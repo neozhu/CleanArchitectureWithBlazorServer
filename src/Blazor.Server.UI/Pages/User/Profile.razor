@@ -1,0 +1,51 @@
+﻿@page "/user/profile"
+
+<MudText  Class="align-center" Typo="Typo.h6">Profile</MudText>
+<MudBreadcrumbs Separator="." Items="_items"></MudBreadcrumbs>
+<br/>
+<MudContainer>
+    <MudGrid>
+       
+        <MudItem sm="12">
+            <MudPaper Class="pa-4"
+                      Elevation="25"
+                      Style="height: 280px;">
+                      <MudTabs Elevation="0" Centered="true" Rounded="true" PanelClass="pa-6" DisableRipple="true">
+                            <MudTabPanel Text="Profile" ToolTip="ToolTip One">
+                            </MudTabPanel>
+                            <MudTabPanel Text="Followers" ToolTip="ToolTip Two">
+                            </MudTabPanel>
+                            <MudTabPanel Text="Friends" ToolTip="ToolTip Three">
+                            </MudTabPanel> 
+                            <MudTabPanel Text="Gallery" ToolTip="ToolTip Three">
+                            </MudTabPanel>
+                        </MudTabs>
+            </MudPaper>
+        </MudItem>
+        <MudItem md="4"
+                 sm="12"
+                 xs="12">
+            <MudPaper Class="pa-4"
+                      Elevation="2"
+                      Style="height: 250px; background: #405f6c">
+            </MudPaper>
+        </MudItem>
+          <MudItem md="8"
+                 sm="12"
+                 xs="12">
+            <MudPaper Class="pa-4"
+                      Elevation="2"
+                      Style="height: 250px; background: var(--mud-palette-primary)">
+            </MudPaper>
+        </MudItem>
+        
+         </MudGrid>
+</MudContainer>
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Dashboard", href: "#"),
+        new BreadcrumbItem("User", href: "#"),
+        new BreadcrumbItem("Profile", href: null, disabled: true)
+    };
+}

@@ -1,0 +1,157 @@
+﻿@page "/pages/authentication/login"
+@using System.Text.RegularExpressions
+@using Microsoft.AspNetCore.DataProtection
+@using Microsoft.AspNetCore.Identity
+@using MudDemo.Server.Models.Authentication
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+
+<EditForm Model="@model"
+          OnValidSubmit="OnValidSubmit">
+    <MudText Typo="Typo.h4" GutterBottom="true">Sign In</MudText>
+
+    <MudText>Don't have an account? <MudLink Href="/pages/authentication/register">Sign Up</MudLink></MudText>
+
+    <MudTextField T="string"
+                  @bind-Value="model.Email" For="@(() => model.Email)"
+                  Label="E-mail"
+                  Variant="Variant.Outlined"
+                  Required="true"
+                  RequiredError="e-mail is required!"
+                  Validation="@(new Func<string, IEnumerable<string>>(IsValidEmail))"
+                  Class="my-6"></MudTextField>
+
+    <MudTextField @bind-Value="model.Password" For="@(() => model.Password)"
+                  Label="Password"
+                  Variant="Variant.Outlined"
+                  InputType="@PasswordInput"
+                  Adornment="Adornment.End"
+                  AdornmentIcon="@PasswordInputIcon"
+                  Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))"
+                  Required="true"
+                  RequiredError="Password is required!"
+                  OnAdornmentClick="TogglePasswordVisibility" />
+
+    <div Class="d-flex justify-space-between align-center">
+        <MudCheckBox For="@(() => model.RememberMe)" @bind-Checked="model.RememberMe" Label="Remember me?" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+        <MudLink Href="/pages/authentication/forgot-password">Forgot pwd?</MudLink>
+    </div>
+
+
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               Size="Size.Large"
+               ButtonType="ButtonType.Submit"
+               FullWidth="true">Sign In</MudButton>
+</EditForm>
+@code {
+    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+    [Inject] private IHostEnvironmentAuthenticationStateProvider HostAuthentication { get; set; }
+    [Inject] private UserManager<IdentityUser> userManager { get; set; }
+    [Inject] private SignInManager<IdentityUser> signInManager { get; set; }
+    [Inject] private NavigationManager _navigation { get; set; }
+    [Inject] private IDataProtectionProvider dataProtectionProvider { get; set; }
+    LoginFormModel model = new LoginFormModel()
+        {
+            Email = "root@mudblazor.com",
+            Password = "Root@123!",
+            RememberMe = true
+        };
+
+    bool success = false;
+    bool PasswordVisibility;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    private IEnumerable<string> PasswordStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Password is required!";
+            yield break;
+        }
+        if (pw.Length < 6)
+            yield return "Password must be at least of length 6";
+        if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Password must contain at least one capital letter";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Password must contain at least one lowercase letter";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Password must contain at least one digit";
+    }
+    private IEnumerable<string> IsValidEmail(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            yield return "e-mail is required!";
+            yield break;
+        }
+        if (!new EmailAddressAttribute().IsValid(input))
+        {
+            yield return "e-mail is required!";
+            yield break;
+        }
+    }
+
+    void TogglePasswordVisibility()
+    {
+        @if (PasswordVisibility)
+        {
+            PasswordVisibility = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            PasswordVisibility = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+    private async Task OnValidSubmit(EditContext context)
+    {
+        if (context.Validate())
+        {
+            var user = await userManager.FindByEmailAsync(model.Email);
+            var valid = await signInManager.UserManager.CheckPasswordAsync(user, model.Password);
+
+            if (valid)
+            {
+                //var principal = await signInManager.CreateUserPrincipalAsync(user);
+
+                //var identity = new ClaimsIdentity(
+                //    principal.Claims,
+                //    Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme
+                //);
+                //principal = new System.Security.Claims.ClaimsPrincipal(identity);
+                //signInManager.Context.User = principal;
+                //HostAuthentication.SetAuthenticationState(Task.FromResult(new AuthenticationState(principal)));
+                //// now the authState is updated
+                //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                //if (authState.User.Identity?.IsAuthenticated is true)
+                //{
+                    //_navigation.NavigateTo("/");
+                    var token = await userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "SignIn");
+
+                    var data = $"{user.Id}|{token}";
+
+                    var parsedQuery = System.Web.HttpUtility.ParseQueryString(new Uri(_navigation.Uri).Query);
+
+                    var returnUrl = parsedQuery["returnUrl"];
+
+                    if (!string.IsNullOrWhiteSpace(returnUrl))
+                    {
+                        data += $"|{returnUrl}";
+                    }
+
+                    var protector = dataProtectionProvider.CreateProtector("SignIn");
+
+                    var pdata = protector.Protect(data);
+
+                    _navigation.NavigateTo("/account/signinactual?t=" + pdata, forceLoad: true);
+                //}
+            }
+            //StateHasChanged();
+        }
+
+    }
+}

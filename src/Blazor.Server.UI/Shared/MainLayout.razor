@@ -1,0 +1,48 @@
+@inherits LayoutComponentBase;
+
+<MudRTLProvider RightToLeft="@_rightToLeft">
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudThemeProvider Theme="_theme" />
+
+<MudLayout>
+    <AuthorizeView>
+        <NotAuthorized>
+            <MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center" Style="height: 100vh;">
+                <div class="d-flex flex-column mud-width-full">
+                    <MudPaper Elevation="25" Class="pa-8" Width="100%" MaxWidth="500px">
+                        <MudIcon Icon="@Icons.Custom.Brands.MudBlazor" Size="Size.Large" Style="width:100px; height:100px;" />
+                        @Body
+                    </MudPaper>
+                    <MudAlert Severity="Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">No authentication is required, click sign in.</MudAlert>
+                </div>
+            </MudContainer>
+        </NotAuthorized>
+        <Authorized>
+            <NavMenu SideMenuDrawerOpen="_sideMenuDrawerOpen"
+                     OpenCommandPalette="OpenCommandPalette"
+                     ThemeManager="_themeManager"
+                     ToggleSideMenuDrawer="ToggleSideMenuDrawer"
+                     RightToLeft="_rightToLeft"
+                     RightToLeftToggle ="RightToLeftToggleHandler"
+                     User="_user" />
+
+            <SideMenu SideMenuDrawerOpen="_sideMenuDrawerOpen"
+                      SideMenuDrawerOpenChanged="SideMenuDrawerOpenChangedHandler"
+                      User="_user" />
+
+            <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
+                        ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
+                        ThemeManager="_themeManager"
+                        ThemeManagerChanged="ThemeManagerChanged" />
+            <ThemesButton OnClick="@(() => _themingDrawerOpen = true)" />
+
+            <MudMainContent>
+                <MudContainer Class="mb-16 mt-4">
+                    @Body
+                </MudContainer>
+            </MudMainContent>
+        </Authorized>
+    </AuthorizeView>
+</MudLayout>
+</MudRTLProvider>

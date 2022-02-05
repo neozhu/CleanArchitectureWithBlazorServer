@@ -1,0 +1,88 @@
+@inherits MudComponentBase
+
+<MudElement @attributes="@UserAttributes"
+            Class="@Classname"
+            Style="@Style">
+    <MudMenu AnchorOrigin="Origin.BottomRight"
+             LockScroll="true"
+             TransformOrigin="Origin.TopRight">
+        <ActivatorContent>
+            <MudTooltip Arrow="true"
+                        Text="Notifications">
+                @if (Notifications != null)
+                {
+                    <MudBadge BadgeClass="notification-badge"
+                              Color="Color.Error"
+                              Content="Notifications.Count()"
+                              Overlap="true"
+                              Visible="Notifications.Any()">
+                        <MudIconButton Color="Color.Default"
+                                       Icon="@Icons.Material.Filled.Notifications" />
+                    </MudBadge>
+                }
+            </MudTooltip>
+        </ActivatorContent>
+        <ChildContent>
+            <div class="pb-2 pt-4"
+                 style="min-width: 330px">
+                <MudText Class="pb-2 px-6"
+                         Typo="Typo.body2">
+                    <b>Notifications</b>
+                </MudText>
+                <MudDivider Class="my-2" />
+                @if (Notifications != null && Notifications.Any())
+                {
+                    @foreach (var notification in Notifications)
+                    {
+                        <MudMenuItem>
+                            <div class="d-flex">
+                                <div class="mr-4">
+                                    <MudAvatar Color="Color.Inherit"
+                                               Variant="Variant.Filled">
+                                        <MudIcon Icon="@notification.NotificationIcon" />
+                                    </MudAvatar>
+                                </div>
+                                <div>
+                                    <MudText Typo="Typo.body2">@notification.Message</MudText>
+                                    <div class="align-center d-flex">
+                                        <MudIcon Class="mr-1"
+                                                 Color="Color.Default"
+                                                 Icon="@Icons.Material.Filled.AccessTime"
+                                                 Style="font-size: 13px" />
+                                        <MudText Typo="Typo.caption">@notification.TimeSinceEventFormatted</MudText>
+                                    </div>
+                                </div>
+                            </div>
+                        </MudMenuItem>
+                    }
+                }
+                else
+                {
+                    <MudText Class="px-6 py-3"
+                             Typo="Typo.body2">
+                        You have no unread notifications.
+                    </MudText>
+                }
+                <MudDivider Class="my-2" />
+                <div class="mt-4 mx-4">
+                    <MudButton Color="Color.Primary"
+                               FullWidth="true"
+                               OnClick="OnClickViewAll"
+                               Style="text-transform:none"
+                               Variant="Variant.Text">
+                        View All
+                    </MudButton>
+                </div>
+            </div>
+        </ChildContent>
+    </MudMenu>
+</MudElement>
+
+<style>
+
+    .notification-badge{
+        margin-left: -10px;
+        margin-bottom: -8px;
+    }
+    
+</style>

@@ -1,0 +1,153 @@
+@using MudBlazor.Extensions
+@using MudDemo.Server.Models.SideMenu
+<MudDrawer Breakpoint="Breakpoint.Md"
+           Class="side-menu"
+           Elevation="0"
+           Open="SideMenuDrawerOpen"
+           Variant="DrawerVariant.Responsive"
+           >
+    <MudDrawerHeader Class="align-center d-flex align-center pa-0">
+        <MudIcon Class="ml-6 mr-2"
+                 Color="Color.Primary"
+                 Icon="@Icons.Custom.Brands.MudBlazor"
+                 Size="Size.Large" />
+        <MudText Typo="Typo.subtitle2">
+            <b>Application Name</b>
+        </MudText>
+    </MudDrawerHeader>
+
+    @if (SideMenuDrawerOpen)
+    {
+        <div class="mx-6">
+            <MudButton Class="d-flex justify-start my-3 user-button"
+                       FullWidth="true">
+                <ChildContent>
+                    <div class="align-center d-flex">
+                        <MudAvatar Image="@User.Avatar" />
+                    </div>
+                    <div class="d-flex flex-column px-4">
+                        <MudText Class="d-flex justify-start"
+                                 Typo="Typo.body2">
+                            @User.DisplayName
+                        </MudText>
+                        <MudText Class="d-flex justify-start"
+                                 Typo="Typo.caption">
+                            @User.Role
+                        </MudText>
+                    </div>
+                </ChildContent>
+            </MudButton>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-center my-3">
+            <MudAvatar Image="@User.Avatar" />
+        </div>
+    }
+
+    <MudNavMenu>
+        @foreach (var section in _menuSections)
+        {
+            @if (SideMenuDrawerOpen)
+            {
+                <div class="ml-6 my-3">
+                    <MudText Typo="Typo.caption">
+                        <b>
+                            @(section.Title)
+                        </b>
+                    </MudText>
+                </div>
+            }
+
+            @foreach (var sectionItem in section.SectionItems)
+            {
+                @if (sectionItem.IsParent)
+                {
+                    <MudNavGroup Icon="@sectionItem.Icon"
+                                 Title="@sectionItem.Title">
+                        @foreach (var menuItem in sectionItem.MenuItems)
+                        {
+                            @if (SideMenuDrawerOpen)
+                            {
+                                <MudNavLink Disabled="@(menuItem.PageStatus != PageStatus.Completed)"
+                                            Href="@(menuItem.Href)"
+                                            Match="NavLinkMatch.All">
+                                    <div class="d-flex">
+                                        @menuItem.Title
+                                        @if (menuItem.PageStatus != PageStatus.Completed)
+                                        {
+                                            <MudSpacer />
+                                            <MudChip Class="mr-4"
+                                                     Color="@Color.Primary"
+                                                     Size="Size.Small"
+                                                     Variant="Variant.Text">
+                                                @menuItem.PageStatus.ToDescriptionString()
+                                            </MudChip>
+                                        }
+                                    </div>
+                                </MudNavLink>
+                            }
+                        }
+                    </MudNavGroup>
+                }
+                else
+                {
+                    <MudNavLink Disabled="@(sectionItem.PageStatus != PageStatus.Completed)"
+                                Href="@(sectionItem.Href)"
+                                Icon="@(sectionItem.Icon)"
+                                Match="NavLinkMatch.All">
+                        <div class="d-flex">
+                            @sectionItem.Title
+                            @if (sectionItem.PageStatus != PageStatus.Completed)
+                            {
+                                <MudSpacer />
+                                <MudChip Class="mr-4"
+                                         Color="@Color.Primary"
+                                         Size="Size.Small"
+                                         Variant="Variant.Text">
+                                    @sectionItem.PageStatus.ToDescriptionString()
+                                </MudChip>
+                            }
+                        </div>
+                    </MudNavLink>
+                }
+            }
+        }
+    </MudNavMenu>
+
+    <MudDivider Class="mt-auto"></MudDivider>
+    <MudNavMenu Class="d-flex justify-space-between pa-4" >
+        <MudLink Href="#"  Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">?022 Copyright</MudLink>
+        <MudLink Href="#"  Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important"> Privacy Policy</MudLink>
+        <MudText Class=""  Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">version 1.0</MudText>
+    </MudNavMenu>
+
+</MudDrawer>
+
+<style>
+
+        .mud-nav-link {
+            white-space: normal !important;
+        }
+        .mud-nav-link.active:not(.mud-nav-link-disabled) {
+            border-right: 3px solid var(--mud-palette-primary);
+            background-color: rgba(var(--mud-palette-primary-rgb), 0.1)
+        }
+        
+        .side-menu {
+            border-right: 1px solid var(--mud-palette-table-lines)
+        }
+        
+        .user-button {
+            text-transform:none; 
+            background: rgba(var(--mud-palette-primary-rgb), 0.1)
+        }
+        
+        .side-menu .mud-chip.mud-chip-size-small
+        {
+            font-size: 0.625rem;
+            height: 1.125rem;
+        }
+       
+</style>

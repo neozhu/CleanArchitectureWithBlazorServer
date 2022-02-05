@@ -1,0 +1,80 @@
+@inherits MudComponentBase
+
+<MudElement @attributes="@UserAttributes"
+            Class="@Classname"
+            Style="@Style">
+    <MudPaper Elevation="2"
+              Style="height: 250px;">
+        <MudCarousel AutoCycle="false"
+                     @bind-SelectedIndex="_selectedArticle"
+                     Class="article-carousel"
+                     id="articleCarousel"
+                     ItemsSource="_articles"
+                     ShowArrows="false"
+                     ShowDelimiters="false">
+            <ItemTemplate>
+                <div class="d-flex flex-column justify-space-between"
+                     style="background-color: var(--mud-palette-surface); height: 100%;">
+                    <div class="align-center d-flex ma-4">
+                        <div >
+                            @foreach (var article in _articles)
+                            {
+                                <MudIconButton Class="@(article.ArticleId == _selectedArticle ? "small-icon selected" : "small-icon non-selected")"
+                                               Icon="@Icons.Material.Filled.Circle"
+                                               OnClick="@(() => _selectedArticle = article.ArticleId)"
+                                               Size="Size.Small" />
+                            }
+                        </div>
+                        <MudSpacer />
+                        <div >
+                            <MudIconButton Icon="@Icons.Material.Filled.ArrowLeft"
+                                           OnClick="NavigatePrevious"
+                                           Size="Size.Large" />
+                            <MudIconButton Icon="@Icons.Material.Filled.ArrowRight"
+                                           OnClick="NavigateNext"
+                                           Size="Size.Large" />
+                        </div>
+                    </div>
+                    <div class="mb-6 ml-4">
+                        <MudText Typo="Typo.caption">
+                            FEATURED
+                        </MudText>
+                        <MudText Typo="Typo.h6">
+                            <b>@context.Title</b>
+                        </MudText>
+                        <MudText>@context.DescriptionTrimed</MudText>
+                    </div>
+                </div>
+            </ItemTemplate>
+        </MudCarousel>
+    </MudPaper>
+</MudElement>
+
+<style>
+    
+    .article-carousel
+    {
+        height: 100%;
+        border-radius: var(--mud-default-borderradius);
+    }
+    
+    #articleCarousel .mud-icon-button {
+        padding: 0;
+    }
+    
+    #articleCarousel .selected{
+        color: var(--mud-palette-primary);
+    }
+    
+    #articleCarousel .non-selected{
+        color: rgba(var(--mud-palette-primary-rgb), 0.5);
+    }
+    
+    #articleCarousel .mud-carousel-transition-slide-next-enter {
+       animation-duration: 0s;
+    }
+    
+    #articleCarousel .mud-carousel-transition-slide-next-exit{
+       animation-duration: 0s;
+    }
+</style>

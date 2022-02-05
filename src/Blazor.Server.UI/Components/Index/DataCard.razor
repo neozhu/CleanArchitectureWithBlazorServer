@@ -1,0 +1,70 @@
+@using System.Globalization
+@using MudDemo.Server.Models.Charts.Series
+@inherits MudComponentBase
+
+<MudElement @attributes="@UserAttributes"
+            Class="@Classname"
+            Style="@Style">
+    <MudPaper Class="pa-4"
+              Elevation="2"
+              Style="height: 170px">
+        <div class="align-center d-flex"
+             style="height: 100%">
+            <div class="d-flex flex-column">
+                <MudText Class="light-bold mb-5">@Title</MudText>
+                @if (IncreaseDecrease > 0)
+                {
+                    <div class="align-center d-flex mb-4">
+                        <MudAvatar Class="mr-2 pa-1"
+                                   Size="Size.Small"
+                                   Style="background: rgba(84, 214, 44, 0.16)">
+                            <MudIcon Color="Color.Success"
+                                     Icon="@Icons.Material.Filled.TrendingUp"
+                                     Style="font-size: 14px" />
+                        </MudAvatar>
+                        <MudText Class="light-bold">
+                            @($"+{IncreaseDecrease}%")
+                        </MudText>
+                    </div>
+                }
+                else
+                {
+                    <div class="align-center d-flex mb-4">
+                        <MudAvatar Class="mr-2 pa-1"
+                                   Size="Size.Small"
+                                   Style="background: rgba(255, 72, 66, 0.16)">
+                            <MudIcon Color="Color.Error"
+                                     Icon="@Icons.Material.Filled.TrendingDown"
+                                     Style="font-size: 14px" />
+                        </MudAvatar>
+                        <MudText Class="light-bold">
+                            @($"{IncreaseDecrease}%")
+                        </MudText>
+                    </div>
+                }
+                <MudText Class="mb-4 strong-bold"
+                         Typo="Typo.h4">
+                    @Total.ToString("N0", CultureInfo.InvariantCulture)
+                </MudText>
+            </div>
+            <MudSpacer />
+            @if (_chartOptions != null)
+            {
+                <ApexChart ChartId="@ChartId"
+                           ChartOptions="_chartOptions"
+                           TCategory="int"
+                           TSeries="SeriesModel<int>" />
+            }
+        </div>
+    </MudPaper>
+</MudElement>
+
+<style>
+    .light-bold {
+        font-weight: 500;
+    }
+    
+    .strong-bold{
+        font-weight: 700;
+    }
+</style>

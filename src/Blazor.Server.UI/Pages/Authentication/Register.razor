@@ -1,0 +1,118 @@
+﻿@page "/pages/authentication/register"
+@using System.Text.RegularExpressions
+@using Microsoft.AspNetCore.Identity
+@using MudDemo.Server.Models.Authentication
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+@using FluentValidation;
+
+@attribute [AllowAnonymous]
+
+<MudForm Model="@model" @ref="@form">
+<MudText Typo="Typo.h4" GutterBottom="true">Sign Up</MudText>
+<MudText>Already have an account? <MudLink Href="/pages/authentication/login">Sign In</MudLink></MudText>
+
+<MudTextField T="string"  
+    Validation="@(registerValidator.ValidateValue)"
+    Immediate="true"
+    Label="User Name"
+    @bind-Value="model.UserName" 
+    For="@(() => model.UserName)" 
+    Variant="Variant.Outlined" 
+    Required="true"
+    RequiredError="user name is required!"
+    Class="my-4"></MudTextField>
+
+<MudTextField T="string" 
+    Validation="@(registerValidator.ValidateValue)"
+    Immediate="true"
+    Label="E-mail" 
+    @bind-Value="model.Email" 
+    For="@(() => model.Email)" 
+    Required="true"
+    Variant="Variant.Outlined"></MudTextField>
+
+<MudTextField 
+     Validation="@(registerValidator.ValidateValue)"
+     Immediate="true"
+     Label="Password" 
+     @bind-Value="model.Password" 
+     For="@(() => model.Password)"
+     Variant="Variant.Outlined" 
+     InputType="@PasswordInput" 
+     Adornment="Adornment.End" 
+     AdornmentIcon="@PasswordInputIcon" 
+     Required="true"
+     RequiredError="password is required!"
+     OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
+<MudTextField 
+     Validation="@(registerValidator.ValidateValue)"
+     Immediate="true"
+     Label="Confirm Password" 
+     @bind-Value="model.ConfirmPassword" 
+     For="@(() => model.ConfirmPassword)"
+     Variant="Variant.Outlined" 
+     InputType="@PasswordInput" 
+     Adornment="Adornment.End" 
+     AdornmentIcon="@PasswordInputIcon"
+     Required="true"
+     RequiredError="password is required!"
+     OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
+
+<MudCheckBox @bind-Checked="@AgreeToTerms" Label="I agree to the terms and privacy" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+
+<MudButton Variant="Variant.Filled" 
+     Color="Color.Primary" 
+     Disabled="@(!AgreeToTerms)"  
+     Size="Size.Large" 
+     OnClick="@(async () => await Submit())"
+     FullWidth="true">Register</MudButton>
+</MudForm>
+@code {
+    [Inject] private NavigationManager _navigation { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] private UserManager<IdentityUser> userManager { get; set; }
+    MudForm form;
+    RegisterFormModel model = new ();
+    RegisterFormModelFluentValidator registerValidator = new ();
+    public bool AgreeToTerms { get; set; }
+
+    bool PasswordVisibility;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void TogglePasswordVisibility()
+    {
+        @if (PasswordVisibility)
+        {
+            PasswordVisibility = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            PasswordVisibility = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+    private async Task Submit()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            var user = new IdentityUser()
+                {
+                    UserName=model.UserName,
+                    Email=model.Email
+                };
+            var result = await userManager.CreateAsync(user,model.Password);
+            if (result.Succeeded)
+            {
+                _navigation.NavigateTo("/pages/authentication/login");
+            }
+            Snackbar.Add("Submited!");
+        }
+    }
+}

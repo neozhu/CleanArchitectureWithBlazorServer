@@ -1,0 +1,154 @@
+@using MudDemo.Server.Models.Invoice
+@inherits MudComponentBase
+
+<MudElement @attributes="@UserAttributes"
+            Class="@Classname"
+            Style="@Style">
+    <MudPaper Elevation="2">
+        <MudTable Breakpoint="Breakpoint.Sm"
+                  Class="ma-2"
+                  CustomHeader="true"
+                  Elevation="0"
+                  Items="_invoices">
+            <ToolBarContent>
+                <div class="align-center d-flex"
+                     style="height: 60px">
+                    <MudText Typo="Typo.h6">
+                        New Invoice
+                    </MudText>
+                </div>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTHeadRow Class="custom-header">
+                    <MudTh Class="custom-header-cell  custom-header-cell-first">
+                        <b>Invoice ID</b>
+                    </MudTh>
+                    <MudTh Class="custom-header-cell">
+                        <b>Category</b>
+                    </MudTh>
+                    <MudTh Class="custom-header-cell">
+                        <b>Price</b>
+                    </MudTh>
+                    <MudTh Class="custom-header-cell">
+                        <b>Status</b>
+                    </MudTh>
+                    <MudTh Class="custom-header-cell custom-header-cell-last"></MudTh>
+                </MudTHeadRow>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="InvoiceId">@context.InvoiceId</MudTd>
+                <MudTd DataLabel="Category">@context.Category</MudTd>
+                <MudTd DataLabel="Price">@($"${context.Price}")</MudTd>
+                <MudTd DataLabel="Status">
+                    @switch (context.Status)
+                    {
+                        case InvoiceStatus.Paid:
+                            <MudChip Color="Color.Success"
+                                     Size="Size.Small"
+                                     Variant="Variant.Text">
+                                Paid
+                            </MudChip>
+                            break;
+                        case InvoiceStatus.InProgress:
+                            <MudChip Color="Color.Warning"
+                                     Size="Size.Small"
+                                     Variant="Variant.Text">
+                                In progress
+                            </MudChip>
+                            break;
+                        case InvoiceStatus.OutOfDate:
+                            <MudChip Color="Color.Error"
+                                     Size="Size.Small"
+                                     Variant="Variant.Text">
+                                Out of date
+                            </MudChip>
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                </MudTd>
+                <MudTd>
+                    <MudMenu Dense="true"
+                             Icon="@Icons.Material.Filled.MoreVert"
+                             Size="Size.Small">
+                        <div>
+                            <MudMenuItem>
+                                <div class="d-flex">
+                                    <MudIcon Class="mx-2"
+                                             Icon="@Icons.Material.Filled.Download"
+                                             Size="Size.Small" />
+                                    <MudText>Download</MudText>
+                                </div>
+                            </MudMenuItem>
+                            <MudMenuItem>
+                                <div class="d-flex">
+                                    <MudIcon Class="mx-2"
+                                             Icon="@Icons.Material.Filled.Share"
+                                             Size="Size.Small" />
+                                    <MudText>Share</MudText>
+                                </div>
+                            </MudMenuItem>
+                            <MudMenuItem>
+                                <div class="d-flex">
+                                    <MudIcon Class="mx-2"
+                                             Icon="@Icons.Material.Filled.Archive"
+                                             Size="Size.Small" />
+                                    <MudText>Archive</MudText>
+                                </div>
+                            </MudMenuItem>
+                            <MudDivider />
+                            <MudMenuItem>
+                                <div class="d-flex">
+                                    <MudIcon Class="mx-2"
+                                             Icon="@Icons.Material.Filled.Delete"
+                                             Size="Size.Small" 
+                                             Color="Color.Error"/>
+                                    <MudText Color="Color.Error">Delete</MudText>
+                                </div>
+                            </MudMenuItem>
+                        </div>
+                    </MudMenu>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+        <MudDivider />
+        <div class="align-center d-flex justify-end"
+             style="height: 60px">
+            <MudButton Class="mr-2"
+                       EndIcon="@Icons.Material.Filled.KeyboardArrowRight"
+                       Style="text-transform: none"
+                       Variant="Variant.Text">
+                View All
+            </MudButton>
+        </div>
+    </MudPaper>
+</MudElement>
+
+<style>
+
+    .custom-header{
+        background-color:rgba(145, 158, 171, 0.16);
+    }
+    
+    .custom-header-cell
+    {
+        color: rgb(145, 158, 171) !important;
+    }
+    
+    .custom-header-cell-first
+    {
+        border-top-left-radius: var(--mud-default-borderradius);
+        border-bottom-left-radius: var(--mud-default-borderradius);
+    }
+
+    .custom-header-cell-last
+    {
+        border-top-right-radius: var(--mud-default-borderradius);
+        border-bottom-right-radius: var(--mud-default-borderradius);
+    }
+
+    .mud-table-cell {
+        border: none;
+    }
+
+</style>

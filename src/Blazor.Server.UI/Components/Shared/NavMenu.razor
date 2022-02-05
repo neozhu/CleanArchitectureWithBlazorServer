@@ -1,0 +1,49 @@
+@using MudDemo.Server.Components.Localization
+<MudAppBar Class=""
+           Elevation="0"
+           Style="@(ThemeManager.IsDarkMode ? "background: rgba(21,27,34,0.7)" : "background: rgba(255,255,255,0.8)")">
+    <MudTooltip Arrow="true"
+                Text="Toggle menu">
+        <MudToggleIconButton Class="mr-3"
+                             Color="@Color.Default"
+                             Icon="@Icons.Material.Filled.MenuOpen"
+                             Size="Size.Medium"
+                             Toggled="SideMenuDrawerOpen"
+                             ToggledChanged="ToggleSideMenuDrawer"
+                             ToggledColor="@Color.Default"
+                             ToggledIcon="@Icons.Material.Filled.Close" />
+
+    </MudTooltip>
+
+
+    <MudTooltip Arrow="true"
+                Text="Search (Cmd + K)">
+        <MudIconButton Color="Color.Default"
+                       Edge="Edge.Start"
+                       Icon="@Icons.Material.Filled.Search"
+                       OnClick="OpenCommandPalette" />
+    </MudTooltip>
+    <MudSpacer />
+    <MudTooltip Arrow="true"
+                Text="Navigate to GitHub">
+        <MudIconButton Class="mx-1"
+                       Color="Color.Default"
+                       Icon="@Icons.Custom.Brands.GitHub"
+                       Link="https://github.com/neozhu/MudDemo"
+                       Target="_blank" />
+    </MudTooltip>
+    <LanguageSelector />
+    <NotificationMenu Class="mx-1"
+                      Notifications="_activeNotifications" />
+    <MudTooltip Text="@(RightToLeft?"Toggle right-to-left":"Toggle left-to-right")">
+               <MudIconButton Class="mx-1"
+                   Icon="@(RightToLeft?Icons.Material.Filled.FormatTextdirectionLToR:Icons.Material.Filled.FormatTextdirectionRToL)" 
+                   Color="Color.Default" 
+                   OnClick="@((e) => RightToLeftToggle.InvokeAsync())" />
+    </MudTooltip>
+
+    <UserMenu Class="mx-1"
+              User="User" />
+    <MudDivider Class="mx-3 my-5" DividerType="DividerType.Middle" Vertical="true" FlexItem="true"></MudDivider>
+    <MudText Color="@Color.Primary" Typo="Typo.h6"><b>COMPANY</b></MudText>
+</MudAppBar>

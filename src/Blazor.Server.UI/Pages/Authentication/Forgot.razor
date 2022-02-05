@@ -1,0 +1,17 @@
+﻿@page "/pages/authentication/forgot-password"
+@attribute [AllowAnonymous]
+
+
+
+<MudText Typo="Typo.h4" GutterBottom="true">Forgot Password?</MudText>
+
+<MudText Typo="Typo.subtitle2">Enter the email address linked to your account and you will recieve an email containing a link to reset your password.</MudText>
+
+<MudTextField T="string" Label="E-mail" Variant="Variant.Outlined" Class="my-4"></MudTextField>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/pages/authentication/reset-password" Size="Size.Large" FullWidth="true"  Class="mt-3">Reset Password</MudButton>
+
+
+@code {
+
+}

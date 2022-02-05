@@ -1,0 +1,140 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>CleanArchitecture.Razor.Application</RootNamespace>
+    <AssemblyName>CleanArchitecture.Razor.Application</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Features\Customers\Import\**" />
+    <Compile Remove="Features\Documents\Commands\Import\**" />
+    <EmbeddedResource Remove="Features\Customers\Import\**" />
+    <EmbeddedResource Remove="Features\Documents\Commands\Import\**" />
+    <None Remove="Features\Customers\Import\**" />
+    <None Remove="Features\Documents\Commands\Import\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="FluentValidation" Version="10.3.6" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.6" />
+    <PackageReference Include="LazyCache" Version="2.4.0" />
+    <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
+    <PackageReference Include="MediatR" Version="10.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="6.0.1" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Documents\Commands\Import\" />
+    <Folder Include="Resources\Features\ApprovalDatas\Commands\Import\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Customers\Commands\Import\ImportCustomersCommandHandler.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ImportCustomersCommandHandler.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Customers\Queries\Export\ExportCustomersQueryHandler.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExportCustomersQueryHandler.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Documents\Queries\Export\ExportDocumentsQueryHandler.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExportDocumentsQueryHandler.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\DocumentTypes\Commands\Import\ImportDocumentTypesCommandHandler.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ImportDocumentTypesCommandHandler.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\DocumentTypes\Queries\Export\ExportDocumentTypesQueryHandler.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExportDocumentTypesQueryHandler.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Features\ApprovalDatas\Queries\Export\ExportApprovalDatasQueryHandler.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExportApprovalDatasQueryHandler.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Features\AuditTrails\Queries\Export\ExportAuditTrailsQuery.Designer.cs">
+      <DependentUpon>ExportAuditTrailsQuery.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\Features\Logs\Queries\Export\ExportLogsQuery.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExportLogsQuery.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\KeyValues\Commands\Import\ImportKeyValuesCommandHandler.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ImportKeyValuesCommandHandler.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\KeyValues\Queries\Export\ExportKeyValuesQueryHandler.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExportKeyValuesQueryHandler.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Customers\Commands\Import\ImportCustomersCommandHandler.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ImportCustomersCommandHandler.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Customers\Queries\Export\ExportCustomersQueryHandler.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExportCustomersQueryHandler.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Documents\Queries\Export\ExportDocumentsQueryHandler.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExportDocumentsQueryHandler.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\DocumentTypes\Commands\Import\ImportDocumentTypesCommandHandler.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ImportDocumentTypesCommandHandler.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\DocumentTypes\Queries\Export\ExportDocumentTypesQueryHandler.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExportDocumentTypesQueryHandler.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Features\ApprovalDatas\Queries\Export\ExportApprovalDatasQueryHandler.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExportApprovalDatasQueryHandler.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Features\AuditTrails\Queries\Export\ExportAuditTrailsQuery.resx">
+      <LastGenOutput>ExportAuditTrailsQuery.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Features\Logs\Queries\Export\ExportLogsQuery.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExportLogsQuery.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\KeyValues\Commands\Import\ImportKeyValuesCommandHandler.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ImportKeyValuesCommandHandler.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\KeyValues\Queries\Export\ExportKeyValuesQueryHandler.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExportKeyValuesQueryHandler.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

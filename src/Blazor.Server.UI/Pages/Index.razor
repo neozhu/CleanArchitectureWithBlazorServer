@@ -1,0 +1,62 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+<PageTitle>@Title</PageTitle>
+<MudContainer MaxWidth="MaxWidth.False">
+    <MudGrid>
+        <MudItem md="8"
+                 sm="12"
+                 xs="12">
+            <MudBlazorCard />
+        </MudItem>
+        <MudItem md="4"
+                 sm="12"
+                 xs="12">
+            <ArticleCarousel />
+        </MudItem>
+        <MudItem md="4"
+                 sm="12"
+                 xs="12">
+            <DataCard ChartId="chartOne"
+                      IncreaseDecrease="IncreaseDecreaseActiveUsers"
+                      LastTenDays="_lastTenDaysActiveUsers"
+                      Title="Total Active Users"
+                      Total="TotalActiveUsers" />
+        </MudItem>
+        <MudItem md="4"
+                 sm="12"
+                 xs="12">
+            <DataCard BarColor="@Colors.Blue.Default"
+                      ChartId="chartTwo"
+                      IncreaseDecrease="IncreaseDecreaseInstalls"
+                      LastTenDays="_lastTenDaysInstalls"
+                      Title="Total Installed"
+                      Total="TotalInstalls" />
+        </MudItem>
+        <MudItem md="4"
+                 sm="12"
+                 xs="12">
+            <DataCard BarColor="@Colors.Orange.Default"
+                      ChartId="chartThree"
+                      IncreaseDecrease="IncreaseDecreaseDownloads"
+                      LastTenDays="_lastTenDaysDownloads"
+                      Title="Total Downloads"
+                      Total="TotalDownloads" />
+        </MudItem>
+        <MudItem md="6"
+                 sm="12">
+            <CurrentDownload />
+        </MudItem>
+        <MudItem md="6"
+                 sm="12">
+            <AreaInstalled />
+        </MudItem>
+        <MudItem md="8"
+                 sm="12">
+            <NewInvoice />
+        </MudItem>
+        <MudItem md="4"
+                 sm="12">
+            <TopApplications />
+        </MudItem>
+    </MudGrid>
+</MudContainer>

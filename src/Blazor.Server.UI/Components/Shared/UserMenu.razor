@@ -1,0 +1,46 @@
+<MudMenu AnchorOrigin="Origin.BottomRight"
+         Class="@Class"
+         LockScroll="true"
+         
+         TransformOrigin="Origin.TopRight">
+    <ActivatorContent>
+        <MudAvatar Image="@User.Avatar" />
+    </ActivatorContent>
+    <ChildContent>
+        <div class="py-4"
+             style="min-width: 220px">
+            <MudText Class="px-6 pb-2"
+                     Typo="Typo.body2">
+                <b>@User.DisplayName</b>
+            </MudText>
+            <MudText Class="px-6 pb-2"
+                     Typo="Typo.caption">
+                @User.Email
+            </MudText>
+            <MudDivider Class="my-2" />
+            <MudMenuItem Link="/user/profile" >
+                <div class="d-flex">
+                    <MudIcon Class="mx-2"
+                             Icon="@Icons.Material.Filled.Person" />
+                    <MudText>Profile</MudText>
+                </div>
+            </MudMenuItem>
+            <MudMenuItem>
+                <div class="d-flex">
+                    <MudIcon Class="mx-2"
+                             Icon="@Icons.Material.Filled.Settings" />
+                    <MudText>Settings</MudText>
+                </div>
+            </MudMenuItem>
+            <div class="mt-4 mx-4">
+                <MudButton Color="Color.Default"
+                           FullWidth="true"
+                           StartIcon="@Icons.Material.Filled.Logout"
+                           Link="/account/signout"
+                           Variant="Variant.Outlined">
+                    Logout
+                </MudButton>
+            </div>
+        </div>
+    </ChildContent>
+</MudMenu>

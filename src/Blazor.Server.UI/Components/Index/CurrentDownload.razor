@@ -1,0 +1,25 @@
+@inherits MudComponentBase
+
+<MudElement @attributes="@UserAttributes"
+            Class="@Classname"
+            Style="@Style">
+    <MudPaper Class="pa-4"
+              Elevation="2"
+              Style="height: 500px;">
+        <div class="align-center d-flex"
+             style="height: 60px">
+            <MudText Typo="Typo.h6">
+                Current Download
+            </MudText>
+        </div>
+        <div class="align-center d-flex justify-center">
+            @if (_chartOptions != null)
+            {
+                <ApexChart ChartId="currentDownload"
+                           ChartOptions="_chartOptions"
+                           TCategory="int"
+                           TSeries="int" />
+            }
+        </div>
+    </MudPaper>
+</MudElement>
