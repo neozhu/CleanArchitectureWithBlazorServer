@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace MudDemo.Server.Models.SideMenu;
+namespace Blazor.Server.UI.Models.SideMenu;
 
 public enum PageStatus
 {

@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "MudDemo.Server": {
+    "Blazor.Server.UI": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

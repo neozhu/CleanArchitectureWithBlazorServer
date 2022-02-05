@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-namespace CleanArchitecture.Razor.Application.Features.Products.EventHandlers;
+namespace CleanArchitecture.Blazor.Application.Features.Products.EventHandlers;
 
     public class ProductCreatedEventHandler : INotificationHandler<DomainEventNotification<ProductCreatedEvent>>
     {

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace MudDemo.Server.Components.Shared.Themes;
+namespace Blazor.Server.UI.Components.Shared.Themes;
 
 public partial class ThemesButton
 {

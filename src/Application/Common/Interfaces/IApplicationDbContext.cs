@@ -3,7 +3,7 @@
 
 
 
-namespace CleanArchitecture.Razor.Application.Common.Interfaces;
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {

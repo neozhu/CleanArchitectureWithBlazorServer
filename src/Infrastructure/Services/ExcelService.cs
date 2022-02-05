@@ -5,7 +5,7 @@ using Microsoft.Extensions.Localization;
 using System.Data;
 using ClosedXML.Excel;
 
-namespace CleanArchitecture.Razor.Infrastructure.Services;
+namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class ExcelService : IExcelService
 {

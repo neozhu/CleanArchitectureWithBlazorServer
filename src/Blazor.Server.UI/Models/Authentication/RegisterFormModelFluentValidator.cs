@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace MudDemo.Server.Models.Authentication;
+namespace Blazor.Server.UI.Models.Authentication;
 
 public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormModel>
 {

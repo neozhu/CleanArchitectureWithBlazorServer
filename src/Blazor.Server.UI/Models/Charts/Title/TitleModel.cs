@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Title;
+namespace Blazor.Server.UI.Models.Charts.Title;
 
 public class TitleModel
 {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CleanArchitecture.Razor.Application.Resources.Features.AuditTrails.Queries.Export {
+namespace CleanArchitecture.Blazor.Application.Resources.Features.AuditTrails.Queries.Export {
     using System;
     
     
@@ -39,8 +39,8 @@ namespace CleanArchitecture.Razor.Application.Resources.Features.AuditTrails.Que
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Razor.Application.Resources.Features.AuditTrails.Queries.Export" +
-                            ".ExportAuditTrailsQuery", typeof(ExportAuditTrailsQuery).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.Features.AuditTrails.Queries.Expor" +
+                            "t.ExportAuditTrailsQuery", typeof(ExportAuditTrailsQuery).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

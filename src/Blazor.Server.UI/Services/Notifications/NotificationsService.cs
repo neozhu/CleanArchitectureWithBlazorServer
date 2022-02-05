@@ -1,9 +1,9 @@
 using System.Net.Http.Json;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using MudDemo.Server.Models.Notification;
+using Blazor.Server.UI.Models.Notification;
 
-namespace MudDemo.Server.Services;
+namespace Blazor.Server.UI.Services;
 
 public class NotificationsService : INotificationsService
 {

@@ -1,6 +1,6 @@
 using MudBlazor;
 
-namespace MudDemo.Server.Models.Notification;
+namespace Blazor.Server.UI.Models.Notification;
 
 public class NotificationModel
 {

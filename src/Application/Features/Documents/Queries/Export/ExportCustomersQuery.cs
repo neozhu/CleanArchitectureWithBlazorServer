@@ -1,9 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Features.Documents.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 
-namespace CleanArchitecture.Razor.Application.Features.Documents.Queries.Export;
+namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.Export;
 
 public class ExportDocumentsQuery : IRequest<byte[]>
 {

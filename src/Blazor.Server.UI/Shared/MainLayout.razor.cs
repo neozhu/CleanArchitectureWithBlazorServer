@@ -1,11 +1,11 @@
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using MudDemo.Server.Components.Shared;
-using MudDemo.Server.Models;
+using Blazor.Server.UI.Components.Shared;
+using Blazor.Server.UI.Models;
 using Toolbelt.Blazor.HotKeys;
 
-namespace MudDemo.Server.Shared;
+namespace Blazor.Server.UI.Shared;
 
 public partial class MainLayout : IDisposable
 {

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Annotations;
+namespace Blazor.Server.UI.Models.Charts.Annotations;
 
 public class AnnotationsModel
 {

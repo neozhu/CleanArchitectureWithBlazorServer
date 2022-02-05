@@ -1,4 +1,4 @@
-namespace MudDemo.Server.Models;
+namespace Blazor.Server.UI.Models;
 
 public class UserModel
 {

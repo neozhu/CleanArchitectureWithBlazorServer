@@ -1,6 +1,6 @@
-using MudDemo.Server.Models.Article;
+using Blazor.Server.UI.Models.Article;
 
-namespace MudDemo.Server.Services;
+namespace Blazor.Server.UI.Services;
 
 public interface IArticlesService
 {

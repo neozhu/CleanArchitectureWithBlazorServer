@@ -4,7 +4,7 @@
 using System.Text.Json;
 using CleanArchitecture.Razor.Domain.Entities.Audit;
 
-namespace CleanArchitecture.Razor.Application.Features.AuditTrails.DTOs;
+namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 
 public class AuditTrailDto : IMapFrom<AuditTrail>
 {

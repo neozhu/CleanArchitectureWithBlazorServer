@@ -4,7 +4,7 @@
 
 using Microsoft.AspNetCore.Builder;
 
-namespace CleanArchitecture.Razor.Infrastructure.Extensions;
+namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 internal static class MiddlewareExtensions
 {

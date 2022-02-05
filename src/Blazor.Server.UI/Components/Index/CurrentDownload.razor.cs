@@ -1,14 +1,14 @@
 using MudBlazor;
 using MudBlazor.Utilities;
-using MudDemo.Server.Models.Charts;
-using MudDemo.Server.Models.Charts.Chart;
-using MudDemo.Server.Models.Charts.DataLabels;
-using MudDemo.Server.Models.Charts.Legend;
-using MudDemo.Server.Models.Charts.PlotOptions;
-using MudDemo.Server.Models.Charts.Stroke;
-using MudDemo.Server.Models.Charts.Tooltip;
+using Blazor.Server.UI.Models.Charts;
+using Blazor.Server.UI.Models.Charts.Chart;
+using Blazor.Server.UI.Models.Charts.DataLabels;
+using Blazor.Server.UI.Models.Charts.Legend;
+using Blazor.Server.UI.Models.Charts.PlotOptions;
+using Blazor.Server.UI.Models.Charts.Stroke;
+using Blazor.Server.UI.Models.Charts.Tooltip;
 
-namespace MudDemo.Server.Components.Index;
+namespace Blazor.Server.UI.Components.Index;
 
 public partial class CurrentDownload : MudComponentBase
 {

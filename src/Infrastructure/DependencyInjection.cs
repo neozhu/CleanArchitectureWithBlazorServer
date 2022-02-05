@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using FluentValidation.AspNetCore;
 
-namespace CleanArchitecture.Razor.Infrastructure;
+namespace CleanArchitecture.Blazor.Infrastructure;
 
 public static class DependencyInjection
 {

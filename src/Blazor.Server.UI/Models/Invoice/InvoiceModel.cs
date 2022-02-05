@@ -1,6 +1,6 @@
 using System;
 
-namespace MudDemo.Server.Models.Invoice;
+namespace Blazor.Server.UI.Models.Invoice;
 
 public class InvoiceModel
 {

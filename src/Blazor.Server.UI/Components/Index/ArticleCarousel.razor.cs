@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using MudBlazor.Utilities;
-using MudDemo.Server.Models.Article;
-using MudDemo.Server.Services;
+using Blazor.Server.UI.Models.Article;
+using Blazor.Server.UI.Services;
 
-namespace MudDemo.Server.Components.Index;
+namespace Blazor.Server.UI.Components.Index;
 
 public partial class ArticleCarousel : MudComponentBase
 {

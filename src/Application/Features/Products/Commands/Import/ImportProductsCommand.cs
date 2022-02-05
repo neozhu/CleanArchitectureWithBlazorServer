@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-using CleanArchitecture.Razor.Application.Features.Products.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
-namespace CleanArchitecture.Razor.Application.Features.Products.Commands.Import;
+namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Import;
 
     public class ImportProductsCommand: IRequest<Result>
     {

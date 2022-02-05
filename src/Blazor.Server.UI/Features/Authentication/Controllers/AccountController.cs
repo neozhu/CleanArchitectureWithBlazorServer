@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace MudDemo.Server.Features.Authentication.Controllers
+namespace Blazor.Server.UI.Features.Authentication.Controllers
 {
     public class AccountController : Controller
     {

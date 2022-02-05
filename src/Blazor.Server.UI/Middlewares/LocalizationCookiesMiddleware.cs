@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 
-namespace MudDemo.Server.Middlewares;
+namespace Blazor.Server.UI.Middlewares;
 public class LocalizationCookiesMiddleware : IMiddleware
 {
     public CookieRequestCultureProvider Provider { get; }

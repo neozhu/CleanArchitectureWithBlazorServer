@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
-namespace MudDemo.Server.Services.Authentication;
+namespace Blazor.Server.UI.Services.Authentication;
 
 public class RevalidatingIdentityAuthenticationStateProvider<TUser>
     : RevalidatingServerAuthenticationStateProvider where TUser : class

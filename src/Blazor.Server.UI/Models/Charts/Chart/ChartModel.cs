@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Chart;
+namespace Blazor.Server.UI.Models.Charts.Chart;
 
 public class ChartModel
 {

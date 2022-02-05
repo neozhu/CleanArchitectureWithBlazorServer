@@ -2,11 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Razor.Application.Common.Extensions;
-using CleanArchitecture.Razor.Infrastructure.Constants.Role;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using Microsoft.AspNetCore.Identity;
 using System.Reflection;
 
-namespace CleanArchitecture.Razor.Infrastructure.Persistence;
+namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
 public static class ApplicationDbContextSeed
 {

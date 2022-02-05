@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using MudDemo.Server.Models;
-using MudDemo.Server.Models.SideMenu;
+using Blazor.Server.UI.Models;
+using Blazor.Server.UI.Models.SideMenu;
 
-namespace MudDemo.Server.Components.Shared;
+namespace Blazor.Server.UI.Components.Shared;
 
 public partial class SideMenu
 {

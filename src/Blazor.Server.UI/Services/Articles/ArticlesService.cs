@@ -1,9 +1,9 @@
-using MudDemo.Server.Models.Article;
+using Blazor.Server.UI.Models.Article;
 using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-namespace MudDemo.Server.Services;
+namespace Blazor.Server.UI.Services;
 
 public class ArticlesService : IArticlesService
 {

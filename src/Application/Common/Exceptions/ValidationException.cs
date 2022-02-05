@@ -3,7 +3,7 @@
 
 using FluentValidation.Results;
 
-namespace CleanArchitecture.Razor.Application.Common.Exceptions;
+namespace CleanArchitecture.Blazor.Application.Common.Exceptions;
 
 public class ValidationException : Exception
 {

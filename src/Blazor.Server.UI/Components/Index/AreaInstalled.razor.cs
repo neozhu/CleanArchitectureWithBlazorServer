@@ -2,16 +2,16 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Utilities;
-using MudDemo.Server.Models.Charts;
-using MudDemo.Server.Models.Charts.Chart;
-using MudDemo.Server.Models.Charts.DataLabels;
-using MudDemo.Server.Models.Charts.Legend;
-using MudDemo.Server.Models.Charts.Series;
-using MudDemo.Server.Models.Charts.Tooltip;
-using MudDemo.Server.Models.Charts.XAxis;
-using MudDemo.Server.Models.Charts.YAxis;
+using Blazor.Server.UI.Models.Charts;
+using Blazor.Server.UI.Models.Charts.Chart;
+using Blazor.Server.UI.Models.Charts.DataLabels;
+using Blazor.Server.UI.Models.Charts.Legend;
+using Blazor.Server.UI.Models.Charts.Series;
+using Blazor.Server.UI.Models.Charts.Tooltip;
+using Blazor.Server.UI.Models.Charts.XAxis;
+using Blazor.Server.UI.Models.Charts.YAxis;
 
-namespace MudDemo.Server.Components.Index;
+namespace Blazor.Server.UI.Components.Index;
 
 public partial class AreaInstalled : MudComponentBase
 {

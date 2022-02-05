@@ -1,4 +1,4 @@
-namespace MudDemo.Server.Models.Application;
+namespace Blazor.Server.UI.Models.Application;
 
 public class ApplicationModel
 {

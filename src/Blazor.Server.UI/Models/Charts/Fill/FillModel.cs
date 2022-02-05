@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Fill;
+namespace Blazor.Server.UI.Models.Charts.Fill;
 
 public class FillModel
 {

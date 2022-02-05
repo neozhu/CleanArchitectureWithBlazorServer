@@ -8,7 +8,7 @@ using Serilog;
 using Serilog.Context;
 
 
-namespace CleanArchitecture.Razor.Infrastructure.Extensions;
+namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 public static class ApplicationBuilderExtensions
 {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CleanArchitecture.Razor.Application.Resources.Customers.Commands.Import {
+namespace CleanArchitecture.Blazor.Application.Resources.Customers.Commands.Import {
     using System;
     
     
@@ -39,8 +39,8 @@ namespace CleanArchitecture.Razor.Application.Resources.Customers.Commands.Impor
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Razor.Application.Resources.Customers.Commands.Import.ImportCus" +
-                            "tomersCommandHandler", typeof(ImportCustomersCommandHandler).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.Customers.Commands.Import.ImportCu" +
+                            "stomersCommandHandler", typeof(ImportCustomersCommandHandler).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

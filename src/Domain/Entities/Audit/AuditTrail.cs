@@ -3,7 +3,7 @@
 
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace CleanArchitecture.Razor.Domain.Entities.Audit;
+namespace CleanArchitecture.Blazor.Domain.Entities.Audit;
 
 public class AuditTrail : IEntity
 {

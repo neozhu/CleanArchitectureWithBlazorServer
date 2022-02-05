@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Legend;
+namespace Blazor.Server.UI.Models.Charts.Legend;
 
 public class LegendModel
 {

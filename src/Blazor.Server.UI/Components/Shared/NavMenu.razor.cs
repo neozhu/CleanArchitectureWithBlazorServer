@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Components;
-using MudDemo.Server.Models;
-using MudDemo.Server.Models.Notification;
-using MudDemo.Server.Services;
+using Blazor.Server.UI.Models;
+using Blazor.Server.UI.Models.Notification;
+using Blazor.Server.UI.Services;
 
-namespace MudDemo.Server.Components.Shared;
+namespace Blazor.Server.UI.Components.Shared;
 
 public partial class NavMenu
 {

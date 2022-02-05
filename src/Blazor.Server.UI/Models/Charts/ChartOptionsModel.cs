@@ -1,25 +1,25 @@
 using System.Text.Json.Serialization;
-using MudDemo.Server.Models.Charts.Annotations;
-using MudDemo.Server.Models.Charts.Chart;
-using MudDemo.Server.Models.Charts.DataLabels;
-using MudDemo.Server.Models.Charts.Fill;
-using MudDemo.Server.Models.Charts.ForecastDataPoints;
-using MudDemo.Server.Models.Charts.Grid;
-using MudDemo.Server.Models.Charts.Legend;
-using MudDemo.Server.Models.Charts.NoData;
-using MudDemo.Server.Models.Charts.PlotOptions;
-using MudDemo.Server.Models.Charts.Responsive;
-using MudDemo.Server.Models.Charts.Series;
-using MudDemo.Server.Models.Charts.States;
-using MudDemo.Server.Models.Charts.Stroke;
-using MudDemo.Server.Models.Charts.Subtitle;
-using MudDemo.Server.Models.Charts.Theme;
-using MudDemo.Server.Models.Charts.Title;
-using MudDemo.Server.Models.Charts.Tooltip;
-using MudDemo.Server.Models.Charts.XAxis;
-using MudDemo.Server.Models.Charts.YAxis;
+using Blazor.Server.UI.Models.Charts.Annotations;
+using Blazor.Server.UI.Models.Charts.Chart;
+using Blazor.Server.UI.Models.Charts.DataLabels;
+using Blazor.Server.UI.Models.Charts.Fill;
+using Blazor.Server.UI.Models.Charts.ForecastDataPoints;
+using Blazor.Server.UI.Models.Charts.Grid;
+using Blazor.Server.UI.Models.Charts.Legend;
+using Blazor.Server.UI.Models.Charts.NoData;
+using Blazor.Server.UI.Models.Charts.PlotOptions;
+using Blazor.Server.UI.Models.Charts.Responsive;
+using Blazor.Server.UI.Models.Charts.Series;
+using Blazor.Server.UI.Models.Charts.States;
+using Blazor.Server.UI.Models.Charts.Stroke;
+using Blazor.Server.UI.Models.Charts.Subtitle;
+using Blazor.Server.UI.Models.Charts.Theme;
+using Blazor.Server.UI.Models.Charts.Title;
+using Blazor.Server.UI.Models.Charts.Tooltip;
+using Blazor.Server.UI.Models.Charts.XAxis;
+using Blazor.Server.UI.Models.Charts.YAxis;
 
-namespace MudDemo.Server.Models.Charts;
+namespace Blazor.Server.UI.Models.Charts;
 
 public class ChartOptionsModel<TSeries, TXAxis>
 {

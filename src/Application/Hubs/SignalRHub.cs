@@ -2,12 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Concurrent;
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Razor.Application.Hubs.Constants;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Application.Hubs.Constants;
 using Microsoft.AspNetCore.SignalR;
 
 
-namespace CleanArchitecture.Razor.Application.Hubs;
+namespace CleanArchitecture.Blazor.Application.Hubs;
 
 public class SignalRHub : Hub
 {

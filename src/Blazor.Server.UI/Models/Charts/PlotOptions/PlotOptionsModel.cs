@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.PlotOptions;
+namespace Blazor.Server.UI.Models.Charts.PlotOptions;
 
 public class PlotOptionsModel
 {

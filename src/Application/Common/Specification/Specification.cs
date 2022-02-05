@@ -4,7 +4,7 @@
 using System.Linq.Expressions;
 using CleanArchitecture.Razor.Domain.Common;
 
-namespace CleanArchitecture.Razor.Application.Common.Specification;
+namespace CleanArchitecture.Blazor.Application.Common.Specification;
 
 public abstract class Specification<T> : ISpecification<T> where T : class, IEntity
 {

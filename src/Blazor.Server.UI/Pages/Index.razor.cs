@@ -1,4 +1,4 @@
-namespace MudDemo.Server.Pages;
+namespace Blazor.Server.UI.Pages;
 public partial class Index
 {
     public string Title { get; set; } = "Dashboard";

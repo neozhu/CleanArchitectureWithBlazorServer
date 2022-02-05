@@ -3,7 +3,7 @@
 
 using Microsoft.Extensions.Caching.Memory;
 
-namespace CleanArchitecture.Razor.Application.Common.Interfaces.Caching;
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 
 public interface ICacheable
 {

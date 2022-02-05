@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.DataLabels;
+namespace Blazor.Server.UI.Models.Charts.DataLabels;
 
 public class DataLabelsModel
 {

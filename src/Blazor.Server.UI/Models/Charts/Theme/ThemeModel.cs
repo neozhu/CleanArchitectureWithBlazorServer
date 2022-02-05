@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Theme;
+namespace Blazor.Server.UI.Models.Charts.Theme;
 
 public class ThemeModel
 {

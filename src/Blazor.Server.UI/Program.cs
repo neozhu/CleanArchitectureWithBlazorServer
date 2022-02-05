@@ -4,17 +4,17 @@ using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
-using MudDemo.Server.Middlewares;
-using MudDemo.Server.Models;
-using MudDemo.Server.Models.Localization;
-using MudDemo.Server.Services;
-using MudDemo.Server.Services.Authentication;
+using Blazor.Server.UI.Middlewares;
+using Blazor.Server.UI.Models;
+using Blazor.Server.UI.Models.Localization;
+using Blazor.Server.UI.Services;
+using Blazor.Server.UI.Services.Authentication;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseInMemoryDatabase("MudDemo.Server"));
+    options.UseInMemoryDatabase("Blazor.Server.UI"));
 builder.Services.AddDefaultIdentity<IdentityUser>()
        .AddRoles<IdentityRole>()
        .AddEntityFrameworkStores<ApplicationDbContext>()

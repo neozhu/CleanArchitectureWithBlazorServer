@@ -1,4 +1,4 @@
-﻿namespace MudDemo.Server.Models.Authentication
+﻿namespace Blazor.Server.UI.Models.Authentication
 {
     public class RegisterFormModel
     {

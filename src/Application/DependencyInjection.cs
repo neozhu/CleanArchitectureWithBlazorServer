@@ -1,11 +1,11 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Common.Behaviours;
+using CleanArchitecture.Blazor.Application.Common.Behaviours;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace CleanArchitecture.Razor.Application;
+namespace CleanArchitecture.Blazor.Application;
 
 public static class DependencyInjection
 {

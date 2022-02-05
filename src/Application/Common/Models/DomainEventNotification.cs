@@ -3,7 +3,7 @@
 
 using CleanArchitecture.Razor.Domain.Common;
 
-namespace CleanArchitecture.Razor.Application.Common.Models;
+namespace CleanArchitecture.Blazor.Application.Common.Models;
 
 public class DomainEventNotification<TDomainEvent> : INotification where TDomainEvent : DomainEvent
 {

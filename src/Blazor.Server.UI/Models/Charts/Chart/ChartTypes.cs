@@ -1,4 +1,4 @@
-namespace MudDemo.Server.Models.Charts.Chart;
+namespace Blazor.Server.UI.Models.Charts.Chart;
 
 public static class ChartTypes
 {

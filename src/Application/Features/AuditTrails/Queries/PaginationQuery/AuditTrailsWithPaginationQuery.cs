@@ -1,10 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Features.AuditTrails.DTOs;
+using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 using CleanArchitecture.Razor.Domain.Entities.Audit;
 
-namespace CleanArchitecture.Razor.Application.AuditTrails.Queries.PaginationQuery;
+namespace CleanArchitecture.Blazor.Application.AuditTrails.Queries.PaginationQuery;
 
 public class AuditTrailsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<AuditTrailDto>>
 {

@@ -6,12 +6,12 @@ using CleanArchitecture.Razor.Domain.Entities;
 using CleanArchitecture.Razor.Domain.Entities.Audit;
 using CleanArchitecture.Razor.Domain.Entities.Log;
 using CleanArchitecture.Razor.Domain.Enums;
-using CleanArchitecture.Razor.Infrastructure.Persistence.Extensions;
+using CleanArchitecture.Blazor.Infrastructure.Persistence.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace CleanArchitecture.Razor.Infrastructure.Persistence;
+namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<
     ApplicationUser, ApplicationRole, string,

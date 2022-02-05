@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Toolbelt.Blazor.HotKeys;
 
-namespace MudDemo.Server.Components.Shared;
+namespace Blazor.Server.UI.Components.Shared;
 
 public partial class CommandPalette : IDisposable
 {

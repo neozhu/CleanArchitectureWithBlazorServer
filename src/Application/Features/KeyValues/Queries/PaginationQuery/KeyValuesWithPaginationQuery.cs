@@ -1,12 +1,12 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Features.KeyValues.DTOs;
+using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using CleanArchitecture.Razor.Application.Features.KeyValues.Caching;
+using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 
-namespace CleanArchitecture.Razor.Application.Features.KeyValues.Queries.PaginationQuery;
+namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.PaginationQuery;
 
 public class KeyValuesWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<KeyValueDto>>, ICacheable
 {

@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
-using CleanArchitecture.Razor.Infrastructure.Extensions;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CleanArchitecture.Razor.Infrastructure.Services.Identity;
+namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 public class IdentityService : IIdentityService
 {

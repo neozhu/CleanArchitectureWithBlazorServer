@@ -1,7 +1,7 @@
 using MudBlazor;
 using MudBlazor.Utilities;
 
-namespace MudDemo.Server.Components.Index;
+namespace Blazor.Server.UI.Components.Index;
 
 public partial class MudBlazorCard : MudComponentBase
 {

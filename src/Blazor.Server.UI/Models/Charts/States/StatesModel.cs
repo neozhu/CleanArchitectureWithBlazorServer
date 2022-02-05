@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.States;
+namespace Blazor.Server.UI.Models.Charts.States;
 
 public class StatesModel
 {

@@ -1,4 +1,4 @@
-namespace MudDemo.Server.Models.SideMenu;
+namespace Blazor.Server.UI.Models.SideMenu;
 
 public class MenuSectionModel
 {

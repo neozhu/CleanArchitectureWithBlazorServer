@@ -1,4 +1,4 @@
-namespace MudDemo.Server.Models.Article;
+namespace Blazor.Server.UI.Models.Article;
 
 public class ArticlePreviewModel
 {

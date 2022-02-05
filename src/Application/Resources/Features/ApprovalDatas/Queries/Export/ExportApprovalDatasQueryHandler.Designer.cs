@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CleanArchitecture.Razor.Application.Resources.Features.ApprovalDatas.Queries.Export {
+namespace CleanArchitecture.Blazor.Application.Resources.Features.ApprovalDatas.Queries.Export {
     using System;
     
     
@@ -39,8 +39,8 @@ namespace CleanArchitecture.Razor.Application.Resources.Features.ApprovalDatas.Q
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Razor.Application.Resources.Features.ApprovalDatas.Queries.Expo" +
-                            "rt.ExportApprovalDatasQueryHandler", typeof(ExportApprovalDatasQueryHandler).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.Features.ApprovalDatas.Queries.Exp" +
+                            "ort.ExportApprovalDatasQueryHandler", typeof(ExportApprovalDatasQueryHandler).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

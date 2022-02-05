@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>CleanArchitecture.Razor.Application</RootNamespace>
-    <AssemblyName>CleanArchitecture.Razor.Application</AssemblyName>
+    <RootNamespace>CleanArchitecture.Blazor.Application</RootNamespace>
+    <AssemblyName>CleanArchitecture.Blazor.Application</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 

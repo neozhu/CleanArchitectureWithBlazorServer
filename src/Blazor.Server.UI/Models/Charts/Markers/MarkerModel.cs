@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Markers;
+namespace Blazor.Server.UI.Models.Charts.Markers;
 
 public class MarkerModel
 {

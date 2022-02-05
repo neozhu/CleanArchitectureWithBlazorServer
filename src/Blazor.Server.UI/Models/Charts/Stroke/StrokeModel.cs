@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Stroke;
+namespace Blazor.Server.UI.Models.Charts.Stroke;
 
 public class StrokeModel
 {

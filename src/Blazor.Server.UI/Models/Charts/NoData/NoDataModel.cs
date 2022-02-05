@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.NoData;
+namespace Blazor.Server.UI.Models.Charts.NoData;
 
 public class NoDataModel
 {

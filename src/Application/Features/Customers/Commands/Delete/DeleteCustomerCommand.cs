@@ -1,9 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Features.Customers.Caching;
+using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
-namespace CleanArchitecture.Razor.Application.Features.Customers.Commands.Delete;
+namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delete;
 
 public class DeleteCustomerCommand : IRequest<Result>, ICacheInvalidator
 {

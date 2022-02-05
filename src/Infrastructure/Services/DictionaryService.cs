@@ -3,7 +3,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace CleanArchitecture.Razor.Infrastructure.Services;
+namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class DictionaryService : IDictionaryService
 {

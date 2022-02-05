@@ -1,8 +1,8 @@
 using MudBlazor;
 using MudBlazor.Utilities;
-using MudDemo.Server.Models.Invoice;
+using Blazor.Server.UI.Models.Invoice;
 
-namespace MudDemo.Server.Components.Index;
+namespace Blazor.Server.UI.Components.Index;
 
 public partial class NewInvoice : MudComponentBase
 {

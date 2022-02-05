@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CleanArchitecture.Razor.Application.Resources.Documents.Queries.Export {
+namespace CleanArchitecture.Blazor.Application.Resources.Documents.Queries.Export {
     using System;
     
     
@@ -39,8 +39,8 @@ namespace CleanArchitecture.Razor.Application.Resources.Documents.Queries.Export
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Razor.Application.Resources.Documents.Queries.Export.ExportDocu" +
-                            "mentsQueryHandler", typeof(ExportDocumentsQueryHandler).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.Documents.Queries.Export.ExportDoc" +
+                            "umentsQueryHandler", typeof(ExportDocumentsQueryHandler).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -3,7 +3,7 @@
 
 using System.ComponentModel;
 
-namespace CleanArchitecture.Razor.Application.Common.Extensions;
+namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 
 public static class EnumExtensions
 {

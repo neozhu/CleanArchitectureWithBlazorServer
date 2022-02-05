@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CleanArchitecture.Razor.Infrastructure.Persistence.Migrations
+namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Migrations
 {
     public partial class initial : Migration
     {

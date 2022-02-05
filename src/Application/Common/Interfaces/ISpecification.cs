@@ -4,7 +4,7 @@
 using System.Linq.Expressions;
 using CleanArchitecture.Razor.Domain.Common;
 
-namespace CleanArchitecture.Razor.Application.Common.Interfaces;
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 
 public interface ISpecification<T> where T : class, IEntity
 {

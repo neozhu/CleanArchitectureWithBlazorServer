@@ -3,7 +3,7 @@
 
 using CleanArchitecture.Razor.Application.Common.Extensions;
 
-namespace CleanArchitecture.Razor.Infrastructure.Services;
+namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class UploadService : IUploadService
 {

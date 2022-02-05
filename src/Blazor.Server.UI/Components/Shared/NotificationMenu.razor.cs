@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using MudBlazor.Utilities;
-using MudDemo.Server.Models.Notification;
-using MudDemo.Server.Services;
+using Blazor.Server.UI.Models.Notification;
+using Blazor.Server.UI.Services;
 
-namespace MudDemo.Server.Components.Shared;
+namespace Blazor.Server.UI.Components.Shared;
 
 public partial class NotificationMenu : MudComponentBase
 {

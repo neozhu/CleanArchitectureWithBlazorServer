@@ -1,6 +1,6 @@
-using MudDemo.Server.Models.Notification;
+using Blazor.Server.UI.Models.Notification;
 
-namespace MudDemo.Server.Services;
+namespace Blazor.Server.UI.Services;
 
 public interface INotificationsService
 {

@@ -1,10 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using System.Diagnostics;
 
-namespace CleanArchitecture.Razor.Application.Common.Behaviours;
+namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
 
 public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {

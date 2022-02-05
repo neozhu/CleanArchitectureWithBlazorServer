@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Tooltip;
+namespace Blazor.Server.UI.Models.Charts.Tooltip;
 
 public class TooltipModel
 {

@@ -3,7 +3,7 @@
 
 using System.Reflection;
 
-namespace CleanArchitecture.Razor.Application.Common.Mappings;
+namespace CleanArchitecture.Blazor.Application.Common.Mappings;
 
 public class MappingProfile : Profile
 {

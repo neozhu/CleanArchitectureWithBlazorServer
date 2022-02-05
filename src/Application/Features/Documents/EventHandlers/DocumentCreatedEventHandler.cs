@@ -3,7 +3,7 @@
 
 
 
-namespace CleanArchitecture.Razor.Application.Features.Documents.EventHandlers;
+namespace CleanArchitecture.Blazor.Application.Features.Documents.EventHandlers;
 
 public class DocumentCreatedEventHandler : INotificationHandler<DomainEventNotification<DocumentCreatedEvent>>
 {

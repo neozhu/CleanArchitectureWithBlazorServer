@@ -1,4 +1,4 @@
-﻿namespace MudDemo.Server.Models.Localization;
+﻿namespace Blazor.Server.UI.Models.Localization;
 
 public record LanguageCode(string Code, string DisplayName, bool IsRTL = false);
 

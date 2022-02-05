@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CleanArchitecture.Razor.Application.Resources.DocumentTypes.Commands.Import {
+namespace CleanArchitecture.Blazor.Application.Resources.DocumentTypes.Commands.Import {
     using System;
     
     
@@ -39,8 +39,8 @@ namespace CleanArchitecture.Razor.Application.Resources.DocumentTypes.Commands.I
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Razor.Application.Resources.DocumentTypes.Commands.Import.Impor" +
-                            "tDocumentTypesCommandHandler", typeof(ImportDocumentTypesCommandHandler).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.DocumentTypes.Commands.Import.Impo" +
+                            "rtDocumentTypesCommandHandler", typeof(ImportDocumentTypesCommandHandler).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

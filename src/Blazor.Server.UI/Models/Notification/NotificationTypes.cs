@@ -1,4 +1,4 @@
-namespace MudDemo.Server.Models.Notification;
+namespace Blazor.Server.UI.Models.Notification;
 
 public enum NotificationTypes
 {

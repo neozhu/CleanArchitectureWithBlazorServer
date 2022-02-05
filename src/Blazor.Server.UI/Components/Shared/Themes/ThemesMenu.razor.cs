@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using MudDemo.Server.Models;
+using Blazor.Server.UI.Models;
 
-namespace MudDemo.Server.Components.Shared.Themes;
+namespace Blazor.Server.UI.Components.Shared.Themes;
 
 public partial class ThemesMenu
 {

@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 
-namespace CleanArchitecture.Razor.Application.Common.Extensions;
+namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 
 public static class PredicateBuilder
 {

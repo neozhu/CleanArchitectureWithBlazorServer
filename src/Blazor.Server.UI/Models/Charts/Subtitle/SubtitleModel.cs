@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Subtitle;
+namespace Blazor.Server.UI.Models.Charts.Subtitle;
 
 public class SubtitleModel
 {

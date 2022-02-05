@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace CleanArchitecture.Razor.Infrastructure.Services;
+namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class SMTPMailService : IMailService
 {

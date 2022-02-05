@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Series;
+namespace Blazor.Server.UI.Models.Charts.Series;
 
 public class SeriesModel<TSeries>
 {

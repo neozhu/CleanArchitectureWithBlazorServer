@@ -5,7 +5,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace CleanArchitecture.Razor.Infrastructure.Services;
+namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<ApplicationUser,ApplicationRole>
 {

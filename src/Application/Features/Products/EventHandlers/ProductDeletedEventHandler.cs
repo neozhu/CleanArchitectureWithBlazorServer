@@ -1,7 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Razor.Application.Features.Products.EventHandlers;
+namespace CleanArchitecture.Blazor.Application.Features.Products.EventHandlers;
 
     public class ProductDeletedEventHandler : INotificationHandler<DomainEventNotification<ProductDeletedEvent>>
     {

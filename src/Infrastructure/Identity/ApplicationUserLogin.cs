@@ -3,7 +3,7 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace CleanArchitecture.Razor.Infrastructure.Identity;
+namespace CleanArchitecture.Blazor.Infrastructure.Identity;
 
 public class ApplicationUserLogin : IdentityUserLogin<string>
 {

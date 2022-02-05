@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CleanArchitecture.Razor.Application.Resources.KeyValues.Queries.Export {
+namespace CleanArchitecture.Blazor.Application.Resources.KeyValues.Queries.Export {
     using System;
     
     
@@ -39,8 +39,8 @@ namespace CleanArchitecture.Razor.Application.Resources.KeyValues.Queries.Export
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Razor.Application.Resources.KeyValues.Queries.Export.ExportKeyV" +
-                            "aluesQueryHandler", typeof(ExportKeyValuesQueryHandler).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.KeyValues.Queries.Export.ExportKey" +
+                            "ValuesQueryHandler", typeof(ExportKeyValuesQueryHandler).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

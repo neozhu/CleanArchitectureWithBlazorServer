@@ -5,7 +5,7 @@ using CleanArchitecture.Razor.Domain.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace CleanArchitecture.Razor.Infrastructure.Services;
+namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class DomainEventService : IDomainEventService
 {

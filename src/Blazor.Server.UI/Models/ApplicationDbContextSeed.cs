@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace MudDemo.Server.Models;
+namespace Blazor.Server.UI.Models;
 public static class ApplicationDbContextSeed
 {
     public static async Task SeedDefaultUserAsync(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)

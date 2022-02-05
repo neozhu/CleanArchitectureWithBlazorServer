@@ -3,7 +3,7 @@
 
 using CleanArchitecture.Razor.Domain.Common;
 
-namespace CleanArchitecture.Razor.Application.Common.Extensions;
+namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 
 public static class QueryableExtensions
 {

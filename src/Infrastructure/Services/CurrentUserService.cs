@@ -4,7 +4,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace CleanArchitecture.Razor.Infrastructure.Services;
+namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class CurrentUserService : ICurrentUserService
 {

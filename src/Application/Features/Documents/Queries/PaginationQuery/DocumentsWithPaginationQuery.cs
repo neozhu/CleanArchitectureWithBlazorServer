@@ -1,10 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Features.Documents.DTOs;
-using CleanArchitecture.Razor.Application.Common.Specification;
+using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
+using CleanArchitecture.Blazor.Application.Common.Specification;
 
-namespace CleanArchitecture.Razor.Application.Features.Documents.Queries.PaginationQuery;
+namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 
 public class DocumentsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<DocumentDto>>
 {

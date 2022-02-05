@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CleanArchitecture.Razor.Application.Resources.KeyValues.Commands.Import {
+namespace CleanArchitecture.Blazor.Application.Resources.KeyValues.Commands.Import {
     using System;
     
     
@@ -39,8 +39,8 @@ namespace CleanArchitecture.Razor.Application.Resources.KeyValues.Commands.Impor
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Razor.Application.Resources.KeyValues.Commands.Import.ImportKey" +
-                            "ValuesCommandHandler", typeof(ImportKeyValuesCommandHandler).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.KeyValues.Commands.Import.ImportKe" +
+                            "yValuesCommandHandler", typeof(ImportKeyValuesCommandHandler).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

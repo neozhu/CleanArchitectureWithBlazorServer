@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
-using MudDemo.Server.Models;
+using Blazor.Server.UI.Models;
 
-namespace MudDemo.Server.Components.Shared;
+namespace Blazor.Server.UI.Components.Shared;
 
 public partial class UserMenu
 {

@@ -1,10 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Features.DocumentTypes.Caching;
-using CleanArchitecture.Razor.Application.Features.DocumentTypes.DTOs;
+using CleanArchitecture.Blazor.Application.Features.DocumentTypes.Caching;
+using CleanArchitecture.Blazor.Application.Features.DocumentTypes.DTOs;
 
-namespace CleanArchitecture.Razor.Application.Features.DocumentTypes.Commands.AddEdit;
+namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.AddEdit;
 
 public class AddEditDocumentTypeCommand : DocumentTypeDto, IRequest<Result<int>>, IMapFrom<DocumentType>, ICacheInvalidator
 {

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Grid;
+namespace Blazor.Server.UI.Models.Charts.Grid;
 
 public class GridModel
 {

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.XAxis;
+namespace Blazor.Server.UI.Models.Charts.XAxis;
 
 public class XAxisModel<TCategory>
 {

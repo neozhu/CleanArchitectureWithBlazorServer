@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Utilities;
-using MudDemo.Server.Models.Charts;
+using Blazor.Server.UI.Models.Charts;
 
-namespace MudDemo.Server.Components.Charts;
+namespace Blazor.Server.UI.Components.Charts;
 
 public partial class ApexChart<TSeries, TCategory> : MudComponentBase
 {

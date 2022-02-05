@@ -3,7 +3,7 @@
 
 using System.Security.Claims;
 
-namespace CleanArchitecture.Razor.Infrastructure.Extensions;
+namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 public static class ClaimsPrincipalExtensions
     {

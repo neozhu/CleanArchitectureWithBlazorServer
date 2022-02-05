@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-namespace CleanArchitecture.Razor.Application.Features.Products.Caching;
+namespace CleanArchitecture.Blazor.Application.Features.Products.Caching;
 
 public static class ProductCacheKey
 {

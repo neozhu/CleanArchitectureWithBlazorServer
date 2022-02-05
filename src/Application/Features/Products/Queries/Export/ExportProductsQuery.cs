@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-using CleanArchitecture.Razor.Application.Features.Products.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
-namespace CleanArchitecture.Razor.Application.Features.Products.Queries.Export;
+namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
 
     public class ExportProductsQuery : IRequest<byte[]>
     {

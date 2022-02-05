@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace CleanArchitecture.Razor.Infrastructure.Persistence.Extensions;
+namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Extensions;
 
 public static class ModelBuilderExtensions
 {

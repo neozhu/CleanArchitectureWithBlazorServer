@@ -3,7 +3,7 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace CleanArchitecture.Razor.Infrastructure.Extensions;
+namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 public static class IdentityResultExtensions
 {

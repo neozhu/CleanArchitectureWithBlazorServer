@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.Responsive;
+namespace Blazor.Server.UI.Models.Charts.Responsive;
 
 public class ResponsiveModel
 {

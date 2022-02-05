@@ -1,10 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Features.Customers.Caching;
-using CleanArchitecture.Razor.Application.Features.Customers.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
+using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 
-namespace CleanArchitecture.Razor.Application.Features.Customers.Commands.AddEdit;
+namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEdit;
 
 public class AddEditCustomerCommand : CustomerDto, IRequest<Result<int>>, IMapFrom<Customer>, ICacheInvalidator
 {

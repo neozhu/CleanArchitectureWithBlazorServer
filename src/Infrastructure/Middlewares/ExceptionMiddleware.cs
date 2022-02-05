@@ -4,7 +4,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
 
-namespace CleanArchitecture.Razor.Infrastructure.Middlewares;
+namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
 
 internal class ExceptionMiddleware : IMiddleware
 {

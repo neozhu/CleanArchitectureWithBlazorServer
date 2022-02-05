@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MudDemo.Server.Models.Charts.YAxis;
+namespace Blazor.Server.UI.Models.Charts.YAxis;
 
 public class YAxisModel
 {

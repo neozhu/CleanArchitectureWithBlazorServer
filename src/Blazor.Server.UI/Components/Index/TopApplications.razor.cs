@@ -1,8 +1,8 @@
 using MudBlazor;
 using MudBlazor.Utilities;
-using MudDemo.Server.Models.Application;
+using Blazor.Server.UI.Models.Application;
 
-namespace MudDemo.Server.Components.Index;
+namespace Blazor.Server.UI.Components.Index;
 
 public partial class TopApplications : MudComponentBase
 {
