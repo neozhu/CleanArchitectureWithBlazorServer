@@ -4,13 +4,11 @@ using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
-using Blazor.Server.UI.Middlewares;
-using Blazor.Server.UI.Models;
-using Blazor.Server.UI.Models.Localization;
 using Blazor.Server.UI.Services;
 using Blazor.Server.UI.Services.Authentication;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
-
+using CleanArchitecture.Blazor.Infrastructure.Persistence;
+using CleanArchitecture.Blazor.Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -36,17 +34,9 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 builder.Services.AddTransient<INotificationsService, NotificationsService>();
 builder.Services.AddTransient<IArticlesService, ArticlesService>();
 
-builder.Services.AddScoped<LocalizationCookiesMiddleware>();
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    // set the default culture
-    //options.DefaultRequestCulture = new RequestCulture("en-US");
-    options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
-    options.AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
-    options.FallBackToParentUICultures = true;
-});
+
+
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddScoped<IHostEnvironmentAuthenticationStateProvider>(sp => {
     // this is safe because 
@@ -62,10 +52,17 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+        if (context.Database.IsSqlServer())
+        {
+            context.Database.Migrate();
+        }
+
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
 
         await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
+        await ApplicationDbContextSeed.SeedSampleDataAsync(context);
     }
     catch (Exception ex)
     {
@@ -77,11 +74,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.UseRequestLocalization(options => {
-    options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
-    options.AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
-});
-app.UseMiddleware<LocalizationCookiesMiddleware>();
+
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
