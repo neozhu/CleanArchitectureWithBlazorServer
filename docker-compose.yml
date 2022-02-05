@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  webui:
+    image: ${DOCKER_REGISTRY-}webui
+    build:
+      context: .
+      dockerfile: src/SmartAdmin.WebUI/Dockerfile
+    environment:
+      - "UseInMemoryDatabase=false"
+      - "ConnectionStrings__DefaultConnection=Server=db;Database=CleanArchitectureDb.slim;User=sa;Password=Password@123;MultipleActiveResultSets=true"
+      - "ASPNETCORE_URLS=https://+;http://+"
+      - "ASPNETCORE_HTTPS_PORT=5001"
+      - "ASPNETCORE_ENVIRONMENT=Development"
+    volumes:
+     - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
+     - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https
+    ports:
+      - "5000:80"
+      - "5001:443"
+    depends_on:
+      - db
+    restart: on-failure
+
+  db:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    environment:
+      - "SA_PASSWORD=Password@123"
+      - "ACCEPT_EULA=Y"
+      - MSSQL_DATA_DIR=/var/opt/mssql/data
+      - MSSQL_LOG_DIR=/var/opt/mssql/log
+      - MSSQL_BACKUP_DIR=/var/opt/mssql/backup
+    ports:
+      - "1433:1433"
+    volumes:
+      - ${USERPROFILE}\mssql_data:/var/opt/mssql/data
+      - ${USERPROFILE}\mssql_log:/var/opt/mssql/log
+      - ${USERPROFILE}\mssql_backup:/var/opt/mssql/backup
+volumes:
+  mssql_data:
+  mssql_log:
+  mssql_backup:
