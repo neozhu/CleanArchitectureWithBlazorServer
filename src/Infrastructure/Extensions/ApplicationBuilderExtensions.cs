@@ -1,5 +1,5 @@
-using CleanArchitecture.Razor.Application.Hubs;
-using CleanArchitecture.Razor.Application.Hubs.Constants;
+using CleanArchitecture.Blazor.Application.Hubs;
+using CleanArchitecture.Blazor.Application.Hubs.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;

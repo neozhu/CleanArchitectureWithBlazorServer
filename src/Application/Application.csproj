@@ -33,12 +33,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <Folder Include="Resources\Documents\Commands\Import\" />
+    <Folder Include="Resources\Features\ApprovalDatas\Commands\Import\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\Documents\Commands\Import\" />
-    <Folder Include="Resources\Features\ApprovalDatas\Commands\Import\" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

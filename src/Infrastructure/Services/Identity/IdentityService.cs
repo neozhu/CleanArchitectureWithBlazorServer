@@ -1,7 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Razor.Application.Common.Interfaces.Identity.DTOs;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

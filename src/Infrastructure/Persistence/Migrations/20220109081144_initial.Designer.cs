@@ -24,7 +24,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Audit.AuditTrail", b =>
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Audit.AuditTrail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,7 +62,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Migrations
                     b.ToTable("AuditTrails");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Customer", b =>
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,7 +130,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Document", b =>
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Document", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -172,7 +172,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Migrations
                     b.ToTable("Documents");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.DocumentType", b =>
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.DocumentType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -203,7 +203,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Migrations
                     b.ToTable("DocumentTypes");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.KeyValue", b =>
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.KeyValue", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -240,7 +240,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Migrations
                     b.ToTable("KeyValues");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Log.Logger", b =>
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Log.Logger", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -283,7 +283,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Migrations
                     b.ToTable("Loggers");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Product", b =>
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -549,9 +549,9 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Razor.Domain.Entities.Document", b =>
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Document", b =>
                 {
-                    b.HasOne("CleanArchitecture.Razor.Domain.Entities.DocumentType", "DocumentType")
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Entities.DocumentType", "DocumentType")
                         .WithMany()
                         .HasForeignKey("DocumentTypeId")
                         .OnDelete(DeleteBehavior.Cascade)

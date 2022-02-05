@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Text.Json;
-using CleanArchitecture.Razor.Domain.Entities.Audit;
+using CleanArchitecture.Blazor.Domain.Entities.Audit;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 

@@ -20,7 +20,7 @@ public static class DependencyInjection
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase("CleanArchitecture.RazorDb")
+                options.UseInMemoryDatabase("CleanArchitecture.BlazorDb")
                 );
 
          
