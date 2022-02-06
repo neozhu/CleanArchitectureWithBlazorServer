@@ -8,8 +8,10 @@
 <ErrorBoundary>
     <ChildContent>
     
-        <MudTable Items="@UserList" Hover="true" SortLabel="Sort By">
-            <ToolBarContent>
+        <MudTable Items="@UserList"
+            FixedHeader="true" FixedFooter="true" Height="calc(100vh - 296px)"
+            Hover="true" MultiSelection="true" SortLabel="Sort By" Filter="new Func<ApplicationUser,bool>(_quickFilter)">
+            <ToolBarContent style="height:84px">
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">Users</MudText>
                     @if (_canCreate)
@@ -35,14 +37,22 @@
                 }
             </ToolBarContent>
             <HeaderContent>
-                <MudTh>User Name</MudTh>
-                <MudTh>Dispaly Name</MudTh>
-               
+                <MudTh>@L["Site"]</MudTh>
+                <MudTh>@L["User Name"]</MudTh>
+                <MudTh>@L["Dispaly Name"]</MudTh>
+                <MudTh>@L["Email"]</MudTh>
+                <MudTh>@L["Phone Number"]</MudTh>
+                <MudTh>@L["Is Active"]</MudTh>
+                <MudTh>@L["Lock Status"]</MudTh>
             </HeaderContent>
             <RowTemplate>
+                <MudTd DataLabel="Site">@context.Site</MudTd>
                 <MudTd DataLabel="UserName">@context.UserName</MudTd>
                 <MudTd DataLabel="DisplayName">@context.DisplayName</MudTd>
-               
+                <MudTd DataLabel="Email">@context.Email</MudTd>
+                <MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
+                <MudTd DataLabel="IsActive">@context.IsActive</MudTd>
+                <MudTd DataLabel="LockoutEnd">@context.LockoutEnd</MudTd>
             </RowTemplate>
             <PagerContent>
                 <MudTablePager />
