@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web
 @using Blazor.Server.UI
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
@@ -30,6 +30,8 @@
     <script src="_framework/blazor.server.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="~/js/apex-chart-wrapper.js"></script>
+   <script src="~/js/apex-chart-wrapper.js"></script>
+    @await RenderSectionAsync("scripts",false)
+   
 </body>
 </html>

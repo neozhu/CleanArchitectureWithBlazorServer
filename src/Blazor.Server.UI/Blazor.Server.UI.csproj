@@ -8,9 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Blazored.LocalStorage" Version="4.1.5" />
+        <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
         <PackageReference Include="FluentValidation" Version="10.3.6" />
-       <PackageReference Include="MudBlazor" Version="6.0.5" />
+       <PackageReference Include="MudBlazor" Version="6.0.6" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys" Version="12.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.1" />
@@ -52,6 +52,7 @@
 
     <ItemGroup>
       <Folder Include="Files\" />
+      <Folder Include="Pages\Identity\Roles\" />
     </ItemGroup>
 
 </Project>

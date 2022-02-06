@@ -1,0 +1,101 @@
+@page "/indentity/users"
+@using Microsoft.AspNetCore.Identity
+
+@attribute [Authorize(Policy = Permissions.Users.View)]
+@inject IStringLocalizer<Users> L
+<PageTitle>@Title</PageTitle>
+
+<ErrorBoundary>
+    <ChildContent>
+    
+        <MudTable Items="@UserList" Hover="true" SortLabel="Sort By">
+            <ToolBarContent>
+                <div class="justify-start pt-3">
+                    <MudText Typo="Typo.h6">Users</MudText>
+                    @if (_canCreate)
+                    {
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            StartIcon="@Icons.Material.Filled.Add"
+                            Size="Size.Small"
+                            IconColor="Color.Surface">@L["Create"]</MudButton>
+                    }
+                    <MudButton DisableElevation Variant="Variant.Outlined"
+                        Size="Size.Small"
+                        StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary"
+                        Style="margin-left: 5px;">@L["Refresh"]</MudButton>
+                </div>
+                <MudSpacer />
+                @if (_canSearch )
+                {
+                    <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth="false"
+                        Placeholder="@(L["Search for user name"])" Adornment="Adornment.End"
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"
+                        >
+                    </MudTextField>
+                }
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>User Name</MudTh>
+                <MudTh>Dispaly Name</MudTh>
+               
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="UserName">@context.UserName</MudTd>
+                <MudTd DataLabel="DisplayName">@context.DisplayName</MudTd>
+               
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </ChildContent>
+    <ErrorContent>
+        <MudAlert Class="mt-auto" Severity="Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+    private IEnumerable<ApplicationUser> UserList = new List<ApplicationUser>();
+    private string _searchString;
+    private bool _sortNameByLength;
+    public string? Title { get; private set; }
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject]
+    protected IAuthorizationService AuthService { get; set; } = default!;
+    [Inject]
+    private UserManager<ApplicationUser> _userManager { get; set; }
+
+    private bool _canCreate;
+    private bool _canSearch;
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L["Users"];
+        var state = await AuthState;
+         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
+         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
+        
+        UserList = await _userManager.Users.ToListAsync();
+
+    }
+    private Func<ApplicationUser, bool> _quickFilter => x =>
+       {
+           if (string.IsNullOrWhiteSpace(_searchString))
+               return true;
+
+           if (x.UserName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+               return true;
+
+           if (x.DisplayName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+               return true;
+
+           if ($"{x.Email} {x.PhoneNumber} {x.Site}".Contains(_searchString))
+               return true;
+
+           return false;
+       };
+    private void click()
+    {
+        throw new Exception("test");
+    }
+}

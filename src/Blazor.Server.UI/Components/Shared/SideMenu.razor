@@ -4,6 +4,7 @@
            Class="side-menu"
            Elevation="0"
            Open="SideMenuDrawerOpen"
+           OpenChanged="@(e => SideMenuDrawerOpenChanged.InvokeAsync(e))"
            Variant="DrawerVariant.Responsive"
            >
     <MudDrawerHeader Class="align-center d-flex align-center pa-0">
