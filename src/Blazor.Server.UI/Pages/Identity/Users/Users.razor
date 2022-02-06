@@ -4,48 +4,122 @@
 @attribute [Authorize(Policy = Permissions.Users.View)]
 @inject IStringLocalizer<Users> L
 <PageTitle>@Title</PageTitle>
-
+<style>
+    .mud-toolbar {
+        height: 84px !important;
+    }
+</style>
 <ErrorBoundary>
     <ChildContent>
-    
+
         <MudTable Items="@UserList"
-            FixedHeader="true" FixedFooter="true" Height="calc(100vh - 296px)"
-            Hover="true" MultiSelection="true" SortLabel="Sort By" Filter="new Func<ApplicationUser,bool>(_quickFilter)">
-            <ToolBarContent style="height:84px">
+                  FixedHeader="true"
+                  FixedFooter="true"
+                  Height="calc(100vh - 296px)"
+                  Hover="true"
+                  MultiSelection="true"
+                  SelectedItems="@SelectItems"
+                  SortLabel="Sort By"
+                  Filter="new Func<ApplicationUser,bool>(_quickFilter)">
+            <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">Users</MudText>
+                    <MudButton DisableElevation Variant="Variant.Outlined"
+                               Size="Size.Small"
+                               StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                               Style="margin-right: 5px;">@L["Refresh"]</MudButton>
                     @if (_canCreate)
                     {
                         <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                            StartIcon="@Icons.Material.Filled.Add"
-                            Size="Size.Small"
-                            IconColor="Color.Surface">@L["Create"]</MudButton>
+                               StartIcon="@Icons.Material.Filled.Add"
+                               Size="Size.Small"
+                               Style="margin-right: 5px;"
+                               IconColor="Color.Surface">@L["Create"]</MudButton>
                     }
-                    <MudButton DisableElevation Variant="Variant.Outlined"
-                        Size="Size.Small"
-                        StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary"
-                        Style="margin-left: 5px;">@L["Refresh"]</MudButton>
+                    @if (_canDelete)
+                    {
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                               StartIcon="@Icons.Material.Filled.Delete"
+                               Disabled="@(!(SelectItems.Count>0))"
+                               Size="Size.Small"
+                               Style="margin-right: 5px;"
+                               IconColor="Color.Surface">@L["Delete"]</MudButton>
+                    }
+                    @if (_canImport)
+                    {
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Upload"
+                               Size="Size.Small"
+                               Style="margin-right: 5px;"
+                               IconColor="Color.Surface">@L["Import Data"]</MudButton>
+                    }
+                    @if (_canExport)
+                    {
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Download"
+                               Size="Size.Small"
+                               Style="margin-right: 5px;"
+                               IconColor="Color.Surface">@L["Export Data"]</MudButton>
+                    }
                 </div>
                 <MudSpacer />
-                @if (_canSearch )
+                @if (_canSearch)
                 {
                     <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth="false"
-                        Placeholder="@(L["Search for user name"])" Adornment="Adornment.End"
-                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"
-                        >
+                              Placeholder="@(L["Search for user name"])" Adornment="Adornment.End"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3">
                     </MudTextField>
                 }
             </ToolBarContent>
             <HeaderContent>
-                <MudTh>@L["Site"]</MudTh>
-                <MudTh>@L["User Name"]</MudTh>
-                <MudTh>@L["Dispaly Name"]</MudTh>
-                <MudTh>@L["Email"]</MudTh>
-                <MudTh>@L["Phone Number"]</MudTh>
-                <MudTh>@L["Is Active"]</MudTh>
+                <MudTh>@L["Actions"]</MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Site)">@L["Site"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.DisplayName)">@L["Dispaly Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Email)">@L["Email"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.PhoneNumber)">@L["Phone Number"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.IsActive)">@L["Is Active"]</MudTableSortLabel></MudTh>
                 <MudTh>@L["Lock Status"]</MudTh>
             </HeaderContent>
             <RowTemplate>
+                <MudTd DataLabel="Actions">
+                    @if(_canEdit || _canManageRoles || _canRestPassword || _canActive) {
+                    <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
+                             EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
+                             OffsetX="true">
+                        @if (_canEdit)
+                        {
+                            <MudMenuItem>@L["Edit"]</MudMenuItem>
+                        }
+                        @if (_canActive)
+                        {
+                            @if (context.IsActive)
+                            {
+                                <MudMenuItem>@L["Set Inactive"]</MudMenuItem>
+                            }
+                            else
+                            {
+                                <MudMenuItem>@L["Set Active"]</MudMenuItem>
+                            }
+
+                        }
+                        @if (_canRestPassword)
+                        {
+                            <MudMenuItem>@L["Rest Password"]</MudMenuItem>
+                        }
+                        @if (_canManageRoles)
+                        {
+                            <MudMenuItem>@L["Manage Roles"]</MudMenuItem>
+                        }
+                    </MudMenu>
+                    } else {
+                    <MudButton Variant="Variant.Filled" DisableElevation="true"
+                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                               Color="Color.Surface">
+                        @L["No Allowed"]
+                    </MudButton>
+                    }
+                </MudTd>
                 <MudTd DataLabel="Site">@context.Site</MudTd>
                 <MudTd DataLabel="UserName">@context.UserName</MudTd>
                 <MudTd DataLabel="DisplayName">@context.DisplayName</MudTd>
@@ -58,6 +132,8 @@
                 <MudTablePager />
             </PagerContent>
         </MudTable>
+
+
     </ChildContent>
     <ErrorContent>
         <MudAlert Class="mt-auto" Severity="Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
@@ -65,7 +141,10 @@
 </ErrorBoundary>
 
 @code {
+
+
     private IEnumerable<ApplicationUser> UserList = new List<ApplicationUser>();
+    private HashSet<ApplicationUser> SelectItems = new HashSet<ApplicationUser>();
     private string _searchString;
     private bool _sortNameByLength;
     public string? Title { get; private set; }
@@ -78,13 +157,26 @@
 
     private bool _canCreate;
     private bool _canSearch;
+    private bool _canEdit;
+    private bool _canDelete;
+    private bool _canActive;
+    private bool _canManageRoles;
+    private bool _canRestPassword;
+    private bool _canImport;
+    private bool _canExport;
     protected override async Task OnInitializedAsync()
     {
         Title = L["Users"];
         var state = await AuthState;
-         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
-         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
-        
+        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
+        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
+        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Edit)).Succeeded;
+        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Delete)).Succeeded;
+        _canActive = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Active)).Succeeded;
+        _canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
+        _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
+        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
+        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         UserList = await _userManager.Users.ToListAsync();
 
     }
