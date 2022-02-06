@@ -2,12 +2,14 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Blazor.Server.UI.Models;
 using Blazor.Server.UI.Models.SideMenu;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Blazor.Server.UI.Components.Shared;
 
 public partial class SideMenu
 {
-    private List<MenuSectionModel> _menuSections = new()
+    private List<MenuSectionModel>? _menuSections = new()
     {
         new MenuSectionModel
         {
@@ -117,4 +119,25 @@ public partial class SideMenu
     [EditorRequired] [Parameter] public bool SideMenuDrawerOpen { get; set; } 
     [EditorRequired] [Parameter] public EventCallback<bool> SideMenuDrawerOpenChanged { get; set; }
     [EditorRequired] [Parameter] public UserModel User { get; set; } = default!;
+
+    private  JsonSerializerOptions _defaultSettings => serializerSettings();
+    private  JsonSerializerOptions serializerSettings(bool indented = true)
+    {
+        var options = new JsonSerializerOptions
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            WriteIndented = indented,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
+        options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+
+        return options;
+    }
+    protected override Task OnInitializedAsync()
+    {
+        var jsonText = File.ReadAllText("nav.json");
+        _menuSections = JsonSerializer.Deserialize<List<MenuSectionModel>>(jsonText, _defaultSettings);
+        return Task.CompletedTask;
+    }
 }

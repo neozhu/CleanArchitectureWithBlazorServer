@@ -1,4 +1,4 @@
-﻿@page "/pages/authentication/login"
+@page "/pages/authentication/login"
 @using System.Text.RegularExpressions
 @using Microsoft.AspNetCore.DataProtection
 @using Microsoft.AspNetCore.Identity
@@ -13,12 +13,11 @@
     <MudText>Don't have an account? <MudLink Href="/pages/authentication/register">Sign Up</MudLink></MudText>
 
     <MudTextField T="string"
-                  @bind-Value="model.Email" For="@(() => model.Email)"
-                  Label="E-mail"
+                  @bind-Value="model.UserName" For="@(() => model.UserName)"
+                  Label="User Name"
                   Variant="Variant.Outlined"
                   Required="true"
-                  RequiredError="e-mail is required!"
-                  Validation="@(new Func<string, IEnumerable<string>>(IsValidEmail))"
+                  RequiredError="User name is required!"
                   Class="my-6"></MudTextField>
 
     <MudTextField @bind-Value="model.Password" For="@(() => model.Password)"
@@ -45,16 +44,13 @@
                FullWidth="true">Sign In</MudButton>
 </EditForm>
 @code {
-    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
-    [Inject] private IHostEnvironmentAuthenticationStateProvider HostAuthentication { get; set; }
-    [Inject] private UserManager<IdentityUser> userManager { get; set; }
-    [Inject] private SignInManager<IdentityUser> signInManager { get; set; }
+    [Inject] private UserManager<ApplicationUser> userManager { get; set; }
     [Inject] private NavigationManager _navigation { get; set; }
     [Inject] private IDataProtectionProvider dataProtectionProvider { get; set; }
     LoginFormModel model = new LoginFormModel()
         {
-            Email = "root@mudblazor.com",
-            Password = "Root@123!",
+            UserName = "administrator",
+            Password = "Password123!",
             RememberMe = true
         };
 
@@ -78,19 +74,6 @@
         if (!Regex.IsMatch(pw, @"[0-9]"))
             yield return "Password must contain at least one digit";
     }
-    private IEnumerable<string> IsValidEmail(string input)
-    {
-        if (string.IsNullOrWhiteSpace(input))
-        {
-            yield return "e-mail is required!";
-            yield break;
-        }
-        if (!new EmailAddressAttribute().IsValid(input))
-        {
-            yield return "e-mail is required!";
-            yield break;
-        }
-    }
 
     void TogglePasswordVisibility()
     {
@@ -111,46 +94,33 @@
     {
         if (context.Validate())
         {
-            var user = await userManager.FindByEmailAsync(model.Email);
-            var valid = await signInManager.UserManager.CheckPasswordAsync(user, model.Password);
+            var user = await userManager.FindByNameAsync(model.UserName);
+            var valid = await userManager.CheckPasswordAsync(user, model.Password);
 
             if (valid)
             {
-                //var principal = await signInManager.CreateUserPrincipalAsync(user);
 
-                //var identity = new ClaimsIdentity(
-                //    principal.Claims,
-                //    Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme
-                //);
-                //principal = new System.Security.Claims.ClaimsPrincipal(identity);
-                //signInManager.Context.User = principal;
-                //HostAuthentication.SetAuthenticationState(Task.FromResult(new AuthenticationState(principal)));
-                //// now the authState is updated
-                //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                //if (authState.User.Identity?.IsAuthenticated is true)
-                //{
-                    //_navigation.NavigateTo("/");
-                    var token = await userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "SignIn");
+                var token = await userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "SignIn");
 
-                    var data = $"{user.Id}|{token}";
+                var data = $"{user.Id}|{token}";
 
-                    var parsedQuery = System.Web.HttpUtility.ParseQueryString(new Uri(_navigation.Uri).Query);
+                var parsedQuery = System.Web.HttpUtility.ParseQueryString(new Uri(_navigation.Uri).Query);
 
-                    var returnUrl = parsedQuery["returnUrl"];
+                var returnUrl = parsedQuery["returnUrl"];
 
-                    if (!string.IsNullOrWhiteSpace(returnUrl))
-                    {
-                        data += $"|{returnUrl}";
-                    }
+                if (!string.IsNullOrWhiteSpace(returnUrl))
+                {
+                    data += $"|{returnUrl}";
+                }
 
-                    var protector = dataProtectionProvider.CreateProtector("SignIn");
+                var protector = dataProtectionProvider.CreateProtector("SignIn");
 
-                    var pdata = protector.Protect(data);
+                var pdata = protector.Protect(data);
 
-                    _navigation.NavigateTo("/account/signinactual?t=" + pdata, forceLoad: true);
-                //}
+                _navigation.NavigateTo("/account/signinactual?t=" + pdata, forceLoad: true);
+
             }
-            //StateHasChanged();
+
         }
 
     }

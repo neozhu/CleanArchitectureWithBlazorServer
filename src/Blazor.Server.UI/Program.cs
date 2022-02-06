@@ -1,35 +1,38 @@
 using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Blazor.Server.UI.Services;
-using Blazor.Server.UI.Services.Authentication;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using CleanArchitecture.Blazor.Infrastructure.Identity;
+using CleanArchitecture.Blazor.Infrastructure;
+using CleanArchitecture.Blazor.Application;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseInMemoryDatabase("Blazor.Server.UI"));
-builder.Services.AddDefaultIdentity<IdentityUser>()
-       .AddRoles<IdentityRole>()
-       .AddEntityFrameworkStores<ApplicationDbContext>()
-       .AddDefaultTokenProviders();
 
-builder.Services.AddRazorPages();
+builder.WebHost.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
+                .MinimumLevel.Override("Serilog", LogEventLevel.Error)
+          .Enrich.FromLogContext()
+          .Enrich.WithClientIp()
+          .Enrich.WithClientAgent()
+          .WriteTo.Console()
+    );
+
+builder.Services.AddInfrastructure(builder.Configuration)
+        .AddApplication();
+
+
 builder.Services.AddMudServices();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddHotKeys();
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.Configure<CookiePolicyOptions>(options =>
-{
-    options.CheckConsentNeeded = context => true;
-    options.MinimumSameSitePolicy = SameSiteMode.None;
-});
-
-
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7226/") });
 builder.Services.AddTransient<INotificationsService, NotificationsService>();
 builder.Services.AddTransient<IArticlesService, ArticlesService>();
@@ -37,13 +40,7 @@ builder.Services.AddTransient<IArticlesService, ArticlesService>();
 
 
 
-builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-builder.Services.AddScoped<IHostEnvironmentAuthenticationStateProvider>(sp => {
-    // this is safe because 
-    //     the `RevalidatingIdentityAuthenticationStateProvider` extends the `ServerAuthenticationStateProvider`
-    var provider = (ServerAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>();
-    return provider;
-});
+
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
@@ -83,16 +80,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-app.UseCookiePolicy();
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseHttpsRedirection();
-
-app.UseStaticFiles();
-
-app.UseRouting();
-app.MapControllers();
+app.UseInfrastructure(builder.Configuration);
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 

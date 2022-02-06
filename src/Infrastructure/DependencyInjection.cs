@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using FluentValidation.AspNetCore;
+using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -102,31 +103,17 @@ public static class DependencyInjection
             options.FallBackToParentUICultures = true;
 
         });
+        services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
+        services.AddScoped<IHostEnvironmentAuthenticationStateProvider>(sp => {
+            // this is safe because 
+            //     the `RevalidatingIdentityAuthenticationStateProvider` extends the `ServerAuthenticationStateProvider`
+            var provider = (ServerAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>();
+            return provider;
+        });
+
         services.AddControllers();
         services.AddSignalR();
-        services.AddRazorPages(options =>
-                 {
-                     options.Conventions.AddPageRoute("/AspNetCore/Welcome", "");
-                 })
-                .AddFluentValidation(fv =>
-                 {
-                     fv.DisableDataAnnotationsValidation = true;
-                     fv.ImplicitlyValidateChildProperties = true;
-                     fv.ImplicitlyValidateRootCollectionElements = true;
-                 })
-                 .AddViewLocalization()
-                 .AddJsonOptions(options =>
-                 {
-                     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 
-                 }) ;
-
-
-        services.ConfigureApplicationCookie(options => {
-            options.LoginPath = "/Identity/Account/Login";
-            options.LogoutPath = "/Identity/Account/Logout";
-            options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-        });
         return services;
     }
 

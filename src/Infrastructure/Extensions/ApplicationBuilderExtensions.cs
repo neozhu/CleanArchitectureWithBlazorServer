@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
 using Serilog.Context;
-
+using Microsoft.AspNetCore.Components.Server;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
@@ -43,9 +43,6 @@ public static class ApplicationBuilderExtensions
         app.UseAuthentication();
         app.UseAuthorization();
        
-       // app.UseWorkflow();
-       
-
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
@@ -53,7 +50,7 @@ public static class ApplicationBuilderExtensions
             endpoints.MapHub<SignalRHub>(SignalR.HubUrl);
         });
 
- 
+   
 
         return app;
     }
