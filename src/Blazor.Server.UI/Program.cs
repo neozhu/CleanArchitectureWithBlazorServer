@@ -30,6 +30,7 @@ builder.Services.AddInfrastructure(builder.Configuration)
 
 
 builder.Services.AddMudServices();
+builder.Services.AddMudBlazorDialog();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddHotKeys();
 builder.Services.AddBlazoredLocalStorage();

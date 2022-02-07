@@ -84,41 +84,44 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Actions">
-                    @if(_canEdit || _canManageRoles || _canRestPassword || _canActive) {
-                    <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
+                    @if (_canEdit || _canManageRoles || _canRestPassword || _canActive)
+                    {
+                        <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
                              EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
-                        @if (_canEdit)
-                        {
-                            <MudMenuItem>@L["Edit"]</MudMenuItem>
-                        }
-                        @if (_canActive)
-                        {
-                            @if (context.IsActive)
+                            @if (_canEdit)
                             {
-                                <MudMenuItem>@L["Set Inactive"]</MudMenuItem>
+                                <MudMenuItem OnClick=@(()=>OnEdit(context))>@L["Edit"]</MudMenuItem>
                             }
-                            else
+                            @if (_canActive)
                             {
-                                <MudMenuItem>@L["Set Active"]</MudMenuItem>
-                            }
+                                @if (context.IsActive)
+                                {
+                                    <MudMenuItem>@L["Set Inactive"]</MudMenuItem>
+                                }
+                                else
+                                {
+                                    <MudMenuItem>@L["Set Active"]</MudMenuItem>
+                                }
 
-                        }
-                        @if (_canRestPassword)
-                        {
-                            <MudMenuItem>@L["Rest Password"]</MudMenuItem>
-                        }
-                        @if (_canManageRoles)
-                        {
-                            <MudMenuItem>@L["Manage Roles"]</MudMenuItem>
-                        }
-                    </MudMenu>
-                    } else {
-                    <MudButton Variant="Variant.Filled" DisableElevation="true"
+                            }
+                            @if (_canRestPassword)
+                            {
+                                <MudMenuItem>@L["Rest Password"]</MudMenuItem>
+                            }
+                            @if (_canManageRoles)
+                            {
+                                <MudMenuItem>@L["Manage Roles"]</MudMenuItem>
+                            }
+                        </MudMenu>
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" DisableElevation="true"
                                StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
-                        @L["No Allowed"]
-                    </MudButton>
+                            @L["No Allowed"]
+                        </MudButton>
                     }
                 </MudTd>
                 <MudTd DataLabel="Site">@context.Site</MudTd>
@@ -198,10 +201,49 @@
            return false;
        };
 
-    private void OnCreate()
+    private async void OnCreate()
     {
-        var parameters = new DialogParameters { ["model"]=new UserFormModel() };
-        var options = new DialogOptions { CloseOnEscapeKey = true };
-        DialogService.Show<_UserFormDialog>(L["Create a new user"],parameters, options);
+        var model = new UserFormModel();
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var applicationUser = new ApplicationUser()
+                {
+                    DisplayName = model.DisplayName,
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    ProfilePictureDataUrl = model.ProfilePictureDataUrl
+                };
+            var password = model.Password;
+
+        }
+    }
+    private async Task OnEdit(ApplicationUser item)
+    {
+        var model = new UserFormModel()
+            {
+                DisplayName = item.DisplayName,
+                UserName = item.UserName,
+                Email = item.Email,
+                PhoneNumber = item.PhoneNumber,
+                ProfilePictureDataUrl = item.ProfilePictureDataUrl
+            };
+
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            item.DisplayName = model.DisplayName;
+            item.UserName = model.UserName;
+            item.Email = model.Email;
+            item.PhoneNumber = model.PhoneNumber;
+            item.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
+        }
     }
 }

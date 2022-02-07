@@ -2,7 +2,7 @@
 @inject IStringLocalizer<Users> L
 <MudDialog>
     <DialogContent>
-        <_UserForm></_UserForm>
+        <_UserForm @ref="@_userForm" model="model" OnFormSubmit="OnFormSubmitHandler"></_UserForm>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@L["Cancle"]</MudButton>
@@ -11,7 +11,20 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    private _UserForm _userForm=default!;
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public UserFormModel model { get; set; } = default;
+    void Submit() {
+        _userForm.Submit();
+
+    }
     void Cancel() => MudDialog.Cancel();
+
+    protected  Task OnFormSubmitHandler(UserFormModel model)
+    {
+        MudDialog.Close(DialogResult.Ok(model));
+        return Task.CompletedTask;
+    }
 }
