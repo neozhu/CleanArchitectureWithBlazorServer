@@ -52,7 +52,7 @@
 
     <ItemGroup>
       <Folder Include="Files\" />
-      <Folder Include="Pages\Identity\Roles\" />
+      <Folder Include="Files\" />
     </ItemGroup>
 
 </Project>

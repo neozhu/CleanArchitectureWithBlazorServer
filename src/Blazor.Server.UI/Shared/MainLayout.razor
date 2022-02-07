@@ -1,5 +1,5 @@
 @inherits LayoutComponentBase;
-
+@inject IStringLocalizer<MainLayout> L
 <MudRTLProvider RightToLeft="@_rightToLeft">
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -14,7 +14,7 @@
                         <MudIcon Icon="@Icons.Custom.Brands.MudBlazor" Size="Size.Large" Style="width:100px; height:100px;" />
                         @Body
                     </MudPaper>
-                    <MudAlert Severity="Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">No authentication is required, click sign in.</MudAlert>
+                    <MudAlert Severity="Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["authentication is required, click sign in."]</MudAlert>
                 </div>
             </MudContainer>
         </NotAuthorized>

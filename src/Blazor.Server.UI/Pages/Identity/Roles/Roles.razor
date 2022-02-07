@@ -1,8 +1,8 @@
-@page "/indentity/users"
+@page "/indentity/roles"
 @using Microsoft.AspNetCore.Identity
 
-@attribute [Authorize(Policy = Permissions.Users.View)]
-@inject IStringLocalizer<Users> L
+@attribute [Authorize(Policy = Permissions.Roles.View)]
+@inject IStringLocalizer<Roles> L
 <PageTitle>@Title</PageTitle>
 <style>
     .mud-toolbar {
@@ -12,7 +12,7 @@
 <ErrorBoundary>
     <ChildContent>
 
-        <MudTable Items="@UserList"
+        <MudTable Items="@RoleList"
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 296px)"
@@ -20,10 +20,10 @@
                   MultiSelection="true"
                   SelectedItems="@SelectItems"
                   SortLabel="Sort By"
-                  Filter="new Func<ApplicationUser,bool>(_quickFilter)">
+                  Filter="new Func<ApplicationRole,bool>(_quickFilter)">
             <ToolBarContent>
                 <div class="justify-start pt-3">
-                    <MudText Typo="Typo.h6">Users</MudText>
+                    <MudText Typo="Typo.h6">Roles</MudText>
                     <MudButton DisableElevation Variant="Variant.Outlined"
                                Size="Size.Small"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
@@ -66,24 +66,19 @@
                 @if (_canSearch)
                 {
                     <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth="false"
-                              Placeholder="@(L["Search for user name"])" Adornment="Adornment.End"
+                              Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3">
                     </MudTextField>
                 }
             </ToolBarContent>
             <HeaderContent>
                 <MudTh>@L["Actions"]</MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Site)">@L["Site"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.DisplayName)">@L["Dispaly Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Email)">@L["Email"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.PhoneNumber)">@L["Phone Number"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.IsActive)">@L["Is Active"]</MudTableSortLabel></MudTh>
-                <MudTh>@L["Lock Status"]</MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Name)">@L["Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Actions">
-                    @if(_canEdit || _canManageRoles || _canRestPassword || _canActive) {
+                    @if(_canEdit || _canManagePermissions ) {
                     <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
                              EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
@@ -91,25 +86,9 @@
                         {
                             <MudMenuItem>@L["Edit"]</MudMenuItem>
                         }
-                        @if (_canActive)
+                        @if (_canManagePermissions)
                         {
-                            @if (context.IsActive)
-                            {
-                                <MudMenuItem>@L["Set Inactive"]</MudMenuItem>
-                            }
-                            else
-                            {
-                                <MudMenuItem>@L["Set Active"]</MudMenuItem>
-                            }
-
-                        }
-                        @if (_canRestPassword)
-                        {
-                            <MudMenuItem>@L["Rest Password"]</MudMenuItem>
-                        }
-                        @if (_canManageRoles)
-                        {
-                            <MudMenuItem>@L["Manage Roles"]</MudMenuItem>
+                            <MudMenuItem>@L["Set Permissions"]</MudMenuItem>
                         }
                     </MudMenu>
                     } else {
@@ -120,13 +99,9 @@
                     </MudButton>
                     }
                 </MudTd>
-                <MudTd DataLabel="Site">@context.Site</MudTd>
-                <MudTd DataLabel="UserName">@context.UserName</MudTd>
-                <MudTd DataLabel="DisplayName">@context.DisplayName</MudTd>
-                <MudTd DataLabel="Email">@context.Email</MudTd>
-                <MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
-                <MudTd DataLabel="IsActive">@context.IsActive</MudTd>
-                <MudTd DataLabel="LockoutEnd">@context.LockoutEnd</MudTd>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Description">@context.Description</MudTd>
+                
             </RowTemplate>
             <PagerContent>
                 <MudTablePager />
@@ -143,55 +118,48 @@
 @code {
 
 
-    private IEnumerable<ApplicationUser> UserList = new List<ApplicationUser>();
-    private HashSet<ApplicationUser> SelectItems = new HashSet<ApplicationUser>();
+    private IEnumerable<ApplicationRole> RoleList = new List<ApplicationRole>();
+    private HashSet<ApplicationRole> SelectItems = new HashSet<ApplicationRole>();
     private string _searchString;
     private bool _sortNameByLength;
     public string? Title { get; private set; }
     [CascadingParameter]
-    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
-    protected IAuthorizationService AuthService { get; set; } = default!;
+    private IAuthorizationService AuthService { get; set; } = default!;
     [Inject]
-    private UserManager<ApplicationUser> _userManager { get; set; }
+    private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
 
     private bool _canCreate;
     private bool _canSearch;
     private bool _canEdit;
     private bool _canDelete;
-    private bool _canActive;
-    private bool _canManageRoles;
-    private bool _canRestPassword;
+    private bool _canManagePermissions;
     private bool _canImport;
     private bool _canExport;
     protected override async Task OnInitializedAsync()
     {
-        Title = L["Users"];
+        Title = L["Roles"];
         var state = await AuthState;
-        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Edit)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Delete)).Succeeded;
-        _canActive = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Active)).Succeeded;
-        _canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
-        _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
+        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Create)).Succeeded;
+        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Search)).Succeeded;
+        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Edit)).Succeeded;
+        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Delete)).Succeeded;
+        _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.ManagePermissions)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-        UserList = await _userManager.Users.ToListAsync();
+        RoleList = await _roleManager.Roles.ToListAsync();
 
     }
-    private Func<ApplicationUser, bool> _quickFilter => x =>
+    private Func<ApplicationRole, bool> _quickFilter => x =>
        {
            if (string.IsNullOrWhiteSpace(_searchString))
                return true;
 
-           if (x.UserName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+           if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                return true;
 
-           if (x.DisplayName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-               return true;
-
-           if ($"{x.Email} {x.PhoneNumber} {x.Site}".Contains(_searchString))
+           if (x.Description.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                return true;
 
            return false;
