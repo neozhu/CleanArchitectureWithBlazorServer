@@ -15,7 +15,7 @@
                  Icon="@Icons.Custom.Brands.MudBlazor"
                  Size="Size.Large" />
         <MudText Typo="Typo.subtitle2">
-            <b>Application Name</b>
+            <b>@L["Application Name"]</b>
         </MudText>
     </MudDrawerHeader>
 
@@ -77,7 +77,7 @@
                                             Href="@(menuItem.Href)"
                                             Match="NavLinkMatch.All">
                                     <div class="d-flex">
-                                        @L[menuItem.Title]
+                                        @(L[menuItem.Title])
                                         @if (menuItem.PageStatus != PageStatus.Completed)
                                         {
                                             <MudSpacer />
@@ -85,7 +85,7 @@
                                                      Color="@Color.Primary"
                                                      Size="Size.Small"
                                                      Variant="Variant.Text">
-                                                @menuItem.PageStatus.ToDescriptionString()
+                                                @(L[menuItem.PageStatus.ToDescriptionString()])
                                             </MudChip>
                                         }
                                     </div>
@@ -101,7 +101,7 @@
                                 Icon="@(sectionItem.Icon)"
                                 Match="NavLinkMatch.All">
                         <div class="d-flex">
-                            @L[sectionItem.Title]
+                            @(L[sectionItem.Title])
                             @if (sectionItem.PageStatus != PageStatus.Completed)
                             {
                                 <MudSpacer />
@@ -109,7 +109,7 @@
                                          Color="@Color.Primary"
                                          Size="Size.Small"
                                          Variant="Variant.Text">
-                                    @sectionItem.PageStatus.ToDescriptionString()
+                                    @(L[sectionItem.PageStatus.ToDescriptionString()])
                                 </MudChip>
                             }
                         </div>

@@ -71,7 +71,6 @@
 </MudForm>
 @code {
     [Inject] private NavigationManager _navigation { get; set; } = default!;
-    [Inject] ISnackbar Snackbar { get; set; }= default!;
     [Inject] private UserManager<IdentityUser> userManager { get; set; }= default!;
     MudForm form;
     RegisterFormModel model = new ();

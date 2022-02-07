@@ -18,9 +18,11 @@
 @using Blazor.Server.UI.Components.Index
 @using Blazor.Server.UI.Components.Charts
 @using Blazor.Server.UI.Models.Localization
-
+@using FluentValidation;
 @using CleanArchitecture.Blazor.Infrastructure.Identity
 @using CleanArchitecture.Blazor.Application.Constants.Permission
 
-
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IConfiguration Config
 @attribute [Authorize]

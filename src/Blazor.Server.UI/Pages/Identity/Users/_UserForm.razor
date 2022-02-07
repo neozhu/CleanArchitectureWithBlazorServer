@@ -1,0 +1,90 @@
+@inherits MudComponentBase
+@inject IStringLocalizer<Users> L
+
+
+<MudForm Model="@model" @ref="@form" >
+    <MudTextField For="@(() => model.Id)" @bind-Value="model.Id" InputType="InputType.Hidden"/>
+    <MudGrid>
+        <MudItem sm="12">
+            @if (string.IsNullOrEmpty(model.ProfilePictureDataUrl))
+            {
+                <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.UserName</MudAvatar>
+            }
+            else
+            {
+                <MudAvatar Image="@model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;"/>
+            }
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => model.Site)" @bind-Value="model.Site" Label="@L["Site"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField Validation="@(modelValidator.ValidateValue)"
+                          Immediate="true"
+                          Label="@L["Password"]"
+                          @bind-Value="model.Password"
+                          For="@(() => model.Password)"
+                          Variant="Variant.Outlined"
+                          InputType="@PasswordInput"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@PasswordInputIcon"
+                          Required="true"
+                          RequiredError="@L["password is required!"]"
+                          OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField Validation="@(modelValidator.ValidateValue)"
+                          Immediate="true"
+                          Label="@L["Confirm Password"]"
+                          @bind-Value="model.ConfirmPassword"
+                          For="@(() => model.ConfirmPassword)"
+                          Variant="Variant.Outlined"
+                          InputType="@PasswordInput"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@PasswordInputIcon"
+                          Required="true"
+                          RequiredError="@L["password is required!"]"
+                          OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
+        </MudItem>
+    </MudGrid>
+</MudForm>
+
+@code {
+    MudForm form = default!;
+    UserFormModelValidator modelValidator = new UserFormModelValidator();
+    [EditorRequired] [Parameter] public UserFormModel model { get; set; } = default!;
+    [EditorRequired] [Parameter] public EventCallback<UserFormModel>? OnFormSubmit { get; set; }
+    bool PasswordVisibility;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    void TogglePasswordVisibility()
+    {
+        @if (PasswordVisibility)
+        {
+            PasswordVisibility = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            PasswordVisibility = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+    public async void Submit()
+    {
+        await form.Validate();
+        if (form.IsValid && OnFormSubmit!=null)
+        {
+           OnFormSubmit?.InvokeAsync(model);
+        }
+    }
+}

@@ -1,0 +1,17 @@
+@inherits MudComponentBase
+@inject IStringLocalizer<Users> L
+<MudDialog>
+    <DialogContent>
+        <_UserForm></_UserForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@L["Cancle"]</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">@L["Ok"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+}

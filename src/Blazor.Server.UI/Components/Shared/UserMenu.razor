@@ -1,3 +1,4 @@
+@inject IStringLocalizer<UserMenu> L
 <MudMenu AnchorOrigin="Origin.BottomRight"
          Class="@Class"
          LockScroll="true"
@@ -22,14 +23,14 @@
                 <div class="d-flex">
                     <MudIcon Class="mx-2"
                              Icon="@Icons.Material.Filled.Person" />
-                    <MudText>Profile</MudText>
+                    <MudText>@L["Profile"]</MudText>
                 </div>
             </MudMenuItem>
             <MudMenuItem>
                 <div class="d-flex">
                     <MudIcon Class="mx-2"
                              Icon="@Icons.Material.Filled.Settings" />
-                    <MudText>Settings</MudText>
+                    <MudText>@L["Settings"]</MudText>
                 </div>
             </MudMenuItem>
             <div class="mt-4 mx-4">
@@ -38,7 +39,7 @@
                            StartIcon="@Icons.Material.Filled.Logout"
                            Link="/account/signout"
                            Variant="Variant.Outlined">
-                    Logout
+                    @L["Logout"]
                 </MudButton>
             </div>
         </div>

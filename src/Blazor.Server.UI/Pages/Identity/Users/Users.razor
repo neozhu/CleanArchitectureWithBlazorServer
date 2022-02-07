@@ -1,8 +1,8 @@
 @page "/indentity/users"
 @using Microsoft.AspNetCore.Identity
-
-@attribute [Authorize(Policy = Permissions.Users.View)]
 @inject IStringLocalizer<Users> L
+@attribute [Authorize(Policy = Permissions.Users.View)]
+
 <PageTitle>@Title</PageTitle>
 <style>
     .mud-toolbar {
@@ -34,6 +34,7 @@
                                StartIcon="@Icons.Material.Filled.Add"
                                Size="Size.Small"
                                Style="margin-right: 5px;"
+                               OnClick="OnCreate"
                                IconColor="Color.Surface">@L["Create"]</MudButton>
                     }
                     @if (_canDelete)
@@ -136,7 +137,7 @@
 
     </ChildContent>
     <ErrorContent>
-        <MudAlert Class="mt-auto" Severity="Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
+        <MudAlert Class="mt-auto" Severity="MudBlazor.Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
     </ErrorContent>
 </ErrorBoundary>
 
@@ -197,4 +198,10 @@
            return false;
        };
 
+    private void OnCreate()
+    {
+        var parameters = new DialogParameters { ["model"]=new UserFormModel() };
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        DialogService.Show<_UserFormDialog>(L["Create a new user"],parameters, options);
+    }
 }
