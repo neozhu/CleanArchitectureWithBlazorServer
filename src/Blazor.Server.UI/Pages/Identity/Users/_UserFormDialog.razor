@@ -13,12 +13,11 @@
 @code {
     private _UserForm _userForm=default!;
     [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; }
+    MudDialogInstance MudDialog { get; set; } = default!;
     [Parameter]
-    public UserFormModel model { get; set; } = default;
+    public UserFormModel model { get; set; } = default!;
     void Submit() {
         _userForm.Submit();
-
     }
     void Cancel() => MudDialog.Cancel();
 
