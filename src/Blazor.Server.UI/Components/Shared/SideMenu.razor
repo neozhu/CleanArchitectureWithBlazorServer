@@ -1,5 +1,7 @@
 @using MudBlazor.Extensions
 @using Blazor.Server.UI.Models.SideMenu
+@inject IStringLocalizer<SideMenu> L
+
 <MudDrawer Breakpoint="Breakpoint.Md"
            Class="side-menu"
            Elevation="0"
@@ -55,7 +57,7 @@
                 <div class="ml-6 my-3">
                     <MudText Typo="Typo.caption">
                         <b>
-                            @(section.Title)
+                            @(L[section.Title])
                         </b>
                     </MudText>
                 </div>
@@ -75,7 +77,7 @@
                                             Href="@(menuItem.Href)"
                                             Match="NavLinkMatch.All">
                                     <div class="d-flex">
-                                        @menuItem.Title
+                                        @L[menuItem.Title]
                                         @if (menuItem.PageStatus != PageStatus.Completed)
                                         {
                                             <MudSpacer />
@@ -99,7 +101,7 @@
                                 Icon="@(sectionItem.Icon)"
                                 Match="NavLinkMatch.All">
                         <div class="d-flex">
-                            @sectionItem.Title
+                            @L[sectionItem.Title]
                             @if (sectionItem.PageStatus != PageStatus.Completed)
                             {
                                 <MudSpacer />

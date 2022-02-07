@@ -1,11 +1,11 @@
-﻿@page "/pages/authentication/register"
+@page "/pages/authentication/register"
 @using System.Text.RegularExpressions
 @using Microsoft.AspNetCore.Identity
 @using Blazor.Server.UI.Models.Authentication
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
 @using FluentValidation;
-
+@inject IStringLocalizer<Register> L
 @attribute [AllowAnonymous]
 
 <MudForm Model="@model" @ref="@form">
@@ -15,27 +15,28 @@
 <MudTextField T="string"  
     Validation="@(registerValidator.ValidateValue)"
     Immediate="true"
-    Label="User Name"
+    Label="@L["User Name"]"
     @bind-Value="model.UserName" 
     For="@(() => model.UserName)" 
     Variant="Variant.Outlined" 
     Required="true"
-    RequiredError="user name is required!"
+    RequiredError="@L["user name is required!"]"
     Class="my-4"></MudTextField>
 
 <MudTextField T="string" 
     Validation="@(registerValidator.ValidateValue)"
     Immediate="true"
-    Label="E-mail" 
+    Label="@L["E-mail"]" 
     @bind-Value="model.Email" 
     For="@(() => model.Email)" 
     Required="true"
+    RequiredError="@L["e-mail is required!"]"
     Variant="Variant.Outlined"></MudTextField>
 
 <MudTextField 
      Validation="@(registerValidator.ValidateValue)"
      Immediate="true"
-     Label="Password" 
+     Label="@L["Password"]" 
      @bind-Value="model.Password" 
      For="@(() => model.Password)"
      Variant="Variant.Outlined" 
@@ -43,12 +44,12 @@
      Adornment="Adornment.End" 
      AdornmentIcon="@PasswordInputIcon" 
      Required="true"
-     RequiredError="password is required!"
+     RequiredError="@L["password is required!"]"
      OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
 <MudTextField 
      Validation="@(registerValidator.ValidateValue)"
      Immediate="true"
-     Label="Confirm Password" 
+     Label="@L["Confirm Password"]" 
      @bind-Value="model.ConfirmPassword" 
      For="@(() => model.ConfirmPassword)"
      Variant="Variant.Outlined" 
@@ -56,22 +57,22 @@
      Adornment="Adornment.End" 
      AdornmentIcon="@PasswordInputIcon"
      Required="true"
-     RequiredError="password is required!"
+     RequiredError="@L["password is required!"]"
      OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
 
-<MudCheckBox @bind-Checked="@AgreeToTerms" Label="I agree to the terms and privacy" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+<MudCheckBox @bind-Checked="@AgreeToTerms" Label="@L["I agree to the terms and privacy"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
 
 <MudButton Variant="Variant.Filled" 
      Color="Color.Primary" 
      Disabled="@(!AgreeToTerms)"  
      Size="Size.Large" 
      OnClick="@(async () => await Submit())"
-     FullWidth="true">Register</MudButton>
+     FullWidth="true">@L["Register"]</MudButton>
 </MudForm>
 @code {
-    [Inject] private NavigationManager _navigation { get; set; }
-    [Inject] ISnackbar Snackbar { get; set; }
-    [Inject] private UserManager<IdentityUser> userManager { get; set; }
+    [Inject] private NavigationManager _navigation { get; set; } = default!;
+    [Inject] ISnackbar Snackbar { get; set; }= default!;
+    [Inject] private UserManager<IdentityUser> userManager { get; set; }= default!;
     MudForm form;
     RegisterFormModel model = new ();
     RegisterFormModelFluentValidator registerValidator = new ();
