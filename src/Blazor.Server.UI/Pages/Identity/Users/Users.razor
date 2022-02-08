@@ -185,7 +185,7 @@
         _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-        UserList = await _userManager.Users.ToListAsync();
+        UserList = await _userManager.Users.Include(x=>x.UserRoles).ToListAsync();
 
     }
     private Func<ApplicationUser, bool> _quickFilter => x =>
@@ -212,7 +212,7 @@
     {
         var model = new UserFormModel();
         var parameters = new DialogParameters { ["model"] = model };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
@@ -250,11 +250,12 @@
                 UserName = item.UserName,
                 Email = item.Email,
                 PhoneNumber = item.PhoneNumber,
-                ProfilePictureDataUrl = item.ProfilePictureDataUrl
+                ProfilePictureDataUrl = item.ProfilePictureDataUrl,
+                AssignRoles =  item.UserRoles.Select(x=>x.Role.Name).ToArray()
             };
 
         var parameters = new DialogParameters { ["model"] = model };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)

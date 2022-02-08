@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Identity
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
 @using SixLabors.ImageSharp.Processing
@@ -77,18 +78,39 @@
                           OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
         </MudItem>
         }
+        <MudItem xs="12" sm="6">
+            <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
+            <div class="d-fex">
+                @foreach(var role in _roles){
+                    @if (model.AssignRoles!=null && model.AssignRoles.Contains(role))
+                    {
+                        <MudCheckBox T="bool" Checked="true" Label="@role" CheckedChanged="@((s)=>OnChecked(s,role))"></MudCheckBox>
+                    }else
+                    {
+                        <MudCheckBox T="bool" Checked="false" Label="@role" CheckedChanged="@((s)=>OnChecked(s,role))"></MudCheckBox>
+                    }
+
+                }
+            </div>
+        </MudItem>
     </MudGrid>
 </MudForm>
 
 @code {
     MudForm form = default!;
-    [Inject] private IUploadService _uploadService{ get; set; }
+    private IEnumerable<string> _roles { get; set; } = new List<string>();
+    [Inject] private IUploadService _uploadService { get; set; } = default!;
+    [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     UserFormModelValidator modelValidator = new UserFormModelValidator();
     [EditorRequired] [Parameter] public UserFormModel model { get; set; } = default!;
     [EditorRequired] [Parameter] public EventCallback<UserFormModel> OnFormSubmit { get; set; }
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    protected override async Task OnInitializedAsync()
+    {
+        _roles = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
+    }
     void TogglePasswordVisibility()
     {
         @if (PasswordVisibility)
@@ -103,6 +125,11 @@
             PasswordInputIcon = Icons.Material.Filled.Visibility;
             PasswordInput = InputType.Text;
         }
+    }
+    private Task OnChecked(bool state,string role)
+    {
+
+        return Task.CompletedTask;
     }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
