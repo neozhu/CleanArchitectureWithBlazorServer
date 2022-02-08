@@ -12,20 +12,22 @@
 <ErrorBoundary>
     <ChildContent>
 
-        <MudTable Items="@UserList"
+        <MudTable Items="UserList"
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 296px)"
                   Hover="true"
                   MultiSelection="true"
-                  SelectedItems="@SelectItems"
+                  SelectedItems="SelectItems"
                   SortLabel="@L["Sort By"]"
+                  Loading="_loading"
                   Filter="new Func<ApplicationUser,bool>(_quickFilter)">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">Users</MudText>
                     <MudButton DisableElevation Variant="Variant.Outlined"
                                Size="Size.Small"
+                               OnClick="@(()=>OnRefresh())"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                Style="margin-right: 5px;">@L["Refresh"]</MudButton>
                     @if (_canCreate)
@@ -97,17 +99,17 @@
                             {
                                 @if (context.IsActive)
                                 {
-                                    <MudMenuItem>@L["Set Inactive"]</MudMenuItem>
+                                    <MudMenuItem OnClick=@(()=>OnSetActive(context))>@L["Set Inactive"]</MudMenuItem>
                                 }
                                 else
                                 {
-                                    <MudMenuItem>@L["Set Active"]</MudMenuItem>
+                                    <MudMenuItem OnClick=@(()=>OnSetActive(context))>@L["Set Active"]</MudMenuItem>
                                 }
 
                             }
                             @if (_canRestPassword)
                             {
-                                <MudMenuItem>@L["Rest Password"]</MudMenuItem>
+                                <MudMenuItem OnClick=@(()=>OnResetPassword(context))>@L["Rest Password"]</MudMenuItem>
                             }
                             @if (_canManageRoles)
                             {
@@ -147,7 +149,7 @@
 @code {
 
 
-    private IEnumerable<ApplicationUser> UserList = new List<ApplicationUser>();
+    private List<ApplicationUser> UserList = new List<ApplicationUser>();
     private HashSet<ApplicationUser> SelectItems = new HashSet<ApplicationUser>();
     private string _searchString;
     private bool _sortNameByLength;
@@ -157,7 +159,7 @@
     [Inject]
     protected IAuthorizationService AuthService { get; set; } = default!;
     [Inject]
-    private UserManager<ApplicationUser> _userManager { get; set; }
+    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
 
     private bool _canCreate;
     private bool _canSearch;
@@ -168,6 +170,8 @@
     private bool _canRestPassword;
     private bool _canImport;
     private bool _canExport;
+    private bool _loading;
+    private MudTable<ApplicationUser> _table = default!;
     protected override async Task OnInitializedAsync()
     {
         Title = L["Users"];
@@ -200,8 +204,11 @@
 
            return false;
        };
-
-    private async void OnCreate()
+    private async Task OnRefresh()
+    {
+        UserList = await _userManager.Users.ToListAsync();
+    }
+    private async Task OnCreate()
     {
         var model = new UserFormModel();
         var parameters = new DialogParameters { ["model"] = model };
@@ -212,6 +219,7 @@
         {
             var applicationUser = new ApplicationUser()
                 {
+                    Site = model.Site,
                     DisplayName = model.DisplayName,
                     UserName = model.UserName,
                     Email = model.Email,
@@ -219,13 +227,25 @@
                     ProfilePictureDataUrl = model.ProfilePictureDataUrl
                 };
             var password = model.Password;
-
+            var state = await _userManager.CreateAsync(applicationUser, password);
+            if (state.Succeeded)
+            {
+                UserList.Add(applicationUser);
+                Snackbar.Add($"Create successfully", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+            }
         }
+
     }
     private async Task OnEdit(ApplicationUser item)
     {
         var model = new UserFormModel()
             {
+                Id = item.Id,
+                Site = item.Site,
                 DisplayName = item.DisplayName,
                 UserName = item.UserName,
                 Email = item.Email,
@@ -244,6 +264,63 @@
             item.Email = model.Email;
             item.PhoneNumber = model.PhoneNumber;
             item.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
+
+            var state = await _userManager.UpdateAsync(item);
+            if (state.Succeeded)
+            {
+                Snackbar.Add($"Update successfully", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+            }
+        }
+
+    }
+    private async Task OnSetActive(ApplicationUser item)
+    {
+        item.IsActive = !item.IsActive;
+        var state = await _userManager.UpdateAsync(item);
+        if (state.Succeeded)
+        {
+            Snackbar.Add($"Update successfully", MudBlazor.Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+        }
+    }
+
+    private async Task OnResetPassword(ApplicationUser item)
+    {
+        var model = new ResetPasswordFormModel()
+            {
+                Id = item.Id,
+                DisplayName = item.DisplayName,
+                UserName = item.UserName,
+                ProfilePictureDataUrl = item.ProfilePictureDataUrl
+            };
+
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth= MaxWidth.ExtraSmall};
+        var dialog = DialogService.Show<_ResetPasswordDialog>(L["Set Password"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            item.DisplayName = model.DisplayName;
+            item.UserName = model.UserName;
+            item.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(item);
+            var state = await _userManager.ResetPasswordAsync(item, token, model.Password);
+            if (state.Succeeded)
+            {
+                Snackbar.Add($"Reset password successfully", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+            }
         }
     }
 }

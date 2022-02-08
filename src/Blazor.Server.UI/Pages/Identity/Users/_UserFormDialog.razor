@@ -16,8 +16,8 @@
     MudDialogInstance MudDialog { get; set; } = default!;
     [Parameter]
     public UserFormModel model { get; set; } = default!;
-    void Submit() {
-        _userForm.Submit();
+    protected async Task Submit() {
+        await  _userForm.Submit();
     }
     void Cancel() => MudDialog.Cancel();
 

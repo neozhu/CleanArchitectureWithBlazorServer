@@ -1,36 +1,55 @@
+@using SixLabors.ImageSharp
+@using SixLabors.ImageSharp.Formats
+@using SixLabors.ImageSharp.Processing
+
 @inherits MudComponentBase
 @inject IStringLocalizer<Users> L
 
 
-<MudForm Model="@model" @ref="@form" >
-    <input  For="@(() => model.Id)" @bind-value="model.Id" type="hidden"/>
+<MudForm Model="@model" @ref="@form">
+    <input For="@(() => model.Id)" @bind-value="model.Id" type="hidden" />
+    <input For="@(() => model.ProfilePictureDataUrl)" @bind-value="model.ProfilePictureDataUrl" type="hidden" />
+    <InputFile id="UploadPhoto" OnChange="UploadPhoto" hidden accept=".jpg, .jpeg, .png" />
     <MudGrid>
         <MudItem sm="12">
             <div class="d-flex justify-center">
-            @if (string.IsNullOrEmpty(model.ProfilePictureDataUrl))
-            {
-                <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.UserName</MudAvatar>
-            }
-            else
-            {
-                <MudAvatar Image="@model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;"/>
-            }
+                
+                    @if (string.IsNullOrEmpty(model.ProfilePictureDataUrl))
+                    {
+                        <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.UserName</MudAvatar>
+                     }
+                    else
+                    {
+                        <MudAvatar Image="@model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;" />
+                    }
+                 <MudTooltip Text="@L["Click upload a photo."]">
+                     <MudIconButton HtmlTag="label"
+                               Color="MudBlazor.Color.Info"
+                                Icon="@Icons.Filled.PhotoCamera"
+                                for="UploadPhoto"></MudIconButton>
+                </MudTooltip>
             </div>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.Site)" @bind-Value="model.Site" Label="@L["Site"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+            <MudTextField Validation="@(modelValidator.ValidateValue)"
+                          For="@(() => model.Site)" @bind-Value="model.Site" Label="@L["Site"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <MudTextField Validation="@(modelValidator.ValidateValue)"
+                          For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField Validation="@(modelValidator.ValidateValue)"
+                          For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField Validation="@(modelValidator.ValidateValue)"
+                          For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        @if (string.IsNullOrEmpty(model.Id))
+        {
+            <MudItem xs="12" sm="6">
+                <MudTextField Validation="@(modelValidator.ValidateValue)"
                           Immediate="true"
                           Label="@L["Password"]"
                           @bind-Value="model.Password"
@@ -57,11 +76,13 @@
                           RequiredError="@L["password is required!"]"
                           OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
         </MudItem>
+        }
     </MudGrid>
 </MudForm>
 
 @code {
     MudForm form = default!;
+    [Inject] private IUploadService _uploadService{ get; set; }
     UserFormModelValidator modelValidator = new UserFormModelValidator();
     [EditorRequired] [Parameter] public UserFormModel model { get; set; } = default!;
     [EditorRequired] [Parameter] public EventCallback<UserFormModel> OnFormSubmit { get; set; }
@@ -83,13 +104,42 @@
             PasswordInput = InputType.Text;
         }
     }
+    private async Task UploadPhoto(InputFileChangeEventArgs e)
+    {
+        var filestream = e.File.OpenReadStream();
+        var imgstream=new MemoryStream();
+        await filestream.CopyToAsync(imgstream);
+        imgstream.Position = 0;
+        using (var outStream = new MemoryStream())
+        {
+            using (var image = Image.Load(imgstream, out IImageFormat format))
+            {
+                image.Mutate(
+                   i => i.Resize(new ResizeOptions() { Mode = ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(128, 128) }));
+                image.Save(outStream, format);
+                var filename = e.File.Name;
+                var fi = new FileInfo(filename);
+                var ext = fi.Extension;
+                var result = await _uploadService.UploadAsync(new UploadRequest()
+                    {
+                        Data = outStream.ToArray(),
+                        FileName = Guid.NewGuid().ToString() + ext,
+                        Extension = ext,
+                        UploadType = UploadType.ProfilePicture
+                    });
+                model.ProfilePictureDataUrl = result;
+                //Do your validations here
+                Snackbar.Add($"upload successfully", MudBlazor.Severity.Info);
+            }
+        }
 
-    public async void Submit()
+    }
+    public async Task Submit()
     {
         await form.Validate();
-        if (form.IsValid )
+        if (form.IsValid)
         {
-          await  OnFormSubmit.InvokeAsync(model);
+            await OnFormSubmit.InvokeAsync(model);
         }
     }
 }
