@@ -81,15 +81,10 @@
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
             <div class="d-fex">
-                @foreach(var role in _roles){
-                    @if (model.AssignRoles!=null && model.AssignRoles.Contains(role))
-                    {
-                        <MudCheckBox T="bool" Checked="true" Label="@role" CheckedChanged="@((s)=>OnChecked(s,role))"></MudCheckBox>
-                    }else
-                    {
-                        <MudCheckBox T="bool" Checked="false" Label="@role" CheckedChanged="@((s)=>OnChecked(s,role))"></MudCheckBox>
-                    }
-
+                @for(int i= 0; i<_roles.Count; i ++) 
+                {
+                    var x = i;
+                    <MudCheckBox T="bool" Checked="@_roles[x].value" Label="@_roles[i].key" CheckedChanged="@(s=>_roles[x].value=s)" ></MudCheckBox>
                 }
             </div>
         </MudItem>
@@ -97,8 +92,13 @@
 </MudForm>
 
 @code {
+    public class keyvalue {
+        public string key{get;set;}
+        public bool value{get;set;}
+    }
     MudForm form = default!;
-    private IEnumerable<string> _roles { get; set; } = new List<string>();
+    private List<keyvalue> _roles { get; set; } = new ();
+
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     UserFormModelValidator modelValidator = new UserFormModelValidator();
@@ -109,7 +109,20 @@
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
     protected override async Task OnInitializedAsync()
     {
-        _roles = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
+        var array = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
+
+        foreach(var role in array)
+        {
+            if(model.AssignRoles!=null && model.AssignRoles.Contains(role))
+            {
+                _roles.Add(new(){key=role,value= true});
+            }
+            else
+            {
+                _roles.Add(new() {key=role,value= false});
+            }
+        }
+      
     }
     void TogglePasswordVisibility()
     {
@@ -126,11 +139,7 @@
             PasswordInput = InputType.Text;
         }
     }
-    private Task OnChecked(bool state,string role)
-    {
 
-        return Task.CompletedTask;
-    }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
         var filestream = e.File.OpenReadStream();
@@ -159,13 +168,13 @@
                 Snackbar.Add($"upload successfully", MudBlazor.Severity.Info);
             }
         }
-
     }
     public async Task Submit()
     {
         await form.Validate();
         if (form.IsValid)
         {
+            model.AssignRoles = _roles.Where(x => x.value).Select(x => x.key).ToArray();
             await OnFormSubmit.InvokeAsync(model);
         }
     }

@@ -15,7 +15,7 @@
         <MudTable Items="UserList"
                   FixedHeader="true"
                   FixedFooter="true"
-                  Height="calc(100vh - 296px)"
+                  Height="calc(100vh - 295px)"
                   Hover="true"
                   MultiSelection="true"
                   SelectedItems="SelectItems"
@@ -74,8 +74,12 @@
                     </MudTextField>
                 }
             </ToolBarContent>
+            <ColGroup>
+                <col style="width:50px;" />
+
+            </ColGroup>
             <HeaderContent>
-                <MudTh>@L["Actions"]</MudTh>
+                <MudTh Style="width:80px">@L["Actions"]</MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Site)">@L["Site"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.DisplayName)">@L["Dispaly Name"]</MudTableSortLabel></MudTh>
@@ -89,6 +93,8 @@
                     @if (_canEdit || _canManageRoles || _canRestPassword || _canActive)
                     {
                         <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
+                             Size="Size.Small"
+                             Dense="true"
                              EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
                             @if (_canEdit)
@@ -111,10 +117,7 @@
                             {
                                 <MudMenuItem OnClick=@(()=>OnResetPassword(context))>@L["Rest Password"]</MudMenuItem>
                             }
-                            @if (_canManageRoles)
-                            {
-                                <MudMenuItem>@L["Manage Roles"]</MudMenuItem>
-                            }
+
                         </MudMenu>
                     }
                     else
@@ -131,7 +134,9 @@
                 <MudTd DataLabel="DisplayName">@context.DisplayName</MudTd>
                 <MudTd DataLabel="Email">@context.Email</MudTd>
                 <MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
-                <MudTd DataLabel="IsActive">@context.IsActive</MudTd>
+                <MudTd DataLabel="IsActive">
+                    <MudCheckBox Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
+                </MudTd>
                 <MudTd DataLabel="LockoutEnd">@context.LockoutEnd</MudTd>
             </RowTemplate>
             <PagerContent>
@@ -185,7 +190,7 @@
         _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-        UserList = await _userManager.Users.Include(x=>x.UserRoles).ToListAsync();
+        UserList = await _userManager.Users.ToListAsync();
 
     }
     private Func<ApplicationUser, bool> _quickFilter => x =>
@@ -242,6 +247,7 @@
     }
     private async Task OnEdit(ApplicationUser item)
     {
+        var roles = await _userManager.GetRolesAsync(item);
         var model = new UserFormModel()
             {
                 Id = item.Id,
@@ -251,7 +257,7 @@
                 Email = item.Email,
                 PhoneNumber = item.PhoneNumber,
                 ProfilePictureDataUrl = item.ProfilePictureDataUrl,
-                AssignRoles =  item.UserRoles.Select(x=>x.Role.Name).ToArray()
+                AssignRoles = roles.ToArray()
             };
 
         var parameters = new DialogParameters { ["model"] = model };
@@ -267,6 +273,11 @@
             item.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
 
             var state = await _userManager.UpdateAsync(item);
+            if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
+            {
+                await _userManager.RemoveFromRolesAsync(item, roles);
+                await _userManager.AddToRolesAsync(item, model.AssignRoles);
+            }
             if (state.Succeeded)
             {
                 Snackbar.Add($"Update successfully", MudBlazor.Severity.Info);
@@ -303,7 +314,7 @@
             };
 
         var parameters = new DialogParameters { ["model"] = model };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth= MaxWidth.ExtraSmall};
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall };
         var dialog = DialogService.Show<_ResetPasswordDialog>(L["Set Password"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)

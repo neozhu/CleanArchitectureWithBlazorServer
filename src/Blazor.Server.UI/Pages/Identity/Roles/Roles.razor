@@ -15,7 +15,7 @@
         <MudTable Items="@RoleList"
                   FixedHeader="true"
                   FixedFooter="true"
-                  Height="calc(100vh - 296px)"
+                  Height="calc(100vh - 295px)"
                   Hover="true"
                   MultiSelection="true"
                   SelectedItems="@SelectItems"
@@ -71,37 +71,45 @@
                     </MudTextField>
                 }
             </ToolBarContent>
+  <ColGroup>
+        <col style="width:50px;" />
+       
+    </ColGroup>
             <HeaderContent>
-                <MudTh>@L["Actions"]</MudTh>
+                <MudTh Style="width:80px">@L["Actions"]</MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Name)">@L["Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Actions">
-                    @if(_canEdit || _canManagePermissions ) {
-                    <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
+                    @if (_canEdit || _canManagePermissions)
+                    {
+                        <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                             Dense="true"
                              EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
-                        @if (_canEdit)
-                        {
-                            <MudMenuItem>@L["Edit"]</MudMenuItem>
-                        }
-                        @if (_canManagePermissions)
-                        {
-                            <MudMenuItem>@L["Set Permissions"]</MudMenuItem>
-                        }
-                    </MudMenu>
-                    } else {
-                    <MudButton Variant="Variant.Filled" DisableElevation="true"
+                            @if (_canEdit)
+                            {
+                                <MudMenuItem >@L["Edit"]</MudMenuItem>
+                            }
+                            @if (_canManagePermissions)
+                            {
+                                <MudMenuItem >@L["Set Permissions"]</MudMenuItem>
+                            }
+                        </MudMenu>
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" DisableElevation="true"
                                StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
-                        @L["No Allowed"]
-                    </MudButton>
+                            @L["No Allowed"]
+                        </MudButton>
                     }
                 </MudTd>
                 <MudTd DataLabel="Name">@context.Name</MudTd>
                 <MudTd DataLabel="Description">@context.Description</MudTd>
-                
+
             </RowTemplate>
             <PagerContent>
                 <MudTablePager />
