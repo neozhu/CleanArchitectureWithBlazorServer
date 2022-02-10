@@ -1,11 +1,11 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 
-    public class ProductsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<ProductDto>>
+    public class ProductsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<ProductDto>>
     {
        
     }
@@ -30,12 +30,10 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Paginat
 
         public async Task<PaginatedData<ProductDto>> Handle(ProductsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing ProductsWithPaginationQueryHandler method 
-           var filters = PredicateBuilder.FromFilter<Product>(request.FilterRules);
-           var data = await _context.Products.Where(filters)
-                .OrderBy("{request.Sort} {request.Order}")
+           var data = await _context.Products.Where(x=>x.Name.Contains(request.Keyword))
+                .OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.Page, request.Rows);
+                .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }
    }

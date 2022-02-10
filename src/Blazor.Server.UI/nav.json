@@ -17,7 +17,7 @@
         "isParent": true,
         "menuItems": [
           {
-            "title": "Product",
+            "title": "Products",
             "href": "/pages/products",
             "pageStatus": "completed"
           }

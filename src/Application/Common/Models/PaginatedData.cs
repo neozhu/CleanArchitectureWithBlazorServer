@@ -5,12 +5,12 @@ namespace CleanArchitecture.Blazor.Application.Common.Models;
 
 public class PaginatedData<T>
 {
-    public int total { get; set; }
-    public IEnumerable<T> rows { get; set; }
+    public int TotalItems { get; set; }
+    public IEnumerable<T> Items { get; set; }
     public PaginatedData(IEnumerable<T> items, int total)
     {
-        this.rows = items;
-        this.total = total;
+        this.Items = items;
+        this.TotalItems = total;
     }
     public static async Task<PaginatedData<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
     {
