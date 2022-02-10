@@ -48,7 +48,7 @@
                                Style="margin-right: 5px;"
                                IconColor="Color.Surface">@L["Delete"]</MudButton>
                     }
-                    @if (_canImport)
+                 @if (_canImport)
                     {
                         <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.Upload"
@@ -188,8 +188,8 @@
         _canActive = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Active)).Succeeded;
         _canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
         _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
-        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
-        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        _canImport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
+        _canExport =false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         UserList = await _userManager.Users.ToListAsync();
 
     }

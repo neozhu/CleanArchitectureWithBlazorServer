@@ -2,15 +2,21 @@
 @inject IStringLocalizer<Roles> L
 <MudDialog>
     <DialogContent>
-        <MudForm Model="@model" @ref="@form">
+        <MudForm Model="model" @ref="form">
             <MudGrid>
                 <MudItem xs="12">
-                    <MudTextField Label="@L["Name"]" Value="model.Name"
-                                  Validation="@(modelValidator.ValidateValue)"
-                    ></MudTextField>
+                    <MudTextField Label="@L["Name"]" @bind-Value="model.Name"
+                                 Required="true"
+                                 For="@(() => model.Name)"
+                                 RequiredError="@L["Role name is required!"]"
+                                 Validation="@(modelValidator.ValidateValue)"
+                    >
+                    </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L["Description"]" Value="model.Description"></MudTextField>
+                    <MudTextField Label="@L["Description"]"
+                           For="@(() => model.Description)"
+                           @bind-Value="model.Description"></MudTextField>
                 </MudItem>
             </MudGrid>
         </MudForm>
@@ -29,7 +35,7 @@
     MudDialogInstance MudDialog { get; set; } = default!;
 
     async Task Submit() {
-        await  form.Validate();
+        await form.Validate();
         if (form.IsValid)
         {
             MudDialog.Close(DialogResult.Ok(true));

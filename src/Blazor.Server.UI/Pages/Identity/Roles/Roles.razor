@@ -1,5 +1,9 @@
 @page "/indentity/roles"
+@using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
 @using Microsoft.AspNetCore.Identity
+@using System.ComponentModel
+@using System.Reflection
+@using System.Security.Claims
 
 @attribute [Authorize(Policy = Permissions.Roles.View)]
 @inject IStringLocalizer<Roles> L
@@ -26,6 +30,7 @@
                     <MudText Typo="Typo.h6">Roles</MudText>
                     <MudButton DisableElevation Variant="Variant.Outlined"
                                Size="Size.Small"
+                               OnClick="OnRefresh"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                Style="margin-right: 5px;">@L["Refresh"]</MudButton>
                     @if (_canCreate)
@@ -33,6 +38,7 @@
                         <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.Add"
                                Size="Size.Small"
+                               OnClick="OnCreate"
                                Style="margin-right: 5px;"
                                IconColor="Color.Surface">@L["Create"]</MudButton>
                     }
@@ -71,10 +77,10 @@
                     </MudTextField>
                 }
             </ToolBarContent>
-  <ColGroup>
-        <col style="width:50px;" />
-       
-    </ColGroup>
+            <ColGroup>
+                <col style="width:50px;" />
+
+            </ColGroup>
             <HeaderContent>
                 <MudTh Style="width:80px">@L["Actions"]</MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Name)">@L["Name"]</MudTableSortLabel></MudTh>
@@ -90,11 +96,11 @@
                              OffsetX="true">
                             @if (_canEdit)
                             {
-                                <MudMenuItem >@L["Edit"]</MudMenuItem>
+                                <MudMenuItem OnClick="@(()=>OnEdit(context))">@L["Edit"]</MudMenuItem>
                             }
                             @if (_canManagePermissions)
                             {
-                                <MudMenuItem >@L["Set Permissions"]</MudMenuItem>
+                                <MudMenuItem OnClick="@(()=>OnSetPermissions(context))">@L["Set Permissions"]</MudMenuItem>
                             }
                         </MudMenu>
                     }
@@ -116,7 +122,7 @@
             </PagerContent>
         </MudTable>
 
-
+        <_PermissionsDrawer OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
     </ChildContent>
     <ErrorContent>
         <MudAlert Class="mt-auto" Severity="MudBlazor.Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
@@ -125,10 +131,10 @@
 
 @code {
 
-
-    private IEnumerable<ApplicationRole> RoleList = new List<ApplicationRole>();
+    private string CurrentRoleName = string.Empty;
+    private List<ApplicationRole> RoleList = new List<ApplicationRole>();
     private HashSet<ApplicationRole> SelectItems = new HashSet<ApplicationRole>();
-    private string _searchString;
+    private string _searchString=string.Empty;
     private bool _sortNameByLength;
     public string? Title { get; private set; }
     [CascadingParameter]
@@ -138,6 +144,8 @@
     [Inject]
     private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
 
+    private List<PermissionModel> _permissions = new();
+    private IList<Claim> _assignedClaims=default!;
     private bool _canCreate;
     private bool _canSearch;
     private bool _canEdit;
@@ -145,6 +153,7 @@
     private bool _canManagePermissions;
     private bool _canImport;
     private bool _canExport;
+    private bool _showPermissionsDrawer ;
     protected override async Task OnInitializedAsync()
     {
         Title = L["Roles"];
@@ -154,8 +163,8 @@
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Edit)).Succeeded;
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Delete)).Succeeded;
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.ManagePermissions)).Succeeded;
-        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
-        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        _canImport =false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
+        _canExport =false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         RoleList = await _roleManager.Roles.ToListAsync();
 
     }
@@ -172,5 +181,139 @@
 
            return false;
        };
+    private async Task OnRefresh()
+    {
+        RoleList = await _roleManager.Roles.ToListAsync();
+    }
+    private async Task OnCreate()
+    {
+        var model = new RoleFormModel();
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<_RoleFormDialog>(L["Create a new role"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var applicationRole = new ApplicationRole()
+                {
+                    Name = model.Name,
+                    Description = model.Description
+                };
+
+            var state = await _roleManager.CreateAsync(applicationRole);
+            if (state.Succeeded)
+            {
+                RoleList.Add(applicationRole);
+                Snackbar.Add($"Create successfully", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+            }
+        }
+    }
+    private async Task OnEdit(ApplicationRole item)
+    {
+        var model = new RoleFormModel()
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Description = item.Description
+            };
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<_RoleFormDialog>(L["Create a new role"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            item.Name = model.Name;
+            item.Description = model.Description;
+
+            var state = await _roleManager.UpdateAsync(item);
+            if (state.Succeeded)
+            {
+                Snackbar.Add($"Updated successfully", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+            }
+        }
+    }
+    private async Task OnSetPermissions(ApplicationRole item)
+    {
+        CurrentRoleName = item.Name;
+        _permissions = await GetAllPermissions(item);
+        _showPermissionsDrawer = true;
+
+    }
+
+    private async Task<List<PermissionModel>> GetAllPermissions(ApplicationRole role)
+    {
+        _assignedClaims = await _roleManager.GetClaimsAsync(role);
+        var allPermissions = new List<PermissionModel>();
+        var modules = typeof(Permissions).GetNestedTypes();
+        foreach (var module in modules)
+        {
+            var moduleName = string.Empty;
+            var moduleDescription = string.Empty;
+            if (module.GetCustomAttributes(typeof(DisplayNameAttribute), true)
+                .FirstOrDefault() is DisplayNameAttribute displayNameAttribute)
+                moduleName = displayNameAttribute.DisplayName;
+
+            if (module.GetCustomAttributes(typeof(DescriptionAttribute), true)
+                .FirstOrDefault() is DescriptionAttribute descriptionAttribute)
+                moduleDescription = descriptionAttribute.Description;
+
+            var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            foreach (var fi in fields)
+            {
+                var propertyValue = fi.GetValue(null);
+
+                if (propertyValue is not null)
+                {
+                    var claimValue = propertyValue.ToString();
+                    allPermissions.Add(
+                        new PermissionModel
+                            {
+                                RoleId = role.Id,
+                                ClaimValue = claimValue,
+                                ClaimType = ApplicationClaimTypes.Permission,
+                                Group = moduleName,
+                                Description = moduleDescription,
+                                Assigned = _assignedClaims.Any(x => x.Value == claimValue)
+                            });
+                }
+            }
+        }
+        return allPermissions;
+    }
+    private  Task OnOpenChangedHandler(bool state)
+    {
+        _showPermissionsDrawer = state;
+        return Task.CompletedTask;
+    }
+    private async Task OnAssignChangedHandler(PermissionModel model)
+    {
+        var roleId=model.RoleId;
+        var role = await _roleManager.FindByIdAsync(roleId);
+        model.Assigned = !model.Assigned;
+        if (model.Assigned)
+        {
+            await _roleManager.AddClaimAsync(role,new Claim(model.ClaimType,model.ClaimValue));
+        }
+        else
+        {
+            var removed = _assignedClaims.FirstOrDefault(x=>x.Value==model.ClaimValue);
+            if(removed is not null)
+            {
+                await _roleManager.RemoveClaimAsync(role,removed);
+            }
+        }
+
+    }
+
+
+
 
 }
