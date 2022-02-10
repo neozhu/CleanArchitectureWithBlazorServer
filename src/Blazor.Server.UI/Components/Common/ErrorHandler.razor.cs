@@ -7,8 +7,6 @@ namespace Blazor.Server.UI.Components.Common;
 
 public partial class ErrorHandler
 {
-    [Inject]
-    public IAuthenticationService AuthService { get; set; } = default!;
 
     public List<Exception> _receivedExceptions = new();
 
