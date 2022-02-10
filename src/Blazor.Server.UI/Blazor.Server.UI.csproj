@@ -54,6 +54,7 @@
     <ItemGroup>
       <Folder Include="Files\" />
       <Folder Include="Files\" />
+      <Folder Include="Files\ProfilePictures\" />
     </ItemGroup>
 
 </Project>
