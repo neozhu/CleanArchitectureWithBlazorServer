@@ -30,7 +30,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Paginat
 
         public async Task<PaginatedData<ProductDto>> Handle(ProductsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-           var data = await _context.Products.Where(x=>x.Name.Contains(request.Keyword))
+           var data = await _context.Products.Where(x=>x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
