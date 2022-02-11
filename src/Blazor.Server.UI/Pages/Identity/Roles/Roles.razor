@@ -222,7 +222,7 @@
             };
         var parameters = new DialogParameters { ["model"] = model };
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_RoleFormDialog>(L["Create a new role"], parameters, options);
+        var dialog = DialogService.Show<_RoleFormDialog>(L["Edit the role"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
