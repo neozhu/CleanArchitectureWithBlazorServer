@@ -13,7 +13,11 @@ public partial class NotificationMenu : MudComponentBase
         new CssBuilder()
             .AddClass(Class)
             .Build();
-    
+
     [Parameter] public IEnumerable<NotificationModel>? Notifications { get; set; }
     [Parameter] public EventCallback<MouseEventArgs> OnClickViewAll { get; set; }
+
+    private bool _newNotificationsAvailable => Notifications != null && Notifications.Any();
+
+    private void MarkNotificationAsRead() => Notifications = null;
 }

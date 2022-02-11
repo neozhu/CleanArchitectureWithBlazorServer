@@ -16,7 +16,8 @@ public static class ApplicationBuilderExtensions
     {
         app.UseSerilogRequestLogging(options =>
         {
-            options.EnrichDiagnosticContext = (diagnosticContext, httpContext) => {
+            options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+            {
                 //This didn't work when tested
                 diagnosticContext.Set("UserName", httpContext.User?.Identity?.Name ?? "Anonymous");
             };
@@ -28,7 +29,7 @@ public static class ApplicationBuilderExtensions
             LogContext.PushProperty("UserName", userName); //Push user in LogContext;
             await next.Invoke();
         });
-       
+
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseStaticFiles(new StaticFileOptions
@@ -37,12 +38,16 @@ public static class ApplicationBuilderExtensions
             RequestPath = new PathString("/Files")
         });
 
-        app.UseRequestLocalization();
+        var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(LocalizationConstants.SupportedLanguages.Select(x => x.Code).First())
+                  .AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray())
+                  .AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
+
+        app.UseRequestLocalization(localizationOptions);
         app.UseMiddlewares();
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-       
+
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
@@ -50,7 +55,7 @@ public static class ApplicationBuilderExtensions
             endpoints.MapHub<SignalRHub>(SignalR.HubUrl);
         });
 
-   
+
 
         return app;
     }
