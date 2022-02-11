@@ -5,35 +5,36 @@
 @using Blazor.Server.UI.Models.Authentication
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
+@inject IStringLocalizer<Login> L
 
 <EditForm Model="@model"
           OnValidSubmit="OnValidSubmit">
-    <MudText Typo="Typo.h4" GutterBottom="true">Sign In</MudText>
+    <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
 
-    <MudText>Don't have an account? <MudLink Href="/pages/authentication/register">Sign Up</MudLink></MudText>
+    <MudText>@L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink></MudText>
 
     <MudTextField T="string"
                   @bind-Value="model.UserName" For="@(() => model.UserName)"
-                  Label="User Name"
+                  Label="@L["User Name"]"
                   Variant="Variant.Outlined"
                   Required="true"
-                  RequiredError="User name is required!"
+                  RequiredError="@L["User name is required!"]"
                   Class="my-6"></MudTextField>
 
     <MudTextField @bind-Value="model.Password" For="@(() => model.Password)"
-                  Label="Password"
+                  Label="@L["Password"]"
                   Variant="Variant.Outlined"
                   InputType="@PasswordInput"
                   Adornment="Adornment.End"
                   AdornmentIcon="@PasswordInputIcon"
                   Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))"
                   Required="true"
-                  RequiredError="Password is required!"
+                  RequiredError="@L["Password is required!"]"
                   OnAdornmentClick="TogglePasswordVisibility" />
 
     <div Class="d-flex justify-space-between align-center">
-        <MudCheckBox For="@(() => model.RememberMe)" @bind-Checked="model.RememberMe" Label="Remember me?" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
-        <MudLink Href="/pages/authentication/forgot-password">Forgot pwd?</MudLink>
+        <MudCheckBox For="@(() => model.RememberMe)" @bind-Checked="model.RememberMe" Label="@L["Remember me?"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+        <MudLink Href="/pages/authentication/forgot-password">@L["Forgot pwd?"]</MudLink>
     </div>
 
 
@@ -44,9 +45,9 @@
                FullWidth="true">Sign In</MudButton>
 </EditForm>
 @code {
-    [Inject] private UserManager<ApplicationUser> userManager { get; set; }
-    [Inject] private NavigationManager _navigation { get; set; }
-    [Inject] private IDataProtectionProvider dataProtectionProvider { get; set; }
+    [Inject] private UserManager<ApplicationUser> userManager { get; set; } = default!;
+    [Inject] private NavigationManager _navigation { get; set; }= default!;
+    [Inject] private IDataProtectionProvider dataProtectionProvider { get; set; }= default!;
     LoginFormModel model = new LoginFormModel()
         {
             UserName = "administrator",
@@ -62,17 +63,17 @@
     {
         if (string.IsNullOrWhiteSpace(pw))
         {
-            yield return "Password is required!";
+            yield return L["Password is required!"];
             yield break;
         }
         if (pw.Length < 6)
-            yield return "Password must be at least of length 6";
+            yield return L["Password must be at least of length 6"];
         if (!Regex.IsMatch(pw, @"[A-Z]"))
-            yield return "Password must contain at least one capital letter";
+            yield return L["Password must contain at least one capital letter"];
         if (!Regex.IsMatch(pw, @"[a-z]"))
-            yield return "Password must contain at least one lowercase letter";
+            yield return L["Password must contain at least one lowercase letter"];
         if (!Regex.IsMatch(pw, @"[0-9]"))
-            yield return "Password must contain at least one digit";
+            yield return L["Password must contain at least one digit"];
     }
 
     void TogglePasswordVisibility()

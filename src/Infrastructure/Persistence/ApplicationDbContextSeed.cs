@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Extensions;
-using CleanArchitecture.Blazor.Application.Common.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
-using Microsoft.AspNetCore.Identity;
 using System.Reflection;
 
 
@@ -76,8 +74,7 @@ public static class ApplicationDbContextSeed
             context.DocumentTypes.Add(new Domain.Entities.DocumentType() { Name = "Image", Description = "Image" });
             context.DocumentTypes.Add(new Domain.Entities.DocumentType() { Name = "Other", Description = "Other" });
             await context.SaveChangesAsync();
-            context.Loggers.Add(new Domain.Entities.Log.Logger() { Message = "Initial add document types", Level = "Information", UserName = "System", TimeStamp = System.DateTime.Now });
-            await context.SaveChangesAsync();
+         
         }
         if (!context.KeyValues.Any())
         {
@@ -90,21 +87,18 @@ public static class ApplicationDbContextSeed
             context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Region", Value = "CNS", Text = "CNS", Description = "Region of Customer" });
             context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Region", Value = "Oversea", Text = "Oversea", Description = "Region of Customer" });
             await context.SaveChangesAsync();
-            context.Loggers.Add(new Domain.Entities.Log.Logger() { Message = "Initial add key values", Level = "Information", UserName = "System", TimeStamp = System.DateTime.Now });
-            await context.SaveChangesAsync();
+          
         }
         if (!context.Customers.Any())
         {
             context.Customers.Add(new Domain.Entities.Customer() { Name = "SmartAdmin", AddressOfEnglish = "https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0", GroupName = "SmartAdmin", Address = "https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0", Sales = "GotBootstrap", RegionSalesDirector = "GotBootstrap", Region = "CNC", NameOfEnglish = "SmartAdmin", PartnerType = Domain.Enums.PartnerType.TP, Contact = "GotBootstrap", Email = "drlantern@gotbootstrap.com" });
             await context.SaveChangesAsync();
-
-            context.Loggers.Add(new Domain.Entities.Log.Logger() { Message = "Initial add customer", Level = "Information", UserName = "System", TimeStamp = System.DateTime.Now });
-
-            context.Loggers.Add(new Domain.Entities.Log.Logger() { Message = "Debug", Level = "Debug", UserName = "System", TimeStamp = System.DateTime.Now.AddHours(-1) });
-            context.Loggers.Add(new Domain.Entities.Log.Logger() { Message = "Error", Level = "Error", UserName = "System", TimeStamp = System.DateTime.Now.AddHours(-1) });
-            context.Loggers.Add(new Domain.Entities.Log.Logger() { Message = "Warning", Level = "Warning", UserName = "System", TimeStamp = System.DateTime.Now.AddHours(-2) });
-            context.Loggers.Add(new Domain.Entities.Log.Logger() { Message = "Trace", Level = "Trace", UserName = "System", TimeStamp = System.DateTime.Now.AddHours(-4) });
-            context.Loggers.Add(new Domain.Entities.Log.Logger() { Message = "Fatal", Level = "Fatal", UserName = "System", TimeStamp = System.DateTime.Now.AddHours(-4) });
+        }
+        if (!context.Products.Any())
+        {
+            context.Products.Add(new Domain.Entities.Product() { Name = "IPhone 13 Pro", Description= "Apple iPhone 13 Pro smartphone. Announced Sep 2021. Features 6.1″ display, Apple A15 Bionic chipset, 3095 mAh battery, 1024 GB storage.", Unit="EA",Price=999.98m });
+            context.Products.Add(new Domain.Entities.Product() { Name = "MI 12 Pro", Description = "Xiaomi 12 Pro Android smartphone. Announced Dec 2021. Features 6.73″ display, Snapdragon 8 Gen 1 chipset, 4600 mAh battery, 256 GB storage.", Unit = "EA", Price = 199.00m });
+            context.Products.Add(new Domain.Entities.Product() { Name = "MX KEYS Mini", Description = "Logitech MX Keys Mini Introducing MX Keys Mini – a smaller, smarter, and mightier keyboard made for creators. Type with confidence on a keyboard crafted for efficiency, stability, and...", Unit = "PA", Price = 99.90m });
             await context.SaveChangesAsync();
         }
     }

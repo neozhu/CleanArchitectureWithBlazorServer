@@ -11,6 +11,7 @@ using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Serilog;
 using Serilog.Events;
+using MudBlazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,18 @@ builder.Services.AddInfrastructure(builder.Configuration)
         .AddApplication();
 
 
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(config =>
+{
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
+    config.SnackbarConfiguration.PreventDuplicates = false;
+    config.SnackbarConfiguration.NewestOnTop = true;
+    config.SnackbarConfiguration.ShowCloseIcon = true;
+    config.SnackbarConfiguration.VisibleStateDuration = 3000;
+    config.SnackbarConfiguration.HideTransitionDuration = 500;
+    config.SnackbarConfiguration.ShowTransitionDuration = 500;
+    config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+});
+builder.Services.AddMudBlazorDialog();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddHotKeys();
 builder.Services.AddBlazoredLocalStorage();

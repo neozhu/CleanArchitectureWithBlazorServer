@@ -30,8 +30,27 @@
     <script src="_framework/blazor.server.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-   <script src="~/js/apex-chart-wrapper.js"></script>
-    @await RenderSectionAsync("scripts",false)
+    <script src="~/js/apex-chart-wrapper.js"></script>
+    <script type="text/javascript">
+
+        async function downloadFileFromStream(fileName, contentStreamReference) {
+            const arrayBuffer = await contentStreamReference.arrayBuffer();
+            const blob = new Blob([arrayBuffer]);
+            const url = URL.createObjectURL(blob);
+
+            triggerFileDownload(fileName, url);
+
+            URL.revokeObjectURL(url);
+        }
+
+        function triggerFileDownload(fileName, url) {
+            const anchorElement = document.createElement('a');
+            anchorElement.href = url;
+            anchorElement.download = fileName ?? '';
+            anchorElement.click();
+            anchorElement.remove();
+        }
+    </script>
    
 </body>
 </html>

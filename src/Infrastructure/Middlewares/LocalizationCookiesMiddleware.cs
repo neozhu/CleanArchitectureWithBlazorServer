@@ -33,7 +33,8 @@ public class LocalizationCookiesMiddleware : IMiddleware
                     .Cookies
                     .Append(
                         Provider.CookieName,
-                        CookieRequestCultureProvider.MakeCookieValue(feature.RequestCulture)
+                        CookieRequestCultureProvider.MakeCookieValue(feature.RequestCulture),
+                        new CookieOptions() { Expires = new DateTimeOffset(DateTime.Now.AddMonths(3)) }
                     );
             }
         }

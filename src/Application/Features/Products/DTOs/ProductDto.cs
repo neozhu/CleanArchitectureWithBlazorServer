@@ -7,9 +7,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 public class ProductDto:IMapFrom<Product>
     {
  
-    public TrackingState TrackingState { get; set; }
     public int Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public string? Unit { get; set; }
+    public decimal Price { get; set; }
+    public IList<string>? Pictures { get; set; }
 }
 

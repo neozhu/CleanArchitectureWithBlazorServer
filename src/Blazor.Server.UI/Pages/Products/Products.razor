@@ -1,0 +1,306 @@
+@page "/pages/products"
+@using Blazor.Server.UI.Components.Dialogs
+@using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
+@using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
+@using CleanArchitecture.Blazor.Application.Features.Products.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
+@using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
+@using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
+
+@inject IJSRuntime JS
+@inject IStringLocalizer<Products> L
+<PageTitle>@Title</PageTitle>
+<style>
+    .mud-table-toolbar {
+        height: 84px !important;
+    }
+</style>
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<ProductDto>>>(ServerReload))"
+          FixedHeader="true"
+          FixedFooter="true"
+          Height="calc(100vh - 265px)"
+          Loading="@_loading"
+          SortLabel="@L["Sort By"]"
+          MultiSelection="true" @bind-SelectedItems="_selectedItems"
+          Hover="true" @ref="_table">
+    <ToolBarContent>
+        <div class="justify-start pt-3">
+            <MudText Typo="Typo.h6">Product</MudText>
+            <MudButton DisableElevation Variant="Variant.Outlined"
+                       Size="Size.Small"
+                       OnClick="@(()=>OnRefresh())"
+                       StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                       Style="margin-right: 5px;">@L["Refresh"]</MudButton>
+            @if (_canCreate)
+            {
+                <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       Size="Size.Small"
+                       Style="margin-right: 5px;"
+                       OnClick="OnCreate"
+                       IconColor="Color.Surface">@L["Create"]</MudButton>
+            }
+            @if (_canDelete)
+            {
+                <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                       StartIcon="@Icons.Material.Filled.Delete"
+                       Disabled="@(!(_selectedItems.Count>0))"
+                       Size="Size.Small"
+                       Style="margin-right: 5px;"
+                       OnClick="OnDeleteChecked"
+                       IconColor="Color.Surface">@L["Delete"]</MudButton>
+            }
+            @if (_canImport)
+            {
+               <InputFile id="importdataInput" OnChange="OnImportData" hidden  accept=".xlsx" />
+                <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Upload"
+                       Size="Size.Small"
+                       Style="margin-right: 5px;"
+                       for="importdataInput"
+                       HtmlTag="label"
+                       IconColor="Color.Surface">@L["Import Data"]</MudButton>
+            }
+            @if (_canExport)
+            {
+                <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Download"
+                       Size="Size.Small"
+                       Style="margin-right: 5px;"
+                       OnClick="OnExport"
+                       IconColor="Color.Surface">@L["Export Data"]</MudButton>
+            }
+        </div>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <ColGroup>
+        <col style="width:50px;" />
+    </ColGroup>
+    <HeaderContent>
+        <MudTh Style="width:80px">@L["Actions"]</MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Name" T="ProductDto">@L["Product Name"]</MudTableSortLabel></MudTh>
+        <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="Price" T="ProductDto">@L["Price"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Unit" T="ProductDto">@L["Unit"]</MudTableSortLabel></MudTh>
+
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Actions">
+            @if (_canEdit || _canDelete)
+            {
+                <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                     Dense="true"
+                     EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
+                     OffsetX="true">
+                    @if (_canEdit)
+                    {
+                        <MudMenuItem OnClick="@(()=>OnEdit(context))">@L["Edit"]</MudMenuItem>
+                    }
+                    @if (_canDelete)
+                    {
+                        <MudMenuItem OnClick="@(()=>OnDelete(context))">@L["Delete"]</MudMenuItem>
+                    }
+                </MudMenu>
+            }
+            else
+            {
+                <MudButton Variant="Variant.Filled" DisableElevation="true"
+                       StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                       Color="Color.Surface">
+                    @L["No Allowed"]
+                </MudButton>
+            }
+        </MudTd>
+        <MudTd DataLabel="Name">
+            <MudText>@context.Name</MudText>
+            <MudText Typo="Typo.body2">@context.Description</MudText>
+        </MudTd>
+        <MudTd DataLabel="Price" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
+        <MudTd DataLabel="Unit">@context.Unit</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No matching records found</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Loading...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    public string? Title { get; private set; }
+    private HashSet<ProductDto> _selectedItems = new HashSet<ProductDto>();
+    private MudTable<ProductDto> _table = default!;
+    private int _totalItems;
+    private string _searchString = string.Empty;
+    private bool _loading;
+    [Inject]
+    private ISender _mediator { get; set; } = default!;
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+
+
+    private bool _canSearch;
+    private bool _canCreate;
+    private bool _canEdit;
+    private bool _canDelete;
+    private bool _canImport;
+    private bool _canExport;
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L["Products"];
+        var state = await AuthState;
+        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Create)).Succeeded;
+        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Search)).Succeeded;
+        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Edit)).Succeeded;
+        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Delete)).Succeeded;
+        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Import)).Succeeded;
+        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Export)).Succeeded;
+
+    }
+    private async Task<TableData<ProductDto>> ServerReload(TableState state)
+    {
+        _loading = true;
+        var request = new ProductsWithPaginationQuery()
+            {
+                Keyword = _searchString,
+                OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
+                SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
+                PageNumber = state.Page + 1,
+                PageSize = state.PageSize
+            };
+        var result = await _mediator.Send(request);
+        _loading = false;
+        return new TableData<ProductDto>() { TotalItems = result.TotalItems, Items = result.Items };
+
+    }
+    private async Task OnSearch(string text)
+    {
+        _searchString = text;
+        await _table.ReloadServerData();
+    }
+    private async Task OnRefresh()
+    {
+        _searchString = string.Empty;
+        await _table.ReloadServerData();
+    }
+    private async Task OnCreate()
+    {
+        var command = new AddEditProductCommand();
+        var parameters = new DialogParameters
+            {
+                { nameof(_ProductFormDialog.model),command },
+            };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<_ProductFormDialog>(L["Create a new product"], parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"Created successfully", MudBlazor.Severity.Info);
+        }
+    }
+    private async Task OnEdit(ProductDto dto)
+    {
+        var command = new AddEditProductCommand()
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Description = dto.Description,
+                Pictures = dto.Pictures,
+                Unit = dto.Unit,
+                Price = dto.Price
+            };
+        var parameters = new DialogParameters
+            {
+                { nameof(_ProductFormDialog.model),command },
+            };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<_ProductFormDialog>(L["Edit the product"], parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"Edited successfully", MudBlazor.Severity.Info);
+        }
+    }
+
+    private async Task OnDelete(ProductDto dto)
+    {
+        var deleteContent = L["You're sure you want to delete the product:{0}?"];
+        var parameters = new DialogParameters
+        {
+            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.Name) }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var command = new DeleteProductCommand() { Id = dto.Id };
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"Deleted successfully", MudBlazor.Severity.Info);
+        }
+    }
+
+    private async Task OnDeleteChecked()
+    {
+        var deleteContent = L["You're sure you want to delete the selected items:{0}?"];
+        var parameters = new DialogParameters
+        {
+            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,_selectedItems.Count) }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var command = new DeleteCheckedProductsCommand() { Id = _selectedItems.Select(x => x.Id).ToArray() };
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"Deleted successfully", MudBlazor.Severity.Info);
+        }
+    }
+    private async Task OnExport()
+    {
+
+        var request = new ExportProductsQuery()
+            {
+                Keyword = _searchString,
+                OrderBy = string.IsNullOrEmpty(_table.TableContext.SortFieldLabel) ? "Id" : _table.TableContext.SortFieldLabel,
+                SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
+            };
+        var result = await _mediator.Send(request);
+        using var streamRef = new DotNetStreamReference(new MemoryStream(result));
+        await JS.InvokeVoidAsync("downloadFileFromStream", $"{L["Products"]}.xlsx", streamRef);
+    }
+    private async Task OnImportData(InputFileChangeEventArgs e)
+    {
+        var stream = new MemoryStream();
+        await e.File.OpenReadStream().CopyToAsync(stream);
+        var command=new ImportProductsCommand()
+        {
+             Data=stream.ToArray(),
+             FileName= e.File.Name
+        };
+        var result = await _mediator.Send(command);
+        if(result.Succeeded){
+            await _table.ReloadServerData();
+            Snackbar.Add($"Import data successfully", MudBlazor.Severity.Info);
+        }
+        else
+        {
+            foreach(var msg in result.Errors)
+            {
+                Snackbar.Add($"{msg}", MudBlazor.Severity.Error);
+            }
+        }
+    }
+}

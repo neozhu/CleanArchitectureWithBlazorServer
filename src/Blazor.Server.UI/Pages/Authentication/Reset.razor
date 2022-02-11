@@ -1,13 +1,14 @@
-﻿@page "/pages/authentication/reset-password"
+@page "/pages/authentication/reset-password"
+@inject IStringLocalizer<Reset> L
 @attribute [AllowAnonymous]
 
 
 
-    <MudText Typo="Typo.h4" GutterBottom="true">Set new password</MudText>
+    <MudText Typo="Typo.h4" GutterBottom="true">@L["Set new password"]</MudText>
 
     <MudTextField @bind-Value="@Password" Label="New Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" Class="my-4" />
 
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/pages/authentication/login" Size="Size.Large" FullWidth="true" Class="mt-2">Set New Password</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/pages/authentication/login" Size="Size.Large" FullWidth="true" Class="mt-2">@L["Set New Password"]</MudButton>
 
 @code {
     string Password { get; set; }

@@ -44,8 +44,8 @@ public static class DependencyInjection
             options.CheckConsentNeeded = context => true;
             options.MinimumSameSitePolicy = SameSiteMode.None;
         });
-        services.Configure<SmartSettings>(configuration.GetSection(SmartSettings.SectionName));
-        services.AddSingleton(s => s.GetRequiredService<IOptions<SmartSettings>>().Value);
+        services.Configure<DashbordSettings>(configuration.GetSection(DashbordSettings.SectionName));
+        services.AddSingleton(s => s.GetRequiredService<IOptions<DashbordSettings>>().Value);
         services.AddSingleton<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
         services.AddScoped<IDomainEventService, DomainEventService>();

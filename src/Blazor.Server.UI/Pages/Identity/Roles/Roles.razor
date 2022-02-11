@@ -1,0 +1,338 @@
+@page "/indentity/roles"
+@using Blazor.Server.UI.Components.Dialogs
+@using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
+@using Microsoft.AspNetCore.Identity
+@using System.ComponentModel
+@using System.Reflection
+@using System.Security.Claims
+
+@attribute [Authorize(Policy = Permissions.Roles.View)]
+@inject IStringLocalizer<Roles> L
+<PageTitle>@Title</PageTitle>
+<style>
+    .mud-table-toolbar {
+        height: 84px !important;
+    }
+</style>
+<ErrorBoundary>
+    <ChildContent>
+
+        <MudTable Items="@RoleList"
+                  FixedHeader="true"
+                  FixedFooter="true"
+                  Height="calc(100vh - 265px)"
+                  Hover="true"
+                  MultiSelection="true"
+                  SelectedItems="@SelectItems"
+                  SortLabel="@L["Sort By"]"
+                  Filter="new Func<ApplicationRole,bool>(_quickFilter)">
+            <ToolBarContent>
+                <div class="justify-start pt-3">
+                    <MudText Typo="Typo.h6">Roles</MudText>
+                    <MudButton DisableElevation Variant="Variant.Outlined"
+                               Size="Size.Small"
+                               OnClick="OnRefresh"
+                               StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                               Style="margin-right: 5px;">@L["Refresh"]</MudButton>
+                    @if (_canCreate)
+                    {
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Add"
+                               Size="Size.Small"
+                               OnClick="OnCreate"
+                               Style="margin-right: 5px;"
+                               IconColor="Color.Surface">@L["Create"]</MudButton>
+                    }
+                    @if (_canDelete)
+                    {
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                               StartIcon="@Icons.Material.Filled.Delete"
+                               Disabled="@(!(SelectItems.Count>0))"
+                               OnClick="OnDeleteChecked"
+                               Size="Size.Small"
+                               Style="margin-right: 5px;"
+                               IconColor="Color.Surface">@L["Delete"]</MudButton>
+                    }
+                    @if (_canImport)
+                    {
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Upload"
+                               Size="Size.Small"
+                               Style="margin-right: 5px;"
+                               IconColor="Color.Surface">@L["Import Data"]</MudButton>
+                    }
+                    @if (_canExport)
+                    {
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Download"
+                               Size="Size.Small"
+                               Style="margin-right: 5px;"
+                               IconColor="Color.Surface">@L["Export Data"]</MudButton>
+                    }
+                </div>
+                <MudSpacer />
+                @if (_canSearch)
+                {
+                    <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth="false"
+                              Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3">
+                    </MudTextField>
+                }
+            </ToolBarContent>
+            <ColGroup>
+                <col style="width:50px;" />
+
+            </ColGroup>
+            <HeaderContent>
+                <MudTh Style="width:80px">@L["Actions"]</MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Name)">@L["Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Actions">
+                    @if (_canEdit || _canManagePermissions)
+                    {
+                        <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                             Dense="true"
+                             EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
+                             OffsetX="true">
+                            @if (_canEdit)
+                            {
+                                <MudMenuItem OnClick="@(()=>OnEdit(context))">@L["Edit"]</MudMenuItem>
+                            }
+                            @if (_canManagePermissions)
+                            {
+                                <MudMenuItem OnClick="@(()=>OnSetPermissions(context))">@L["Set Permissions"]</MudMenuItem>
+                            }
+                        </MudMenu>
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" DisableElevation="true"
+                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                               Color="Color.Surface">
+                            @L["No Allowed"]
+                        </MudButton>
+                    }
+                </MudTd>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Description">@context.Description</MudTd>
+
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+
+        <_PermissionsDrawer OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
+    </ChildContent>
+    <ErrorContent>
+        <MudAlert Class="mt-auto" Severity="MudBlazor.Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+
+    private string CurrentRoleName = string.Empty;
+    private List<ApplicationRole> RoleList = new List<ApplicationRole>();
+    private HashSet<ApplicationRole> SelectItems = new HashSet<ApplicationRole>();
+    private string _searchString=string.Empty;
+    private bool _sortNameByLength;
+    public string? Title { get; private set; }
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject]
+    private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
+
+    private List<PermissionModel> _permissions = new();
+    private IList<Claim> _assignedClaims=default!;
+    private bool _canCreate;
+    private bool _canSearch;
+    private bool _canEdit;
+    private bool _canDelete;
+    private bool _canManagePermissions;
+    private bool _canImport;
+    private bool _canExport;
+    private bool _showPermissionsDrawer ;
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L["Roles"];
+        var state = await AuthState;
+        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Create)).Succeeded;
+        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Search)).Succeeded;
+        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Edit)).Succeeded;
+        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Delete)).Succeeded;
+        _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.ManagePermissions)).Succeeded;
+        _canImport =false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
+        _canExport =false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        RoleList = await _roleManager.Roles.ToListAsync();
+
+    }
+    private Func<ApplicationRole, bool> _quickFilter => x =>
+       {
+           if (string.IsNullOrWhiteSpace(_searchString))
+               return true;
+
+           if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+               return true;
+
+           if (x.Description.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+               return true;
+
+           return false;
+       };
+    private async Task OnRefresh()
+    {
+        RoleList = await _roleManager.Roles.ToListAsync();
+    }
+    private async Task OnCreate()
+    {
+        var model = new RoleFormModel();
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<_RoleFormDialog>(L["Create a new role"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var applicationRole = new ApplicationRole()
+                {
+                    Name = model.Name,
+                    Description = model.Description
+                };
+
+            var state = await _roleManager.CreateAsync(applicationRole);
+            if (state.Succeeded)
+            {
+                RoleList.Add(applicationRole);
+                Snackbar.Add($"Create successfully", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+            }
+        }
+    }
+    private async Task OnEdit(ApplicationRole item)
+    {
+        var model = new RoleFormModel()
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Description = item.Description
+            };
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<_RoleFormDialog>(L["Create a new role"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            item.Name = model.Name;
+            item.Description = model.Description;
+
+            var state = await _roleManager.UpdateAsync(item);
+            if (state.Succeeded)
+            {
+                Snackbar.Add($"Updated successfully", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+            }
+        }
+    }
+    private async Task OnSetPermissions(ApplicationRole item)
+    {
+        CurrentRoleName = item.Name;
+        _permissions = await GetAllPermissions(item);
+        _showPermissionsDrawer = true;
+
+    }
+
+    private async Task<List<PermissionModel>> GetAllPermissions(ApplicationRole role)
+    {
+        _assignedClaims = await _roleManager.GetClaimsAsync(role);
+        var allPermissions = new List<PermissionModel>();
+        var modules = typeof(Permissions).GetNestedTypes();
+        foreach (var module in modules)
+        {
+            var moduleName = string.Empty;
+            var moduleDescription = string.Empty;
+            if (module.GetCustomAttributes(typeof(DisplayNameAttribute), true)
+                .FirstOrDefault() is DisplayNameAttribute displayNameAttribute)
+                moduleName = displayNameAttribute.DisplayName;
+
+            if (module.GetCustomAttributes(typeof(DescriptionAttribute), true)
+                .FirstOrDefault() is DescriptionAttribute descriptionAttribute)
+                moduleDescription = descriptionAttribute.Description;
+
+            var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            foreach (var fi in fields)
+            {
+                var propertyValue = fi.GetValue(null);
+
+                if (propertyValue is not null)
+                {
+                    var claimValue = propertyValue.ToString();
+                    allPermissions.Add(
+                        new PermissionModel
+                            {
+                                RoleId = role.Id,
+                                ClaimValue = claimValue,
+                                ClaimType = ApplicationClaimTypes.Permission,
+                                Group = moduleName,
+                                Description = moduleDescription,
+                                Assigned = _assignedClaims.Any(x => x.Value == claimValue)
+                            });
+                }
+            }
+        }
+        return allPermissions;
+    }
+    private  Task OnOpenChangedHandler(bool state)
+    {
+        _showPermissionsDrawer = state;
+        return Task.CompletedTask;
+    }
+    private async Task OnAssignChangedHandler(PermissionModel model)
+    {
+        var roleId=model.RoleId;
+        var role = await _roleManager.FindByIdAsync(roleId);
+        model.Assigned = !model.Assigned;
+        if (model.Assigned)
+        {
+            await _roleManager.AddClaimAsync(role,new Claim(model.ClaimType,model.ClaimValue));
+        }
+        else
+        {
+            var removed = _assignedClaims.FirstOrDefault(x=>x.Value==model.ClaimValue);
+            if(removed is not null)
+            {
+                await _roleManager.RemoveClaimAsync(role,removed);
+            }
+        }
+
+    }
+    private async Task OnDeleteChecked()
+    {
+        string deleteContent = L["You're sure you want to delete selected items:{0}?"];
+        var parameters = new DialogParameters
+        {
+            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, SelectItems.Count) }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            foreach(var item in SelectItems)
+            {
+                await _roleManager.DeleteAsync(item);
+                RoleList.Remove(item);
+            }
+        }
+    }
+
+
+
+
+}

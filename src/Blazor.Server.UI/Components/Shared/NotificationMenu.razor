@@ -1,5 +1,5 @@
 @inherits MudComponentBase
-
+@inject IStringLocalizer<NotificationMenu> L
 <MudElement @attributes="@UserAttributes"
             Class="@Classname"
             Style="@Style">
@@ -27,7 +27,7 @@
                  style="min-width: 330px">
                 <MudText Class="pb-2 px-6"
                          Typo="Typo.body2">
-                    <b>Notifications</b>
+                    <b>@(L["Notifications"])</b>
                 </MudText>
                 <MudDivider Class="my-2" />
                 @if (Notifications != null && Notifications.Any())
@@ -60,7 +60,7 @@
                 {
                     <MudText Class="px-6 py-3"
                              Typo="Typo.body2">
-                        You have no unread notifications.
+                        @(L["You have no unread notifications."])
                     </MudText>
                 }
                 <MudDivider Class="my-2" />
@@ -70,7 +70,7 @@
                                OnClick="OnClickViewAll"
                                Style="text-transform:none"
                                Variant="Variant.Text">
-                        View All
+                        @(L["View All"])
                     </MudButton>
                 </div>
             </div>

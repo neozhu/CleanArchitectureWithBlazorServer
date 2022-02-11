@@ -1,31 +1,34 @@
 @page "/indentity/users"
+@using Blazor.Server.UI.Components.Dialogs
 @using Microsoft.AspNetCore.Identity
-
-@attribute [Authorize(Policy = Permissions.Users.View)]
 @inject IStringLocalizer<Users> L
+@attribute [Authorize(Policy = Permissions.Users.View)]
+
 <PageTitle>@Title</PageTitle>
 <style>
-    .mud-toolbar {
+    .mud-table-toolbar {
         height: 84px !important;
     }
 </style>
 <ErrorBoundary>
     <ChildContent>
 
-        <MudTable Items="@UserList"
+        <MudTable Items="UserList"
                   FixedHeader="true"
                   FixedFooter="true"
-                  Height="calc(100vh - 296px)"
+                  Height="calc(100vh - 265px)"
                   Hover="true"
                   MultiSelection="true"
-                  SelectedItems="@SelectItems"
-                  SortLabel="Sort By"
+                  SelectedItems="SelectItems"
+                  SortLabel="@L["Sort By"]"
+                  Loading="_loading"
                   Filter="new Func<ApplicationUser,bool>(_quickFilter)">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">Users</MudText>
                     <MudButton DisableElevation Variant="Variant.Outlined"
                                Size="Size.Small"
+                               OnClick="@(()=>OnRefresh())"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                Style="margin-right: 5px;">@L["Refresh"]</MudButton>
                     @if (_canCreate)
@@ -34,6 +37,7 @@
                                StartIcon="@Icons.Material.Filled.Add"
                                Size="Size.Small"
                                Style="margin-right: 5px;"
+                               OnClick="OnCreate"
                                IconColor="Color.Surface">@L["Create"]</MudButton>
                     }
                     @if (_canDelete)
@@ -43,9 +47,10 @@
                                Disabled="@(!(SelectItems.Count>0))"
                                Size="Size.Small"
                                Style="margin-right: 5px;"
+                               OnClick="OnDeleteChecked"
                                IconColor="Color.Surface">@L["Delete"]</MudButton>
                     }
-                    @if (_canImport)
+                 @if (_canImport)
                     {
                         <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.Upload"
@@ -71,8 +76,12 @@
                     </MudTextField>
                 }
             </ToolBarContent>
+            <ColGroup>
+                <col style="width:50px;" />
+
+            </ColGroup>
             <HeaderContent>
-                <MudTh>@L["Actions"]</MudTh>
+                <MudTh Style="width:80px">@L["Actions"]</MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Site)">@L["Site"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.DisplayName)">@L["Dispaly Name"]</MudTableSortLabel></MudTh>
@@ -83,41 +92,43 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Actions">
-                    @if(_canEdit || _canManageRoles || _canRestPassword || _canActive) {
-                    <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
+                    @if (_canEdit || _canManageRoles || _canRestPassword || _canActive)
+                    {
+                        <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
+                             Size="Size.Small"
+                             Dense="true"
                              EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
-                        @if (_canEdit)
-                        {
-                            <MudMenuItem>@L["Edit"]</MudMenuItem>
-                        }
-                        @if (_canActive)
-                        {
-                            @if (context.IsActive)
+                            @if (_canEdit)
                             {
-                                <MudMenuItem>@L["Set Inactive"]</MudMenuItem>
+                                <MudMenuItem OnClick=@(()=>OnEdit(context))>@L["Edit"]</MudMenuItem>
                             }
-                            else
+                            @if (_canActive)
                             {
-                                <MudMenuItem>@L["Set Active"]</MudMenuItem>
+                                @if (context.IsActive)
+                                {
+                                    <MudMenuItem OnClick=@(()=>OnSetActive(context))>@L["Set Inactive"]</MudMenuItem>
+                                }
+                                else
+                                {
+                                    <MudMenuItem OnClick=@(()=>OnSetActive(context))>@L["Set Active"]</MudMenuItem>
+                                }
+
+                            }
+                            @if (_canRestPassword)
+                            {
+                                <MudMenuItem OnClick=@(()=>OnResetPassword(context))>@L["Rest Password"]</MudMenuItem>
                             }
 
-                        }
-                        @if (_canRestPassword)
-                        {
-                            <MudMenuItem>@L["Rest Password"]</MudMenuItem>
-                        }
-                        @if (_canManageRoles)
-                        {
-                            <MudMenuItem>@L["Manage Roles"]</MudMenuItem>
-                        }
-                    </MudMenu>
-                    } else {
-                    <MudButton Variant="Variant.Filled" DisableElevation="true"
+                        </MudMenu>
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" DisableElevation="true"
                                StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
-                        @L["No Allowed"]
-                    </MudButton>
+                            @L["No Allowed"]
+                        </MudButton>
                     }
                 </MudTd>
                 <MudTd DataLabel="Site">@context.Site</MudTd>
@@ -125,7 +136,9 @@
                 <MudTd DataLabel="DisplayName">@context.DisplayName</MudTd>
                 <MudTd DataLabel="Email">@context.Email</MudTd>
                 <MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
-                <MudTd DataLabel="IsActive">@context.IsActive</MudTd>
+                <MudTd DataLabel="IsActive">
+                    <MudCheckBox Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
+                </MudTd>
                 <MudTd DataLabel="LockoutEnd">@context.LockoutEnd</MudTd>
             </RowTemplate>
             <PagerContent>
@@ -136,14 +149,14 @@
 
     </ChildContent>
     <ErrorContent>
-        <MudAlert Class="mt-auto" Severity="Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
+        <MudAlert Class="mt-auto" Severity="MudBlazor.Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
     </ErrorContent>
 </ErrorBoundary>
 
 @code {
 
 
-    private IEnumerable<ApplicationUser> UserList = new List<ApplicationUser>();
+    private List<ApplicationUser> UserList = new List<ApplicationUser>();
     private HashSet<ApplicationUser> SelectItems = new HashSet<ApplicationUser>();
     private string _searchString;
     private bool _sortNameByLength;
@@ -151,9 +164,7 @@
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
-    protected IAuthorizationService AuthService { get; set; } = default!;
-    [Inject]
-    private UserManager<ApplicationUser> _userManager { get; set; }
+    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
 
     private bool _canCreate;
     private bool _canSearch;
@@ -164,6 +175,8 @@
     private bool _canRestPassword;
     private bool _canImport;
     private bool _canExport;
+    private bool _loading;
+    private MudTable<ApplicationUser> _table = default!;
     protected override async Task OnInitializedAsync()
     {
         Title = L["Users"];
@@ -175,8 +188,8 @@
         _canActive = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Active)).Succeeded;
         _canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
         _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
-        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
-        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        _canImport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
+        _canExport =false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         UserList = await _userManager.Users.ToListAsync();
 
     }
@@ -196,8 +209,149 @@
 
            return false;
        };
-    private void click()
+    private async Task OnRefresh()
     {
-        throw new Exception("test");
+        UserList = await _userManager.Users.ToListAsync();
+    }
+    private async Task OnCreate()
+    {
+        var model = new UserFormModel();
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var applicationUser = new ApplicationUser()
+                {
+                    Site = model.Site,
+                    DisplayName = model.DisplayName,
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    ProfilePictureDataUrl = model.ProfilePictureDataUrl
+                };
+            var password = model.Password;
+            var state = await _userManager.CreateAsync(applicationUser, password);
+            if (state.Succeeded)
+            {
+                UserList.Add(applicationUser);
+                Snackbar.Add($"Create successfully", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+            }
+        }
+
+    }
+    private async Task OnEdit(ApplicationUser item)
+    {
+        var roles = await _userManager.GetRolesAsync(item);
+        var model = new UserFormModel()
+            {
+                Id = item.Id,
+                Site = item.Site,
+                DisplayName = item.DisplayName,
+                UserName = item.UserName,
+                Email = item.Email,
+                PhoneNumber = item.PhoneNumber,
+                ProfilePictureDataUrl = item.ProfilePictureDataUrl,
+                AssignRoles = roles.ToArray()
+            };
+
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            item.DisplayName = model.DisplayName;
+            item.UserName = model.UserName;
+            item.Email = model.Email;
+            item.PhoneNumber = model.PhoneNumber;
+            item.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
+
+            var state = await _userManager.UpdateAsync(item);
+            if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
+            {
+                await _userManager.RemoveFromRolesAsync(item, roles);
+                await _userManager.AddToRolesAsync(item, model.AssignRoles);
+            }
+            if (state.Succeeded)
+            {
+                Snackbar.Add($"Update successfully", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+            }
+        }
+
+    }
+    private async Task OnDeleteChecked()
+    {
+        string deleteContent = L["You're sure you want to delete selected items:{0}?"];
+        var parameters = new DialogParameters
+        {
+            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, SelectItems.Count) }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            foreach(var item in SelectItems)
+            {
+                await _userManager.DeleteAsync(item);
+                UserList.Remove(item);
+            }
+        }
+    }
+    private async Task OnSetActive(ApplicationUser item)
+    {
+        item.IsActive = !item.IsActive;
+        var state = await _userManager.UpdateAsync(item);
+        if (state.Succeeded)
+        {
+            Snackbar.Add($"Update successfully", MudBlazor.Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+        }
+    }
+
+    private async Task OnResetPassword(ApplicationUser item)
+    {
+        var model = new ResetPasswordFormModel()
+            {
+                Id = item.Id,
+                DisplayName = item.DisplayName,
+                UserName = item.UserName,
+                ProfilePictureDataUrl = item.ProfilePictureDataUrl
+            };
+
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = DialogService.Show<_ResetPasswordDialog>(L["Set Password"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            item.DisplayName = model.DisplayName;
+            item.UserName = model.UserName;
+            item.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(item);
+            var state = await _userManager.ResetPasswordAsync(item, token, model.Password);
+            if (state.Succeeded)
+            {
+                Snackbar.Add($"Reset password successfully", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+            }
+        }
     }
 }
