@@ -39,10 +39,8 @@ public partial class MainLayout : IDisposable
     {
             Primary = "#2d4275",
             Black = "#0A0E19",
-            //Tertiary = "#00B5E2",
             Success = "#64A70B",
-            Secondary = "#728BC9",
-            //Info = "#2879A8"
+            Secondary = "#ff4081ff",
     };
     private readonly MudTheme _theme = new()
     {
