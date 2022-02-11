@@ -117,7 +117,7 @@
             <MudText>@context.Name</MudText>
             <MudText Typo="Typo.body2">@context.Description</MudText>
         </MudTd>
-        <MudTd DataLabel="Price" Style="text-align:right">@context.Price</MudTd>
+        <MudTd DataLabel="Price" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
         <MudTd DataLabel="Unit">@context.Unit</MudTd>
     </RowTemplate>
     <NoRecordsContent>
