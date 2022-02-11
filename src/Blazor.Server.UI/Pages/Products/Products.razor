@@ -291,7 +291,16 @@
              FileName= e.File.Name
         };
         var result = await _mediator.Send(command);
-        await _table.ReloadServerData();
-        Snackbar.Add($"Import data successfully", MudBlazor.Severity.Info);
+        if(result.Succeeded){
+            await _table.ReloadServerData();
+            Snackbar.Add($"Import data successfully", MudBlazor.Severity.Info);
+        }
+        else
+        {
+            foreach(var msg in result.Errors)
+            {
+                Snackbar.Add($"{msg}", MudBlazor.Severity.Error);
+            }
+        }
     }
 }
