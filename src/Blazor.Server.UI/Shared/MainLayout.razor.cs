@@ -114,28 +114,28 @@ public partial class MainLayout : IDisposable
             {
                 FontSize = "3rem",
                 FontWeight = 600,
-                LineHeight = 1.8,
+                LineHeight = 1.167,
                 LetterSpacing = "0"
             },
             H4 = new H4
             {
                 FontSize = "1.8rem",
-                FontWeight = 700,
+                FontWeight = 400,
                 LineHeight = 1.235,
-                LetterSpacing = ".007em"
+                LetterSpacing = ".00735em"
             },
             H5 = new H5
             {
-                FontSize = "1.8rem",
-                FontWeight = 700,
-                LineHeight = 2,
+                FontSize = "1.5rem",
+                FontWeight = 400,
+                LineHeight = 1.334,
                 LetterSpacing = "0"
             },
             H6 = new H6
             {
                 FontSize = "1.125rem",
-                FontWeight = 700,
-                LineHeight = 2,
+                FontWeight = 600,
+                LineHeight =1.6,
                 LetterSpacing = ".0075em"
             },
             Button = new Button
@@ -143,20 +143,23 @@ public partial class MainLayout : IDisposable
                 FontSize = ".875rem",
                 FontWeight = 500,
                 LineHeight = 1.75,
-                LetterSpacing = ".02857em"
+                LetterSpacing = ".02857em",
+                TextTransform = "none"
+
+
             },
             Subtitle1 = new Subtitle1
             {
-                FontSize = "1.1rem",
-                FontWeight = 500,
+                FontSize = "1rem",
+                FontWeight = 400,
                 LineHeight = 1.75,
                 LetterSpacing = ".00938em"
             },
             Subtitle2 = new Subtitle2
             {
-                FontSize = "1rem",
-                FontWeight = 600,
-                LineHeight = 1.8,
+                FontSize = ".875rem",
+                FontWeight = 500,
+                LineHeight = 1.57,
                 LetterSpacing = ".00714em"
             },
             Body1 = new Body1
