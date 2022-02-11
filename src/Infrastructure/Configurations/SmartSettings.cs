@@ -3,9 +3,9 @@
 
 namespace CleanArchitecture.Blazor.Infrastructure.Configurations;
 
-public class SmartSettings
+public class DashbordSettings
 {
-    public const string SectionName = nameof(SmartSettings);
+    public const string SectionName = nameof(DashbordSettings);
 
     public string Version { get; set; }
     public string App { get; set; }

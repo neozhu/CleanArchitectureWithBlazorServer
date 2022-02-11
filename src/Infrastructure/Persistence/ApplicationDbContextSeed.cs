@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Extensions;
-using CleanArchitecture.Blazor.Application.Common.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
-using Microsoft.AspNetCore.Identity;
 using System.Reflection;
 
 
