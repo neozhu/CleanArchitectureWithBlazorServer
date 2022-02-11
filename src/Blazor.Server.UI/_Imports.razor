@@ -1,5 +1,6 @@
 @using System.Net.Http
 @using System.Net.Http.Json
+@using CleanArchitecture.Blazor.Infrastructure.Configurations
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
@@ -26,7 +27,8 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces
 @using CleanArchitecture.Blazor.Application.Common.Models
 @using  CleanArchitecture.Blazor.Domain.Enums
-
+@using  Microsoft.AspNetCore.Components.Authorization
+@inject DashbordSettings Settings
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IConfiguration Config

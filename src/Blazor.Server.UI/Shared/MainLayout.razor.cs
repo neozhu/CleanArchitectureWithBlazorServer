@@ -4,6 +4,8 @@ using MudBlazor;
 using Blazor.Server.UI.Components.Shared;
 using Blazor.Server.UI.Models;
 using Toolbelt.Blazor.HotKeys;
+using Microsoft.AspNetCore.Components.Authorization;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 namespace Blazor.Server.UI.Shared;
 
@@ -188,7 +190,7 @@ public partial class MainLayout : IDisposable
         }
     }; 
 
-    private readonly UserModel _user = new()
+    private  UserModel _user = new()
     {
         Avatar = "./sample-data/avatar.png",
         DisplayName = "MudDemo",
@@ -205,10 +207,11 @@ public partial class MainLayout : IDisposable
  
 
     private bool _themingDrawerOpen;
-    [Inject] private IDialogService _dialogService { get; set; }
-    [Inject] private HotKeys _hotKeys { get; set; }
-    [Inject] private ILocalStorageService _localStorage { get; set; }
-
+    [Inject] private IDialogService _dialogService { get; set; } = default!;
+    [Inject] private HotKeys _hotKeys { get; set; } = default!;
+    [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
     public void Dispose()
     {
         _hotKeysContext?.Dispose();
@@ -224,12 +227,18 @@ public partial class MainLayout : IDisposable
             StateHasChanged();
         }
     }
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-       
+        var state = await AuthState;
+        _user = new UserModel()
+        {
+             Avatar = state.User.GetProfilePictureDataUrl(),
+             DisplayName = state.User.GetDisplayName(),
+             Email = state.User.GetEmail(),
+             Role = state.User.GetRoles().FirstOrDefault()
+        };
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
-        return Task.CompletedTask;
     }
     protected void SideMenuDrawerOpenChangedHandler(bool state)
     {

@@ -36,17 +36,7 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
             .IsRequired();
     }
 }
-//public class ApplicationRoleConfiguration : IEntityTypeConfiguration<ApplicationRole>
-//{
-//    //duplicate definition 
-//    public void Configure(EntityTypeBuilder<ApplicationRole> builder)
-//    {
-//        builder.HasMany(e => e.RoleClaims)
-//           .WithOne()
-//           .HasForeignKey(uc => uc.RoleId)
-//           .IsRequired();
-//    }
-//}
+
 
 public class ApplicationRoleClaimConfiguration : IEntityTypeConfiguration<ApplicationRoleClaim>
 {

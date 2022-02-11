@@ -15,7 +15,7 @@
                  Icon="@Icons.Custom.Brands.MudBlazor"
                  Size="Size.Large" />
         <MudText Typo="Typo.subtitle2">
-            <b>@L["Application Name"]</b>
+            <b>@L[Settings.AppName]</b>
         </MudText>
     </MudDrawerHeader>
 
@@ -121,9 +121,9 @@
 
     <MudDivider Class="mt-auto"></MudDivider>
     <MudNavMenu Class="d-flex justify-space-between pa-4" >
-        <MudLink Href="#"  Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">@@2022 Copyright</MudLink>
+        <MudLink Href="#"  Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">@Settings.Copyright</MudLink>
         <MudLink Href="#"  Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important"> Privacy Policy</MudLink>
-        <MudText Class=""  Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">version 1.0</MudText>
+        <MudText Class=""  Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">version @Settings.Version</MudText>
     </MudNavMenu>
 
 </MudDrawer>
