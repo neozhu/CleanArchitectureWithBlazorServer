@@ -19,7 +19,7 @@ public partial class UserMenu
                 { nameof(LogoutConfirmation.Color), Color.Error}
             };
 
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
         DialogService.Show<LogoutConfirmation>(L["Logout"], parameters, options);
         return Task.CompletedTask;
     } 

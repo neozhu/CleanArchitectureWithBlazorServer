@@ -1,6 +1,9 @@
 @page "/pages/products"
+@using Blazor.Server.UI.Components.Dialogs
+@using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
+@using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
 @inject IStringLocalizer<Products> L
 <PageTitle>@Title</PageTitle>
 <style>
@@ -40,6 +43,7 @@
                                Disabled="@(!(_selectedItems.Count>0))"
                                Size="Size.Small"
                                Style="margin-right: 5px;"
+                               OnClick="OnDeleteChecked"
                                IconColor="Color.Surface">@L["Delete"]</MudButton>
                     }
                     @if (_canImport)
@@ -83,11 +87,11 @@
                      OffsetX="true">
                     @if (_canEdit)
                     {
-                        <MudMenuItem>@L["Edit"]</MudMenuItem>
+                        <MudMenuItem OnClick="@(()=>OnEdit(context))">@L["Edit"]</MudMenuItem>
                     }
                     @if (_canDelete)
                     {
-                        <MudMenuItem>@L["Delete"]</MudMenuItem>
+                        <MudMenuItem OnClick="@(()=>OnDelete(context))">@L["Delete"]</MudMenuItem>
                     }
                 </MudMenu>
             }
@@ -175,8 +179,84 @@
         _searchString = string.Empty;
         await _table.ReloadServerData();
     }
-    private Task OnCreate()
+    private async Task OnCreate()
     {
-        return Task.CompletedTask;
+        var command=new AddEditProductCommand();
+        var parameters = new DialogParameters
+            {
+                { nameof(_ProductFormDialog.model),command },
+            };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<_ProductFormDialog>(L["Create a new product"], parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"Created successfully", MudBlazor.Severity.Info);
+        }
+    }
+    private async Task OnEdit(ProductDto dto)
+    {
+        var command = new AddEditProductCommand()
+        {
+            Id=dto.Id,
+            Name=dto.Name,
+            Description = dto.Description,
+            Pictures = dto.Pictures,
+            Unit=dto.Unit,
+            Price=dto.Price
+        };
+        var parameters = new DialogParameters
+            {
+                { nameof(_ProductFormDialog.model),command },
+            };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<_ProductFormDialog>(L["Edit the product"], parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"Edited successfully", MudBlazor.Severity.Info);
+        }
+    }
+
+    private async Task OnDelete(ProductDto dto)
+    {
+        var deleteContent = L["You're sure you want to delete the product:{0}?"];
+        var parameters = new DialogParameters
+        {
+            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.Name) }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var command = new DeleteProductCommand() { Id = dto.Id };
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"Deleted successfully", MudBlazor.Severity.Info);
+        }
+    }
+
+    private async Task OnDeleteChecked()
+    {
+        var deleteContent = L["You're sure you want to delete the selected items:{0}?"];
+        var parameters = new DialogParameters
+        {
+            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,_selectedItems.Count) }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var command = new DeleteCheckedProductsCommand() { Id =_selectedItems.Select(x=>x.Id).ToArray()  };
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"Deleted successfully", MudBlazor.Severity.Info);
+        }
     }
 }
