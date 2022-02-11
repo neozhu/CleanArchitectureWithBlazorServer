@@ -39,8 +39,6 @@ public partial class EntityTable<TEntity, TId, TRequest>
 
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
-    [Inject]
-    protected IAuthorizationService AuthService { get; set; } = default!;
 
     private bool _canSearch;
     private bool _canCreate;

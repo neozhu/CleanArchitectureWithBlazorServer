@@ -1,4 +1,5 @@
 @page "/indentity/roles"
+@using Blazor.Server.UI.Components.Dialogs
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel
@@ -19,7 +20,7 @@
         <MudTable Items="@RoleList"
                   FixedHeader="true"
                   FixedFooter="true"
-                  Height="calc(100vh - 2655px)"
+                  Height="calc(100vh - 265px)"
                   Hover="true"
                   MultiSelection="true"
                   SelectedItems="@SelectItems"
@@ -47,6 +48,7 @@
                         <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
                                StartIcon="@Icons.Material.Filled.Delete"
                                Disabled="@(!(SelectItems.Count>0))"
+                               OnClick="OnDeleteChecked"
                                Size="Size.Small"
                                Style="margin-right: 5px;"
                                IconColor="Color.Surface">@L["Delete"]</MudButton>
@@ -139,8 +141,6 @@
     public string? Title { get; private set; }
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
-    [Inject]
-    private IAuthorizationService AuthService { get; set; } = default!;
     [Inject]
     private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
 
@@ -311,6 +311,25 @@
             }
         }
 
+    }
+    private async Task OnDeleteChecked()
+    {
+        string deleteContent = L["You're sure you want to delete selected items:{0}?"];
+        var parameters = new DialogParameters
+        {
+            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, SelectItems.Count) }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            foreach(var item in SelectItems)
+            {
+                await _roleManager.DeleteAsync(item);
+                RoleList.Remove(item);
+            }
+        }
     }
 
 

@@ -1,4 +1,5 @@
 @page "/indentity/users"
+@using Blazor.Server.UI.Components.Dialogs
 @using Microsoft.AspNetCore.Identity
 @inject IStringLocalizer<Users> L
 @attribute [Authorize(Policy = Permissions.Users.View)]
@@ -46,6 +47,7 @@
                                Disabled="@(!(SelectItems.Count>0))"
                                Size="Size.Small"
                                Style="margin-right: 5px;"
+                               OnClick="OnDeleteChecked"
                                IconColor="Color.Surface">@L["Delete"]</MudButton>
                     }
                  @if (_canImport)
@@ -161,8 +163,6 @@
     public string? Title { get; private set; }
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
-    [Inject]
-    protected IAuthorizationService AuthService { get; set; } = default!;
     [Inject]
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
 
@@ -288,6 +288,25 @@
             }
         }
 
+    }
+    private async Task OnDeleteChecked()
+    {
+        string deleteContent = L["You're sure you want to delete selected items:{0}?"];
+        var parameters = new DialogParameters
+        {
+            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, SelectItems.Count) }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            foreach(var item in SelectItems)
+            {
+                await _userManager.DeleteAsync(item);
+                UserList.Remove(item);
+            }
+        }
     }
     private async Task OnSetActive(ApplicationUser item)
     {
