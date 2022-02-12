@@ -1,9 +1,12 @@
-using Blazor.Server.UI.Models.Notification;
+namespace Blazor.Server.UI.Services.Notifications;
 
-namespace Blazor.Server.UI.Services;
-
-public interface INotificationsService
+public interface INotificationService
 {
-    Task<IEnumerable<NotificationModel>> GetNotifications();
-    Task<IEnumerable<NotificationModel>> GetActiveNotifications();
+
+    Task<bool> AreNewNotificationsAvailable();
+    Task MarkNotificationsAsRead();
+    Task MarkNotificationsAsRead(string id);
+    Task<NotificationMessage> GetMessageById(string id);
+    Task<IDictionary<NotificationMessage, bool>> GetNotifications();
+    Task AddNotification(NotificationMessage message);
 }

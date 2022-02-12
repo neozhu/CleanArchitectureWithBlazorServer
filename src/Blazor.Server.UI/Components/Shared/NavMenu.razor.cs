@@ -7,9 +7,9 @@ namespace Blazor.Server.UI.Components.Shared;
 
 public partial class NavMenu
 {
-    private IEnumerable<NotificationModel> _activeNotifications;
+ 
 
-    [Inject] private INotificationsService NotificationsService { get; set; }
+  
 
     [EditorRequired] [Parameter] public ThemeManagerModel ThemeManager { get; set; } = default!;
     [EditorRequired] [Parameter] public bool SideMenuDrawerOpen { get; set; }
@@ -19,10 +19,5 @@ public partial class NavMenu
 
     [EditorRequired] [Parameter] public bool RightToLeft { get; set; }
     [EditorRequired] [Parameter] public EventCallback RightToLeftToggle { get; set; }
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        _activeNotifications = await NotificationsService.GetActiveNotifications();
-    }
+ 
 }
