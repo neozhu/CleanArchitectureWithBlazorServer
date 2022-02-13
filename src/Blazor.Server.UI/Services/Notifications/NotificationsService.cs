@@ -4,28 +4,30 @@ namespace Blazor.Server.UI.Services.Notifications;
 
 public class InMemoryNotificationService : INotificationService
 {
+    private const string LocalStorageKey = "__notficationTimestamp";
+    private readonly ILocalStorageService _localStorageService;
     private readonly ILogger<InMemoryNotificationService> _logger;
-    private readonly List<NotificationMessage> _messages;
-    private DateTime ___notficationTimestamp = DateTime.MinValue;
 
-    public InMemoryNotificationService(
+    private readonly List<NotificationMessage> _messages;
+
+    public InMemoryNotificationService(ILocalStorageService localStorageService,
         ILogger<InMemoryNotificationService> logger)
     {
+        _localStorageService = localStorageService;
         _logger = logger;
         _messages = new List<NotificationMessage>();
-        Preload();
     }
 
     private async Task<DateTime> GetLastReadTimestamp()
     {
-        if (_messages.Count==0)
+        if (await _localStorageService.ContainKeyAsync(LocalStorageKey) == false)
         {
-            return await Task.FromResult(DateTime.MinValue);
+            return DateTime.MinValue;
         }
         else
         {
-            var timestamp = ___notficationTimestamp;
-            return await Task.FromResult(timestamp);
+            var timestamp = await _localStorageService.GetItemAsync<DateTime>(LocalStorageKey);
+            return timestamp;
         }
     }
 
@@ -37,10 +39,9 @@ public class InMemoryNotificationService : INotificationService
         return entriesFound;
     }
 
-    public  Task MarkNotificationsAsRead()
+    public async Task MarkNotificationsAsRead()
     {
-        ___notficationTimestamp = DateTime.Now;
-        return Task.CompletedTask;
+        await _localStorageService.SetItemAsync(LocalStorageKey, DateTime.UtcNow.Date);
     }
 
     public async Task MarkNotificationsAsRead(string id)
@@ -48,10 +49,10 @@ public class InMemoryNotificationService : INotificationService
         var message = await GetMessageById(id);
         if (message == null) { return; }
 
-        var timestamp = ___notficationTimestamp;
+        var timestamp = await _localStorageService.GetItemAsync<DateTime>(LocalStorageKey);
         if (message.PublishDate > timestamp)
         {
-            ___notficationTimestamp = message.PublishDate;
+            await _localStorageService.SetItemAsync(LocalStorageKey, message.PublishDate);
         }
 
     }

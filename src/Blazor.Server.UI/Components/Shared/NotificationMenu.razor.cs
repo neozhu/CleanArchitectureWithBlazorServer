@@ -19,12 +19,16 @@ public partial class NotificationMenu : MudComponentBase
         await NotificationService.MarkNotificationsAsRead();
         _newNotificationsAvailable = false;
     }
-   
-    protected override async Task OnInitializedAsync()
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-         
+        if (firstRender)
+        {
+           (NotificationService as InMemoryNotificationService).Preload();
+        }
         _newNotificationsAvailable = await NotificationService.AreNewNotificationsAvailable();
         _messages = await NotificationService.GetNotifications();
-        await base.OnInitializedAsync();
+        StateHasChanged();
     }
+   
 }
