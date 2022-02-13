@@ -1,4 +1,4 @@
-# CleanArchitectureWithBlazorServer
+# Clean Architecture With Blazor Server
 This is a repository for creating a  Blazor Server application following the principles of Clean Architecture
 ## Live Demo
 -  Blazor Server mode: https://mudblazor-s.dotnet6.cn/
