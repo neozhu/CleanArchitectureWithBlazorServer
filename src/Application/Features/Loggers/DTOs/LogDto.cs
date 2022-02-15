@@ -19,5 +19,7 @@ public class LogDto : IMapFrom<Logger>
     public string? ClientAgent { get; set; }
     public string? Properties { get; set; }
     public string? LogEvent { get; set; }
+   
+
 
 }

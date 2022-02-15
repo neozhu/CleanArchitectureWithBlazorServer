@@ -1,9 +1,10 @@
-@page "/system/logs"
-@using CleanArchitecture.Blazor.Application.Features.Logs.DTOs
-@using CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery
+@page "/system/audittrails"
+@using CleanArchitecture.Blazor.Application.AuditTrails.Queries.PaginationQuery
+@using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs
 
-@attribute [Authorize(Policy = Permissions.Logs.View)]
-@inject IStringLocalizer<Logs> L
+
+@attribute [Authorize(Policy = Permissions.AuditTrails.View)]
+@inject IStringLocalizer<AuditTrails> L
 <PageTitle>@L[Title]</PageTitle>
 <style>
     .mud-table-toolbar {
@@ -12,7 +13,7 @@
 </style>
 <ErrorBoundary>
     <ChildContent>
-        <MudTable ServerData="@(new Func<TableState, Task<TableData<LogDto>>>(ServerReload))"
+        <MudTable ServerData="@(new Func<TableState, Task<TableData<AuditTrailDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 265px)"
@@ -34,16 +35,14 @@
             </ToolBarContent>
             <ColGroup>
                 <col style="width:160px;" />
-                <col style="width:100px;" />
-                <col style="width:90px;" />
-                <col style="width:70%;" />
             </ColGroup>
             <HeaderContent>
                 <MudTh Style="width:80px">@L["Actions"]</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="TimeStamp" T="LogDto">@L["Time Stamp"]</MudTableSortLabel></MudTh>
-                <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="Level" T="LogDto">@L["Level"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Message" T="LogDto">@L["Message"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="UserName" T="LogDto">@L["UserName"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="UserId" T="AuditTrailDto">@L["User Id"]</MudTableSortLabel></MudTh>
+                <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="AuditType" T="AuditTrailDto">@L["Audit Type"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="TableName" T="AuditTrailDto">@L["Table Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="PrimaryKey" T="AuditTrailDto">@L["Primary Key"]</MudTableSortLabel></MudTh>
+               
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Actions">
@@ -54,18 +53,19 @@
                         @L[((context.ShowDetails == true) ? "Hide" : "Show") + " Details"]
                     </MudButton>
                 </MudTd>
-                <MudTd DataLabel="TimeStamp">
-                    @context.TimeStamp
+                <MudTd DataLabel="UserId">
+                    @context.UserId
                 </MudTd>
-                <MudTd Style="text-align:center" DataLabel="Level">
-                    @context.Level
+                <MudTd Style="text-align:center" DataLabel="AuditType">
+                    @context.AuditType
                 </MudTd>
-                <MudTd DataLabel="Message">
-                    @context.Message
+                <MudTd DataLabel="TableName">
+                    @context.TableName
                 </MudTd>
-                <MudTd DataLabel="UserName">
-                    @context.UserName
+                <MudTd DataLabel="PrimaryKey">
+                    @context.PrimaryKey
                 </MudTd>
+                 
             </RowTemplate>
             <ChildRowContent>
                 @if (context.ShowDetails)
@@ -75,19 +75,16 @@
                             <MudCard Elevation="0">
                                 <MudCardHeader>
                                     <CardHeaderContent>
-                                        <MudText Typo="Typo.body1"><strong>@context.Level</strong></MudText>
+                                        <MudText Typo="Typo.body1"><strong>@context.TableName</strong></MudText>
                                     </CardHeaderContent>
                                 </MudCardHeader>
                                 <MudCardContent Class="pt-0">
-                                    <MudText>Message</MudText>
-                                    <MudText Typo="Typo.body2">@context.Message</MudText>
-                                    @if (!string.IsNullOrEmpty(context.Exception))
-                                    {
-                                        <MudText Color="Color.Error">Exception</MudText>
-                                        <MudText Color="Color.Warning" Typo="Typo.body2">@context.Exception</MudText>
-                                    }
-                                    <MudText>Client IP</MudText>
-                                    <MudText Typo="Typo.body2">@context.ClientIP</MudText>
+                                    <MudText>Old Values</MudText>
+                                    <MudText Typo="Typo.body2">@context.OldValues</MudText>
+                                   
+                                   <MudText>New Value</MudText>
+                                    <MudText Typo="Typo.body2">@context.NewValues</MudText>
+                                  
                                 </MudCardContent>
                             </MudCard>
                         </td>
@@ -110,17 +107,17 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
-    public string Title { get; private set; } = "Logs";
+    public string Title { get; private set; } = "Audit Trails";
     private string _searchString = string.Empty;
-    private MudTable<LogDto> _table = default!;
+    private MudTable<AuditTrailDto> _table = default!;
     private bool _loading;
     [Inject]
     private ISender _mediator { get; set; } = default!;
 
-    private async Task<TableData<LogDto>> ServerReload(TableState state)
+    private async Task<TableData<AuditTrailDto>> ServerReload(TableState state)
     {
         _loading = true;
-        var request = new LogsWithPaginationQuery()
+        var request = new AuditTrailsWithPaginationQuery()
             {
                 Keyword = _searchString,
                 OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
@@ -130,7 +127,7 @@
             };
         var result = await _mediator.Send(request);
         _loading = false;
-        return new TableData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
+        return new TableData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
 
     }
     private async Task OnSearch(string text)
@@ -143,7 +140,7 @@
         _searchString = string.Empty;
         await _table.ReloadServerData();
     }
-    private Task OnShowDetail(LogDto dto)
+    private Task OnShowDetail(AuditTrailDto dto)
     {
         dto.ShowDetails = !dto.ShowDetails;
         return Task.CompletedTask;

@@ -15,7 +15,7 @@ public class AuditTrail : IEntity
     public Dictionary<string, object>? OldValues { get; set; } = new();
     public Dictionary<string, object>? NewValues { get; set; } = new();
     public ICollection<string>? AffectedColumns { get; set; }
-    public Dictionary<string, object>? PrimaryKey { get; set; } = new();
+    public Dictionary<string, object> PrimaryKey { get; set; } = new();
 
     public List<PropertyEntry> TemporaryProperties { get; } = new();
     public bool HasTemporaryProperties => TemporaryProperties.Any();
