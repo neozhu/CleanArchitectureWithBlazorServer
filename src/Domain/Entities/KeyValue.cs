@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Domain.Entities;
 
-public class KeyValue : AuditableEntity, IHasDomainEvent
+public class KeyValue : AuditableEntity, IHasDomainEvent, IAuditTrial
 {
     public int Id { get; set; }
     public string Name { get; set; } = default!;

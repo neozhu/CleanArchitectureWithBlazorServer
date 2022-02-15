@@ -34,7 +34,7 @@
             </ToolBarContent>
             <ColGroup>
                 <col style="width:160px;" />
-                <col style="width:100px;" />
+                <col style="width:120px;" />
                 <col style="width:90px;" />
                 <col style="width:70%;" />
             </ColGroup>
@@ -49,7 +49,7 @@
                 <MudTd DataLabel="Actions">
                     <MudButton Variant="Variant.Filled" DisableElevation="true"
                                OnClick="@(() => OnShowDetail(context))"
-                               StartIcon="@Icons.Material.Filled.Details" IconColor="Color.Secondary" Size="Size.Small"
+                               StartIcon="@(context.ShowDetails == true?Icons.Material.Filled.Close:Icons.Material.Filled.Add)" IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
                         @L[((context.ShowDetails == true) ? "Hide" : "Show") + " Details"]
                     </MudButton>
