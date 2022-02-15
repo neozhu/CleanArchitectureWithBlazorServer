@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Domain.Entities.Log;
 
 namespace CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery;
 
-public class LogsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<LogDto>>
+public class LogsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<LogDto>>
 {
 
 
@@ -29,13 +29,13 @@ public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, Paginat
     }
     public async Task<PaginatedData<LogDto>> Handle(LogsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var filters = PredicateBuilder.FromFilter<Logger>(request.FilterRules);
+   
 
         var data = await _context.Loggers
-            .Where(filters)
-            .OrderBy($"{request.Sort} {request.Order}")
-            .ProjectTo<LogDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.Page, request.Rows);
+            .Where(x=>x.Message.Contains(request.Keyword) || x.Exception.Contains(request.Keyword))
+            .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                .ProjectTo<LogDto>(_mapper.ConfigurationProvider)
+                .PaginatedDataAsync(request.PageNumber, request.PageSize);
 
         return data;
     }

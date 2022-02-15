@@ -1,0 +1,150 @@
+@page "/system/logs"
+@using CleanArchitecture.Blazor.Application.Features.Logs.DTOs
+@using CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery
+
+@attribute [Authorize(Policy = Permissions.Logs.View)]
+@inject IStringLocalizer<Logs> L
+<PageTitle>@L[Title]</PageTitle>
+<style>
+    .mud-table-toolbar {
+        height: 84px !important;
+    }
+</style>
+<ErrorBoundary>
+    <ChildContent>
+        <MudTable ServerData="@(new Func<TableState, Task<TableData<LogDto>>>(ServerReload))"
+                  FixedHeader="true"
+                  FixedFooter="true"
+                  Height="calc(100vh - 265px)"
+                  Loading="@_loading"
+                  SortLabel="@L["Sort By"]"
+                  Hover="true" @ref="_table">
+            <ToolBarContent>
+                <div class="justify-start pt-3">
+                    <MudText Typo="Typo.h6">@L[Title]</MudText>
+                    <MudButton DisableElevation Variant="Variant.Outlined"
+                               Size="Size.Small"
+                               OnClick="@(()=>OnRefresh())"
+                               StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                               Style="margin-right: 5px;">@L["Refresh"]</MudButton>
+                </div>
+                <MudSpacer />
+                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <ColGroup>
+                <col style="width:160px;" />
+                <col style="width:100px;" />
+                <col style="width:90px;" />
+                <col style="width:70%;" />
+            </ColGroup>
+            <HeaderContent>
+                <MudTh Style="width:80px">@L["Actions"]</MudTh>
+                <MudTh><MudTableSortLabel SortLabel="TimeStamp" T="LogDto">@L["Time Stamp"]</MudTableSortLabel></MudTh>
+                <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="Level" T="LogDto">@L["Level"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Message" T="LogDto">@L["Message"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="UserName" T="LogDto">@L["UserName"]</MudTableSortLabel></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Actions">
+                    <MudButton Variant="Variant.Filled" DisableElevation="true"
+                               OnClick="@(() => OnShowDetail(context))"
+                               StartIcon="@Icons.Material.Filled.Details" IconColor="Color.Secondary" Size="Size.Small"
+                               Color="Color.Surface">
+                        @L[((context.ShowDetails == true) ? "Hide" : "Show") + " Details"]
+                    </MudButton>
+                </MudTd>
+                <MudTd DataLabel="TimeStamp">
+                    @context.TimeStamp
+                </MudTd>
+                <MudTd Style="text-align:center" DataLabel="Level">
+                    @context.Level
+                </MudTd>
+                <MudTd DataLabel="Message">
+                    @context.Message
+                </MudTd>
+                <MudTd DataLabel="UserName">
+                    @context.UserName
+                </MudTd>
+            </RowTemplate>
+            <ChildRowContent>
+                @if (context.ShowDetails)
+                {
+                    <MudTr>
+                        <td colspan="5">
+                            <MudCard Elevation="0">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.body1"><strong>@context.Level</strong></MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudCardContent >
+                                    <MudText>Message</MudText>
+                                    <MudText Typo="Typo.body2">@context.Message</MudText>
+                                    @if (!string.IsNullOrEmpty(context.Exception))
+                                    {
+                                        <MudText Color="Color.Error">Exception</MudText>
+                                        <MudText Typo="Typo.body2">@context.Exception</MudText>
+                                    }
+                                    <MudText>Client IP</MudText>
+                                    <MudText Typo="Typo.body2">@context.ClientIP</MudText>
+                                </MudCardContent>
+                            </MudCard>
+                        </td>
+                    </MudTr>
+                }
+            </ChildRowContent>
+            <NoRecordsContent>
+                <MudText>@L["No matching records found"]</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>@L["Loading.."].</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </ChildContent>
+    <ErrorContent>
+        <MudAlert Class="mt-auto" Severity="MudBlazor.Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
+    </ErrorContent>
+</ErrorBoundary>
+@code {
+    public string Title { get; private set; } = "Logs";
+    private string _searchString = string.Empty;
+    private MudTable<LogDto> _table = default!;
+    private bool _loading;
+    [Inject]
+    private ISender _mediator { get; set; } = default!;
+
+    private async Task<TableData<LogDto>> ServerReload(TableState state)
+    {
+        _loading = true;
+        var request = new LogsWithPaginationQuery()
+            {
+                Keyword = _searchString,
+                OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
+                SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
+                PageNumber = state.Page + 1,
+                PageSize = state.PageSize
+            };
+        var result = await _mediator.Send(request);
+        _loading = false;
+        return new TableData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
+
+    }
+    private async Task OnSearch(string text)
+    {
+        _searchString = text;
+        await _table.ReloadServerData();
+    }
+    private async Task OnRefresh()
+    {
+        _searchString = string.Empty;
+        await _table.ReloadServerData();
+    }
+    private async Task OnShowDetail(LogDto dto)
+    {
+        dto.ShowDetails = !dto.ShowDetails;
+    }
+}

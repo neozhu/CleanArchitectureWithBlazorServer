@@ -35,8 +35,6 @@ public static class ApplicationDbContextSeed
             await userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
             await userManager.CreateAsync(demo, RoleConstants.DefaultPassword);
             await userManager.AddToRolesAsync(demo, new[] { userRole.Name });
-
-
         }
 
     }
@@ -101,5 +99,8 @@ public static class ApplicationDbContextSeed
             context.Products.Add(new Domain.Entities.Product() { Name = "MX KEYS Mini", Description = "Logitech MX Keys Mini Introducing MX Keys Mini – a smaller, smarter, and mightier keyboard made for creators. Type with confidence on a keyboard crafted for efficiency, stability, and...", Unit = "PA", Price = 99.90m });
             await context.SaveChangesAsync();
         }
+
+        context.Loggers.Add(new Domain.Entities.Log.Logger() { Level = "Information", Message = "Welcome!", TimeStamp = DateTime.Now, UserName = "System", ClientAgent = "Client Agent", ClientIP = "127.0.0.1", LogEvent = "ApplicationDbContextSeed" });
+        await context.SaveChangesAsync();
     }
 }

@@ -14,6 +14,7 @@ using Serilog.Events;
 using MudBlazor;
 using Blazor.Analytics;
 using Blazor.Server.UI.Services.Notifications;
+using Blazor.Server.UI.Services.Navigation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +49,9 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddHotKeys();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7226/") });
+builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddTransient<INotificationService, InMemoryNotificationService>();
+
 builder.Services.AddTransient<IArticlesService, ArticlesService>();
 
 builder.Services.AddGoogleAnalytics("G-PRYNCB61NV");
