@@ -8,11 +8,11 @@ using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.PaginationQuery;
 
-public class KeyValuesWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<KeyValueDto>>, ICacheable
+public class KeyValuesWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<KeyValueDto>>, ICacheable
 {
     public string CacheKey => $"KeyValuesWithPaginationQuery,{this.ToString()}";
 
-    public MemoryCacheEntryOptions Options => KeyValueCacheKey.MemoryCacheEntryOptions;
+    public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
 }
 public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuery, PaginatedData<KeyValueDto>>
 {
@@ -32,11 +32,11 @@ public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuer
     }
     public async Task<PaginatedData<KeyValueDto>> Handle(KeyValuesWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var filters = PredicateBuilder.FromFilter<KeyValue>(request.FilterRules);
-        var data = await _context.KeyValues.Where(filters)
-            .OrderBy($"{request.Sort} {request.Order}")
+    
+        var data = await _context.KeyValues.Where(x=>x.Name.Contains(request.Keyword)|| x.Value.Contains(request.Keyword)|| x.Text.Contains(request.Keyword))
+            .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.Page, request.Rows);
+            .PaginatedDataAsync(request.PageNumber, request.PageSize);
 
         return data;
     }

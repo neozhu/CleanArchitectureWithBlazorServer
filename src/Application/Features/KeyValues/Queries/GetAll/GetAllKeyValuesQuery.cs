@@ -12,7 +12,7 @@ public class GetAllKeyValuesQuery : IRequest<IEnumerable<KeyValueDto>>, ICacheab
 
     public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
 
-    public MemoryCacheEntryOptions Options => KeyValueCacheKey.MemoryCacheEntryOptions;
+    public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
 }
 public class GetAllKeyValuesQueryHandler : IRequestHandler<KeyValuesQueryByName, IEnumerable<KeyValueDto>>
 {

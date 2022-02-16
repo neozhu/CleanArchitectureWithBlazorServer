@@ -7,6 +7,6 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 
 public interface ICacheable
 {
-    string CacheKey { get; }
-    MemoryCacheEntryOptions Options { get; }
+    string CacheKey { get=>String.Empty; }
+    MemoryCacheEntryOptions? Options { get; }
 }

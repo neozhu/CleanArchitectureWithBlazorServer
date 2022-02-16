@@ -1,15 +1,19 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
+
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete;
 
-public class DeleteKeyValueCommand : IRequest<Result>
+public class DeleteKeyValueCommand : IRequest<Result>, ICacheInvalidator
 {
     public int Id { get; set; }
+    public CancellationTokenSource? ResetCacheToken = KeyValueCacheKey.ResetCacheToken;
 }
-public class DeleteCheckedKeyValuesCommand : IRequest<Result>
+public class DeleteCheckedKeyValuesCommand : IRequest<Result>, ICacheInvalidator
 {
     public int[] Id { get; set; }
+    public CancellationTokenSource? ResetCacheToken = KeyValueCacheKey.ResetCacheToken;
 }
 
 public class DeleteKeyValueCommandHandler : IRequestHandler<DeleteKeyValueCommand, Result>,
