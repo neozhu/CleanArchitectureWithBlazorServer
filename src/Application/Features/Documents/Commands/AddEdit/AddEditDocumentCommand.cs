@@ -7,12 +7,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEd
 
 public class AddEditDocumentCommand : DocumentDto, IRequest<Result<int>>, IMapFrom<Document>
 {
-    public new void Mapping(Profile profile)
-    {
-        profile.CreateMap<AddEditDocumentCommand, Document>(MemberList.None);
-
-    }
-    public UploadRequest UploadRequest { get; set; }
+    public UploadRequest? UploadRequest { get; set; }
 }
 
 public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentCommand, Result<int>>
@@ -37,6 +32,14 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
         if (request.Id > 0)
         {
             var document = await _context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);
+            if (document == null)
+            {
+                throw new Exception($"Not found document with Id:{request.Id}");
+            }
+            if (request.UploadRequest != null)
+            {
+                document.URL = await _uploadService.UploadAsync(request.UploadRequest);
+            }
             document.Title = request.Title;
             document.Description = request.Description;
             document.IsPublic = request.IsPublic;
@@ -45,9 +48,11 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
         }
         else
         {
-            var result = await _uploadService.UploadAsync(request.UploadRequest);
             var document = _mapper.Map<Document>(request);
-            document.URL = result;
+            if (request.UploadRequest != null)
+            {
+                document.URL = await _uploadService.UploadAsync(request.UploadRequest); ;
+            }
             var createdevent = new DocumentCreatedEvent(document);
             document.DomainEvents.Add(createdevent);
             _context.Documents.Add(document);

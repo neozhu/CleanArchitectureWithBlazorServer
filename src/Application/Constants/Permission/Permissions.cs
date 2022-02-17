@@ -24,16 +24,7 @@ public static class Permissions
         public const string Search = "Permissions.Logs.Search";
         public const string Export = "Permissions.Logs.Export";
     }
-    [DisplayName("Workflow")]
-    [Description("Approval Permissions")]
-    public static class Approval
-    {
-        public const string View = "Permissions.Approval.View";
-        public const string Approve = "Permissions.Approval.Approve";
-        public const string Histories = "Permissions.Approval.Histories";
-        public const string Search = "Permissions.Approval.Search";
-        public const string Export = "Permissions.Approval.Export";
-    }
+    
 
     [DisplayName("Products")]
     [Description("Products Permissions")]
@@ -181,7 +172,7 @@ public static class Permissions
         {
             var propertyValue = prop.GetValue(null);
             if (propertyValue is not null)
-                permissions.Add(propertyValue.ToString());
+                permissions.Add((string)propertyValue);
         }
         return permissions;
     }

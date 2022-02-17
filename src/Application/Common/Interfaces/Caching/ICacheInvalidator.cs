@@ -6,5 +6,5 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 public interface ICacheInvalidator
 {
     string CacheKey { get => String.Empty; } 
-    CancellationTokenSource? ResetCacheToken { get=> null; }
+    CancellationTokenSource? SharedExpiryTokenSource { get=>null; }
 }

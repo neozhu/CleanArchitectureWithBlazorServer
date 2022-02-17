@@ -3,7 +3,7 @@ using MudBlazor;
 
 namespace Blazor.Server.UI.Services.Navigation;
 
-public class MenuService: IMenuService
+public class MenuService : IMenuService
 {
     private readonly List<MenuSectionModel> _features = new List<MenuSectionModel>()
     {
@@ -100,7 +100,12 @@ public class MenuService: IMenuService
                     Title = "System",
                     Icon = Icons.Material.Filled.Devices,
                     MenuItems = new List<MenuSectionSubItemModel>
-                    {
+                    {   new()
+                        {
+                            Title = "Dictionaries",
+                            Href = "/system/dictionaries",
+                            PageStatus = PageStatus.Completed
+                        },
                         new()
                         {
                             Title = "Audit Trails",
@@ -121,7 +126,7 @@ public class MenuService: IMenuService
                         }
                     }
                 }
-                 
+
             }
         }
     };

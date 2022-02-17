@@ -8,12 +8,14 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delet
 public class DeleteKeyValueCommand : IRequest<Result>, ICacheInvalidator
 {
     public int Id { get; set; }
-    public CancellationTokenSource? ResetCacheToken = KeyValueCacheKey.ResetCacheToken;
+    public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
+    public CancellationTokenSource? SharedExpiryTokenSource = KeyValueCacheKey.SharedExpiryTokenSource;
 }
 public class DeleteCheckedKeyValuesCommand : IRequest<Result>, ICacheInvalidator
 {
     public int[] Id { get; set; }
-    public CancellationTokenSource? ResetCacheToken = KeyValueCacheKey.ResetCacheToken;
+    //public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
+    public CancellationTokenSource? SharedExpiryTokenSource = KeyValueCacheKey.SharedExpiryTokenSource;
 }
 
 public class DeleteKeyValueCommandHandler : IRequestHandler<DeleteKeyValueCommand, Result>,

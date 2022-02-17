@@ -38,7 +38,6 @@ public class ApplicationDbContext : IdentityDbContext<
     }
     public DbSet<Logger> Loggers { get; set; }
     public DbSet<AuditTrail> AuditTrails { get; set; }
-    public DbSet<Customer> Customers { get; set; }
     public DbSet<DocumentType> DocumentTypes { get; set; }
     public DbSet<Document> Documents { get; set; }
 
