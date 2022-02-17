@@ -8,6 +8,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEd
 
 public class AddEditKeyValueCommand : KeyValueDto, IRequest<Result<int>>, ICacheInvalidator
 {
+    public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource = KeyValueCacheKey.SharedExpiryTokenSource;
 }
 
