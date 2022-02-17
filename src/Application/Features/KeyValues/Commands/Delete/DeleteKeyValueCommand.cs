@@ -14,7 +14,7 @@ public class DeleteKeyValueCommand : IRequest<Result>, ICacheInvalidator
 public class DeleteCheckedKeyValuesCommand : IRequest<Result>, ICacheInvalidator
 {
     public int[] Id { get; set; }
-    //public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
+    public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource = KeyValueCacheKey.SharedExpiryTokenSource;
 }
 
