@@ -6,6 +6,7 @@ public partial class PaginationFilter : BaseFilter
     public int PageSize { get; set; }
     public string OrderBy { get; set; }
     public string SortDirection { get; set; }
+    public override string ToString() => $"PageNumber:{PageNumber},PageSize:{PageSize},OrderBy:{OrderBy},SortDirection:{SortDirection},Keyword:{Keyword}";
 }
 
 public class BaseFilter

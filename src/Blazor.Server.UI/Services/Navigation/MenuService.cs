@@ -1,34 +1,42 @@
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
-using Blazor.Server.UI.Models;
 using Blazor.Server.UI.Models.SideMenu;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Blazor.Server.UI.Services.Navigation;
+using MudBlazor;
 
-namespace Blazor.Server.UI.Components.Shared;
+namespace Blazor.Server.UI.Services.Navigation;
 
-public partial class SideMenu
+public class MenuService : IMenuService
 {
-    private IEnumerable<MenuSectionModel> _menuSections = new List<MenuSectionModel>()
+    private readonly List<MenuSectionModel> _features = new List<MenuSectionModel>()
     {
         new MenuSectionModel
         {
-            Title = "GENERAL",
+            Title = "Application",
             SectionItems = new List<MenuSectionItemModel>
             {
                 new()
                 {
-                    Title = "App",
-                    Icon = Icons.Material.Filled.Speed,
+                    Title = "Home",
+                    Icon = Icons.Material.Filled.Home,
                     Href = "/"
                 },
                 new()
                 {
                     Title = "E-Commerce",
                     Icon = Icons.Material.Filled.ShoppingCart,
-                    Href = "/ecommerce",
-                    PageStatus = PageStatus.Wip
+                    PageStatus = PageStatus.Completed,
+                    IsParent = true,
+                    MenuItems = new List<MenuSectionSubItemModel>
+                    {
+                        new(){
+                             Title = "Products",
+                             Href = "/pages/products",
+                             PageStatus = PageStatus.Completed,
+                        },
+                        new(){
+                             Title = "Customers",
+                             Href = "/pages/customers",
+                             PageStatus = PageStatus.ComingSoon,
+                        }
+                    }
                 },
                 new()
                 {
@@ -62,26 +70,26 @@ public partial class SideMenu
                 new()
                 {
                     IsParent = true,
-                    Title = "User",
+                    Title = "Authorization",
                     Icon = Icons.Material.Filled.Person,
                     MenuItems = new List<MenuSectionSubItemModel>
                     {
                         new()
                         {
+                            Title = "Users",
+                            Href = "/indentity/users",
+                            PageStatus = PageStatus.Completed
+                        },
+                        new()
+                        {
+                            Title = "Roles",
+                            Href = "/indentity/roles",
+                            PageStatus = PageStatus.Completed
+                        },
+                        new()
+                        {
                             Title = "Profile",
-                            Href = "/user/profile",
-                            PageStatus = PageStatus.ComingSoon
-                        },
-                        new()
-                        {
-                            Title = "Cards",
-                            Href = "/user/cards",
-                            PageStatus = PageStatus.ComingSoon
-                        },
-                        new()
-                        {
-                            Title = "List",
-                            Href = "/user/list",
+                            Href = "/indentity/profile",
                             PageStatus = PageStatus.ComingSoon
                         }
                     }
@@ -89,42 +97,39 @@ public partial class SideMenu
                 new()
                 {
                     IsParent = true,
-                    Title = "Article",
-                    Icon = Icons.Material.Filled.Article,
+                    Title = "System",
+                    Icon = Icons.Material.Filled.Devices,
                     MenuItems = new List<MenuSectionSubItemModel>
-                    {
-                        new()
+                    {   new()
                         {
-                            Title = "Posts",
-                            Href = "/user/posts",
-                            PageStatus = PageStatus.ComingSoon
+                            Title = "Dictionaries",
+                            Href = "/system/dictionaries",
+                            PageStatus = PageStatus.Completed
                         },
                         new()
                         {
-                            Title = "Post",
-                            Href = "/user/post",
-                            PageStatus = PageStatus.ComingSoon
+                            Title = "Audit Trails",
+                            Href = "/system/audittrails",
+                            PageStatus = PageStatus.Completed
                         },
                         new()
                         {
-                            Title = "New Post",
-                            Href = "/user/newpost",
+                            Title = "Log",
+                            Href = "/system/logs",
+                            PageStatus = PageStatus.Completed
+                        },
+                        new()
+                        {
+                            Title = "Jobs",
+                            Href = "/hangfire/index",
                             PageStatus = PageStatus.ComingSoon
                         }
                     }
                 }
+
             }
         }
     };
 
-    [EditorRequired] [Parameter] public bool SideMenuDrawerOpen { get; set; } 
-    [EditorRequired] [Parameter] public EventCallback<bool> SideMenuDrawerOpenChanged { get; set; }
-    [EditorRequired] [Parameter] public UserModel User { get; set; } = default!;
-
-    [Inject] private IMenuService _menuService { get; set; } = default!;
-    protected override Task OnInitializedAsync()
-    {
-        _menuSections = _menuService.Features;
-        return Task.CompletedTask;
-    }
+    public IEnumerable<MenuSectionModel> Features => _features;
 }

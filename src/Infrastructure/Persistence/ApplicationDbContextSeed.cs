@@ -35,8 +35,6 @@ public static class ApplicationDbContextSeed
             await userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
             await userManager.CreateAsync(demo, RoleConstants.DefaultPassword);
             await userManager.AddToRolesAsync(demo, new[] { userRole.Name });
-
-
         }
 
     }
@@ -89,11 +87,6 @@ public static class ApplicationDbContextSeed
             await context.SaveChangesAsync();
           
         }
-        if (!context.Customers.Any())
-        {
-            context.Customers.Add(new Domain.Entities.Customer() { Name = "SmartAdmin", AddressOfEnglish = "https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0", GroupName = "SmartAdmin", Address = "https://wrapbootstrap.com/theme/smartadmin-responsive-webapp-WB0573SK0", Sales = "GotBootstrap", RegionSalesDirector = "GotBootstrap", Region = "CNC", NameOfEnglish = "SmartAdmin", PartnerType = Domain.Enums.PartnerType.TP, Contact = "GotBootstrap", Email = "drlantern@gotbootstrap.com" });
-            await context.SaveChangesAsync();
-        }
         if (!context.Products.Any())
         {
             context.Products.Add(new Domain.Entities.Product() { Name = "IPhone 13 Pro", Description= "Apple iPhone 13 Pro smartphone. Announced Sep 2021. Features 6.1″ display, Apple A15 Bionic chipset, 3095 mAh battery, 1024 GB storage.", Unit="EA",Price=999.98m });
@@ -101,5 +94,8 @@ public static class ApplicationDbContextSeed
             context.Products.Add(new Domain.Entities.Product() { Name = "MX KEYS Mini", Description = "Logitech MX Keys Mini Introducing MX Keys Mini – a smaller, smarter, and mightier keyboard made for creators. Type with confidence on a keyboard crafted for efficiency, stability, and...", Unit = "PA", Price = 99.90m });
             await context.SaveChangesAsync();
         }
+
+        context.Loggers.Add(new Domain.Entities.Log.Logger() { Level = "Information", Message = "Welcome!", TimeStamp = DateTime.Now, UserName = "System", ClientAgent = "Client Agent", ClientIP = "127.0.0.1", LogEvent = "ApplicationDbContextSeed" });
+        await context.SaveChangesAsync();
     }
 }

@@ -1,6 +1,5 @@
 using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Mappings;
-using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Features.DocumentTypes.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
@@ -38,7 +37,6 @@ public class MappingTests
     [Test]
     [TestCase(typeof(DocumentType), typeof(DocumentTypeDto))]
     [TestCase(typeof(Document), typeof(DocumentDto))]
-    [TestCase(typeof(Customer), typeof(CustomerDto))]
     [TestCase(typeof(KeyValue), typeof(KeyValueDto))]
     [TestCase(typeof(Product), typeof(ProductDto))]
     public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)

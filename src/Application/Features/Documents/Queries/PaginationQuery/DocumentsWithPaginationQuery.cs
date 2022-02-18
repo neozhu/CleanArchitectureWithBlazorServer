@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Common.Specification;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 
-public class DocumentsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<DocumentDto>>
+public class DocumentsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<DocumentDto>>
 {
 
 
@@ -29,14 +29,13 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
     }
     public async Task<PaginatedData<DocumentDto>> Handle(DocumentsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var filters = PredicateBuilder.FromFilter<Document>(request.FilterRules);
-
+    
         var data = await _context.Documents
             .Specify(new DocumentsQuery(_currentUserService.UserId))
-            .Where(filters)
-            .OrderBy($"{request.Sort} {request.Order}")
+            .Where(x=>x.Description.Contains(request.Keyword))
+            .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<DocumentDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.Page, request.Rows);
+            .PaginatedDataAsync(request.PageNumber, request.PageSize);
 
         return data;
     }

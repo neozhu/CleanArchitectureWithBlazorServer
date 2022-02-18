@@ -9,17 +9,14 @@ public class DeleteDocumentTypeCommand : IRequest<Result>, ICacheInvalidator
 {
     public int Id { get; set; }
 
-    public string CacheKey => DocumentTypeCacheKey.GetAllCacheKey;
 
-    public CancellationTokenSource ResetCacheToken => DocumentTypeCacheKey.ResetCacheToken;
+    public CancellationTokenSource SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
 }
 public class DeleteCheckedDocumentTypesCommand : IRequest<Result>, ICacheInvalidator
 {
     public int[] Id { get; set; }
 
-    public string CacheKey => DocumentTypeCacheKey.GetAllCacheKey;
-
-    public CancellationTokenSource ResetCacheToken => DocumentTypeCacheKey.ResetCacheToken;
+    public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
 }
 
 public class DeleteDocumentTypeCommandHandler : IRequestHandler<DeleteDocumentTypeCommand, Result>,

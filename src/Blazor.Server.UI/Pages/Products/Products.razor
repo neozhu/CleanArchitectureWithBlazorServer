@@ -15,7 +15,8 @@
         height: 84px !important;
     }
 </style>
-
+<ErrorBoundary>
+    <ChildContent>
 <MudTable ServerData="@(new Func<TableState, Task<TableData<ProductDto>>>(ServerReload))"
           FixedHeader="true"
           FixedFooter="true"
@@ -121,16 +122,20 @@
         <MudTd DataLabel="Unit">@context.Unit</MudTd>
     </RowTemplate>
     <NoRecordsContent>
-        <MudText>No matching records found</MudText>
+        <MudText>@L["No matching records found"]</MudText>
     </NoRecordsContent>
     <LoadingContent>
-        <MudText>Loading...</MudText>
+        <MudText>@L["Loading.."].</MudText>
     </LoadingContent>
     <PagerContent>
         <MudTablePager />
     </PagerContent>
 </MudTable>
-
+</ChildContent>
+    <ErrorContent>
+        <MudAlert Class="mt-auto" Severity="MudBlazor.Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
+    </ErrorContent>
+</ErrorBoundary>
 @code {
     public string? Title { get; private set; }
     private HashSet<ProductDto> _selectedItems = new HashSet<ProductDto>();

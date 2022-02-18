@@ -12,6 +12,9 @@ using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Serilog;
 using Serilog.Events;
 using MudBlazor;
+using Blazor.Analytics;
+using Blazor.Server.UI.Services.Notifications;
+using Blazor.Server.UI.Services.Navigation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,14 +49,17 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddHotKeys();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7226/") });
-builder.Services.AddTransient<INotificationsService, NotificationsService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddTransient<INotificationService, InMemoryNotificationService>();
+
 builder.Services.AddTransient<IArticlesService, ArticlesService>();
 
-
+builder.Services.AddGoogleAnalytics("G-PRYNCB61NV");
 
 
 
 var app = builder.Build();
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -95,5 +101,7 @@ if (!app.Environment.IsDevelopment())
 app.UseInfrastructure(builder.Configuration);
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+
+
 
 await app.RunAsync();

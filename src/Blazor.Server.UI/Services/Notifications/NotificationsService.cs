@@ -1,40 +1,92 @@
-using System.Net.Http.Json;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using Blazor.Server.UI.Models.Notification;
+using Blazored.LocalStorage;
 
-namespace Blazor.Server.UI.Services;
+namespace Blazor.Server.UI.Services.Notifications;
 
-public class NotificationsService : INotificationsService
+public class InMemoryNotificationService : INotificationService
 {
-    private const string UriRequest = "sample-data/notifications.json";
-    private readonly IWebHostEnvironment _environment;
+    private const string LocalStorageKey = "__notficationTimestamp";
+    private readonly ILocalStorageService _localStorageService;
+    private readonly ILogger<InMemoryNotificationService> _logger;
 
-    public NotificationsService( IWebHostEnvironment environment)
+    private readonly List<NotificationMessage> _messages;
+
+    public InMemoryNotificationService(ILocalStorageService localStorageService,
+        ILogger<InMemoryNotificationService> logger)
     {
-        _environment = environment;
+        _localStorageService = localStorageService;
+        _logger = logger;
+        _messages = new List<NotificationMessage>();
     }
 
-    public async Task<IEnumerable<NotificationModel>> GetNotifications()
+    private async Task<DateTime> GetLastReadTimestamp()
     {
-        var jsonstring = File.ReadAllText(Path.Combine(_environment.WebRootPath, UriRequest));
-        var notifications = JsonSerializer.Deserialize<IEnumerable<NotificationModel>>(jsonstring, new JsonSerializerOptions()
+        if (await _localStorageService.ContainKeyAsync(LocalStorageKey) == false)
         {
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            PropertyNameCaseInsensitive = true
-        });
-        return await Task.FromResult(notifications) ?? throw new InvalidOperationException();
+            return DateTime.MinValue;
+        }
+        else
+        {
+            var timestamp = await _localStorageService.GetItemAsync<DateTime>(LocalStorageKey);
+            return timestamp;
+        }
     }
 
-    public async Task<IEnumerable<NotificationModel>> GetActiveNotifications()
+    public async Task<bool> AreNewNotificationsAvailable()
     {
-        var jsonstring = File.ReadAllText(Path.Combine(_environment.WebRootPath, UriRequest));
-        var notifications = JsonSerializer.Deserialize<IEnumerable<NotificationModel>>(jsonstring, new JsonSerializerOptions()
+        var timestamp = await GetLastReadTimestamp();
+        var entriesFound = _messages.Any(x => x.PublishDate > timestamp);
+
+        return entriesFound;
+    }
+
+    public async Task MarkNotificationsAsRead()
+    {
+        await _localStorageService.SetItemAsync(LocalStorageKey, DateTime.UtcNow.Date);
+    }
+
+    public async Task MarkNotificationsAsRead(string id)
+    {
+        var message = await GetMessageById(id);
+        if (message == null) { return; }
+
+        var timestamp = await _localStorageService.GetItemAsync<DateTime>(LocalStorageKey);
+        if (message.PublishDate > timestamp)
         {
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            PropertyNameCaseInsensitive = true
-        });
-        var activeNotifications = (notifications ?? throw new InvalidOperationException()).Where(n => n.IsActive);
-        return await Task.FromResult(activeNotifications) ?? throw new InvalidOperationException();
+            await _localStorageService.SetItemAsync(LocalStorageKey, message.PublishDate);
+        }
+
+    }
+
+    public Task<NotificationMessage> GetMessageById(string id) =>
+        Task.FromResult(_messages.FirstOrDefault((x => x.Id == id)));
+
+    public async Task<IDictionary<NotificationMessage, bool>> GetNotifications()
+    {
+        var lastReadTimestamp = await GetLastReadTimestamp();
+        var items = _messages.ToDictionary(x => x, x => lastReadTimestamp > x.PublishDate);
+        return items;
+    }
+
+    public Task AddNotification(NotificationMessage message)
+    {
+        _messages.Add(message);
+        return Task.CompletedTask;
+    }
+
+
+    public void Preload()
+    {
+        _messages.Add(new NotificationMessage(
+            "mudblazor-here-to-stay",
+            "MudBlazor is here to stay",
+            "We are paving the way for the future of Blazor",
+            "Announcement",
+            new DateTime(2022, 01, 13),
+            "_content/MudBlazor.Docs/images/announcements/mudblazor_heretostay.png",
+            new[]
+            {
+                new NotificationAuthor("Jonny Larsson",
+                    "https://avatars.githubusercontent.com/u/10367109?v=4")
+            }, typeof(NotificationMessage)));
     }
 }

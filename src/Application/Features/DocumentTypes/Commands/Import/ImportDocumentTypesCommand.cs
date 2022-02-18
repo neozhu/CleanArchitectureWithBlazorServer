@@ -1,19 +1,22 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Application.Features.DocumentTypes.Caching;
 using CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.AddEdit;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.Import;
 
-public class ImportDocumentTypesCommand : IRequest<Result>
+public class ImportDocumentTypesCommand : IRequest<Result>, ICacheInvalidator
 {
-    public string FileName { get; set; }
-    public byte[] Data { get; set; }
+    public string FileName { get; set; } = default!;
+    public byte[] Data { get; set; } = default!;
+    public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
 }
-public class CreateDocumentTypeTemplateCommand : IRequest<byte[]>
+public class CreateDocumentTypeTemplateCommand : IRequest<byte[]>, ICacheInvalidator
 {
-    public IEnumerable<string> Fields { get; set; }
-    public string SheetName { get; set; }
+    public IEnumerable<string>? Fields { get; set; }
+    public string SheetName { get; set; } = "DocumentTypes";
+    public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
 }
 public class ImportDocumentTypesCommandHandler :
     IRequestHandler<CreateDocumentTypeTemplateCommand, byte[]>,
@@ -86,7 +89,7 @@ public class ImportDocumentTypesCommandHandler :
 
     public async Task<byte[]> Handle(CreateDocumentTypeTemplateCommand request, CancellationToken cancellationToken)
     {
-        var fields = new string[] {
+        var fields = request.Fields ?? new string[] {
                 _localizer["Name"],
                 _localizer["Description"]
                 };

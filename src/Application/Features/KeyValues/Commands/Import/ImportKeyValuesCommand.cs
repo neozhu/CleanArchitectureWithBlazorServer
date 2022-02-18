@@ -1,14 +1,16 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Import;
 
-public class ImportKeyValuesCommand : IRequest<Result>
+public class ImportKeyValuesCommand : IRequest<Result>, ICacheInvalidator
 {
     public string FileName { get; set; }
     public byte[] Data { get; set; }
+    public CancellationTokenSource? SharedExpiryTokenSource => KeyValueCacheKey.SharedExpiryTokenSource;
 }
 public class CreateKeyValueTemplateCommand : IRequest<byte[]>
 {

@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Domain.Entities.Audit;
 
 namespace CleanArchitecture.Blazor.Application.AuditTrails.Queries.PaginationQuery;
 
-public class AuditTrailsWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<AuditTrailDto>>
+public class AuditTrailsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<AuditTrailDto>>
 {
 
 
@@ -29,13 +29,11 @@ public class AuditTrailsQueryHandler : IRequestHandler<AuditTrailsWithPagination
     }
     public async Task<PaginatedData<AuditTrailDto>> Handle(AuditTrailsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var filters = PredicateBuilder.FromFilter<AuditTrail>(request.FilterRules);
-
         var data = await _context.AuditTrails
-            .Where(filters)
-            .OrderBy($"{request.Sort} {request.Order}")
-            .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.Page, request.Rows);
+            .Where(x=>x.TableName.Contains(request.Keyword))
+            .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
+                .PaginatedDataAsync(request.PageNumber, request.PageSize);
 
         return data;
     }

@@ -12,7 +12,7 @@ public class DocumentTypesGetAllQuery : IRequest<IEnumerable<DocumentTypeDto>>, 
 
     public string CacheKey => DocumentTypeCacheKey.GetAllCacheKey;
 
-    public MemoryCacheEntryOptions Options => null;
+    public MemoryCacheEntryOptions? Options => DocumentTypeCacheKey.MemoryCacheEntryOptions;
 }
 public class DocumentTypesGetAllQueryHandler : IRequestHandler<DocumentTypesGetAllQuery, IEnumerable<DocumentTypeDto>>
 {

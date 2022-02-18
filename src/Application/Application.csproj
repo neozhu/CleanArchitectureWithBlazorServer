@@ -9,11 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Features\Customers\Import\**" />
     <Compile Remove="Features\Documents\Commands\Import\**" />
-    <EmbeddedResource Remove="Features\Customers\Import\**" />
     <EmbeddedResource Remove="Features\Documents\Commands\Import\**" />
-    <None Remove="Features\Customers\Import\**" />
     <None Remove="Features\Documents\Commands\Import\**" />
   </ItemGroup>
 

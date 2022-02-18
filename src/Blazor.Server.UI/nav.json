@@ -66,6 +66,24 @@
             "pageStatus": "completed"
           }
         ]
+      },
+      {
+        "title": "System",
+        "icon": "\u003Cpath d=\u0022M0 0h24v24H0z\u0022 fill=\u0022none\u0022/\u003E\u003Cpath d=\u0022M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\u0022/\u003E",
+        "pageStatus": "completed",
+        "isParent": true,
+        "menuItems": [
+          {
+            "title": "Logs",
+            "href": "/pages/system/logs",
+            "pageStatus": "completed"
+          },
+          {
+            "title": "Audit Trails",
+            "href": "/pages/system/audittrails",
+            "pageStatus": "completed"
+          }
+        ]
       }
  
     ]

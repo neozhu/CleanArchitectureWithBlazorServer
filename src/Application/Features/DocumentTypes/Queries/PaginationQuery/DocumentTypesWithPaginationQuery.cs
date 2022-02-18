@@ -8,11 +8,11 @@ using CleanArchitecture.Blazor.Application.Features.DocumentTypes.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Queries.PaginationQuery;
 
-public class DocumentTypesWithPaginationQuery : PaginationRequest, IRequest<PaginatedData<DocumentTypeDto>>, ICacheable
+public class DocumentTypesWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<DocumentTypeDto>>, ICacheable
 {
     public string CacheKey => $"{nameof(DocumentTypesWithPaginationQuery)},{this}";
 
-    public MemoryCacheEntryOptions Options => DocumentTypeCacheKey.MemoryCacheEntryOptions;
+    public MemoryCacheEntryOptions? Options => DocumentTypeCacheKey.MemoryCacheEntryOptions;
 }
 public class DocumentTypesQueryHandler : IRequestHandler<DocumentTypesWithPaginationQuery, PaginatedData<DocumentTypeDto>>
 {
@@ -32,11 +32,11 @@ public class DocumentTypesQueryHandler : IRequestHandler<DocumentTypesWithPagina
     }
     public async Task<PaginatedData<DocumentTypeDto>> Handle(DocumentTypesWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var filters = PredicateBuilder.FromFilter<DocumentType>(request.FilterRules);
-        var data = await _context.DocumentTypes.Where(filters)
-            .OrderBy($"{request.Sort} {request.Order}")
+
+        var data = await _context.DocumentTypes.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
+            .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<DocumentTypeDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.Page, request.Rows);
+            .PaginatedDataAsync(request.PageNumber, request.PageSize);
 
         return data;
     }
