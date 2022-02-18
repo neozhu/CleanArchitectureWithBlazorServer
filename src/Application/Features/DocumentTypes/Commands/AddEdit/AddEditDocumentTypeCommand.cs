@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.A
 public class AddEditDocumentTypeCommand : DocumentTypeDto, IRequest<Result<int>>, IMapFrom<DocumentType>, ICacheInvalidator
 {
   
-    public CancellationTokenSource? ResetCacheToken => DocumentTypeCacheKey.ResetCacheToken;
+    public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
 }
 
 public class AddEditDocumentTypeCommandHandler : IRequestHandler<AddEditDocumentTypeCommand, Result<int>>

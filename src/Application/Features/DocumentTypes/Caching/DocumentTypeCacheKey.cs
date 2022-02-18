@@ -8,8 +8,8 @@ public static class DocumentTypeCacheKey
     public const string GetAllCacheKey = "all-documenttypes";
     static DocumentTypeCacheKey()
     {
-        ResetCacheToken = new CancellationTokenSource();
+        SharedExpiryTokenSource = new CancellationTokenSource(new TimeSpan(12,0,0));
     }
-    public static CancellationTokenSource ResetCacheToken { get; private set; }
-    public static MemoryCacheEntryOptions MemoryCacheEntryOptions => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(ResetCacheToken.Token));
+    public static CancellationTokenSource SharedExpiryTokenSource { get; private set; }
+    public static MemoryCacheEntryOptions MemoryCacheEntryOptions => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource.Token));
 }

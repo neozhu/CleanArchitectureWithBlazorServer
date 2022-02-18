@@ -10,13 +10,13 @@ public class ImportDocumentTypesCommand : IRequest<Result>, ICacheInvalidator
 {
     public string FileName { get; set; } = default!;
     public byte[] Data { get; set; } = default!;
-    public CancellationTokenSource ResetCacheToken => DocumentTypeCacheKey.ResetCacheToken;
+    public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
 }
 public class CreateDocumentTypeTemplateCommand : IRequest<byte[]>, ICacheInvalidator
 {
     public IEnumerable<string>? Fields { get; set; }
     public string SheetName { get; set; } = "DocumentTypes";
-    public CancellationTokenSource ResetCacheToken => DocumentTypeCacheKey.ResetCacheToken;
+    public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
 }
 public class ImportDocumentTypesCommandHandler :
     IRequestHandler<CreateDocumentTypeTemplateCommand, byte[]>,
