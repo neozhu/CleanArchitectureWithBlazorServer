@@ -14,7 +14,7 @@ public class KeyValuesQueryByName : IRequest<IEnumerable<KeyValueDto>>, ICacheab
 
     public string CacheKey => KeyValueCacheKey.GetCacheKey(Name);
 
-    public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions();
+    public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
 }
 public class KeyValuesQueryByNameHandler : IRequestHandler<KeyValuesQueryByName, IEnumerable<KeyValueDto>>
 {

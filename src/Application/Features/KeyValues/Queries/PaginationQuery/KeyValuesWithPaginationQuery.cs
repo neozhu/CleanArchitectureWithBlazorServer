@@ -12,7 +12,7 @@ public class KeyValuesWithPaginationQuery : PaginationFilter, IRequest<Paginated
 {
     public string CacheKey => $"KeyValuesWithPaginationQuery,{this.ToString()}";
 
-    public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions();
+    public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
 }
 public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuery, PaginatedData<KeyValueDto>>
 {
