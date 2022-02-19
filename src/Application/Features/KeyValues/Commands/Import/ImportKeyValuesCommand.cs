@@ -49,7 +49,7 @@ public class ImportKeyValuesCommandHandler :
                 { _localizer["Value"], (row,item) => item.Value =  row[_localizer["Value"]]?.ToString() },
                 { _localizer["Text"], (row,item) => item.Text =  row[_localizer["Text"]]?.ToString() },
                 { _localizer["Description"], (row,item) => item.Description =  row[_localizer["Description"]]?.ToString() }
-            }, _localizer["KeyValues"]);
+            }, _localizer["Data"]);
 
         if (result.Succeeded)
         {

@@ -7,9 +7,9 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Export
 
 public class ExportKeyValuesQuery : IRequest<byte[]>
 {
-    public string filterRules { get; set; }
-    public string sort { get; set; } = "Id";
-    public string order { get; set; } = "desc";
+    public string Keyword { get; set; }
+    public string OrderBy { get; set; } = "Id";
+    public string SortDirection { get; set; } = "desc";
 }
 
 public class ExportKeyValuesQueryHandler :
@@ -34,9 +34,9 @@ public class ExportKeyValuesQueryHandler :
     }
     public async Task<byte[]> Handle(ExportKeyValuesQuery request, CancellationToken cancellationToken)
     {
-        var filters = PredicateBuilder.FromFilter<KeyValue>(request.filterRules);
-        var data = await _context.KeyValues.Where(filters)
-            .OrderBy($"{request.sort} {request.order}")
+        
+        var data = await _context.KeyValues.Where(x => x.Name.Contains(request.Keyword) || x.Value.Contains(request.Keyword) || x.Text.Contains(request.Keyword))
+            .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         var result = await _excelService.ExportAsync(data,
@@ -48,7 +48,7 @@ public class ExportKeyValuesQueryHandler :
                     { _localizer["Text"], item => item.Text },
                     { _localizer["Description"], item => item.Description },
 
-            }, _localizer["KeyValues"]
+            }, _localizer["Data"]
             );
         return result;
     }

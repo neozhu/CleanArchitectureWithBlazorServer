@@ -1,10 +1,14 @@
 @page "/system/dictionaries"
 @using Blazor.Server.UI.Components.Dialogs
+@using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete
+@using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Import
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
+@using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Export
 @attribute [Authorize(Policy = Permissions.Roles.View)]
 @inject IStringLocalizer<Dictionaries> L
+@inject IJSRuntime JS
 <PageTitle>@Title</PageTitle>
 <style>
     .mud-table-toolbar {
@@ -14,13 +18,23 @@
 <ErrorBoundary>
     <ChildContent>
 
-        <MudTable Items="@KeyValueList"
+        <MudTable @ref="_table"
+                  Items="@KeyValueList"
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 265px)"
                   Hover="true"
                   MultiSelection="true"
-                  SelectedItems="@_selectedItems"
+                  @bind-SelectedItems="_selectedItems"
+                  @bind-SelectedItem="_selectedItem"
+                  CommitEditTooltip="@L["Commit Edit"]"
+                  RowEditPreview="BackupItem"
+                  RowEditCancel="ResetItemToOriginalValues"
+                  CanCancelEdit="@_canCancelEdit"
+                  RowEditCommit="ItemHasBeenCommitted"
+                  OnCommitEditClick="@(() => Snackbar.Add(L["Update successfully"], MudBlazor.Severity.Info))"
+                  IsEditRowSwitchingBlocked="false"
+                  ReadOnly="@_readonly"
                   SortLabel="@L["Sort By"]"
                   Filter="new Func<KeyValueDto,bool>(_quickFilter)">
             <ToolBarContent>
@@ -52,10 +66,13 @@
                     }
                     @if (_canImport)
                     {
+                        <InputFile id="importdataInput" OnChange="OnImportData" hidden  accept=".xlsx" />
                         <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.Upload"
                                Size="Size.Small"
                                Style="margin-right: 5px;"
+                               for="importdataInput"
+                               HtmlTag="label"
                                IconColor="Color.Surface">@L["Import Data"]</MudButton>
                     }
                     @if (_canExport)
@@ -64,6 +81,7 @@
                                StartIcon="@Icons.Material.Filled.Download"
                                Size="Size.Small"
                                Style="margin-right: 5px;"
+                               OnClick="OnExport"
                                IconColor="Color.Surface">@L["Export Data"]</MudButton>
                     }
                 </div>
@@ -78,23 +96,34 @@
             </ToolBarContent>
             <ColGroup>
                 <col style="width:50px;" />
-
             </ColGroup>
             <HeaderContent>
-          
                 <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object>(x=>x.Name)">@L["Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object>(x=>x.Value)">@L["Value"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object>(x=>x.Text)">@L["Text"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
-                
                 <MudTd DataLabel="Name">@context.Name</MudTd>
                 <MudTd DataLabel="Value">@context.Value</MudTd>
                 <MudTd DataLabel="Text">@context.Text</MudTd>
                 <MudTd DataLabel="Description">@context.Description</MudTd>
-
             </RowTemplate>
+            <RowEditingTemplate>
+                <MudTd DataLabel="Name">
+                   <MudTextField @bind-Value="@context.Name" Required />
+                </MudTd>
+                <MudTd DataLabel="Value">
+                    <MudTextField @bind-Value="@context.Value" Required />
+                </MudTd>
+                <MudTd DataLabel="Text">
+                    <MudTextField @bind-Value="@context.Text" Required />
+                </MudTd>
+                <MudTd DataLabel="Description">
+                    <MudNumericField @bind-Value="@context.Description" />
+                </MudTd>
+                
+            </RowEditingTemplate>
             <PagerContent>
                 <MudTablePager />
             </PagerContent>
@@ -106,10 +135,14 @@
 </ErrorBoundary>
 
 @code {
+    private MudTable<KeyValueDto> _table=default!;
     public string Title { get; set; } = "Dictionaries";
     private IList<KeyValueDto> KeyValueList = new List<KeyValueDto>();
     private HashSet<KeyValueDto> _selectedItems = new HashSet<KeyValueDto>();
-    private string _searchString=string.Empty;
+    private KeyValueDto? _selectedItem { get; set; } = null;
+    private KeyValueDto _elementBeforeEdit { get; set; } = new();
+    private bool _canCancelEdit=true;
+    private string _searchString = string.Empty;
     private bool _sortNameByLength;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
@@ -121,6 +154,7 @@
     private bool _canDelete;
     private bool _canImport;
     private bool _canExport;
+    private bool _readonly => !_canCreate || !_canEdit;
     protected override async Task OnInitializedAsync()
     {
         var state = await AuthState;
@@ -130,7 +164,6 @@
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Dictionaries.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Dictionaries.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Dictionaries.Export)).Succeeded;
-
         await LoadData();
     }
     private bool _quickFilter(KeyValueDto dto) => FilterFunc(dto, _searchString);
@@ -151,13 +184,16 @@
     {
         var cmd = new GetAllKeyValuesQuery();
         KeyValueList = await _mediator.Send(cmd);
+        _selectedItems=new HashSet<KeyValueDto>();;
+        _selectedItem = null;
+
     }
     private async Task OnRefresh()
     {
         _searchString = string.Empty;
         await LoadData();
     }
-     private async Task OnDeleteChecked()
+    private async Task OnDeleteChecked()
     {
         var deleteContent = L["You're sure you want to delete the selected items:{0}?"];
         var parameters = new DialogParameters
@@ -177,6 +213,83 @@
     }
     private Task OnCreate()
     {
+        var newitem = new KeyValueDto()
+        {
+            Name = _selectedItem?.Name,
+            Description = _selectedItem?.Description
+        };
+        KeyValueList.Insert(0, newitem);
         return Task.CompletedTask;
     }
+    private void BackupItem(object element)
+    {
+        _elementBeforeEdit = new()
+            {
+                Id = ((KeyValueDto)element).Id,
+                Name = ((KeyValueDto)element).Name,
+                Text = ((KeyValueDto)element).Text,
+                Value = ((KeyValueDto)element).Value,
+                Description = ((KeyValueDto)element).Description,
+            };
+    }
+    private void ResetItemToOriginalValues(object element)
+    {
+        ((KeyValueDto)element).Id = _elementBeforeEdit.Id;
+        ((KeyValueDto)element).Name = _elementBeforeEdit.Name;
+        ((KeyValueDto)element).Text = _elementBeforeEdit.Text;
+        ((KeyValueDto)element).Value = _elementBeforeEdit.Value;
+        ((KeyValueDto)element).Description = _elementBeforeEdit.Description;
+    }
+    private void ItemHasBeenCommitted(object element)
+    {
+        Task.Run(async () =>
+        {
+            var command = new AddEditKeyValueCommand()
+                {
+                    Id = ((KeyValueDto)element).Id,
+                    Name = ((KeyValueDto)element).Name,
+                    Text = ((KeyValueDto)element).Text,
+                    Value = ((KeyValueDto)element).Value,
+                    Description = ((KeyValueDto)element).Description,
+                };
+            var result = await _mediator.Send(command);
+        });
+    }
+
+    private async Task OnExport()
+    {
+
+        var request = new ExportKeyValuesQuery()
+            {
+                Keyword = _searchString,
+                OrderBy = string.IsNullOrEmpty(_table.TableContext.SortFieldLabel) ? "Id" : _table.TableContext.SortFieldLabel,
+                SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
+            };
+        var result = await _mediator.Send(request);
+        using var streamRef = new DotNetStreamReference(new MemoryStream(result));
+        await JS.InvokeVoidAsync("downloadFileFromStream", $"{L["Dictionaries"]}.xlsx", streamRef);
+    }
+    private async Task OnImportData(InputFileChangeEventArgs e)
+    {
+        var stream = new MemoryStream();
+        await e.File.OpenReadStream().CopyToAsync(stream);
+        var command=new ImportKeyValuesCommand()
+        {
+             Data=stream.ToArray(),
+             FileName= e.File.Name
+        };
+        var result = await _mediator.Send(command);
+        if(result.Succeeded){
+            await OnRefresh();
+            Snackbar.Add($"Import data successfully", MudBlazor.Severity.Info);
+        }
+        else
+        {
+            foreach(var msg in result.Errors)
+            {
+                Snackbar.Add($"{msg}", MudBlazor.Severity.Error);
+            }
+        }
+    }
+
 }
