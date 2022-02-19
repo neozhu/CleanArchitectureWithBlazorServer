@@ -14,9 +14,13 @@ public class AddEditProductCommandValidator : AbstractValidator<AddEditProductCo
         RuleFor(v => v.Unit)
             .MaximumLength(2)
             .NotEmpty();
+        RuleFor(v => v.Brand)
+           .MaximumLength(30)
+           .NotEmpty();
         RuleFor(v => v.Price)
                .GreaterThanOrEqualTo(0);
-   
+        RuleFor(v => v.Description)
+                   .MaximumLength(1024);
     }
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>

@@ -17,121 +17,123 @@
 </style>
 <ErrorBoundary>
     <ChildContent>
-<MudTable ServerData="@(new Func<TableState, Task<TableData<ProductDto>>>(ServerReload))"
-          FixedHeader="true"
-          FixedFooter="true"
-          Height="calc(100vh - 265px)"
-          Loading="@_loading"
-          SortLabel="@L["Sort By"]"
-          MultiSelection="true" @bind-SelectedItems="_selectedItems"
-          Hover="true" @ref="_table">
-    <ToolBarContent>
-        <div class="justify-start pt-3">
-            <MudText Typo="Typo.h6">Product</MudText>
-            <MudButton DisableElevation Variant="Variant.Outlined"
-                       Size="Size.Small"
-                       OnClick="@(()=>OnRefresh())"
-                       StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                       Style="margin-right: 5px;">@L["Refresh"]</MudButton>
-            @if (_canCreate)
-            {
-                <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                       StartIcon="@Icons.Material.Filled.Add"
-                       Size="Size.Small"
-                       Style="margin-right: 5px;"
-                       OnClick="OnCreate"
-                       IconColor="Color.Surface">@L["Create"]</MudButton>
-            }
-            @if (_canDelete)
-            {
-                <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                       StartIcon="@Icons.Material.Filled.Delete"
-                       Disabled="@(!(_selectedItems.Count>0))"
-                       Size="Size.Small"
-                       Style="margin-right: 5px;"
-                       OnClick="OnDeleteChecked"
-                       IconColor="Color.Surface">@L["Delete"]</MudButton>
-            }
-            @if (_canImport)
-            {
-               <InputFile id="importdataInput" OnChange="OnImportData" hidden  accept=".xlsx" />
-                <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                       StartIcon="@Icons.Material.Filled.Upload"
-                       Size="Size.Small"
-                       Style="margin-right: 5px;"
-                       for="importdataInput"
-                       HtmlTag="label"
-                       IconColor="Color.Surface">@L["Import Data"]</MudButton>
-            }
-            @if (_canExport)
-            {
-                <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                       StartIcon="@Icons.Material.Filled.Download"
-                       Size="Size.Small"
-                       Style="margin-right: 5px;"
-                       OnClick="OnExport"
-                       IconColor="Color.Surface">@L["Export Data"]</MudButton>
-            }
-        </div>
-        <MudSpacer />
-        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <ColGroup>
-        <col style="width:50px;" />
-    </ColGroup>
-    <HeaderContent>
-        <MudTh Style="width:80px">@L["Actions"]</MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Name" T="ProductDto">@L["Product Name"]</MudTableSortLabel></MudTh>
-        <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="Price" T="ProductDto">@L["Price"]</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Unit" T="ProductDto">@L["Unit"]</MudTableSortLabel></MudTh>
-
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Actions">
-            @if (_canEdit || _canDelete)
-            {
-                <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
-                     Dense="true"
-                     EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
-                     OffsetX="true">
-                    @if (_canEdit)
+        <MudTable ServerData="@(new Func<TableState, Task<TableData<ProductDto>>>(ServerReload))"
+                  FixedHeader="true"
+                  FixedFooter="true"
+                  Height="calc(100vh - 265px)"
+                  Loading="@_loading"
+                  SortLabel="@L["Sort By"]"
+                  MultiSelection="true" @bind-SelectedItems="_selectedItems"
+                  Hover="true" @ref="_table">
+            <ToolBarContent>
+                <div class="justify-start pt-3">
+                    <MudText Typo="Typo.h6">Product</MudText>
+                    <MudButton DisableElevation Variant="Variant.Outlined"
+                               Size="Size.Small"
+                               OnClick="@(()=>OnRefresh())"
+                               StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                               Style="margin-right: 5px;">@L["Refresh"]</MudButton>
+                    @if (_canCreate)
                     {
-                        <MudMenuItem OnClick="@(()=>OnEdit(context))">@L["Edit"]</MudMenuItem>
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Add"
+                               Size="Size.Small"
+                               Style="margin-right: 5px;"
+                               OnClick="OnCreate"
+                               IconColor="Color.Surface">@L["Create"]</MudButton>
                     }
                     @if (_canDelete)
                     {
-                        <MudMenuItem OnClick="@(()=>OnDelete(context))">@L["Delete"]</MudMenuItem>
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                               StartIcon="@Icons.Material.Filled.Delete"
+                               Disabled="@(!(_selectedItems.Count>0))"
+                               Size="Size.Small"
+                               Style="margin-right: 5px;"
+                               OnClick="OnDeleteChecked"
+                               IconColor="Color.Surface">@L["Delete"]</MudButton>
                     }
-                </MudMenu>
-            }
-            else
-            {
-                <MudButton Variant="Variant.Filled" DisableElevation="true"
-                       StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                       Color="Color.Surface">
-                    @L["No Allowed"]
-                </MudButton>
-            }
-        </MudTd>
-        <MudTd DataLabel="Name">
-            <MudText>@context.Name</MudText>
-            <MudText Typo="Typo.body2">@context.Description</MudText>
-        </MudTd>
-        <MudTd DataLabel="Price" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
-        <MudTd DataLabel="Unit">@context.Unit</MudTd>
-    </RowTemplate>
-    <NoRecordsContent>
-        <MudText>@L["No matching records found"]</MudText>
-    </NoRecordsContent>
-    <LoadingContent>
-        <MudText>@L["Loading.."].</MudText>
-    </LoadingContent>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
-</MudTable>
-</ChildContent>
+                    @if (_canImport)
+                    {
+                        <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Upload"
+                               Size="Size.Small"
+                               Style="margin-right: 5px;"
+                               for="importdataInput"
+                               HtmlTag="label"
+                               IconColor="Color.Surface">@L["Import Data"]</MudButton>
+                    }
+                    @if (_canExport)
+                    {
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Download"
+                               Size="Size.Small"
+                               Style="margin-right: 5px;"
+                               OnClick="OnExport"
+                               IconColor="Color.Surface">@L["Export Data"]</MudButton>
+                    }
+                </div>
+                <MudSpacer />
+                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <ColGroup>
+                <col style="width:50px;" />
+            </ColGroup>
+            <HeaderContent>
+                <MudTh Style="width:80px">@L["Actions"]</MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Brand" T="ProductDto">@L["Brand Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Name" T="ProductDto">@L["Product Name"]</MudTableSortLabel></MudTh>
+                <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="Price" T="ProductDto">@L["Price"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Unit" T="ProductDto">@L["Unit"]</MudTableSortLabel></MudTh>
+
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Actions">
+                    @if (_canEdit || _canDelete)
+                    {
+                        <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                             Dense="true"
+                             EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
+                             OffsetX="true">
+                            @if (_canEdit)
+                            {
+                                <MudMenuItem OnClick="@(()=>OnEdit(context))">@L["Edit"]</MudMenuItem>
+                            }
+                            @if (_canDelete)
+                            {
+                                <MudMenuItem OnClick="@(()=>OnDelete(context))">@L["Delete"]</MudMenuItem>
+                            }
+                        </MudMenu>
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" DisableElevation="true"
+                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                               Color="Color.Surface">
+                            @L["No Allowed"]
+                        </MudButton>
+                    }
+                </MudTd>
+                <MudTd DataLabel="Brand">@context.Brand</MudTd>
+                <MudTd DataLabel="Name">
+                    <MudText>@context.Name</MudText>
+                    <MudText Typo="Typo.body2">@context.Description</MudText>
+                </MudTd>
+                <MudTd DataLabel="Price" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
+                <MudTd DataLabel="Unit">@context.Unit</MudTd>
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>@L["No matching records found"]</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>@L["Loading.."].</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </ChildContent>
     <ErrorContent>
         <MudAlert Class="mt-auto" Severity="MudBlazor.Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
     </ErrorContent>
@@ -290,19 +292,20 @@
     {
         var stream = new MemoryStream();
         await e.File.OpenReadStream().CopyToAsync(stream);
-        var command=new ImportProductsCommand()
-        {
-             Data=stream.ToArray(),
-             FileName= e.File.Name
-        };
+        var command = new ImportProductsCommand()
+            {
+                Data = stream.ToArray(),
+                FileName = e.File.Name
+            };
         var result = await _mediator.Send(command);
-        if(result.Succeeded){
+        if (result.Succeeded)
+        {
             await _table.ReloadServerData();
             Snackbar.Add($"Import data successfully", MudBlazor.Severity.Info);
         }
         else
         {
-            foreach(var msg in result.Errors)
+            foreach (var msg in result.Errors)
             {
                 Snackbar.Add($"{msg}", MudBlazor.Severity.Error);
             }

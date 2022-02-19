@@ -3,8 +3,6 @@
 
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName;
 
@@ -15,6 +13,10 @@ public class KeyValuesQueryByName : IRequest<IEnumerable<KeyValueDto>>, ICacheab
     public string CacheKey => KeyValueCacheKey.GetCacheKey(Name);
 
     public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
+    public KeyValuesQueryByName(string name)
+    {
+        Name = name;
+    }
 }
 public class KeyValuesQueryByNameHandler : IRequestHandler<KeyValuesQueryByName, IEnumerable<KeyValueDto>>
 {
@@ -33,6 +35,7 @@ public class KeyValuesQueryByNameHandler : IRequestHandler<KeyValuesQueryByName,
     public async Task<IEnumerable<KeyValueDto>> Handle(KeyValuesQueryByName request, CancellationToken cancellationToken)
     {
         var data = await _context.KeyValues.Where(x => x.Name == request.Name)
+            .OrderBy(x=>x.Text)
            .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
            .ToListAsync(cancellationToken);
         return data;

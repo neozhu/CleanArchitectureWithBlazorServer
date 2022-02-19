@@ -1,3 +1,4 @@
+@using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
@@ -22,7 +23,16 @@
                                   For="@(() => model.Description)"
                                   @bind-Value="model.Description"></MudTextField>
                 </MudItem>
-                <MudItem xs="12" sm="6">
+                <MudItem xs="12" sm="4">
+                    <MudAutocomplete Label="@L["Brand"]"
+                                     For="@(() => model.Brand)"
+                                     T="string"
+                                     Validation="@(modelValidator.ValidateValue)"
+                                     ResetValueOnEmptyText="true"
+                                     SearchFunc="@_searchBrand"
+                                     @bind-Value="model.Brand"></MudAutocomplete>
+                </MudItem>
+                <MudItem xs="12" sm="4">
                     <MudNumericField Label="@L["Price"]"
                                      T="decimal"
                                      Format="N2"
@@ -31,7 +41,7 @@
                                      Validation="@(modelValidator.ValidateValue)"
                                      @bind-Value="model.Price"></MudNumericField>
                 </MudItem>
-                <MudItem xs="12" sm="6">
+                <MudItem xs="12" sm="4">
                     <MudTextField Label="@L["Unit"]"
                                   Required="true"
                                   RequiredError="@L["unit is required!"]"
@@ -72,8 +82,23 @@
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     AddEditProductCommandValidator modelValidator = new AddEditProductCommandValidator();
     [EditorRequired] [Parameter] public AddEditProductCommand model { get; set; } = default!;
-
+    [Inject]
+    private ISender _mediator { get; set; } = default!;
     private IList<string>? _prictures = null;
+    private string[] _brands { get; set; } = default!;
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await _mediator.Send(new KeyValuesQueryByName("Brand"));
+        _brands = result.Select(x=>x.Text).ToArray();
+    }
+    private async Task<IEnumerable<string>> _searchBrand(string value)
+    {
+   
+        // if text is null or empty, show complete list
+        if (string.IsNullOrEmpty(value))
+            return _brands;
+        return _brands.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
         var list = new List<string>();
