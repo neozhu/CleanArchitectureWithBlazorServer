@@ -30,7 +30,7 @@ public class GetAllKeyValuesQueryHandler : IRequestHandler<GetAllKeyValuesQuery,
     }
     public async Task<IList<KeyValueDto>> Handle(GetAllKeyValuesQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.KeyValues
+        var data = await _context.KeyValues.OrderBy(x=>x.Name).ThenBy(x=>x.Value)
            .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
            .ToListAsync(cancellationToken);
         return data;

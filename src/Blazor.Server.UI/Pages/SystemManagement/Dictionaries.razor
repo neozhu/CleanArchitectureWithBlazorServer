@@ -120,7 +120,7 @@
                     <MudTextField @bind-Value="@context.Text" Required />
                 </MudTd>
                 <MudTd DataLabel="Description">
-                    <MudNumericField @bind-Value="@context.Description" />
+                    <MudTextField @bind-Value="@context.Description" />
                 </MudTd>
                 
             </RowEditingTemplate>
@@ -253,6 +253,8 @@
                     Description = ((KeyValueDto)element).Description,
                 };
             var result = await _mediator.Send(command);
+            ((KeyValueDto)element).Id = result.Data;
+            StateHasChanged();
         });
     }
 
