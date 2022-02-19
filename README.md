@@ -3,7 +3,8 @@ This is a repository for creating a  Blazor Server application following the pri
 ## Live Demo
 -  Blazor Server mode: https://mudblazor-s.dotnet6.cn/
 ## Screenshots and video
-[![Blazor Dashboard](doc/main_screenshot.png)](https://www.youtube.com/watch?v=GyZJl_dG-Pg)
+[![Everything Is AWESOME](doc/main_screenshot.png)](https://www.youtube.com/embed/GyZJl_dG-Pg "Everything Is AWESOME")
+
 ## Development Enviroment
 - Microsoft Visual Studio Community 2022 (64-bit) 
 - Docker
