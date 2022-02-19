@@ -1,51 +1,262 @@
-﻿@page "/user/profile"
+@page "/user/profile"
+@using SixLabors.ImageSharp
+@using SixLabors.ImageSharp.Formats
+@using SixLabors.ImageSharp.Processing
 
-<MudText  Class="align-center" Typo="Typo.h6">Profile</MudText>
-<MudBreadcrumbs Separator="." Items="_items"></MudBreadcrumbs>
-<br/>
-<MudContainer>
-    <MudGrid>
-       
-        <MudItem sm="12">
-            <MudPaper Class="pa-4"
-                      Elevation="25"
-                      Style="height: 280px;">
-                      <MudTabs Elevation="0" Centered="true" Rounded="true" PanelClass="pa-6" DisableRipple="true">
-                            <MudTabPanel Text="Profile" ToolTip="ToolTip One">
-                            </MudTabPanel>
-                            <MudTabPanel Text="Followers" ToolTip="ToolTip Two">
-                            </MudTabPanel>
-                            <MudTabPanel Text="Friends" ToolTip="ToolTip Three">
-                            </MudTabPanel> 
-                            <MudTabPanel Text="Gallery" ToolTip="ToolTip Three">
-                            </MudTabPanel>
-                        </MudTabs>
-            </MudPaper>
-        </MudItem>
-        <MudItem md="4"
-                 sm="12"
-                 xs="12">
-            <MudPaper Class="pa-4"
-                      Elevation="2"
-                      Style="height: 250px; background: #405f6c">
-            </MudPaper>
-        </MudItem>
-          <MudItem md="8"
-                 sm="12"
-                 xs="12">
-            <MudPaper Class="pa-4"
-                      Elevation="2"
-                      Style="height: 250px; background: var(--mud-palette-primary)">
-            </MudPaper>
-        </MudItem>
-        
-         </MudGrid>
-</MudContainer>
+
+@inject IStringLocalizer<Profile> L
+<PageTitle>@Title</PageTitle>
+
+<ErrorBoundary>
+    <ChildContent>
+        <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" Elevation="6"
+                 ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
+            <MudTabPanel Text="@L["Profile"]">
+                <MudForm Model="@model" @ref="@form" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
+                    <MudGrid Justify="Justify.Center" Style="width:600px;display:flex;">
+                        <MudItem sm="12" xs="12">
+                            <div class="d-flex justify-center">
+
+                                @if (string.IsNullOrEmpty(model.ProfilePictureDataUrl))
+                                {
+                                    <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.UserName</MudAvatar>
+                                }
+                                else
+                                {
+                                    <MudAvatar Image="@model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;" />
+                                }
+                                <MudTooltip Text="@L["Click upload a photo."]">
+                                    <InputFile id="UploadPhoto" OnChange="UploadPhoto" hidden accept=".jpg, .jpeg, .png" />
+                                    <MudIconButton HtmlTag="label"
+                                                   Color="MudBlazor.Color.Info"
+                                                   Icon="@Icons.Filled.PhotoCamera"
+                                                   for="UploadPhoto"></MudIconButton>
+                                </MudTooltip>
+                            </div>
+                        </MudItem>
+                        <MudItem sm="6" xs="12">
+                            <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
+                        </MudItem>
+                        <MudItem sm="6" xs="12">
+                            <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["Email"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
+                        </MudItem>
+                        <MudItem sm="6" xs="12">
+                            <MudTextField For="@(() => model.DisplayName)" Validation="@(userValidator.ValidateValue)" @bind-Value="model.UserName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+                        </MudItem>
+                        <MudItem sm="6" xs="12">
+                            <MudTextField For="@(() => model.PhoneNumber)" Validation="@(userValidator.ValidateValue)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
+                        </MudItem>
+                        <MudItem sm="12" xs="12" Class="d-flex justify-end">
+                            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="MudBlazor.Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">@L["Save Changes"]</MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudForm>
+            </MudTabPanel>
+            <MudTabPanel Text="@L["Change Password"]">
+                <MudForm Model="@changepassword" @ref="@passwordform" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
+                    <MudGrid Justify="Justify.Center" Style="width:300px">
+                        <MudItem sm="12" xs="12">
+                            <MudTextField Immediate="true"
+                                          Label="@L["Current Password"]"
+                                          For="@(()=>changepassword.CurrentPassword)"
+                                          @bind-Value="changepassword.CurrentPassword"
+                                          Variant="Variant.Text"
+                                          InputType="@PasswordInput"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@PasswordInputIcon"
+                                          Required="true"
+                                          RequiredError="@L["current password is required!"]"
+                                          OnAdornmentClick="TogglePasswordVisibility" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField Validation="@(passwordValidator.ValidateValue)"
+                                          Immediate="true"
+                                          Label="@L["New Password"]"
+                                          For="@(()=>changepassword.NewPassword)"
+                                          @bind-Value="changepassword.NewPassword"
+                                          Variant="Variant.Text"
+                                          InputType="@PasswordInput"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@PasswordInputIcon"
+                                          Required="true"
+                                          RequiredError="@L["password is required!"]"
+                                          OnAdornmentClick="TogglePasswordVisibility" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField Validation="@(passwordValidator.ValidateValue)"
+                                          Immediate="true"
+                                          Label="@L["Confirm New Password"]"
+                                          For="@(()=>changepassword.ConfirmPassword)"
+                                          @bind-Value="changepassword.ConfirmPassword"
+                                          Variant="Variant.Text"
+                                          InputType="@PasswordInput"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@PasswordInputIcon"
+                                          Required="true"
+                                          RequiredError="@L["password is required!"]"
+                                          OnAdornmentClick="TogglePasswordVisibility" />
+                        </MudItem>
+                        <MudItem sm="12" xs="12" Class="d-flex justify-end">
+                            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="MudBlazor.Color.Primary" Class="ml-auto" OnClick="@(async () => await ChangePassword())">@L["Change Password"]</MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudForm>
+            </MudTabPanel>
+
+        </MudTabs>
+    </ChildContent>
+    <ErrorContent>
+        <MudAlert Class="mt-auto" Severity="MudBlazor.Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
+    </ErrorContent>
+</ErrorBoundary>
 @code {
-    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    private MudForm form = default!;
+    private MudForm passwordform = default!;
+    public string Title { get; set; } = "Profile";
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject]
+    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
+    [Inject] private IUploadService _uploadService { get; set; } = default!;
+    private ApplicationUser model { get; set; } = default!;
+    private UserFluentValidator userValidator = new UserFluentValidator();
+
+    private ChangePasswordModel changepassword { get; set; } = new();
+    private PasswordFluentValidator passwordValidator = new PasswordFluentValidator();
+
+
+    bool PasswordVisibility;
+    InputType PasswordInput = InputType.Password;
+
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    void TogglePasswordVisibility()
     {
-        new BreadcrumbItem("Dashboard", href: "#"),
-        new BreadcrumbItem("User", href: "#"),
-        new BreadcrumbItem("Profile", href: null, disabled: true)
-    };
+        @if (PasswordVisibility)
+        {
+            PasswordVisibility = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            PasswordVisibility = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState;
+        model = await _userManager.FindByEmailAsync(state.User.GetEmail());
+    }
+
+    private async Task UploadPhoto(InputFileChangeEventArgs e)
+    {
+        var filestream = e.File.OpenReadStream();
+        var imgstream = new MemoryStream();
+        await filestream.CopyToAsync(imgstream);
+        imgstream.Position = 0;
+        using (var outStream = new MemoryStream())
+        {
+            using (var image = Image.Load(imgstream, out IImageFormat format))
+            {
+                image.Mutate(
+                   i => i.Resize(new ResizeOptions() { Mode = ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(128, 128) }));
+                image.Save(outStream, format);
+                var filename = e.File.Name;
+                var fi = new FileInfo(filename);
+                var ext = fi.Extension;
+                var result = await _uploadService.UploadAsync(new UploadRequest()
+                    {
+                        Data = outStream.ToArray(),
+                        FileName = Guid.NewGuid().ToString() + ext,
+                        Extension = ext,
+                        UploadType = UploadType.ProfilePicture
+                    });
+                model.ProfilePictureDataUrl = result;
+                //Do your validations here
+                Snackbar.Add($"Upload successfully.", MudBlazor.Severity.Info);
+            }
+        }
+    }
+    private async Task Submit()
+    {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            await _userManager.UpdateAsync(model);
+            Snackbar.Add($"Update successfully", MudBlazor.Severity.Info);
+        }
+
+    }
+    private async Task ChangePassword()
+    {
+        await passwordform.Validate();
+        if (passwordform.IsValid)
+        {
+            var result = await _userManager.ChangePasswordAsync(model, changepassword.CurrentPassword, changepassword.NewPassword);
+            if (result.Succeeded)
+            {
+                Snackbar.Add($"Change password successfully.", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"Change password fail.{string.Join(",", result.Errors.Select(x => x.Description).ToArray())}", MudBlazor.Severity.Error);
+            }
+        }
+    }
+    public class UserFluentValidator : AbstractValidator<ApplicationUser>
+    {
+        public UserFluentValidator()
+        {
+            RuleFor(x => x.DisplayName)
+                .MaximumLength(128)
+                .NotEmpty();
+
+
+            RuleFor(x => x.PhoneNumber)
+                .MaximumLength(128);
+
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<ApplicationUser>.CreateWithOptions((ApplicationUser)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+
+    public class ChangePasswordModel
+    {
+        public string CurrentPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty;
+    }
+
+    public class PasswordFluentValidator : AbstractValidator<ChangePasswordModel>
+    {
+        public PasswordFluentValidator()
+        {
+            RuleFor(p => p.NewPassword).NotEmpty().WithMessage("Your password cannot be empty")
+                .MinimumLength(6).WithMessage("Your password length must be at least 6.")
+                .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
+                .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
+                .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
+                .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
+                .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
+            RuleFor(x => x.ConfirmPassword)
+                 .Equal(x => x.NewPassword);
+
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<ChangePasswordModel>.CreateWithOptions((ChangePasswordModel)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
 }

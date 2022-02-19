@@ -89,8 +89,8 @@ public class MenuService : IMenuService
                         new()
                         {
                             Title = "Profile",
-                            Href = "/indentity/profile",
-                            PageStatus = PageStatus.ComingSoon
+                            Href = "/user/profile",
+                            PageStatus = PageStatus.Completed
                         }
                     }
                 },
