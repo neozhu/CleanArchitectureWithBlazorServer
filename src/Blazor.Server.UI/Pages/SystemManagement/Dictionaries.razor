@@ -111,7 +111,7 @@
             </RowTemplate>
             <RowEditingTemplate>
                 <MudTd DataLabel="Name">
-                   <MudTextField @bind-Value="@context.Name" Required />
+                   <MudAutocomplete @bind-Value="@context.Name" CoerceText="true" CoerceValue="true" SearchFunc="searchName" Required />
                 </MudTd>
                 <MudTd DataLabel="Value">
                     <MudTextField @bind-Value="@context.Value" Required />
@@ -179,6 +179,13 @@
         if ($"{dto.Value} {dto.Text}".Contains(searchString))
             return true;
         return false;
+    }
+    private async Task<IEnumerable<string>> searchName(string value)
+    {
+ 
+        if (string.IsNullOrEmpty(value))
+            return KeyValueList.Where(x=>!string.IsNullOrEmpty(x.Name)).Select(x=>x.Name).OrderBy(x=>x).Distinct();
+        return KeyValueList.Where(x =>!string.IsNullOrEmpty(x.Name) && x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x=>x.Name).OrderBy(x=>x).Distinct();
     }
     private async Task LoadData()
     {

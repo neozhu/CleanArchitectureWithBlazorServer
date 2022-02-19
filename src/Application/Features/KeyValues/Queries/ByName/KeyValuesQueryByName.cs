@@ -13,6 +13,10 @@ public class KeyValuesQueryByName : IRequest<IEnumerable<KeyValueDto>>, ICacheab
     public string CacheKey => KeyValueCacheKey.GetCacheKey(Name);
 
     public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
+    public KeyValuesQueryByName(string name)
+    {
+        Name = name;
+    }
 }
 public class KeyValuesQueryByNameHandler : IRequestHandler<KeyValuesQueryByName, IEnumerable<KeyValueDto>>
 {
