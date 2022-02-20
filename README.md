@@ -2,6 +2,7 @@
 This is a repository for creating a  Blazor Server application following the principles of Clean Architecture
 ## Live Demo
 -  Blazor Server mode: https://mudblazor-s.dotnet6.cn/
+-  (cloudflare accelerate): https://dashboard.i247365.net/
 ## Screenshots and video
 [![Everything Is AWESOME](doc/main_screenshot.png)](https://www.youtube.com/embed/GyZJl_dG-Pg "Everything Is AWESOME")
 
