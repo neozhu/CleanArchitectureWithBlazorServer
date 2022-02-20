@@ -6,6 +6,7 @@ using Blazor.Server.UI.Models;
 using Toolbelt.Blazor.HotKeys;
 using Microsoft.AspNetCore.Components.Authorization;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
+using Blazor.Server.UI.Services.Authentication;
 
 namespace Blazor.Server.UI.Shared;
 
@@ -213,9 +214,12 @@ public partial class MainLayout : IDisposable
     [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject]
+    private ProfileService _profileService { get; set; } = default!;
     public void Dispose()
     {
         _hotKeysContext?.Dispose();
+       
     }
   
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -230,17 +234,18 @@ public partial class MainLayout : IDisposable
     }
     protected override async Task OnInitializedAsync()
     {
-        var state = await AuthState;
-        _user = new UserModel()
-        {
-             Avatar = state.User.GetProfilePictureDataUrl(),
-             DisplayName = state.User.GetDisplayName(),
-             Email = state.User.GetEmail(),
-             Role = state.User.GetRoles().FirstOrDefault()
+        _profileService.OnChange = (s) => {
+            _user = s;
+            StateHasChanged();
+            return Task.CompletedTask;
         };
+        await _profileService.Set(AuthState);
+        
+       
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
     }
+ 
     protected void SideMenuDrawerOpenChangedHandler(bool state)
     {
         _sideMenuDrawerOpen = state;

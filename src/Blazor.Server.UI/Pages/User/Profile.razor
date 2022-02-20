@@ -1,4 +1,5 @@
 @page "/user/profile"
+@using Blazor.Server.UI.Services.Authentication
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
 @using SixLabors.ImageSharp.Processing
@@ -135,6 +136,8 @@
     [Inject]
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     [Inject] private IUploadService _uploadService { get; set; } = default!;
+    [Inject]
+    private ProfileService _profileService { get; set; } = default!;
     private ApplicationUser model { get; set; } = default!;
     private UserFluentValidator userValidator = new UserFluentValidator();
 
@@ -203,6 +206,16 @@
         if (form.IsValid)
         {
             await _userManager.UpdateAsync(model);
+            await _profileService.Update(new Models.UserModel()
+            {
+                 Avatar = model.ProfilePictureDataUrl,
+                  DisplayName=model.DisplayName,
+                   Email =model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                     Site = model.Site,
+                     Role = roles.FirstOrDefault()
+
+            });
             Snackbar.Add($"Update successfully", MudBlazor.Severity.Info);
         }
 
