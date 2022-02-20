@@ -13,17 +13,34 @@
                  ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
             <MudTabPanel Text="@L["Profile"]">
                 <MudForm Model="@model" @ref="@form" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
-                    <MudGrid Justify="Justify.Center" Style="width:600px;display:flex;">
+                    <MudGrid Justify="Justify.Center" Style="max-width:600px;display:flex;">
                         <MudItem sm="12" xs="12">
                             <div class="d-flex justify-center">
 
                                 @if (string.IsNullOrEmpty(model.ProfilePictureDataUrl))
                                 {
+                                    <MudElement Class="d-flex flex-column  align-center">
                                     <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.UserName</MudAvatar>
+                                    <div class="d-flex">
+                                            @foreach(var role in roles)
+                                            {
+                                                <MudChip Size="MudBlazor.Size.Small">@role</MudChip>
+                                            }
+                                    </div>
+                                    
+                                    </MudElement>
                                 }
                                 else
                                 {
+                                    <MudElement Class="d-flex flex-column  align-center">
                                     <MudAvatar Image="@model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;" />
+                                     <div class="d-flex">
+                                            @foreach(var role in roles)
+                                            {
+                                                <MudChip Size="MudBlazor.Size.Small">@role</MudChip>
+                                            }
+                                    </div>
+                                    </MudElement>
                                 }
                                 <MudTooltip Text="@L["Click upload a photo."]">
                                     <InputFile id="UploadPhoto" OnChange="UploadPhoto" hidden accept=".jpg, .jpeg, .png" />
@@ -41,7 +58,7 @@
                             <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["Email"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                         </MudItem>
                         <MudItem sm="6" xs="12">
-                            <MudTextField For="@(() => model.DisplayName)" Validation="@(userValidator.ValidateValue)" @bind-Value="model.UserName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+                            <MudTextField For="@(() => model.DisplayName)" Validation="@(userValidator.ValidateValue)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
                         </MudItem>
                         <MudItem sm="6" xs="12">
                             <MudTextField For="@(() => model.PhoneNumber)" Validation="@(userValidator.ValidateValue)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
@@ -54,7 +71,7 @@
             </MudTabPanel>
             <MudTabPanel Text="@L["Change Password"]">
                 <MudForm Model="@changepassword" @ref="@passwordform" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
-                    <MudGrid Justify="Justify.Center" Style="width:300px">
+                    <MudGrid Justify="Justify.Center" Style="max-width:300px">
                         <MudItem sm="12" xs="12">
                             <MudTextField Immediate="true"
                                           Label="@L["Current Password"]"
@@ -124,7 +141,7 @@
     private ChangePasswordModel changepassword { get; set; } = new();
     private PasswordFluentValidator passwordValidator = new PasswordFluentValidator();
 
-
+    private IList<string> roles =new List<string>();
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
 
@@ -148,6 +165,7 @@
     {
         var state = await AuthState;
         model = await _userManager.FindByEmailAsync(state.User.GetEmail());
+        roles = await _userManager.GetRolesAsync(model);
     }
 
     private async Task UploadPhoto(InputFileChangeEventArgs e)

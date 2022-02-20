@@ -1,5 +1,6 @@
 @page "/pages/authentication/register"
 @using System.Text.RegularExpressions
+@using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @using Microsoft.AspNetCore.Identity
 @using Blazor.Server.UI.Models.Authentication
 @using System.ComponentModel.DataAnnotations
@@ -71,7 +72,7 @@
 </MudForm>
 @code {
     [Inject] private NavigationManager _navigation { get; set; } = default!;
-    [Inject] private UserManager<IdentityUser> userManager { get; set; }= default!;
+    [Inject] private UserManager<ApplicationUser> _userManager { get; set; }= default!;
     MudForm form;
     RegisterFormModel model = new ();
     RegisterFormModelFluentValidator registerValidator = new ();
@@ -102,14 +103,15 @@
 
         if (form.IsValid)
         {
-            var user = new IdentityUser()
+            var user = new ApplicationUser()
                 {
                     UserName=model.UserName,
                     Email=model.Email
                 };
-            var result = await userManager.CreateAsync(user,model.Password);
+            var result = await _userManager.CreateAsync(user,model.Password);
             if (result.Succeeded)
             {
+                await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
                 _navigation.NavigateTo("/pages/authentication/login");
             }
             Snackbar.Add("Submited!");
