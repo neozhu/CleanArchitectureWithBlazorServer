@@ -241,14 +241,8 @@ public partial class MainLayout : IDisposable
                 _user = s;
                 StateHasChanged();
             });
-
-
-
-
         };
         _user = await _profileService.Set(AuthState);
-
-
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
     }
