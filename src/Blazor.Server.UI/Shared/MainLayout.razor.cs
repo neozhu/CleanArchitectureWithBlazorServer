@@ -38,10 +38,10 @@ public partial class MainLayout : IDisposable
 
     private readonly Palette _lightPalette = new()
     {
-            Primary = "#2d4275",
-            Black = "#0A0E19",
-            Success = "#64A70B",
-            Secondary = "#ff4081ff",
+        Primary = "#2d4275",
+        Black = "#0A0E19",
+        Success = "#64A70B",
+        Secondary = "#ff4081ff",
     };
     private readonly MudTheme _theme = new()
     {
@@ -134,7 +134,7 @@ public partial class MainLayout : IDisposable
             {
                 FontSize = "1.125rem",
                 FontWeight = 600,
-                LineHeight =1.6,
+                LineHeight = 1.6,
                 LetterSpacing = ".0075em"
             },
             Button = new Button
@@ -190,9 +190,9 @@ public partial class MainLayout : IDisposable
                 LetterSpacing = ".08333em"
             }
         }
-    }; 
+    };
 
-    private  UserModel _user = new()
+    private UserModel _user = new()
     {
         Avatar = "./sample-data/avatar.png",
         DisplayName = "MudDemo",
@@ -206,7 +206,7 @@ public partial class MainLayout : IDisposable
     private bool _sideMenuDrawerOpen = true;
     private bool _rightToLeft = false;
     private ThemeManagerModel _themeManager = new();
- 
+
 
     private bool _themingDrawerOpen;
     [Inject] private IDialogService _dialogService { get; set; } = default!;
@@ -219,9 +219,9 @@ public partial class MainLayout : IDisposable
     public void Dispose()
     {
         _hotKeysContext?.Dispose();
-       
+
     }
-  
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -234,18 +234,25 @@ public partial class MainLayout : IDisposable
     }
     protected override async Task OnInitializedAsync()
     {
-        _profileService.OnChange = (s) => {
-            _user = s;
-            StateHasChanged();
-            return Task.CompletedTask;
+        _profileService.OnChange = (s) =>
+        {
+            return InvokeAsync(() =>
+            {
+                _user = s;
+                StateHasChanged();
+            });
+
+
+
+
         };
-        await _profileService.Set(AuthState);
-        
-       
+        _user = await _profileService.Set(AuthState);
+
+
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
     }
- 
+
     protected void SideMenuDrawerOpenChangedHandler(bool state)
     {
         _sideMenuDrawerOpen = state;
