@@ -11,7 +11,7 @@ public class ProfileService
 
 
 
-    public async Task Set(Task<AuthenticationState> state)
+    public async Task<UserModel> Set(Task<AuthenticationState> state)
     {
         var user = (await state).User;
         Profile =  new UserModel()
@@ -23,7 +23,7 @@ public class ProfileService
             Site=user.GetSite(),
             Role = user.GetRoles().FirstOrDefault()
         };
-        OnChange?.Invoke(Profile);
+        return Profile;
     }
 
     public Task Update(UserModel profile)
