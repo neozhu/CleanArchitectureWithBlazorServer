@@ -21,13 +21,14 @@ public partial class MainLayout : IDisposable
         DrawerBackground = "rgb(21,27,34)",
         DrawerText = "rgba(255,255,255, 0.50)",
         DrawerIcon = "rgba(255,255,255, 0.50)",
-        AppbarBackground = "#27272f",
+        AppbarBackground = "rgba(21,27,34,0.7)",
         AppbarText = "rgba(255,255,255, 0.70)",
         TextPrimary = "rgba(255,255,255, 0.70)",
         TextSecondary = "rgba(255,255,255, 0.50)",
         ActionDefault = "#adadb1",
         ActionDisabled = "rgba(255,255,255, 0.26)",
         ActionDisabledBackground = "rgba(255,255,255, 0.12)",
+        DarkDarken= "rgba(21,27,34,0.7)",
         Divider = "rgba(255,255,255, 0.12)",
         DividerLight = "rgba(255,255,255, 0.06)",
         TableLines = "rgba(255,255,255, 0.12)",
@@ -42,6 +43,7 @@ public partial class MainLayout : IDisposable
         Black = "#0A0E19",
         Success = "#64A70B",
         Secondary = "#ff4081ff",
+        AppbarBackground = "rgba(255,255,255,0.8)",
     };
     private readonly MudTheme _theme = new()
     {
@@ -205,6 +207,7 @@ public partial class MainLayout : IDisposable
     private HotKeysContext? _hotKeysContext;
     private bool _sideMenuDrawerOpen = true;
     private bool _rightToLeft = false;
+    private bool _isDark = false;
     private ThemeManagerModel _themeManager = new();
 
 
@@ -267,7 +270,6 @@ public partial class MainLayout : IDisposable
     protected async Task ThemeManagerChanged(ThemeManagerModel themeManager)
     {
         _themeManager = themeManager;
-
         _theme.Palette = _themeManager.IsDarkMode ? _darkPalette : _lightPalette;
         _theme.Palette.Primary = _themeManager.PrimaryColor;
         _theme.LayoutProperties.DefaultBorderRadius = _themeManager.BorderRadius + "px";
