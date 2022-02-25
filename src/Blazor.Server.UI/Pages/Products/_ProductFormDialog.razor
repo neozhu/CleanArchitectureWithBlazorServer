@@ -7,14 +7,14 @@
 @inject IStringLocalizer<Products> L
 <MudDialog>
     <DialogContent>
-        <MudForm Model="model" @ref="form">
+        <MudForm Model="model" @ref="form" Validation="@(modelValidator.ValidateValue)">
             <MudGrid>
                 <MudItem xs="12">
                     <MudTextField Label="@L["Name"]" @bind-Value="model.Name"
                                   For="@(() => model.Name)"
                                   Required="true"
                                   RequiredError="@L["product name is required!"]"
-                                  Validation="@(modelValidator.ValidateValue)">
+                                  >
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
@@ -27,7 +27,6 @@
                     <MudAutocomplete Label="@L["Brand"]"
                                      For="@(() => model.Brand)"
                                      T="string"
-                                     Validation="@(modelValidator.ValidateValue)"
                                      ResetValueOnEmptyText="true"
                                      SearchFunc="@_searchBrand"
                                      @bind-Value="model.Brand"></MudAutocomplete>
@@ -38,7 +37,6 @@
                                      Format="N2"
                                      For="@(() => model.Price)"
                                      Min="0.00m"
-                                     Validation="@(modelValidator.ValidateValue)"
                                      @bind-Value="model.Price"></MudNumericField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
@@ -46,7 +44,6 @@
                                   Required="true"
                                   RequiredError="@L["unit is required!"]"
                                   For="@(() => model.Unit)"
-                                  Validation="@(modelValidator.ValidateValue)"
                                   @bind-Value="model.Unit"></MudTextField>
                 </MudItem>
                 <MudItem>

@@ -9,12 +9,11 @@
 @inject IStringLocalizer<Register> L
 @attribute [AllowAnonymous]
 
-<MudForm Model="@model" @ref="@form">
+<MudForm Model="@model" @ref="@form"  Validation="@(registerValidator.ValidateValue)">
 <MudText Typo="Typo.h4" GutterBottom="true">Sign Up</MudText>
 <MudText>Already have an account? <MudLink Href="/pages/authentication/login">Sign In</MudLink></MudText>
 
 <MudTextField T="string"  
-    Validation="@(registerValidator.ValidateValue)"
     Immediate="true"
     Label="@L["User Name"]"
     @bind-Value="model.UserName" 
@@ -25,7 +24,6 @@
     Class="my-4"></MudTextField>
 
 <MudTextField T="string" 
-    Validation="@(registerValidator.ValidateValue)"
     Immediate="true"
     Label="@L["E-mail"]" 
     @bind-Value="model.Email" 
@@ -35,7 +33,6 @@
     Variant="Variant.Outlined"></MudTextField>
 
 <MudTextField 
-     Validation="@(registerValidator.ValidateValue)"
      Immediate="true"
      Label="@L["Password"]" 
      @bind-Value="model.Password" 
@@ -48,7 +45,6 @@
      RequiredError="@L["password is required!"]"
      OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
 <MudTextField 
-     Validation="@(registerValidator.ValidateValue)"
      Immediate="true"
      Label="@L["Confirm Password"]" 
      @bind-Value="model.ConfirmPassword" 
