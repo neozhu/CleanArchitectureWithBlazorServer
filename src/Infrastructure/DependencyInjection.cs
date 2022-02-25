@@ -76,12 +76,14 @@ public static class DependencyInjection
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
             options.Lockout.MaxFailedAccessAttempts = 5;
             options.Lockout.AllowedForNewUsers = true;
+            
         });
         services.Configure<DataProtectionTokenProviderOptions>(opt =>
                 opt.TokenLifespan = TimeSpan.FromHours(2));
         services.ConfigureApplicationCookie(options =>
         {
             options.ExpireTimeSpan = TimeSpan.FromDays(30);
+            options.Cookie.HttpOnly = true;
         });
 
         services.AddAuthorization(options =>
