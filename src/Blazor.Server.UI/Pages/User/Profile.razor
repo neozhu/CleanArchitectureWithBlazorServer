@@ -13,7 +13,7 @@
         <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" Elevation="6"
                  ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
             <MudTabPanel Text="@L["Profile"]">
-                <MudForm Model="@model" @ref="@form" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
+                <MudForm Model="@model" @ref="@form" Validation="@(userValidator.ValidateValue)" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
                     <MudGrid Justify="Justify.Center" Style="max-width:600px;display:flex;">
                         <MudItem sm="12" xs="12">
                             <div class="d-flex justify-center">
@@ -59,10 +59,10 @@
                             <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["Email"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                         </MudItem>
                         <MudItem sm="6" xs="12">
-                            <MudTextField For="@(() => model.DisplayName)" Validation="@(userValidator.ValidateValue)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+                            <MudTextField For="@(() => model.DisplayName)"  @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
                         </MudItem>
                         <MudItem sm="6" xs="12">
-                            <MudTextField For="@(() => model.PhoneNumber)" Validation="@(userValidator.ValidateValue)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
+                            <MudTextField For="@(() => model.PhoneNumber)"  @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
                         </MudItem>
                         <MudItem sm="12" xs="12" Class="d-flex justify-end">
                             <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="MudBlazor.Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">@L["Save Changes"]</MudButton>
@@ -71,7 +71,7 @@
                 </MudForm>
             </MudTabPanel>
             <MudTabPanel Text="@L["Change Password"]">
-                <MudForm Model="@changepassword" @ref="@passwordform" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
+                <MudForm Model="@changepassword" @ref="@passwordform" Validation="@(passwordValidator.ValidateValue)" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
                     <MudGrid Justify="Justify.Center" Style="max-width:300px">
                         <MudItem sm="12" xs="12">
                             <MudTextField Immediate="true"
@@ -87,7 +87,7 @@
                                           OnAdornmentClick="TogglePasswordVisibility" />
                         </MudItem>
                         <MudItem xs="12">
-                            <MudTextField Validation="@(passwordValidator.ValidateValue)"
+                            <MudTextField 
                                           Immediate="true"
                                           Label="@L["New Password"]"
                                           For="@(()=>changepassword.NewPassword)"
@@ -101,7 +101,7 @@
                                           OnAdornmentClick="TogglePasswordVisibility" />
                         </MudItem>
                         <MudItem xs="12">
-                            <MudTextField Validation="@(passwordValidator.ValidateValue)"
+                            <MudTextField 
                                           Immediate="true"
                                           Label="@L["Confirm New Password"]"
                                           For="@(()=>changepassword.ConfirmPassword)"

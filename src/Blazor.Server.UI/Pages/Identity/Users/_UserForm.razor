@@ -7,51 +7,46 @@
 @inject IStringLocalizer<Users> L
 
 
-<MudForm Model="@model" @ref="@form">
+<MudForm Model="@model" @ref="@form" Validation="@(modelValidator.ValidateValue)">
     <input For="@(() => model.Id)" @bind-value="model.Id" type="hidden" />
     <input For="@(() => model.ProfilePictureDataUrl)" @bind-value="model.ProfilePictureDataUrl" type="hidden" />
     <InputFile id="UploadPhoto" OnChange="UploadPhoto" hidden accept=".jpg, .jpeg, .png" />
     <MudGrid>
         <MudItem sm="12">
             <div class="d-flex justify-center">
-                
-                    @if (string.IsNullOrEmpty(model.ProfilePictureDataUrl))
-                    {
-                        <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.UserName</MudAvatar>
-                     }
-                    else
-                    {
-                        <MudAvatar Image="@model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;" />
-                    }
-                 <MudTooltip Text="@L["Click upload a photo."]">
-                     <MudIconButton HtmlTag="label"
-                               Color="MudBlazor.Color.Info"
-                                Icon="@Icons.Filled.PhotoCamera"
-                                for="UploadPhoto"></MudIconButton>
+
+                @if (string.IsNullOrEmpty(model.ProfilePictureDataUrl))
+                {
+                    <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.UserName</MudAvatar>
+                }
+                else
+                {
+                    <MudAvatar Image="@model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;" />
+                }
+                <MudTooltip Text="@L["Click upload a photo."]">
+                    <MudIconButton HtmlTag="label"
+                                   Color="MudBlazor.Color.Info"
+                                   Icon="@Icons.Filled.PhotoCamera"
+                                   for="UploadPhoto"></MudIconButton>
                 </MudTooltip>
             </div>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField Validation="@(modelValidator.ValidateValue)"
-                          For="@(() => model.Site)" @bind-Value="model.Site" Label="@L["Site"]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => model.Site)" @bind-Value="model.Site" Label="@L["Site"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField Validation="@(modelValidator.ValidateValue)"
-                          For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField Validation="@(modelValidator.ValidateValue)"
-                          For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField Validation="@(modelValidator.ValidateValue)"
-                          For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         @if (string.IsNullOrEmpty(model.Id))
         {
             <MudItem xs="12" sm="6">
-                <MudTextField Validation="@(modelValidator.ValidateValue)"
-                          Immediate="true"
+                <MudTextField Immediate="true"
                           Label="@L["Password"]"
                           @bind-Value="model.Password"
                           For="@(() => model.Password)"
@@ -62,10 +57,9 @@
                           Required="true"
                           RequiredError="@L["password is required!"]"
                           OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudTextField Validation="@(modelValidator.ValidateValue)"
-                          Immediate="true"
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTextField Immediate="true"
                           Label="@L["Confirm Password"]"
                           @bind-Value="model.ConfirmPassword"
                           For="@(() => model.ConfirmPassword)"
@@ -76,15 +70,15 @@
                           Required="true"
                           RequiredError="@L["password is required!"]"
                           OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
-        </MudItem>
+            </MudItem>
         }
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
             <div class="d-fex">
-                @for(int i= 0; i<_roles.Count; i ++) 
+                @for (int i = 0; i < _roles.Count; i++)
                 {
                     var x = i;
-                    <MudCheckBox T="bool" Checked="@_roles[x].value" Label="@_roles[i].key" CheckedChanged="@(s=>_roles[x].value=s)" ></MudCheckBox>
+                    <MudCheckBox T="bool" Checked="@_roles[x].value" Label="@_roles[i].key" CheckedChanged="@(s=>_roles[x].value=s)"></MudCheckBox>
                 }
             </div>
         </MudItem>
@@ -92,18 +86,19 @@
 </MudForm>
 
 @code {
-    public class keyvalue {
-        public string key{get;set;}
-        public bool value{get;set;}
+    public class keyvalue
+    {
+        public string key { get; set; }
+        public bool value { get; set; }
     }
     MudForm form = default!;
-    private List<keyvalue> _roles { get; set; } = new ();
+    private List<keyvalue> _roles { get; set; } = new();
 
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     UserFormModelValidator modelValidator = new UserFormModelValidator();
-    [EditorRequired] [Parameter] public UserFormModel model { get; set; } = default!;
-    [EditorRequired] [Parameter] public EventCallback<UserFormModel> OnFormSubmit { get; set; }
+    [EditorRequired][Parameter] public UserFormModel model { get; set; } = default!;
+    [EditorRequired][Parameter] public EventCallback<UserFormModel> OnFormSubmit { get; set; }
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
@@ -111,18 +106,18 @@
     {
         var array = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
 
-        foreach(var role in array)
+        foreach (var role in array)
         {
-            if(model.AssignRoles!=null && model.AssignRoles.Contains(role))
+            if (model.AssignRoles != null && model.AssignRoles.Contains(role))
             {
-                _roles.Add(new(){key=role,value= true});
+                _roles.Add(new() { key = role, value = true });
             }
             else
             {
-                _roles.Add(new() {key=role,value= false});
+                _roles.Add(new() { key = role, value = false });
             }
         }
-      
+
     }
     void TogglePasswordVisibility()
     {
@@ -143,7 +138,7 @@
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
         var filestream = e.File.OpenReadStream();
-        var imgstream=new MemoryStream();
+        var imgstream = new MemoryStream();
         await filestream.CopyToAsync(imgstream);
         imgstream.Position = 0;
         using (var outStream = new MemoryStream())
