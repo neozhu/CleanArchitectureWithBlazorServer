@@ -11,7 +11,7 @@
         <PackageReference Include="Blazor-Analytics" Version="3.10.0" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
         <PackageReference Include="FluentValidation" Version="10.3.6" />
-       <PackageReference Include="MudBlazor" Version="6.0.6" />
+       <PackageReference Include="MudBlazor" Version="6.0.7" />
         <PackageReference Include="MediatR" Version="10.0.1" />
        <PackageReference Include="SixLabors.ImageSharp" Version="2.0.0" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys" Version="12.0.1" />
@@ -23,10 +23,10 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-        <PackageReference Include="Serilog.AspNetCore" Version="4.1.1-dev-00229" />
+        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
         <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="1.1.4" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
-        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.7.0-dev-00405" />
+        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.7.0" />
     </ItemGroup>
 
     <ItemGroup>
