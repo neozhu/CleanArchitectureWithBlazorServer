@@ -56,6 +56,30 @@ public partial class MainLayout : IDisposable
             Secondary = "#ff4081ff",
             AppbarBackground = "rgba(255,255,255,0.8)",
         },
+        PaletteDark =new Palette
+        {
+            Black = "#27272f",
+            Background = "rgb(21,27,34)",
+            BackgroundGrey = "#27272f",
+            Surface = "#212B36",
+            DrawerBackground = "rgb(21,27,34)",
+            DrawerText = "rgba(255,255,255, 0.50)",
+            DrawerIcon = "rgba(255,255,255, 0.50)",
+            AppbarBackground = "rgba(21,27,34,0.7)",
+            AppbarText = "rgba(255,255,255, 0.70)",
+            TextPrimary = "rgba(255,255,255, 0.70)",
+            TextSecondary = "rgba(255,255,255, 0.50)",
+            ActionDefault = "#adadb1",
+            ActionDisabled = "rgba(255,255,255, 0.26)",
+            ActionDisabledBackground = "rgba(255,255,255, 0.12)",
+            DarkDarken = "rgba(21,27,34,0.7)",
+            Divider = "rgba(255,255,255, 0.12)",
+            DividerLight = "rgba(255,255,255, 0.06)",
+            TableLines = "rgba(255,255,255, 0.12)",
+            LinesDefault = "rgba(255,255,255, 0.12)",
+            LinesInputs = "rgba(255,255,255, 0.3)",
+            TextDisabled = "rgba(255,255,255, 0.2)"
+        },
         LayoutProperties = new LayoutProperties
         {
             AppbarHeight = "80px",
@@ -244,8 +268,10 @@ public partial class MainLayout : IDisposable
     protected async Task ThemeManagerChanged(ThemeManagerModel themeManager)
     {
         _themeManager = themeManager;
-        _theme.Palette = _themeManager.IsDarkMode ? _darkPalette : _lightPalette;
+        //_theme.Palette = _themeManager.IsDarkMode ? _darkPalette : _lightPalette;
+        _isDark = _themeManager.IsDarkMode;
         _theme.Palette.Primary = _themeManager.PrimaryColor;
+        _theme.PaletteDark.Primary = _themeManager.PrimaryColor;
         _theme.LayoutProperties.DefaultBorderRadius = _themeManager.BorderRadius + "px";
         await UpdateThemeManagerLocalStorage();
     }
