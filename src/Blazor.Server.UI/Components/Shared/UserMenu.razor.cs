@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Blazor.Server.UI.Models;
 using MudBlazor;
 using Blazor.Server.UI.Components.Dialogs;
+using Blazor.Server.UI.Services.Authentication;
 
 namespace Blazor.Server.UI.Components.Shared;
 
@@ -10,7 +11,8 @@ public partial class UserMenu
 {
     [Parameter] public string Class { get; set; }
     [EditorRequired] [Parameter] public UserModel User { get; set; } = default!;
-    private Task OnLogout()
+    [Inject] private IdentityAuthenticationService _authenticationService { get; set; } = default!;
+    private async Task OnLogout()
     {
         var parameters = new DialogParameters
             {
@@ -20,7 +22,11 @@ public partial class UserMenu
             };
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-        DialogService.Show<LogoutConfirmation>(L["Logout"], parameters, options);
-        return Task.CompletedTask;
+        var dialog = DialogService.Show<LogoutConfirmation>(L["Logout"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            await _authenticationService.Logout();
+        }
     } 
 }

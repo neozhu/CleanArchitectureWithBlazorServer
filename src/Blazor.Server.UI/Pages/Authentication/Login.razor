@@ -1,5 +1,6 @@
 @page "/pages/authentication/login"
 @using System.Text.RegularExpressions
+@using Blazor.Server.UI.Services.Authentication
 @using Microsoft.AspNetCore.DataProtection
 @using Microsoft.AspNetCore.Identity
 @using Blazor.Server.UI.Models.Authentication
@@ -45,9 +46,9 @@
                FullWidth="true">Sign In</MudButton>
 </EditForm>
 @code {
-    [Inject] private UserManager<ApplicationUser> userManager { get; set; } = default!;
+
     [Inject] private NavigationManager _navigation { get; set; }= default!;
-    [Inject] private IDataProtectionProvider dataProtectionProvider { get; set; }= default!;
+    [Inject] private IdentityAuthenticationService _authenticationService { get; set; } = default!;
     LoginFormModel model = new LoginFormModel()
         {
             UserName = "administrator",
@@ -95,32 +96,7 @@
     {
         if (context.Validate())
         {
-            var user = await userManager.FindByNameAsync(model.UserName);
-            var valid = await userManager.CheckPasswordAsync(user, model.Password);
-
-            if (valid)
-            {
-
-                var token = await userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "SignIn");
-
-                var data = $"{user.Id}|{token}";
-
-                var parsedQuery = System.Web.HttpUtility.ParseQueryString(new Uri(_navigation.Uri).Query);
-
-                var returnUrl = parsedQuery["returnUrl"];
-
-                if (!string.IsNullOrWhiteSpace(returnUrl))
-                {
-                    data += $"|{returnUrl}";
-                }
-
-                var protector = dataProtectionProvider.CreateProtector("SignIn");
-
-                var pdata = protector.Protect(data);
-
-                _navigation.NavigateTo("/account/signinactual?t=" + pdata, forceLoad: true);
-
-            }
+            await _authenticationService.Login(model);
 
         }
 

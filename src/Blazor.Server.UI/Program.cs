@@ -16,6 +16,7 @@ using Blazor.Analytics;
 using Blazor.Server.UI.Services.Notifications;
 using Blazor.Server.UI.Services.Navigation;
 using Blazor.Server.UI.Services.Authentication;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,9 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddHotKeys();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSingleton<ProfileService>();
+builder.Services.AddScoped<IdentityAuthenticationService >();
+builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<IdentityAuthenticationService>());
+
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7226/") });
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddTransient<INotificationService, InMemoryNotificationService>();
