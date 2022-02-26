@@ -1,3 +1,4 @@
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Identity;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +49,13 @@ namespace Blazor.Server.UI.Features.Authentication.Controllers
         [HttpGet("account/signout")]
         public async Task<IActionResult> SignOut()
         {
-            await _signInManager.SignOutAsync();
+            if (_signInManager.IsSignedIn(User))
+            {
+                await _signInManager.SignOutAsync();
+                var identityUser = await _userManager.FindByEmailAsync(User.GetEmail());
+                await _userManager.UpdateSecurityStampAsync(identityUser);
+            }
+          
 
             return Redirect("/");
         }
