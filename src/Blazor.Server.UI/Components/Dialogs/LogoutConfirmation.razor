@@ -24,11 +24,12 @@
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
     [Inject] private NavigationManager _navigation { get; set; }= default!;
+
     async Task Submit()
     {
         Snackbar.Add(@L["Logged out"], MudBlazor.Severity.Info);
         MudDialog.Close(DialogResult.Ok(true));
-        _navigation.NavigateTo("/account/signout", forceLoad: true);
+
     }
 
     void Cancel() =>  MudDialog.Cancel();
