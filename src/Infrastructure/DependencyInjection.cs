@@ -3,15 +3,9 @@
 
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
-using FluentValidation.AspNetCore;
-using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -84,6 +78,7 @@ public static class DependencyInjection
         {
             options.ExpireTimeSpan = TimeSpan.FromDays(30);
             options.Cookie.HttpOnly = true;
+            options.SlidingExpiration = true;
         });
 
         services.AddAuthorization(options =>
@@ -111,13 +106,8 @@ public static class DependencyInjection
             options.FallBackToParentUICultures = true;
 
         });
-        services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
-        services.AddScoped<IHostEnvironmentAuthenticationStateProvider>(sp => {
-            // this is safe because 
-            //     the `RevalidatingIdentityAuthenticationStateProvider` extends the `ServerAuthenticationStateProvider`
-            var provider = (ServerAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>();
-            return provider;
-        });
+      
+
 
         services.AddControllers();
         services.AddSignalR();
