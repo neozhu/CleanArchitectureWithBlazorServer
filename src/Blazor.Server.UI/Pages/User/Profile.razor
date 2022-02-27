@@ -1,5 +1,5 @@
 @page "/user/profile"
-@using Blazor.Server.UI.Services.Authentication
+@using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
 @using SixLabors.ImageSharp.Processing
@@ -205,16 +205,20 @@
         await form.Validate();
         if (form.IsValid)
         {
+            var state = await AuthState;
             await _userManager.UpdateAsync(model);
-            await _profileService.Update(new Models.UserModel()
+            if(model.DisplayName is not null)
+            state.User.UpdateDisplayName(model.DisplayName);
+            if(model.ProfilePictureDataUrl is not null)
+            state.User.UpdateProfilePictureUrl(model.ProfilePictureDataUrl);
+            await _profileService.Update(new UserModel()
             {
                  Avatar = model.ProfilePictureDataUrl,
-                  DisplayName=model.DisplayName,
-                   Email =model.Email,
-                    PhoneNumber = model.PhoneNumber,
-                     Site = model.Site,
-                     Role = roles.FirstOrDefault()
-
+                 DisplayName=model.DisplayName,
+                 Email =model.Email,
+                 PhoneNumber = model.PhoneNumber,
+                 Site = model.Site,
+                 Role = roles.FirstOrDefault()
             });
             Snackbar.Add($"Update successfully", MudBlazor.Severity.Info);
         }

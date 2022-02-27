@@ -5,6 +5,7 @@ using Blazor.Server.UI.Models.SideMenu;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Blazor.Server.UI.Services.Navigation;
+using CleanArchitecture.Blazor.Application.Common.Models;
 
 namespace Blazor.Server.UI.Components.Shared;
 

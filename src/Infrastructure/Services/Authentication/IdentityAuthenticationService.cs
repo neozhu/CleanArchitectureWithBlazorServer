@@ -1,26 +1,17 @@
-using System.Security.Claims;
-using Blazor.Server.UI.Models.Authentication;
-using CleanArchitecture.Blazor.Infrastructure.Identity;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Microsoft.AspNetCore.Identity;
-using System.Text.Json;
-using Microsoft.AspNetCore.DataProtection;
-using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Application.Common.Security;
 
-
-namespace Blazor.Server.UI.Services.Authentication;
+namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
 public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthenticationService
 {
-    private readonly IDataProtector _dataProtector;
+
     private readonly ProtectedLocalStorage _protectedLocalStorage;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private const string KEY = "Identity";
 
     public IdentityAuthenticationService(
-        IDataProtectionProvider dataProtectionProvider,
         ProtectedLocalStorage protectedLocalStorage,
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager
@@ -28,7 +19,6 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
   
         )
     {
-        _dataProtector = dataProtectionProvider.CreateProtector("SignIn");
         _protectedLocalStorage = protectedLocalStorage;
         _userManager = userManager;
         _roleManager = roleManager;
@@ -42,8 +32,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             if (storedPrincipal.Success && storedPrincipal.Value is not null)
             {
                 var token = storedPrincipal.Value;
-                var data = _dataProtector.Unprotect(token);
-                var parts = data.Split('|');
+                var parts = token.Split('|');
                 var identityUser = await _userManager.FindByIdAsync(parts[0]);
                 var isTokenValid = await _userManager.VerifyUserTokenAsync(identityUser, TokenOptions.DefaultProvider, "SignIn", parts[1]);
                 if (isTokenValid)
@@ -121,8 +110,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         {
             var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "SignIn");
             var data = $"{user.Id}|{token}";
-            var pdata = _dataProtector.Protect(data);
-            await _protectedLocalStorage.SetAsync(KEY, pdata);
+            await _protectedLocalStorage.SetAsync(KEY, data);
             var identity = await createIdentityFromApplicationUser(user);
             var principal = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));

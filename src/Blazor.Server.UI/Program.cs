@@ -15,8 +15,6 @@ using MudBlazor;
 using Blazor.Analytics;
 using Blazor.Server.UI.Services.Notifications;
 using Blazor.Server.UI.Services.Navigation;
-using Blazor.Server.UI.Services.Authentication;
-using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,11 +28,10 @@ builder.WebHost.UseSerilog((context, configuration) =>
           .Enrich.WithClientAgent()
           .WriteTo.Console()
     );
-
-builder.Services.AddInfrastructure(builder.Configuration)
-        .AddApplication();
-
-
+builder.Services.AddMudBlazorDialog();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddHotKeys();
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddMudServices(config =>
 {
     config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
@@ -46,13 +43,12 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.ShowTransitionDuration = 500;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
-builder.Services.AddMudBlazorDialog();
-builder.Services.AddServerSideBlazor();
-builder.Services.AddHotKeys();
-builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddSingleton<ProfileService>();
-builder.Services.AddScoped<IdentityAuthenticationService >();
-builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<IdentityAuthenticationService>());
+builder.Services.AddInfrastructure(builder.Configuration)
+        .AddApplication();
+
+
+
+
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7226/") });
 builder.Services.AddScoped<IMenuService, MenuService>();
