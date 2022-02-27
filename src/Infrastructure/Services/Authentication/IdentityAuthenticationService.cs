@@ -33,7 +33,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             {
                 var token = storedPrincipal.Value;
                 var parts = token.Split('|');
-                var identityUser = await _userManager.FindByIdAsync(parts[0]);
+                var identityUser = await _userManager.FindByEmailAsync(parts[0]);
                 var isTokenValid = await _userManager.VerifyUserTokenAsync(identityUser, TokenOptions.DefaultProvider, "SignIn", parts[1]);
                 if (isTokenValid)
                 {
@@ -109,7 +109,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         if (valid)
         {
             var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "SignIn");
-            var data = $"{user.Id}|{token}";
+            var data = $"{user.Email}|{token}";
             await _protectedLocalStorage.SetAsync(KEY, data);
             var identity = await createIdentityFromApplicationUser(user);
             var principal = new ClaimsPrincipal(identity);
