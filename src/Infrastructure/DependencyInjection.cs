@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
+using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -52,6 +53,10 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
+        services.AddSingleton<ProfileService>();
+        services.AddScoped<IdentityAuthenticationService>();
+        services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<IdentityAuthenticationService>());
+
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IExcelService, ExcelService>();
         services.AddTransient<IUploadService, UploadService>();
@@ -72,8 +77,6 @@ public static class DependencyInjection
             options.Lockout.AllowedForNewUsers = true;
             
         });
-        services.Configure<DataProtectionTokenProviderOptions>(opt =>
-                opt.TokenLifespan = TimeSpan.FromHours(2));
         services.ConfigureApplicationCookie(options =>
         {
             options.ExpireTimeSpan = TimeSpan.FromDays(30);

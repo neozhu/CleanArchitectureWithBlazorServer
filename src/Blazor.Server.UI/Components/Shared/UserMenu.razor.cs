@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Identity;
-using Blazor.Server.UI.Models;
 using MudBlazor;
 using Blazor.Server.UI.Components.Dialogs;
-using Blazor.Server.UI.Services.Authentication;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
 namespace Blazor.Server.UI.Components.Shared;
 

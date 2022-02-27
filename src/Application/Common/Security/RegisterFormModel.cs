@@ -1,5 +1,5 @@
-﻿namespace Blazor.Server.UI.Models.Authentication
-{
+namespace CleanArchitecture.Blazor.Application.Common.Security;
+
     public class RegisterFormModel
     {
         public string? UserName { get; set; }
@@ -8,4 +8,4 @@
         public string? ConfirmPassword { get; set; }
    
     }
-}
+

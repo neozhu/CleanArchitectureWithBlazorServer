@@ -1,8 +1,5 @@
-using Blazor.Server.UI.Models;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
-using Microsoft.AspNetCore.Components.Authorization;
-
-namespace Blazor.Server.UI.Services.Authentication;
+namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
 public class ProfileService 
 {

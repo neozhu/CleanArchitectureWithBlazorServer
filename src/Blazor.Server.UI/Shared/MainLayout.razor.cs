@@ -5,8 +5,8 @@ using Blazor.Server.UI.Components.Shared;
 using Blazor.Server.UI.Models;
 using Toolbelt.Blazor.HotKeys;
 using Microsoft.AspNetCore.Components.Authorization;
-using CleanArchitecture.Blazor.Infrastructure.Extensions;
-using Blazor.Server.UI.Services.Authentication;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
 namespace Blazor.Server.UI.Shared;
 
@@ -194,10 +194,7 @@ public partial class MainLayout : IDisposable
 
     private UserModel _user = new()
     {
-        Avatar = "./sample-data/avatar.png",
-        DisplayName = "MudDemo",
-        Email = "muddemo@demo.com.au",
-        Role = "Admin"
+     
     };
 
     private bool _commandPaletteOpen;
@@ -243,10 +240,19 @@ public partial class MainLayout : IDisposable
                 StateHasChanged();
             });
         };
-        _user = await _profileService.Set(AuthState);
+        
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
     }
+    protected override   void OnAfterRender(bool firstRender)
+    {
+        InvokeAsync(() =>
+        {
+            _user = _profileService.Set(AuthState).Result;
+            StateHasChanged();
+        });
+    }
+
 
     protected void SideMenuDrawerOpenChangedHandler(bool state)
     {

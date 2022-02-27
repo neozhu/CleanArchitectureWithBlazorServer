@@ -1,6 +1,6 @@
-﻿using FluentValidation;
+using FluentValidation;
 
-namespace Blazor.Server.UI.Models.Authentication;
+namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormModel>
 {

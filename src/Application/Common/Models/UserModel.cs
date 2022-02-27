@@ -1,4 +1,4 @@
-namespace Blazor.Server.UI.Models;
+namespace CleanArchitecture.Blazor.Application.Common.Models;
 
 public class UserModel
 {
