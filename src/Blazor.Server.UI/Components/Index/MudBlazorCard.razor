@@ -1,5 +1,5 @@
 @inherits MudComponentBase
-
+@inject IStringLocalizer<MudBlazorCard> L
 <MudElement @attributes="@UserAttributes"
             Class="@Classname"
             Style="@Style">
@@ -13,55 +13,20 @@
                      Style="font-size: 70px" />
             <MudText Class="my-1"
                      Typo="Typo.h5">
-                Blazor Components
+                @L["Blazor Components"]
             </MudText>
             <MudText Class="my-1"
                      Typo="Typo.h6">
-                For faster and easier web development
+                @L["faster and easier web development"]
             </MudText>
         </div>
         <div class="d-flex justify-end">
-            <MudButton Color="Color.Tertiary"
-                       Link="https://mudblazor.com"
-                       Variant="Variant.Filled"
-                       Size="Size.Small">
-                Tertiary
-            </MudButton>
-            <MudButton Color="Color.Warning"
-                       Link="https://mudblazor.com"
-                       Variant="Variant.Filled"
-                       Size="Size.Small">
-                Warning
-            </MudButton>
-            <MudButton Color="Color.Success"
-                       Link="https://mudblazor.com"
-                       Variant="Variant.Filled"
-                       Size="Size.Small">
-                Success
-            </MudButton>
-            <MudButton Color="Color.Error"
-                       Link="https://mudblazor.com"
-                       Variant="Variant.Filled"
-                       Size="Size.Small">
-                Error
-            </MudButton>
-            <MudButton Color="Color.Info"
-                       Link="https://mudblazor.com"
-                       Variant="Variant.Filled"
-                       Size="Size.Small">
-                Info
-            </MudButton>
-             <MudButton Color="Color.Secondary"
-                       Link="https://mudblazor.com"
-                       Variant="Variant.Filled"
-                       Size="Size.Small">
-                Secondary
-            </MudButton>
+
             <MudButton Color="Color.Primary"
                        Link="https://mudblazor.com"
                        Variant="Variant.Filled"
                        Size="Size.Small">
-                See more
+                @L["more"] 
             </MudButton>
         </div>
     </MudPaper>
