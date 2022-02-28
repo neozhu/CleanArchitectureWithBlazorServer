@@ -2,13 +2,13 @@ version: '3.4'
 
 services:
   webui:
-    image: ${DOCKER_REGISTRY-}webui
+    image: ${DOCKER_REGISTRY-}blazorserver
     build:
       context: .
-      dockerfile: src/SmartAdmin.WebUI/Dockerfile
+      dockerfile: src/Blazor.Server.UI/Dockerfile
     environment:
-      - "UseInMemoryDatabase=false"
-      - "ConnectionStrings__DefaultConnection=Server=db;Database=CleanArchitectureDb.slim;User=sa;Password=Password@123;MultipleActiveResultSets=true"
+      - "UseInMemoryDatabase=true"
+      - "ConnectionStrings__DefaultConnection=Server=db;Database=BlazorDashboardDb;User=sa;Password=Password@123;MultipleActiveResultSets=true"
       - "ASPNETCORE_URLS=https://+;http://+"
       - "ASPNETCORE_HTTPS_PORT=5001"
       - "ASPNETCORE_ENVIRONMENT=Development"
