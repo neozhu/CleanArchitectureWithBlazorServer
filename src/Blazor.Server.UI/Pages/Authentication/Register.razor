@@ -57,11 +57,11 @@
      RequiredError="@L["password is required!"]"
      OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
 
-<MudCheckBox @bind-Checked="@AgreeToTerms" Label="@L["I agree to the terms and privacy"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+<MudCheckBox For="@(() => model.AgreeToTerms)" @bind-Checked="@model.AgreeToTerms" Label="@L["I agree to the terms and privacy"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
 
 <MudButton Variant="Variant.Filled" 
      Color="Color.Primary" 
-     Disabled="@(!AgreeToTerms)"  
+     Disabled="@(!model.AgreeToTerms)"  
      Size="Size.Large" 
      OnClick="@(async () => await Submit())"
      FullWidth="true">@L["Register"]</MudButton>
@@ -72,7 +72,7 @@
     MudForm form;
     RegisterFormModel model = new ();
     RegisterFormModelFluentValidator registerValidator = new ();
-    public bool AgreeToTerms { get; set; }
+   
 
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
@@ -109,8 +109,13 @@
             {
                 await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
                 _navigation.NavigateTo("/pages/authentication/login");
+                Snackbar.Add("Regist successfully!", MudBlazor.Severity.Info);
             }
-            Snackbar.Add("Submited!");
+            else
+            {
+                Snackbar.Add($"{string.Join(",", result.Errors.Select(x=>x.Description))}", MudBlazor.Severity.Error);
+            }
+
         }
     }
 }

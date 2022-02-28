@@ -22,6 +22,8 @@ public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormMo
                   .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
         RuleFor(x => x.ConfirmPassword)
              .Equal(x => x.Password);
+        RuleFor(x => x.AgreeToTerms)
+            .Equal(true);
     }
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
