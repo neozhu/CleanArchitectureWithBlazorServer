@@ -17,15 +17,30 @@ public static class LocalizationConstants
                 Code = "de-DE",
                 DisplayName = "Deutsch"
             },
-             new LanguageCode
+            new LanguageCode
             {
                 Code = "ru",
                 DisplayName = "Russian"
             },
-             new LanguageCode
+            new LanguageCode
+            {
+                Code = "fr-FR",
+                DisplayName = "French"
+            },
+            new LanguageCode
             {
                 Code = "ja-JP",
                 DisplayName = "Japanese"
+            },
+            new LanguageCode
+            {
+                Code = "km-KH",
+                DisplayName = "Khmer"
+            },
+            new LanguageCode
+            {
+                Code = "es-ES",
+                DisplayName = "Spanish"
             },
             new LanguageCode
             {
