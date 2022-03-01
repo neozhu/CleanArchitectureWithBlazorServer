@@ -102,7 +102,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
     }
 
 
-    public async Task Login(LoginFormModel request)
+    public async Task<bool> Login(LoginFormModel request)
     {
         var user = await _userManager.FindByNameAsync(request.UserName);
         var valid = await _userManager.CheckPasswordAsync(user, request.Password);
@@ -115,6 +115,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             var principal = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
         }
+        return valid;
     }
 
     public async Task Logout()

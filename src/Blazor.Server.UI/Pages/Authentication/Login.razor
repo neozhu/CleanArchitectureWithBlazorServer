@@ -96,7 +96,11 @@
     {
         if (context.Validate())
         {
-            await _authenticationService.Login(model);
+            var result = await _authenticationService.Login(model);
+            if (!result)
+            {
+                Snackbar.Add($"Please check your username and password.  If you are still unable to log in, contact your administrator.  ", MudBlazor.Severity.Error);
+            }
 
         }
 

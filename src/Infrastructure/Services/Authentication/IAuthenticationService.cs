@@ -4,6 +4,6 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
 public interface IAuthenticationService
 {
-    Task Login(LoginFormModel request);
+    Task<bool> Login(LoginFormModel request);
     Task Logout();
 }
