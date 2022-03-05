@@ -7,6 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
+using Duende.IdentityServer.EntityFramework.Entities;
+using static IdentityModel.OidcConstants;
+using Duende.IdentityServer.Models;
+using IdentityResource = Duende.IdentityServer.Models.IdentityResource;
+using GrantTypes = Duende.IdentityServer.Models.GrantTypes;
+using Client = Duende.IdentityServer.Models.Client;
+using Duende.IdentityServer;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -20,7 +27,7 @@ public static class DependencyInjection
                 options.UseInMemoryDatabase("CleanArchitecture.BlazorDb")
                 );
 
-         
+
         }
         else
         {
@@ -33,7 +40,7 @@ public static class DependencyInjection
             services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
-        
+
         services.Configure<CookiePolicyOptions>(options =>
         {
             // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -52,6 +59,44 @@ public static class DependencyInjection
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+        services.AddIdentityServer()
+                .AddInMemoryClients(new Client[] {
+                    new Client
+                    {
+                        ClientId = "client",
+                        AllowedGrantTypes = GrantTypes.Implicit,
+                        RedirectUris = { "https://localhost:5002/signin-oidc" },
+                        PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                        FrontChannelLogoutUri = "https://localhost:5002/signout-oidc",
+                        AllowedScopes = { "openid", "profile", "email", "phone" }
+                    },
+                     // JWT-based client authentication sample
+                    new Client
+                    {
+                        ClientId = "jwt.client.credentials.sample",
+                        AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    
+                        // this client uses an RSA key as client secret
+                        // and https://docs.duendesoftware.com/identityserver/v5/tokens/authentication/jwt/
+                        ClientSecrets =
+                        {
+                            new Duende.IdentityServer.Models.Secret
+                            {
+                                Type = IdentityServerConstants.SecretTypes.JsonWebKey,
+                                Value = "{'e':'AQAB','kid':'ZzAjSnraU3bkWGnnAqLapYGpTyNfLbjbzgAPbbW2GEA','kty':'RSA','n':'wWwQFtSzeRjjerpEM5Rmqz_DsNaZ9S1Bw6UbZkDLowuuTCjBWUax0vBMMxdy6XjEEK4Oq9lKMvx9JzjmeJf1knoqSNrox3Ka0rnxXpNAz6sATvme8p9mTXyp0cX4lF4U2J54xa2_S9NF5QWvpXvBeC4GAJx7QaSw4zrUkrc6XyaAiFnLhQEwKJCwUw4NOqIuYvYp_IXhw-5Ti_icDlZS-282PcccnBeOcX7vc21pozibIdmZJKqXNsL1Ibx5Nkx1F1jLnekJAmdaACDjYRLL_6n3W4wUp19UvzB1lGtXcJKLLkqB6YDiZNu16OSiSprfmrRXvYmvD8m6Fnl5aetgKw'}"
+                            }
+                        },
+
+                        AllowedScopes = { "scope1", "scope2" }
+                    },
+                })
+                .AddInMemoryIdentityResources(new IdentityResource[] {
+                    new IdentityResources.OpenId(),
+                    new IdentityResources.Profile(),
+                    new IdentityResources.Email(),
+                    new IdentityResources.Phone(),
+                })
+                .AddAspNetIdentity<ApplicationUser>();
 
         services.AddSingleton<ProfileService>();
         services.AddScoped<IdentityAuthenticationService>();
@@ -75,7 +120,7 @@ public static class DependencyInjection
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
             options.Lockout.MaxFailedAccessAttempts = 5;
             options.Lockout.AllowedForNewUsers = true;
-            
+
         });
         services.ConfigureApplicationCookie(options =>
         {
@@ -87,8 +132,8 @@ public static class DependencyInjection
         services.AddAuthorization(options =>
         {
             options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
-                // Here I stored necessary permissions/roles in a constant
-                foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+            // Here I stored necessary permissions/roles in a constant
+            foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
             {
                 var propertyValue = prop.GetValue(null);
                 if (propertyValue is not null)
@@ -109,7 +154,7 @@ public static class DependencyInjection
             options.FallBackToParentUICultures = true;
 
         });
-      
+
 
 
         services.AddControllers();
@@ -119,5 +164,5 @@ public static class DependencyInjection
     }
 
 
- 
+
 }
