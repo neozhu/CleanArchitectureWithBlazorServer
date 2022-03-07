@@ -29,46 +29,74 @@
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">Roles</MudText>
-                    <MudButton DisableElevation Variant="Variant.Outlined"
-                               Size="Size.Small"
-                               OnClick="OnRefresh"
-                               StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                               Style="margin-right: 5px;">@L["Refresh"]</MudButton>
-                    @if (_canCreate)
-                    {
-                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                               StartIcon="@Icons.Material.Filled.Add"
-                               Size="Size.Small"
-                               OnClick="OnCreate"
-                               Style="margin-right: 5px;"
-                               IconColor="Color.Surface">@L["Create"]</MudButton>
-                    }
-                    @if (_canDelete)
-                    {
-                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                               StartIcon="@Icons.Material.Filled.Delete"
-                               Disabled="@(!(SelectItems.Count>0))"
-                               OnClick="OnDeleteChecked"
-                               Size="Size.Small"
-                               Style="margin-right: 5px;"
-                               IconColor="Color.Surface">@L["Delete"]</MudButton>
-                    }
-                    @if (_canImport)
-                    {
-                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                               StartIcon="@Icons.Material.Filled.Upload"
-                               Size="Size.Small"
-                               Style="margin-right: 5px;"
-                               IconColor="Color.Surface">@L["Import Data"]</MudButton>
-                    }
-                    @if (_canExport)
-                    {
-                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                               StartIcon="@Icons.Material.Filled.Download"
-                               Size="Size.Small"
-                               Style="margin-right: 5px;"
-                               IconColor="Color.Surface">@L["Export Data"]</MudButton>
-                    }
+                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                        <MudButton DisableElevation Variant="Variant.Outlined"
+                                   Size="Size.Small"
+                                   OnClick="OnRefresh"
+                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                                   Style="margin-right: 4px; margin-bottom:4px">@L["Refresh"]</MudButton>
+                        @if (_canCreate)
+                        {
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Add"
+                                   Size="Size.Small"
+                                   OnClick="OnCreate"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   IconColor="Color.Surface">@L["Create"]</MudButton>
+                        }
+                        @if (_canDelete)
+                        {
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                                   StartIcon="@Icons.Material.Filled.Delete"
+                                   Disabled="@(!(SelectItems.Count>0))"
+                                   OnClick="OnDeleteChecked"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   IconColor="Color.Surface">@L["Delete"]</MudButton>
+                        }
+                        @if (_canImport)
+                        {
+                            <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Upload"
+                                   Size="Size.Small"
+                                   for="importdataInput"
+                                   HtmlTag="label"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   IconColor="Color.Surface">@L["Import Data"]</MudButton>
+                        }
+                        @if (_canExport)
+                        {
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Download"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   IconColor="Color.Surface">@L["Export Data"]</MudButton>
+                        }
+                    </MudHidden>
+                    <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+                        <MudMenu Origin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
+                            <MudMenuItem OnClick="@(()=>OnRefresh())">Refresh</MudMenuItem>
+                            @if (_canCreate)
+                            {
+                                <MudMenuItem OnClick="OnCreate">@L["Create"]</MudMenuItem>
+                            }
+                            @if (_canDelete)
+                            {
+                                <MudMenuItem OnClick="OnDeleteChecked">@L["Delete"]</MudMenuItem>
+                            }
+                            @if (_canImport)
+                            {
+                                   <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
+                                <MudMenuItem for="importdataInput"
+                                         HtmlTag="label">@L["Import Data"]</MudMenuItem>
+                            }
+                            @if (_canExport)
+                            {
+                                <MudMenuItem OnClick="OnExport">@L["Export Data"]</MudMenuItem>
+                            }
+                        </MudMenu>
+                    </MudHidden>
                 </div>
                 <MudSpacer />
                 @if (_canSearch)
@@ -136,7 +164,7 @@
     private string CurrentRoleName = string.Empty;
     private List<ApplicationRole> RoleList = new List<ApplicationRole>();
     private HashSet<ApplicationRole> SelectItems = new HashSet<ApplicationRole>();
-    private string _searchString=string.Empty;
+    private string _searchString = string.Empty;
     private bool _sortNameByLength;
     public string? Title { get; private set; }
     [CascadingParameter]
@@ -145,7 +173,7 @@
     private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
 
     private List<PermissionModel> _permissions = new();
-    private IList<Claim> _assignedClaims=default!;
+    private IList<Claim> _assignedClaims = default!;
     private bool _canCreate;
     private bool _canSearch;
     private bool _canEdit;
@@ -153,7 +181,7 @@
     private bool _canManagePermissions;
     private bool _canImport;
     private bool _canExport;
-    private bool _showPermissionsDrawer ;
+    private bool _showPermissionsDrawer;
     protected override async Task OnInitializedAsync()
     {
         Title = L["Roles"];
@@ -163,8 +191,8 @@
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Edit)).Succeeded;
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Delete)).Succeeded;
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.ManagePermissions)).Succeeded;
-        _canImport =false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
-        _canExport =false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        _canImport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
+        _canExport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         RoleList = await _roleManager.Roles.ToListAsync();
 
     }
@@ -288,26 +316,26 @@
         }
         return allPermissions;
     }
-    private  Task OnOpenChangedHandler(bool state)
+    private Task OnOpenChangedHandler(bool state)
     {
         _showPermissionsDrawer = state;
         return Task.CompletedTask;
     }
     private async Task OnAssignChangedHandler(PermissionModel model)
     {
-        var roleId=model.RoleId;
+        var roleId = model.RoleId;
         var role = await _roleManager.FindByIdAsync(roleId);
         model.Assigned = !model.Assigned;
         if (model.Assigned)
         {
-            await _roleManager.AddClaimAsync(role,new Claim(model.ClaimType,model.ClaimValue));
+            await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
         }
         else
         {
-            var removed = _assignedClaims.FirstOrDefault(x=>x.Value==model.ClaimValue);
-            if(removed is not null)
+            var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
+            if (removed is not null)
             {
-                await _roleManager.RemoveClaimAsync(role,removed);
+                await _roleManager.RemoveClaimAsync(role, removed);
             }
         }
 
@@ -324,14 +352,22 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            foreach(var item in SelectItems)
+            foreach (var item in SelectItems)
             {
                 await _roleManager.DeleteAsync(item);
                 RoleList.Remove(item);
             }
         }
     }
+    private Task OnExport()
+    {
 
+        return Task.CompletedTask;
+    }
+    private Task OnImportData(InputFileChangeEventArgs e)
+    {
+        return Task.CompletedTask;
+    }
 
 
 

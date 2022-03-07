@@ -26,17 +26,18 @@
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">Users</MudText>
+                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
                     <MudButton DisableElevation Variant="Variant.Outlined"
                                Size="Size.Small"
                                OnClick="@(()=>OnRefresh())"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                               Style="margin-right: 5px;">@L["Refresh"]</MudButton>
+                               Style="margin-right: 4px; margin-bottom:4px">@L["Refresh"]</MudButton>
                     @if (_canCreate)
                     {
                         <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.Add"
                                Size="Size.Small"
-                               Style="margin-right: 5px;"
+                               Style="margin-right: 4px; margin-bottom:4px"
                                OnClick="OnCreate"
                                IconColor="Color.Surface">@L["Create"]</MudButton>
                     }
@@ -46,16 +47,19 @@
                                StartIcon="@Icons.Material.Filled.Delete"
                                Disabled="@(!(SelectItems.Count>0))"
                                Size="Size.Small"
-                               Style="margin-right: 5px;"
+                               Style="margin-right: 4px; margin-bottom:4px"
                                OnClick="OnDeleteChecked"
                                IconColor="Color.Surface">@L["Delete"]</MudButton>
                     }
-                 @if (_canImport)
+                    @if (_canImport)
                     {
+                        <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                         <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.Upload"
                                Size="Size.Small"
-                               Style="margin-right: 5px;"
+                               Style="margin-right: 4px; margin-bottom:4px"
+                               for="importdataInput"
+                                         HtmlTag="label"
                                IconColor="Color.Surface">@L["Import Data"]</MudButton>
                     }
                     @if (_canExport)
@@ -63,9 +67,33 @@
                         <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.Download"
                                Size="Size.Small"
-                               Style="margin-right: 5px;"
+                               Style="margin-right: 4px; margin-bottom:4px"
                                IconColor="Color.Surface">@L["Export Data"]</MudButton>
                     }
+                    </MudHidden>
+                    <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+                        <MudMenu Origin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
+                            <MudMenuItem OnClick="@(()=>OnRefresh())">Refresh</MudMenuItem>
+                            @if (_canCreate)
+                            {
+                                <MudMenuItem OnClick="OnCreate">@L["Create"]</MudMenuItem>
+                            }
+                            @if (_canDelete)
+                            {
+                                <MudMenuItem OnClick="OnDeleteChecked">@L["Delete"]</MudMenuItem>
+                            }
+                            @if (_canImport)
+                            {
+                                <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
+                                <MudMenuItem for="importdataInput"
+                                         HtmlTag="label">@L["Import Data"]</MudMenuItem>
+                            }
+                            @if (_canExport)
+                            {
+                                <MudMenuItem OnClick="OnExport">@L["Export Data"]</MudMenuItem>
+                            }
+                        </MudMenu>
+                    </MudHidden>
                 </div>
                 <MudSpacer />
                 @if (_canSearch)
@@ -135,11 +163,11 @@
                 <MudTd DataLabel="UserName">@context.UserName</MudTd>
                 <MudTd DataLabel="DisplayName">@context.DisplayName</MudTd>
                 <MudTd DataLabel="Email">@context.Email</MudTd>
-                <MudTd DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
-                <MudTd DataLabel="IsActive">
+                <MudTd HideSmall="true" DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
+                <MudTd HideSmall="true" DataLabel="IsActive">
                     <MudCheckBox Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
                 </MudTd>
-                <MudTd DataLabel="LockoutEnd">@context.LockoutEnd</MudTd>
+                <MudTd HideSmall="true" DataLabel="LockoutEnd">@context.LockoutEnd</MudTd>
             </RowTemplate>
             <PagerContent>
                 <MudTablePager />
@@ -353,5 +381,14 @@
                 Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
             }
         }
+    }
+
+    private Task OnExport()
+    {
+        return Task.CompletedTask;
+    }
+    private Task OnImportData(InputFileChangeEventArgs e)
+    {
+        return Task.CompletedTask;
     }
 }
