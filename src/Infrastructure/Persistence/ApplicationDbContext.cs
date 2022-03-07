@@ -194,7 +194,7 @@ public class ApplicationDbContext : IdentityDbContext<
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=CleanArchitecture.Slim;Trusted_Connection=True;MultipleActiveResultSets=true;");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=BlazorDashboardDb;Trusted_Connection=True;MultipleActiveResultSets=true;");
         }
     }
 }

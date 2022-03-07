@@ -18,10 +18,10 @@
                         <MudItem sm="12" xs="12">
                             <div class="d-flex justify-center">
 
-                                @if (string.IsNullOrEmpty(model.ProfilePictureDataUrl))
+                                @if (string.IsNullOrEmpty(model.Avatar))
                                 {
                                     <MudElement Class="d-flex flex-column  align-center">
-                                    <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.UserName</MudAvatar>
+                                    <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.DisplayName</MudAvatar>
                                     <div class="d-flex">
                                             @foreach(var role in roles)
                                             {
@@ -34,7 +34,7 @@
                                 else
                                 {
                                     <MudElement Class="d-flex flex-column  align-center">
-                                    <MudAvatar Image="@model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;" />
+                                    <MudAvatar Image="@model.Avatar" Style="height:128px; width:128px; font-size:2rem;" />
                                      <div class="d-flex">
                                             @foreach(var role in roles)
                                             {
@@ -138,8 +138,8 @@
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
-    private ApplicationUser model { get; set; } = default!;
-    private UserFluentValidator userValidator = new UserFluentValidator();
+    private UserModel model { get; set; } = new();
+    private UserFluentValidator userValidator = new();
 
     private ChangePasswordModel changepassword { get; set; } = new();
     private PasswordFluentValidator passwordValidator = new PasswordFluentValidator();
@@ -167,8 +167,17 @@
     protected override async Task OnInitializedAsync()
     {
         var state = await AuthState;
-        model = await _userManager.FindByEmailAsync(state.User.GetEmail());
-        roles = await _userManager.GetRolesAsync(model);
+        var user = await _userManager.FindByEmailAsync(state.User.GetEmail());
+        model = new UserModel()
+            {
+                Avatar = user.ProfilePictureDataUrl,
+                DisplayName = user.DisplayName,
+                Email = user.Email,
+                Site = user.Site,
+                PhoneNumber = user.PhoneNumber,
+                UserName =user.UserName
+            };
+        roles = await _userManager.GetRolesAsync(user);
     }
 
     private async Task UploadPhoto(InputFileChangeEventArgs e)
@@ -194,7 +203,7 @@
                         Extension = ext,
                         UploadType = UploadType.ProfilePicture
                     });
-                model.ProfilePictureDataUrl = result;
+                model.Avatar = result;
                 //Do your validations here
                 Snackbar.Add($"Upload successfully.", MudBlazor.Severity.Info);
             }
@@ -206,20 +215,15 @@
         if (form.IsValid)
         {
             var state = await AuthState;
-            await _userManager.UpdateAsync(model);
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            user.PhoneNumber = model.PhoneNumber;
+            user.DisplayName = model.DisplayName;
+            await _userManager.UpdateAsync(user);
             if(model.DisplayName is not null)
-            state.User.UpdateDisplayName(model.DisplayName);
-            if(model.ProfilePictureDataUrl is not null)
-            state.User.UpdateProfilePictureUrl(model.ProfilePictureDataUrl);
-            await _profileService.Update(new UserModel()
-            {
-                 Avatar = model.ProfilePictureDataUrl,
-                 DisplayName=model.DisplayName,
-                 Email =model.Email,
-                 PhoneNumber = model.PhoneNumber,
-                 Site = model.Site,
-                 Role = roles.FirstOrDefault()
-            });
+                state.User.UpdateDisplayName(model.DisplayName);
+            if(model.Avatar is not null)
+                state.User.UpdateProfilePictureUrl(model.Avatar);
+            await _profileService.Update(model);
             Snackbar.Add($"Update successfully", MudBlazor.Severity.Info);
         }
 
@@ -229,7 +233,8 @@
         await passwordform.Validate();
         if (passwordform.IsValid)
         {
-            var result = await _userManager.ChangePasswordAsync(model, changepassword.CurrentPassword, changepassword.NewPassword);
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            var result = await _userManager.ChangePasswordAsync(user, changepassword.CurrentPassword, changepassword.NewPassword);
             if (result.Succeeded)
             {
                 Snackbar.Add($"Change password successfully.", MudBlazor.Severity.Info);
@@ -240,7 +245,7 @@
             }
         }
     }
-    public class UserFluentValidator : AbstractValidator<ApplicationUser>
+    public class UserFluentValidator : AbstractValidator<UserModel>
     {
         public UserFluentValidator()
         {
@@ -256,7 +261,7 @@
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
-            var result = await ValidateAsync(ValidationContext<ApplicationUser>.CreateWithOptions((ApplicationUser)model, x => x.IncludeProperties(propertyName)));
+            var result = await ValidateAsync(ValidationContext<UserModel>.CreateWithOptions((UserModel)model, x => x.IncludeProperties(propertyName)));
             if (result.IsValid)
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);
