@@ -72,7 +72,7 @@
                     }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-                        <MudMenu Origin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
+                        <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
                             <MudMenuItem OnClick="@(()=>OnRefresh())">Refresh</MudMenuItem>
                             @if (_canCreate)
                             {
