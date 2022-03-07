@@ -246,9 +246,9 @@ public partial class MainLayout : IDisposable
     }
     protected override   void OnAfterRender(bool firstRender)
     {
-        InvokeAsync(() =>
+        InvokeAsync(async () =>
         {
-            _user = _profileService.Set(AuthState).Result;
+            _user =await _profileService.Set(AuthState);
             StateHasChanged();
         });
     }
