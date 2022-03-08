@@ -43,6 +43,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
             var result = await _excelService.ExportAsync(data,
                 new Dictionary<string, Func<ProductDto, object>>()
                 {
+                    { _localizer["Brand Name"], item => item.Brand },
                     { _localizer["Product Name"], item => item.Name },
                     { _localizer["Description"], item => item.Description },
                     { _localizer["Price of unit"], item => item.Price },
