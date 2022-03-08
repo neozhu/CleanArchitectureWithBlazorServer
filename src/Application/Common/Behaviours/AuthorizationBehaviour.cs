@@ -56,7 +56,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
                 // Must be a member of at least one role in roles
                 if (!authorized)
                 {
-                    throw new ForbiddenAccessException();
+                    throw new ForbiddenAccessException("You are not authorized to access this resource.");
                 }
             }
 
@@ -70,7 +70,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
 
                     if (!authorized)
                     {
-                        throw new ForbiddenAccessException();
+                        throw new ForbiddenAccessException("You are not authorized to access this resource.");
                     }
                 }
             }

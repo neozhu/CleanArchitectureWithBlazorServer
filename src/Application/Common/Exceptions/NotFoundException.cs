@@ -3,25 +3,19 @@
 
 namespace CleanArchitecture.Blazor.Application.Common.Exceptions;
 
-public class NotFoundException : Exception
+public class NotFoundException : CustomException
 {
-    public NotFoundException()
-        : base()
-    {
-    }
+
 
     public NotFoundException(string message)
-        : base(message)
+        : base(message,null,System.Net.HttpStatusCode.NotFound)
     {
     }
 
-    public NotFoundException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
+
 
     public NotFoundException(string name, object key)
-        : base($"Entity \"{name}\" ({key}) was not found.")
+        : base($"Entity \"{name}\" ({key}) was not found.", null, System.Net.HttpStatusCode.NotFound)
     {
     }
 }
