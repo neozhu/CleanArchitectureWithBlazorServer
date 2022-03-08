@@ -177,7 +177,7 @@
 
     </ChildContent>
     <ErrorContent>
-        <MudAlert Class="mt-auto" Severity="MudBlazor.Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
+        <CustomError Exception="context" ></CustomError>
     </ErrorContent>
 </ErrorBoundary>
 
@@ -186,7 +186,7 @@
 
     private List<ApplicationUser> UserList = new List<ApplicationUser>();
     private HashSet<ApplicationUser> SelectItems = new HashSet<ApplicationUser>();
-    private string _searchString;
+    private string _searchString=string.Empty    ;
     private bool _sortNameByLength;
     public string? Title { get; private set; }
     [CascadingParameter]

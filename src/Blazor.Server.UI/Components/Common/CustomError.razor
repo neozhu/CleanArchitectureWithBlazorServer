@@ -1,28 +1,31 @@
 @using CleanArchitecture.Blazor.Application.Common.Exceptions
-<MudAlert Severity="MudBlazor.Severity.Warning">Oopsie ! @message </MudAlert>
+@using System.Net
+<MudAlert Severity="MudBlazor.Severity.Warning">Oopsie! @statusCode: @message </MudAlert>
 
 @code {
     private string? message { get; set; }
-    [EditorRequired][Parameter] public Exception exception { get; set; } = default!;
+    private string? statusCode { get; set; } = HttpStatusCode.InternalServerError.ToString();
+    [EditorRequired][Parameter] public Exception Exception { get; set; } = default!;
     protected override Task OnInitializedAsync()
     {
-        switch (exception)
+        switch (Exception)
         {
             case CustomException e:
+                statusCode = e.StatusCode.ToString();
                 if (e.ErrorMessages is not null)
                 {
                     message = string.Join(", ", e.ErrorMessages.ToArray());
                 }
                 break;
             default:
-                if (exception.InnerException != null)
+                if (Exception.InnerException != null)
                 {
-                    while (exception.InnerException != null)
+                    while (Exception.InnerException != null)
                     {
-                        exception = exception.InnerException;
+                        Exception = Exception.InnerException;
                     }
                 }
-                message = exception.Message;
+                message = Exception.Message;
                 break;
         }
         return base.OnInitializedAsync();

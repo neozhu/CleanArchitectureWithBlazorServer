@@ -46,6 +46,10 @@ internal class ExceptionHandlingMiddleware : IMiddleware
                     exception = exception.InnerException;
                 }
             }
+            if (!string.IsNullOrEmpty(exception.Message))
+            {
+                responseModel.Errors=new string[] { exception.Message };
+            }
             switch (exception)
             {
                 case CustomException e:

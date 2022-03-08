@@ -55,14 +55,14 @@
                         }
                         @if (_canImport)
                         {
-                            <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.Upload"
                                    Size="Size.Small"
-                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   Style="margin-right:1px; margin-bottom:4px"
                                    for="importdataInput"
                                    HtmlTag="label"
                                    IconColor="Color.Surface">@L["Import Data"]</MudButton>
+                            <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                         }
                         @if (_canExport)
                         {
@@ -159,7 +159,7 @@
         </MudTable>
     </ChildContent>
     <ErrorContent>
-        <CustomError exception="context" ></CustomError>
+        <CustomError Exception="context" ></CustomError>
     </ErrorContent>
 </ErrorBoundary>
 @code {
