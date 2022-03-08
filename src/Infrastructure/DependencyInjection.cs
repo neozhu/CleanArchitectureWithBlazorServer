@@ -143,7 +143,7 @@ public static class DependencyInjection
         // Localization
         services.AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
         services.AddScoped<LocalizationCookiesMiddleware>();
-        services.AddScoped<ExceptionMiddleware>();
+        services.AddScoped<ExceptionHandlingMiddleware>();
         services.Configure<RequestLocalizationOptions>(options =>
         {
             options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());

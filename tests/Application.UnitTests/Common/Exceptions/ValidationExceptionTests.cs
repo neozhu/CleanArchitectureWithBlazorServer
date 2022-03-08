@@ -9,26 +9,20 @@ namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Exceptions;
 
 public class ValidationExceptionTests
 {
-    [Test]
-    public void DefaultConstructorCreatesAnEmptyErrorDictionary()
-    {
-        var actual = new ValidationException().Errors;
 
-        actual.Keys.Should().BeEquivalentTo(Array.Empty<string>());
-    }
 
     [Test]
     public void SingleValidationFailureCreatesASingleElementErrorDictionary()
     {
         var failures = new List<ValidationFailure>
             {
-                new ValidationFailure("Age", "must be over 18"),
+                new ValidationFailure("Age", "'Age' must be over 18"),
             };
 
-        var actual = new ValidationException(failures).Errors;
+        var actual = new ValidationException(failures).ErrorMessages;
 
-        actual.Keys.Should().BeEquivalentTo(new string[] { "Age" });
-        actual["Age"].Should().BeEquivalentTo(new string[] { "must be over 18" });
+        actual.Should().BeEquivalentTo(new List<string>() { "'Age' must be over 18" });
+        
     }
 
     [Test]
@@ -36,31 +30,19 @@ public class ValidationExceptionTests
     {
         var failures = new List<ValidationFailure>
             {
-                new ValidationFailure("Age", "must be 18 or older"),
-                new ValidationFailure("Age", "must be 25 or younger"),
-                new ValidationFailure("Password", "must contain at least 8 characters"),
-                new ValidationFailure("Password", "must contain a digit"),
-                new ValidationFailure("Password", "must contain upper case letter"),
-                new ValidationFailure("Password", "must contain lower case letter"),
+                new ValidationFailure("Age", "'Age' must be 18 or older"),
+                new ValidationFailure("Age", "'Age' must be 25 or younger"),
+                new ValidationFailure("Password", "'Password' must contain at least 8 characters"),
+                new ValidationFailure("Password", "'Password' must contain a digit"),
+                new ValidationFailure("Password", "'Password' must contain upper case letter"),
+                new ValidationFailure("Password", "'Password' must contain lower case letter"),
             };
 
-        var actual = new ValidationException(failures).Errors;
+        var actual = new ValidationException(failures).ErrorMessages;
 
-        actual.Keys.Should().BeEquivalentTo(new string[] { "Password", "Age" });
+        actual.Count.Should().Equals(2);
+        actual.Should().Contain(r=>r.Equals("'Age' must be 18 or older, 'Age' must be 25 or younger"));
 
-        actual["Age"].Should().BeEquivalentTo(new string[]
-        {
-                "must be 25 or younger",
-                "must be 18 or older",
-        });
-
-        actual["Password"].Should().BeEquivalentTo(new string[]
-        {
-                "must contain lower case letter",
-                "must contain upper case letter",
-                "must contain at least 8 characters",
-                "must contain a digit",
-        });
     }
 }
 

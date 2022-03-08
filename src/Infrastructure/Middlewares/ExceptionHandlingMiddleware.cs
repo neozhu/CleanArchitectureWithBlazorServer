@@ -6,17 +6,17 @@ using Serilog.Context;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
 
-internal class ExceptionMiddleware : IMiddleware
+internal class ExceptionHandlingMiddleware : IMiddleware
 {
     private readonly ICurrentUserService _currentUserService;
-    private readonly ILogger<ExceptionMiddleware> _logger;
-    private readonly IStringLocalizer<ExceptionMiddleware> _localizer;
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+    private readonly IStringLocalizer<ExceptionHandlingMiddleware> _localizer;
 
-    public ExceptionMiddleware(
+    public ExceptionHandlingMiddleware(
   
         ICurrentUserService currentUserService ,
-        ILogger<ExceptionMiddleware> logger,
-        IStringLocalizer<ExceptionMiddleware> localizer)
+        ILogger<ExceptionHandlingMiddleware> logger,
+        IStringLocalizer<ExceptionHandlingMiddleware> localizer)
     {
         _currentUserService = currentUserService;
         _logger = logger;
@@ -39,23 +39,21 @@ internal class ExceptionMiddleware : IMiddleware
             var responseModel = await Result.FailureAsync(new string[] { exception.Message });
             var response = context.Response;
             response.ContentType = "application/json";
-            if (exception.InnerException != null)
+            if (exception is not CustomException && exception.InnerException != null)
             {
                 while (exception.InnerException != null)
                 {
                     exception = exception.InnerException;
                 }
             }
-
             switch (exception)
             {
-                case ValidationException e:
-                    response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    responseModel = await Result.FailureAsync(e.Errors.Select(x => $"{x.Key}:{string.Join(',', x.Value)}"));
-                    break;
-                case NotFoundException e:
-                    response.StatusCode = (int)HttpStatusCode.NotFound;
-                    responseModel = await Result.FailureAsync(new string[] { e.Message });
+                case CustomException e:
+                    response.StatusCode = (int)e.StatusCode;
+                    if (e.ErrorMessages is not null)
+                    {
+                        responseModel.Errors = e.ErrorMessages.ToArray();
+                    }
                     break;
                 case KeyNotFoundException:
                     response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -63,7 +61,6 @@ internal class ExceptionMiddleware : IMiddleware
 
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    responseModel = await Result.FailureAsync(new string[] { exception.Message });
                     break;
             }
             _logger.LogError(exception, $"{exception}. Request failed with Status Code {response.StatusCode}");

@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Application.Common.Exceptions;
 
-public class ForbiddenAccessException : Exception
+public class ForbiddenAccessException : CustomException
 {
-    public ForbiddenAccessException() : base() { }
+    public ForbiddenAccessException(string message) : base(message,null,System.Net.HttpStatusCode.Forbidden) { }
 }

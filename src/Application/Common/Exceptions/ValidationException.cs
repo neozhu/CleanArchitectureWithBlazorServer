@@ -5,21 +5,15 @@ using FluentValidation.Results;
 
 namespace CleanArchitecture.Blazor.Application.Common.Exceptions;
 
-public class ValidationException : Exception
+public class ValidationException : CustomException
 {
-    public ValidationException()
-        : base("One or more validation failures have occurred.")
+    public ValidationException(IEnumerable<ValidationFailure> failures):base(string.Empty, failures
+             .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
+             .Select(failureGroup => $"{string.Join(", ", failureGroup.Distinct().ToArray())}")
+             .ToList(), System.Net.HttpStatusCode.UnprocessableEntity)
+        
     {
-        Errors = new Dictionary<string, string[]>();
+     
     }
 
-    public ValidationException(IEnumerable<ValidationFailure> failures)
-        : this()
-    {
-        Errors = failures
-            .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
-            .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
-    }
-
-    public IDictionary<string, string[]> Errors { get; }
 }
