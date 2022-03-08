@@ -63,7 +63,7 @@ internal class ExceptionHandlingMiddleware : IMiddleware
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;
             }
-            _logger.LogError(exception, $"{exception}. Request failed with Status Code {response.StatusCode}");
+            //_logger.LogError(exception, $"{exception}. Request failed with Status Code {response.StatusCode}");
             await response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(responseModel));
         }
     }

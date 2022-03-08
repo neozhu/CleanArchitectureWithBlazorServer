@@ -33,6 +33,7 @@ public class DeleteDocumentTypeCommandHandler : IRequestHandler<DeleteDocumentTy
     public async Task<Result> Handle(DeleteDocumentTypeCommand request, CancellationToken cancellationToken)
     {
         var item = await _context.DocumentTypes.FindAsync(new object[] { request.Id }, cancellationToken);
+        _ = item ?? throw new NotFoundException($"Document Type {request.Id} Not Found.");
         _context.DocumentTypes.Remove(item);
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();

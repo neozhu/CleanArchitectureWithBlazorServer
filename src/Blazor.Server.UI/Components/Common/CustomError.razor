@@ -1,1 +1,30 @@
-<MudAlert Severity="MudBlazor.Severity.Warning">Oopsie !! 😔</MudAlert>
+@using CleanArchitecture.Blazor.Application.Common.Exceptions
+<MudAlert Severity="MudBlazor.Severity.Warning">Oopsie ! @message </MudAlert>
+
+@code {
+    private string? message { get; set; }
+    [EditorRequired][Parameter] public Exception exception { get; set; } = default!;
+    protected override Task OnInitializedAsync()
+    {
+        switch (exception)
+        {
+            case CustomException e:
+                if (e.ErrorMessages is not null)
+                {
+                    message = string.Join(", ", e.ErrorMessages.ToArray());
+                }
+                break;
+            default:
+                if (exception.InnerException != null)
+                {
+                    while (exception.InnerException != null)
+                    {
+                        exception = exception.InnerException;
+                    }
+                }
+                message = exception.Message;
+                break;
+        }
+        return base.OnInitializedAsync();
+    }
+}

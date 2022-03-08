@@ -26,6 +26,7 @@ public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentComman
     public async Task<Result> Handle(DeleteDocumentCommand request, CancellationToken cancellationToken)
     {
         var item = await _context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);
+        _ = item ?? throw new NotFoundException($"Document {request.Id} Not Found.");
         _context.Documents.Remove(item);
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();

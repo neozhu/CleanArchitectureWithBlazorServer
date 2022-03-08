@@ -1,5 +1,5 @@
 @page "/pages/products"
-@using Blazor.Server.UI.Components.Dialogs
+
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
@@ -159,7 +159,7 @@
         </MudTable>
     </ChildContent>
     <ErrorContent>
-        <MudAlert Class="mt-auto" Severity="MudBlazor.Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
+        <CustomError exception="context" ></CustomError>
     </ErrorContent>
 </ErrorBoundary>
 @code {
