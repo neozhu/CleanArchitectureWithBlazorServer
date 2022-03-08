@@ -26,8 +26,6 @@ public static class DependencyInjection
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseInMemoryDatabase("CleanArchitecture.BlazorDb")
                 );
-
-
         }
         else
         {
@@ -86,7 +84,6 @@ public static class DependencyInjection
                                 Value = "{'e':'AQAB','kid':'ZzAjSnraU3bkWGnnAqLapYGpTyNfLbjbzgAPbbW2GEA','kty':'RSA','n':'wWwQFtSzeRjjerpEM5Rmqz_DsNaZ9S1Bw6UbZkDLowuuTCjBWUax0vBMMxdy6XjEEK4Oq9lKMvx9JzjmeJf1knoqSNrox3Ka0rnxXpNAz6sATvme8p9mTXyp0cX4lF4U2J54xa2_S9NF5QWvpXvBeC4GAJx7QaSw4zrUkrc6XyaAiFnLhQEwKJCwUw4NOqIuYvYp_IXhw-5Ti_icDlZS-282PcccnBeOcX7vc21pozibIdmZJKqXNsL1Ibx5Nkx1F1jLnekJAmdaACDjYRLL_6n3W4wUp19UvzB1lGtXcJKLLkqB6YDiZNu16OSiSprfmrRXvYmvD8m6Fnl5aetgKw'}"
                             }
                         },
-
                         AllowedScopes = { "scope1", "scope2" }
                     },
                 })
@@ -146,7 +143,7 @@ public static class DependencyInjection
         // Localization
         services.AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
         services.AddScoped<LocalizationCookiesMiddleware>();
-        services.AddScoped<ExceptionMiddleware>();
+        services.AddScoped<ExceptionHandlingMiddleware>();
         services.Configure<RequestLocalizationOptions>(options =>
         {
             options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());

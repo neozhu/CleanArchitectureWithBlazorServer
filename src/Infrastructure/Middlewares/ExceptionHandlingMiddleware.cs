@@ -6,17 +6,17 @@ using Serilog.Context;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
 
-internal class ExceptionMiddleware : IMiddleware
+internal class ExceptionHandlingMiddleware : IMiddleware
 {
     private readonly ICurrentUserService _currentUserService;
-    private readonly ILogger<ExceptionMiddleware> _logger;
-    private readonly IStringLocalizer<ExceptionMiddleware> _localizer;
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+    private readonly IStringLocalizer<ExceptionHandlingMiddleware> _localizer;
 
-    public ExceptionMiddleware(
+    public ExceptionHandlingMiddleware(
   
         ICurrentUserService currentUserService ,
-        ILogger<ExceptionMiddleware> logger,
-        IStringLocalizer<ExceptionMiddleware> localizer)
+        ILogger<ExceptionHandlingMiddleware> logger,
+        IStringLocalizer<ExceptionHandlingMiddleware> localizer)
     {
         _currentUserService = currentUserService;
         _logger = logger;
