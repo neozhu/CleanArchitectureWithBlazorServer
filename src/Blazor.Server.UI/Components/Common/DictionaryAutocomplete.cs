@@ -37,7 +37,9 @@ public class DictionaryAutocomplete:MudAutocomplete<string>
         // if text is null or empty, show complete list
         if (string.IsNullOrEmpty(value))
             return Task.FromResult(_keyvalues.Select(x=>x.Value??String.Empty));
-        return Task.FromResult(_keyvalues.Where(x =>x.Value.Contains(value, StringComparison.InvariantCultureIgnoreCase) || x.Text.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x=>x.Value??String.Empty));
+        return Task.FromResult(_keyvalues.Where(x =>x.Value.Contains(value, StringComparison.InvariantCultureIgnoreCase)
+                                                 || x.Text.Contains(value, StringComparison.InvariantCultureIgnoreCase))
+                .Select(x=>x.Value??String.Empty));
     }
     private string GetText(string value) => _keyvalues.Find(b => b.Value == value)?.Text ?? String.Empty;
 }
