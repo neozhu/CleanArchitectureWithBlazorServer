@@ -55,28 +55,49 @@
                         }
                         @if (_canImport)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton Disabled="@_uploading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.Upload"
                                    Size="Size.Small"
                                    Style="margin-right:1px; margin-bottom:4px"
                                    for="importdataInput"
                                    HtmlTag="label"
-                                   IconColor="Color.Surface">@L["Import Data"]</MudButton>
+                                   IconColor="Color.Surface">
+                                @if (_uploading)
+                                {
+                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                    <MudText Class="ms-2"> @L["Uploading..."]</MudText>
+                                }
+                                else
+                                {
+                                    <MudText>@L["Import Data"]</MudText>
+                                }
+
+                            </MudButton>
                             <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                         }
                         @if (_canExport)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton Disabled="@_downloading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.Download"
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    OnClick="OnExport"
-                                   IconColor="Color.Surface">@L["Export Data"]</MudButton>
+                                   IconColor="Color.Surface">
+                                @if (_downloading)
+                                {
+                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                    <MudText Class="ms-2"> @L["Downloading..."]</MudText>
+                                }
+                                else
+                                {
+                                    <MudText>@L["Export Data"]</MudText>
+                                }
+                            </MudButton>
                         }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem  OnClick="@(()=>OnRefresh())">Refresh</MudMenuItem>
+                            <MudMenuItem OnClick="@(()=>OnRefresh())">Refresh</MudMenuItem>
                             @if (_canCreate)
                             {
                                 <MudMenuItem OnClick="OnCreate">@L["Create"]</MudMenuItem>
@@ -86,9 +107,10 @@
                                 <MudMenuItem OnClick="OnDeleteChecked">@L["Delete"]</MudMenuItem>
                             }
                             @if (_canImport)
-                            {   <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
+                            {
+                                <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                                 <MudMenuItem for="importdataInput"
-                                   HtmlTag="label">@L["Import Data"]</MudMenuItem>
+                                         HtmlTag="label">@L["Import Data"]</MudMenuItem>
                             }
                             @if (_canExport)
                             {
@@ -159,7 +181,7 @@
         </MudTable>
     </ChildContent>
     <ErrorContent>
-        <CustomError Exception="context" ></CustomError>
+        <CustomError Exception="context"></CustomError>
     </ErrorContent>
 </ErrorBoundary>
 @code {
@@ -169,6 +191,8 @@
     private int _totalItems;
     private string _searchString = string.Empty;
     private bool _loading;
+    private bool _uploading;
+    private bool _downloading;
     [Inject]
     private ISender _mediator { get; set; } = default!;
     [CascadingParameter]
@@ -301,7 +325,7 @@
     }
     private async Task OnExport()
     {
-
+        _downloading = true;
         var request = new ExportProductsQuery()
             {
                 Keyword = _searchString,
@@ -311,9 +335,11 @@
         var result = await _mediator.Send(request);
         using var streamRef = new DotNetStreamReference(new MemoryStream(result));
         await JS.InvokeVoidAsync("downloadFileFromStream", $"{L["Products"]}.xlsx", streamRef);
+        _downloading = false;
     }
     private async Task OnImportData(InputFileChangeEventArgs e)
     {
+        _uploading = true;
         var stream = new MemoryStream();
         await e.File.OpenReadStream().CopyToAsync(stream);
         var command = new ImportProductsCommand()
@@ -334,5 +360,6 @@
                 Snackbar.Add($"{msg}", MudBlazor.Severity.Error);
             }
         }
+        _uploading = false;
     }
 }
