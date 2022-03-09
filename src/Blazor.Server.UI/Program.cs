@@ -18,8 +18,8 @@ using Blazor.Server.UI.Services.Navigation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration)
+builder.Host.UseSerilog((context, configuration) =>
+            configuration.ReadFrom.Configuration(context.Configuration)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
                 .MinimumLevel.Override("Serilog", LogEventLevel.Error)

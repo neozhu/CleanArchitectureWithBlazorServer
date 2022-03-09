@@ -226,7 +226,7 @@
             {
                 { nameof(_ProductFormDialog.model),command },
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>(L["Create a new product"], parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
@@ -252,7 +252,7 @@
             {
                 { nameof(_ProductFormDialog.model),command },
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Large, FullWidth = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>(L["Edit the product"], parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
@@ -270,7 +270,7 @@
         {
             { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.Name) }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
