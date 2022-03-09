@@ -233,7 +233,7 @@
         {
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"Created successfully", MudBlazor.Severity.Info);
+            Snackbar.Add($"{L["Created successfully"]}", MudBlazor.Severity.Info);
         }
     }
     private async Task OnEdit(ProductDto dto)
@@ -259,7 +259,7 @@
         {
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"Edited successfully", MudBlazor.Severity.Info);
+            Snackbar.Add($"{L["Saved successfully"]}", MudBlazor.Severity.Info);
         }
     }
 
@@ -278,7 +278,7 @@
             var command = new DeleteProductCommand() { Id = dto.Id };
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"Deleted successfully", MudBlazor.Severity.Info);
+            Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
         }
     }
 
@@ -297,7 +297,7 @@
             var command = new DeleteCheckedProductsCommand() { Id = _selectedItems.Select(x => x.Id).ToArray() };
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"Deleted successfully", MudBlazor.Severity.Info);
+            Snackbar.Add($"{L["Deleted successfully"]", MudBlazor.Severity.Info);
         }
     }
     private async Task OnExport()
@@ -326,7 +326,7 @@
         if (result.Succeeded)
         {
             await _table.ReloadServerData();
-            Snackbar.Add($"Import data successfully", MudBlazor.Severity.Info);
+            Snackbar.Add($"{L["Import data successfully"]}", MudBlazor.Severity.Info);
         }
         else
         {
