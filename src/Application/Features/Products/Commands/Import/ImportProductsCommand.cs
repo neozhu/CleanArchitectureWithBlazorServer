@@ -43,6 +43,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
     
            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, ProductDto, object>>
             {
+              { _localizer["Brand Name"], (row,item) => item.Brand = row[_localizer["Brand Name"]]?.ToString() },
               { _localizer["Product Name"], (row,item) => item.Name = row[_localizer["Product Name"]]?.ToString() },
               { _localizer["Description"], (row,item) => item.Description = row[_localizer["Description"]]?.ToString() },
               { _localizer["Unit"], (row,item) => item.Unit = row[_localizer["Unit"]]?.ToString() },

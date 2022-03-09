@@ -32,6 +32,7 @@ public class AddEditDocumentTypeCommandHandler : IRequestHandler<AddEditDocument
         if (request.Id > 0)
         {
             var documentType = await _context.DocumentTypes.FindAsync(new object[] { request.Id }, cancellationToken);
+            _ = documentType ?? throw new NotFoundException($"Document Type {request.Id} Not Found.");
             documentType = _mapper.Map(request, documentType);
             await _context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(documentType.Id);

@@ -29,7 +29,7 @@ public class SignalRHub : Hub
     }
     public override async Task OnConnectedAsync()
     {
-        var userId = _currentUserService.UserId;
+        var userId =await _currentUserService.UserId();
         if (userId is not null)
         {
             if (_onlineUsers.TryAdd(userId, true))
@@ -51,7 +51,7 @@ public class SignalRHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception exception)
     {
-        var userId = _currentUserService.UserId;
+        var userId =await _currentUserService.UserId();
         if (userId is not null)
         {
             //try to remove key from dictionary

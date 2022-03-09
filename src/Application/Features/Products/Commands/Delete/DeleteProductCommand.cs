@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+
+
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete;
 
 public class DeleteProductCommand: IRequest<Result>
@@ -31,16 +33,17 @@ public class DeleteProductCommand: IRequest<Result>
         }
         public async Task<Result> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing DeleteProductCommandHandler method 
+   
            var item = await _context.Products.FindAsync(new object[] { request.Id }, cancellationToken);
-            _context.Products.Remove(item);
+        _ = item ?? throw new NotFoundException($"Product {request.Id} Not Found.");
+        _context.Products.Remove(item);
             await _context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
 
         public async Task<Result> Handle(DeleteCheckedProductsCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing DeleteCheckedProductsCommandHandler method 
+         
            var items = await _context.Products.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {

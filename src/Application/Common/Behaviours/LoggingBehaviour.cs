@@ -21,17 +21,11 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where T
 
     public async Task Process(TRequest request, CancellationToken cancellationToken)
     {
-        var requestName = typeof(TRequest).Name;
-        var userId = _currentUserService.UserId ?? string.Empty;
-        string userName = string.Empty;
+        var requestName = nameof(TRequest);
+        var userName =await _currentUserService.UserId();
+   
 
-        if (!string.IsNullOrEmpty(userId))
-        {
-            userName = await _identityService.GetUserNameAsync(userId);
-
-        }
-
-        _logger.LogInformation("CleanArchitecture Request: {Name} {@UserId} {@UserName} {@Request}",
-            requestName, userId, userName, request);
+        _logger.LogInformation("Request: {Name} with {@Request} by  {@UserName}",
+            requestName,  request, userName);
     }
 }

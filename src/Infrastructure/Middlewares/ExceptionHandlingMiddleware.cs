@@ -31,7 +31,7 @@ internal class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (Exception exception)
         {
-            var userId = _currentUserService.UserId;
+            var userId =await _currentUserService.UserId();
             if (!string.IsNullOrEmpty(userId)) LogContext.PushProperty("UserId", userId);
             string errorId = Guid.NewGuid().ToString();
             LogContext.PushProperty("ErrorId", errorId);
@@ -45,6 +45,10 @@ internal class ExceptionHandlingMiddleware : IMiddleware
                 {
                     exception = exception.InnerException;
                 }
+            }
+            if (!string.IsNullOrEmpty(exception.Message))
+            {
+                responseModel.Errors=new string[] { exception.Message };
             }
             switch (exception)
             {
@@ -63,7 +67,7 @@ internal class ExceptionHandlingMiddleware : IMiddleware
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;
             }
-            _logger.LogError(exception, $"{exception}. Request failed with Status Code {response.StatusCode}");
+            //_logger.LogError(exception, $"{exception}. Request failed with Status Code {response.StatusCode}");
             await response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(responseModel));
         }
     }

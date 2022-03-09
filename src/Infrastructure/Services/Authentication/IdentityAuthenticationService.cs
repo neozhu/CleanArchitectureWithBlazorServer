@@ -10,6 +10,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private const string KEY = "Identity";
+    private const string USERID = "UserId";
 
     public IdentityAuthenticationService(
         ProtectedLocalStorage protectedLocalStorage,
@@ -111,6 +112,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "SignIn");
             var data = $"{user.Email}|{token}";
             await _protectedLocalStorage.SetAsync(KEY, data);
+            await _protectedLocalStorage.SetAsync(USERID, user.UserName);
             var identity = await createIdentityFromApplicationUser(user);
             var principal = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
@@ -121,6 +123,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
     public async Task Logout()
     {
         await _protectedLocalStorage.DeleteAsync(KEY);
+        await _protectedLocalStorage.DeleteAsync(USERID);
         var principal = new ClaimsPrincipal();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
     }

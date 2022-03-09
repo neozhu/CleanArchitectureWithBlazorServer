@@ -18,8 +18,8 @@ using Blazor.Server.UI.Services.Navigation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration)
+builder.Host.UseSerilog((context, configuration) =>
+            configuration.ReadFrom.Configuration(context.Configuration)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
                 .MinimumLevel.Override("Serilog", LogEventLevel.Error)
@@ -38,7 +38,7 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.PreventDuplicates = false;
     config.SnackbarConfiguration.NewestOnTop = true;
     config.SnackbarConfiguration.ShowCloseIcon = true;
-    config.SnackbarConfiguration.VisibleStateDuration = 3000;
+    config.SnackbarConfiguration.VisibleStateDuration = 4000;
     config.SnackbarConfiguration.HideTransitionDuration = 500;
     config.SnackbarConfiguration.ShowTransitionDuration = 500;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;

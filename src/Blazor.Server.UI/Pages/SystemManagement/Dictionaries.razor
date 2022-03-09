@@ -154,7 +154,7 @@
         </MudTable>
     </ChildContent>
     <ErrorContent>
-        <MudAlert Class="mt-auto" Severity="MudBlazor.Severity.Warning">Oopsie !! 😔 @context.GetBaseException().Message</MudAlert>
+        <CustomError Exception="context" ></CustomError>
     </ErrorContent>
 </ErrorBoundary>
 
@@ -204,12 +204,11 @@
             return true;
         return false;
     }
-    private async Task<IEnumerable<string>> searchName(string value)
+    private Task<IEnumerable<string>> searchName(string value)
     {
- 
         if (string.IsNullOrEmpty(value))
-            return KeyValueList.Where(x=>!string.IsNullOrEmpty(x.Name)).Select(x=>x.Name).OrderBy(x=>x).Distinct();
-        return KeyValueList.Where(x =>!string.IsNullOrEmpty(x.Name) && x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x=>x.Name).OrderBy(x=>x).Distinct();
+            return Task.FromResult(KeyValueList.Where(x=>!string.IsNullOrEmpty(x.Name)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
+        return Task.FromResult(KeyValueList.Where(x =>!string.IsNullOrEmpty(x.Name) && x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
     }
     private async Task LoadData()
     {
@@ -239,7 +238,7 @@
             var command = new DeleteCheckedKeyValuesCommand() { Id = _selectedItems.Select(x => x.Id).ToArray() };
             var result = await _mediator.Send(command);
             await LoadData();
-            Snackbar.Add($"Deleted successfully", MudBlazor.Severity.Info);
+            Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
         }
     }
     private Task OnCreate()

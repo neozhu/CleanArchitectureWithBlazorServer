@@ -32,6 +32,7 @@ public class DeleteKeyValueCommandHandler : IRequestHandler<DeleteKeyValueComman
     public async Task<Result> Handle(DeleteKeyValueCommand request, CancellationToken cancellationToken)
     {
         var item = await _context.KeyValues.FindAsync(new object[] { request.Id }, cancellationToken);
+        _ = item ?? throw new NotFoundException($"KeyValue Pair  {request.Id} Not Found.");
         _context.KeyValues.Remove(item);
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();

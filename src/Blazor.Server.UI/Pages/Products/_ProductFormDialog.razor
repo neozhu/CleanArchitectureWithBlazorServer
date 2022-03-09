@@ -24,12 +24,11 @@
                                   @bind-Value="model.Description"></MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
-                    <MudAutocomplete Label="@L["Brand"]"
+                    <DictionaryAutocomplete Dictionary="Brand"
+                                     Label="@L["Brand"]"
                                      For="@(() => model.Brand)"
-                                     T="string"
                                      ResetValueOnEmptyText="true"
-                                     SearchFunc="@_searchBrand"
-                                     @bind-Value="model.Brand"></MudAutocomplete>
+                                     @bind-Value="model.Brand"></DictionaryAutocomplete>
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <MudNumericField Label="@L["Price"]"
@@ -79,23 +78,9 @@
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     AddEditProductCommandValidator modelValidator = new AddEditProductCommandValidator();
     [EditorRequired] [Parameter] public AddEditProductCommand model { get; set; } = default!;
-    [Inject]
-    private ISender _mediator { get; set; } = default!;
+
     private IList<string>? _prictures = null;
-    private string[] _brands { get; set; } = default!;
-    protected override async Task OnInitializedAsync()
-    {
-        var result = await _mediator.Send(new KeyValuesQueryByName("Brand"));
-        _brands = result.Select(x=>x.Text).ToArray();
-    }
-    private async Task<IEnumerable<string>> _searchBrand(string value)
-    {
-   
-        // if text is null or empty, show complete list
-        if (string.IsNullOrEmpty(value))
-            return _brands;
-        return _brands.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
-    }
+
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
         var list = new List<string>();

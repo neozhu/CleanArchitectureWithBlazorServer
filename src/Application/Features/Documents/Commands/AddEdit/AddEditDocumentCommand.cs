@@ -32,10 +32,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
         if (request.Id > 0)
         {
             var document = await _context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);
-            if (document == null)
-            {
-                throw new Exception($"Not found document with Id:{request.Id}");
-            }
+            _ = document ?? throw new NotFoundException($"Document {request.Id} Not Found.");
             if (request.UploadRequest != null)
             {
                 document.URL = await _uploadService.UploadAsync(request.UploadRequest);
