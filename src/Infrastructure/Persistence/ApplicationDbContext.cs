@@ -46,25 +46,26 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<Product> Products { get; set; }
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-        var auditEntries = OnBeforeSaveChanges(_currentUserService.UserId);
+        var userId = await _currentUserService.UserId();
+        var auditEntries = OnBeforeSaveChanges(userId);
 
         foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
         {
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.CreatedBy = _currentUserService.UserId;
+                    entry.Entity.CreatedBy = userId;
                     entry.Entity.Created = _dateTime.Now;
                     break;
 
                 case EntityState.Modified:
-                    entry.Entity.LastModifiedBy = _currentUserService.UserId;
+                    entry.Entity.LastModifiedBy = userId;
                     entry.Entity.LastModified = _dateTime.Now;
                     break;
                 case EntityState.Deleted:
                     if (entry.Entity is ISoftDelete softDelete)
                     {
-                        softDelete.DeletedBy = _currentUserService.UserId;
+                        softDelete.DeletedBy = userId;
                         softDelete.Deleted = _dateTime.Now;
                         entry.State = EntityState.Modified;
                     }

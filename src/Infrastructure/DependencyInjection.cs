@@ -24,7 +24,7 @@ public static class DependencyInjection
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase("CleanArchitecture.BlazorDb")
+                options.UseInMemoryDatabase("BlazorDashboardDb")
                 );
         }
         else
@@ -47,8 +47,8 @@ public static class DependencyInjection
         });
         services.Configure<DashbordSettings>(configuration.GetSection(DashbordSettings.SectionName));
         services.AddSingleton(s => s.GetRequiredService<IOptions<DashbordSettings>>().Value);
-        services.AddSingleton<ICurrentUserService, CurrentUserService>();
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+     
+        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<IDomainEventService, DomainEventService>();
 
 
@@ -98,7 +98,7 @@ public static class DependencyInjection
         services.AddSingleton<ProfileService>();
         services.AddScoped<IdentityAuthenticationService>();
         services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<IdentityAuthenticationService>());
-
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IExcelService, ExcelService>();
         services.AddTransient<IUploadService, UploadService>();

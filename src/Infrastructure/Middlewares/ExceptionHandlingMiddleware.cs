@@ -31,7 +31,7 @@ internal class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (Exception exception)
         {
-            var userId = _currentUserService.UserId;
+            var userId =await _currentUserService.UserId();
             if (!string.IsNullOrEmpty(userId)) LogContext.PushProperty("UserId", userId);
             string errorId = Guid.NewGuid().ToString();
             LogContext.PushProperty("ErrorId", errorId);

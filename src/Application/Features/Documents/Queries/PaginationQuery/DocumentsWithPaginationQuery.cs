@@ -31,7 +31,7 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
     {
     
         var data = await _context.Documents
-            .Specify(new DocumentsQuery(_currentUserService.UserId))
+            .Specify(new DocumentsQuery(await _currentUserService.UserId()))
             .Where(x=>x.Description.Contains(request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<DocumentDto>(_mapper.ConfigurationProvider)
