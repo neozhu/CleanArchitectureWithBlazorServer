@@ -122,7 +122,6 @@ public static class DependencyInjection
 
         services.AddControllers();
         services.AddSingleton<CircuitHandler, CircuitHandlerService>();
-        services.AddSingleton(sp => new HubClient("https://localhost:44375"));
         services.AddSignalR();
 
         return services;

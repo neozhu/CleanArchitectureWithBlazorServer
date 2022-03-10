@@ -12,6 +12,7 @@
     <None Include="docker-compose.yml" />
     <None Include="docker-compose.override.yml" />
     <None Include=".dockerignore" />
+    <None Include="src\Blazor.Server.UI\Pages\Identity\Users\Users.razor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="launchSettings.json" />

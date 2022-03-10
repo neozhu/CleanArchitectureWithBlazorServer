@@ -29,13 +29,12 @@ public class SignalRHub : Hub
         //try to remove key from dictionary
         if (_onlineUsers.TryRemove(id, out string userName))
         {
-            await Clients.All.SendAsync(SignalR.DisconnectUser, userName );
+            await Clients.AllExcept(id).SendAsync(SignalR.DisconnectUser, userName );
         }
-
         await base.OnDisconnectedAsync(exception);
     }
 
-    public async Task ConnectUser(string userName)
+    public async Task OnConnectUser(string userName)
     {
         var id = Context.ConnectionId;
         if (!_onlineUsers.ContainsKey(id))
@@ -44,9 +43,16 @@ public class SignalRHub : Hub
             if (_onlineUsers.TryAdd(id, userName))
             {
                 // re-use existing message for now
-                await Clients.All.SendAsync(SignalR.ConnectUser,  userName );
+                await Clients.AllExcept(id).SendAsync(SignalR.ConnectUser,  userName );
             }
         }
-       
+    }
+    public async Task SendMessage(string username, string message)
+    {
+        await Clients.All.SendAsync(SignalR.SendMessage, username, message);
+    }
+    public async Task SendNotification(string message)
+    {
+        await Clients.All.SendAsync(SignalR.SendNotification, message);
     }
 }

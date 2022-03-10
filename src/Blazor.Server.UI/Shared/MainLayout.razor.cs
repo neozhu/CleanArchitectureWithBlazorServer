@@ -219,27 +219,19 @@ public partial class MainLayout : IDisposable
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
-    [Inject]
+
     private HubClient _client  { get; set; } = default!;
-    [Inject]
-    public CircuitHandler circuitHandler { get; set; }
-    public async void Dispose()
+
+ 
+    public void Dispose()
     {
-    
+      
         _hotKeysContext?.Dispose();
-        (circuitHandler as CircuitHandlerService).CircuitsChanged -=
-                 HandleCircuitsChanged;
         _client.LoggedOut -= _client_LoggedOut;
         _client.LoggedIn -= _client_LoggedIn;
+      
     }
-    public void HandleCircuitsChanged(object sender,bool connected)
-    {
-
-        InvokeAsync(() => {
-            Snackbar.Add($"Update user status", MudBlazor.Severity.Info);
-            StateHasChanged();
-        });
-    }
+    
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -252,7 +244,8 @@ public partial class MainLayout : IDisposable
             var state = await AuthState;
             if (state.User.Identity != null && state.User.Identity.Name != null)
             {
-                await _client.StartAsync(state.User.Identity.Name);
+                _client=new HubClient(_navigationManager.BaseUri, state.User.Identity.Name);
+                await _client.StartAsync();
                 _client.LoggedOut += _client_LoggedOut;
                 _client.LoggedIn += _client_LoggedIn;
             }
@@ -264,7 +257,7 @@ public partial class MainLayout : IDisposable
     {
         InvokeAsync(() =>
         {
-            Snackbar.Add($"{e} logined", MudBlazor.Severity.Info);
+            Snackbar.Add($"{e} login.", MudBlazor.Severity.Info);
             StateHasChanged();
         });
     }
@@ -273,7 +266,7 @@ public partial class MainLayout : IDisposable
     {
         InvokeAsync(() =>
         {
-            Snackbar.Add($"{e} logout", MudBlazor.Severity.Info);
+            Snackbar.Add($"{e} logout.", MudBlazor.Severity.Normal);
             StateHasChanged();
         });
     }
@@ -291,7 +284,7 @@ public partial class MainLayout : IDisposable
         
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
-        (circuitHandler as CircuitHandlerService).CircuitsChanged += HandleCircuitsChanged;
+     
 
 
     
