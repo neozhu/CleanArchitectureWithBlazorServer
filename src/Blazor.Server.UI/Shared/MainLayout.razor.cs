@@ -89,7 +89,7 @@ public partial class MainLayout : IDisposable
         {
             Default = new Default
             {
-                FontSize = ".875rem",
+                FontSize = ".825rem",
                 FontWeight = 400,
                 LineHeight = 1.43,
                 LetterSpacing = "normal",
@@ -139,7 +139,7 @@ public partial class MainLayout : IDisposable
             },
             Button = new Button
             {
-                FontSize = ".875rem",
+                FontSize = ".825rem",
                 FontWeight = 500,
                 LineHeight = 1.75,
                 LetterSpacing = ".02857em",
@@ -163,14 +163,14 @@ public partial class MainLayout : IDisposable
             },
             Body1 = new Body1
             {
-                FontSize = "1rem",
+                FontSize = "0.875rem",
                 FontWeight = 400,
                 LineHeight = 1.5,
                 LetterSpacing = ".00938em"
             },
             Body2 = new Body2
             {
-                FontSize = ".875rem",
+                FontSize = ".825rem",
                 FontWeight = 400,
                 LineHeight = 1.43,
                 LetterSpacing = ".01071em"

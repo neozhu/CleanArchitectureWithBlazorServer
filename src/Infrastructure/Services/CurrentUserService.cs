@@ -9,14 +9,17 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class CurrentUserService : ICurrentUserService
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ProtectedLocalStorage _protectedLocalStorage;
 
 
 
     public CurrentUserService(
+        IHttpContextAccessor httpContextAccessor,
         ProtectedLocalStorage protectedLocalStorage
        )
     {
+        _httpContextAccessor = httpContextAccessor;
         _protectedLocalStorage = protectedLocalStorage;
 
 
@@ -26,16 +29,24 @@ public class CurrentUserService : ICurrentUserService
     {
         try
         {
-            var storedPrincipal = await _protectedLocalStorage.GetAsync<string>("UserId");
-            if (storedPrincipal.Success && storedPrincipal.Value is not null)
+            var userId = "";
+            if (_httpContextAccessor.HttpContext != null)
             {
-                return storedPrincipal.Value;
+                userId = _httpContextAccessor.HttpContext.User?.FindFirstValue(ClaimTypes.NameIdentifier);
             }
-            return "";
+            if (string.IsNullOrEmpty(userId))
+            {
+                var storedPrincipal = await _protectedLocalStorage.GetAsync<string>("UserId");
+                if (storedPrincipal.Success && storedPrincipal.Value is not null)
+                {
+                    userId = storedPrincipal.Value;
+                }
+            }
+            return userId??String.Empty;
         }
         catch
         {
-            return "";
+            return String.Empty;
         }
     }
 }
