@@ -232,7 +232,7 @@
             if (state.Succeeded)
             {
                 RoleList.Add(applicationRole);
-                Snackbar.Add($"Create successfully", MudBlazor.Severity.Info);
+                Snackbar.Add($"{L["Create successfully"]}", MudBlazor.Severity.Info);
             }
             else
             {
@@ -260,7 +260,7 @@
             var state = await _roleManager.UpdateAsync(item);
             if (state.Succeeded)
             {
-                Snackbar.Add($"Updated successfully", MudBlazor.Severity.Info);
+                Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
             }
             else
             {

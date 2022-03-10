@@ -203,8 +203,7 @@
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
-    [Inject]
-    public CircuitHandler circuitHandler { get; set; }
+ 
 
     private bool _canCreate;
     private bool _canSearch;
@@ -234,24 +233,10 @@
         _canImport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         UserList = await _userManager.Users.ToListAsync();
-        (circuitHandler as CircuitHandlerService).CircuitsChanged +=
-                  HandleCircuitsChanged;
+        
     }
-    public async void Dispose()
-    {
-
-        (circuitHandler as CircuitHandlerService).CircuitsChanged -=
-                  HandleCircuitsChanged;
-
-    }
-    public void HandleCircuitsChanged(object sender, EventArgs args)
-    {
-
-        InvokeAsync(async () => {
-            UserList = await _userManager.Users.ToListAsync();
-            StateHasChanged();
-        });
-    }
+ 
+   
     private Func<ApplicationUser, bool> _quickFilter => x =>
        {
            if (string.IsNullOrWhiteSpace(_searchString))
@@ -295,7 +280,7 @@
             if (state.Succeeded)
             {
                 UserList.Add(applicationUser);
-                Snackbar.Add($"Create successfully", MudBlazor.Severity.Info);
+                Snackbar.Add($"{L["Create successfully"]}", MudBlazor.Severity.Info);
             }
             else
             {
@@ -339,7 +324,7 @@
             }
             if (state.Succeeded)
             {
-                Snackbar.Add($"Update successfully", MudBlazor.Severity.Info);
+                Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
             }
             else
             {
@@ -373,7 +358,7 @@
         var state = await _userManager.UpdateAsync(item);
         if (state.Succeeded)
         {
-            Snackbar.Add($"Update successfully", MudBlazor.Severity.Info);
+            Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
         }
         else
         {
@@ -405,7 +390,7 @@
             var state = await _userManager.ResetPasswordAsync(item, token, model.Password);
             if (state.Succeeded)
             {
-                Snackbar.Add($"Reset password successfully", MudBlazor.Severity.Info);
+                Snackbar.Add($"{L["Reset password successfully"]}", MudBlazor.Severity.Info);
             }
             else
             {

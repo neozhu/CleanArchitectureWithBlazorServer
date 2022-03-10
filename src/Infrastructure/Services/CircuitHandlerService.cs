@@ -12,10 +12,10 @@ public class CircuitHandlerService : CircuitHandler
 
 
     public ConcurrentDictionary<string, Circuit> Circuits { get; set; }
-    public event EventHandler CircuitsChanged;
+    public event EventHandler<bool> CircuitsChanged;
 
-    protected virtual void OnCircuitsChanged()
-    => CircuitsChanged?.Invoke(this, EventArgs.Empty);
+    protected virtual void OnCircuitsChanged(bool connected)
+    => CircuitsChanged?.Invoke(this, connected);
 
     public CircuitHandlerService( )
     {
@@ -26,7 +26,7 @@ public class CircuitHandlerService : CircuitHandler
     public override async Task OnCircuitOpenedAsync(Circuit circuit, CancellationToken cancellationToken)
     {
         Circuits[circuit.Id] = circuit;
-        OnCircuitsChanged();
+        OnCircuitsChanged(true);
         await base.OnCircuitOpenedAsync(circuit, cancellationToken);
     }
 
@@ -35,7 +35,7 @@ public class CircuitHandlerService : CircuitHandler
         
         Circuit circuitRemoved;
         Circuits.TryRemove(circuit.Id, out circuitRemoved);
-        OnCircuitsChanged();
+        OnCircuitsChanged(false);
         await base.OnCircuitClosedAsync(circuit, cancellationToken);
     }
 

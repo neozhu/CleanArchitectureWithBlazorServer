@@ -12,77 +12,41 @@ namespace CleanArchitecture.Blazor.Application.Hubs;
 public class SignalRHub : Hub
 {
 
-    private static readonly ConcurrentDictionary<string, bool> _onlineUsers = new ConcurrentDictionary<string, bool>();
-    private readonly ICurrentUserService _currentUserService;
-    private readonly IIdentityService _identityService;
-
-
-    public SignalRHub(
-        ICurrentUserService currentUserService,
-        IIdentityService identityService
-
-        )
+    private static readonly ConcurrentDictionary<string, string> _onlineUsers = new();
+    public SignalRHub()
     {
-        _currentUserService = currentUserService;
-        _identityService = identityService;
+
 
     }
     public override async Task OnConnectedAsync()
     {
-        var userId =await _currentUserService.UserId();
-        if (userId is not null)
-        {
-            if (_onlineUsers.TryAdd(userId, true))
-            {
-                var result = await _identityService.UpdateLiveStatus(userId, true);
-                if (result != string.Empty)
-                {
-                    await Clients.All.SendAsync(SignalR.ConnectUser, new { userId, displayName = result });
-                }
-
-            }
-
-            await UpdateOnlineUsers();
-        }
-
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
     {
-        var userId =await _currentUserService.UserId();
-        if (userId is not null)
+        string id = Context.ConnectionId;
+        //try to remove key from dictionary
+        if (_onlineUsers.TryRemove(id, out string userName))
         {
-            //try to remove key from dictionary
-            if (!_onlineUsers.TryRemove(userId, out _))
-            {
-                //if not possible to remove key from dictionary, then try to mark key as not existing in cache
-                _onlineUsers.TryUpdate(userId, false, true);
-            }
-            else
-            {
-                var result = await _identityService.UpdateLiveStatus(userId, true);
-                if (result != string.Empty)
-                {
-
-                    await Clients.All.SendAsync(SignalR.DisconnectUser, new { userId, displayName = result });
-                }
-            }
-
-            await UpdateOnlineUsers();
+            await Clients.All.SendAsync(SignalR.DisconnectUser, userName );
         }
 
         await base.OnDisconnectedAsync(exception);
     }
 
-    private Task UpdateOnlineUsers()
+    public async Task ConnectUser(string userName)
     {
-        var count = GetOnlineUsersCount();
-        return Clients.All.SendAsync(SignalR.UpdateOnlineUsers, count);
-    }
-
-    public static int GetOnlineUsersCount()
-    {
-        return _onlineUsers.Count(p => p.Value);
+        var id = Context.ConnectionId;
+        if (!_onlineUsers.ContainsKey(id))
+        {
+            // maintain a lookup of connectionId-to-username
+            if (_onlineUsers.TryAdd(id, userName))
+            {
+                // re-use existing message for now
+                await Clients.All.SendAsync(SignalR.ConnectUser,  userName );
+            }
+        }
+       
     }
 }

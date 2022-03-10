@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Components.Authorization;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 using Microsoft.AspNetCore.SignalR.Client;
+using CleanArchitecture.Blazor.Application.Hubs;
+using Microsoft.AspNetCore.Components.Server.Circuits;
+using CleanArchitecture.Blazor.Infrastructure.Services;
 
 namespace Blazor.Server.UI.Shared;
 
@@ -209,18 +212,35 @@ public partial class MainLayout : IDisposable
 
     private bool _themingDrawerOpen;
     [Inject] private IDialogService _dialogService { get; set; } = default!;
+    [Inject] private NavigationManager _navigationManager { get; set; } = default!;
     [Inject] private HotKeys _hotKeys { get; set; } = default!;
     [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
-    public void Dispose()
+    [Inject]
+    private HubClient _client  { get; set; } = default!;
+    [Inject]
+    public CircuitHandler circuitHandler { get; set; }
+    public async void Dispose()
     {
+    
         _hotKeysContext?.Dispose();
-
+        (circuitHandler as CircuitHandlerService).CircuitsChanged -=
+                 HandleCircuitsChanged;
+        _client.LoggedOut -= _client_LoggedOut;
+        _client.LoggedIn -= _client_LoggedIn;
     }
+    public void HandleCircuitsChanged(object sender,bool connected)
+    {
 
+        InvokeAsync(() => {
+            Snackbar.Add($"Update user status", MudBlazor.Severity.Info);
+            StateHasChanged();
+        });
+    }
+    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -229,9 +249,35 @@ public partial class MainLayout : IDisposable
                 _themeManager = await _localStorage.GetItemAsync<ThemeManagerModel>("themeManager");
             await ThemeManagerChanged(_themeManager);
             StateHasChanged();
+            var state = await AuthState;
+            if (state.User.Identity != null && state.User.Identity.Name != null)
+            {
+                await _client.StartAsync(state.User.Identity.Name);
+                _client.LoggedOut += _client_LoggedOut;
+                _client.LoggedIn += _client_LoggedIn;
+            }
         }
+       
     }
-    private HubConnection _hubConnection;
+
+    private void _client_LoggedIn(object? sender, string e)
+    {
+        InvokeAsync(() =>
+        {
+            Snackbar.Add($"{e} logined", MudBlazor.Severity.Info);
+            StateHasChanged();
+        });
+    }
+
+    private void _client_LoggedOut(object? sender, string e)
+    {
+        InvokeAsync(() =>
+        {
+            Snackbar.Add($"{e} logout", MudBlazor.Severity.Info);
+            StateHasChanged();
+        });
+    }
+
     protected override async Task OnInitializedAsync()
     {
         _profileService.OnChange = (s) =>
@@ -245,7 +291,15 @@ public partial class MainLayout : IDisposable
         
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
+        (circuitHandler as CircuitHandlerService).CircuitsChanged += HandleCircuitsChanged;
+
+
+    
+
     }
+
+    
+
     protected override   void OnAfterRender(bool firstRender)
     {
         InvokeAsync(async () =>
