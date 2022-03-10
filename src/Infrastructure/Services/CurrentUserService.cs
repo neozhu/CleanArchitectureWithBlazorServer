@@ -21,8 +21,6 @@ public class CurrentUserService : ICurrentUserService
     {
         _httpContextAccessor = httpContextAccessor;
         _protectedLocalStorage = protectedLocalStorage;
-
-
     }
 
     public async Task<string> UserId()
