@@ -9,8 +9,7 @@ using Microsoft.AspNetCore.Components.Server.Circuits;
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 public class CircuitHandlerService : CircuitHandler
 {
-    private readonly IIdentityService _identityService;
-    private readonly ICurrentUserService _currentUserService;
+
 
     public ConcurrentDictionary<string, Circuit> Circuits { get; set; }
     public event EventHandler CircuitsChanged;
@@ -18,20 +17,14 @@ public class CircuitHandlerService : CircuitHandler
     protected virtual void OnCircuitsChanged()
     => CircuitsChanged?.Invoke(this, EventArgs.Empty);
 
-    public CircuitHandlerService(
-        IIdentityService identityService,
-        ICurrentUserService currentUserService
-        )
+    public CircuitHandlerService( )
     {
         Circuits = new ConcurrentDictionary<string, Circuit>();
-        _identityService = identityService;
-        _currentUserService = currentUserService;
+
     }
 
     public override async Task OnCircuitOpenedAsync(Circuit circuit, CancellationToken cancellationToken)
     {
-        var userId =await _currentUserService.UserId();
-        await _identityService.UpdateLiveStatus(userId, true);
         Circuits[circuit.Id] = circuit;
         OnCircuitsChanged();
         await base.OnCircuitOpenedAsync(circuit, cancellationToken);
@@ -48,8 +41,6 @@ public class CircuitHandlerService : CircuitHandler
 
     public override async Task OnConnectionDownAsync(Circuit circuit, CancellationToken cancellationToken)
     {
-        var userId = await _currentUserService.UserId();
-        await _identityService.UpdateLiveStatus(userId, false);
         await base.OnConnectionDownAsync(circuit, cancellationToken);
     }
 
