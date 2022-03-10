@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using CleanArchitecture.Blazor.Application.Hubs;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 namespace Blazor.Server.UI.Shared;
 
@@ -219,17 +220,23 @@ public partial class MainLayout : IDisposable
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
-
+    [Inject]
+    private IIdentityService _identityService { get; set; } = default!;
     private HubClient _client  { get; set; } = default!;
 
  
     public void Dispose()
     {
-      
+        if(_user.UserName is not null)
+        _identityService.UpdateLiveStatus(_user.UserName, false).Wait();
+        
+        if(_client is not null)
+        {
+            _client.LoggedOut -= _client_LoggedOut;
+            _client.LoggedIn -= _client_LoggedIn;
+        }
+
         _hotKeysContext?.Dispose();
-        _client.LoggedOut -= _client_LoggedOut;
-        _client.LoggedIn -= _client_LoggedIn;
-      
     }
     
     
@@ -248,6 +255,7 @@ public partial class MainLayout : IDisposable
                 await _client.StartAsync();
                 _client.LoggedOut += _client_LoggedOut;
                 _client.LoggedIn += _client_LoggedIn;
+               await _identityService.UpdateLiveStatus(state.User.Identity.Name, true);
             }
         }
        
