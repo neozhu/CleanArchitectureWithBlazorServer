@@ -14,6 +14,7 @@ using IdentityResource = Duende.IdentityServer.Models.IdentityResource;
 using GrantTypes = Duende.IdentityServer.Models.GrantTypes;
 using Client = Duende.IdentityServer.Models.Client;
 using Duende.IdentityServer;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -155,6 +156,7 @@ public static class DependencyInjection
 
 
         services.AddControllers();
+        services.AddScoped<CircuitHandler, CircuitHandlerService>();
         services.AddSignalR();
 
         return services;

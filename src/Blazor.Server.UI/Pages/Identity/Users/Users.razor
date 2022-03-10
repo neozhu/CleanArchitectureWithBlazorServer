@@ -1,5 +1,7 @@
 @page "/indentity/users"
 @using Blazor.Server.UI.Components.Dialogs
+@using CleanArchitecture.Blazor.Infrastructure.Services
+@using Microsoft.AspNetCore.Components.Server.Circuits
 @using Microsoft.AspNetCore.Identity
 @inject IStringLocalizer<Users> L
 @attribute [Authorize(Policy = Permissions.Users.View)]
@@ -27,49 +29,49 @@
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">Users</MudText>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                    <MudButton DisableElevation Variant="Variant.Outlined"
-                               Size="Size.Small"
-                               OnClick="@(()=>OnRefresh())"
-                               StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                               Style="margin-right: 4px; margin-bottom:4px">@L["Refresh"]</MudButton>
-                    @if (_canCreate)
-                    {
-                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                               StartIcon="@Icons.Material.Filled.Add"
-                               Size="Size.Small"
-                               Style="margin-right: 4px; margin-bottom:4px"
-                               OnClick="OnCreate"
-                               IconColor="Color.Surface">@L["Create"]</MudButton>
-                    }
-                    @if (_canDelete)
-                    {
-                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                               StartIcon="@Icons.Material.Filled.Delete"
-                               Disabled="@(!(SelectItems.Count>0))"
-                               Size="Size.Small"
-                               Style="margin-right: 4px; margin-bottom:4px"
-                               OnClick="OnDeleteChecked"
-                               IconColor="Color.Surface">@L["Delete"]</MudButton>
-                    }
-                    @if (_canImport)
-                    {
-                        <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
-                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                               StartIcon="@Icons.Material.Filled.Upload"
-                               Size="Size.Small"
-                               Style="margin-right: 4px; margin-bottom:4px"
-                               for="importdataInput"
-                                         HtmlTag="label"
-                               IconColor="Color.Surface">@L["Import Data"]</MudButton>
-                    }
-                    @if (_canExport)
-                    {
-                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                               StartIcon="@Icons.Material.Filled.Download"
-                               Size="Size.Small"
-                               Style="margin-right: 4px; margin-bottom:4px"
-                               IconColor="Color.Surface">@L["Export Data"]</MudButton>
-                    }
+                        <MudButton DisableElevation Variant="Variant.Outlined"
+                                   Size="Size.Small"
+                                   OnClick="@(()=>OnRefresh())"
+                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                                   Style="margin-right: 4px; margin-bottom:4px">@L["Refresh"]</MudButton>
+                        @if (_canCreate)
+                        {
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Add"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   OnClick="OnCreate"
+                                   IconColor="Color.Surface">@L["Create"]</MudButton>
+                        }
+                        @if (_canDelete)
+                        {
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                                   StartIcon="@Icons.Material.Filled.Delete"
+                                   Disabled="@(!(SelectItems.Count>0))"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   OnClick="OnDeleteChecked"
+                                   IconColor="Color.Surface">@L["Delete"]</MudButton>
+                        }
+                        @if (_canImport)
+                        {
+                            <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Upload"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   for="importdataInput"
+                                   HtmlTag="label"
+                                   IconColor="Color.Surface">@L["Import Data"]</MudButton>
+                        }
+                        @if (_canExport)
+                        {
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Download"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   IconColor="Color.Surface">@L["Export Data"]</MudButton>
+                        }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
@@ -160,10 +162,18 @@
                     }
                 </MudTd>
                 <MudTd DataLabel="Site">@context.Site</MudTd>
-                <MudTd DataLabel="UserName">@context.UserName</MudTd>
+                <MudTd DataLabel="UserName">
+                    <div class="d-flex align-content-center flex-wrap">
+
+                        <MudBadge Color="@(context.IsLive? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
+                            <MudAvatar Image="@context.ProfilePictureDataUrl" Alt="@context.UserName">@context.UserName.First()</MudAvatar>
+                        </MudBadge>
+                        <MudText Class="ml-2 align-self-center">@context.UserName</MudText>
+                    </div>
+                </MudTd>
                 <MudTd DataLabel="DisplayName">@context.DisplayName</MudTd>
                 <MudTd DataLabel="Email">@context.Email</MudTd>
-                <MudTd HideSmall="true"  DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
+                <MudTd HideSmall="true" DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
                 <MudTd HideSmall="true" DataLabel="IsActive">
                     <MudCheckBox Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
                 </MudTd>
@@ -177,7 +187,7 @@
 
     </ChildContent>
     <ErrorContent>
-        <CustomError Exception="context" ></CustomError>
+        <CustomError Exception="context"></CustomError>
     </ErrorContent>
 </ErrorBoundary>
 
@@ -186,13 +196,15 @@
 
     private List<ApplicationUser> UserList = new List<ApplicationUser>();
     private HashSet<ApplicationUser> SelectItems = new HashSet<ApplicationUser>();
-    private string _searchString=string.Empty    ;
+    private string _searchString = string.Empty;
     private bool _sortNameByLength;
     public string? Title { get; private set; }
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
+    [Inject]
+    public CircuitHandler circuitHandler { get; set; }
 
     private bool _canCreate;
     private bool _canSearch;
@@ -205,6 +217,9 @@
     private bool _canExport;
     private bool _loading;
     private MudTable<ApplicationUser> _table = default!;
+
+
+
     protected override async Task OnInitializedAsync()
     {
         Title = L["Users"];
@@ -217,9 +232,25 @@
         _canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
         _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
         _canImport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
-        _canExport =false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        _canExport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         UserList = await _userManager.Users.ToListAsync();
+        (circuitHandler as CircuitHandlerService).CircuitsChanged +=
+                  HandleCircuitsChanged;
+    }
+    public async void Dispose()
+    {
 
+        (circuitHandler as CircuitHandlerService).CircuitsChanged -=
+                  HandleCircuitsChanged;
+
+    }
+    public void HandleCircuitsChanged(object sender, EventArgs args)
+    {
+
+        InvokeAsync(async () => {
+            UserList = await _userManager.Users.ToListAsync();
+            StateHasChanged();
+        });
     }
     private Func<ApplicationUser, bool> _quickFilter => x =>
        {
@@ -329,7 +360,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            foreach(var item in SelectItems)
+            foreach (var item in SelectItems)
             {
                 await _userManager.DeleteAsync(item);
                 UserList.Remove(item);

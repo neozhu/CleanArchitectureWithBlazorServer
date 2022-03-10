@@ -37,7 +37,6 @@ public class SignalRHub : Hub
                 var result = await _identityService.UpdateLiveStatus(userId, true);
                 if (result != string.Empty)
                 {
-
                     await Clients.All.SendAsync(SignalR.ConnectUser, new { userId, displayName = result });
                 }
 
@@ -79,7 +78,7 @@ public class SignalRHub : Hub
     private Task UpdateOnlineUsers()
     {
         var count = GetOnlineUsersCount();
-        return Clients.All.SendAsync("UpdateOnlineUsers", count);
+        return Clients.All.SendAsync(SignalR.UpdateOnlineUsers, count);
     }
 
     public static int GetOnlineUsersCount()

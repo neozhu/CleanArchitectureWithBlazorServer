@@ -7,6 +7,7 @@ using Toolbelt.Blazor.HotKeys;
 using Microsoft.AspNetCore.Components.Authorization;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Blazor.Server.UI.Shared;
 
@@ -230,6 +231,7 @@ public partial class MainLayout : IDisposable
             StateHasChanged();
         }
     }
+    private HubConnection _hubConnection;
     protected override async Task OnInitializedAsync()
     {
         _profileService.OnChange = (s) =>

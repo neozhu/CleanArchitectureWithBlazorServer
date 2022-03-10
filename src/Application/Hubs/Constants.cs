@@ -20,7 +20,7 @@ public static class SignalR
     public const string LogoutUsersByRole = "LogoutUsersByRole";
     public const string PingRequest = "PingRequestAsync";
     public const string PingResponse = "PingResponseAsync";
-
+    public const string UpdateOnlineUsers = "UpdateOnlineUsers";
     public const string OCRTaskCompleted = "OCRTaskCompleted";
 
 }

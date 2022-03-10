@@ -246,9 +246,9 @@ public class IdentityService : IIdentityService
 
     public async Task<string> UpdateLiveStatus(string userId, bool isLive)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByNameAsync(userId);
         if (user is null) return string.Empty;
-        user.IsLive = true;
+        user.IsLive = isLive;
         await _userManager.UpdateAsync(user);
         return user.DisplayName;
     }

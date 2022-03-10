@@ -28,7 +28,7 @@ namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Behaviours;
     [Test]
     public async Task ShouldCallGetUserNameAsyncOnceIfAuthenticated()
     {
-        _currentUserService.Setup(x => x.UserId).Returns("Administrator");
+        _currentUserService.Setup(x => x.UserId()).Returns(Task.FromResult("Administrator"));
 
  
         _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>()), Times.Once);

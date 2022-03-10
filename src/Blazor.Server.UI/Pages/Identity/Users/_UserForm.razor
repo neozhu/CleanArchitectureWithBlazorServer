@@ -78,7 +78,7 @@
                 @for (int i = 0; i < _roles.Count; i++)
                 {
                     var x = i;
-                    <MudCheckBox T="bool" Checked="@_roles[x].value" Label="@_roles[i].key" CheckedChanged="@(s=>_roles[x].value=s)"></MudCheckBox>
+                    <MudCheckBox For="@(() =>model.Checked)" T="bool" Checked="@_roles[x].value" Label="@_roles[i].key" CheckedChanged="@(s=>_roles[x].value=s)"></MudCheckBox>
                 }
             </div>
         </MudItem>
@@ -96,7 +96,7 @@
 
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
-    UserFormModelValidator modelValidator = new UserFormModelValidator();
+    UserFormModelValidator modelValidator = new();
     [EditorRequired][Parameter] public UserFormModel model { get; set; } = default!;
     [EditorRequired][Parameter] public EventCallback<UserFormModel> OnFormSubmit { get; set; }
     bool PasswordVisibility;
