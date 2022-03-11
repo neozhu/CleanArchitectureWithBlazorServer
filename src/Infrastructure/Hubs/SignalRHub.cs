@@ -3,11 +3,11 @@
 
 using System.Collections.Concurrent;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Blazor.Application.Hubs.Constants;
+using CleanArchitecture.Blazor.Infrastructure.Constants;
 using Microsoft.AspNetCore.SignalR;
 
 
-namespace CleanArchitecture.Blazor.Application.Hubs;
+namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
 
 public class SignalRHub : Hub
 {

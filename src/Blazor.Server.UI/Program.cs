@@ -30,7 +30,16 @@ builder.Host.UseSerilog((context, configuration) =>
           .WriteTo.Console()
     );
 builder.Services.AddMudBlazorDialog();
-builder.Services.AddServerSideBlazor().AddHubOptions(options =>
+builder.Services.AddServerSideBlazor(
+    options =>
+    {
+        options.DetailedErrors = true;
+        options.DisconnectedCircuitMaxRetained = 100;
+        options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
+        options.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(1);
+        options.MaxBufferedUnacknowledgedRenderBatches = 10;
+    }
+    ).AddHubOptions(options =>
 {
     options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
     options.EnableDetailedErrors = false;

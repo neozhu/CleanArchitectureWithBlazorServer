@@ -225,13 +225,16 @@ public partial class MainLayout : IDisposable
     private HubClient _client  { get; set; } = default!;
 
  
-    public void Dispose()
+    public  void Dispose()
     {
-        if(_user.UserName is not null)
-        _identityService.UpdateLiveStatus(_user.UserName, false).Wait();
-        
+
+        if (_user.UserName is not null)
+        {
+            _identityService.UpdateLiveStatus(_user.UserName, false).Wait();
+        }
         if(_client is not null)
         {
+            _client.StopAsync().Wait();
             _client.LoggedOut -= _client_LoggedOut;
             _client.LoggedIn -= _client_LoggedIn;
         }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CleanArchitecture.Blazor.Application.Hubs.Constants;
+using CleanArchitecture.Blazor.Infrastructure.Constants;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace CleanArchitecture.Blazor.Application.Hubs;
+namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
 public class HubClient : IAsyncDisposable
 {
     private HubConnection _hubConnection;
@@ -55,6 +55,7 @@ public class HubClient : IAsyncDisposable
 
             // register user on hub to let other clients know they've joined
             await _hubConnection.SendAsync(SignalR.ConnectUser, _username);
+            _started = true;
         }
      
     }
@@ -79,7 +80,7 @@ public class HubClient : IAsyncDisposable
             // the connections are left open
             await _hubConnection.DisposeAsync();
             _hubConnection = null;
-
+            _started = false;
         }
     }
     public async Task SendAsync(string message)
