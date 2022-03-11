@@ -1,12 +1,11 @@
-using CleanArchitecture.Blazor.Application.Hubs;
-using CleanArchitecture.Blazor.Application.Hubs.Constants;
+using CleanArchitecture.Blazor.Infrastructure.Constants;
+using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
 using Serilog.Context;
-using Microsoft.AspNetCore.Components.Server;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 

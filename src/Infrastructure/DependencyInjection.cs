@@ -7,16 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
-using Duende.IdentityServer.EntityFramework.Entities;
-using static IdentityModel.OidcConstants;
-using Duende.IdentityServer.Models;
-using IdentityResource = Duende.IdentityServer.Models.IdentityResource;
-using GrantTypes = Duende.IdentityServer.Models.GrantTypes;
-using Client = Duende.IdentityServer.Models.Client;
-using Duende.IdentityServer;
 using Microsoft.AspNetCore.Components.Server.Circuits;
-using CleanArchitecture.Blazor.Application.Hubs;
-using Microsoft.AspNetCore.Components;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 

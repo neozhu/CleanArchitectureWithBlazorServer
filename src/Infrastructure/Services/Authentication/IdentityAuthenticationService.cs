@@ -112,7 +112,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "SignIn");
             var data = $"{user.Email}|{token}";
             await _protectedLocalStorage.SetAsync(KEY, data);
-            await _protectedLocalStorage.SetAsync(USERID, user.UserName);
+            await _protectedLocalStorage.SetAsync(USERID, user.Id);
             var identity = await createIdentityFromApplicationUser(user);
             var principal = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));

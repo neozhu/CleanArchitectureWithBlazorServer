@@ -15,7 +15,6 @@ using MudBlazor;
 using Blazor.Analytics;
 using Blazor.Server.UI.Services.Notifications;
 using Blazor.Server.UI.Services.Navigation;
-using CleanArchitecture.Blazor.Application.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 

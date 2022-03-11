@@ -13,10 +13,11 @@ public class SignalRHub : Hub
 {
 
     private static readonly ConcurrentDictionary<string, string> _onlineUsers = new();
+ 
+
     public SignalRHub()
     {
-
-
+        
     }
     public override async Task OnConnectedAsync()
     {
@@ -27,29 +28,31 @@ public class SignalRHub : Hub
     {
         string id = Context.ConnectionId;
         //try to remove key from dictionary
-        if (_onlineUsers.TryRemove(id, out string userName))
+        if (_onlineUsers.TryRemove(id, out string userId))
         {
-            await Clients.AllExcept(id).SendAsync(SignalR.DisconnectUser, userName );
+            await Clients.AllExcept(id).SendAsync(SignalR.DisconnectUser, userId);
+           
         }
         await base.OnDisconnectedAsync(exception);
     }
 
-    public async Task OnConnectUser(string userName)
+    public async Task OnConnectUser(string userId)
     {
         var id = Context.ConnectionId;
         if (!_onlineUsers.ContainsKey(id))
         {
             // maintain a lookup of connectionId-to-username
-            if (_onlineUsers.TryAdd(id, userName))
+            if (_onlineUsers.TryAdd(id, userId))
             {
                 // re-use existing message for now
-                await Clients.AllExcept(id).SendAsync(SignalR.ConnectUser,  userName );
+                await Clients.AllExcept(id).SendAsync(SignalR.ConnectUser, userId);
+              
             }
         }
     }
-    public async Task SendMessage(string username, string message)
+    public async Task SendMessage(string userId, string message)
     {
-        await Clients.All.SendAsync(SignalR.SendMessage, username, message);
+        await Clients.All.SendAsync(SignalR.SendMessage, userId, message);
     }
     public async Task SendNotification(string message)
     {

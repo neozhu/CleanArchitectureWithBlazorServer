@@ -11,18 +11,18 @@ public class HubClient : IAsyncDisposable
 {
     private HubConnection _hubConnection;
     private readonly string _hubUrl;
-    private readonly string _username;
+    private readonly string _userId;
     private bool _started = false;
-    public HubClient(string siteUrl,string userName)
+    public HubClient(string siteUrl,string userId)
     {
         if (string.IsNullOrWhiteSpace(siteUrl))
             throw new ArgumentNullException(nameof(siteUrl));
-        if (string.IsNullOrWhiteSpace(userName))
-            throw new ArgumentNullException(nameof(userName));
+        if (string.IsNullOrWhiteSpace(userId))
+            throw new ArgumentNullException(nameof(userId));
         // set the hub URL
         _hubUrl = siteUrl.TrimEnd('/') + SignalR.HubUrl;
         // save username
-        _username = userName;
+        _userId = userId;
     }
     public async Task StartAsync()
     {
@@ -33,38 +33,38 @@ public class HubClient : IAsyncDisposable
                 .WithUrl(_hubUrl)
                 .Build();
             // add handler for receiving messages
-            _hubConnection.On<string>(SignalR.ConnectUser, (user) =>
+            _hubConnection.On<string>(SignalR.ConnectUser, (userId) =>
             {
-                LoggedIn?.Invoke(this, user);
+                LoggedIn?.Invoke(this, userId);
             });
-            _hubConnection.On<string>(SignalR.DisconnectUser, (user) =>
+            _hubConnection.On<string>(SignalR.DisconnectUser, (userId) =>
             {
-                LoggedOut?.Invoke(this, user);
+                LoggedOut?.Invoke(this, userId);
             });
             _hubConnection.On<string>(SignalR.SendNotification, (message) =>
             {
                 NotificationReceived?.Invoke(this, message);
             });
-            _hubConnection.On<string, string>(SignalR.SendMessage, (user, message) =>
+            _hubConnection.On<string, string>(SignalR.SendMessage, (userId, message) =>
             {
-                HandleReceiveMessage(user, message);
+                HandleReceiveMessage(userId, message);
             });
             // start the connection
             await _hubConnection.StartAsync();
 
 
             // register user on hub to let other clients know they've joined
-            await _hubConnection.SendAsync(SignalR.ConnectUser, _username);
+            await _hubConnection.SendAsync(SignalR.ConnectUser, _userId);
             _started = true;
         }
      
     }
 
 
-    private void HandleReceiveMessage(string username, string message)
+    private void HandleReceiveMessage(string userId, string message)
     {
         // raise an event to subscribers
-        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(username, message));
+        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(userId, message));
     }
     public async Task StopAsync()
     {
@@ -89,7 +89,7 @@ public class HubClient : IAsyncDisposable
         if (!_started)
             throw new InvalidOperationException("Client not started");
         // send the message
-        await _hubConnection.SendAsync(SignalR.SendMessage, _username, message);
+        await _hubConnection.SendAsync(SignalR.SendMessage, _userId, message);
     }
     public async Task NotifyAsync(string message)
     {
@@ -112,13 +112,12 @@ public class HubClient : IAsyncDisposable
 
     public class MessageReceivedEventArgs : EventArgs
     {
-        public MessageReceivedEventArgs(string username, string message)
+        public MessageReceivedEventArgs(string userId, string message)
         {
-            Username = username;
+            UserId = userId;
             Message = message;
         }
-        public string Username { get; set; }
+        public string UserId { get; set; }
         public string Message { get; set; }
-
     }
 }

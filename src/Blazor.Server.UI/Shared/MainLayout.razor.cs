@@ -7,11 +7,9 @@ using Toolbelt.Blazor.HotKeys;
 using Microsoft.AspNetCore.Components.Authorization;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
-using Microsoft.AspNetCore.SignalR.Client;
-using CleanArchitecture.Blazor.Application.Hubs;
-using Microsoft.AspNetCore.Components.Server.Circuits;
-using CleanArchitecture.Blazor.Infrastructure.Services;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Hubs;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 namespace Blazor.Server.UI.Shared;
 
@@ -228,10 +226,6 @@ public partial class MainLayout : IDisposable
     public  void Dispose()
     {
 
-        if (_user.UserName is not null)
-        {
-            _identityService.UpdateLiveStatus(_user.UserName, false).Wait();
-        }
         if(_client is not null)
         {
             _client.StopAsync().Wait();
@@ -252,13 +246,12 @@ public partial class MainLayout : IDisposable
             await ThemeManagerChanged(_themeManager);
             StateHasChanged();
             var state = await AuthState;
-            if (state.User.Identity != null && state.User.Identity.Name != null)
+            if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
-                _client=new HubClient(_navigationManager.BaseUri, state.User.Identity.Name);
-                await _client.StartAsync();
-                _client.LoggedOut += _client_LoggedOut;
+                _client=new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
+                 _client.LoggedOut += _client_LoggedOut;
                 _client.LoggedIn += _client_LoggedIn;
-               await _identityService.UpdateLiveStatus(state.User.Identity.Name, true);
+                await _client.StartAsync();
             }
         }
        
