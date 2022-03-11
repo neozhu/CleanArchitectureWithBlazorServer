@@ -29,7 +29,25 @@ builder.Host.UseSerilog((context, configuration) =>
           .WriteTo.Console()
     );
 builder.Services.AddMudBlazorDialog();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddServerSideBlazor(
+    options =>
+    {
+        options.DetailedErrors = true;
+        options.DisconnectedCircuitMaxRetained = 100;
+        options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
+        options.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(1);
+        options.MaxBufferedUnacknowledgedRenderBatches = 10;
+    }
+    ).AddHubOptions(options =>
+{
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
+    options.EnableDetailedErrors = false;
+    options.HandshakeTimeout = TimeSpan.FromSeconds(15);
+    options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+    options.MaximumParallelInvocationsPerClient = 1;
+    options.MaximumReceiveMessageSize = 32 * 1024;
+    options.StreamBufferCapacity = 10;
+});
 builder.Services.AddHotKeys();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddMudServices(config =>
@@ -46,19 +64,13 @@ builder.Services.AddMudServices(config =>
 builder.Services.AddInfrastructure(builder.Configuration)
         .AddApplication();
 
-
-
-
-
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7226/") });
+
+
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddTransient<INotificationService, InMemoryNotificationService>();
-
 builder.Services.AddTransient<IArticlesService, ArticlesService>();
-
 builder.Services.AddGoogleAnalytics("G-PRYNCB61NV");
-
-
 
 var app = builder.Build();
 
@@ -90,7 +102,6 @@ using (var scope = app.Services.CreateScope())
         throw;
     }
 }
-
 
 
 // Configure the HTTP request pipeline.

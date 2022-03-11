@@ -10,32 +10,30 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 public class CurrentUserService : ICurrentUserService
 {
     private readonly ProtectedLocalStorage _protectedLocalStorage;
-
-
-
+    private const string USERID = "UserId";
     public CurrentUserService(
         ProtectedLocalStorage protectedLocalStorage
        )
     {
         _protectedLocalStorage = protectedLocalStorage;
-
-
     }
 
     public async Task<string> UserId()
     {
         try
         {
-            var storedPrincipal = await _protectedLocalStorage.GetAsync<string>("UserId");
+            var userId = string.Empty;
+            var storedPrincipal = await _protectedLocalStorage.GetAsync<string>(USERID);
             if (storedPrincipal.Success && storedPrincipal.Value is not null)
             {
-                return storedPrincipal.Value;
+                userId = storedPrincipal.Value;
             }
-            return "";
+
+            return userId;
         }
         catch
         {
-            return "";
+            return String.Empty;
         }
     }
 }

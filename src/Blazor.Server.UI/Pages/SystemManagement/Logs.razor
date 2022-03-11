@@ -16,6 +16,7 @@
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 265px)"
+                  Style="min-height:700px"
                   Loading="@_loading"
                   SortLabel="@L["Sort By"]"
                   Hover="true" @ref="_table">
@@ -36,14 +37,14 @@
                 <col style="width:160px;" />
                 <col style="width:120px;" />
                 <col style="width:90px;" />
-                <col style="width:70%;" />
+                <col style="width:60%;" />
             </ColGroup>
             <HeaderContent>
                 <MudTh Style="width:80px">@L["Actions"]</MudTh>
                 <MudTh><MudTableSortLabel SortLabel="TimeStamp" T="LogDto">@L["Time Stamp"]</MudTableSortLabel></MudTh>
                 <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="Level" T="LogDto">@L["Level"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Message" T="LogDto">@L["Message"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="UserName" T="LogDto">@L["UserName"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="UserName" T="LogDto">@L["User Name"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="Actions">

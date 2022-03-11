@@ -16,7 +16,8 @@ public static class ClaimsPrincipalExtensions
 
     public static string GetUserId(this ClaimsPrincipal claimsPrincipal)
        => claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
-
+    public static string GetUserName(this ClaimsPrincipal claimsPrincipal)
+       => claimsPrincipal.FindFirstValue(ClaimTypes.Name);
     public static string GetSite(this ClaimsPrincipal claimsPrincipal)
       => claimsPrincipal.FindFirstValue(ClaimTypes.Locality);
     public static string GetDisplayName(this ClaimsPrincipal claimsPrincipal)

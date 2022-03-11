@@ -7,13 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
-using Duende.IdentityServer.EntityFramework.Entities;
-using static IdentityModel.OidcConstants;
-using Duende.IdentityServer.Models;
-using IdentityResource = Duende.IdentityServer.Models.IdentityResource;
-using GrantTypes = Duende.IdentityServer.Models.GrantTypes;
-using Client = Duende.IdentityServer.Models.Client;
-using Duende.IdentityServer;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -33,7 +27,6 @@ public static class DependencyInjection
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
-
                 );
             services.AddDatabaseDeveloperPageExceptionFilter();
         }
@@ -47,8 +40,8 @@ public static class DependencyInjection
         });
         services.Configure<DashbordSettings>(configuration.GetSection(DashbordSettings.SectionName));
         services.AddSingleton(s => s.GetRequiredService<IOptions<DashbordSettings>>().Value);
-     
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<IDbContextFactory<ApplicationDbContext>,BlazorContextFactory<ApplicationDbContext>>();
+        services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
         services.AddScoped<IDomainEventService, DomainEventService>();
 
 
@@ -57,43 +50,7 @@ public static class DependencyInjection
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-        services.AddIdentityServer()
-                .AddInMemoryClients(new Client[] {
-                    new Client
-                    {
-                        ClientId = "client",
-                        AllowedGrantTypes = GrantTypes.Implicit,
-                        RedirectUris = { "https://localhost:5002/signin-oidc" },
-                        PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
-                        FrontChannelLogoutUri = "https://localhost:5002/signout-oidc",
-                        AllowedScopes = { "openid", "profile", "email", "phone" }
-                    },
-                     // JWT-based client authentication sample
-                    new Client
-                    {
-                        ClientId = "jwt.client.credentials.sample",
-                        AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    
-                        // this client uses an RSA key as client secret
-                        // and https://docs.duendesoftware.com/identityserver/v5/tokens/authentication/jwt/
-                        ClientSecrets =
-                        {
-                            new Duende.IdentityServer.Models.Secret
-                            {
-                                Type = IdentityServerConstants.SecretTypes.JsonWebKey,
-                                Value = "{'e':'AQAB','kid':'ZzAjSnraU3bkWGnnAqLapYGpTyNfLbjbzgAPbbW2GEA','kty':'RSA','n':'wWwQFtSzeRjjerpEM5Rmqz_DsNaZ9S1Bw6UbZkDLowuuTCjBWUax0vBMMxdy6XjEEK4Oq9lKMvx9JzjmeJf1knoqSNrox3Ka0rnxXpNAz6sATvme8p9mTXyp0cX4lF4U2J54xa2_S9NF5QWvpXvBeC4GAJx7QaSw4zrUkrc6XyaAiFnLhQEwKJCwUw4NOqIuYvYp_IXhw-5Ti_icDlZS-282PcccnBeOcX7vc21pozibIdmZJKqXNsL1Ibx5Nkx1F1jLnekJAmdaACDjYRLL_6n3W4wUp19UvzB1lGtXcJKLLkqB6YDiZNu16OSiSprfmrRXvYmvD8m6Fnl5aetgKw'}"
-                            }
-                        },
-                        AllowedScopes = { "scope1", "scope2" }
-                    },
-                })
-                .AddInMemoryIdentityResources(new IdentityResource[] {
-                    new IdentityResources.OpenId(),
-                    new IdentityResources.Profile(),
-                    new IdentityResources.Email(),
-                    new IdentityResources.Phone(),
-                })
-                .AddAspNetIdentity<ApplicationUser>();
+       
 
         services.AddSingleton<ProfileService>();
         services.AddScoped<IdentityAuthenticationService>();
@@ -155,6 +112,7 @@ public static class DependencyInjection
 
 
         services.AddControllers();
+        services.AddSingleton<CircuitHandler, CircuitHandlerService>();
         services.AddSignalR();
 
         return services;

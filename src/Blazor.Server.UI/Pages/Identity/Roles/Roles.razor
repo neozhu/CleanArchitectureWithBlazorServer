@@ -152,7 +152,7 @@
             </PagerContent>
         </MudTable>
 
-        <_PermissionsDrawer OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
+        <_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
     </ChildContent>
     <ErrorContent>
         <CustomError Exception="context" ></CustomError>
@@ -232,7 +232,7 @@
             if (state.Succeeded)
             {
                 RoleList.Add(applicationRole);
-                Snackbar.Add($"Create successfully", MudBlazor.Severity.Info);
+                Snackbar.Add($"{L["Create successfully"]}", MudBlazor.Severity.Info);
             }
             else
             {
@@ -260,7 +260,7 @@
             var state = await _roleManager.UpdateAsync(item);
             if (state.Succeeded)
             {
-                Snackbar.Add($"Updated successfully", MudBlazor.Severity.Info);
+                Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
             }
             else
             {
@@ -336,6 +336,30 @@
             if (removed is not null)
             {
                 await _roleManager.RemoveClaimAsync(role, removed);
+            }
+        }
+
+    }
+    private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
+    {
+        foreach (var model in models)
+        {
+            var roleId = model.RoleId;
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (model.Assigned)
+            {
+                if (model.ClaimType is not null && model.ClaimValue is not null)
+                {
+                    await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
+                }
+            }
+            else
+            {
+                var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
+                if (removed is not null)
+                {
+                    await _roleManager.RemoveClaimAsync(role, removed);
+                }
             }
         }
 

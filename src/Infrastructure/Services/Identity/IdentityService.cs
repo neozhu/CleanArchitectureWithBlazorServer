@@ -244,12 +244,13 @@ public class IdentityService : IIdentityService
         return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
     }
 
-    public async Task<string> UpdateLiveStatus(string userId, bool isLive)
+    public async Task UpdateLiveStatus(string userId, bool isLive)
     {
         var user = await _userManager.FindByIdAsync(userId);
-        if (user is null) return string.Empty;
-        user.IsLive = true;
-        await _userManager.UpdateAsync(user);
-        return user.DisplayName;
+        if (user is not null)
+        {
+            user.IsLive = isLive;
+            await _userManager.UpdateAsync(user);
+        }
     }
 }

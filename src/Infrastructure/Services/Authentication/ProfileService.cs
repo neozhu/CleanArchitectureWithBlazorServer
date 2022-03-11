@@ -18,7 +18,10 @@ public class ProfileService
             Email = user.GetEmail(),
             PhoneNumber = user.GetPhoneNumber(),
             Site=user.GetSite(),
-            Role = user.GetRoles().FirstOrDefault()
+            Role = user.GetRoles().FirstOrDefault(),
+            UserId = user.GetUserId(),
+            UserName = user.GetUserName(),
+            
         };
         return Profile;
     }

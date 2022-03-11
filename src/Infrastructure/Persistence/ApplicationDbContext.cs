@@ -21,10 +21,6 @@ public class ApplicationDbContext : IdentityDbContext<
     private readonly ICurrentUserService _currentUserService;
     private readonly IDateTime _dateTime;
     private readonly IDomainEventService _domainEventService;
-
-    public ApplicationDbContext() : base()
-    {
-    }
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
         ICurrentUserService currentUserService,

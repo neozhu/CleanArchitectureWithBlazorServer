@@ -7,6 +7,9 @@ using Toolbelt.Blazor.HotKeys;
 using Microsoft.AspNetCore.Components.Authorization;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Hubs;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 namespace Blazor.Server.UI.Shared;
 
@@ -89,7 +92,7 @@ public partial class MainLayout : IDisposable
         {
             Default = new Default
             {
-                FontSize = ".875rem",
+                FontSize = ".825rem",
                 FontWeight = 400,
                 LineHeight = 1.43,
                 LetterSpacing = "normal",
@@ -139,7 +142,7 @@ public partial class MainLayout : IDisposable
             },
             Button = new Button
             {
-                FontSize = ".875rem",
+                FontSize = ".825rem",
                 FontWeight = 500,
                 LineHeight = 1.75,
                 LetterSpacing = ".02857em",
@@ -163,14 +166,14 @@ public partial class MainLayout : IDisposable
             },
             Body1 = new Body1
             {
-                FontSize = "1rem",
+                FontSize = "0.875rem",
                 FontWeight = 400,
                 LineHeight = 1.5,
                 LetterSpacing = ".00938em"
             },
             Body2 = new Body2
             {
-                FontSize = ".875rem",
+                FontSize = ".825rem",
                 FontWeight = 400,
                 LineHeight = 1.43,
                 LetterSpacing = ".01071em"
@@ -208,18 +211,32 @@ public partial class MainLayout : IDisposable
 
     private bool _themingDrawerOpen;
     [Inject] private IDialogService _dialogService { get; set; } = default!;
+    [Inject] private NavigationManager _navigationManager { get; set; } = default!;
     [Inject] private HotKeys _hotKeys { get; set; } = default!;
     [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
-    public void Dispose()
+    [Inject]
+    private IIdentityService _identityService { get; set; } = default!;
+    private HubClient _client  { get; set; } = default!;
+
+ 
+    public  void Dispose()
     {
+
+        if(_client is not null)
+        {
+            _client.StopAsync().Wait();
+            _client.LoggedOut -= _client_LoggedOut;
+            _client.LoggedIn -= _client_LoggedIn;
+        }
+
         _hotKeysContext?.Dispose();
-
     }
-
+    
+    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -228,8 +245,36 @@ public partial class MainLayout : IDisposable
                 _themeManager = await _localStorage.GetItemAsync<ThemeManagerModel>("themeManager");
             await ThemeManagerChanged(_themeManager);
             StateHasChanged();
+            var state = await AuthState;
+            if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
+            {
+                _client=new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
+                 _client.LoggedOut += _client_LoggedOut;
+                _client.LoggedIn += _client_LoggedIn;
+                await _client.StartAsync();
+            }
         }
+       
     }
+
+    private void _client_LoggedIn(object? sender, string e)
+    {
+        InvokeAsync(() =>
+        {
+            Snackbar.Add($"{e} login.", MudBlazor.Severity.Info);
+            StateHasChanged();
+        });
+    }
+
+    private void _client_LoggedOut(object? sender, string e)
+    {
+        InvokeAsync(() =>
+        {
+            Snackbar.Add($"{e} logout.", MudBlazor.Severity.Normal);
+            StateHasChanged();
+        });
+    }
+
     protected override async Task OnInitializedAsync()
     {
         _profileService.OnChange = (s) =>
@@ -243,7 +288,15 @@ public partial class MainLayout : IDisposable
         
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
+     
+
+
+    
+
     }
+
+    
+
     protected override   void OnAfterRender(bool firstRender)
     {
         InvokeAsync(async () =>

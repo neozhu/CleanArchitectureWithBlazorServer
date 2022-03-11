@@ -13,6 +13,7 @@
         <PackageReference Include="Blazor-Analytics" Version="3.10.0" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
         <PackageReference Include="FluentValidation" Version="10.3.6" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.3" />
        <PackageReference Include="MudBlazor" Version="6.0.7" />
         <PackageReference Include="MediatR" Version="10.0.1" />
        <PackageReference Include="SixLabors.ImageSharp" Version="2.0.0" />
