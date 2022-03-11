@@ -245,14 +245,14 @@ public partial class MainLayout : IDisposable
                 _themeManager = await _localStorage.GetItemAsync<ThemeManagerModel>("themeManager");
             await ThemeManagerChanged(_themeManager);
             StateHasChanged();
-            var state = await AuthState;
-            if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
-            {
-                _client=new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
-                 _client.LoggedOut += _client_LoggedOut;
-                _client.LoggedIn += _client_LoggedIn;
-                await _client.StartAsync();
-            }
+            //var state = await AuthState;
+            //if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
+            //{
+            //    _client=new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
+            //    _client.LoggedOut += _client_LoggedOut;
+            //    _client.LoggedIn += _client_LoggedIn;
+            //    await _client.StartAsync();
+            //}
         }
        
     }
@@ -288,23 +288,29 @@ public partial class MainLayout : IDisposable
         
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
-     
 
-
-    
-
-    }
-
-    
-
-    protected override   void OnAfterRender(bool firstRender)
-    {
-        InvokeAsync(async () =>
+        var state = await AuthState;
+       
+        if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
-            _user =await _profileService.Set(AuthState);
-            StateHasChanged();
-        });
+            _user = await _profileService.Get(state.User);
+            _client = new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
+            _client.LoggedOut += _client_LoggedOut;
+            _client.LoggedIn += _client_LoggedIn;
+            await _client.StartAsync();
+        }
     }
+
+    
+
+    //protected override   void OnAfterRender(bool firstRender)
+    //{
+    //    InvokeAsync(async () =>
+    //    {
+    //        _user =await _profileService.Set(AuthState);
+    //        StateHasChanged();
+    //    });
+    //}
 
 
     protected void SideMenuDrawerOpenChangedHandler(bool state)

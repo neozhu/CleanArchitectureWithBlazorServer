@@ -5,12 +5,9 @@ public class ProfileService
 {
     public  Func<UserModel,Task>? OnChange;
     public UserModel Profile { get; private set; } = default!;
-
-
-
-    public async Task<UserModel> Set(Task<AuthenticationState> state)
+    public async Task<UserModel> Get(ClaimsPrincipal principal)
     {
-        var user = (await state).User;
+        var user = principal;
         Profile =  new UserModel()
         {
             Avatar = user.GetProfilePictureDataUrl(),
@@ -23,7 +20,7 @@ public class ProfileService
             UserName = user.GetUserName(),
             
         };
-        return Profile;
+        return await Task.FromResult(Profile);
     }
 
     public Task Update(UserModel profile)
