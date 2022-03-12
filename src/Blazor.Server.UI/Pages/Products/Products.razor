@@ -257,7 +257,7 @@
         {
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{L["Created successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{L["Create successfully"]}", MudBlazor.Severity.Info);
         }
     }
     private async Task OnEdit(ProductDto dto)
@@ -283,7 +283,7 @@
         {
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{L["Saved successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{L["Save successfully"]}", MudBlazor.Severity.Info);
         }
     }
 

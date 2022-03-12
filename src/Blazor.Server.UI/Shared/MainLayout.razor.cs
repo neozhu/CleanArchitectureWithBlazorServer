@@ -215,24 +215,24 @@ public partial class MainLayout : IDisposable
     [Inject] private HotKeys _hotKeys { get; set; } = default!;
     [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
     [CascadingParameter]
-    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    protected Task<AuthenticationState> _authState { get; set; } = default!;
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
-    [Inject]
-    private IIdentityService _identityService { get; set; } = default!;
+
     private HubClient _client  { get; set; } = default!;
 
- 
+    [Inject]
+    private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
     public  void Dispose()
     {
-
-        if(_client is not null)
+        
+        if (_client is not null)
         {
             _client.StopAsync().Wait();
             _client.LoggedOut -= _client_LoggedOut;
             _client.LoggedIn -= _client_LoggedIn;
         }
-
+        _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         _hotKeysContext?.Dispose();
     }
     
@@ -245,14 +245,6 @@ public partial class MainLayout : IDisposable
                 _themeManager = await _localStorage.GetItemAsync<ThemeManagerModel>("themeManager");
             await ThemeManagerChanged(_themeManager);
             StateHasChanged();
-            var state = await AuthState;
-            if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
-            {
-                _client=new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
-                 _client.LoggedOut += _client_LoggedOut;
-                _client.LoggedIn += _client_LoggedIn;
-                await _client.StartAsync();
-            }
         }
        
     }
@@ -288,22 +280,31 @@ public partial class MainLayout : IDisposable
         
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
-     
+        _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
 
-
-    
-
+        var state = await _authState;
+        if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
+        {
+            _user = await _profileService.Get(state.User);
+            _client = new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
+            _client.LoggedOut += _client_LoggedOut;
+            _client.LoggedIn += _client_LoggedIn;
+            await _client.StartAsync();
+        }
     }
 
-    
-
-    protected override   void OnAfterRender(bool firstRender)
+    private async void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
     {
-        InvokeAsync(async () =>
+        var state = await authenticationState;
+        if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
-            _user =await _profileService.Set(AuthState);
+            _user = await _profileService.Get(state.User);
+            _client = new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
+            _client.LoggedOut += _client_LoggedOut;
+            _client.LoggedIn += _client_LoggedIn;
+            await _client.StartAsync();
             StateHasChanged();
-        });
+        }
     }
 
 
