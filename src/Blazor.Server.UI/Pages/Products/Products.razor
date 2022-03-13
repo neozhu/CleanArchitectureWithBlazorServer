@@ -235,11 +235,13 @@
     }
     private async Task OnSearch(string text)
     {
+        _selectedItems = new HashSet<ProductDto>();
         _searchString = text;
         await _table.ReloadServerData();
     }
     private async Task OnRefresh()
     {
+        _selectedItems = new HashSet<ProductDto>();
         _searchString = string.Empty;
         await _table.ReloadServerData();
     }
@@ -322,6 +324,7 @@
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
             Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
+            _selectedItems = new HashSet<ProductDto>();
         }
     }
     private async Task OnExport()
