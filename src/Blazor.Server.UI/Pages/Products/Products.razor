@@ -301,7 +301,7 @@
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var command = new DeleteProductCommand() { Id = dto.Id };
+            var command = new DeleteProductCommand() { Id = new int[] { dto.Id} };
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
             Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
@@ -320,7 +320,7 @@
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var command = new DeleteCheckedProductsCommand() { Id = _selectedItems.Select(x => x.Id).ToArray() };
+            var command = new DeleteProductCommand() { Id = _selectedItems.Select(x => x.Id).ToArray() };
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
             Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
