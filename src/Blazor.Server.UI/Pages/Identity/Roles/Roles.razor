@@ -329,6 +329,7 @@
         if (model.Assigned)
         {
             await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
+            Snackbar.Add($"{L["Assigned successfully"]}", MudBlazor.Severity.Info);
         }
         else
         {
@@ -337,7 +338,9 @@
             {
                 await _roleManager.RemoveClaimAsync(role, removed);
             }
+            Snackbar.Add($"{L["Unassigned successfully"]}", MudBlazor.Severity.Info);
         }
+        
 
     }
     private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
@@ -352,6 +355,7 @@
                 {
                     await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
                 }
+                Snackbar.Add($"{L["Assigned all successfully"]}", MudBlazor.Severity.Info);
             }
             else
             {
@@ -360,6 +364,7 @@
                 {
                     await _roleManager.RemoveClaimAsync(role, removed);
                 }
+                Snackbar.Add($"{L["Unassigned all successfully"]}", MudBlazor.Severity.Info);
             }
         }
 
