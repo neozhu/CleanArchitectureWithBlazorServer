@@ -1,4 +1,5 @@
 @using Blazor.Server.UI.Pages.Authentication
+@inject IStringLocalizer<SharedResource> L
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
@@ -9,7 +10,7 @@
                 <NotAuthorized>
                     @if (@context.User.Identity?.IsAuthenticated is true)
                     {
-                        <p>You are not authorized to be here. For more information, contact your system administrator</p>
+                        <p>@L["You are not authorized to be here. For more information, contact your system administrator."]</p>
                     }
                     else
                     {
@@ -23,7 +24,7 @@
             <PageTitle>Not found</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
                 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex" >
-                    <p role="alert">Sorry, there's nothing at this address. <MudButton Variant="Variant.Filled" Size="Size.Small" Link="/">Go Home</MudButton></p>
+                    <p role="alert">@L["Sorry, there's nothing at this address."] <MudButton Variant="Variant.Filled" Size="Size.Small" Link="/">@L["Go Home"]</MudButton></p>
                 </MudContainer>
             </LayoutView>
         </NotFound>

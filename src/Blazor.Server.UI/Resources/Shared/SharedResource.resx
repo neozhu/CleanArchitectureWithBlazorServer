@@ -120,4 +120,49 @@
   <data name="authentication is required, click sign in." xml:space="preserve">
     <value>authentication is required, click sign in.</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Delete Confirmation" xml:space="preserve">
+    <value>Delete Confirmation</value>
+  </data>
+  <data name="Go Home" xml:space="preserve">
+    <value>Go Home</value>
+  </data>
+  <data name="Logged out" xml:space="preserve">
+    <value>Logged out</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Logout Confirmation" xml:space="preserve">
+    <value>Logout Confirmation</value>
+  </data>
+  <data name="Mode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Sorry, there's nothing at this address." xml:space="preserve">
+    <value>Sorry, there's nothing at this address.</value>
+  </data>
+  <data name="Themes" xml:space="preserve">
+    <value>Themes</value>
+  </data>
+  <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
+    <value>You are attempting to log out of application. Do you really want to log out?</value>
+  </data>
+  <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
+    <value>You are not authorized to be here. For more information, contact your system administrator.</value>
+  </data>
 </root>
