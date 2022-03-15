@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,30 +118,39 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="E-mail" xml:space="preserve">
-    <value>电子邮件</value>
+    <value>E-mail</value>
   </data>
   <data name="e-mail is required!" xml:space="preserve">
-    <value>电子邮件必填!</value>
+    <value>e-mail is required!</value>
+  </data>
+  <data name="have an account?" xml:space="preserve">
+    <value>have an account?</value>
   </data>
   <data name="I agree to the terms and privacy" xml:space="preserve">
-    <value>我同意条款和隐私</value>
+    <value>I agree to the terms and privacy</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>密码</value>
+    <value>Password</value>
   </data>
   <data name="password is required!" xml:space="preserve">
-    <value>密码必填!</value>
+    <value>password is required!</value>
   </data>
   <data name="Register" xml:space="preserve">
-    <value>注册</value>
+    <value>Register</value>
   </data>
   <data name="Register successfully!" xml:space="preserve">
-    <value>注册成功!</value>
+    <value>Register successfully!</value>
+  </data>
+  <data name="Sign In" xml:space="preserve">
+    <value>Sign In</value>
+  </data>
+  <data name="Sign Up" xml:space="preserve">
+    <value>Sign Up</value>
   </data>
   <data name="User Name" xml:space="preserve">
-    <value>用户名</value>
+    <value>User Name</value>
   </data>
   <data name="user name is required!" xml:space="preserve">
-    <value>用户名必填</value>
+    <value>user name is required!</value>
   </data>
 </root>
