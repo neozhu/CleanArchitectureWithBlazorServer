@@ -109,7 +109,7 @@
             {
                 await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
                 _navigation.NavigateTo("/pages/authentication/login");
-                Snackbar.Add("Regist successfully!", MudBlazor.Severity.Info);
+                Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
             }
             else
             {
