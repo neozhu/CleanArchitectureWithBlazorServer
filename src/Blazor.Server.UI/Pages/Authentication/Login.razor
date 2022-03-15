@@ -16,7 +16,7 @@
 
     <MudTextField T="string"
                   @bind-Value="model.UserName" For="@(() => model.UserName)"
-                  Label="@L["User Name"]"
+                  Label="@L["User name"]"
                   Variant="Variant.Outlined"
                   Required="true"
                   RequiredError="@L["User name is required!"]"
@@ -35,7 +35,7 @@
 
     <div Class="d-flex justify-space-between align-center">
         <MudCheckBox For="@(() => model.RememberMe)" @bind-Checked="model.RememberMe" Label="@L["Remember me?"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
-        <MudLink Href="/pages/authentication/forgot-password">@L["Forgot pwd?"]</MudLink>
+        <MudLink Href="/pages/authentication/forgot-password">@L["Forgot password?"]</MudLink>
     </div>
 
 
@@ -99,7 +99,7 @@
             var result = await _authenticationService.Login(model);
             if (!result)
             {
-                Snackbar.Add(L["Please check your username and password.  If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
+                Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
             }
 
         }

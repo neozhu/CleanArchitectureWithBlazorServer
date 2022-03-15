@@ -10,8 +10,8 @@
 @attribute [AllowAnonymous]
 
 <MudForm Model="@model" @ref="@form"  Validation="@(registerValidator.ValidateValue)">
-<MudText Typo="Typo.h4" GutterBottom="true">Sign Up</MudText>
-<MudText>Already have an account? <MudLink Href="/pages/authentication/login">Sign In</MudLink></MudText>
+<MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
+<MudText>@L["have an account?"] <MudLink Href="/pages/authentication/login">@L["Sign In"]</MudLink></MudText>
 
 <MudTextField T="string"  
     Immediate="true"
