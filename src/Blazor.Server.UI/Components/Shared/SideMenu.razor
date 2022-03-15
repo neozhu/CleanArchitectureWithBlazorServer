@@ -68,7 +68,7 @@
                 @if (sectionItem.IsParent)
                 {
                     <MudNavGroup Icon="@sectionItem.Icon"
-                                 Title="@sectionItem.Title">
+                                 Title="@L[sectionItem.Title]">
                         @foreach (var menuItem in sectionItem.MenuItems)
                         {
                             @if (SideMenuDrawerOpen)
