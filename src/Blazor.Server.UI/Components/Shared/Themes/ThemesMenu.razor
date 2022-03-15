@@ -1,3 +1,5 @@
+@inject IStringLocalizer<SharedResource> L
+
 <MudDrawer Anchor="Anchor.Right"
            @bind-Open="ThemingDrawerOpen"
            Elevation="1"
@@ -5,7 +7,7 @@
            Width="260px">
     <MudDrawerHeader Class="align-center">
         <MudText Typo="Typo.body1">
-            <b>Themes</b>
+            <b>@L["Themes"]</b>
         </MudText>
         <MudSpacer />
         <MudIconButton Color="Color.Default"
@@ -16,7 +18,7 @@
     <MudDivider />
     <div class="ma-6">
         <MudText Typo="Typo.body2">
-            <b>Mode</b>
+            <b>@L["Mode"]</b>
         </MudText>
         <MudGrid Class="my-3"
                  Spacing="3">
@@ -45,7 +47,7 @@
         </MudGrid>
 
         <MudText Typo="Typo.body2">
-            <b>Color</b>
+            <b>@L["Color"]</b>
         </MudText>
         <MudGrid Class="my-3"
                  Spacing="3">

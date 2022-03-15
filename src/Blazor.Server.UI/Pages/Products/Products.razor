@@ -9,6 +9,7 @@
 
 @inject IJSRuntime JS
 @inject IStringLocalizer<Products> L
+@attribute [Authorize(Policy = Permissions.Products.View)]
 <PageTitle>@Title</PageTitle>
 <style>
     .mud-table-toolbar {

@@ -1,4 +1,4 @@
-@inject IStringLocalizer<UserMenu> L
+@inject IStringLocalizer<SharedResource> L
 <MudMenu AnchorOrigin="Origin.BottomRight"
          Class="@Class"
          LockScroll="true"
@@ -26,8 +26,8 @@
                     <MudText>@L["Profile"]</MudText>
                 </div>
             </MudMenuItem>
-            <MudMenuItem>
-                <div class="d-flex">
+            <MudMenuItem OnClick="OnSettingClick">
+                <div class="d-flex" >
                     <MudIcon Class="mx-2"
                              Icon="@Icons.Material.Filled.Settings" />
                     <MudText>@L["Settings"]</MudText>

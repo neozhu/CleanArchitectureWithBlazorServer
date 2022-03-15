@@ -23,6 +23,8 @@ public static class ApplicationDbContextSeed
             foreach (var permission in Permissions)
             {
                 await roleManager.AddClaimAsync(administratorRole, new System.Security.Claims.Claim(ApplicationClaimTypes.Permission, permission));
+                if(permission.StartsWith("Permissions.Products"))
+                  await roleManager.AddClaimAsync(userRole, new System.Security.Claims.Claim(ApplicationClaimTypes.Permission, permission));
             }
         }
 

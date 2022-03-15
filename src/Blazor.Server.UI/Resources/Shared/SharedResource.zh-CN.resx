@@ -120,4 +120,49 @@
   <data name="authentication is required, click sign in." xml:space="preserve">
     <value>需要登录后访问, 单击“登录”.</value>
   </data>
+  <data name="Go Home" xml:space="preserve">
+    <value>返回首页</value>
+  </data>
+  <data name="Sorry, there's nothing at this address." xml:space="preserve">
+    <value>对不起, 没有这个地址.</value>
+  </data>
+  <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
+    <value>不允许访问, 更多信息, 请联系管理员.</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>注销</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>简介</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="Delete Confirmation" xml:space="preserve">
+    <value>删除确认</value>
+  </data>
+  <data name="Logged out" xml:space="preserve">
+    <value>已注销</value>
+  </data>
+  <data name="Logout Confirmation" xml:space="preserve">
+    <value>注销确认</value>
+  </data>
+  <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
+    <value>您正试图注销应用程序.您真的想退出吗?</value>
+  </data>
+  <data name="Color" xml:space="preserve">
+    <value>颜色</value>
+  </data>
+  <data name="Mode" xml:space="preserve">
+    <value>模式</value>
+  </data>
+  <data name="Themes" xml:space="preserve">
+    <value>主题</value>
+  </data>
 </root>
