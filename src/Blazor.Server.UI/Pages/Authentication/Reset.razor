@@ -6,9 +6,9 @@
 
     <MudText Typo="Typo.h4" GutterBottom="true">@L["Set new password"]</MudText>
 
-    <MudTextField @bind-Value="@Password" Label="New Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" Class="my-4" />
+    <MudTextField @bind-Value="@Password" Label="@L["New password"]" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" Class="my-4" />
 
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/pages/authentication/login" Size="Size.Large" FullWidth="true" Class="mt-2">@L["Set New Password"]</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="mt-2">@L["Set new password"]</MudButton>
 
 @code {
     string Password { get; set; }
