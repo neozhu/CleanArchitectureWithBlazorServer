@@ -22,11 +22,12 @@ public class ProfileService
         };
         return await Task.FromResult(Profile);
     }
-
     public Task Update(UserModel profile)
     {
         Profile = profile;
         OnChange?.Invoke(Profile);
         return Task.CompletedTask;
     }
+
+   
 }

@@ -16,8 +16,6 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         ProtectedLocalStorage protectedLocalStorage,
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager
- 
-  
         )
     {
         _protectedLocalStorage = protectedLocalStorage;
