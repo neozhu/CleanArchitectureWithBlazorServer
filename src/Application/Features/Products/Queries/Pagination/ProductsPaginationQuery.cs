@@ -1,16 +1,18 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 
-    public class ProductsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<ProductDto>>
-    {
-       
-    }
-    
-    public class ProductsWithPaginationQueryHandler :
+    public class ProductsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<ProductDto>>, ICacheable
+{
+    public string CacheKey => $"{nameof(ProductsWithPaginationQuery)}:{this.ToString()}";
+    public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
+}
+
+public class ProductsWithPaginationQueryHandler :
          IRequestHandler<ProductsWithPaginationQuery, PaginatedData<ProductDto>>
     {
         private readonly IApplicationDbContext _context;
