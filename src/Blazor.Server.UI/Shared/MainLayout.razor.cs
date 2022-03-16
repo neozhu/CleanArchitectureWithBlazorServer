@@ -218,7 +218,8 @@ public partial class MainLayout : IDisposable
     protected Task<AuthenticationState> _authState { get; set; } = default!;
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
-
+    [Inject]
+    private IIdentityService _identityService { get; set; } = default!;
     private HubClient _client  { get; set; } = default!;
 
     [Inject]
@@ -251,18 +252,20 @@ public partial class MainLayout : IDisposable
 
     private void _client_LoggedIn(object? sender, string e)
     {
-        InvokeAsync(() =>
+        InvokeAsync(async () =>
         {
             Snackbar.Add($"{e} login.", MudBlazor.Severity.Info);
+            await _identityService.UpdateLiveStatus(e, true);
             StateHasChanged();
         });
     }
 
     private void _client_LoggedOut(object? sender, string e)
     {
-        InvokeAsync(() =>
+        InvokeAsync( async () =>
         {
             Snackbar.Add($"{e} logout.", MudBlazor.Severity.Normal);
+            await _identityService.UpdateLiveStatus(e, false);
             StateHasChanged();
         });
     }
