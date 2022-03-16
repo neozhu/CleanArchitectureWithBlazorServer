@@ -10,6 +10,7 @@ using Blazor.Server.UI.Components.Dialogs;
 using CleanArchitecture.Blazor.Infrastructure.Services;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 
 namespace Blazor.Server.UI.Pages.Identity.Users
 {
@@ -86,7 +87,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
 
         private async Task OnCreate()
         {
-            var model = new UserFormModel();
+            var model = new UserFormModel() { AssignRoles =new string[] { RoleConstants.BasicRole } };
             var parameters = new DialogParameters{["model"] = model};
             var options = new DialogOptions{CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true};
             var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
@@ -94,7 +95,13 @@ namespace Blazor.Server.UI.Pages.Identity.Users
             if (!result.Cancelled)
             {
                 var applicationUser = new ApplicationUser()
-                {Site = model.Site, DisplayName = model.DisplayName, UserName = model.UserName, Email = model.Email, PhoneNumber = model.PhoneNumber, ProfilePictureDataUrl = model.ProfilePictureDataUrl};
+                {Site = model.Site,
+                DisplayName = model.DisplayName,
+                UserName = model.UserName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                ProfilePictureDataUrl = model.ProfilePictureDataUrl,
+                };
                 var password = model.Password;
                 var state = await _userManager.CreateAsync(applicationUser, password);
                 if (state.Succeeded)
@@ -113,7 +120,15 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         {
             var roles = await _userManager.GetRolesAsync(item);
             var model = new UserFormModel()
-            {Id = item.Id, Site = item.Site, DisplayName = item.DisplayName, UserName = item.UserName, Email = item.Email, PhoneNumber = item.PhoneNumber, ProfilePictureDataUrl = item.ProfilePictureDataUrl, AssignRoles = roles.ToArray()};
+            {Id = item.Id,
+            Site = item.Site,
+            DisplayName = item.DisplayName,
+            UserName = item.UserName,
+            Email = item.Email,
+            PhoneNumber = item.PhoneNumber,
+            ProfilePictureDataUrl = item.ProfilePictureDataUrl,
+            AssignRoles = roles.ToArray()
+            };
             var parameters = new DialogParameters{["model"] = model};
             var options = new DialogOptions{CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true};
             var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
@@ -125,6 +140,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
                 item.Email = model.Email;
                 item.PhoneNumber = model.PhoneNumber;
                 item.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
+                item.Site = model.Site;
                 var state = await _userManager.UpdateAsync(item);
                 if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
                 {
