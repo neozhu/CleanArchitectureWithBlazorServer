@@ -18,7 +18,6 @@ public class ProfileService
             Role = user.GetRoles().FirstOrDefault(),
             UserId = user.GetUserId(),
             UserName = user.GetUserName(),
-            
         };
         return await Task.FromResult(Profile);
     }
