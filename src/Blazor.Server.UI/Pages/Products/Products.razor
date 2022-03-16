@@ -136,7 +136,7 @@
 
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Actions">
+                <MudTd DataLabel="@L["Actions"]">
                     @if (_canEdit || _canDelete)
                     {
                         <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
@@ -162,13 +162,13 @@
                         </MudButton>
                     }
                 </MudTd>
-                <MudTd HideSmall="true" DataLabel="Brand">@context.Brand</MudTd>
-                <MudTd DataLabel="Name">
+                <MudTd HideSmall="true" DataLabel="@L["Brand Name"]">@context.Brand</MudTd>
+                <MudTd DataLabel="@L["Product Name"]">
                     <MudText>@context.Name</MudText>
                     <MudText Typo="Typo.body2">@context.Description</MudText>
                 </MudTd>
-                <MudTd DataLabel="Price" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
-                <MudTd DataLabel="Unit">@context.Unit</MudTd>
+                <MudTd DataLabel="@L["Price"]" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
+                <MudTd DataLabel="@L["Unit"]">@context.Unit</MudTd>
             </RowTemplate>
             <NoRecordsContent>
                 <MudText>@L["No matching records found"]</MudText>

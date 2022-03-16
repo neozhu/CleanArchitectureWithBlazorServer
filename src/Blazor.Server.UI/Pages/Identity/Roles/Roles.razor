@@ -117,7 +117,7 @@
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Actions">
+                <MudTd DataLabel="@L["Actions"]">
                     @if (_canEdit || _canManagePermissions)
                     {
                         <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
@@ -143,8 +143,8 @@
                         </MudButton>
                     }
                 </MudTd>
-                <MudTd DataLabel="Name">@context.Name</MudTd>
-                <MudTd DataLabel="Description">@context.Description</MudTd>
+                <MudTd DataLabel="@L["Name"]">@context.Name</MudTd>
+                <MudTd DataLabel="@L["Description"]">@context.Description</MudTd>
 
             </RowTemplate>
             <PagerContent>

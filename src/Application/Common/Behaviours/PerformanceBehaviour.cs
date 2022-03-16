@@ -39,9 +39,10 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
         {
             var requestName = typeof(TRequest).Name;
 
-            var userName = await _currentUserService.UserId();
-            _logger.LogWarning("Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) with {@Request} {@UserName} ",
-                requestName, elapsedMilliseconds,   request, userName);
+            var userId = await _currentUserService.UserId();
+            var userName = await _identityService.GetUserNameAsync(userId);
+            _logger.LogWarning("{Name} Long Running Request ({ElapsedMilliseconds} milliseconds) with {@Request} {@UserName} ",
+                requestName, elapsedMilliseconds, request, userName);
         }
 
         return response;
