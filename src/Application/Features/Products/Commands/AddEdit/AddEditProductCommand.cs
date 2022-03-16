@@ -3,13 +3,15 @@
 
 
 using CleanArchitecture.Blazor.Application.Common.Exceptions;
+using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 
-public class AddEditProductCommand : ProductDto, IRequest<Result<int>>, IMapFrom<Product>
+public class AddEditProductCommand : ProductDto, IRequest<Result<int>>, IMapFrom<Product>, ICacheInvalidator
 {
-
+    public string CacheKey => ProductCacheKey.GetAllCacheKey;
+    public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource;
 }
 
 public class AddEditProductCommandHandler : IRequestHandler<AddEditProductCommand, Result<int>>
