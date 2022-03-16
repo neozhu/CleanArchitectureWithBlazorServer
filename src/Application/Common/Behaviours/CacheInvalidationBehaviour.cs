@@ -21,7 +21,7 @@ public class CacheInvalidationBehaviour<TRequest, TResponse> : IPipelineBehavior
     }
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
     {
-        _logger.LogTrace("{Request} is configured for cache expire.", nameof(request));
+        _logger.LogTrace("{Request} cache expire.", nameof(request));
         var response = await next();
         if (!string.IsNullOrEmpty(request.CacheKey))
         {

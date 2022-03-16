@@ -121,7 +121,7 @@
                 <MudTh>@L["Lock Status"]</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Actions">
+                <MudTd DataLabel="@L["Actions"]">
                     @if (_canEdit || _canManageRoles || _canRestPassword || _canActive)
                     {
                         <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
@@ -161,8 +161,8 @@
                         </MudButton>
                     }
                 </MudTd>
-                <MudTd DataLabel="Site">@context.Site</MudTd>
-                <MudTd DataLabel="UserName">
+                <MudTd DataLabel="@L["Site"]">@context.Site</MudTd>
+                <MudTd DataLabel="@L["User Name"]">
                     <div class="d-flex align-content-center flex-wrap">
 
                         <MudBadge Color="@(context.IsLive? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
@@ -171,13 +171,13 @@
                         <MudText Class="ml-2 align-self-center">@context.UserName</MudText>
                     </div>
                 </MudTd>
-                <MudTd DataLabel="DisplayName">@context.DisplayName</MudTd>
-                <MudTd DataLabel="Email">@context.Email</MudTd>
-                <MudTd HideSmall="true" DataLabel="PhoneNumber">@context.PhoneNumber</MudTd>
-                <MudTd HideSmall="true" DataLabel="IsActive">
+                <MudTd DataLabel="@L["Display Name"]">@context.DisplayName</MudTd>
+                <MudTd DataLabel="@L["Email"]">@context.Email</MudTd>
+                <MudTd HideSmall="true" DataLabel="@L["Phone Number"]">@context.PhoneNumber</MudTd>
+                <MudTd HideSmall="true" DataLabel="@L["Is Active"]">
                     <MudCheckBox Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
                 </MudTd>
-                <MudTd HideSmall="true" DataLabel="LockoutEnd">@context.LockoutEnd</MudTd>
+                <MudTd HideSmall="true" DataLabel="@L["Lock Status"]">@context.LockoutEnd</MudTd>
             </RowTemplate>
             <PagerContent>
                 <MudTablePager />

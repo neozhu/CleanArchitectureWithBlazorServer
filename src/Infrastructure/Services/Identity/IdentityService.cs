@@ -44,7 +44,6 @@ public class IdentityService : IIdentityService
     public async Task<string> GetUserNameAsync(string userId)
     {
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
-
         return user?.UserName;
     }
 

@@ -47,7 +47,7 @@
                 <MudTh><MudTableSortLabel SortLabel="UserName" T="LogDto">@L["User Name"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Actions">
+                <MudTd DataLabel="@L["Actions"]">
                     <MudButton Variant="Variant.Filled" DisableElevation="true"
                                OnClick="@(() => OnShowDetail(context))"
                                StartIcon="@(context.ShowDetails == true?Icons.Material.Filled.Close:Icons.Material.Filled.Add)" IconColor="Color.Secondary" Size="Size.Small"
@@ -55,16 +55,16 @@
                         @L[((context.ShowDetails == true) ? "Hide" : "Show") + " Details"]
                     </MudButton>
                 </MudTd>
-                <MudTd DataLabel="TimeStamp">
+                <MudTd DataLabel="@L["Time Stamp"]">
                     @context.TimeStamp
                 </MudTd>
-                <MudTd Style="text-align:center" DataLabel="Level">
+                <MudTd Style="text-align:center" DataLabel="@L["Level"]">
                     @context.Level
                 </MudTd>
-                <MudTd DataLabel="Message">
+                <MudTd DataLabel="@L["Message"]">
                     @context.Message
                 </MudTd>
-                <MudTd DataLabel="UserName">
+                <MudTd DataLabel="@L["User Name"]">
                     @context.UserName
                 </MudTd>
             </RowTemplate>

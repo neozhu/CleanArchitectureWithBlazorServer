@@ -21,7 +21,7 @@ public class CachingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest,
     }
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
     {
-        _logger.LogTrace("{Request} is configured for caching.", nameof(request));
+        _logger.LogTrace("{Request} is caching.", nameof(request));
         var response = await _cache.GetOrAddAsync(
             request.CacheKey,
             async () => await next(),

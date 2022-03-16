@@ -128,10 +128,10 @@
                 <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Name">@context.Name</MudTd>
-                <MudTd DataLabel="Value">@context.Value</MudTd>
-                <MudTd DataLabel="Text">@context.Text</MudTd>
-                <MudTd DataLabel="Description">@context.Description</MudTd>
+                <MudTd DataLabel="@L["Name"]">@context.Name</MudTd>
+                <MudTd DataLabel="@L["Value"]">@context.Value</MudTd>
+                <MudTd DataLabel="@L["Text"]">@context.Text</MudTd>
+                <MudTd DataLabel="@L["Description"]">@context.Description</MudTd>
             </RowTemplate>
             <RowEditingTemplate>
                 <MudTd DataLabel="Name">

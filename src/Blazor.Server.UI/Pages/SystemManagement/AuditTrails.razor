@@ -45,7 +45,7 @@
                 <MudTh><MudTableSortLabel SortLabel="DateTime" T="AuditTrailDto">@L["Date Time"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="Actions">
+                <MudTd DataLabel="@L["Actions"]">
                     <MudButton Variant="Variant.Filled" DisableElevation="true"
                                OnClick="@(() => OnShowDetail(context))"
                                StartIcon="@(context.ShowDetails == true?Icons.Material.Filled.Close:Icons.Material.Filled.Add)" IconColor="Color.Secondary" Size="Size.Small"
@@ -53,19 +53,19 @@
                         @L[((context.ShowDetails == true) ? "Hide" : "Show") + " Details"]
                     </MudButton>
                 </MudTd>
-                <MudTd DataLabel="UserId">
+                <MudTd DataLabel="@L["User Id"]">
                     @context.UserId
                 </MudTd>
-                <MudTd Style="text-align:center" DataLabel="AuditType">
+                <MudTd Style="text-align:center" DataLabel="@L["Audit Type"]">
                     @context.AuditType
                 </MudTd>
-                <MudTd DataLabel="TableName">
+                <MudTd DataLabel="@L["Table Name"]">
                     @context.TableName
                 </MudTd>
-                <MudTd DataLabel="PrimaryKey">
+                <MudTd DataLabel="@L["Primary Key"]">
                     @context.PrimaryKey
                 </MudTd>
-                <MudTd DataLabel="DateTime">
+                <MudTd DataLabel="@L["Date Time"]">
                     @context.DateTime
                 </MudTd> 
             </RowTemplate>
