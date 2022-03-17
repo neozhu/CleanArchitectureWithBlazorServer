@@ -10,7 +10,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Pagina
 
 public class KeyValuesWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<KeyValueDto>>, ICacheable
 {
-    public string CacheKey => $"KeyValuesWithPaginationQuery,{this.ToString()}";
+    public string CacheKey => $"{nameof(KeyValuesWithPaginationQuery)},{this}";
 
     public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
 }

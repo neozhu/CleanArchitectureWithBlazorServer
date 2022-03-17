@@ -7,20 +7,16 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.D
 
 public class DeleteDocumentTypeCommand : IRequest<Result>, ICacheInvalidator
 {
-    public int Id { get; set; }
-
-
+    public int[] Id { get;  }
     public CancellationTokenSource SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
-}
-public class DeleteCheckedDocumentTypesCommand : IRequest<Result>, ICacheInvalidator
-{
-    public int[] Id { get; set; }
-
-    public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
+    public DeleteDocumentTypeCommand(int[] id)
+    {
+        Id = id;
+    }
 }
 
-public class DeleteDocumentTypeCommandHandler : IRequestHandler<DeleteDocumentTypeCommand, Result>,
-    IRequestHandler<DeleteCheckedDocumentTypesCommand, Result>
+
+public class DeleteDocumentTypeCommandHandler : IRequestHandler<DeleteDocumentTypeCommand, Result>
 {
     private readonly IApplicationDbContext _context;
 
@@ -32,15 +28,6 @@ public class DeleteDocumentTypeCommandHandler : IRequestHandler<DeleteDocumentTy
     }
     public async Task<Result> Handle(DeleteDocumentTypeCommand request, CancellationToken cancellationToken)
     {
-        var item = await _context.DocumentTypes.FindAsync(new object[] { request.Id }, cancellationToken);
-        _ = item ?? throw new NotFoundException($"Document Type {request.Id} Not Found.");
-        _context.DocumentTypes.Remove(item);
-        await _context.SaveChangesAsync(cancellationToken);
-        return Result.Success();
-    }
-
-    public async Task<Result> Handle(DeleteCheckedDocumentTypesCommand request, CancellationToken cancellationToken)
-    {
         var items = await _context.DocumentTypes.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
         {
@@ -49,4 +36,6 @@ public class DeleteDocumentTypeCommandHandler : IRequestHandler<DeleteDocumentTy
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }
+
+     
 }

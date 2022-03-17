@@ -11,12 +11,15 @@ public class ImportDocumentTypesCommand : IRequest<Result>, ICacheInvalidator
     public string FileName { get; set; } = default!;
     public byte[] Data { get; set; } = default!;
     public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
+    public ImportDocumentTypesCommand(string fileName,byte[] data)
+    {
+        FileName=fileName;
+        Data=data;
+    }
 }
-public class CreateDocumentTypeTemplateCommand : IRequest<byte[]>, ICacheInvalidator
+public record CreateDocumentTypeTemplateCommand : IRequest<byte[]>
 {
-    public IEnumerable<string>? Fields { get; set; }
-    public string SheetName { get; set; } = "DocumentTypes";
-    public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
+    
 }
 public class ImportDocumentTypesCommandHandler :
     IRequestHandler<CreateDocumentTypeTemplateCommand, byte[]>,
@@ -89,7 +92,7 @@ public class ImportDocumentTypesCommandHandler :
 
     public async Task<byte[]> Handle(CreateDocumentTypeTemplateCommand request, CancellationToken cancellationToken)
     {
-        var fields = request.Fields ?? new string[] {
+        var fields = new string[] {
                 _localizer["Name"],
                 _localizer["Description"]
                 };

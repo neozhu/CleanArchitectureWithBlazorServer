@@ -7,19 +7,18 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delet
 
 public class DeleteKeyValueCommand : IRequest<Result>, ICacheInvalidator
 {
-    public int Id { get; set; }
-    //public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
+    public int[] Id { get; }
+    public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => KeyValueCacheKey.SharedExpiryTokenSource;
-}
-public class DeleteCheckedKeyValuesCommand : IRequest<Result>, ICacheInvalidator
-{
-    public int[] Id { get; set; }
-    //public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => KeyValueCacheKey.SharedExpiryTokenSource;
+    public DeleteKeyValueCommand(int[] id)
+    {
+        Id = id;
+    }
 }
 
-public class DeleteKeyValueCommandHandler : IRequestHandler<DeleteKeyValueCommand, Result>,
-    IRequestHandler<DeleteCheckedKeyValuesCommand, Result>
+
+public class DeleteKeyValueCommandHandler : IRequestHandler<DeleteKeyValueCommand, Result>
+   
 {
     private readonly IApplicationDbContext _context;
 
@@ -30,15 +29,6 @@ public class DeleteKeyValueCommandHandler : IRequestHandler<DeleteKeyValueComman
         _context = context;
     }
     public async Task<Result> Handle(DeleteKeyValueCommand request, CancellationToken cancellationToken)
-    {
-        var item = await _context.KeyValues.FindAsync(new object[] { request.Id }, cancellationToken);
-        _ = item ?? throw new NotFoundException($"KeyValue Pair  {request.Id} Not Found.");
-        _context.KeyValues.Remove(item);
-        await _context.SaveChangesAsync(cancellationToken);
-        return Result.Success();
-    }
-
-    public async Task<Result> Handle(DeleteCheckedKeyValuesCommand request, CancellationToken cancellationToken)
     {
         var items = await _context.KeyValues.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)

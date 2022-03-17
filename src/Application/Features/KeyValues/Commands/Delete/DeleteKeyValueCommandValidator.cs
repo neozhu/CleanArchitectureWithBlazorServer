@@ -7,13 +7,6 @@ public class DeleteKeyValueCommandValidator : AbstractValidator<DeleteKeyValueCo
 {
     public DeleteKeyValueCommandValidator()
     {
-        RuleFor(x => x.Id).NotNull().NotEqual(0);
-    }
-}
-public class DeleteCheckedKeyValuesCommandValidator : AbstractValidator<DeleteCheckedKeyValuesCommand>
-{
-    public DeleteCheckedKeyValuesCommandValidator()
-    {
         RuleFor(x => x.Id).NotNull().NotEmpty();
     }
 }
