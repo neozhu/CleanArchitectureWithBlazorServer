@@ -104,10 +104,10 @@ public class HubClient : IAsyncDisposable
         await StopAsync();
     }
 
-    public event EventHandler<string> LoggedIn;
-    public event EventHandler<string> LoggedOut;
-    public event EventHandler<string> NotificationReceived;
-    public event MessageReceivedEventHandler MessageReceived;
+    public event EventHandler<string>? LoggedIn;
+    public event EventHandler<string>? LoggedOut;
+    public event EventHandler<string>? NotificationReceived;
+    public event MessageReceivedEventHandler? MessageReceived;
     public delegate Task MessageReceivedEventHandler(object sender, MessageReceivedEventArgs e);
 
     public class MessageReceivedEventArgs : EventArgs
