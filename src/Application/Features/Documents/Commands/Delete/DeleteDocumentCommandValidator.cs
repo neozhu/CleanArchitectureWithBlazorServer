@@ -7,13 +7,7 @@ public class DeleteDocumentCommandValidator : AbstractValidator<DeleteDocumentCo
 {
     public DeleteDocumentCommandValidator()
     {
-        RuleFor(x => x.Id).NotNull().NotEqual(0);
-    }
-}
-public class DeleteCheckedDocumentsCommandValidator : AbstractValidator<DeleteCheckedDocumentsCommand>
-{
-    public DeleteCheckedDocumentsCommandValidator()
-    {
         RuleFor(x => x.Id).NotNull().NotEmpty();
     }
 }
+

@@ -3,12 +3,14 @@
 
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Common.Specification;
+using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 
-public class DocumentsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<DocumentDto>>
+public class DocumentsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<DocumentDto>>, ICacheable
 {
-
+    public string CacheKey => $"{nameof(DocumentsWithPaginationQuery)},{this}";
+    public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;
 
 }
 public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuery, PaginatedData<DocumentDto>>
