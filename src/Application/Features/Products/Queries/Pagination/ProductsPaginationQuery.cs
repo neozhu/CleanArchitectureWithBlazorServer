@@ -8,7 +8,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Paginat
 
     public class ProductsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<ProductDto>>, ICacheable
 {
-    public string CacheKey => $"{nameof(ProductsWithPaginationQuery)}:{this}";
+    public string CacheKey => ProductCacheKey.GetPagtionCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
 }
 

@@ -226,13 +226,6 @@ public partial class MainLayout : IAsyncDisposable, IDisposable
     private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
     public void Dispose()
     {
-        
-        if (_client is not null)
-        {
-            _client.StopAsync().Wait();
-            _client.LoggedOut -= _client_LoggedOut;
-            _client.LoggedIn -= _client_LoggedIn;
-        }
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         _hotKeysContext?.Dispose();
         GC.SuppressFinalize(this);
@@ -241,7 +234,16 @@ public partial class MainLayout : IAsyncDisposable, IDisposable
     public async ValueTask DisposeAsync()
     {
         var state = await _authState;
-        await _identityService.UpdateLiveStatus(state.User.GetUserId(), false);
+        if (state.User.Identity is not null)
+        {
+            await _identityService.UpdateLiveStatus(state.User.GetUserId(), false);
+        }
+        if (_client is not null)
+        {
+            await  _client.StopAsync();
+            _client.LoggedOut -= _client_LoggedOut;
+            _client.LoggedIn -= _client_LoggedIn;
+        }
         Dispose();
         GC.SuppressFinalize(this);
 

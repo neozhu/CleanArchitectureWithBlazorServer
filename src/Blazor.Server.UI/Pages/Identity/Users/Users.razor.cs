@@ -104,8 +104,17 @@ namespace Blazor.Server.UI.Pages.Identity.Users
                 };
                 var password = model.Password;
                 var state = await _userManager.CreateAsync(applicationUser, password);
+                
                 if (state.Succeeded)
                 {
+                    if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
+                    {
+                       await _userManager.AddToRolesAsync(applicationUser, model.AssignRoles);
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(applicationUser, RoleConstants.BasicRole);
+                    }
                     UserList.Add(applicationUser);
                     Snackbar.Add($"{L["Create successfully"]}", MudBlazor.Severity.Info);
                 }
