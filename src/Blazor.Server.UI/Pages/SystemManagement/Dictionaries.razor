@@ -235,7 +235,7 @@
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var command = new DeleteCheckedKeyValuesCommand() { Id = _selectedItems.Select(x => x.Id).ToArray() };
+            var command = new DeleteKeyValueCommand(_selectedItems.Select(x => x.Id).ToArray());
             var result = await _mediator.Send(command);
             await LoadData();
             Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
@@ -305,11 +305,7 @@
     {
         var stream = new MemoryStream();
         await e.File.OpenReadStream().CopyToAsync(stream);
-        var command=new ImportKeyValuesCommand()
-        {
-             Data=stream.ToArray(),
-             FileName= e.File.Name
-        };
+        var command = new ImportKeyValuesCommand(e.File.Name, stream.ToArray());
         var result = await _mediator.Send(command);
         if(result.Succeeded){
             await OnRefresh();
