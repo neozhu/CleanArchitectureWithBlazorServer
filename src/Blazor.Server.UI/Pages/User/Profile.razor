@@ -163,7 +163,7 @@
     {
         var state = await AuthState;
         model = await _profileService.Get(state.User);
-   
+
     }
 
     private async Task UploadPhoto(InputFileChangeEventArgs e)
@@ -204,6 +204,7 @@
             var user = await _userManager.FindByIdAsync(model.UserId);
             user.PhoneNumber = model.PhoneNumber;
             user.DisplayName = model.DisplayName;
+            user.ProfilePictureDataUrl = model.Avatar;
             await _userManager.UpdateAsync(user);
             if(model.DisplayName is not null)
                 state.User.UpdateDisplayName(model.DisplayName);
