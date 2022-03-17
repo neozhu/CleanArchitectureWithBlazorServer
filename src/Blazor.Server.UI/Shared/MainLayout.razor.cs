@@ -13,7 +13,7 @@ using CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 namespace Blazor.Server.UI.Shared;
 
-public partial class MainLayout : IDisposable
+public partial class MainLayout : IAsyncDisposable, IDisposable
 {
     private readonly Palette _darkPalette = new()
     {
@@ -224,7 +224,7 @@ public partial class MainLayout : IDisposable
 
     [Inject]
     private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
-    public  void Dispose()
+    public void Dispose()
     {
         
         if (_client is not null)
@@ -235,9 +235,18 @@ public partial class MainLayout : IDisposable
         }
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         _hotKeysContext?.Dispose();
+        GC.SuppressFinalize(this);
     }
-    
-    
+
+    public async ValueTask DisposeAsync()
+    {
+        var state = await _authState;
+        await _identityService.UpdateLiveStatus(state.User.GetUserId(), false);
+        Dispose();
+        GC.SuppressFinalize(this);
+
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -254,7 +263,8 @@ public partial class MainLayout : IDisposable
     {
         InvokeAsync(async () =>
         {
-            Snackbar.Add($"{e} login.", MudBlazor.Severity.Info);
+            var username = await _identityService.GetUserNameAsync(e);
+            Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
             await _identityService.UpdateLiveStatus(e, true);
             StateHasChanged();
         });
@@ -264,7 +274,8 @@ public partial class MainLayout : IDisposable
     {
         InvokeAsync( async () =>
         {
-            Snackbar.Add($"{e} logout.", MudBlazor.Severity.Normal);
+            var username = await _identityService.GetUserNameAsync(e);
+            Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
             await _identityService.UpdateLiveStatus(e, false);
             StateHasChanged();
         });
@@ -293,21 +304,26 @@ public partial class MainLayout : IDisposable
             _client.LoggedOut += _client_LoggedOut;
             _client.LoggedIn += _client_LoggedIn;
             await _client.StartAsync();
+            await _identityService.UpdateLiveStatus(state.User.GetUserId(), true);
         }
     }
 
-    private async void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
+    private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
     {
-        var state = await authenticationState;
-        if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
+        Task.Run(async () =>
         {
-            _user = await _profileService.Get(state.User);
-            _client = new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
-            _client.LoggedOut += _client_LoggedOut;
-            _client.LoggedIn += _client_LoggedIn;
-            await _client.StartAsync();
-            StateHasChanged();
-        }
+            var state = await authenticationState;
+            if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
+            {
+                _user = await _profileService.Get(state.User);
+                _client = new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
+                _client.LoggedOut += _client_LoggedOut;
+                _client.LoggedIn += _client_LoggedIn;
+                await _client.StartAsync();
+                StateHasChanged();
+                await _identityService.UpdateLiveStatus(state.User.GetUserId(), true);
+            }
+        });
     }
 
 
