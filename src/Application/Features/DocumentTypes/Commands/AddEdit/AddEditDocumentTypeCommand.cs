@@ -6,9 +6,8 @@ using CleanArchitecture.Blazor.Application.Features.DocumentTypes.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.AddEdit;
 
-public class AddEditDocumentTypeCommand : DocumentTypeDto, IRequest<Result<int>>, IMapFrom<DocumentType>, ICacheInvalidator
+public class AddEditDocumentTypeCommand : DocumentTypeDto, IRequest<Result<int>>, ICacheInvalidator
 {
-  
     public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
 }
 
