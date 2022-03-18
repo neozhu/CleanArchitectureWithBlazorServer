@@ -10,22 +10,20 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where T
 {
     private readonly ILogger _logger;
     private readonly ICurrentUserService _currentUserService;
-    private readonly IIdentityService _identityService;
 
-    public LoggingBehaviour(ILogger<TRequest> logger, ICurrentUserService currentUserService, IIdentityService identityService)
+
+    public LoggingBehaviour(ILogger<TRequest> logger, ICurrentUserService currentUserService)
     {
         _logger = logger;
         _currentUserService = currentUserService;
-        _identityService = identityService;
+
     }
 
     public async Task Process(TRequest request, CancellationToken cancellationToken)
     {
         var requestName = nameof(TRequest);
         var userId =await _currentUserService.UserId();
-        var userName = await _identityService.GetUserNameAsync(userId);
-
         _logger.LogTrace("Request: {Name} with {@Request} by  {@UserName}",
-            requestName,  request, userName);
+            requestName,  request, userId);
     }
 }
