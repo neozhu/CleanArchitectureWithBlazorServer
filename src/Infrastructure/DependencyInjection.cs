@@ -18,16 +18,19 @@ public static class DependencyInjection
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase("BlazorDashboardDb")
-                );
+            {
+                options.UseInMemoryDatabase("BlazorDashboardDb");
+                options.EnableSensitiveDataLogging();
+            }, ServiceLifetime.Transient);
         }
         else
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options => {
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
-                );
+                    b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
+                 options.EnableSensitiveDataLogging();
+            }, ServiceLifetime.Transient);
             services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
@@ -41,9 +44,8 @@ public static class DependencyInjection
         services.Configure<DashbordSettings>(configuration.GetSection(DashbordSettings.SectionName));
         services.AddSingleton(s => s.GetRequiredService<IOptions<DashbordSettings>>().Value);
         services.AddScoped<IDbContextFactory<ApplicationDbContext>,BlazorContextFactory<ApplicationDbContext>>();
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
+        services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
         services.AddScoped<IDomainEventService, DomainEventService>();
-
 
         services
             .AddDefaultIdentity<ApplicationUser>()
