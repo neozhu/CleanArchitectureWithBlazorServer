@@ -6,14 +6,11 @@ using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit;
 
-public class AddEditDocumentCommand : DocumentDto, IRequest<Result<int>>, IMapFrom<Document>, ICacheInvalidator
+public class AddEditDocumentCommand : DocumentDto, IRequest<Result<int>>, ICacheInvalidator
 {
     public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource;
-    public UploadRequest? UploadRequest { get;  }
-    public AddEditDocumentCommand(UploadRequest? uploadRequest=null)
-    {
-        UploadRequest = uploadRequest;
-    }
+    public UploadRequest? UploadRequest { get; set; }
+  
 }
 
 public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentCommand, Result<int>>
