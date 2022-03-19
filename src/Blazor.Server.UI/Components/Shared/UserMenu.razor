@@ -1,25 +1,34 @@
 @inject IStringLocalizer<SharedResource> L
 <MudMenu AnchorOrigin="Origin.BottomRight"
+         Icon="@Icons.Filled.PermIdentity"
          Class="@Class"
          LockScroll="true"
-         
          TransformOrigin="Origin.TopRight">
-    <ActivatorContent>
-        <MudAvatar Image="@User.Avatar" />
-    </ActivatorContent>
     <ChildContent>
-        <div class="py-4"
-             style="min-width: 220px">
-            <MudText Class="px-6 pb-2"
-                     Typo="Typo.body2">
-                <b>@User.DisplayName</b>
-            </MudText>
-            <MudText Class="px-6 pb-2"
-                     Typo="Typo.caption">
-                @User.Email
-            </MudText>
+        <div class="pb-4"
+             style="min-width: 260px;margin-bottom:0px!important">
+            <MudCard Elevation="0" Square="true" Style="ma-0">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        @if (string.IsNullOrEmpty(User.Avatar))
+                        {
+                            <MudAvatar Size="Size.Medium" Color="Color.Primary" Class="ma-2">
+                                @User.UserName?.ToUpper().FirstOrDefault()
+                            </MudAvatar>
+                        }
+                        else
+                        {
+                            <MudAvatar Image="@User.Avatar" />
+                        }
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">@User.DisplayName</MudText>
+                        <MudText Typo="Typo.body2">@User.Email</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+            </MudCard>
             <MudDivider Class="my-2" />
-            <MudMenuItem Link="/user/profile" >
+            <MudMenuItem Link="/user/profile">
                 <div class="d-flex">
                     <MudIcon Class="mx-2"
                              Icon="@Icons.Material.Filled.Person" />
@@ -27,7 +36,7 @@
                 </div>
             </MudMenuItem>
             <MudMenuItem OnClick="OnSettingClick">
-                <div class="d-flex" >
+                <div class="d-flex">
                     <MudIcon Class="mx-2"
                              Icon="@Icons.Material.Filled.Settings" />
                     <MudText>@L["Settings"]</MudText>
