@@ -254,10 +254,13 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
+            
+            var role = await _roleManager.FindByIdAsync(item.Id);
+            role.Name = model.Name;
+            role.Description = model.Description;
+            var state = await _roleManager.UpdateAsync(role);
             item.Name = model.Name;
             item.Description = model.Description;
-
-            var state = await _roleManager.UpdateAsync(item);
             if (state.Succeeded)
             {
                 Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);

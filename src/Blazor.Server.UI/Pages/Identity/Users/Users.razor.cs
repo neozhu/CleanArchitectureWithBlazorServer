@@ -144,17 +144,25 @@ namespace Blazor.Server.UI.Pages.Identity.Users
             var result = await dialog.Result;
             if (!result.Cancelled)
             {
+                
+                var user = await _userManager.FindByIdAsync(item.Id);
+                user.Email = model.Email;
+                user.PhoneNumber = model.PhoneNumber;
+                user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
+                user.DisplayName = model.DisplayName;
+                user.Site = model.Site;
+                user.UserName = model.UserName;
+                var state = await _userManager.UpdateAsync(user);
                 item.DisplayName = model.DisplayName;
                 item.UserName = model.UserName;
                 item.Email = model.Email;
                 item.PhoneNumber = model.PhoneNumber;
                 item.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 item.Site = model.Site;
-                var state = await _userManager.UpdateAsync(item);
                 if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
                 {
-                    await _userManager.RemoveFromRolesAsync(item, roles);
-                    await _userManager.AddToRolesAsync(item, model.AssignRoles);
+                    await _userManager.RemoveFromRolesAsync(user, roles);
+                    await _userManager.AddToRolesAsync(user, model.AssignRoles);
                 }
 
                 if (state.Succeeded)
@@ -179,7 +187,8 @@ namespace Blazor.Server.UI.Pages.Identity.Users
             {
                 foreach (var item in SelectItems)
                 {
-                    await _userManager.DeleteAsync(item);
+                    var user= await _userManager.FindByIdAsync(item.Id);
+                    await _userManager.DeleteAsync(user);
                     UserList.Remove(item);
                 }
             }
@@ -187,8 +196,11 @@ namespace Blazor.Server.UI.Pages.Identity.Users
 
         private async Task OnSetActive(ApplicationUser item)
         {
+            
+            var user = await _userManager.FindByIdAsync(item.Id);
+            user.IsActive = !item.IsActive;
+            var state = await _userManager.UpdateAsync(user);
             item.IsActive = !item.IsActive;
-            var state = await _userManager.UpdateAsync(item);
             if (state.Succeeded)
             {
                 Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
@@ -209,11 +221,9 @@ namespace Blazor.Server.UI.Pages.Identity.Users
             var result = await dialog.Result;
             if (!result.Cancelled)
             {
-                item.DisplayName = model.DisplayName;
-                item.UserName = model.UserName;
-                item.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
-                var token = await _userManager.GeneratePasswordResetTokenAsync(item);
-                var state = await _userManager.ResetPasswordAsync(item, token, model.Password);
+                var user=await _userManager.FindByIdAsync(item.Id);
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var state = await _userManager.ResetPasswordAsync(user, token, model.Password);
                 if (state.Succeeded)
                 {
                     Snackbar.Add($"{L["Reset password successfully"]}", MudBlazor.Severity.Info);
