@@ -24,8 +24,8 @@ namespace Blazor.Server.UI.Pages.Identity.Users
 
         [CascadingParameter]
         protected Task<AuthenticationState> AuthState { get; set; } = default !;
-        [Inject]
-        private UserManager<ApplicationUser> _userManager { get; set; } = default !;
+        //[Inject]
+        //private UserManager<ApplicationUser> Service { get; set; } = default !;
         [Inject]
         public CircuitHandler circuitHandler { get; set; } = default !;
         private bool _canCreate;
@@ -52,7 +52,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
             _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
             _canImport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
             _canExport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-            UserList = await _userManager.Users.ToListAsync();
+            UserList = await Service.Users.ToListAsync();
             (circuitHandler as CircuitHandlerService).CircuitsChanged += HandleCircuitsChanged;
         }
         public void Dispose()
@@ -63,8 +63,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         {
             InvokeAsync(async () =>
             {
-                await OnRefresh();
-                StateHasChanged();
+                Snackbar.Add($"{L["Circuits changed."]}", MudBlazor.Severity.Info);
             });
         }
 
@@ -82,7 +81,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         };
         private async Task OnRefresh()
         {
-            UserList = await _userManager.Users.ToListAsync();
+            UserList = await Service.Users.ToListAsync();
         }
 
         private async Task OnCreate()
@@ -103,17 +102,17 @@ namespace Blazor.Server.UI.Pages.Identity.Users
                 ProfilePictureDataUrl = model.ProfilePictureDataUrl,
                 };
                 var password = model.Password;
-                var state = await _userManager.CreateAsync(applicationUser, password);
+                var state = await Service.CreateAsync(applicationUser, password);
                 
                 if (state.Succeeded)
                 {
                     if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
                     {
-                       await _userManager.AddToRolesAsync(applicationUser, model.AssignRoles);
+                       await Service.AddToRolesAsync(applicationUser, model.AssignRoles);
                     }
                     else
                     {
-                        await _userManager.AddToRoleAsync(applicationUser, RoleConstants.BasicRole);
+                        await Service.AddToRoleAsync(applicationUser, RoleConstants.BasicRole);
                     }
                     UserList.Add(applicationUser);
                     Snackbar.Add($"{L["Create successfully"]}", MudBlazor.Severity.Info);
@@ -127,7 +126,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
 
         private async Task OnEdit(ApplicationUser item)
         {
-            var roles = await _userManager.GetRolesAsync(item);
+            var roles = await Service.GetRolesAsync(item);
             var model = new UserFormModel()
             {Id = item.Id,
             Site = item.Site,
@@ -145,24 +144,18 @@ namespace Blazor.Server.UI.Pages.Identity.Users
             if (!result.Cancelled)
             {
                 
-                var user = await _userManager.FindByIdAsync(item.Id);
+                var user = await Service.FindByIdAsync(item.Id);
                 user.Email = model.Email;
                 user.PhoneNumber = model.PhoneNumber;
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 user.DisplayName = model.DisplayName;
                 user.Site = model.Site;
                 user.UserName = model.UserName;
-                var state = await _userManager.UpdateAsync(user);
-                //item.DisplayName = model.DisplayName;
-                //item.UserName = model.UserName;
-                //item.Email = model.Email;
-                //item.PhoneNumber = model.PhoneNumber;
-                //item.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
-                //item.Site = model.Site;
+                var state = await Service.UpdateAsync(user);
                 if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
                 {
-                    await _userManager.RemoveFromRolesAsync(user, roles);
-                    await _userManager.AddToRolesAsync(user, model.AssignRoles);
+                    await Service.RemoveFromRolesAsync(user, roles);
+                    await Service.AddToRolesAsync(user, model.AssignRoles);
                 }
 
                 if (state.Succeeded)
@@ -187,8 +180,8 @@ namespace Blazor.Server.UI.Pages.Identity.Users
             {
                 foreach (var item in SelectItems)
                 {
-                    var user= await _userManager.FindByIdAsync(item.Id);
-                    await _userManager.DeleteAsync(user);
+                    var user= await Service.FindByIdAsync(item.Id);
+                    await Service.DeleteAsync(user);
                     UserList.Remove(item);
                 }
             }
@@ -197,9 +190,9 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         private async Task OnSetActive(ApplicationUser item)
         {
             
-            var user = await _userManager.FindByIdAsync(item.Id);
+            var user = await Service.FindByIdAsync(item.Id);
             user.IsActive = !user.IsActive;
-            var state = await _userManager.UpdateAsync(user);
+            var state = await Service.UpdateAsync(user);
             //item.IsActive = !item.IsActive;
             if (state.Succeeded)
             {
@@ -221,9 +214,9 @@ namespace Blazor.Server.UI.Pages.Identity.Users
             var result = await dialog.Result;
             if (!result.Cancelled)
             {
-                var user=await _userManager.FindByIdAsync(item.Id);
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var state = await _userManager.ResetPasswordAsync(user, token, model.Password);
+                var user=await Service.FindByIdAsync(item.Id);
+                var token = await Service.GeneratePasswordResetTokenAsync(user);
+                var state = await Service.ResetPasswordAsync(user, token, model.Password);
                 if (state.Succeeded)
                 {
                     Snackbar.Add($"{L["Reset password successfully"]}", MudBlazor.Severity.Info);

@@ -1,4 +1,5 @@
 @page "/user/profile"
+@inherits OwningComponentBase<UserManager<ApplicationUser>>
 @using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
@@ -128,8 +129,6 @@
     public string Title { get; set; } = "Profile";
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
-    [Inject]
-    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
@@ -201,14 +200,16 @@
         if (form.IsValid)
         {
             var state = await AuthState;
-            var user = await _userManager.FindByIdAsync(model.UserId);
+            var user = await Service.FindByIdAsync(model.UserId);
             user.PhoneNumber = model.PhoneNumber;
             user.DisplayName = model.DisplayName;
             user.ProfilePictureDataUrl = model.Avatar;
-            await _userManager.UpdateAsync(user);
+            await Service.UpdateAsync(user);
             if(model.DisplayName is not null)
                 state.User.UpdateDisplayName(model.DisplayName);
             if(model.Avatar is not null)
+                state.User.UpdateProfilePictureUrl(model.Avatar);
+            if(model.PhoneNumber is not null)
                 state.User.UpdateProfilePictureUrl(model.Avatar);
             await _profileService.Update(model);
             Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
@@ -220,8 +221,8 @@
         await passwordform.Validate();
         if (passwordform.IsValid)
         {
-            var user = await _userManager.FindByIdAsync(model.UserId);
-            var result = await _userManager.ChangePasswordAsync(user, changepassword.CurrentPassword, changepassword.NewPassword);
+            var user = await Service.FindByIdAsync(model.UserId);
+            var result = await Service.ChangePasswordAsync(user, changepassword.CurrentPassword, changepassword.NewPassword);
             if (result.Succeeded)
             {
                 Snackbar.Add($"{L["Changed password successfully."]}", MudBlazor.Severity.Info);

@@ -267,7 +267,6 @@ public partial class MainLayout : IAsyncDisposable, IDisposable
         {
             var username = await _identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
-            await _identityService.UpdateLiveStatus(e, true);
             StateHasChanged();
         });
     }
@@ -278,7 +277,6 @@ public partial class MainLayout : IAsyncDisposable, IDisposable
         {
             var username = await _identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
-            await _identityService.UpdateLiveStatus(e, false);
             StateHasChanged();
         });
     }
