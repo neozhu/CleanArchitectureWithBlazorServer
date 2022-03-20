@@ -7,6 +7,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
 {
 
     private readonly ProtectedLocalStorage _protectedLocalStorage;
+    private readonly IServiceProvider _serviceProvider;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private const string KEY = "Identity";
@@ -14,13 +15,13 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
 
     public IdentityAuthenticationService(
         ProtectedLocalStorage protectedLocalStorage,
-        UserManager<ApplicationUser> userManager,
-        RoleManager<ApplicationRole> roleManager
+        IServiceProvider serviceProvider
         )
     {
         _protectedLocalStorage = protectedLocalStorage;
-        _userManager = userManager;
-        _roleManager = roleManager;
+        _serviceProvider = serviceProvider;
+        _userManager = _serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _roleManager = _serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
     }
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
@@ -41,9 +42,9 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 }
             }
         }
-        catch
+        catch(Exception e)
         {
-
+            Console.WriteLine(e);
         }
         return new AuthenticationState(principal);
     }
@@ -83,8 +84,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 new Claim(ClaimTypes.GivenName, user.DisplayName)
             });
         }
-        var appuser = await _userManager.FindByIdAsync(user.Id);
-        var roles = await _userManager.GetRolesAsync(appuser);
+        var roles = await _userManager.GetRolesAsync(user);
         foreach (var rolename in roles)
         {
             var role = await _roleManager.FindByNameAsync(rolename);
