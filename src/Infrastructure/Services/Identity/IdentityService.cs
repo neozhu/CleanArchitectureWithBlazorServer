@@ -18,6 +18,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 public class IdentityService : IIdentityService
 {
+    private readonly IServiceProvider _serviceProvider;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly IOptions<AppConfigurationSettings> _appConfig;
@@ -26,15 +27,15 @@ public class IdentityService : IIdentityService
     private readonly IStringLocalizer<IdentityService> _localizer;
 
     public IdentityService(
-        UserManager<ApplicationUser> userManager,
-        RoleManager<ApplicationRole> roleManager,
+        IServiceProvider serviceProvider,
         IOptions<AppConfigurationSettings> appConfig,
         IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
         IAuthorizationService authorizationService,
         IStringLocalizer<IdentityService> localizer)
     {
-        _userManager = userManager;
-        _roleManager = roleManager;
+        _serviceProvider = serviceProvider;
+        _userManager = _serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _roleManager = _serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         _appConfig = appConfig;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         _authorizationService = authorizationService;
