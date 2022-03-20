@@ -218,9 +218,7 @@ public partial class MainLayout : IAsyncDisposable, IDisposable
     protected Task<AuthenticationState> _authState { get; set; } = default!;
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
-    [Inject]
-    private IIdentityService _identityService { get; set; } = default!;
-    private HubClient _client  { get; set; } = default!;
+   
 
     [Inject]
     private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
@@ -233,17 +231,7 @@ public partial class MainLayout : IAsyncDisposable, IDisposable
 
     public async ValueTask DisposeAsync()
     {
-        var state = await _authState;
-        if (state.User.Identity is not null)
-        {
-            await _identityService.UpdateLiveStatus(state.User.GetUserId(), false);
-        }
-        if (_client is not null)
-        {
-            await  _client.StopAsync();
-            _client.LoggedOut -= _client_LoggedOut;
-            _client.LoggedIn -= _client_LoggedIn;
-        }
+        
         Dispose();
         GC.SuppressFinalize(this);
 
@@ -261,25 +249,7 @@ public partial class MainLayout : IAsyncDisposable, IDisposable
        
     }
 
-    private void _client_LoggedIn(object? sender, string e)
-    {
-        InvokeAsync(async () =>
-        {
-            var username = await _identityService.GetUserNameAsync(e);
-            Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
-            StateHasChanged();
-        });
-    }
-
-    private void _client_LoggedOut(object? sender, string e)
-    {
-        InvokeAsync( async () =>
-        {
-            var username = await _identityService.GetUserNameAsync(e);
-            Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
-            StateHasChanged();
-        });
-    }
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -295,33 +265,24 @@ public partial class MainLayout : IAsyncDisposable, IDisposable
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
         _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
-
         var state = await _authState;
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
             _user = await _profileService.Get(state.User);
-            _client = new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
-            _client.LoggedOut += _client_LoggedOut;
-            _client.LoggedIn += _client_LoggedIn;
-            await _client.StartAsync();
-            await _identityService.UpdateLiveStatus(state.User.GetUserId(), true);
+            StateHasChanged();
         }
+
     }
 
     private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
     {
-        Task.Run(async () =>
+        InvokeAsync(async () =>
         {
             var state = await authenticationState;
             if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
                 _user = await _profileService.Get(state.User);
-                _client = new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
-                _client.LoggedOut += _client_LoggedOut;
-                _client.LoggedIn += _client_LoggedIn;
-                await _client.StartAsync();
                 StateHasChanged();
-                await _identityService.UpdateLiveStatus(state.User.GetUserId(), true);
             }
         });
     }
