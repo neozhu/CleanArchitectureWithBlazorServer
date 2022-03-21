@@ -84,6 +84,12 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 new Claim(ClaimTypes.GivenName, user.DisplayName)
             });
         }
+        if (!string.IsNullOrEmpty(user.PhoneNumber))
+        {
+            result.AddClaims(new[] {
+                new Claim(ClaimTypes.MobilePhone, user.PhoneNumber)
+            });
+        }
         var roles = await _userManager.GetRolesAsync(user);
         foreach (var rolename in roles)
         {

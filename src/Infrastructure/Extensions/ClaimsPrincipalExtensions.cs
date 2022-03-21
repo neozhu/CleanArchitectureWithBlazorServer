@@ -56,6 +56,18 @@ public static class ClaimsPrincipalExtensions
             identity.AddClaim(new Claim(ApplicationClaimTypes.ProfilePictureDataUrl, url));
         }
     }
-
+    public static void UpdatePhoneNumber(this ClaimsPrincipal claimsPrincipal, string phoneNumber)
+    {
+        var identity = claimsPrincipal.Identity as ClaimsIdentity;
+        if (identity is not null)
+        {
+            var claim = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone);
+            if (claim is not null)
+            {
+                identity.RemoveClaim(claim);
+            }
+            identity.AddClaim(new Claim(ClaimTypes.MobilePhone, phoneNumber));
+        }
+    }
 }
 

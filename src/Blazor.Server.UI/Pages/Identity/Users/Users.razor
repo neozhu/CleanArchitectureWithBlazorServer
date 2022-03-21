@@ -1,11 +1,11 @@
 @page "/indentity/users"
+@inherits OwningComponentBase<UserManager<ApplicationUser>>
 @using Blazor.Server.UI.Components.Dialogs
 @using CleanArchitecture.Blazor.Infrastructure.Services
 @using Microsoft.AspNetCore.Components.Server.Circuits
 @using Microsoft.AspNetCore.Identity
 @inject IStringLocalizer<Users> L
 @attribute [Authorize(Policy = Permissions.Users.View)]
-@inherits MudComponentBase
 <PageTitle>@Title</PageTitle>
 <style>
     .mud-table-toolbar {
