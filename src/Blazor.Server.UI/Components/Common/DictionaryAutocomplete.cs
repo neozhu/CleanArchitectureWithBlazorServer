@@ -20,6 +20,9 @@ public class DictionaryAutocomplete:MudAutocomplete<string>
         SearchFunc = SearchKeyValues;
         ToStringFunc = GetText;
         Clearable = true;
+        Dense = true;
+        ResetValueOnEmptyText = true;
+        CoerceText = true;
         return base.SetParametersAsync(parameters);
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
