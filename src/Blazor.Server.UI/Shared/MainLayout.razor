@@ -1,10 +1,10 @@
 @inherits LayoutComponentBase
 
 @inject IStringLocalizer<SharedResource> L
-<MudRTLProvider RightToLeft="@_rightToLeft">
+<MudRTLProvider RightToLeft="@LayoutService.IsRTL">
 <MudDialogProvider />
 <MudSnackbarProvider />
-<MudThemeProvider Theme="_theme" IsDarkMode="_isDark"  />
+<MudThemeProvider @ref="@_mudThemeProvider"  Theme="@LayoutService.CurrentTheme" IsDarkMode="@LayoutService.IsDarkMode" IsDarkModeChanged="LayoutService.SetDarkMode" />
 <UserLoginState />
 <MudLayout>
     <AuthorizeView>
@@ -22,10 +22,10 @@
         <Authorized>
             <NavMenu SideMenuDrawerOpen="_sideMenuDrawerOpen"
                      OpenCommandPalette="OpenCommandPalette"
-                     ThemeManager="_themeManager"
+                     IsDarkMode="@LayoutService.IsDarkMode"
                      ToggleSideMenuDrawer="ToggleSideMenuDrawer"
-                     RightToLeft="_rightToLeft"
-                     RightToLeftToggle ="RightToLeftToggleHandler"
+                     RightToLeft="@LayoutService.IsRTL"
+                     RightToLeftToggle ="LayoutService.ToggleRightToLeft"
                      OnSettingClick="@(() => _themingDrawerOpen = true)"
                      User="_user" />
 
@@ -35,8 +35,8 @@
 
             <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
                         ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
-                        ThemeManager="_themeManager"
-                        ThemeManagerChanged="ThemeManagerChanged" />
+                        UserPreferences="UserPreferences"
+                        UserPreferencesChanged="LayoutService.UpdateUserPreferences" />
             <ThemesButton OnClick="@(() => _themingDrawerOpen = true)" />
 
             <MudMainContent>

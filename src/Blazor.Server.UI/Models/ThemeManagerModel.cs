@@ -6,3 +6,4 @@ public class ThemeManagerModel
     public string PrimaryColor { get; set; } = "#2d4275";
     public double BorderRadius { get; set; } = 4;
 }
+
