@@ -144,11 +144,23 @@
   <data name="Logout Confirmation" xml:space="preserve">
     <value>Logout Confirmation</value>
   </data>
+  <data name="Mark as read" xml:space="preserve">
+    <value>Mark as read</value>
+  </data>
   <data name="Mode" xml:space="preserve">
     <value>Mode</value>
   </data>
+  <data name="Nothing new :(" xml:space="preserve">
+    <value>Nothing new :(</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="Search..." xml:space="preserve">
+    <value>Search...</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
