@@ -43,7 +43,8 @@ public class ApplicationDbContext : IdentityDbContext<
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         var userId = await _currentUserService.UserId();
-        var auditEntries = OnBeforeSaveChanges(userId);
+        var userName = await _currentUserService.UserName();
+        var auditEntries = OnBeforeSaveChanges(userName);
 
         foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
         {

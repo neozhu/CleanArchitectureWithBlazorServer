@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Blazor.Server.UI.Models;
+using Blazor.Server.UI.Services;
 
 namespace Blazor.Server.UI.Components.Shared.Themes;
 
@@ -25,8 +26,8 @@ public partial class ThemesMenu
 
     [EditorRequired] [Parameter] public bool ThemingDrawerOpen { get; set; }
     [EditorRequired] [Parameter] public EventCallback<bool> ThemingDrawerOpenChanged { get; set; }
-    [EditorRequired] [Parameter] public ThemeManagerModel ThemeManager { get; set; }
-    [EditorRequired] [Parameter] public EventCallback<ThemeManagerModel> ThemeManagerChanged { get; set; }
+    [EditorRequired] [Parameter] public UserPreferences UserPreferences { get; set; }
+    [EditorRequired] [Parameter] public EventCallback<UserPreferences> UserPreferencesChanged { get; set; }
 
     [Parameter]
     public double Radius { get; set; }
@@ -36,17 +37,17 @@ public partial class ThemesMenu
 
     private async Task UpdateThemePrimaryColor(string color)
     {
-        ThemeManager.PrimaryColor = color;
-        await ThemeManagerChanged.InvokeAsync(ThemeManager);
+        UserPreferences.PrimaryColor = color;
+        await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
     private async Task ChangedSelection(ChangeEventArgs args)
     {
-        ThemeManager.BorderRadius = int.Parse(args?.Value?.ToString() ?? "0");
-        await ThemeManagerChanged.InvokeAsync(ThemeManager);
+        UserPreferences.BorderRadius = int.Parse(args?.Value?.ToString() ?? "0");
+        await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
     private async Task ToggleDarkLightMode(bool isDarkMode)
     {
-        ThemeManager.IsDarkMode = isDarkMode;
-        await ThemeManagerChanged.InvokeAsync(ThemeManager);
+        UserPreferences.IsDarkMode = isDarkMode;
+        await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
 }

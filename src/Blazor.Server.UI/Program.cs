@@ -16,6 +16,7 @@ using Blazor.Analytics;
 using Blazor.Server.UI.Services.Notifications;
 using Blazor.Server.UI.Services.Navigation;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) =>
@@ -65,8 +66,8 @@ builder.Services.AddInfrastructure(builder.Configuration)
         .AddApplication();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7226/") });
-
-
+builder.Services.AddScoped<LayoutService>();
+builder.Services.AddScoped<IUserPreferencesService, UserPreferencesService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddTransient<INotificationService, InMemoryNotificationService>();
 builder.Services.AddTransient<IArticlesService, ArticlesService>();

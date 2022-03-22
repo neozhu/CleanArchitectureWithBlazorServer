@@ -54,11 +54,11 @@
             @foreach (var color in _primaryColors)
             {
                 <MudItem xs="4">
-                    <MudButton Class="@(color == ThemeManager.PrimaryColor ? "color-button color-button-selected" : "color-button")"
+                    <MudButton Class="@(color == UserPreferences.PrimaryColor ? "color-button color-button-selected" : "color-button")"
                            FullWidth="true"
                            OnClick="@(() => UpdateThemePrimaryColor(color))">
                         <ChildContent>
-                            <div class="@(color == ThemeManager.PrimaryColor ? "oval oval-selected" : "oval")"
+                            <div class="@(color == UserPreferences.PrimaryColor ? "oval oval-selected" : "oval")"
                              style="@($"background: {color};")">
                             </div>
                         </ChildContent>
@@ -73,9 +73,9 @@
                  Spacing="3">
 
             <MudItem xs="12">
-                <MudSlider Value="@ThemeManager.BorderRadius" Min="0" Max="@MaxValue" Immediate="false" Step="1" Color="Color.Primary"
+                <MudSlider Value="@UserPreferences.BorderRadius" Min="0" Max="@MaxValue" Immediate="false" Step="1" Color="Color.Primary"
                            @oninput="@((e) => ChangedSelection(e))">
-                    @ThemeManager.BorderRadius.ToString()
+                    @UserPreferences.BorderRadius.ToString()
                 </MudSlider>
             </MudItem>
 
