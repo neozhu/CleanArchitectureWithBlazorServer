@@ -27,6 +27,7 @@ public class Theme
             },
             PaletteDark = new Palette
             {
+                Primary = "#7e6fff",
                 Black = "#27272f",
                 Background = "rgb(21,27,34)",
                 BackgroundGrey = "#27272f",
