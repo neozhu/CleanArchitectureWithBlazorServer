@@ -229,7 +229,7 @@
             }
             else
             {
-                Snackbar.Add($"{L["Changed password fail."]} {string.Join(",", result.Errors.Select(x => x.Description).ToArray())}", MudBlazor.Severity.Error);
+                Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description).ToArray())}", MudBlazor.Severity.Error);
             }
         }
     }

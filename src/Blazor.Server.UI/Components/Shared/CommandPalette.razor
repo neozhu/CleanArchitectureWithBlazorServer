@@ -1,10 +1,11 @@
+@inject IStringLocalizer<SharedResource> L
 <MudDialog DisableSidePadding="true">
     <DialogContent>
         <MudContainer>
             <MudTextField @bind-Value="@_search"
                           Class="mb-3"
                           Clearable="true"
-                          Placeholder="Search..."
+                          Placeholder="@L["Search..."]"
                           TextChanged="@(SearchPages)" 
                           Immediate="true"/>
             <MudList Clickable="true"
