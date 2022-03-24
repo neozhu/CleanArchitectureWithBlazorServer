@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using CleanArchitecture.Blazor.Application.Common.Security;
+using System.Text;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
@@ -13,7 +14,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
     private const string KEY = "Identity";
     private const string USERID = "UserId";
     private const string USERNAME = "UserName";
-    private const string PURPOSE = "SignIn";
+    private const string CLAIMSIDENTITY = "ClaimsIdentity";
     public IdentityAuthenticationService(
         ProtectedLocalStorage protectedLocalStorage,
         IServiceProvider serviceProvider
@@ -29,18 +30,14 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         var principal = new ClaimsPrincipal();
         try
         {
-            var storedPrincipal = await _protectedLocalStorage.GetAsync<string>(KEY);
-            if (storedPrincipal.Success && storedPrincipal.Value is not null)
+            var storedClaimsIdentity =  await _protectedLocalStorage.GetAsync<string>(CLAIMSIDENTITY);
+            if (storedClaimsIdentity.Success && storedClaimsIdentity.Value is not null)
             {
-                var token = storedPrincipal.Value;
-                var parts = token.Split('|');
-                var identityUser = await _userManager.FindByIdAsync(parts[0]);
-                var isTokenValid = await _userManager.VerifyUserTokenAsync(identityUser, TokenOptions.DefaultProvider, "SignIn", parts[1]);
-                if (isTokenValid)
-                {
-                    var identity = await createIdentityFromApplicationUser(identityUser);
-                    principal = new(identity);
-                }
+                var buffer = Convert.FromBase64String(storedClaimsIdentity.Value);
+                var deserializationStream = new MemoryStream(buffer);
+                var identity = new ClaimsIdentity(new BinaryReader(deserializationStream, Encoding.UTF8));
+                principal = new(identity);
+              
             }
         }
         catch(Exception e)
@@ -114,12 +111,16 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         var valid = await _userManager.CheckPasswordAsync(user, request.Password);
         if (valid)
         {
-            var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, PURPOSE);
-            var data = $"{user.Id}|{token}";
-            await _protectedLocalStorage.SetAsync(KEY, data);
+           
+            var identity = await createIdentityFromApplicationUser(user);
+            var memoryStream = new MemoryStream();
+            var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true);
+            identity.WriteTo(binaryWriter);
+            binaryWriter.Close();
+            var base64= Convert.ToBase64String(memoryStream.ToArray());
+            await _protectedLocalStorage.SetAsync(CLAIMSIDENTITY, base64);
             await _protectedLocalStorage.SetAsync(USERID, user.Id);
             await _protectedLocalStorage.SetAsync(USERNAME, user.UserName);
-            var identity = await createIdentityFromApplicationUser(user);
             var principal = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
         }
@@ -128,7 +129,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
 
     public async Task Logout()
     {
-        await _protectedLocalStorage.DeleteAsync(KEY);
+        await _protectedLocalStorage.DeleteAsync(CLAIMSIDENTITY);
         await _protectedLocalStorage.DeleteAsync(USERID);
         await _protectedLocalStorage.DeleteAsync(USERNAME);
         var principal = new ClaimsPrincipal();
