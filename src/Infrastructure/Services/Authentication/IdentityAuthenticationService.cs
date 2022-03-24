@@ -30,17 +30,18 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         var principal = new ClaimsPrincipal();
         try
         {
-            var storedClaimsIdentity =  await _protectedLocalStorage.GetAsync<string>(CLAIMSIDENTITY);
+            var storedClaimsIdentity = await _protectedLocalStorage.GetAsync<string>(CLAIMSIDENTITY);
             if (storedClaimsIdentity.Success && storedClaimsIdentity.Value is not null)
             {
                 var buffer = Convert.FromBase64String(storedClaimsIdentity.Value);
-                var deserializationStream = new MemoryStream(buffer);
-                var identity = new ClaimsIdentity(new BinaryReader(deserializationStream, Encoding.UTF8));
-                principal = new(identity);
-              
+                using (var deserializationStream = new MemoryStream(buffer))
+                {
+                    var identity = new ClaimsIdentity(new BinaryReader(deserializationStream, Encoding.UTF8));
+                    principal = new(identity);
+                }
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
         }
@@ -111,14 +112,15 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         var valid = await _userManager.CheckPasswordAsync(user, request.Password);
         if (valid)
         {
-           
+
             var identity = await createIdentityFromApplicationUser(user);
-            var memoryStream = new MemoryStream();
-            var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true);
-            identity.WriteTo(binaryWriter);
-            binaryWriter.Close();
-            var base64= Convert.ToBase64String(memoryStream.ToArray());
-            await _protectedLocalStorage.SetAsync(CLAIMSIDENTITY, base64);
+            using (var memoryStream = new MemoryStream())
+            using (var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))
+            {
+                identity.WriteTo(binaryWriter);
+                var base64 = Convert.ToBase64String(memoryStream.ToArray());
+                await _protectedLocalStorage.SetAsync(CLAIMSIDENTITY, base64);
+            }
             await _protectedLocalStorage.SetAsync(USERID, user.Id);
             await _protectedLocalStorage.SetAsync(USERNAME, user.UserName);
             var principal = new ClaimsPrincipal(identity);
