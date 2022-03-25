@@ -8,7 +8,6 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
 {
 
     private readonly ProtectedLocalStorage _protectedLocalStorage;
-    private readonly IServiceProvider _serviceProvider;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private const string KEY = "Identity";
@@ -17,13 +16,13 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
     private const string CLAIMSIDENTITY = "ClaimsIdentity";
     public IdentityAuthenticationService(
         ProtectedLocalStorage protectedLocalStorage,
-        IServiceProvider serviceProvider
+        RoleManager<ApplicationRole> roleManager,
+        UserManager<ApplicationUser> userManager
         )
     {
         _protectedLocalStorage = protectedLocalStorage;
-        _serviceProvider = serviceProvider;
-        _userManager = _serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        _roleManager = _serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        _userManager = userManager;
+        _roleManager = roleManager;
     }
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {

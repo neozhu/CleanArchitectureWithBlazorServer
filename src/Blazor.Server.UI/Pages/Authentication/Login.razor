@@ -6,6 +6,8 @@
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
+
+@inherits ComponentBase
 @inject IStringLocalizer<Login> L
 
 <EditForm Model="@model"
@@ -47,8 +49,9 @@
 </EditForm>
 @code {
 
-    [Inject] private NavigationManager _navigation { get; set; }= default!;
+  
     [Inject] private IdentityAuthenticationService _authenticationService { get; set; } = default!;
+    [Inject] private ILogger<Login> _logger { get; set; } = default!;
     LoginFormModel model = new LoginFormModel()
         {
             UserName = "administrator",
@@ -99,7 +102,12 @@
             var result = await _authenticationService.Login(model);
             if (!result)
             {
+                _logger.LogWarning("{@UserName} login fail.",model.UserName);
                 Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
+            }
+            else
+            {
+                 _logger.LogInformation("{@UserName} login successfully.",model.UserName);
             }
 
         }
