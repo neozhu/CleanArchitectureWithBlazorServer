@@ -69,7 +69,13 @@ public class ApplicationDbContext : IdentityDbContext<
                     break;
             }
         }
+        var events = ChangeTracker.Entries<IHasDomainEvent>()
+               .Select(x => x.Entity.DomainEvents)
+               .SelectMany(x => x)
+               .Where(domainEvent => !domainEvent.IsPublished)
+               .ToArray();
         var result = await base.SaveChangesAsync(cancellationToken);
+        await DispatchEvents(events);
         await OnAfterSaveChanges(auditEntries, cancellationToken);
         return result;
     }
@@ -146,7 +152,14 @@ public class ApplicationDbContext : IdentityDbContext<
         }
         return auditEntries.Where(_ => _.HasTemporaryProperties).ToList();
     }
-
+    private async Task DispatchEvents(DomainEvent[] events)
+    {
+        foreach (var _event in events)
+        {
+            _event.IsPublished = true;
+            await _domainEventService.Publish(_event);
+        }
+    }
     private Task OnAfterSaveChanges(List<AuditTrail> auditEntries, CancellationToken cancellationToken = new())
     {
         if (auditEntries == null || auditEntries.Count == 0)
