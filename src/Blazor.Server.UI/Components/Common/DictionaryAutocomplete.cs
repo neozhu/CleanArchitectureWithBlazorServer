@@ -19,7 +19,7 @@ public class DictionaryAutocomplete:MudAutocomplete<string>
     public override Task SetParametersAsync(ParameterView parameters)
     {
         SearchFunc = SearchKeyValues;
-        ToStringFunc = GetText;
+        //ToStringFunc = GetText;
         Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;
@@ -38,5 +38,5 @@ public class DictionaryAutocomplete:MudAutocomplete<string>
                                                  )
                                          .Select(x=>x.Value??String.Empty));
     }
-    private string GetText(string value) => DataSource.FirstOrDefault(x => x.Name == Dictionary && x.Value == value)?.Text ?? String.Empty;
+    //private string GetText(string value) => DataSource.FirstOrDefault(x => x.Name == Dictionary && x.Value == value)?.Text ?? String.Empty;
 }

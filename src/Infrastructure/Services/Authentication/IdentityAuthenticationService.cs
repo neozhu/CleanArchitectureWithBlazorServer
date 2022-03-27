@@ -6,7 +6,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
 public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthenticationService
 {
-
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
     private readonly ProtectedLocalStorage _protectedLocalStorage;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
@@ -107,25 +107,33 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
 
     public async Task<bool> Login(LoginFormModel request)
     {
-        var user = await _userManager.FindByNameAsync(request.UserName);
-        var valid = await _userManager.CheckPasswordAsync(user, request.Password);
-        if (valid)
+        await _semaphore.WaitAsync();
+        try
         {
-
-            var identity = await createIdentityFromApplicationUser(user);
-            using (var memoryStream = new MemoryStream())
-            using (var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            var valid = await _userManager.CheckPasswordAsync(user, request.Password);
+            if (valid)
             {
-                identity.WriteTo(binaryWriter);
-                var base64 = Convert.ToBase64String(memoryStream.ToArray());
-                await _protectedLocalStorage.SetAsync(CLAIMSIDENTITY, base64);
+
+                var identity = await createIdentityFromApplicationUser(user);
+                using (var memoryStream = new MemoryStream())
+                using (var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))
+                {
+                    identity.WriteTo(binaryWriter);
+                    var base64 = Convert.ToBase64String(memoryStream.ToArray());
+                    await _protectedLocalStorage.SetAsync(CLAIMSIDENTITY, base64);
+                }
+                await _protectedLocalStorage.SetAsync(USERID, user.Id);
+                await _protectedLocalStorage.SetAsync(USERNAME, user.UserName);
+                var principal = new ClaimsPrincipal(identity);
+                NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
             }
-            await _protectedLocalStorage.SetAsync(USERID, user.Id);
-            await _protectedLocalStorage.SetAsync(USERNAME, user.UserName);
-            var principal = new ClaimsPrincipal(identity);
-            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
+            return valid;
         }
-        return valid;
+        finally
+        {
+            _semaphore.Release();
+        }
     }
 
     public async Task Logout()
