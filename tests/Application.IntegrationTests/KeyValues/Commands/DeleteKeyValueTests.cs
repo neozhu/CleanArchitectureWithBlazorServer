@@ -16,7 +16,7 @@ namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
         [Test]
         public void ShouldRequireValidKeyValueId()
         {
-            var command = new DeleteKeyValueCommand { Id = 99 };
+            var command = new DeleteKeyValueCommand (new int[] { 99});
 
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().ThrowAsync<NotFoundException>();
@@ -33,11 +33,8 @@ namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
                 Description = "For Test"
             };
            var result= await SendAsync(addcommand);
-             
-            await SendAsync(new DeleteKeyValueCommand
-            {
-                Id = result.Data
-            });
+
+            await SendAsync(new DeleteKeyValueCommand(new int[] { result.Data }));
 
             var item = await FindAsync<Document>(result.Data);
 
