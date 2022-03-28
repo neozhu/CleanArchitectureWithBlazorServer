@@ -221,7 +221,7 @@
         try{
             _loading = true;
             var cmd = new GetAllKeyValuesQuery();
-            KeyValueList = await _mediator.Send(cmd);
+            KeyValueList = (await _mediator.Send(cmd)).ToList();
             _selectedItems=new HashSet<KeyValueDto>();;
             _selectedItem = null;
         }
