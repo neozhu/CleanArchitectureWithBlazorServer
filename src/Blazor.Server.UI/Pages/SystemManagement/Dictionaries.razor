@@ -35,6 +35,7 @@
                   OnCommitEditClick="@(() => Snackbar.Add(L["Update successfully"], MudBlazor.Severity.Info))"
                   IsEditRowSwitchingBlocked="false"
                   ReadOnly="@_readonly"
+                  Loading="@_loading"
                   SortLabel="@L["Sort By"]"
                   Filter="new Func<KeyValueDto,bool>(_quickFilter)">
             <ToolBarContent>
@@ -44,6 +45,7 @@
                     <MudButton DisableElevation Variant="Variant.Outlined"
                                Size="Size.Small"
                                OnClick="OnRefresh"
+                               Disabled="@_loading"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                Style="margin-right: 4px; margin-bottom:4px">@L["Refresh"]</MudButton>
                     @if (_canCreate)
@@ -89,7 +91,7 @@
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu  AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem  OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
+                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
                             @if (_canCreate)
                             {
                                 <MudMenuItem Disabled="@_editing" OnClick="OnCreate">@L["Create"]</MudMenuItem>
@@ -181,6 +183,7 @@
     private bool _canImport;
     private bool _canExport;
     private bool _readonly => !_canCreate || !_canEdit;
+    private bool _loading;
     protected override async Task OnInitializedAsync()
     {
         var state = await AuthState;
@@ -214,10 +217,19 @@
     }
     private async Task LoadData()
     {
-        var cmd = new GetAllKeyValuesQuery();
-        KeyValueList = (await _mediator.Send(cmd)).ToList();
-        _selectedItems=new HashSet<KeyValueDto>();;
-        _selectedItem = null;
+        if(_loading) return;
+        try{
+            _loading = true;
+            var cmd = new GetAllKeyValuesQuery();
+            KeyValueList = await _mediator.Send(cmd);
+            _selectedItems=new HashSet<KeyValueDto>();;
+            _selectedItem = null;
+        }
+        finally
+        {
+            _loading = false;
+        }
+
 
     }
     private async Task OnRefresh()

@@ -14,7 +14,7 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 
 namespace Blazor.Server.UI.Pages.Identity.Users
 {
-    public partial class Users:IDisposable
+    public partial class Users : IDisposable
     {
         private List<ApplicationUser> UserList = new List<ApplicationUser>();
         private HashSet<ApplicationUser> SelectItems = new HashSet<ApplicationUser>();
@@ -23,11 +23,11 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         public string? Title { get; private set; }
 
         [CascadingParameter]
-        protected Task<AuthenticationState> AuthState { get; set; } = default !;
+        protected Task<AuthenticationState> AuthState { get; set; } = default!;
         //[Inject]
         //private UserManager<ApplicationUser> Service { get; set; } = default !;
         [Inject]
-        public CircuitHandler circuitHandler { get; set; } = default !;
+        public CircuitHandler circuitHandler { get; set; } = default!;
         private bool _canCreate;
         private bool _canSearch;
         private bool _canEdit;
@@ -38,7 +38,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         private bool _canImport;
         private bool _canExport;
         private bool _loading;
-        private MudTable<ApplicationUser> _table = default !;
+        private MudTable<ApplicationUser> _table = default!;
         protected override async Task OnInitializedAsync()
         {
             Title = L["Users"];
@@ -52,7 +52,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
             _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
             _canImport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
             _canExport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-            UserList = await Service.Users.ToListAsync();
+            await LoadData();
             (circuitHandler as CircuitHandlerService).CircuitsChanged += HandleCircuitsChanged;
         }
         public void Dispose()
@@ -81,34 +81,49 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         };
         private async Task OnRefresh()
         {
-            UserList = await Service.Users.ToListAsync();
-        }
 
+            await LoadData();
+
+        }
+        private async Task LoadData()
+        {
+            if (_loading) return;
+            try
+            {
+                _loading = true;
+                UserList = await Service.Users.ToListAsync();
+            }
+            finally
+            {
+                _loading = false;
+            }
+        }
         private async Task OnCreate()
         {
-            var model = new UserFormModel() { AssignRoles =new string[] { RoleConstants.BasicRole } };
-            var parameters = new DialogParameters{["model"] = model};
-            var options = new DialogOptions{CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true};
+            var model = new UserFormModel() { AssignRoles = new string[] { RoleConstants.BasicRole } };
+            var parameters = new DialogParameters { ["model"] = model };
+            var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
             var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
             var result = await dialog.Result;
             if (!result.Cancelled)
             {
                 var applicationUser = new ApplicationUser()
-                {Site = model.Site,
-                DisplayName = model.DisplayName,
-                UserName = model.UserName,
-                Email = model.Email,
-                PhoneNumber = model.PhoneNumber,
-                ProfilePictureDataUrl = model.ProfilePictureDataUrl,
+                {
+                    Site = model.Site,
+                    DisplayName = model.DisplayName,
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    ProfilePictureDataUrl = model.ProfilePictureDataUrl,
                 };
                 var password = model.Password;
                 var state = await Service.CreateAsync(applicationUser, password);
-                
+
                 if (state.Succeeded)
                 {
                     if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
                     {
-                       await Service.AddToRolesAsync(applicationUser, model.AssignRoles);
+                        await Service.AddToRolesAsync(applicationUser, model.AssignRoles);
                     }
                     else
                     {
@@ -128,22 +143,23 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         {
             var roles = await Service.GetRolesAsync(item);
             var model = new UserFormModel()
-            {Id = item.Id,
-            Site = item.Site,
-            DisplayName = item.DisplayName,
-            UserName = item.UserName,
-            Email = item.Email,
-            PhoneNumber = item.PhoneNumber,
-            ProfilePictureDataUrl = item.ProfilePictureDataUrl,
-            AssignRoles = roles.ToArray()
+            {
+                Id = item.Id,
+                Site = item.Site,
+                DisplayName = item.DisplayName,
+                UserName = item.UserName,
+                Email = item.Email,
+                PhoneNumber = item.PhoneNumber,
+                ProfilePictureDataUrl = item.ProfilePictureDataUrl,
+                AssignRoles = roles.ToArray()
             };
-            var parameters = new DialogParameters{["model"] = model};
-            var options = new DialogOptions{CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true};
+            var parameters = new DialogParameters { ["model"] = model };
+            var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
             var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
             var result = await dialog.Result;
             if (!result.Cancelled)
             {
-                
+
                 var user = await Service.FindByIdAsync(item.Id);
                 user.Email = model.Email;
                 user.PhoneNumber = model.PhoneNumber;
@@ -172,15 +188,15 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         private async Task OnDeleteChecked()
         {
             string deleteContent = L["You're sure you want to delete selected items:{0}?"];
-            var parameters = new DialogParameters{{nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, SelectItems.Count)}};
-            var options = new DialogOptions{CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true};
+            var parameters = new DialogParameters { { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, SelectItems.Count) } };
+            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
             var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
             var result = await dialog.Result;
             if (!result.Cancelled)
             {
                 foreach (var item in SelectItems)
                 {
-                    var user= await Service.FindByIdAsync(item.Id);
+                    var user = await Service.FindByIdAsync(item.Id);
                     await Service.DeleteAsync(user);
                     UserList.Remove(item);
                 }
@@ -189,7 +205,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
 
         private async Task OnSetActive(ApplicationUser item)
         {
-            
+
             var user = await Service.FindByIdAsync(item.Id);
             user.IsActive = !user.IsActive;
             var state = await Service.UpdateAsync(user);
@@ -207,14 +223,14 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         private async Task OnResetPassword(ApplicationUser item)
         {
             var model = new ResetPasswordFormModel()
-            {Id = item.Id, DisplayName = item.DisplayName, UserName = item.UserName, ProfilePictureDataUrl = item.ProfilePictureDataUrl};
-            var parameters = new DialogParameters{["model"] = model};
-            var options = new DialogOptions{CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall};
+            { Id = item.Id, DisplayName = item.DisplayName, UserName = item.UserName, ProfilePictureDataUrl = item.ProfilePictureDataUrl };
+            var parameters = new DialogParameters { ["model"] = model };
+            var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall };
             var dialog = DialogService.Show<_ResetPasswordDialog>(L["Set Password"], parameters, options);
             var result = await dialog.Result;
             if (!result.Cancelled)
             {
-                var user=await Service.FindByIdAsync(item.Id);
+                var user = await Service.FindByIdAsync(item.Id);
                 var token = await Service.GeneratePasswordResetTokenAsync(user);
                 var state = await Service.ResetPasswordAsync(user, token, model.Password);
                 if (state.Succeeded)

@@ -118,19 +118,24 @@
 
     private async Task<TableData<AuditTrailDto>> ServerReload(TableState state)
     {
-        _loading = true;
-        var request = new AuditTrailsWithPaginationQuery()
-            {
-                Keyword = _searchString,
-                OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
-                SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
-                PageNumber = state.Page + 1,
-                PageSize = state.PageSize
-            };
-        var result = await _mediator.Send(request);
-        _loading = false;
-        return new TableData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
-
+        try
+        {
+            _loading = true;
+            var request = new AuditTrailsWithPaginationQuery()
+                {
+                    Keyword = _searchString,
+                    OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
+                    SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
+                    PageNumber = state.Page + 1,
+                    PageSize = state.PageSize
+                };
+            var result = await _mediator.Send(request);
+            return new TableData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
+        }
+        finally
+        {
+             _loading = false;
+        }
     }
     private async Task OnSearch(string text)
     {
