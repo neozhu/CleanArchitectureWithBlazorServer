@@ -13,11 +13,11 @@ public class SignalRHub : Hub
 {
 
     private static readonly ConcurrentDictionary<string, string> _onlineUsers = new();
- 
+
 
     public SignalRHub()
     {
-        
+
     }
     public override async Task OnConnectedAsync()
     {
@@ -30,8 +30,11 @@ public class SignalRHub : Hub
         //try to remove key from dictionary
         if (_onlineUsers.TryRemove(id, out string userId))
         {
-            await Clients.AllExcept(id).SendAsync(SignalR.DisconnectUser, userId);
-           
+            if (!_onlineUsers.Any(x => x.Value == userId))
+            {
+                await Clients.AllExcept(id).SendAsync(SignalR.DisconnectUser, userId);
+            }
+
         }
         await base.OnDisconnectedAsync(exception);
     }
@@ -46,8 +49,10 @@ public class SignalRHub : Hub
             {
                 // re-use existing message for now
                 await Clients.AllExcept(id).SendAsync(SignalR.ConnectUser, userId);
-              
             }
+
+
+
         }
     }
     public async Task SendMessage(string userId, string message)

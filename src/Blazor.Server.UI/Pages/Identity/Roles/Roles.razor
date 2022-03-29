@@ -1,4 +1,4 @@
-@inherits OwningComponentBase<RoleManager<ApplicationRole>>
+@inherits OwningComponentBase
 @page "/indentity/roles"
 @using Blazor.Server.UI.Components.Dialogs
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
@@ -172,8 +172,8 @@
     public string? Title { get; private set; }
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
-    //[Inject]
-    //private RoleManager<ApplicationRole> Service { get; set; } = default!;
+
+    private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
 
     private List<PermissionModel> _permissions = new();
     private IList<Claim> _assignedClaims = default!;
@@ -188,6 +188,7 @@
     private bool _loading;
     protected override async Task OnInitializedAsync()
     {
+        _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
         Title = L["Roles"];
         var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Create)).Succeeded;
@@ -223,7 +224,7 @@
             try
             {
                 _loading = true;
-               RoleList = await Service.Roles.ToListAsync();
+               RoleList = await _roleManager.Roles.ToListAsync();
             }
             finally
             {
@@ -245,7 +246,7 @@
                     Description = model.Description
                 };
 
-            var state = await Service.CreateAsync(applicationRole);
+            var state = await _roleManager.CreateAsync(applicationRole);
             if (state.Succeeded)
             {
                 RoleList.Add(applicationRole);
@@ -274,7 +275,7 @@
             
             item.Name = model.Name;
             item.Description = model.Description;
-            var state = await Service.UpdateAsync(item);
+            var state = await _roleManager.UpdateAsync(item);
             if (state.Succeeded)
             {
                 Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
@@ -295,7 +296,7 @@
 
     private async Task<List<PermissionModel>> GetAllPermissions(ApplicationRole role)
     {
-        _assignedClaims = await Service.GetClaimsAsync(role);
+        _assignedClaims = await _roleManager.GetClaimsAsync(role);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
         foreach (var module in modules)
@@ -341,11 +342,11 @@
     private async Task OnAssignChangedHandler(PermissionModel model)
     {
         var roleId = model.RoleId;
-        var role = await Service.FindByIdAsync(roleId);
+        var role = await _roleManager.FindByIdAsync(roleId);
         model.Assigned = !model.Assigned;
         if (model.Assigned)
         {
-            await Service.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
+            await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
             Snackbar.Add($"{L["Assigned successfully"]}", MudBlazor.Severity.Info);
         }
         else
@@ -353,7 +354,7 @@
             var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
             if (removed is not null)
             {
-                await Service.RemoveClaimAsync(role, removed);
+                await _roleManager.RemoveClaimAsync(role, removed);
             }
             Snackbar.Add($"{L["Unassigned successfully"]}", MudBlazor.Severity.Info);
         }
@@ -365,12 +366,12 @@
         foreach (var model in models)
         {
             var roleId = model.RoleId;
-            var role = await Service.FindByIdAsync(roleId);
+            var role = await _roleManager.FindByIdAsync(roleId);
             if (model.Assigned)
             {
                 if (model.ClaimType is not null && model.ClaimValue is not null)
                 {
-                    await Service.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
+                    await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
                 }
             }
             else
@@ -378,7 +379,7 @@
                 var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
                 if (removed is not null)
                 {
-                    await Service.RemoveClaimAsync(role, removed);
+                    await _roleManager.RemoveClaimAsync(role, removed);
                 }
    
             }
@@ -399,7 +400,7 @@
         {
             foreach (var item in SelectItems)
             {
-                await Service.DeleteAsync(item);
+                await _roleManager.DeleteAsync(item);
                 RoleList.Remove(item);
             }
         }
