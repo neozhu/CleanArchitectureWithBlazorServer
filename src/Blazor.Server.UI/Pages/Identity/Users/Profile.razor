@@ -1,5 +1,5 @@
 @page "/user/profile"
-@inherits OwningComponentBase<UserManager<ApplicationUser>>
+@inherits OwningComponentBase
 @using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
@@ -134,7 +134,7 @@
     private ProfileService _profileService { get; set; } = default!;
     private UserModel model { get; set; } = new();
     private UserFluentValidator userValidator = new();
-
+    private UserManager<ApplicationUser> _userManager { get; set; } = default !;
     private ChangePasswordModel changepassword { get; set; } = new();
     private PasswordFluentValidator passwordValidator = new PasswordFluentValidator();
 
@@ -160,6 +160,7 @@
     }
     protected override async Task OnInitializedAsync()
     {
+        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         var state = await AuthState;
         model = await _profileService.Get(state.User);
 
@@ -200,17 +201,17 @@
         if (form.IsValid)
         {
             var state = await AuthState;
-            var user = await Service.FindByIdAsync(model.UserId);
+            var user = await _userManager.FindByIdAsync(model.UserId);
             user.PhoneNumber = model.PhoneNumber;
             user.DisplayName = model.DisplayName;
             user.ProfilePictureDataUrl = model.Avatar;
-            await Service.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
             if(model.DisplayName is not null)
                 state.User.UpdateDisplayName(model.DisplayName);
             if(model.Avatar is not null)
                 state.User.UpdateProfilePictureUrl(model.Avatar);
             if(model.PhoneNumber is not null)
-                state.User.UpdateProfilePictureUrl(model.Avatar);
+                state.User.UpdatePhoneNumber(model.PhoneNumber);
             await _profileService.Update(model);
             Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
         }
@@ -221,8 +222,8 @@
         await passwordform.Validate();
         if (passwordform.IsValid)
         {
-            var user = await Service.FindByIdAsync(model.UserId);
-            var result = await Service.ChangePasswordAsync(user, changepassword.CurrentPassword, changepassword.NewPassword);
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            var result = await _userManager.ChangePasswordAsync(user, changepassword.CurrentPassword, changepassword.NewPassword);
             if (result.Succeeded)
             {
                 Snackbar.Add($"{L["Changed password successfully."]}", MudBlazor.Severity.Info);

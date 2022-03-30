@@ -34,6 +34,7 @@
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton DisableElevation Variant="Variant.Outlined"
                                    Size="Size.Small"
+                                   Disabled="@_loading"
                                    OnClick="@(()=>OnRefresh())"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                    Style="margin-right: 4px; margin-bottom:4px">@L["Refresh"]</MudButton>
@@ -100,7 +101,7 @@
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
+                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
                             @if (_canCreate)
                             {
                                 <MudMenuItem OnClick="OnCreate">@L["Create"]</MudMenuItem>
@@ -224,18 +225,24 @@
     }
     private async Task<TableData<ProductDto>> ServerReload(TableState state)
     {
-        _loading = true;
-        var request = new ProductsWithPaginationQuery()
-            {
-                Keyword = _searchString,
-                OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
-                SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
-                PageNumber = state.Page + 1,
-                PageSize = state.PageSize
-            };
-        var result = await _mediator.Send(request);
-        _loading = false;
-        return new TableData<ProductDto>() { TotalItems = result.TotalItems, Items = result.Items };
+        try
+        {
+            _loading = true;
+            var request = new ProductsWithPaginationQuery()
+                {
+                    Keyword = _searchString,
+                    OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
+                    SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
+                    PageNumber = state.Page + 1,
+                    PageSize = state.PageSize
+                };
+            var result = await _mediator.Send(request);
+            return new TableData<ProductDto>() { TotalItems = result.TotalItems, Items = result.Items };
+        }
+        finally
+        {
+            _loading = false;
+        }
 
     }
     private async Task OnSearch(string text)

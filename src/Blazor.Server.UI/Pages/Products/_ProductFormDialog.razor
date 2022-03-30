@@ -41,11 +41,12 @@
                                      @bind-Value="model.Price"></MudNumericField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
-                    <MudTextField Label="@L["Unit"]"
-                                  Required="true"
-                                  RequiredError="@L["unit is required!"]"
-                                  For="@(() => model.Unit)"
-                                  @bind-Value="model.Unit"></MudTextField>
+                    <DictionaryAutocomplete Dictionary="Unit"
+                                     DataSource="datasource"
+                                     Label="@L["Unit"]"
+                                     For="@(() => model.Unit)"
+                                     ResetValueOnEmptyText="true"
+                                     @bind-Value="model.Unit"></DictionaryAutocomplete>
                 </MudItem>
                 <MudItem>
                     <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />

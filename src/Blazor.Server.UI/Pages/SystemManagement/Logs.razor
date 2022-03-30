@@ -25,6 +25,7 @@
                     <MudText Typo="Typo.h6">@L[Title]</MudText>
                     <MudButton DisableElevation Variant="Variant.Outlined"
                                Size="Size.Small"
+                               Disabled="@_loading"
                                OnClick="@(()=>OnRefresh())"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                Style="margin-right: 5px;">@L["Refresh"]</MudButton>
@@ -120,8 +121,9 @@
 
     private async Task<TableData<LogDto>> ServerReload(TableState state)
     {
-        _loading = true;
-        var request = new LogsWithPaginationQuery()
+        try{
+            _loading = true;
+            var request = new LogsWithPaginationQuery()
             {
                 Keyword = _searchString,
                 OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
@@ -129,10 +131,13 @@
                 PageNumber = state.Page + 1,
                 PageSize = state.PageSize
             };
-        var result = await _mediator.Send(request);
-        _loading = false;
-        return new TableData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
-
+            var result = await _mediator.Send(request);
+            return new TableData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
+        }
+        finally
+        {
+            _loading = false;
+        }
     }
     private async Task OnSearch(string text)
     {
