@@ -4,13 +4,13 @@
 <MudPaper Class="py-4 px-6 rounded-lg d-flex flex-column">
     <MudText Typo="Typo.h6" Color="Color.Error">@statusCode</MudText>
     <div class="d-flex align-center gap-4">
-        <MudText Typo="Typo.subtitle2" Color="Color.Primary">@DateTime.Now</MudText>
+        <MudText Typo="Typo.subtitle2" >@DateTime.Now</MudText>
         <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(()=>_showstacktrace=!_showstacktrace)">More</MudButton>
     </div>
     <MudText>@message For more information, contact your system administrator</MudText>
     @if (_showstacktrace)
     {
-        <MudText>@stacktrace</MudText>
+        <MudText Typo="Typo.body2" Class="mt-2">@stacktrace</MudText>
     }
     <MudDivider Class="my-3" />
     <div class="mx-n2 mb-2">
