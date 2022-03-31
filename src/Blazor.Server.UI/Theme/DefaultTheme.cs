@@ -113,7 +113,7 @@ public class Theme
                     FontWeight = 500,
                     LineHeight = 1.75,
                     LetterSpacing = ".02857em",
-                    TextTransform = "none"
+                    TextTransform = "uppercase"
 
 
                 },
