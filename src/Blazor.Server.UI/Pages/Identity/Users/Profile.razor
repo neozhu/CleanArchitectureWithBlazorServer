@@ -158,12 +158,11 @@
             PasswordInput = InputType.Text;
         }
     }
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        var state = await AuthState;
-        model = await _profileService.Get(state.User);
-
+        model = _profileService.Profile;
+        return Task.CompletedTask;
     }
 
     private async Task UploadPhoto(InputFileChangeEventArgs e)

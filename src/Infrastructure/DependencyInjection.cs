@@ -5,7 +5,6 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Http;
 using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 
@@ -34,17 +33,10 @@ public static class DependencyInjection
             services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
-
-        services.Configure<CookiePolicyOptions>(options =>
-        {
-            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-            options.CheckConsentNeeded = context => true;
-            options.MinimumSameSitePolicy = SameSiteMode.Strict;
-        });
         services.Configure<DashbordSettings>(configuration.GetSection(DashbordSettings.SectionName));
         services.AddSingleton(s => s.GetRequiredService<IOptions<DashbordSettings>>().Value);
         services.AddScoped<IDbContextFactory<ApplicationDbContext>,BlazorContextFactory<ApplicationDbContext>>();
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
+        services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
         services.AddScoped<IDomainEventService, DomainEventService>();
 
         services
@@ -78,13 +70,6 @@ public static class DependencyInjection
             options.Lockout.AllowedForNewUsers = true;
 
         });
-        services.ConfigureApplicationCookie(options =>
-        {
-            options.ExpireTimeSpan = TimeSpan.FromDays(30);
-            options.Cookie.HttpOnly = true;
-            options.SlidingExpiration = true;
-        });
-
         services.AddAuthorization(options =>
         {
             options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));

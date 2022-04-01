@@ -18,6 +18,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 public class IdentityService : IIdentityService
 {
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
     private readonly IServiceProvider _serviceProvider;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
@@ -246,11 +247,19 @@ public class IdentityService : IIdentityService
 
     public async Task UpdateLiveStatus(string userId, bool isLive)
     {
-        var user = await _userManager.FindByIdAsync(userId);
-        if (user is not null && user.IsLive!= isLive)
+        await _semaphore.WaitAsync();
+        try
         {
-            user.IsLive = isLive;
-            await _userManager.UpdateAsync(user);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is not null && user.IsLive != isLive)
+            {
+                user.IsLive = isLive;
+                await _userManager.UpdateAsync(user);
+            }
+        }
+        finally
+        {
+            _semaphore.Release();
         }
     }
 }
