@@ -7,6 +7,7 @@
         <MudItem xs="12" sm="6" md="4">
             <MudTextField @bind-Value="Query.Name" 
                           Placeholder="@L["Search for product name"]"
+                          Clearable="true"
                           TextChanged="OnSearchStringChanged">
             </MudTextField>
         </MudItem>
@@ -18,18 +19,20 @@
         </MudItem>
         <MudItem xs="12" sm="6"  md="4">
            <UnitAutocomplete @bind-Value="Query.Unit"    
-                          Placeholder="@L["Search for unit"]" 
+                           Placeholder="@L["Search for unit"]" 
                            TextChanged="OnSearchStringChanged">
            </UnitAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudNumericField @bind-Value="Query.MinPrice" 
+            <MudNumericField @bind-Value="Query.MinPrice"
+                          Clearable="true"
                           Placeholder="@L["Search for minimum price"]" 
                           TextChanged="OnSearchStringChanged">
             </MudNumericField>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudNumericField @bind-Value="Query.MaxPrice" 
+            <MudNumericField @bind-Value="Query.MaxPrice"
+                          Clearable="true"
                           Placeholder="@L["Search for maximum price"]" 
                           TextChanged="OnSearchStringChanged">
             </MudNumericField>
@@ -46,7 +49,6 @@
         if (_advancedSearchExpanded)
         {
             OnFilterChanged.InvokeAsync();
-            StateHasChanged();
         }
     }
 }
