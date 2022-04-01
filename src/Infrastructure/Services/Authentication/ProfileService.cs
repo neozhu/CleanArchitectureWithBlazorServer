@@ -7,7 +7,6 @@ public class ProfileService
     public UserModel Profile { get; private set; } = new();
     public Task Set(ClaimsPrincipal principal)
     {
-  
         Profile =  new UserModel()
         {
             Avatar = principal.GetProfilePictureDataUrl(),
