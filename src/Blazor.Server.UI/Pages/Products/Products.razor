@@ -20,7 +20,7 @@
 </style>
 <ErrorBoundary>
     <ChildContent>
-        <AdvancedSearchComponent Query="query" OnFilterChanged="OnFilterChanged"></AdvancedSearchComponent>
+        <AdvancedSearchProductsComponent TRequest="query" OnFilterChanged="OnFilterChanged"></AdvancedSearchProductsComponent>
         <MudTable ServerData="@(new Func<TableState, Task<TableData<ProductDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
@@ -243,7 +243,12 @@
         }
 
     }
-    private void OnFilterChanged()
+    //private  async Task OnFilterChanged(string s)
+    //{
+    //      await _table.ReloadServerData();
+
+    //}
+    private void OnFilterChanged(string s)
     {
         InvokeAsync(async () =>
         {
@@ -258,8 +263,7 @@
     }
     private async Task OnRefresh()
     {
-        _selectedItems = new HashSet<ProductDto>
-        ();
+        _selectedItems = new();
         _searchString = string.Empty;
         await _table.ReloadServerData();
     }
