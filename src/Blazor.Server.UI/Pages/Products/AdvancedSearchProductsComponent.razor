@@ -5,33 +5,33 @@
                    Class="pa-2 mb-3" Text="@L["Advanced Search"]">
     <MudGrid>
         <MudItem xs="12" sm="6" md="4">
-            <MudTextField @bind-Value="Query.Name" 
+            <MudTextField @bind-Value="TRequest.Name" 
                           Placeholder="@L["Search for product name"]"
                           Clearable="true"
                           TextChanged="OnSearchStringChanged">
             </MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6"  md="4">
-           <BrandAutocomplete  @bind-Value="Query.Brand" 
+           <BrandAutocomplete  @bind-Value="TRequest.Brand" 
                           Placeholder="@L["Search for brand"]" 
                           TextChanged="OnSearchStringChanged">
            </BrandAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6"  md="4">
-           <UnitAutocomplete @bind-Value="Query.Unit"    
+           <UnitAutocomplete @bind-Value="TRequest.Unit"    
                            Placeholder="@L["Search for unit"]" 
                            TextChanged="OnSearchStringChanged">
            </UnitAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudNumericField @bind-Value="Query.MinPrice"
+            <MudNumericField @bind-Value="TRequest.MinPrice"
                           Clearable="true"
                           Placeholder="@L["Search for minimum price"]" 
                           TextChanged="OnSearchStringChanged">
             </MudNumericField>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudNumericField @bind-Value="Query.MaxPrice"
+            <MudNumericField @bind-Value="TRequest.MaxPrice"
                           Clearable="true"
                           Placeholder="@L["Search for maximum price"]" 
                           TextChanged="OnSearchStringChanged">
@@ -41,14 +41,14 @@
 </MudExpansionPanel>
 
 @code {
-    [EditorRequired][Parameter] public ProductsWithPaginationQuery Query { get; set; } = default!;
-    [EditorRequired][Parameter] public EventCallback OnFilterChanged { get; set; }
+    [EditorRequired][Parameter] public ProductsWithPaginationQuery TRequest { get; set; } = default!;
+    [EditorRequired][Parameter] public EventCallback<string> OnFilterChanged { get; set; }
     private bool _advancedSearchExpanded { get; set; }
-    private void OnSearchStringChanged()
+    private async Task OnSearchStringChanged(string str)
     {
         if (_advancedSearchExpanded)
         {
-            OnFilterChanged.InvokeAsync();
+          await OnFilterChanged.InvokeAsync(str);
         }
     }
 }
