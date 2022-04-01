@@ -1,0 +1,52 @@
+@using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
+@inject IStringLocalizer<Products> L
+<MudExpansionPanel @bind-IsExpanded="_advancedSearchExpanded"
+                   Style="border-radius: var(--mud-default-borderradius) !important;"
+                   Class="pa-2 mb-3" Text="@L["Advanced Search"]">
+    <MudGrid>
+        <MudItem xs="12" sm="6" md="4">
+            <MudTextField @bind-Value="Query.Name" 
+                          Placeholder="@L["Search for product name"]"
+                          TextChanged="OnSearchStringChanged">
+            </MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6"  md="4">
+           <BrandAutocomplete  @bind-Value="Query.Brand" 
+                          Placeholder="@L["Search for brand"]" 
+                          TextChanged="OnSearchStringChanged">
+           </BrandAutocomplete>
+        </MudItem>
+        <MudItem xs="12" sm="6"  md="4">
+           <UnitAutocomplete @bind-Value="Query.Unit"    
+                          Placeholder="@L["Search for unit"]" 
+                           TextChanged="OnSearchStringChanged">
+           </UnitAutocomplete>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudNumericField @bind-Value="Query.MinPrice" 
+                          Placeholder="@L["Search for minimum price"]" 
+                          TextChanged="OnSearchStringChanged">
+            </MudNumericField>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudNumericField @bind-Value="Query.MaxPrice" 
+                          Placeholder="@L["Search for maximum price"]" 
+                          TextChanged="OnSearchStringChanged">
+            </MudNumericField>
+        </MudItem>
+    </MudGrid>
+</MudExpansionPanel>
+
+@code {
+    [EditorRequired][Parameter] public ProductsWithPaginationQuery Query { get; set; } = default!;
+    [EditorRequired][Parameter] public EventCallback OnFilterChanged { get; set; }
+    private bool _advancedSearchExpanded { get; set; }
+    private void OnSearchStringChanged()
+    {
+        if (_advancedSearchExpanded)
+        {
+            OnFilterChanged.InvokeAsync();
+            StateHasChanged();
+        }
+    }
+}
