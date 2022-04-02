@@ -1,5 +1,3 @@
-@using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs
-@using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
@@ -79,7 +77,6 @@
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     AddEditProductCommandValidator modelValidator = new AddEditProductCommandValidator();
     [EditorRequired] [Parameter] public AddEditProductCommand model { get; set; } = default!;
-    [EditorRequired] [Parameter] public IEnumerable<KeyValueDto> datasource { get; set; } = default!;
 
     private IList<string>? _prictures = null;
 
