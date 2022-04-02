@@ -33,6 +33,8 @@ public class DeleteKeyValueCommandHandler : IRequestHandler<DeleteKeyValueComman
         var items = await _context.KeyValues.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
         {
+            var changeEvent = new KeyValueChangedEvent(item);
+            item.DomainEvents.Add(changeEvent);
             _context.KeyValues.Remove(item);
         }
         await _context.SaveChangesAsync(cancellationToken);

@@ -2,7 +2,7 @@
 @inject IStringLocalizer<Products> L
 <MudExpansionPanel @bind-IsExpanded="_advancedSearchExpanded"
                    Style="border-radius: var(--mud-default-borderradius) !important;"
-                   Class="pa-2 mb-3" Text="@L["Advanced Search"]">
+                   Class="mud-elevation-25 pa-2 mb-3" Text="@L["Advanced Search"]">
     <MudGrid>
         <MudItem xs="12" sm="6" md="4">
             <MudTextField @bind-Value="TRequest.Name" 
@@ -12,16 +12,18 @@
             </MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6"  md="4">
-           <BrandAutocomplete  @bind-Value="TRequest.Brand" 
-                          Placeholder="@L["Search for brand"]" 
-                          TextChanged="OnSearchStringChanged">
-           </BrandAutocomplete>
+           <PicklistAutocomplete Picklist="Picklist.Brand"
+                                Placeholder="@L["Search for brand"]"
+                                TextChanged="OnSearchStringChanged"
+                                ResetValueOnEmptyText="true"
+                                @bind-Value="TRequest.Brand"></PicklistAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6"  md="4">
-           <UnitAutocomplete @bind-Value="TRequest.Unit"    
-                           Placeholder="@L["Search for unit"]" 
-                           TextChanged="OnSearchStringChanged">
-           </UnitAutocomplete>
+          <PicklistAutocomplete Picklist="Picklist.Unit"
+                                Placeholder="@L["Search for unit"]"
+                                TextChanged="OnSearchStringChanged"
+                                ResetValueOnEmptyText="true"
+                                @bind-Value="TRequest.Unit"></PicklistAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <MudNumericField @bind-Value="TRequest.MinPrice"

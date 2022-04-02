@@ -34,14 +34,16 @@ public class AddEditKeyValueCommandHandler : IRequestHandler<AddEditKeyValueComm
             var keyValue = await _context.KeyValues.FindAsync(new object[] { request.Id }, cancellationToken);
             _ = keyValue ?? throw new NotFoundException($"KeyValue Pair  {request.Id} Not Found.");
             keyValue = _mapper.Map(request, keyValue);
+            var changeEvent = new KeyValueChangedEvent(keyValue);
+            keyValue.DomainEvents.Add(changeEvent);
             await _context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(keyValue.Id);
         }
         else
         {
             var keyValue = _mapper.Map<KeyValue>(request);
-            var createevent = new KeyValueCreatedEvent(keyValue);
-            keyValue.DomainEvents.Add(createevent);
+            var changeEvent = new KeyValueChangedEvent(keyValue);
+            keyValue.DomainEvents.Add(changeEvent);
             _context.KeyValues.Add(keyValue);
             await _context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(keyValue.Id);

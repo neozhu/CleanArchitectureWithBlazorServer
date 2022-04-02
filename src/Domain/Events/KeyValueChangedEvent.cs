@@ -3,9 +3,9 @@
 
 namespace CleanArchitecture.Blazor.Domain.Events;
 
-public class KeyValueCreatedEvent : DomainEvent
+public class KeyValueChangedEvent : DomainEvent
 {
-    public KeyValueCreatedEvent(KeyValue item)
+    public KeyValueChangedEvent(KeyValue item)
     {
         Item = item;
     }

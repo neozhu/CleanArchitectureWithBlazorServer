@@ -25,11 +25,11 @@
                                   @bind-Value="model.Description"></MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
-                    <BrandAutocomplete 
+                    <PicklistAutocomplete Picklist="Picklist.Brand"
                                      Label="@L["Brand"]"
                                      For="@(() => model.Brand)"
                                      ResetValueOnEmptyText="true"
-                                     @bind-Value="model.Brand"></BrandAutocomplete>
+                                     @bind-Value="model.Brand"></PicklistAutocomplete>
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <MudNumericField Label="@L["Price"]"
@@ -40,11 +40,11 @@
                                      @bind-Value="model.Price"></MudNumericField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
-                    <UnitAutocomplete 
+                    <PicklistAutocomplete Picklist="Picklist.Unit"
                                      Label="@L["Unit"]"
                                      For="@(() => model.Unit)"
                                      ResetValueOnEmptyText="true"
-                                     @bind-Value="model.Unit"></UnitAutocomplete>
+                                     @bind-Value="model.Unit"></PicklistAutocomplete>
                 </MudItem>
                 <MudItem>
                     <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
