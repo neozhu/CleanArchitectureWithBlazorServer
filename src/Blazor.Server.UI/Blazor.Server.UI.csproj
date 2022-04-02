@@ -10,6 +10,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Services\Picklist\**" />
+      <Content Remove="Services\Picklist\**" />
+      <EmbeddedResource Remove="Services\Picklist\**" />
+      <None Remove="Services\Picklist\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Blazor-Analytics" Version="3.11.0" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.3" />

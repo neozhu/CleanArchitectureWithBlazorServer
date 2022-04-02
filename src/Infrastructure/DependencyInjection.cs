@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 using Microsoft.AspNetCore.Components.Server.Circuits;
+using CleanArchitecture.Blazor.Infrastructure.Services.Picklist;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -49,6 +50,7 @@ public static class DependencyInjection
         services.AddSingleton<ProfileService>();
         services.AddScoped<IdentityAuthenticationService>();
         services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<IdentityAuthenticationService>());
+        services.AddScoped<IPicklistService,PicklistService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IExcelService, ExcelService>();
@@ -57,7 +59,6 @@ public static class DependencyInjection
         services.Configure<AppConfigurationSettings>(configuration.GetSection("AppConfigurationSettings"));
         services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
         services.AddTransient<IMailService, SMTPMailService>();
-        services.AddTransient<IDictionaryService, DictionaryService>();
         services.AddAuthentication();
         services.Configure<IdentityOptions>(options =>
         {
