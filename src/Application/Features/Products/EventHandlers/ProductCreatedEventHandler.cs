@@ -4,7 +4,7 @@
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.EventHandlers;
 
-    public class ProductCreatedEventHandler : INotificationHandler<DomainEventNotification<ProductCreatedEvent>>
+    public class ProductCreatedEventHandler : INotificationHandler<DomainEventNotification<CreatedEvent<Product>>>
     {
         private readonly ILogger<ProductCreatedEventHandler> _logger;
 
@@ -14,11 +14,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.EventHandlers;
         {
             _logger = logger;
         }
-        public Task Handle(DomainEventNotification<ProductCreatedEvent> notification, CancellationToken cancellationToken)
+        public Task Handle(DomainEventNotification<CreatedEvent<Product>> notification, CancellationToken cancellationToken)
         {
             var domainEvent = notification.DomainEvent;
 
-            _logger.LogInformation("CleanArchitecture Domain Event: {DomainEvent}", domainEvent.GetType().Name);
+            _logger.LogInformation("Domain Event: {DomainEvent}", domainEvent.GetType().Name);
 
             return Task.CompletedTask;
         }
