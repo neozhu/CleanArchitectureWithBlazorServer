@@ -1,4 +1,4 @@
-@page "/system/dictionaries"
+@page "/system/picklist"
 @using Blazor.Server.UI.Components.Dialogs
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete
@@ -40,7 +40,7 @@
                   Filter="new Func<KeyValueDto,bool>(_quickFilter)">
             <ToolBarContent>
                 <div class="justify-start pt-3">
-                    <MudText Typo="Typo.h6">Roles</MudText>
+                    <MudText Typo="Typo.h6">@L["Picklist"]</MudText>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                     <MudButton DisableElevation Variant="Variant.Outlined"
                                Size="Size.Small"
