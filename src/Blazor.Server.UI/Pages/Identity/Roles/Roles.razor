@@ -363,10 +363,11 @@
     }
     private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
     {
+        var roleId = models.First().RoleId;
+        var role = await _roleManager.FindByIdAsync(roleId);
         foreach (var model in models)
         {
-            var roleId = model.RoleId;
-            var role = await _roleManager.FindByIdAsync(roleId);
+            
             if (model.Assigned)
             {
                 if (model.ClaimType is not null && model.ClaimValue is not null)
