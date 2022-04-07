@@ -100,6 +100,7 @@ public static class DependencyInjection
 
 
         services.AddControllers();
+        services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
         services.AddSingleton<CircuitHandler, CircuitHandlerService>();
         services.AddSignalR();
 
