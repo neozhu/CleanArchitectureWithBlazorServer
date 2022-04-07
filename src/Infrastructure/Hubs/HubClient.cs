@@ -4,28 +4,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Infrastructure.Constants;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
 public class HubClient : IAsyncDisposable
 {
     private HubConnection _hubConnection;
-    private readonly string _hubUrl;
-    private readonly string _userId;
+    private string _hubUrl;
+    private string _userId;
+    private readonly NavigationManager _navigationManager;
+    private readonly AuthenticationStateProvider _authenticationStateProvider;
     private bool _started = false;
-    public HubClient(string siteUrl,string userId)
+    //public HubClient(string siteUrl,string userId)
+    //{
+    //    if (string.IsNullOrWhiteSpace(siteUrl))
+    //        throw new ArgumentNullException(nameof(siteUrl));
+    //    if (string.IsNullOrWhiteSpace(userId))
+    //        throw new ArgumentNullException(nameof(userId));
+    //    // set the hub URL
+    //    _hubUrl = siteUrl.TrimEnd('/') + SignalR.HubUrl;
+    //    // save username
+    //    _userId = userId;
+    //}
+    public HubClient(NavigationManager navigationManager,
+        AuthenticationStateProvider authenticationStateProvider)
     {
-        if (string.IsNullOrWhiteSpace(siteUrl))
-            throw new ArgumentNullException(nameof(siteUrl));
-        if (string.IsNullOrWhiteSpace(userId))
-            throw new ArgumentNullException(nameof(userId));
-        // set the hub URL
-        _hubUrl = siteUrl.TrimEnd('/') + SignalR.HubUrl;
-        // save username
-        _userId = userId;
+        this._navigationManager =navigationManager;
+        _authenticationStateProvider = authenticationStateProvider;
     }
     public async Task StartAsync()
     {
+        _hubUrl = _navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
+        var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        _userId = state.User.GetUserId();
         if (!_started)
         {
             // create the connection using the .NET SignalR client

@@ -18,35 +18,24 @@
 
     public async ValueTask DisposeAsync()
     {
-        var state = await _authState;
-        if (state.User.Identity is not null)
-        {
-            await _identityService.UpdateLiveStatus(state.User.GetUserId(), false);
-        }
-        if (_client is not null)
-        {
-            await _client.StopAsync();
-            _client.LoggedOut -= _client_LoggedOut;
-            _client.LoggedIn -= _client_LoggedIn;
-        }
+        await _client.StopAsync();
+        _client.LoggedOut -= _client_LoggedOut;
+        _client.LoggedIn -= _client_LoggedIn;
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-
-    private HubClient? _client = null;
+    [Inject]
+    private HubClient _client { get; set; }
     protected override async Task OnInitializedAsync()
     {
         _identityService = ScopedServices.GetRequiredService<IIdentityService>();
+        _client.LoggedOut += _client_LoggedOut;
+        _client.LoggedIn += _client_LoggedIn;
         var state = await _authState;
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
-          
-            _client = new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
-            _client.LoggedOut += _client_LoggedOut;
-            _client.LoggedIn += _client_LoggedIn;
             await _client.StartAsync();
-            await _identityService.UpdateLiveStatus(state.User.GetUserId(), true);
         }
         _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
     }
@@ -57,18 +46,7 @@
             var state = await authenticationState;
             if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
-                if(_client is not null)
-                {
-                    await _client.StopAsync();
-                    _client.LoggedOut -= _client_LoggedOut;
-                    _client.LoggedIn -= _client_LoggedIn;
-                }
-                _client = new HubClient(_navigationManager.BaseUri, state.User.GetUserId());
-                _client.LoggedOut += _client_LoggedOut;
-                _client.LoggedIn += _client_LoggedIn;
                 await _client.StartAsync();
-                await _identityService.UpdateLiveStatus(state.User.GetUserId(), true);
-
             }
         });
     }
@@ -78,6 +56,7 @@
         {
             var username = await _identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
+            await _identityService.UpdateLiveStatus(e, true);
         });
     }
 
@@ -87,6 +66,7 @@
         {
             var username = await _identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
+            await _identityService.UpdateLiveStatus(e, false);
         });
     }
 }
