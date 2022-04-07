@@ -24,17 +24,13 @@ public class SignalRHub : Hub
         await base.OnConnectedAsync();
     }
 
-    public override async Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
         string id = Context.ConnectionId;
         //try to remove key from dictionary
-        if (_onlineUsers.TryRemove(id, out string userId))
+        if (_onlineUsers.TryRemove(id, out string? userId))
         {
-            if (!_onlineUsers.Any(x => x.Value == userId))
-            {
-                await Clients.AllExcept(id).SendAsync(SignalR.DisconnectUser, userId);
-            }
-
+          await Clients.AllExcept(id).SendAsync(SignalR.DisconnectUser, userId);
         }
         await base.OnDisconnectedAsync(exception);
     }
@@ -50,9 +46,6 @@ public class SignalRHub : Hub
                 // re-use existing message for now
                 await Clients.AllExcept(id).SendAsync(SignalR.ConnectUser, userId);
             }
-
-
-
         }
     }
     public async Task SendMessage(string userId, string message)
