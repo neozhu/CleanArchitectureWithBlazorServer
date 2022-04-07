@@ -101,7 +101,7 @@ public static class DependencyInjection
 
         services.AddControllers();
         services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
-        services.AddSingleton<CircuitHandler, CircuitHandlerService>();
+        services.AddScoped<CircuitHandler, CircuitHandlerService>();
         services.AddSignalR();
 
         return services;

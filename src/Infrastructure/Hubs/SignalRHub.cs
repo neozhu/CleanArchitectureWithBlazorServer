@@ -11,9 +11,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
 
 public class SignalRHub : Hub
 {
-
     private static readonly ConcurrentDictionary<string, string> _onlineUsers = new();
-
 
     public SignalRHub()
     {
@@ -21,6 +19,7 @@ public class SignalRHub : Hub
     }
     public override async Task OnConnectedAsync()
     {
+
         await base.OnConnectedAsync();
     }
 
