@@ -1,7 +1,5 @@
 @page "/pages/products"
 
-@using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs
-@using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
@@ -44,6 +42,7 @@
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.Add"
                                    Size="Size.Small"
+                                   Disabled="@_loading"
                                    OnClick="OnCreate"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    IconColor="Color.Surface">@L["Create"]</MudButton>
@@ -105,7 +104,7 @@
                             <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
                             @if (_canCreate)
                             {
-                                <MudMenuItem OnClick="OnCreate">@L["Create"]</MudMenuItem>
+                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@L["Create"]</MudMenuItem>
                             }
                             @if (_canDelete)
                             {
@@ -200,7 +199,6 @@
     private bool _downloading;
     [Inject]
     private ISender _mediator { get; set; } = default!;
-    private IEnumerable<KeyValueDto> _datasource = default!;
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
 
@@ -222,7 +220,6 @@
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Export)).Succeeded;
-        _datasource = await _mediator.Send(new GetAllKeyValuesQuery());
     }
     private async Task<TableData<ProductDto>> ServerReload(TableState state)
     {
@@ -272,7 +269,6 @@
         var command = new AddEditProductCommand();
         var parameters = new DialogParameters
             {
-        { nameof(_ProductFormDialog.datasource),_datasource },
         { nameof(_ProductFormDialog.model),command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
@@ -300,8 +296,7 @@
             };
         var parameters = new DialogParameters
                 {
-            { nameof(_ProductFormDialog.datasource),_datasource },
-            { nameof(_ProductFormDialog.model),command },
+                 { nameof(_ProductFormDialog.model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>

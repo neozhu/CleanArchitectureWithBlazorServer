@@ -1,4 +1,4 @@
-@page "/system/dictionaries"
+@page "/system/picklist"
 @using Blazor.Server.UI.Components.Dialogs
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete
@@ -40,7 +40,7 @@
                   Filter="new Func<KeyValueDto,bool>(_quickFilter)">
             <ToolBarContent>
                 <div class="justify-start pt-3">
-                    <MudText Typo="Typo.h6">Roles</MudText>
+                    <MudText Typo="Typo.h6">@L["Picklist"]</MudText>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                     <MudButton DisableElevation Variant="Variant.Outlined"
                                Size="Size.Small"
@@ -60,7 +60,7 @@
                     }
                     @if (_canDelete)
                     {
-                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Secondary"
                                StartIcon="@Icons.Material.Filled.Delete"
                                Disabled="@(!(_selectedItems.Count>0) || _editing)"
                                OnClick="OnDeleteChecked"
@@ -138,7 +138,7 @@
             </RowTemplate>
             <RowEditingTemplate>
                 <MudTd DataLabel="Name">
-                   <MudAutocomplete @bind-Value="@context.Name" CoerceText="true" CoerceValue="true" SearchFunc="searchName" Required />
+                   <MudAutocomplete @bind-Value="@context.Name" Clearable="true" CoerceText="true" CoerceValue="true" SearchFunc="searchName" Required />
                 </MudTd>
                 <MudTd DataLabel="Value">
                     <MudTextField @bind-Value="@context.Value" Required />
@@ -220,6 +220,7 @@
         if(_loading) return;
         try{
             _loading = true;
+            _editing = false;
             var cmd = new GetAllKeyValuesQuery();
             KeyValueList = (await _mediator.Send(cmd)).ToList();
             _selectedItems=new HashSet<KeyValueDto>();;

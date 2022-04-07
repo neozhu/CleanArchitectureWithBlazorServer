@@ -1,5 +1,74 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
 @inherits OwningComponentBase
+@implements IAsyncDisposable
+@code{
+    [CascadingParameter]
+    protected Task<AuthenticationState> _authState { get; set; } = default!;
+    [Inject]
+    private NavigationManager _navigationManager { get; set; } = default!;
+    [Inject]
+    private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
+
+    private IIdentityService _identityService { get; set; }=default!;
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _client.StopAsync();
+        _client.LoggedOut -= _client_LoggedOut;
+        _client.LoggedIn -= _client_LoggedIn;
+        _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    [Inject]
+    private HubClient _client { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        _identityService = ScopedServices.GetRequiredService<IIdentityService>();
+        _client.LoggedOut += _client_LoggedOut;
+        _client.LoggedIn += _client_LoggedIn;
+        var state = await _authState;
+        if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
+        {
+            await _client.StartAsync();
+        }
+        _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
+    }
+    private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
+    {
+        InvokeAsync(async () =>
+        {
+            var state = await authenticationState;
+            if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
+            {
+                await _client.StartAsync();
+            }
+        });
+    }
+    private void _client_LoggedIn(object? sender, string e)
+    {
+        InvokeAsync(async () =>
+        {
+            var username = await _identityService.GetUserNameAsync(e);
+            Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
+            await _identityService.UpdateLiveStatus(e, true);
+        });
+    }
+
+    private void _client_LoggedOut(object? sender, string e)
+    {
+        InvokeAsync(async () =>
+        {
+            var username = await _identityService.GetUserNameAsync(e);
+            Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
+            await _identityService.UpdateLiveStatus(e, false);
+        });
+    }
+}
 
 

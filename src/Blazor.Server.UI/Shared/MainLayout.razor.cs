@@ -33,7 +33,7 @@ public partial class MainLayout: IDisposable
     private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
     public void Dispose()
     {
-        _profileService.OnChange -= StateHasChanged;
+        _profileService.OnChange -= _profileService_OnChange;
         LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         _hotKeysContext?.Dispose();
@@ -57,7 +57,7 @@ public partial class MainLayout: IDisposable
     protected override async Task OnInitializedAsync()
     {
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
-        _profileService.OnChange += StateHasChanged;
+        _profileService.OnChange += _profileService_OnChange;
         LayoutService.SetBaseTheme(Theme.ApplicationTheme());
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
@@ -70,6 +70,12 @@ public partial class MainLayout: IDisposable
        await base.OnInitializedAsync();
 
     }
+
+    private void _profileService_OnChange()
+    {
+        InvokeAsync(() => StateHasChanged());
+    }
+
     private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e) => StateHasChanged();
     private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
     {

@@ -30,8 +30,7 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
     {
         if (request.Id > 0)
         {
-            var item = await _context.Products.FindAsync(new object[] { request.Id }, cancellationToken);
-            _ = item ?? throw new NotFoundException($"Product {request.Id} Not Found.");
+            var item = await _context.Products.FindAsync(new object[] { request.Id }, cancellationToken) ?? throw new NotFoundException($"Product {request.Id} Not Found.");
             item = _mapper.Map(request, item);
             await _context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(item.Id);

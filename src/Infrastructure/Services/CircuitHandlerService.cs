@@ -10,43 +10,27 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 public class CircuitHandlerService : CircuitHandler
 {
 
+    private readonly IUsersStateContainer _usersStateContainer;
+    private readonly AuthenticationStateProvider _authenticationStateProvider;
 
-    public ConcurrentDictionary<string, Circuit> Circuits { get; set; }
-    public event EventHandler<bool> CircuitsChanged;
-
-    protected virtual void OnCircuitsChanged(bool connected)
-    => CircuitsChanged?.Invoke(this, connected);
-
-    public CircuitHandlerService( )
+    public CircuitHandlerService(IUsersStateContainer usersStateContainer, AuthenticationStateProvider authenticationStateProvider)
     {
-        Circuits = new ConcurrentDictionary<string, Circuit>();
-
+        _usersStateContainer = usersStateContainer;
+        _authenticationStateProvider = authenticationStateProvider;
     }
 
-    public override async Task OnCircuitOpenedAsync(Circuit circuit, CancellationToken cancellationToken)
+    public override async Task OnConnectionUpAsync(Circuit circuit,
+        CancellationToken cancellationToken)
     {
-        Circuits[circuit.Id] = circuit;
-        OnCircuitsChanged(true);
-        await base.OnCircuitOpenedAsync(circuit, cancellationToken);
+        var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        _usersStateContainer.Update(circuit.Id, state.User.Identity?.Name);
     }
 
-    public override async Task OnCircuitClosedAsync(Circuit circuit, CancellationToken cancellationToken)
+    public override Task OnConnectionDownAsync(Circuit circuit,
+        CancellationToken cancellationToken)
     {
-        
-        Circuit circuitRemoved;
-        Circuits.TryRemove(circuit.Id, out circuitRemoved);
-        OnCircuitsChanged(false);
-        await base.OnCircuitClosedAsync(circuit, cancellationToken);
-    }
-
-    public override async Task OnConnectionDownAsync(Circuit circuit, CancellationToken cancellationToken)
-    {
-        await base.OnConnectionDownAsync(circuit, cancellationToken);
-    }
-
-    public override Task OnConnectionUpAsync(Circuit circuit, CancellationToken cancellationToken)
-    {
-        return base.OnConnectionUpAsync(circuit, cancellationToken);
+        _usersStateContainer.Remove(circuit.Id);
+        return Task.CompletedTask;
     }
 
 }

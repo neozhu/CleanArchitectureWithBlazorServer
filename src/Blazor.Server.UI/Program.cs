@@ -67,6 +67,7 @@ builder.Services.AddInfrastructure(builder.Configuration)
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7226/") });
 builder.Services.AddScoped<LayoutService>();
+
 builder.Services.AddScoped<IUserPreferencesService, UserPreferencesService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddTransient<INotificationService, InMemoryNotificationService>();

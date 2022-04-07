@@ -11,9 +11,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
 
 public class SignalRHub : Hub
 {
-
     private static readonly ConcurrentDictionary<string, string> _onlineUsers = new();
-
 
     public SignalRHub()
     {
@@ -21,20 +19,17 @@ public class SignalRHub : Hub
     }
     public override async Task OnConnectedAsync()
     {
+
         await base.OnConnectedAsync();
     }
 
-    public override async Task OnDisconnectedAsync(Exception exception)
+    public override async Task OnDisconnectedAsync(Exception? exception)
     {
         string id = Context.ConnectionId;
         //try to remove key from dictionary
-        if (_onlineUsers.TryRemove(id, out string userId))
+        if (_onlineUsers.TryRemove(id, out string? userId))
         {
-            if (!_onlineUsers.Any(x => x.Value == userId))
-            {
-                await Clients.AllExcept(id).SendAsync(SignalR.DisconnectUser, userId);
-            }
-
+          await Clients.All.SendAsync(SignalR.DisconnectUser, userId);
         }
         await base.OnDisconnectedAsync(exception);
     }
@@ -48,11 +43,8 @@ public class SignalRHub : Hub
             if (_onlineUsers.TryAdd(id, userId))
             {
                 // re-use existing message for now
-                await Clients.AllExcept(id).SendAsync(SignalR.ConnectUser, userId);
+                await Clients.All.SendAsync(SignalR.ConnectUser, userId);
             }
-
-
-
         }
     }
     public async Task SendMessage(string userId, string message)
