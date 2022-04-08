@@ -77,13 +77,13 @@ public class MenuService : IMenuService
                         new()
                         {
                             Title = "Users",
-                            Href = "/indentity/users",
+                            Href = "/identity/users",
                             PageStatus = PageStatus.Completed
                         },
                         new()
                         {
                             Title = "Roles",
-                            Href = "/indentity/roles",
+                            Href = "/identity/roles",
                             PageStatus = PageStatus.Completed
                         },
                         new()

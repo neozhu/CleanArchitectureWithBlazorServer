@@ -1,11 +1,9 @@
-@page "/user/profile"
 @inherits OwningComponentBase
+@page "/user/profile"
 @using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
 @using SixLabors.ImageSharp.Processing
-
-
 @inject IStringLocalizer<Profile> L
 <PageTitle>@Title</PageTitle>
 
@@ -160,6 +158,7 @@
     }
     protected override Task OnInitializedAsync()
     {
+        Title = L["Profile"];
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         model = _profileService.Profile;
         return Task.CompletedTask;

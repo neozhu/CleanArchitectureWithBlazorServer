@@ -16,6 +16,8 @@
         <MudTable ServerData="@(new Func<TableState, Task<TableData<AuditTrailDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
+                  Virtualize="true"
+                  RowsPerPage="25"
                   Height="calc(100vh - 265px)"
                   Loading="@_loading"
                   SortLabel="@L["Sort By"]"
@@ -129,7 +131,7 @@
                     PageNumber = state.Page + 1,
                     PageSize = state.PageSize
                 };
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request).ConfigureAwait(false);
             return new TableData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally

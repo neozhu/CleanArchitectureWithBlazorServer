@@ -15,7 +15,6 @@
       <EmbeddedResource Remove="Services\Picklist\**" />
       <None Remove="Services\Picklist\**" />
     </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Blazor-Analytics" Version="3.11.0" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
@@ -65,6 +64,16 @@
       <Folder Include="Files\" />
       <Folder Include="Files\ProfilePictures\" />
       <Folder Include="Files\" />
+    </ItemGroup>
+
+
+
+    <ItemGroup>
+      <None Include="Pages\Identity\Users\Profile.razor" />
+      <None Include="Pages\Identity\Users\Users.razor" />
+      <None Include="Pages\Identity\Users\_ResetPasswordDialog.razor" />
+      <None Include="Pages\Identity\Users\_UserForm.razor" />
+      <None Include="Pages\Identity\Users\_UserFormDialog.razor" />
     </ItemGroup>
 
 </Project>

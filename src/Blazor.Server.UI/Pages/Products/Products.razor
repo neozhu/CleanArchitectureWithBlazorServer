@@ -22,7 +22,9 @@
         <MudTable ServerData="@(new Func<TableState, Task<TableData<ProductDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
-                  Height="calc(100vh - 265px)"
+                  Virtualize="true"
+                  RowsPerPage="15"
+                  Height="calc(100vh - 330px)"
                   Loading="@_loading"
                   SortLabel="@L["Sort By"]"
                   MultiSelection="true" @bind-SelectedItems="_selectedItems"
@@ -180,7 +182,7 @@
                 <MudText>@L["Loading.."].</MudText>
             </LoadingContent>
             <PagerContent>
-                <MudTablePager />
+                <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
         </MudTable>
     </ChildContent>
@@ -231,7 +233,7 @@
             query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
             query.PageNumber = state.Page + 1;
             query.PageSize = state.PageSize;
-            var result = await _mediator.Send(query);
+            var result = await _mediator.Send(query).ConfigureAwait(false);
             return new TableData<ProductDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
