@@ -15,15 +15,6 @@
       <EmbeddedResource Remove="Services\Picklist\**" />
       <None Remove="Services\Picklist\**" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Content Remove="Pages\Identity\Users\Profile.razor" />
-      <Content Remove="Pages\Identity\Users\Users.razor" />
-      <Content Remove="Pages\Identity\Users\_ResetPasswordDialog.razor" />
-      <Content Remove="Pages\Identity\Users\_UserForm.razor" />
-      <Content Remove="Pages\Identity\Users\_UserFormDialog.razor" />
-    </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Blazor-Analytics" Version="3.11.0" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
