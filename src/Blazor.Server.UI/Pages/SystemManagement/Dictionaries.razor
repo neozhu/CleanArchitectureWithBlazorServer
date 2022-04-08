@@ -22,6 +22,8 @@
                   Items="@KeyValueList"
                   FixedHeader="true"
                   FixedFooter="true"
+                  Virtualize="true"
+                  RowsPerPage="25"
                   Height="calc(100vh - 265px)"
                   Hover="true"
                   MultiSelection="true"
@@ -222,7 +224,7 @@
             _loading = true;
             _editing = false;
             var cmd = new GetAllKeyValuesQuery();
-            KeyValueList = (await _mediator.Send(cmd)).ToList();
+            KeyValueList = (await _mediator.Send(cmd).ConfigureAwait(false)).ToList();
             _selectedItems=new HashSet<KeyValueDto>();;
             _selectedItem = null;
         }

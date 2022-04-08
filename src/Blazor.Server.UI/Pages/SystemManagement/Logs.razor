@@ -15,6 +15,8 @@
         <MudTable ServerData="@(new Func<TableState, Task<TableData<LogDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
+                  Virtualize="true"
+                  RowsPerPage="25"
                   Height="calc(100vh - 265px)"
                   Style="min-height:700px"
                   Loading="@_loading"
@@ -131,7 +133,7 @@
                 PageNumber = state.Page + 1,
                 PageSize = state.PageSize
             };
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request).ConfigureAwait(false);
             return new TableData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
