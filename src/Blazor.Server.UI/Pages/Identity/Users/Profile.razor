@@ -160,6 +160,7 @@
     }
     protected override Task OnInitializedAsync()
     {
+        Title = L["Profile"];
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         model = _profileService.Profile;
         return Task.CompletedTask;

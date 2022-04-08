@@ -12,5 +12,6 @@ public class UserFormModel
     public string? ConfirmPassword { get; set; }
     public string? PhoneNumber { get; set; }
     public string[]? AssignRoles { get; set; }
+    public bool IsActive { get; set; }
     public bool Checked { get; set; }
 }
