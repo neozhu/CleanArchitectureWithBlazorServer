@@ -9,7 +9,7 @@ global using System.Linq.Dynamic.Core;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Primitives;
 global using Microsoft.Extensions.Caching.Memory;
-global using CleanArchitecture.Blazor.Domain.Enums;
+global using CleanArchitecture.Blazor.Domain;
 global using CleanArchitecture.Blazor.Domain.Entities;
 global using CleanArchitecture.Blazor.Domain.Events;
 global using CleanArchitecture.Blazor.Application.Common.Mappings;

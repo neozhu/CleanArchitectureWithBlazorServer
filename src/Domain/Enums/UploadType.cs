@@ -3,7 +3,7 @@
 
 using System.ComponentModel;
 
-namespace CleanArchitecture.Blazor.Domain.Enums;
+namespace CleanArchitecture.Blazor.Domain;
 
 public enum UploadType : byte
 {
