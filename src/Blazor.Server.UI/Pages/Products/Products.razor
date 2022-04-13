@@ -38,7 +38,7 @@
                                    Disabled="@_loading"
                                    OnClick="@(()=>OnRefresh())"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   Style="margin-right: 4px; margin-bottom:4px">@L["Refresh"]</MudButton>
+                                   Style="margin-right: 4px; margin-bottom:4px">@ButtonText.REFRESH</MudButton>
                         @if (_canCreate)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -47,7 +47,7 @@
                                    Disabled="@_loading"
                                    OnClick="OnCreate"
                                    Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@L["Create"]</MudButton>
+                                   IconColor="Color.Surface">@ButtonText.CREATE</MudButton>
                         }
                         @if (_canDelete)
                         {
@@ -57,7 +57,7 @@
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    OnClick="OnDeleteChecked"
-                                   IconColor="Color.Surface">@L["Delete"]</MudButton>
+                                   IconColor="Color.Surface">@ButtonText.DELETE</MudButton>
                         }
                         @if (_canImport)
                         {
@@ -71,11 +71,11 @@
                                 @if (_uploading)
                                 {
                                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                    <MudText Class="ms-2"> @L["Uploading..."]</MudText>
+                                    <MudText Class="ms-2"> @ButtonText.UPLOADING</MudText>
                                 }
                                 else
                                 {
-                                    <MudText>@L["Import Data"]</MudText>
+                                    <MudText>@ButtonText.IMPORT</MudText>
                                 }
 
                             </MudButton>
@@ -92,48 +92,48 @@
                                 @if (_downloading)
                                 {
                                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                    <MudText Class="ms-2"> @L["Downloading..."]</MudText>
+                                    <MudText Class="ms-2"> @ButtonText.DOWNLOADING</MudText>
                                 }
                                 else
                                 {
-                                    <MudText>@L["Export Data"]</MudText>
+                                    <MudText>@ButtonText.EXPORT</MudText>
                                 }
                             </MudButton>
                         }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
+                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ButtonText.REFRESH</MudMenuItem>
                             @if (_canCreate)
                             {
-                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@L["Create"]</MudMenuItem>
+                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@ButtonText.CREATE</MudMenuItem>
                             }
                             @if (_canDelete)
                             {
-                                <MudMenuItem OnClick="OnDeleteChecked">@L["Delete"]</MudMenuItem>
+                                <MudMenuItem OnClick="OnDeleteChecked">@ButtonText.DELETE</MudMenuItem>
                             }
                             @if (_canImport)
                             {
                                 <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                                 <MudMenuItem for="importdataInput"
-                                         HtmlTag="label">@L["Import Data"]</MudMenuItem>
+                                         HtmlTag="label">@ButtonText.IMPORT</MudMenuItem>
                             }
                             @if (_canExport)
                             {
-                                <MudMenuItem OnClick="OnExport">@L["Export Data"]</MudMenuItem>
+                                <MudMenuItem OnClick="OnExport">@ButtonText.EXPORT</MudMenuItem>
                             }
                         </MudMenu>
                     </MudHidden>
                 </div>
                 <MudSpacer />
-                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@PromptText.SEARCH" Adornment="Adornment.Start"
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
                 <col style="width:50px;" />
             </ColGroup>
             <HeaderContent>
-                <MudTh Style="width:80px">@L["Actions"]</MudTh>
+                <MudTh Style="width:80px">@PromptText.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Brand" T="ProductDto">@L["Brand Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Name" T="ProductDto">@L["Product Name"]</MudTableSortLabel></MudTh>
                 <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="Price" T="ProductDto">@L["Price"]</MudTableSortLabel></MudTh>
@@ -141,20 +141,20 @@
 
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="@L["Actions"]">
+                <MudTd DataLabel="@ButtonText.ACTIONS">
                     @if (_canEdit || _canDelete)
                     {
-                        <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                        <MudMenu Label="@ButtonText.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                              Dense="true"
                              EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
                             @if (_canEdit)
                             {
-                                <MudMenuItem OnClick="@(()=>OnEdit(context))">@L["Edit"]</MudMenuItem>
+                                <MudMenuItem OnClick="@(()=>OnEdit(context))">@ButtonText.EDIT</MudMenuItem>
                             }
                             @if (_canDelete)
                             {
-                                <MudMenuItem OnClick="@(()=>OnDelete(context))">@L["Delete"]</MudMenuItem>
+                                <MudMenuItem OnClick="@(()=>OnDelete(context))">@ButtonText.DELETE</MudMenuItem>
                             }
                         </MudMenu>
                     }
@@ -163,7 +163,7 @@
                         <MudButton Variant="Variant.Filled" DisableElevation="true"
                                StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
-                            @L["No Allowed"]
+                            @ButtonText.NOALLOWED
                         </MudButton>
                     }
                 </MudTd>
@@ -176,10 +176,10 @@
                 <MudTd DataLabel="@L["Unit"]">@context.Unit</MudTd>
             </RowTemplate>
             <NoRecordsContent>
-                <MudText>@L["No matching records found"]</MudText>
+                <MudText>@PromptText.NOMACHING</MudText>
             </NoRecordsContent>
             <LoadingContent>
-                <MudText>@L["Loading.."].</MudText>
+                <MudText>@PromptText.LOADING</MudText>
             </LoadingContent>
             <PagerContent>
                 <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
@@ -275,13 +275,13 @@
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
-        (L["Create a new product"], parameters, options);
+        (string.Format(PromptText.CREATEAITEM,"product"), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{L["Create successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
         }
     }
     private async Task OnEdit(ProductDto dto)
@@ -302,53 +302,50 @@
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
-        (L["Edit the product"], parameters, options);
+        (string.Format(PromptText.EDITTHEITEM,"product"), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{L["Save successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ToastText.SAVESUCCESS}", MudBlazor.Severity.Info);
         }
     }
 
     private async Task OnDelete(ProductDto dto)
     {
-        var deleteContent = L["You're sure you want to delete the product:{0}?"];
         var parameters = new DialogParameters
                     {
-                { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.Name) }
+                { nameof(DeleteConfirmation.ContentText), string.Format(PromptText.DELETECONFIRMATION, dto.Name) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>
-        (L["Delete"], parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(PromptText.EDITTHEITEM,"product"), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
             var command = new DeleteProductCommand(new int[] { dto.Id });
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ToastText.DELETESUCCESS}", MudBlazor.Severity.Info);
         }
     }
 
     private async Task OnDeleteChecked()
     {
-        var deleteContent = L["You're sure you want to delete the selected items:{0}?"];
         var parameters = new DialogParameters
                         {
-                    { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,_selectedItems.Count) }
+                    { nameof(DeleteConfirmation.ContentText), string.Format(PromptText.DELETECONFIRMWITHSELECTED,_selectedItems.Count) }
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>
-        (L["Delete"], parameters, options);
+        (string.Format(PromptText.DELETETHEITEM,"product"), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
             var command = new DeleteProductCommand(_selectedItems.Select(x => x.Id).ToArray());
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ToastText.DELETESUCCESS}", MudBlazor.Severity.Info);
             _selectedItems = new HashSet<ProductDto>
             ();
         }
@@ -365,6 +362,7 @@
         var result = await _mediator.Send(request);
         using var streamRef = new DotNetStreamReference(new MemoryStream(result));
         await JS.InvokeVoidAsync("downloadFileFromStream", $"{L["Products"]}.xlsx", streamRef);
+        Snackbar.Add($"{ToastText.EXPORTSUCESS}", MudBlazor.Severity.Info);
         _downloading = false;
     }
     private async Task OnImportData(InputFileChangeEventArgs e)
@@ -378,7 +376,7 @@
         if (result.Succeeded)
         {
             await _table.ReloadServerData();
-            Snackbar.Add($"{L["Import data successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ToastText.IMPORTSUCCESS}", MudBlazor.Severity.Info);
         }
         else
         {
