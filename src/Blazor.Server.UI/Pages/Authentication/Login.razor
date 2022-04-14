@@ -51,25 +51,25 @@
     @if (_externalLogins.Any())
     {
         <div class="d-flex justify-space-around flex-grow-1 my-4">
-        @foreach (var provider in _externalLogins)
-          {
-            string? icon = null;
-            switch (provider.Name.ToLower())
+            @foreach (var provider in _externalLogins)
             {
-              case "microsoft":
-                icon = Icons.Custom.Brands.Microsoft;
-                break;
-              case "google":
-                icon = Icons.Custom.Brands.Google;
-                break;
-            }
-            <MudButton OnClick="@(()=>SignInExternal(provider.Name))" Variant="Variant.Filled" StartIcon="@icon" ButtonType="ButtonType.Submit"
+                string? icon = null;
+                switch (provider.Name.ToLower())
+                {
+                    case "microsoft":
+                        icon = Icons.Custom.Brands.Microsoft;
+                        break;
+                    case "google":
+                        icon = Icons.Custom.Brands.Google;
+                        break;
+                }
+                <MudButton OnClick="@(()=>SignInExternal(provider.Name))" Variant="Variant.Filled" StartIcon="@icon" ButtonType="ButtonType.Submit"
                        name="provider" value="@provider.Name"
                        title="@string.Format(ButtonText.SIGNINWITH, provider.DisplayName)">
-              @provider.DisplayName
-            </MudButton>
-          }
-         </div>
+                    @provider.DisplayName
+                </MudButton>
+            }
+        </div>
     }
 </EditForm>
 @code {
@@ -77,7 +77,10 @@
     private SignInManager<ApplicationUser> _signInManager { get; set; } = default!;
     private List<AuthenticationScheme> _externalLogins { get; set; } = new();
     [Inject] private IdentityAuthenticationService _authenticationService { get; set; } = default!;
-    [Inject] private ILogger<Login> _logger { get; set; } = default!;
+    [Inject]
+    private ILogger<Login> _logger { get; set; } = default!;
+    [Inject]
+    private Microsoft.Identity.Web.ITokenAcquisition TokenAcquisitionService {get;set;} 
     LoginFormModel model = new LoginFormModel()
         {
             UserName = "administrator",
@@ -148,9 +151,9 @@
 
     }
 
-    private  Task SignInExternal(string provider)
+    private async Task SignInExternal(string provider)
     {
+        var token = await TokenAcquisitionService.GetAccessTokenForUserAsync(new string[] { "User.Read", "Mail.Read" });
 
-        return Task.CompletedTask;
     }
 }

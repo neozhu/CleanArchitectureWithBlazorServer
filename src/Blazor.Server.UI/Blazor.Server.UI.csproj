@@ -19,6 +19,7 @@
         <PackageReference Include="Blazor-Analytics" Version="3.11.0" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.4" />
+        <PackageReference Include="Microsoft.Identity.Web" Version="1.23.1" />
        <PackageReference Include="MudBlazor" Version="6.0.9" />
         <PackageReference Include="MediatR" Version="10.0.1" />
        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.0" />

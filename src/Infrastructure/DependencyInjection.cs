@@ -9,6 +9,7 @@ using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services.Picklist;
 using CleanArchitecture.Blazor.Infrastructure.Hubs;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -60,18 +61,9 @@ public static class DependencyInjection
         services.Configure<AppConfigurationSettings>(configuration.GetSection("AppConfigurationSettings"));
         services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
         services.AddTransient<IMailService, SMTPMailService>();
-        services.AddAuthentication();
-        services.Configure<IdentityOptions>(options =>
-        {
-            // Default SignIn settings.
-            options.SignIn.RequireConfirmedEmail = false;
-            options.SignIn.RequireConfirmedPhoneNumber = false;
-            // Default Lockout settings.
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
-            options.Lockout.MaxFailedAccessAttempts = 5;
-            options.Lockout.AllowedForNewUsers = true;
+        services.AddAuthentication().TryConfigureMicrosoftAccount(configuration)
+                                    .TryConfigureGoogleAccount(configuration);
 
-        });
         services.AddAuthorization(options =>
         {
             options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
