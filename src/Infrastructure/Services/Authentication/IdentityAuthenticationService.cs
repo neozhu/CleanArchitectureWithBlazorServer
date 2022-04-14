@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using System.Text;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
@@ -136,6 +137,50 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         }
     }
 
+    public async Task<bool> ExternalLogin(string provider,string userName, string name,string accessToken)
+    {
+        await _semaphore.WaitAsync();
+        try
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user is null)
+            {
+                user = new ApplicationUser
+                {
+                    EmailConfirmed=true,
+                    IsActive=true,
+                    IsLive=true,
+                    UserName = userName,
+                    Email = userName.Any(x => x == '@') ? userName : $"{userName}@provider.com",
+                    Site = provider,
+                    DisplayName = name,
+                };
+                var result = await _userManager.CreateAsync(user);
+                if (!result.Succeeded)
+                {
+                    return false;
+                }
+                await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
+            }
+            var identity = await createIdentityFromApplicationUser(user);
+            using (var memoryStream = new MemoryStream())
+            using (var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))
+            {
+                identity.WriteTo(binaryWriter);
+                var base64 = Convert.ToBase64String(memoryStream.ToArray());
+                await _protectedLocalStorage.SetAsync(CLAIMSIDENTITY, base64);
+            }
+            await _protectedLocalStorage.SetAsync(USERID, user.Id);
+            await _protectedLocalStorage.SetAsync(USERNAME, user.UserName);
+            var principal = new ClaimsPrincipal(identity);
+            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
+            return true;
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
     public async Task Logout()
     {
         await _protectedLocalStorage.DeleteAsync(CLAIMSIDENTITY);
