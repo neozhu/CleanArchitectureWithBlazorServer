@@ -2,14 +2,16 @@
 @using System.Text.RegularExpressions
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
+@using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.DataProtection
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
 
-@inherits ComponentBase
+@inherits OwningComponentBase
+@implements IDisposable
 @inject IStringLocalizer<Login> L
-
+<PageTitle>@Title</PageTitle>
 <EditForm Model="@model"
           OnValidSubmit="OnValidSubmit">
     <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
@@ -46,10 +48,34 @@
                Size="Size.Large"
                ButtonType="ButtonType.Submit"
                FullWidth="true">@L["Sign In"]</MudButton>
+    @if (_externalLogins.Any())
+    {
+        <div class="d-flex justify-space-around flex-grow-1 my-4">
+        @foreach (var provider in _externalLogins)
+          {
+            string? icon = null;
+            switch (provider.Name.ToLower())
+            {
+              case "microsoft":
+                icon = Icons.Custom.Brands.Microsoft;
+                break;
+              case "google":
+                icon = Icons.Custom.Brands.Google;
+                break;
+            }
+            <MudButton OnClick="@(()=>SignInExternal(provider.Name))" Variant="Variant.Filled" StartIcon="@icon" ButtonType="ButtonType.Submit"
+                       name="provider" value="@provider.Name"
+                       title="@string.Format(ButtonText.SIGNINWITH, provider.DisplayName)">
+              @provider.DisplayName
+            </MudButton>
+          }
+         </div>
+    }
 </EditForm>
 @code {
-
-  
+    private string Title = "Sign In";
+    private SignInManager<ApplicationUser> _signInManager { get; set; } = default!;
+    private List<AuthenticationScheme> _externalLogins { get; set; } = new();
     [Inject] private IdentityAuthenticationService _authenticationService { get; set; } = default!;
     [Inject] private ILogger<Login> _logger { get; set; } = default!;
     LoginFormModel model = new LoginFormModel()
@@ -63,6 +89,14 @@
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
+        var externalSchemes = await _signInManager.GetExternalAuthenticationSchemesAsync();
+        _externalLogins = externalSchemes.ToList();
+    }
+
     private IEnumerable<string> PasswordStrength(string pw)
     {
         if (string.IsNullOrWhiteSpace(pw))
@@ -102,15 +136,21 @@
             var result = await _authenticationService.Login(model);
             if (!result)
             {
-                _logger.LogWarning("{@UserName} login fail.",model.UserName);
+                _logger.LogWarning("{@UserName} login fail.", model.UserName);
                 Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
             }
             else
             {
-                 _logger.LogInformation("{@UserName} login successfully.",model.UserName);
+                _logger.LogInformation("{@UserName} login successfully.", model.UserName);
             }
 
         }
 
+    }
+
+    private  Task SignInExternal(string provider)
+    {
+
+        return Task.CompletedTask;
     }
 }

@@ -34,4 +34,6 @@ public static class ButtonText
     public static string DOWNLOADING => Localize("Downloading...");
 
     public static string NOALLOWED => Localize("No Allowed");
+
+    public static string SIGNINWITH => Localize("Sign in with {0}");
 }
