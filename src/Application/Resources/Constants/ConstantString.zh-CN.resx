@@ -243,4 +243,7 @@
   <data name="Yes" xml:space="preserve">
     <value>是</value>
   </data>
+  <data name="Sign in with {0}" xml:space="preserve">
+    <value>{0}</value>
+  </data>
 </root>

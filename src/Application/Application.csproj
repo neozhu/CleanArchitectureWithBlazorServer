@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -29,7 +29,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="6.0.4" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.18" />
-    <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,10 +41,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\Constants\Constants.Designer.cs">
+    <Compile Update="Resources\Constants\ConstantString.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Constants.resx</DependentUpon>
+      <DependentUpon>ConstantString.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\Customers\Commands\Import\ImportCustomersCommandHandler.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -100,9 +99,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\Constants\Constants.resx">
+    <EmbeddedResource Update="Resources\Constants\ConstantString.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Constants.Designer.cs</LastGenOutput>
+      <LastGenOutput>ConstantString.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Customers\Commands\Import\ImportCustomersCommandHandler.resx">
       <Generator>ResXFileCodeGenerator</Generator>

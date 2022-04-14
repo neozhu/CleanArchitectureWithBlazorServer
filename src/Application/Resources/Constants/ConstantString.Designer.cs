@@ -22,14 +22,14 @@ namespace CleanArchitecture.Blazor.Application.Resources.Constants {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Constants {
+    internal class ConstantString {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Constants() {
+        internal ConstantString() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace CleanArchitecture.Blazor.Application.Resources.Constants {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.Constants.Constants", typeof(Constants).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.Constants.ConstantString", typeof(ConstantString).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -417,6 +417,15 @@ namespace CleanArchitecture.Blazor.Application.Resources.Constants {
         internal static string Search {
             get {
                 return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sign in with {0}.
+        /// </summary>
+        internal static string Sign_in_with__0_ {
+            get {
+                return ResourceManager.GetString("Sign in with {0}", resourceCulture);
             }
         }
         

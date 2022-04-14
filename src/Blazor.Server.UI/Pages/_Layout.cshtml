@@ -37,6 +37,8 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
+    <script src="~/msal/authConfig.js"></script>
     <script src="_framework/blazor.server.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -62,7 +64,13 @@
         }
 
 
- 
+       async function externalLogin(provider, dotNetHelper) {
+            var client = new msal.PublicClientApplication(msalConfig);
+            var response = await client.loginPopup(loginRequest);
+            console.log(response);
+            await dotNetHelper.invokeMethodAsync('ConfirmExternal', provider, response.account.username, response.account.name, response.accessToken);
+            console.log('ExternalLogin success');
+       }
     </script>
    
 </body>
