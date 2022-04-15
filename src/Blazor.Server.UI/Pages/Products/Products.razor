@@ -26,7 +26,7 @@
                   RowsPerPage="15"
                   Height="calc(100vh - 330px)"
                   Loading="@_loading"
-                  SortLabel="@L["Sort By"]"
+                  SortLabel="@PromptText.ORDERBY"
                   MultiSelection="true" @bind-SelectedItems="_selectedItems"
                   Hover="true" @ref="_table">
             <ToolBarContent>
@@ -130,10 +130,15 @@
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
-                <col style="width:50px;" />
+                <col style="width:48px;" />
+                <col style="width:95px;" />
+                <col style="width:180px;" />
+                <col style="width:60%;"/>
+                <col style="width:120px;"/>
+                <col style="width:120px;"/>
             </ColGroup>
             <HeaderContent>
-                <MudTh Style="width:80px">@PromptText.ACTIONS</MudTh>
+                <MudTh>@PromptText.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Brand" T="ProductDto">@L["Brand Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Name" T="ProductDto">@L["Product Name"]</MudTableSortLabel></MudTh>
                 <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="Price" T="ProductDto">@L["Price"]</MudTableSortLabel></MudTh>
