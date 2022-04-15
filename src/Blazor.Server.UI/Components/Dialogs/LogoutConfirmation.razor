@@ -1,35 +1,32 @@
-@inject IStringLocalizer<SharedResource> L
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.Logout" Class="mr-3 mb-n1" />
-            @L["Logout Confirmation"]
+            @PromptText.LOGOUTCONFIRMATIONTITLE
         </MudText>
     </TitleContent>
     <DialogContent>
         <MudText>@ContentText</MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton StartIcon="@Icons.Filled.Cancel" OnClick="Cancel">@L["Cancel"]</MudButton>
-        <MudButton StartIcon="@Icons.Filled.Logout" Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
+        <MudButton StartIcon="@Icons.Filled.Cancel" OnClick="Cancel">@ButtonText.CANCEL</MudButton>
+        <MudButton StartIcon="@Icons.Filled.Logout" Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText.LOGOUT</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
     [Parameter] public string? ContentText { get; set; }
 
-    [Parameter] public string? ButtonText { get; set; }
-
     [Parameter] public Color Color { get; set; }
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
     [Inject] private NavigationManager _navigation { get; set; }= default!;
 
-    async Task Submit()
+    Task Submit()
     {
-        Snackbar.Add(@L["Logged out"], MudBlazor.Severity.Info);
         MudDialog.Close(DialogResult.Ok(true));
-
+        Snackbar.Add(@ToastText.LOGOUTSUCCESS, MudBlazor.Severity.Info);
+        return Task.CompletedTask;
     }
 
     void Cancel() =>  MudDialog.Cancel();

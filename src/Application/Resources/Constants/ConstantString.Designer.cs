@@ -79,6 +79,15 @@ namespace CleanArchitecture.Blazor.Application.Resources.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advanced Search.
+        /// </summary>
+        internal static string Advanced_Search {
+            get {
+                return ResourceManager.GetString("Advanced Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure you want to delete the selected items: {0}?.
         /// </summary>
         internal static string Are_you_sure_you_want_to_delete_the_selected_items___0__ {
@@ -165,6 +174,15 @@ namespace CleanArchitecture.Blazor.Application.Resources.Constants {
         internal static string Delete {
             get {
                 return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Confirmation.
+        /// </summary>
+        internal static string Delete_Confirmation {
+            get {
+                return ResourceManager.GetString("Delete Confirmation", resourceCulture);
             }
         }
         
@@ -304,6 +322,24 @@ namespace CleanArchitecture.Blazor.Application.Resources.Constants {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logout.
+        /// </summary>
+        internal static string Logout {
+            get {
+                return ResourceManager.GetString("Logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logout Confirmation.
+        /// </summary>
+        internal static string Logout_Confirmation {
+            get {
+                return ResourceManager.GetString("Logout Confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Logout fail.
         /// </summary>
         internal static string Logout_fail {
@@ -354,6 +390,15 @@ namespace CleanArchitecture.Blazor.Application.Resources.Constants {
         internal static string OK {
             get {
                 return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order By.
+        /// </summary>
+        internal static string Order_By {
+            get {
+                return ResourceManager.GetString("Order By", resourceCulture);
             }
         }
         

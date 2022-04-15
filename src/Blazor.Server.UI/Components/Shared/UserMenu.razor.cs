@@ -9,7 +9,7 @@ namespace Blazor.Server.UI.Components.Shared;
 
 public partial class UserMenu
 {
-    [Parameter] public string Class { get; set; }
+    [Parameter] public string Class { get; set; } = string.Empty;
     [EditorRequired] [Parameter] public UserModel User { get; set; } = default!;
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     [Inject] private IdentityAuthenticationService _authenticationService { get; set; } = default!;
@@ -18,7 +18,6 @@ public partial class UserMenu
         var parameters = new DialogParameters
             {
                 { nameof(LogoutConfirmation.ContentText), $"{L["You are attempting to log out of application. Do you really want to log out?"]}"},
-                { nameof(LogoutConfirmation.ButtonText), $"{L["Logout"]}"},
                 { nameof(LogoutConfirmation.Color), Color.Error}
             };
 

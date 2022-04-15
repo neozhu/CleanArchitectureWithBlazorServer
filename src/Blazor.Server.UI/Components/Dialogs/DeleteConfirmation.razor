@@ -1,18 +1,17 @@
 @inject IStringLocalizer<SharedResource> L
-
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.Delete" Class="mr-3 mb-n1" />
-            @L["Delete Confirmation"]
+            @PromptText.DELETECONFIRMATIONTITLE
         </MudText>
     </TitleContent>
     <DialogContent>
         <MudText>@ContentText</MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton StartIcon="@Icons.Filled.Cancel" OnClick="Cancel">@L["Cancel"]</MudButton>
-        <MudButton StartIcon="@Icons.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" OnClick="Submit">@L["Confirm"]</MudButton>
+        <MudButton StartIcon="@Icons.Filled.Cancel" OnClick="Cancel">@ButtonText.CANCEL</MudButton>
+        <MudButton StartIcon="@Icons.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" OnClick="Submit">@ButtonText.CONFIRM</MudButton>
     </DialogActions>
 </MudDialog>
 

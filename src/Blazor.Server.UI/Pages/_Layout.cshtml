@@ -11,18 +11,20 @@
     <link href="css/app.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
-   <style>
-       .mud-input {
-          font-size: 0.8125rem;
-       }
-       .mud-input-control>.mud-input-control-input-container>.mud-input-label-inputcontrol {
-        font-size:0.8125rem;
-       }
-        .mud-button-year {
-        font-size:0.8125rem;
+    <style>
+        .mud-input {
+            font-size: 0.8125rem;
         }
-   </style>
-   <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+
+        .mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
+            font-size: 0.8125rem;
+        }
+
+        .mud-button-year {
+            font-size: 0.8125rem;
+        }
+    </style>
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
     @RenderBody()
@@ -38,40 +40,61 @@
         <a class="dismiss">🗙</a>
     </div>
     <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
-    <script src="~/msal/authConfig.js"></script>
+    <script src="~/js/msal/authConfig.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="~/js/gapi/auth2config.js"></script>
+
     <script src="_framework/blazor.server.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="~/js/apex-chart-wrapper.js"></script>
     <script type="text/javascript">
 
-        async function downloadFileFromStream(fileName, contentStreamReference) {
-            const arrayBuffer = await contentStreamReference.arrayBuffer();
-            const blob = new Blob([arrayBuffer]);
-            const url = URL.createObjectURL(blob);
+              async function downloadFileFromStream(fileName, contentStreamReference) {
+                  const arrayBuffer = await contentStreamReference.arrayBuffer();
+                  const blob = new Blob([arrayBuffer]);
+                  const url = URL.createObjectURL(blob);
 
-            triggerFileDownload(fileName, url);
+                  triggerFileDownload(fileName, url);
 
-            URL.revokeObjectURL(url);
-        }
+                  URL.revokeObjectURL(url);
+              }
 
-        function triggerFileDownload(fileName, url) {
-            const anchorElement = document.createElement('a');
-            anchorElement.href = url;
-            anchorElement.download = fileName ?? '';
-            anchorElement.click();
-            anchorElement.remove();
-        }
+              function triggerFileDownload(fileName, url) {
+                  const anchorElement = document.createElement('a');
+                  anchorElement.href = url;
+                  anchorElement.download = fileName ?? '';
+                  anchorElement.click();
+                  anchorElement.remove();
+              }
 
 
-       async function externalLogin(provider, dotNetHelper) {
-            var client = new msal.PublicClientApplication(msalConfig);
-            var response = await client.loginPopup(loginRequest);
-            console.log(response);
-            await dotNetHelper.invokeMethodAsync('ConfirmExternal', provider, response.account.username, response.account.name, response.accessToken);
-            console.log('ExternalLogin success');
-       }
+             async function externalLogin(provider, dotNetHelper) {
+                 if(provider=='Microsoft'){
+                     await loginWithMicrosoft(provider,dotNetHelper);
+                 }else if(provider=='Google') {
+                     await loginWithGoogle(provider,dotNetHelper);
+                 }
+
+             }
+             async function loginWithMicrosoft(provider, dotNetHelper){
+                  var client = new msal.PublicClientApplication(msalConfig);
+                  var response = await client.loginPopup(loginRequest);
+                  console.log(response);
+                  await dotNetHelper.invokeMethodAsync('ConfirmExternal', provider, response.account.username, response.account.name, response.accessToken);
+                  console.log('login with microsoft success');
+             }
+             async function loginWithGoogle(provider, dotNetHelper) {
+                 gapi.load('client:auth2',function() {
+                     gapi.client.init(auth2Config).then(function(response) {
+                                console.log(response.result);
+                             }, function(reason) {
+                                   console.log('Error: ' + reason.result.error.message);
+                             });
+                 })
+                 console.log('login with google success');
+             }
     </script>
-   
+
 </body>
 </html>

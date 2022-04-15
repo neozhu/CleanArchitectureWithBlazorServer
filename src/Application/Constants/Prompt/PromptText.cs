@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace CleanArchitecture.Blazor.Application.Constants;
 public static class PromptText
 {
+    public static string ADVANCEDSEARCH => Localize("Advanced Search");
+    public static string ORDERBY => Localize("Order By");
     public static string ACTIONS => Localize("Actions");
     public static string SEARCH => Localize("Search");
     public static string CREATEAITEM => Localize("Create a new {0}");
@@ -18,5 +20,10 @@ public static class PromptText
     public static string DELETECONFIRMWITHSELECTED => Localize("Are you sure you want to delete the selected items: {0}?");
     public static string NOMACHING => Localize("No matching records found");
     public static string LOADING => Localize("Loading...");
+
+    public static string DELETECONFIRMATIONTITLE => Localize("Delete Confirmation");
+
+    public static string LOGOUTCONFIRMATIONTITLE=>Localize("Logout Confirmation");
+    public static string LOGOUTCONFIRMATION => Localize("");
 
 }

@@ -26,6 +26,7 @@ public static class ButtonText
     public static string CLEAR => Localize("Clear");
     public static string RESET => Localize("Reset");
     public static string OK => Localize("OK");
+    public static string CONFIRM => Localize("Confirm");
     public static string YES => Localize("Yes");
     public static string NO => Localize("No");
     public static string NEXT => Localize("Next");
@@ -36,4 +37,5 @@ public static class ButtonText
     public static string NOALLOWED => Localize("No Allowed");
 
     public static string SIGNINWITH => Localize("Sign in with {0}");
+    public static string LOGOUT => Localize("Logout");
 }
