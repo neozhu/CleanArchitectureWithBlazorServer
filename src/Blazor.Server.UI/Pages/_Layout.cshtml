@@ -41,7 +41,8 @@
     </div>
     <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
     <script src="~/js/msal/authConfig.js"></script>
-    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/8.0.20/jsrsasign-all-min.js"></script>
     <script src="~/js/gapi/auth2config.js"></script>
 
     <script src="_framework/blazor.server.js"></script>
@@ -85,15 +86,32 @@
                   console.log('login with microsoft success');
              }
              async function loginWithGoogle(provider, dotNetHelper) {
-                 gapi.load('client:auth2',function() {
-                     gapi.client.init(auth2Config).then(function(response) {
-                                console.log(response.result);
-                             }, function(reason) {
-                                   console.log('Error: ' + reason.result.error.message);
-                             });
-                 })
-                 console.log('login with google success');
+                 google.accounts.id.initialize({
+                                ux_mode:'popup',
+                                client_id: auth2Config.clientId,
+                                callback: async function(response){
+                                     console.log(response)
+                                     const responsePayload = decodeJwtResponse(response.credential);
+                                     console.log("ID: " + responsePayload.sub);
+                                     console.log('Full Name: ' + responsePayload.name);
+                                     console.log('Given Name: ' + responsePayload.given_name);
+                                     console.log('Family Name: ' + responsePayload.family_name);
+                                     console.log("Image URL: " + responsePayload.picture);
+                                     console.log("Email: " + responsePayload.email);
+                                     await dotNetHelper.invokeMethodAsync('ConfirmExternal', provider, responsePayload.email, responsePayload.given_name, response.accessToken);
+                                     console.log('login with google success');
+                                } 
+                        });
+                        google.accounts.id.prompt();
              }
+             function decodeJwtResponse(credential){
+                         var a = credential.split(".");
+                         var uHeader = b64utos(a[0]);
+                         var uClaim = b64utos(a[1]);
+                         var pHeader = KJUR.jws.JWS.readSafeJSONString(uHeader);
+                         var pClaim = KJUR.jws.JWS.readSafeJSONString(uClaim);
+                         return pClaim
+                   }
     </script>
 
 </body>
