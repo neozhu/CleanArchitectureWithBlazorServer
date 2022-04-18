@@ -3,7 +3,7 @@ const msalConfig = {
         clientId: "28a686de-99c7-49b5-9c7b-46c74fafbb57",
         clientSecret: "d4ff6a43-d105-44d7-8f1e-67af15b6d885",
         authority: "https://login.microsoftonline.com/common",
-        redirectUri: "https://mudblazor-s.dotnet6.cn",
+        redirectUri: "https://mudblazor-s.dotnet6.cn/",
     },
     cache: {
         cacheLocation: "sessionStorage", // This configures where your cache will be stored

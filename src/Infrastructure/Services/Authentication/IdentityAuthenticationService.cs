@@ -136,8 +136,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             _semaphore.Release();
         }
     }
-
-    public async Task<bool> ExternalLogin(string provider,string userName, string name,string accessToken)
+    public async Task<bool> ExternalLogin(string provider, string userName, string name, string accessToken)
     {
         await _semaphore.WaitAsync();
         try
@@ -147,11 +146,11 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             {
                 user = new ApplicationUser
                 {
-                    EmailConfirmed=true,
-                    IsActive=true,
-                    IsLive=true,
+                    EmailConfirmed = true,
+                    IsActive = true,
+                    IsLive = true,
                     UserName = userName,
-                    Email = userName.Any(x => x == '@') ? userName : $"{userName}@provider.com",
+                    Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
                     Site = provider,
                     DisplayName = name,
                 };
