@@ -1,9 +1,9 @@
 const msalConfig = {
     auth: {
-        clientId: "36a06978-f382-4ee2-918b-23f0b05120dc",
-        clientSecret: "0e3f4cc8-da27-4f11-bdda-ea54fceb5552",
+        clientId: "28a686de-99c7-49b5-9c7b-46c74fafbb57",
+        clientSecret: "d4ff6a43-d105-44d7-8f1e-67af15b6d885",
         authority: "https://login.microsoftonline.com/common",
-        redirectUri: "https://localhost:44375/",
+        redirectUri: "https://mudblazor-s.dotnet6.cn/",
     },
     cache: {
         cacheLocation: "sessionStorage", // This configures where your cache will be stored
@@ -38,7 +38,7 @@ const msalConfig = {
     },
     telemetry: {
         application: {
-            appName: "visitormanagement(blazor)",
+            appName: "Blazor",
             appVersion: "1.0.0"
         }
     }
