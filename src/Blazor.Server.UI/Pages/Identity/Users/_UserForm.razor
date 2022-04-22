@@ -68,7 +68,7 @@
                           Adornment="Adornment.End"
                           AdornmentIcon="@PasswordInputIcon"
                           Required="true"
-                          RequiredError="@L["password is required!"]"
+                          RequiredError="@L["confrm password is required!"]"
                           OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
             </MudItem>
         }
@@ -169,7 +169,7 @@
                     });
                 model.ProfilePictureDataUrl = result;
                 //Do your validations here
-                Snackbar.Add($"upload successfully", MudBlazor.Severity.Info);
+                Snackbar.Add(ToastText.UPLOADSUCCESS, MudBlazor.Severity.Info);
             }
         }
     }

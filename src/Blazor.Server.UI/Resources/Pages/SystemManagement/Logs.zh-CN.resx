@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,64 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Analytics" xml:space="preserve">
-    <value>Analytics</value>
+  <data name="Hide Details" xml:space="preserve">
+    <value>隐藏明细</value>
   </data>
-  <data name="Application" xml:space="preserve">
-    <value>Application</value>
+  <data name="Level" xml:space="preserve">
+    <value>等级</value>
   </data>
-  <data name="Audit Trails" xml:space="preserve">
-    <value>Audit Trails</value>
+  <data name="Logs" xml:space="preserve">
+    <value>日志</value>
   </data>
-  <data name="Authorization" xml:space="preserve">
-    <value>Authorization</value>
+  <data name="Message" xml:space="preserve">
+    <value>消息</value>
   </data>
-  <data name="Banking" xml:space="preserve">
-    <value>Banking</value>
+  <data name="Show Details" xml:space="preserve">
+    <value>显示明细</value>
   </data>
-  <data name="Blazor Dashbord" xml:space="preserve">
-    <value>Blazor Dashbord</value>
+  <data name="Time Stamp" xml:space="preserve">
+    <value>时间</value>
   </data>
-  <data name="Booking" xml:space="preserve">
-    <value>Booking</value>
-  </data>
-  <data name="Dictionaries" xml:space="preserve">
-    <value>Dictionaries</value>
-  </data>
-  <data name="E-Commerce" xml:space="preserve">
-    <value>E-Commerce</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="Jobs" xml:space="preserve">
-    <value>Jobs</value>
-  </data>
-  <data name="Log" xml:space="preserve">
-    <value>Log</value>
-  </data>
-  <data name="MANAGEMENT" xml:space="preserve">
-    <value>MANAGEMENT</value>
-  </data>
-  <data name="Picklist" xml:space="preserve">
-    <value>Picklist</value>
-  </data>
-  <data name="Products" xml:space="preserve">
-    <value>Products</value>
-  </data>
-  <data name="Profile" xml:space="preserve">
-    <value>Profile</value>
-  </data>
-  <data name="Roles" xml:space="preserve">
-    <value>Roles</value>
-  </data>
-  <data name="System" xml:space="preserve">
-    <value>System</value>
-  </data>
-  <data name="Users" xml:space="preserve">
-    <value>Users</value>
-  </data>
-  <data name="Customers" xml:space="preserve">
-    <value>Customers</value>
+  <data name="User Name" xml:space="preserve">
+    <value>用户名</value>
   </data>
 </root>

@@ -48,7 +48,7 @@
                     {
                         <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Primary"
                             OnClick="(() => InvokeModal())" StartIcon="@Icons.Material.Filled.Add"
-                            IconColor="Color.Surface">@L["Create"]</MudButton>
+                            IconColor="Color.Surface">@ButtonText.CREATE</MudButton>
                     }
                     <MudButton DisableElevation Variant="Variant.Filled" OnClick="ReloadDataAsync"
                         StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary"
@@ -82,7 +82,7 @@
                         </MudTh>
                     }
                 }
-                <MudTh Style="text-align:right">@L["Actions"]</MudTh>
+                <MudTh Style="text-align:right">@ButtonText.ACTIONS</MudTh>
             </HeaderContent>
 
             <RowTemplate>
@@ -110,16 +110,16 @@
                     }
                     else if (HasActions)
                     {
-                        <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
+                        <MudMenu Label="@ButtonText.ACTIONS" Variant="Variant.Filled" DisableElevation="true"
                             EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" Direction="Direction.Left"
                             OffsetX="true">
                             @if (CanUpdateEntity(context))
                             {
-                                <MudMenuItem @onclick="@(() => InvokeModal(context))">@L["Edit"]</MudMenuItem>
+                                <MudMenuItem @onclick="@(() => InvokeModal(context))">@ButtonText.EDIT</MudMenuItem>
                             }
                             @if (CanDeleteEntity(context))
                             {
-                                <MudMenuItem Style="color:red!important" @onclick="@(() => Delete(context))">@L["Delete"]</MudMenuItem>
+                                <MudMenuItem Style="color:red!important" @onclick="@(() => Delete(context))">@ButtonText.DELETE</MudMenuItem>
                             }
                             @if (ExtraActions is not null)
                             {

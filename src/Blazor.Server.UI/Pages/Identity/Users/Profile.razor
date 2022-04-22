@@ -189,7 +189,7 @@
                     });
                 model.Avatar = result;
                 //Do your validations here
-                Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{ToastText.UPDATESUCCESS}", MudBlazor.Severity.Info);
             }
         }
     }
@@ -211,7 +211,7 @@
             if(model.PhoneNumber is not null)
                 state.User.SetPhoneNumber(model.PhoneNumber);
             await _profileService.Update(model);
-            Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ToastText.UPDATESUCCESS}", MudBlazor.Severity.Info);
         }
 
     }

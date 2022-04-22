@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,64 +117,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Analytics" xml:space="preserve">
-    <value>Analytics</value>
+  <data name="{0} session changed." xml:space="preserve">
+    <value>{0} 会话更新</value>
   </data>
-  <data name="Application" xml:space="preserve">
-    <value>Application</value>
+  <data name="Assign Roles" xml:space="preserve">
+    <value>分配角色</value>
   </data>
-  <data name="Audit Trails" xml:space="preserve">
-    <value>Audit Trails</value>
+  <data name="Click upload a photo." xml:space="preserve">
+    <value>颜色</value>
   </data>
-  <data name="Authorization" xml:space="preserve">
-    <value>Authorization</value>
+  <data name="Confirm New Password" xml:space="preserve">
+    <value>确认新密码</value>
   </data>
-  <data name="Banking" xml:space="preserve">
-    <value>Banking</value>
+  <data name="confirm password is required!" xml:space="preserve">
+    <value>确认密码必填</value>
   </data>
-  <data name="Blazor Dashbord" xml:space="preserve">
-    <value>Blazor Dashbord</value>
+  <data name="Create a new user" xml:space="preserve">
+    <value>创建新用户</value>
   </data>
-  <data name="Booking" xml:space="preserve">
-    <value>Booking</value>
+  <data name="Dispaly Name" xml:space="preserve">
+    <value>显示名称</value>
   </data>
-  <data name="Dictionaries" xml:space="preserve">
-    <value>Dictionaries</value>
+  <data name="Edit the user" xml:space="preserve">
+    <value>编辑用户</value>
   </data>
-  <data name="E-Commerce" xml:space="preserve">
-    <value>E-Commerce</value>
+  <data name="Email" xml:space="preserve">
+    <value>电子邮件</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
+  <data name="Is Active" xml:space="preserve">
+    <value>是否激活</value>
   </data>
-  <data name="Jobs" xml:space="preserve">
-    <value>Jobs</value>
+  <data name="Lock Status" xml:space="preserve">
+    <value>锁状态</value>
   </data>
-  <data name="Log" xml:space="preserve">
-    <value>Log</value>
+  <data name="Phone Number" xml:space="preserve">
+    <value>电话号码</value>
   </data>
-  <data name="MANAGEMENT" xml:space="preserve">
-    <value>MANAGEMENT</value>
+  <data name="Reset password successfully" xml:space="preserve">
+    <value>重置密码成功</value>
   </data>
-  <data name="Picklist" xml:space="preserve">
-    <value>Picklist</value>
+  <data name="Rest Password" xml:space="preserve">
+    <value>重置密码</value>
   </data>
-  <data name="Products" xml:space="preserve">
-    <value>Products</value>
+  <data name="Search for user name" xml:space="preserve">
+    <value>搜索</value>
   </data>
-  <data name="Profile" xml:space="preserve">
-    <value>Profile</value>
+  <data name="Set Active" xml:space="preserve">
+    <value>激活</value>
   </data>
-  <data name="Roles" xml:space="preserve">
-    <value>Roles</value>
+  <data name="Set Inactive" xml:space="preserve">
+    <value>暂停</value>
   </data>
-  <data name="System" xml:space="preserve">
-    <value>System</value>
+  <data name="Set Password" xml:space="preserve">
+    <value>设置密码</value>
+  </data>
+  <data name="Site" xml:space="preserve">
+    <value>站点</value>
+  </data>
+  <data name="User Name" xml:space="preserve">
+    <value>用户名</value>
   </data>
   <data name="Users" xml:space="preserve">
-    <value>Users</value>
-  </data>
-  <data name="Customers" xml:space="preserve">
-    <value>Customers</value>
+    <value>系统账号</value>
   </data>
 </root>
