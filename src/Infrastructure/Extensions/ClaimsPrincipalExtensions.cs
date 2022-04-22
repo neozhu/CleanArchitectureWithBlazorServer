@@ -29,7 +29,7 @@ public static class ClaimsPrincipalExtensions
     public static string[] GetRoles(this ClaimsPrincipal claimsPrincipal)
         => claimsPrincipal.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToArray();
 
-    public static void UpdateDisplayName (this ClaimsPrincipal claimsPrincipal, string displayName)
+    public static void SetDisplayName (this ClaimsPrincipal claimsPrincipal, string displayName)
     {
         var identity = claimsPrincipal.Identity as ClaimsIdentity;
         if(identity is not null)
@@ -43,7 +43,7 @@ public static class ClaimsPrincipalExtensions
         }
         
     }
-    public static void UpdateProfilePictureUrl(this ClaimsPrincipal claimsPrincipal, string url)
+    public static void SetProfilePictureUrl(this ClaimsPrincipal claimsPrincipal, string url)
     {
         var identity = claimsPrincipal.Identity as ClaimsIdentity;
         if (identity is not null)
@@ -56,7 +56,7 @@ public static class ClaimsPrincipalExtensions
             identity.AddClaim(new Claim(ApplicationClaimTypes.ProfilePictureDataUrl, url));
         }
     }
-    public static void UpdatePhoneNumber(this ClaimsPrincipal claimsPrincipal, string phoneNumber)
+    public static void SetPhoneNumber(this ClaimsPrincipal claimsPrincipal, string phoneNumber)
     {
         var identity = claimsPrincipal.Identity as ClaimsIdentity;
         if (identity is not null)
@@ -67,6 +67,19 @@ public static class ClaimsPrincipalExtensions
                 identity.RemoveClaim(claim);
             }
             identity.AddClaim(new Claim(ClaimTypes.MobilePhone, phoneNumber));
+        }
+    }
+    public static void SetSite(this ClaimsPrincipal claimsPrincipal, string site)
+    {
+        var identity = claimsPrincipal.Identity as ClaimsIdentity;
+        if (identity is not null)
+        {
+            var claim = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Locality);
+            if (claim is not null)
+            {
+                identity.RemoveClaim(claim);
+            }
+            identity.AddClaim(new Claim(ClaimTypes.Locality, site));
         }
     }
 }
