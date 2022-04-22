@@ -20,7 +20,7 @@
                   Height="calc(100vh - 265px)"
                   Style="min-height:700px"
                   Loading="@_loading"
-                  SortLabel="@L["Sort By"]"
+                  SortLabel="@PromptText.ORDERBY"
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
@@ -30,7 +30,7 @@
                                Disabled="@_loading"
                                OnClick="@(()=>OnRefresh())"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                               Style="margin-right: 5px;">@L["Refresh"]</MudButton>
+                               Style="margin-right: 5px;">@ButtonText.REFRESH</MudButton>
                 </div>
                 <MudSpacer />
                 <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
@@ -42,14 +42,14 @@
                 <col style="width:90px;" />
             </ColGroup>
             <HeaderContent>
-                <MudTh Style="width:190px">@L["Actions"]</MudTh>
+                <MudTh Style="width:190px">@ButtonText.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortLabel="TimeStamp" T="LogDto">@L["Time Stamp"]</MudTableSortLabel></MudTh>
                 <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="Level" T="LogDto">@L["Level"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Message" T="LogDto">@L["Message"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="UserName" T="LogDto">@L["User Name"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="@L["Actions"]">
+                <MudTd DataLabel="@ButtonText.ACTIONS">
                     <MudButton Variant="Variant.Filled" DisableElevation="true"
                                OnClick="@(() => OnShowDetail(context))"
                                StartIcon="@(context.ShowDetails == true?Icons.Material.Filled.Close:Icons.Material.Filled.Add)" IconColor="Color.Secondary" Size="Size.Small"
@@ -114,10 +114,10 @@
                 }
             </ChildRowContent>
             <NoRecordsContent>
-                <MudText>@L["No matching records found"]</MudText>
+                <MudText>@PromptText.NOMACHING</MudText>
             </NoRecordsContent>
             <LoadingContent>
-                <MudText>@L["Loading.."].</MudText>
+                <MudText>@PromptText.LOADING</MudText>
             </LoadingContent>
             <PagerContent>
                 <MudTablePager  />

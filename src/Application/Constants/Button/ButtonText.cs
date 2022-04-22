@@ -38,4 +38,8 @@ public static class ButtonText
 
     public static string SIGNINWITH => Localize("Sign in with {0}");
     public static string LOGOUT => Localize("Logout");
+    public static string SIGNIN => Localize("Sign In");
+    public static string Microsoft => Localize("Microsoft");
+    public static string Facebook => Localize("Facebook");
+    public static string Google => Localize("Google");
 }

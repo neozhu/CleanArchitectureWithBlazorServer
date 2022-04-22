@@ -19,4 +19,5 @@ public static class ToastText
     public static string IMPORTFAIL => Localize("Import fail");
     public static string EXPORTSUCESS => Localize("Export successfully");
     public static string EXPORTFAIL => Localize("Export fail");
+    public static string UPLOADSUCCESS => Localize("Upload successfully");
 }

@@ -117,64 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Analytics" xml:space="preserve">
-    <value>Analytics</value>
+  <data name="Assign changed successfully" xml:space="preserve">
+    <value>Assign changed successfully</value>
   </data>
-  <data name="Application" xml:space="preserve">
-    <value>Application</value>
+  <data name="Assigned successfully" xml:space="preserve">
+    <value>Assigned successfully</value>
   </data>
-  <data name="Audit Trails" xml:space="preserve">
-    <value>Audit Trails</value>
+  <data name="Create a new role" xml:space="preserve">
+    <value>Create a new role</value>
   </data>
-  <data name="Authorization" xml:space="preserve">
-    <value>Authorization</value>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
   </data>
-  <data name="Banking" xml:space="preserve">
-    <value>Banking</value>
+  <data name="Edit the role" xml:space="preserve">
+    <value>Edit the role</value>
   </data>
-  <data name="Blazor Dashbord" xml:space="preserve">
-    <value>Blazor Dashbord</value>
-  </data>
-  <data name="Booking" xml:space="preserve">
-    <value>Booking</value>
-  </data>
-  <data name="Dictionaries" xml:space="preserve">
-    <value>Dictionaries</value>
-  </data>
-  <data name="E-Commerce" xml:space="preserve">
-    <value>E-Commerce</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="Jobs" xml:space="preserve">
-    <value>Jobs</value>
-  </data>
-  <data name="Log" xml:space="preserve">
-    <value>Log</value>
-  </data>
-  <data name="MANAGEMENT" xml:space="preserve">
-    <value>MANAGEMENT</value>
-  </data>
-  <data name="Picklist" xml:space="preserve">
-    <value>Picklist</value>
-  </data>
-  <data name="Products" xml:space="preserve">
-    <value>Products</value>
-  </data>
-  <data name="Profile" xml:space="preserve">
-    <value>Profile</value>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="Roles" xml:space="preserve">
     <value>Roles</value>
   </data>
-  <data name="System" xml:space="preserve">
-    <value>System</value>
+  <data name="Search for role name" xml:space="preserve">
+    <value>Search for role name</value>
   </data>
-  <data name="Users" xml:space="preserve">
-    <value>Users</value>
+  <data name="Set Permissions" xml:space="preserve">
+    <value>Set Permissions</value>
   </data>
-  <data name="Customers" xml:space="preserve">
-    <value>Customers</value>
+  <data name="Unassigned successfully" xml:space="preserve">
+    <value>Unassigned successfully</value>
   </data>
 </root>

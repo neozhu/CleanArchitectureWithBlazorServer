@@ -127,7 +127,7 @@
     <value>对不起, 没有这个地址.</value>
   </data>
   <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
-    <value>不允许访问, 更多信息, 请联系管理员.</value>
+    <value>你无权来这里。有关更多信息，请与系统管理员联系。</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>注销</value>

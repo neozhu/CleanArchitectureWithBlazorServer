@@ -189,7 +189,7 @@
                     });
                 model.Avatar = result;
                 //Do your validations here
-                Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{ToastText.UPDATESUCCESS}", MudBlazor.Severity.Info);
             }
         }
     }
@@ -205,13 +205,13 @@
             user.ProfilePictureDataUrl = model.Avatar;
             await _userManager.UpdateAsync(user);
             if(model.DisplayName is not null)
-                state.User.UpdateDisplayName(model.DisplayName);
+                state.User.SetDisplayName(model.DisplayName);
             if(model.Avatar is not null)
-                state.User.UpdateProfilePictureUrl(model.Avatar);
+                state.User.SetProfilePictureUrl(model.Avatar);
             if(model.PhoneNumber is not null)
-                state.User.UpdatePhoneNumber(model.PhoneNumber);
+                state.User.SetPhoneNumber(model.PhoneNumber);
             await _profileService.Update(model);
-            Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ToastText.UPDATESUCCESS}", MudBlazor.Severity.Info);
         }
 
     }
