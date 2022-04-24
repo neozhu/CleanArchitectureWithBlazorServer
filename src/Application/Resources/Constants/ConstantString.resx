@@ -144,6 +144,9 @@
   <data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
   <data name="Create" xml:space="preserve">
     <value>Create</value>
   </data>

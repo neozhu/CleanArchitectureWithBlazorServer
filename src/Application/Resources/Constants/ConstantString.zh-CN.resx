@@ -267,4 +267,7 @@
   <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
     <value>您正试图注销应用程序.您真的想退出吗?</value>
   </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>确认</value>
+  </data>
 </root>

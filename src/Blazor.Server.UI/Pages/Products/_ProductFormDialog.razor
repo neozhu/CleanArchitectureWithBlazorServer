@@ -9,7 +9,7 @@
         <MudForm Model="model" @ref="form" Validation="@(modelValidator.ValidateValue)">
             <MudGrid>
                 <MudItem xs="12">
-                    <MudTextField Label="@L["Name"]" @bind-Value="model.Name"
+                    <MudTextField Label="@L["Product Name"]" @bind-Value="model.Name"
                                   For="@(() => model.Name)"
                                   Required="true"
                                   RequiredError="@L["product name is required!"]"
@@ -24,7 +24,7 @@
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <PicklistAutocomplete Picklist="Picklist.Brand"
-                                     Label="@L["Brand"]"
+                                     Label="@L["Brand Name"]"
                                      For="@(() => model.Brand)"
                                      ResetValueOnEmptyText="true"
                                      @bind-Value="model.Brand"></PicklistAutocomplete>
@@ -46,7 +46,7 @@
                 </MudItem>
                 <MudItem>
                     <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
-                    <MudText Typo="Typo.caption">@L["Product Pictures"]</MudText>
+                    <MudText Typo="Typo.caption">@L["Product Pictures"]*</MudText>
                     <MudFab HtmlTag="label" Size="MudBlazor.Size.Small" 
                             Color="MudBlazor.Color.Info"
                             Icon="@Icons.Filled.Image"
@@ -65,8 +65,8 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@L["Cancel"]</MudButton>
-        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">@L["Ok"]</MudButton>
+        <MudButton OnClick="Cancel">@ButtonText.CANCEL</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">@ButtonText.OK</MudButton>
     </DialogActions>
 </MudDialog>
 

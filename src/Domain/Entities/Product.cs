@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Domain.Entities;
 
-public class Product : AuditableEntity
+public class Product : AuditableEntity, IHasDomainEvent
 {
     public int Id { get; set; }
     public string? Name { get; set; }
@@ -12,5 +12,7 @@ public class Product : AuditableEntity
     public string? Unit { get; set; }
     public decimal Price { get; set; }
     public IList<string>? Pictures { get; set; }
+    public List<DomainEvent> DomainEvents { get; set; } = new();
+
 
 }
