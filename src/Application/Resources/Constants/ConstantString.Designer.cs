@@ -500,5 +500,14 @@ namespace CleanArchitecture.Blazor.Application.Resources.Constants {
                 return ResourceManager.GetString("Yes", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are attempting to log out of application. Do you really want to log out?.
+        /// </summary>
+        internal static string You_are_attempting_to_log_out_of_application__Do_you_really_want_to_log_out_ {
+            get {
+                return ResourceManager.GetString("You are attempting to log out of application. Do you really want to log out?", resourceCulture);
+            }
+        }
     }
 }

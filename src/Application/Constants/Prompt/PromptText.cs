@@ -24,6 +24,6 @@ public static class PromptText
     public static string DELETECONFIRMATIONTITLE => Localize("Delete Confirmation");
 
     public static string LOGOUTCONFIRMATIONTITLE=>Localize("Logout Confirmation");
-    public static string LOGOUTCONFIRMATION => Localize("");
+    public static string LOGOUTCONFIRMATION => Localize("You are attempting to log out of application. Do you really want to log out?");
 
 }
