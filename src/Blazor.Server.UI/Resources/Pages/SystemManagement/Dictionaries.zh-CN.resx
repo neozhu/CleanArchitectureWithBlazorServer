@@ -126,6 +126,9 @@
   <data name="Dictionaries" xml:space="preserve">
     <value>参数选用表</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>参数名</value>
+  </data>
   <data name="Picklist" xml:space="preserve">
     <value>参数选用表</value>
   </data>
