@@ -13,6 +13,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
+        builder.Ignore(e => e.DomainEvents);
         builder.Property(e => e.Pictures)
            .HasConversion(
                  v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),

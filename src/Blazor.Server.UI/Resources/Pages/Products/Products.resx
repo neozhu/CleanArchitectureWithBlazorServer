@@ -120,11 +120,20 @@
   <data name="Brand Name" xml:space="preserve">
     <value>Brand Name</value>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
   <data name="Price" xml:space="preserve">
     <value>Price</value>
   </data>
+  <data name="Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
   <data name="Product Name" xml:space="preserve">
     <value>Product Name</value>
+  </data>
+  <data name="Product Pictures" xml:space="preserve">
+    <value>Product Pictures</value>
   </data>
   <data name="Products" xml:space="preserve">
     <value>Products</value>
@@ -143,6 +152,9 @@
   </data>
   <data name="Search for unit" xml:space="preserve">
     <value>Search for unit</value>
+  </data>
+  <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
+    <value>The recommended size for uploading images is 640X320</value>
   </data>
   <data name="Unit" xml:space="preserve">
     <value>Unit</value>

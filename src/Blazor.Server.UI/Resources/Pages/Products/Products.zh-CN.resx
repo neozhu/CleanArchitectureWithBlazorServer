@@ -127,7 +127,7 @@
     <value>产品名称</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>产品</value>
+    <value>产品信息</value>
   </data>
   <data name="Unit" xml:space="preserve">
     <value>单位</value>
@@ -146,5 +146,17 @@
   </data>
   <data name="Search for unit" xml:space="preserve">
     <value>按单位搜索</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>产品</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Product Pictures" xml:space="preserve">
+    <value>产品图片</value>
+  </data>
+  <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
+    <value>建议上传的图片尺寸:640x320</value>
   </data>
 </root>

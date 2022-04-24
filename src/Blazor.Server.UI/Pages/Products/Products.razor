@@ -31,7 +31,7 @@
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
-                    <MudText Typo="Typo.h6">@L["Product"]</MudText>
+                    <MudText Typo="Typo.h6">@L["Products"]</MudText>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton DisableElevation Variant="Variant.Outlined"
                                    Size="Size.Small"
@@ -280,7 +280,7 @@
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
-        (string.Format(PromptText.CREATEAITEM,"product"), parameters, options);
+        (string.Format(PromptText.CREATEAITEM,L["Product"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
@@ -307,7 +307,7 @@
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
-        (string.Format(PromptText.EDITTHEITEM,"product"), parameters, options);
+        (string.Format(PromptText.EDITTHEITEM,L["Product"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
@@ -324,7 +324,7 @@
                 { nameof(DeleteConfirmation.ContentText), string.Format(PromptText.DELETECONFIRMATION, dto.Name) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(PromptText.EDITTHEITEM,"product"), parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(PromptText.EDITTHEITEM,L["Product"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
@@ -343,7 +343,7 @@
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>
-        (string.Format(PromptText.DELETETHEITEM,"product"), parameters, options);
+        (string.Format(PromptText.DELETETHEITEM,L["Product"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
