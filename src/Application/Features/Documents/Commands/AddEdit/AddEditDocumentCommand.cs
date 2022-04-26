@@ -36,6 +36,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
         {
             var document = await _context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);
             _ = document ?? throw new NotFoundException($"Document {request.Id} Not Found.");
+            document.DomainEvents.Add(new UpdatedEvent<Document>(document));
             if (request.UploadRequest != null)
             {
                 document.URL = await _uploadService.UploadAsync(request.UploadRequest);
@@ -53,8 +54,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
             {
                 document.URL = await _uploadService.UploadAsync(request.UploadRequest); ;
             }
-            var createdevent = new DocumentCreatedEvent(document);
-            document.DomainEvents.Add(createdevent);
+             document.DomainEvents.Add(new CreatedEvent<Document>(document));
             _context.Documents.Add(document);
             await _context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(document.Id);

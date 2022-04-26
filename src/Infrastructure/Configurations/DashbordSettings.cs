@@ -15,6 +15,5 @@ public class DashbordSettings
 
     public string Company { get; set; } = "Company";
     public string Copyright { get; set; } = "@2022 Copyright";
-    public Theme Theme { get; set; } = default!;
-    public Features Features { get; set; } = default!;
+ 
 }

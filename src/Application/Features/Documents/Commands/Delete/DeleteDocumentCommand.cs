@@ -32,6 +32,7 @@ public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentComman
         var items = await _context.Documents.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
         {
+            item.DomainEvents.Add(new DeletedEvent<Document>(item));
             _context.Documents.Remove(item);
         }
         await _context.SaveChangesAsync(cancellationToken);
