@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using System.Text;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
+using CleanArchitecture.Blazor.Infrastructure.Constants.LocalStorage;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
@@ -12,9 +13,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private const string KEY = "Basic";
-    private const string USERID = "UserId";
-    private const string USERNAME = "UserName";
-    private const string CLAIMSIDENTITY = "ClaimsIdentity";
+ 
     public IdentityAuthenticationService(
         ProtectedLocalStorage protectedLocalStorage,
         RoleManager<ApplicationRole> roleManager,
@@ -30,7 +29,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         var principal = new ClaimsPrincipal(new ClaimsIdentity());
         try
         {
-            var storedClaimsIdentity = await _protectedLocalStorage.GetAsync<string>(CLAIMSIDENTITY);
+            var storedClaimsIdentity = await _protectedLocalStorage.GetAsync<string>(LocalStorage.CLAIMSIDENTITY);
             if (storedClaimsIdentity.Success && storedClaimsIdentity.Value is not null)
             {
                 var buffer = Convert.FromBase64String(storedClaimsIdentity.Value);
@@ -122,10 +121,10 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 {
                     identity.WriteTo(binaryWriter);
                     var base64 = Convert.ToBase64String(memoryStream.ToArray());
-                    await _protectedLocalStorage.SetAsync(CLAIMSIDENTITY, base64);
+                    await _protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
                 }
-                await _protectedLocalStorage.SetAsync(USERID, user.Id);
-                await _protectedLocalStorage.SetAsync(USERNAME, user.UserName);
+                await _protectedLocalStorage.SetAsync(LocalStorage.USERID, user.Id);
+                await _protectedLocalStorage.SetAsync(LocalStorage.USERNAME, user.UserName);
                 var principal = new ClaimsPrincipal(identity);
                 NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
             }
@@ -167,10 +166,10 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             {
                 identity.WriteTo(binaryWriter);
                 var base64 = Convert.ToBase64String(memoryStream.ToArray());
-                await _protectedLocalStorage.SetAsync(CLAIMSIDENTITY, base64);
+                await _protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
             }
-            await _protectedLocalStorage.SetAsync(USERID, user.Id);
-            await _protectedLocalStorage.SetAsync(USERNAME, user.UserName);
+            await _protectedLocalStorage.SetAsync(LocalStorage.USERID, user.Id);
+            await _protectedLocalStorage.SetAsync(LocalStorage.USERNAME, user.UserName);
             var principal = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
             return true;
@@ -182,9 +181,9 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
     }
     public async Task Logout()
     {
-        await _protectedLocalStorage.DeleteAsync(CLAIMSIDENTITY);
-        await _protectedLocalStorage.DeleteAsync(USERID);
-        await _protectedLocalStorage.DeleteAsync(USERNAME);
+        await _protectedLocalStorage.DeleteAsync(LocalStorage.CLAIMSIDENTITY);
+        await _protectedLocalStorage.DeleteAsync(LocalStorage.USERID);
+        await _protectedLocalStorage.DeleteAsync(LocalStorage.USERNAME);
         var principal = new ClaimsPrincipal();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
     }
