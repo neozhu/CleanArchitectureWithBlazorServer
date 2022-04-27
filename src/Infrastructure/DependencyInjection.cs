@@ -58,8 +58,11 @@ public static class DependencyInjection
         services.AddTransient<IExcelService, ExcelService>();
         services.AddTransient<IUploadService, UploadService>();
         services.AddTransient<IIdentityService, IdentityService>();
-        services.Configure<AppConfigurationSettings>(configuration.GetSection("AppConfigurationSettings"));
-        services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.SectionName));
+        var mailSettings = new MailSettings();
+        configuration.GetSection(MailSettings.SectionName).Bind(mailSettings);
+        services.Configure<MailSettings>(configuration.GetSection(MailSettings.SectionName));
+        services.AddSingleton(mailSettings);
         services.AddTransient<IMailService, SMTPMailService>();
         services.AddAuthentication().TryConfigureMicrosoftAccount(configuration)
                                     .TryConfigureGoogleAccount(configuration);
@@ -89,7 +92,16 @@ public static class DependencyInjection
             options.FallBackToParentUICultures = true;
 
         });
-
+        // configure your sender and template choices with dependency injection.
+        services.AddFluentEmail(mailSettings.From)
+                .AddRazorRenderer()
+                .AddSmtpSender(new System.Net.Mail.SmtpClient()
+                {
+                    Host = mailSettings.Host,
+                    Port = mailSettings.Port,
+                    EnableSsl = mailSettings.UseSsl,
+                    Credentials = new System.Net.NetworkCredential(mailSettings.UserName, mailSettings.Password)
+                });
 
 
         services.AddControllers();
