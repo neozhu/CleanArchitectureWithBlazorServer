@@ -4,28 +4,20 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-		<InvariantGlobalization>false</InvariantGlobalization>
+        <InvariantGlobalization>false</InvariantGlobalization>
         <UserSecretsId>53DD81A6-A283-48B1-854B-734630970E69</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
     </PropertyGroup>
 
-    <ItemGroup>
-      <Compile Remove="Services\Picklist\**" />
-      <Content Remove="Services\Picklist\**" />
-      <EmbeddedResource Remove="Services\Picklist\**" />
-      <None Remove="Services\Picklist\**" />
-    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Blazor-Analytics" Version="3.11.0" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.4" />
-       <PackageReference Include="MudBlazor" Version="6.0.9" />
+        <PackageReference Include="MudBlazor" Version="6.0.9" />
         <PackageReference Include="MediatR" Version="10.0.1" />
-       <PackageReference Include="SixLabors.ImageSharp" Version="2.1.1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.1" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys" Version="12.1.1" />
-
-
-
         <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
         <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="1.1.4" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
@@ -33,47 +25,47 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Application\Application.csproj" />
-      <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\Application\Application.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
 
 
     <ItemGroup>
         <Content Update="wwwroot\sample-data\articles.json">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Update="wwwroot\sample-data\avatar.png">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Update="wwwroot\favicon.ico">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Update="wwwroot\sample-data\notifications.json">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Update="wwwroot\js\apex-chart-wrapper.js">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
 
 
 
     <ItemGroup>
-      <Folder Include="Files\" />
-      <Folder Include="Files\" />
-      <Folder Include="Files\ProfilePictures\" />
-      <Folder Include="Files\" />
+        <Folder Include="Files\" />
+        <Folder Include="Files\" />
+        <Folder Include="Files\ProfilePictures\" />
+        <Folder Include="Files\" />
     </ItemGroup>
 
 
 
     <ItemGroup>
-      <None Include="Pages\Identity\Users\Profile.razor" />
-      <None Include="Pages\Identity\Users\Users.razor" />
-      <None Include="Pages\Identity\Users\_ResetPasswordDialog.razor" />
-      <None Include="Pages\Identity\Users\_UserForm.razor" />
-      <None Include="Pages\Identity\Users\_UserFormDialog.razor" />
+        <None Include="Pages\Identity\Users\Profile.razor" />
+        <None Include="Pages\Identity\Users\Users.razor" />
+        <None Include="Pages\Identity\Users\_ResetPasswordDialog.razor" />
+        <None Include="Pages\Identity\Users\_UserForm.razor" />
+        <None Include="Pages\Identity\Users\_UserFormDialog.razor" />
     </ItemGroup>
 
 </Project>

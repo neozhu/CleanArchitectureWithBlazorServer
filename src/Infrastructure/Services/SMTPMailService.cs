@@ -13,9 +13,9 @@ public class SMTPMailService : IMailService
     public MailSettings _mailSettings { get; }
     public ILogger<SMTPMailService> _logger { get; }
 
-    public SMTPMailService(IOptions<MailSettings> mailSettings, ILogger<SMTPMailService> logger)
+    public SMTPMailService(MailSettings mailSettings, ILogger<SMTPMailService> logger)
     {
-        _mailSettings = mailSettings.Value;
+        _mailSettings = mailSettings;
         _logger = logger;
     }
 
