@@ -6,6 +6,7 @@
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Export
+
 @attribute [Authorize(Policy = Permissions.Dictionaries.View)]
 @inject IStringLocalizer<Dictionaries> L
 @inject IJSRuntime JS
@@ -258,16 +259,20 @@
             Snackbar.Add($"{ToastText.DELETESUCCESS}", MudBlazor.Severity.Info);
         }
     }
-    private Task OnCreate()
+    private async Task OnCreate()
     {
         _editing = true;
+        _table.SetEditingItem(null);
         var newitem = new KeyValueDto()
-        {
-            Name = _selectedItem?.Name,
-            Description = _selectedItem?.Description
-        };
+            {
+                Name = _selectedItem?.Name,
+                Description = _selectedItem?.Description,
+                TrackingState = TrackingState.Added
+            };
         KeyValueList.Insert(0, newitem);
-        return Task.CompletedTask;
+        await Task.Delay(50);
+        _table.SetSelectedItem(newitem);
+        _table.SetEditingItem(newitem);
     }
     private void BackupItem(object element)
     {
@@ -281,20 +286,29 @@
                     Text = ((KeyValueDto)element).Text,
                     Value = ((KeyValueDto)element).Value,
                     Description = ((KeyValueDto)element).Description,
+                    TrackingState = ((KeyValueDto)element).TrackingState,
                 };
-                StateHasChanged();
+            StateHasChanged();
         });
     }
     private void ResetItemToOriginalValues(object element)
     {
         InvokeAsync(() =>
         {
-            ((KeyValueDto)element).Id = _elementBeforeEdit.Id;
-            ((KeyValueDto)element).Name = _elementBeforeEdit.Name;
-            ((KeyValueDto)element).Text = _elementBeforeEdit.Text;
-            ((KeyValueDto)element).Value = _elementBeforeEdit.Value;
-            ((KeyValueDto)element).Description = _elementBeforeEdit.Description;
-
+            if (((KeyValueDto)element).TrackingState == TrackingState.Added)
+            {
+                _table.SetEditingItem(null);
+                KeyValueList.Remove((KeyValueDto)element);
+            }
+            else
+            {
+                ((KeyValueDto)element).Id = _elementBeforeEdit.Id;
+                ((KeyValueDto)element).Name = _elementBeforeEdit.Name;
+                ((KeyValueDto)element).Text = _elementBeforeEdit.Text;
+                ((KeyValueDto)element).Value = _elementBeforeEdit.Value;
+                ((KeyValueDto)element).Description = _elementBeforeEdit.Description;
+                ((KeyValueDto)element).TrackingState = _elementBeforeEdit.TrackingState;
+            }
             _editing = false;
             StateHasChanged();
         });
@@ -321,7 +335,6 @@
 
     private async Task OnExport()
     {
-
         var request = new ExportKeyValuesQuery()
             {
                 Keyword = _searchString,
