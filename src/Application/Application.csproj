@@ -10,8 +10,11 @@
 
   <ItemGroup>
     <Compile Remove="Features\Documents\Commands\Import\**" />
+    <Compile Remove="Resources\Documents\Commands\**" />
     <EmbeddedResource Remove="Features\Documents\Commands\Import\**" />
+    <EmbeddedResource Remove="Resources\Documents\Commands\**" />
     <None Remove="Features\Documents\Commands\Import\**" />
+    <None Remove="Resources\Documents\Commands\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\Documents\Commands\Import\" />
     <Folder Include="Resources\Features\ApprovalDatas\Commands\Import\" />
   </ItemGroup>
 
