@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using Blazor.Server.UI.Models;
 using Blazor.Server.UI.Models.SideMenu;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Blazor.Server.UI.Services.Navigation;
 using CleanArchitecture.Blazor.Application.Common.Models;
 

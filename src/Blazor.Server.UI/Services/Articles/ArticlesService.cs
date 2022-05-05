@@ -1,6 +1,4 @@
 using Blazor.Server.UI.Models.Article;
-using System.Collections.Generic;
-using System.Net.Http.Json;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 namespace Blazor.Server.UI.Services;

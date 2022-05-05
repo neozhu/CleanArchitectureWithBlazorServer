@@ -1,5 +1,3 @@
-using FluentValidation;
-
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormModel>

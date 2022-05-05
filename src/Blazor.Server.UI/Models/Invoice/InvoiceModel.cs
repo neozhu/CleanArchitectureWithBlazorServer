@@ -1,5 +1,3 @@
-using System;
-
 namespace Blazor.Server.UI.Models.Invoice;
 
 public class InvoiceModel

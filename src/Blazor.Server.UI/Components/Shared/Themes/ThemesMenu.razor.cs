@@ -1,8 +1,5 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using Blazor.Server.UI.Models;
 using Blazor.Server.UI.Services;
 
 namespace Blazor.Server.UI.Components.Shared.Themes;

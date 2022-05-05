@@ -1,7 +1,4 @@
 using Microsoft.AspNetCore.Components;
-using Blazor.Server.UI.Models;
-using Blazor.Server.UI.Models.Notification;
-using Blazor.Server.UI.Services;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using Microsoft.AspNetCore.Components.Web;
 

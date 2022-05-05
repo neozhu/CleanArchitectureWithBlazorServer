@@ -4,10 +4,8 @@ using MudBlazor;
 using MudBlazor.Utilities;
 using Blazor.Server.UI.Models.Charts;
 using Blazor.Server.UI.Models.Charts.Chart;
-using Blazor.Server.UI.Models.Charts.DataLabels;
 using Blazor.Server.UI.Models.Charts.Legend;
 using Blazor.Server.UI.Models.Charts.Series;
-using Blazor.Server.UI.Models.Charts.Tooltip;
 using Blazor.Server.UI.Models.Charts.XAxis;
 using Blazor.Server.UI.Models.Charts.YAxis;
 

@@ -1,9 +1,6 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
-using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Picklist;
 

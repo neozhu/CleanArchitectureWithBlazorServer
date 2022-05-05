@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.DocumentTypes.DTOs;
-using Microsoft.Extensions.Caching.Memory;
 using CleanArchitecture.Blazor.Application.Features.DocumentTypes.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Queries.PaginationQuery;

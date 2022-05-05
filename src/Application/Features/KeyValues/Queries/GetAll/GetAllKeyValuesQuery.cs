@@ -3,7 +3,6 @@
 
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName;
 
