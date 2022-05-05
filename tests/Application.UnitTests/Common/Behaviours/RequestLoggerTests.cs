@@ -1,15 +1,12 @@
-using CleanArchitecture.Blazor.Application.Common.Behaviours;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Behaviours;
 
-    public class RequestLoggerTests
+public class RequestLoggerTests
 {
  
     private readonly Mock<ICurrentUserService> _currentUserService;

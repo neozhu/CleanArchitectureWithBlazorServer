@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Logs.DTOs;
-using CleanArchitecture.Blazor.Domain.Entities.Log;
 
 namespace CleanArchitecture.Blazor.Application.Features.Logs.Queries.Export;
 

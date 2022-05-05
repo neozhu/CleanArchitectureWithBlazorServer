@@ -1,7 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 using Serilog.Context;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;

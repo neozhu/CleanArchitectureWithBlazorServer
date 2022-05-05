@@ -2,7 +2,6 @@ using CleanArchitecture.Blazor.Application.Common.Exceptions;
 using FluentAssertions;
 using FluentValidation.Results;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Exceptions;

@@ -1,6 +1,3 @@
-
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace Blazor.Server.UI.Components.Common;

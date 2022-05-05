@@ -1,6 +1,5 @@
 
 using Blazor.Server.UI.Components.Dialogs;
-using Blazor.Server.UI.Shared;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;

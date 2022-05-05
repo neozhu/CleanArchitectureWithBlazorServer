@@ -63,9 +63,9 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
 builder.Services.AddInfrastructure(builder.Configuration)
-        .AddApplication();
+                .AddApplication();
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7226/") });
+
 builder.Services.AddScoped<LayoutService>();
 
 builder.Services.AddScoped<IUserPreferencesService, UserPreferencesService>();

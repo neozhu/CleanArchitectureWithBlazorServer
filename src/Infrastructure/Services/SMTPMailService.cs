@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using MailKit.Net.Smtp;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MimeKit;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
