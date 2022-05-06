@@ -6,7 +6,7 @@
     <ProjectGuid>6bd2ec46-fa8f-44f3-af33-903bbb347116</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>webui</DockerServiceName>
+    <DockerServiceName>dashboard</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.yml" />
@@ -23,5 +23,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="launchSettings.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="src\**" />
   </ItemGroup>
 </Project>

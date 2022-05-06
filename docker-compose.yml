@@ -1,28 +1,29 @@
-version: '3.4'
+version: '3.8'
 
 services:
-  webui:
+  dashboard:
     image: ${DOCKER_REGISTRY-}blazorserver
     build:
       context: .
       dockerfile: src/Blazor.Server.UI/Dockerfile
     environment:
-      - "UseInMemoryDatabase=true"
-      - "ConnectionStrings__DefaultConnection=Server=db;Database=BlazorDashboardDb;User=sa;Password=Password@123;MultipleActiveResultSets=true"
-      - "ASPNETCORE_URLS=https://+;http://+"
-      - "ASPNETCORE_HTTPS_PORT=5001"
-      - "ASPNETCORE_ENVIRONMENT=Development"
+      - ASPNETCORE_ENVIRONMENT=Development
+      - UseInMemoryDatabase=true
+      - ConnectionStrings__DefaultConnection=Server=sqldb;Database=BlazorDashboardDb;User=sa;Password=Password@123;MultipleActiveResultSets=true
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=Password@123
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/Blazor.Server.UI.pfx
     volumes:
-     - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets
-     - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https
+     - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets:ro
+     - ~/.aspnet/https:/root/.aspnet/https:ro
     ports:
       - "5000:80"
       - "5001:443"
     depends_on:
-      - db
+      - sqldb
     restart: on-failure
 
-  db:
+  sqldb:
     image: "mcr.microsoft.com/mssql/server:2019-latest"
     environment:
       - "SA_PASSWORD=Password@123"
