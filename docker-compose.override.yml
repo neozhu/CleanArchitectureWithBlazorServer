@@ -1,9 +1,9 @@
 version: '3.4'
 
 services:
-  webui:
+  dashboard:
     environment:
       - "ASPNETCORE_ENVIRONMENT=Development"
-  db:
+  sqldb:
     ports:
       - "1433:1433"
