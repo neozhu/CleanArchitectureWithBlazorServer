@@ -202,13 +202,9 @@
 
     private bool FilterFunc(KeyValueDto dto, string searchString)
     {
-        if (string.IsNullOrWhiteSpace(searchString))
+        if (string.IsNullOrWhiteSpace(searchString) || dto.Name is null || dto.Description is null)
             return true;
-        if (dto.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        if (dto.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        if ($"{dto.Value} {dto.Text}".Contains(searchString))
+        if ($"{dto.Name} {dto.Value} {dto.Text} {dto.Description}".Contains(searchString))
             return true;
         return false;
     }

@@ -60,8 +60,6 @@ public class Theme
             {
                 Primary = "#7e6fff",
                 Dark= "#343a40",
-                Secondary= "#adb5bd",
-                SecondaryDarken= "rgba(245,110,80,1.0)",
                 PrimaryContrastText = "#c3cbe4",
                 Info= "#47bce8",
                 Error= "#f56e50",
