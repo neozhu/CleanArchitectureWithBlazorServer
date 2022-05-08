@@ -27,8 +27,7 @@ public class CacheInvalidationBehaviour<TRequest, TResponse> : IPipelineBehavior
         {
             _cache.Remove(request.CacheKey);
         }
-        request.SharedExpiryTokenSource?.Cancel();
-
+        request.SharedExpiryTokenSource?.TryReset();
         return response;
     }
 }
