@@ -11,7 +11,7 @@ public class GetAllKeyValuesQuery : IRequest<IEnumerable<KeyValueDto>>, ICacheab
 
     public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
 
-    public MemoryCacheEntryOptions? Options => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(KeyValueCacheKey.SharedExpiryTokenSource.Token));
+    public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
 }
 public class GetAllKeyValuesQueryHandler : IRequestHandler<GetAllKeyValuesQuery, IEnumerable<KeyValueDto>>
 {

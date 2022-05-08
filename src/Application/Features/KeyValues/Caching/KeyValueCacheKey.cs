@@ -15,7 +15,7 @@ public static class KeyValueCacheKey
         SharedExpiryTokenSource = new CancellationTokenSource(new TimeSpan(3,0,0));
         
     }
-    public static CancellationTokenSource? SharedExpiryTokenSource { get; private set; }
+    public static CancellationTokenSource SharedExpiryTokenSource { get; private set; }
     public static MemoryCacheEntryOptions MemoryCacheEntryOptions  => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource.Token));
    
     

@@ -24,7 +24,8 @@ public class CachingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest,
         _logger.LogTrace("{Name} is caching with {@Request}.", nameof(request),request);
         var response = await _cache.GetOrAddAsync(
             request.CacheKey,
-            async () => await next(),
+            async () =>
+            await next(),
             request.Options);
         return response;
     }

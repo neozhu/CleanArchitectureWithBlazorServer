@@ -1,9 +1,10 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 using LazyCache;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Services.Picklist;
+namespace CleanArchitecture.Blazor.Application.Services.Picklist;
 
 public class PicklistService: IPicklistService
 {
@@ -26,7 +27,7 @@ public class PicklistService: IPicklistService
     }
     public async Task Initialize()
     {
-        if (DataSource.Count > 0) return;
+        //if (DataSource.Count > 0) return;
         await _semaphore.WaitAsync();
         try
         {
@@ -34,7 +35,7 @@ public class PicklistService: IPicklistService
                 () => _context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
                     .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(),
-                TimeSpan.FromMinutes(60));
+                  KeyValueCacheKey.MemoryCacheEntryOptions);
 
         }
         finally
@@ -50,10 +51,11 @@ public class PicklistService: IPicklistService
         {
             _cache.Remove(PicklistCacheKey);
             DataSource = await _cache.GetOrAddAsync(PicklistCacheKey,
-                 () => _context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
-                     .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
-                     .ToListAsync(),
-                 TimeSpan.FromMinutes(60));
+                () => _context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
+                    .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync(),
+                KeyValueCacheKey.MemoryCacheEntryOptions
+                  );
             OnChange?.Invoke();
         }
         finally
