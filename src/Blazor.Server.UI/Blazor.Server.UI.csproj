@@ -52,6 +52,7 @@
 
 
     <ItemGroup>
+        <Folder Include="Components\Index\" />
         <Folder Include="Files\" />
         <Folder Include="Files\" />
         <Folder Include="Files\ProfilePictures\" />

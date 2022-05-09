@@ -1,4 +1,5 @@
 using Blazor.Server.UI.Models.SideMenu;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using MudBlazor;
 
 namespace Blazor.Server.UI.Services.Navigation;
@@ -41,6 +42,7 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Analytics",
+                    Roles=new string[]{ RoleConstants.UsersRole },
                     Icon = Icons.Material.Filled.Analytics,
                     Href = "/analytics",
                     PageStatus = PageStatus.ComingSoon
@@ -48,6 +50,7 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Banking",
+                    Roles=new string[]{ RoleConstants.UsersRole },
                     Icon = Icons.Material.Filled.Money,
                     Href = "/banking",
                     PageStatus = PageStatus.ComingSoon
@@ -55,6 +58,7 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Booking",
+                    Roles=new string[]{ RoleConstants.UsersRole },
                     Icon = Icons.Material.Filled.CalendarToday,
                     Href = "/booking",
                     PageStatus = PageStatus.ComingSoon
@@ -65,6 +69,7 @@ public class MenuService : IMenuService
         new MenuSectionModel
         {
             Title = "MANAGEMENT",
+            Roles=new string[]{ RoleConstants.AdministratorRole },
             SectionItems = new List<MenuSectionItemModel>
             {
                 new()
