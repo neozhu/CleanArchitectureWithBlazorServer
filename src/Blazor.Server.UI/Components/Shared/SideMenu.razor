@@ -49,7 +49,7 @@
     }
 
     <MudNavMenu>
-        @foreach (var section in _menuSections)
+        @foreach (var section in _menuSections.Where(x=>x.Roles==null || x.Roles.Any(x=>_roles.Contains(x))))
         {
             @if (SideMenuDrawerOpen)
             {
@@ -62,13 +62,13 @@
                 </div>
             }
 
-            @foreach (var sectionItem in section.SectionItems)
+            @foreach (var sectionItem in section.SectionItems.Where(x=>x.Roles==null || x.Roles.Any(x=>_roles.Contains(x))))
             {
                 @if (sectionItem.IsParent)
                 {
                     <MudNavGroup Icon="@sectionItem.Icon"
                                  Title="@L[sectionItem.Title]">
-                        @foreach (var menuItem in sectionItem.MenuItems)
+                        @foreach (var menuItem in sectionItem.MenuItems.Where(x=>x.Roles==null || x.Roles.Any(x=>_roles.Contains(x))))
                         {
                             @if (SideMenuDrawerOpen)
                             {
