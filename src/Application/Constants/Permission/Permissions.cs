@@ -132,7 +132,16 @@ public static class Permissions
         public const string ManagePermissions = "Permissions.Roles.Permissions";
         public const string ManageNavigation = "Permissions.Roles.Navigation";
     }
-
+    [DisplayName("Multi-Tenant")]
+    [Description("Multi-Tenant Permissions")]
+    public static class Tenants
+    {
+        public const string View = "Permissions.Tenants.View";
+        public const string Create = "Permissions.Tenants.Create";
+        public const string Edit = "Permissions.Tenants.Edit";
+        public const string Delete = "Permissions.Tenants.Delete";
+        public const string Search = "Permissions.Tenants.Search";
+    }
     [DisplayName("Role Claims")]
     [Description("Role Claims Permissions")]
     public static class RoleClaims

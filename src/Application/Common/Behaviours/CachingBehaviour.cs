@@ -27,6 +27,7 @@ public class CachingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest,
             async () =>
             await next(),
             request.Options);
+     
         return response;
     }
 }

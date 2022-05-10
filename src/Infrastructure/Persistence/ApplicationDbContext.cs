@@ -91,7 +91,7 @@ public class ApplicationDbContext : IdentityDbContext<
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-      
+        base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
         Task.Run(async () =>
@@ -101,7 +101,7 @@ public class ApplicationDbContext : IdentityDbContext<
             builder.ApplyGlobalFilters<IMayHaveTenant>(s => s.TenantId == null || s.TenantId == _tenant);
 
         }).Wait();
-        base.OnModelCreating(builder);
+        
     }
 
     private List<AuditTrail> OnBeforeSaveChanges(string userId)
@@ -200,11 +200,5 @@ public class ApplicationDbContext : IdentityDbContext<
         return SaveChangesAsync(cancellationToken);
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=BlazorDashboardDb;Trusted_Connection=True;MultipleActiveResultSets=true;");
-        }
-    }
+   
 }
