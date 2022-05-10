@@ -24,6 +24,7 @@ public class ApplicationDbContext : IdentityDbContext<
         _domainEventService = domainEventService;
         _dateTime = dateTime;
     }
+    public DbSet<Tenant> Tenants { get; set; }
     public DbSet<Logger> Loggers { get; set; }
     public DbSet<AuditTrail> AuditTrails { get; set; }
     public DbSet<DocumentType> DocumentTypes { get; set; }

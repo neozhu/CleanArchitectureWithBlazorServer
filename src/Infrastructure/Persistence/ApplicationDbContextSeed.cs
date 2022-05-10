@@ -9,8 +9,9 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
 public static class ApplicationDbContextSeed
 {
-    public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+    public static async Task SeedDefaultUserAsync(ApplicationDbContext context,UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
     {
+        
         var administratorRole = new ApplicationRole(RoleConstants.AdministratorRole) { Description = "Admin Group" };
         var userRole = new ApplicationRole(RoleConstants.BasicRole) { Description = "Basic Group" };
 
@@ -27,8 +28,8 @@ public static class ApplicationDbContextSeed
             }
         }
 
-        var administrator = new ApplicationUser { UserName = "administrator", IsActive = true, Site = "Razor", DisplayName = "Administrator", Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
-        var demo = new ApplicationUser { UserName = "Demo", IsActive = true, Site = "Razor", DisplayName = "Demo", Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
+        var administrator = new ApplicationUser {  UserName = "administrator", IsActive = true, Site = context.Tenants.First().Id, DisplayName = "Administrator", Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
+        var demo = new ApplicationUser { UserName = "Demo", IsActive = true, Site = context.Tenants.First().Id, DisplayName = "Demo", Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
 
         if (userManager.Users.All(u => u.UserName != administrator.UserName))
         {
@@ -66,6 +67,13 @@ public static class ApplicationDbContextSeed
     public static async Task SeedSampleDataAsync(ApplicationDbContext context)
     {
         //Seed, if necessary
+        if (!context.Tenants.Any())
+        {
+            context.Tenants.Add(new Domain.Entities.Tenant() { Name = "Master", Description = "Master Site" });
+            context.Tenants.Add(new Domain.Entities.Tenant() { Name = "Slave", Description = "Slave Site" });
+            await context.SaveChangesAsync();
+
+        }
         if (!context.DocumentTypes.Any())
         {
             context.DocumentTypes.Add(new Domain.Entities.DocumentType() { Name = "Document", Description = "Document" });
