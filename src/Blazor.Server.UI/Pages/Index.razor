@@ -1,5 +1,6 @@
 @page "/"
 @using Microsoft.AspNetCore.Authorization
+@using MudBlazor.Utilities
 <PageTitle>@Title</PageTitle>
 <style>
     .lp-app-grid {
@@ -213,7 +214,11 @@
 @code{
     public string Title { get; set; } = "Dashboard";
     private bool IsMobile = false;
-    private string ContentClassNames = "flex-grow-1 flex-shrink-1";
+    protected string ContentClassNames =>
+        new CssBuilder("flex-grow-1 flex-shrink-1")
+            .AddClass("pa-5", !IsMobile)
+            .AddClass("px-8", IsMobile)
+            .Build();
     private bool expansionPanel1 = true;
     private double sliderValue = 50.0;
 

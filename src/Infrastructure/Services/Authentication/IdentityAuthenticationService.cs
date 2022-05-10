@@ -58,10 +58,16 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 new Claim(ClaimTypes.Name, user.UserName)
             });
         }
-        if (!string.IsNullOrEmpty(user.Site))
+        if (!string.IsNullOrEmpty(user.TenantName))
         {
             result.AddClaims(new[] {
-                new Claim(ClaimTypes.Locality, user.Site)
+                new Claim(ApplicationClaimTypes.TenantName, user.TenantName)
+            });
+        }
+        if (!string.IsNullOrEmpty(user.TenantId))
+        {
+            result.AddClaims(new[] {
+                new Claim(ApplicationClaimTypes.TenantId, user.TenantId)
             });
         }
         if (!string.IsNullOrEmpty(user.Email))
@@ -125,6 +131,10 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 }
                 await _protectedLocalStorage.SetAsync(LocalStorage.USERID, user.Id);
                 await _protectedLocalStorage.SetAsync(LocalStorage.USERNAME, user.UserName);
+                if (user.TenantId is not null)
+                {
+                    await _protectedLocalStorage.SetAsync(LocalStorage.TENANTID, user.TenantId);
+                }
                 var principal = new ClaimsPrincipal(identity);
                 NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
             }
@@ -170,6 +180,11 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             }
             await _protectedLocalStorage.SetAsync(LocalStorage.USERID, user.Id);
             await _protectedLocalStorage.SetAsync(LocalStorage.USERNAME, user.UserName);
+            if(user.TenantId is not null)
+            {
+                await _protectedLocalStorage.SetAsync(LocalStorage.TENANTID, user.TenantId);
+            }
+            
             var principal = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
             return true;
@@ -184,6 +199,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         await _protectedLocalStorage.DeleteAsync(LocalStorage.CLAIMSIDENTITY);
         await _protectedLocalStorage.DeleteAsync(LocalStorage.USERID);
         await _protectedLocalStorage.DeleteAsync(LocalStorage.USERNAME);
+        await _protectedLocalStorage.DeleteAsync(LocalStorage.TENANTID);
         var principal = new ClaimsPrincipal();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
     }

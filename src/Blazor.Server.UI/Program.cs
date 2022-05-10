@@ -71,7 +71,6 @@ builder.Services.AddScoped<LayoutService>();
 builder.Services.AddScoped<IUserPreferencesService, UserPreferencesService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddTransient<INotificationService, InMemoryNotificationService>();
-builder.Services.AddTransient<IArticlesService, ArticlesService>();
 builder.Services.AddGoogleAnalytics("G-PRYNCB61NV");
 
 var app = builder.Build();
@@ -92,8 +91,9 @@ using (var scope = app.Services.CreateScope())
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
 
-        await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);
         await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+        await ApplicationDbContextSeed.SeedDefaultUserAsync(context,userManager, roleManager);
+        
     }
     catch (Exception ex)
     {

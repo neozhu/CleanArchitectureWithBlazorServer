@@ -3,13 +3,13 @@
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
-public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<ApplicationUser,ApplicationRole>
+public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
 {
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
     public ApplicationClaimsIdentityFactory(UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
-        IOptions<IdentityOptions> optionsAccessor) : base(userManager,roleManager, optionsAccessor)
+        IOptions<IdentityOptions> optionsAccessor) : base(userManager, roleManager, optionsAccessor)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -17,11 +17,22 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
         var principal = await base.CreateAsync(user);
-
         if (!string.IsNullOrEmpty(user.Site))
         {
             ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
                 new Claim(ClaimTypes.Locality, user.Site)
+            });
+        }
+        if (!string.IsNullOrEmpty(user.TenantId))
+        {
+            ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+                new Claim(ApplicationClaimTypes.TenantId, user.TenantId)
+            });
+        }
+        if (!string.IsNullOrEmpty(user.TenantName))
+        {
+            ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+                new Claim(ApplicationClaimTypes.TenantName, user.TenantName)
             });
         }
         if (!string.IsNullOrEmpty(user.ProfilePictureDataUrl))
