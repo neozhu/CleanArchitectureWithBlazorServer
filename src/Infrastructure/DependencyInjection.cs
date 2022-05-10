@@ -45,6 +45,7 @@ public static class DependencyInjection
         services.AddLocalizationServices();
         services.AddServices()
                 .AddSerialization()
+                .AddMultiTenantService()
                 .AddMessageServices(configuration)
                 .AddSignalRServices();
         services.AddAuthenticationService(configuration);

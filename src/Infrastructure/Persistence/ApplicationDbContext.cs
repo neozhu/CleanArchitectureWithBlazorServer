@@ -2,27 +2,35 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
+using CleanArchitecture.Blazor.Infrastructure.Services.Tenant;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
+#nullable disable
 public class ApplicationDbContext : IdentityDbContext<
     ApplicationUser, ApplicationRole, string,
     ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
     ApplicationRoleClaim, ApplicationUserToken>, IApplicationDbContext
 {
+    private readonly TenantProvider _tenantProvider;
     private readonly ICurrentUserService _currentUserService;
     private readonly IDateTime _dateTime;
     private readonly IDomainEventService _domainEventService;
+    private readonly string _tenant = string.Empty;
+
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
+        TenantProvider tenantProvider,
         ICurrentUserService currentUserService,
         IDomainEventService domainEventService,
         IDateTime dateTime
         ) : base(options)
     {
+        _tenantProvider = tenantProvider;
         _currentUserService = currentUserService;
         _domainEventService = domainEventService;
         _dateTime = dateTime;
+        _tenant = _tenantProvider.GetTenant().Result;
     }
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<Logger> Loggers { get; set; }
@@ -75,9 +83,12 @@ public class ApplicationDbContext : IdentityDbContext<
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(builder);
+      
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
+        builder.ApplyGlobalFilters<IMustHaveTenant>(s => s.TenantId == _tenant);
+        builder.ApplyGlobalFilters<IMayHaveTenant>(s => s.TenantId==null || s.TenantId == _tenant);
+        base.OnModelCreating(builder);
     }
 
     private List<AuditTrail> OnBeforeSaveChanges(string userId)
