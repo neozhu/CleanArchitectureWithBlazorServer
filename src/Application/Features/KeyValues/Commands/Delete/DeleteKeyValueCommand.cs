@@ -9,7 +9,7 @@ public class DeleteKeyValueCommand : IRequest<Result>, ICacheInvalidator
 {
     public int[] Id { get; }
     public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => KeyValueCacheKey.SharedExpiryTokenSource;
+    public CancellationTokenSource? SharedExpiryTokenSource => KeyValueCacheKey.SharedExpiryTokenSource();
     public DeleteKeyValueCommand(int[] id)
     {
         Id = id;
