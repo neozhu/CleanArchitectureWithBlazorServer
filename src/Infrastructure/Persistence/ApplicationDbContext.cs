@@ -16,7 +16,7 @@ public class ApplicationDbContext : IdentityDbContext<
     private readonly ICurrentUserService _currentUserService;
     private readonly IDateTime _dateTime;
     private readonly IDomainEventService _domainEventService;
-    private readonly string _tenant = string.Empty;
+    private string _tenant = string.Empty;
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
@@ -30,7 +30,7 @@ public class ApplicationDbContext : IdentityDbContext<
         _currentUserService = currentUserService;
         _domainEventService = domainEventService;
         _dateTime = dateTime;
-        _tenant = _tenantProvider.GetTenant().Result;
+        _tenantProvider.GetTenant().ContinueWith(s=>_tenant=s.Result);
     }
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<Logger> Loggers { get; set; }
