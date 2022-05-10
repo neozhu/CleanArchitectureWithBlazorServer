@@ -30,7 +30,6 @@ public class ApplicationDbContext : IdentityDbContext<
         _currentUserService = currentUserService;
         _domainEventService = domainEventService;
         _dateTime = dateTime;
-        _tenantProvider.GetTenant().ContinueWith(s=>_tenant=s.Result);
     }
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<Logger> Loggers { get; set; }
@@ -45,6 +44,7 @@ public class ApplicationDbContext : IdentityDbContext<
     {
         var userId = await _currentUserService.UserId();
         var userName = await _currentUserService.UserName();
+        var tenantId = await _tenantProvider.GetTenant();
         var auditEntries = OnBeforeSaveChanges(userName);
 
         foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
@@ -54,6 +54,14 @@ public class ApplicationDbContext : IdentityDbContext<
                 case EntityState.Added:
                     entry.Entity.CreatedBy = userId;
                     entry.Entity.Created = _dateTime.Now;
+                    if (entry.Entity is IMustHaveTenant mustenant)
+                    {
+                        mustenant.TenantId = tenantId;
+                    }
+                    if (entry.Entity is IMayHaveTenant maytenant && !string.IsNullOrEmpty(tenantId))
+                    {
+                        maytenant.TenantId = tenantId;
+                    }
                     break;
 
                 case EntityState.Modified:
@@ -86,8 +94,13 @@ public class ApplicationDbContext : IdentityDbContext<
       
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
-        builder.ApplyGlobalFilters<IMustHaveTenant>(s => s.TenantId == _tenant);
-        builder.ApplyGlobalFilters<IMayHaveTenant>(s => s.TenantId==null || s.TenantId == _tenant);
+        Task.Run(async () =>
+        {
+            _tenant = await _tenantProvider.GetTenant();
+            builder.ApplyGlobalFilters<IMustHaveTenant>(s => s.TenantId == _tenant);
+            builder.ApplyGlobalFilters<IMayHaveTenant>(s => s.TenantId == null || s.TenantId == _tenant);
+
+        }).Wait();
         base.OnModelCreating(builder);
     }
 
