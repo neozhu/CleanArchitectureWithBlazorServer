@@ -51,8 +51,10 @@ public class PicklistAutocomplete : MudAutocomplete<string>
         {
             return Task.FromResult(_picklistService.DataSource.Where(x => x.Name == Picklist.ToString()).Select(x => x.Value ?? String.Empty));
         }
-        return Task.FromResult(_picklistService.DataSource.Where(x => x.Name == Picklist.ToString() && ( x.Value.Contains(value, StringComparison.InvariantCultureIgnoreCase)
-                                                                            || x.Text.Contains(value, StringComparison.InvariantCultureIgnoreCase))
+        return Task.FromResult(_picklistService.DataSource.Where(x => x.Name == Picklist.ToString() &&
+        ( x.Value!=null &&  x.Value.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
+          x.Text!=null && x.Text.Contains(value, StringComparison.InvariantCultureIgnoreCase)
+        )
                                                  )
                                          .Select(x=>x.Value??String.Empty));
     }

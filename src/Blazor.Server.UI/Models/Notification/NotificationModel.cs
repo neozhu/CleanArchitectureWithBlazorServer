@@ -22,7 +22,7 @@ public class NotificationModel
         }
     }
 
-    public string Message { get; set; }
+    public string Message { get; set; } = String.Empty;
     public DateTime DateTimeStamp { get; set; }
     public bool IsActive { get; set; }
 

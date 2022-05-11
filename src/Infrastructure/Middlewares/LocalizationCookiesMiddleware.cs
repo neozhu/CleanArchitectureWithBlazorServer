@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
-
+#nullable disable
 public class LocalizationCookiesMiddleware : IMiddleware
 {
     public CookieRequestCultureProvider Provider { get; }

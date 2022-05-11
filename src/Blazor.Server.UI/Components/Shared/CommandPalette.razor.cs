@@ -9,10 +9,10 @@ public partial class CommandPalette : IDisposable
     private readonly Dictionary<string, string> _pages = new();
     private HotKeysContext? _hotKeysContext;
     private Dictionary<string, string> _pagesFiltered = new();
-    private string _search;
-    [Inject] private HotKeys HotKeys { get; set; }
-    [Inject] private NavigationManager Navigation { get; set; }
-    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+    private string _search=String.Empty;
+    [Inject] private HotKeys HotKeys { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 
     public void Dispose()
     {

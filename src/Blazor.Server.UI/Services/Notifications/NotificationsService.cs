@@ -58,7 +58,7 @@ public class InMemoryNotificationService : INotificationService
     }
 
     public Task<NotificationMessage> GetMessageById(string id) =>
-        Task.FromResult(_messages.FirstOrDefault((x => x.Id == id)));
+        Task.FromResult(_messages.First((x => x.Id == id)));
 
     public async Task<IDictionary<NotificationMessage, bool>> GetNotifications()
     {

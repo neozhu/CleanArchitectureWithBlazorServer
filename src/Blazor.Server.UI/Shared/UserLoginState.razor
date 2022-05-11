@@ -26,7 +26,7 @@
         GC.SuppressFinalize(this);
     }
     [Inject]
-    private HubClient _client { get; set; }
+    private HubClient _client { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
         _identityService = ScopedServices.GetRequiredService<IIdentityService>();

@@ -16,4 +16,7 @@ public class UserFormModel
     public bool Checked { get; set; }
     public string? TenantId { get; set; }
     public string? TenantName { get; set; }
+    public bool IsLive { get; set; }
+    public string? Role { get; set; }
+    public DateTimeOffset? LockoutEnd { get; set; }
 }

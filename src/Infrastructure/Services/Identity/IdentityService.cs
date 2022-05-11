@@ -103,7 +103,7 @@ public class IdentityService : IIdentityService
         return result.ToApplicationResult();
     }
 
-    public async Task<IDictionary<string, string>> FetchUsers(string roleName)
+    public async Task<IDictionary<string, string?>> FetchUsers(string roleName)
     {
         var result = await _userManager.Users
              .Where(x => x.UserRoles.Where(y => y.Role.Name == roleName).Any())
