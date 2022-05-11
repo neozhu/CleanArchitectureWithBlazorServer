@@ -117,70 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Analytics" xml:space="preserve">
-    <value>分析决策</value>
+  <data name="Create a new Tenant" xml:space="preserve">
+    <value>创建新租户</value>
   </data>
-  <data name="Application" xml:space="preserve">
-    <value>应用程序</value>
-  </data>
-  <data name="Audit Trails" xml:space="preserve">
-    <value>安全审计</value>
-  </data>
-  <data name="Authorization" xml:space="preserve">
-    <value>授权</value>
-  </data>
-  <data name="Banking" xml:space="preserve">
-    <value>金融</value>
-  </data>
-  <data name="Blazor Dashbord" xml:space="preserve">
-    <value>Blazor看板</value>
-  </data>
-  <data name="Booking" xml:space="preserve">
-    <value>预定</value>
-  </data>
-  <data name="Customers" xml:space="preserve">
-    <value>客户信息</value>
-  </data>
-  <data name="Dictionaries" xml:space="preserve">
-    <value>参数选用表</value>
-  </data>
-  <data name="Documents" xml:space="preserve">
-    <value>文档</value>
-  </data>
-  <data name="E-Commerce" xml:space="preserve">
-    <value>电子商务</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>首页</value>
-  </data>
-  <data name="Jobs" xml:space="preserve">
-    <value>任务</value>
-  </data>
-  <data name="Log" xml:space="preserve">
-    <value>日志</value>
-  </data>
-  <data name="MANAGEMENT" xml:space="preserve">
-    <value>系统管理</value>
+  <data name="Edit the Tenant" xml:space="preserve">
+    <value>编辑租户</value>
   </data>
   <data name="Multi-Tenant" xml:space="preserve">
     <value>多租户</value>
   </data>
-  <data name="Picklist" xml:space="preserve">
-    <value>参数选用表</value>
+  <data name="Tenant" xml:space="preserve">
+    <value>租户</value>
   </data>
-  <data name="Products" xml:space="preserve">
-    <value>产品库</value>
+  <data name="Tenant Id" xml:space="preserve">
+    <value>租户编号</value>
   </data>
-  <data name="Profile" xml:space="preserve">
-    <value>简档</value>
+  <data name="Tenant id is required!" xml:space="preserve">
+    <value>租户编号必填</value>
   </data>
-  <data name="Roles" xml:space="preserve">
-    <value>角色</value>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>租户名称</value>
   </data>
-  <data name="System" xml:space="preserve">
-    <value>系统</value>
+  <data name="Tenant name is required!" xml:space="preserve">
+    <value>租户名称必填</value>
   </data>
-  <data name="Users" xml:space="preserve">
-    <value>系统账号</value>
+  <data name="Tenants" xml:space="preserve">
+    <value>租户</value>
   </data>
 </root>
