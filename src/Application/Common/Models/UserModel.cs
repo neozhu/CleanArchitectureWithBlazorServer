@@ -12,5 +12,7 @@ public class UserModel
     public string? UserId { get; set; }
     public bool IsActive { get; set; }
     public bool IsLive { get; set; }
+    public string? TenantId { get; set; }
+    public string? TenantName { get; set; }
     public DateTimeOffset? LockoutEnd { get; set; }
 }

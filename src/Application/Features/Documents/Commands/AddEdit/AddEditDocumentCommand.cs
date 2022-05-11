@@ -44,6 +44,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
             document.Title = request.Title;
             document.Description = request.Description;
             document.IsPublic = request.IsPublic;
+            document.DocumentType = request.DocumentType;
             await _context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(document.Id);
         }

@@ -1,7 +1,6 @@
 using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Mappings;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
-using CleanArchitecture.Blazor.Application.Features.DocumentTypes.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 using CleanArchitecture.Blazor.Domain.Entities;
@@ -35,7 +34,6 @@ public class MappingTests
     }
 
     [Test]
-    [TestCase(typeof(DocumentType), typeof(DocumentTypeDto))]
     [TestCase(typeof(Document), typeof(DocumentDto))]
     [TestCase(typeof(KeyValue), typeof(KeyValueDto))]
     [TestCase(typeof(Product), typeof(ProductDto))]

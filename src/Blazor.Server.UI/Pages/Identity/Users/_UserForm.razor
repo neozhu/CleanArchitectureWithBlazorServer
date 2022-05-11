@@ -1,3 +1,4 @@
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using Microsoft.AspNetCore.Identity
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
@@ -31,8 +32,23 @@
                 </MudTooltip>
             </div>
         </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudSelect For="@(() => model.TenantId)"
+                       T="string"
+                       Label="@L["Select Tenant"]"
+                       Text="@model.TenantName"
+                       Required="true"
+                       RequiredError="@L["Tenant is required."]"
+                       ValueChanged="TenantIdChanged"
+                       Value="@model.TenantId">
+                @foreach (var item in _tenantsService.DataSource)
+                {
+                    <MudSelectItem T="string" Value="@item.Id" >@item.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.Site)" @bind-Value="model.Site" Label="@L["Site"]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => model.Site)" @bind-Value="model.Site" Label="@L["Provider"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
@@ -42,6 +58,9 @@
         </MudItem>
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+         <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => model.PhoneNumber)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         @if (string.IsNullOrEmpty(model.Id))
         {
@@ -72,9 +91,7 @@
                           OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
             </MudItem>
         }
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.PhoneNumber)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
+       
        <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
             <div class="d-fex">
@@ -104,6 +121,7 @@
     private List<keyvalue> _roles { get; set; } = new();
 
     [Inject] private IUploadService _uploadService { get; set; } = default!;
+    [Inject] private ITenantsService  _tenantsService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     UserFormModelValidator modelValidator = new();
     [EditorRequired][Parameter] public UserFormModel model { get; set; } = default!;
@@ -111,10 +129,11 @@
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
     protected override async Task OnInitializedAsync()
     {
         var array = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
-
+       await _tenantsService.Initialize();
         foreach (var role in array)
         {
             if (model.AssignRoles != null && model.AssignRoles.Contains(role))
@@ -143,7 +162,11 @@
             PasswordInput = InputType.Text;
         }
     }
-
+    private void TenantIdChanged(string id)
+    {
+        model.TenantId = id;
+        model.TenantName = _tenantsService.DataSource.FirstOrDefault(x => x.Id == id)?.Name;
+    }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
         var filestream = e.File.OpenReadStream();

@@ -1,20 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Constants.LocalStorage;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Services.Tenant;
-public sealed class TenantProvider
+namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
+public sealed class TenantProvider : ITenantProvider
 {
     private readonly ProtectedLocalStorage _protectedLocalStorage;
     private readonly IDictionary<Guid, Action> callbacks = new Dictionary<Guid, Action>();
+    public TenantProvider(
 
-    public TenantProvider(ProtectedLocalStorage protectedLocalStorage)
+        ProtectedLocalStorage protectedLocalStorage)
     {
+
         _protectedLocalStorage = protectedLocalStorage;
+
     }
     public async Task SetTenant(string tenant)
     {

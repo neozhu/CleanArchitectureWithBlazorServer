@@ -74,15 +74,6 @@ public static class ApplicationDbContextSeed
             await context.SaveChangesAsync();
 
         }
-        if (!context.DocumentTypes.Any())
-        {
-            context.DocumentTypes.Add(new Domain.Entities.DocumentType() { Name = "Document", Description = "Document" });
-            context.DocumentTypes.Add(new Domain.Entities.DocumentType() { Name = "PDF", Description = "PDF" });
-            context.DocumentTypes.Add(new Domain.Entities.DocumentType() { Name = "Image", Description = "Image" });
-            context.DocumentTypes.Add(new Domain.Entities.DocumentType() { Name = "Other", Description = "Other" });
-            await context.SaveChangesAsync();
-         
-        }
         if (!context.KeyValues.Any())
         {
             context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "initialization", Text = "initialization", Description = "Status of workflow" });

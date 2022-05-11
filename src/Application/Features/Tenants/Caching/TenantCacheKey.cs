@@ -6,6 +6,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 public static class TenantCacheKey
 {
     public const string GetAllCacheKey = "all-Tenants";
+    public const string TenantsCacheKey = "all-TenantsCacheKey";
     public static string GetPagtionCacheKey(string parameters) {
         return $"TenantsWithPaginationQuery,{parameters}";
     }

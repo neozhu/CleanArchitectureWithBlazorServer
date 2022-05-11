@@ -5,6 +5,9 @@ public class UserFormModelValidator: AbstractValidator<UserFormModel>
 {
     public UserFormModelValidator()
     {
+        RuleFor(v => v.TenantId)
+             .MaximumLength(256)
+             .NotEmpty();
         RuleFor(v => v.Site)
              .MaximumLength(256)
              .NotEmpty();

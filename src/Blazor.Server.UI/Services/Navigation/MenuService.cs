@@ -33,9 +33,9 @@ public class MenuService : IMenuService
                              PageStatus = PageStatus.Completed,
                         },
                         new(){
-                             Title = "Customers",
-                             Href = "/pages/customers",
-                             PageStatus = PageStatus.ComingSoon,
+                             Title = "Documents",
+                             Href = "/pages/documents",
+                             PageStatus = PageStatus.Completed,
                         }
                     }
                 },

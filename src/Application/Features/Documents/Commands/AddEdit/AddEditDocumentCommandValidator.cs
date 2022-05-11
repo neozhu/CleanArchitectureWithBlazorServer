@@ -11,9 +11,8 @@ public class AddEditDocumentCommandValidator : AbstractValidator<AddEditDocument
             .NotNull()
             .MaximumLength(256)
             .NotEmpty();
-        RuleFor(v => v.DocumentTypeId)
-            .NotNull()
-            .NotEqual(0);
+        RuleFor(v => v.DocumentType)
+            .NotNull();
         RuleFor(v => v.Description)
             .MaximumLength(256);
         RuleFor(v => v.UploadRequest)
@@ -22,4 +21,11 @@ public class AddEditDocumentCommandValidator : AbstractValidator<AddEditDocument
 
 
     }
+    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+    {
+        var result = await ValidateAsync(ValidationContext<AddEditDocumentCommand>.CreateWithOptions((AddEditDocumentCommand)model, x => x.IncludeProperties(propertyName)));
+        if (result.IsValid)
+            return Array.Empty<string>();
+        return result.Errors.Select(e => e.ErrorMessage);
+    };
 }

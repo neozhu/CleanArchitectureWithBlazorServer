@@ -5,12 +5,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchitecture.Infrastructure.Persistence.Configurations;
 
-public class DocumentConfiguration : IEntityTypeConfiguration<Document>
+public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
 {
-    public void Configure(EntityTypeBuilder<Document> builder)
+    public void Configure(EntityTypeBuilder<Tenant> builder)
     {
-        builder.Property(t => t.DocumentType).HasConversion<string>();
         builder.Ignore(e => e.DomainEvents);
-
     }
 }
