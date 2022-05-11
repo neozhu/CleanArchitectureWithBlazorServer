@@ -35,7 +35,7 @@ public class MenuService : IMenuService
                         new(){
                              Title = "Documents",
                              Href = "/pages/documents",
-                             PageStatus = PageStatus.ComingSoon,
+                             PageStatus = PageStatus.Completed,
                         }
                     }
                 },
