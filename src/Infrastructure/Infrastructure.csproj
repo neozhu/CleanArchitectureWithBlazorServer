@@ -32,11 +32,11 @@
     </PackageReference>
     <PackageReference Include="MimeKit" Version="3.2.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
-    <PackageReference Include="Duende.IdentityServer" Version="6.0.5" />
-    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="6.0.5" />
-    <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="6.0.5" />
-    <PackageReference Include="Duende.IdentityServer.EntityFramework.Storage" Version="6.0.5" />
-    <PackageReference Include="Duende.IdentityServer.Storage" Version="6.0.5" />
+    <PackageReference Include="Duende.IdentityServer" Version="6.0.4" />
+    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="6.0.4" />
+    <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="6.0.4" />
+    <PackageReference Include="Duende.IdentityServer.EntityFramework.Storage" Version="6.0.4" />
+    <PackageReference Include="Duende.IdentityServer.Storage" Version="6.0.4" />
   </ItemGroup>
 
   <ItemGroup>
