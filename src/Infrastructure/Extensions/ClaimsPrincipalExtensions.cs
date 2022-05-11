@@ -16,8 +16,8 @@ public static class ClaimsPrincipalExtensions
        => claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
     public static string GetUserName(this ClaimsPrincipal claimsPrincipal)
        => claimsPrincipal.FindFirstValue(ClaimTypes.Name);
-    public static string GetSite(this ClaimsPrincipal claimsPrincipal)
-      => claimsPrincipal.FindFirstValue(ClaimTypes.Locality);
+    public static string GetProvider(this ClaimsPrincipal claimsPrincipal)
+      => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.Provider);
     public static string GetDisplayName(this ClaimsPrincipal claimsPrincipal)
          => claimsPrincipal.FindFirstValue(ClaimTypes.GivenName);
     public static string GetProfilePictureDataUrl(this ClaimsPrincipal claimsPrincipal)
@@ -71,17 +71,43 @@ public static class ClaimsPrincipalExtensions
             identity.AddClaim(new Claim(ClaimTypes.MobilePhone, phoneNumber));
         }
     }
-    public static void SetSite(this ClaimsPrincipal claimsPrincipal, string site)
+    public static void SetProvider(this ClaimsPrincipal claimsPrincipal, string provider)
     {
         var identity = claimsPrincipal.Identity as ClaimsIdentity;
         if (identity is not null)
         {
-            var claim = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Locality);
+            var claim = identity.Claims.FirstOrDefault(x => x.Type == ApplicationClaimTypes.Provider);
             if (claim is not null)
             {
                 identity.RemoveClaim(claim);
             }
-            identity.AddClaim(new Claim(ClaimTypes.Locality, site));
+            identity.AddClaim(new Claim(ApplicationClaimTypes.Provider, provider));
+        }
+    }
+    public static void SetTenantId(this ClaimsPrincipal claimsPrincipal, string tenantId)
+    {
+        var identity = claimsPrincipal.Identity as ClaimsIdentity;
+        if (identity is not null)
+        {
+            var claim = identity.Claims.FirstOrDefault(x => x.Type == ApplicationClaimTypes.TenantId);
+            if (claim is not null)
+            {
+                identity.RemoveClaim(claim);
+            }
+            identity.AddClaim(new Claim(ApplicationClaimTypes.TenantId, tenantId));
+        }
+    }
+    public static void SetTenantName(this ClaimsPrincipal claimsPrincipal, string tenantName)
+    {
+        var identity = claimsPrincipal.Identity as ClaimsIdentity;
+        if (identity is not null)
+        {
+            var claim = identity.Claims.FirstOrDefault(x => x.Type == ApplicationClaimTypes.TenantName);
+            if (claim is not null)
+            {
+                identity.RemoveClaim(claim);
+            }
+            identity.AddClaim(new Claim(ApplicationClaimTypes.TenantName, tenantName));
         }
     }
 }

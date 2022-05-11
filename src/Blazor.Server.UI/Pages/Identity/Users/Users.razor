@@ -362,43 +362,30 @@
     {
         var user = await _userManager.FindByIdAsync(item.Id);
         var roles = await _userManager.GetRolesAsync(user);
-        var model = new UserFormModel()
-            {
-                Id = item.Id,
-                Provider = item.Provider,
-                TenantId = item.TenantId,
-                TenantName = item.TenantName,
-                DisplayName = item.DisplayName,
-                UserName = item.UserName,
-                Email = item.Email,
-                PhoneNumber = item.PhoneNumber,
-                ProfilePictureDataUrl = item.ProfilePictureDataUrl,
-                IsActive = item.IsActive,
-                AssignRoles = roles.ToArray()
-            };
-        var parameters = new DialogParameters { ["model"] = model };
+        item.AssignRoles = roles.ToArray();
+        var parameters = new DialogParameters { ["model"] = item };
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
             var state = await AuthState;
-            user.Email = model.Email;
-            user.PhoneNumber = model.PhoneNumber;
-            user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
-            user.DisplayName = model.DisplayName;
-            user.Provider = model.Provider;
-            user.UserName = model.UserName;
-            user.IsActive = model.IsActive;
-            user.TenantId = model.TenantId;
-            user.TenantName = model.TenantName;
+            user.Email = item.Email;
+            user.PhoneNumber = item.PhoneNumber;
+            user.ProfilePictureDataUrl = item.ProfilePictureDataUrl;
+            user.DisplayName = item.DisplayName;
+            user.Provider = item.Provider;
+            user.UserName = item.UserName;
+            user.IsActive = item.IsActive;
+            user.TenantId = item.TenantId;
+            user.TenantName = item.TenantName;
             var identityResult = await _userManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
-                if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
+                if (item.AssignRoles is not null && item.AssignRoles.Length > 0)
                 {
                     await _userManager.RemoveFromRolesAsync(user, roles);
-                    await _userManager.AddToRolesAsync(user, model.AssignRoles);
+                    await _userManager.AddToRolesAsync(user, item.AssignRoles);
                 }
                 if (state.User.GetUserId() == item.Id)
                 {

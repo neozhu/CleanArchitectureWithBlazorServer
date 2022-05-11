@@ -1,5 +1,6 @@
 @page "/pages/documents"
 
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
@@ -157,13 +158,14 @@
     private MudTable<DocumentDto> _table = default!;
     private string _searchString = string.Empty;
     private bool _loading;
-   
+    [Inject]
+    private ITenantProvider _tenantProvider { get; set; } = default!;
     [Inject]
     private ISender _mediator { get; set; } = default!;
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
-
-    private DocumentsWithPaginationQuery query { get; set; } = new();
+    private string _tenantId = string.Empty;
+    private DocumentsWithPaginationQuery query { get; set; } = new(string.Empty);
 
     private bool _canSearch;
     private bool _canCreate;
@@ -181,6 +183,11 @@
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
+        _tenantId =await _tenantProvider.GetTenant();
+        _tenantProvider.Register(async () =>
+        {
+            await _table.ReloadServerData();
+        });
     }
     private async Task<TableData<DocumentDto>> ServerReload(TableState state)
     {
@@ -188,6 +195,7 @@
         {
             _loading = true;
             query.Keyword = _searchString;
+            query.TenantId = _tenantId;
             query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
             query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
             query.PageNumber = state.Page + 1;
