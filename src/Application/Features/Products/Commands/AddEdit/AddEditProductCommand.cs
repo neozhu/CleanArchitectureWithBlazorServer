@@ -10,7 +10,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdi
 public class AddEditProductCommand : ProductDto, IRequest<Result<int>>, IMapFrom<Product>, ICacheInvalidator
 {
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource;
+    public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource();
 }
 
 public class AddEditProductCommandHandler : IRequestHandler<AddEditProductCommand, Result<int>>

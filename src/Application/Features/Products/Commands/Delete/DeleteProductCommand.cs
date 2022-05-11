@@ -12,7 +12,7 @@ public class DeleteProductCommand : IRequest<Result>, ICacheInvalidator
 {
     public int[] Id { get; }
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource;
+    public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource();
     public DeleteProductCommand(int[] id)
     {
         Id = id;
