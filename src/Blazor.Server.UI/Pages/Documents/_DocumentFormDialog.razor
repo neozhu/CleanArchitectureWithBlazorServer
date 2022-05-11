@@ -23,6 +23,8 @@
                 <MudItem xs="12" sm="6">
                     <MudSelect Label="@L["Select Document Type"]"
                                For="@(() => model.DocumentType)"
+                               Required="true"
+                               RequiredError="@L["Document type is required!"]"
                                @bind-Value="model.DocumentType">
                         @foreach (var doctype in Enum.GetValues<DocumentType>())
                         {
@@ -42,7 +44,7 @@
                             Class="ml-2"
                             Color="MudBlazor.Color.Info"
                             Icon="@Icons.Filled.Image"
-                            Label="Upload"
+                            Label="@L["Upload"]"
                             for="fileInput" />
 
                     <div class="d-fex">
@@ -86,7 +88,7 @@
                UploadType= UploadType.Document
         };
         model.URL = file.Name;
-        Snackbar.Add($"upload successfully", MudBlazor.Severity.Info);
+        Snackbar.Add($"Upload successfully", MudBlazor.Severity.Info);
 
     }
     async Task Submit()

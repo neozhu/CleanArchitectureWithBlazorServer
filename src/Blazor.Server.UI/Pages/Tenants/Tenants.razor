@@ -89,17 +89,17 @@
                 <MudTd DataLabel="@ButtonText.ACTIONS">
                     @if (_canEdit || _canDelete)
                     {
-                        <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                        <MudMenu Label="@ButtonText.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                              Dense="true"
                              EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
                             @if (_canEdit)
                             {
-                                <MudMenuItem OnClick="@(()=>OnEdit(context))">@L["Edit"]</MudMenuItem>
+                                <MudMenuItem OnClick="@(()=>OnEdit(context))">@ButtonText.EDIT</MudMenuItem>
                             }
                             @if (_canDelete)
                             {
-                                <MudMenuItem OnClick="@(()=>OnDelete(context))">@L["Delete"]</MudMenuItem>
+                                <MudMenuItem OnClick="@(()=>OnDelete(context))">@ButtonText.DELETE</MudMenuItem>
                             }
                         </MudMenu>
                     }
@@ -214,7 +214,7 @@
         {
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{L["Create successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
         }
     }
     private async Task OnEdit(TenantDto dto)
