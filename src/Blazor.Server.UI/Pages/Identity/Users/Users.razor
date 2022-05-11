@@ -120,7 +120,7 @@
                 <MudTh Style="width:80px">@PromptText.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.TenantName)">@L["Tenant Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Site)">@L["Provider"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Provider)">@L["Provider"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Email)">@L["Email"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.PhoneNumber)">@L["Phone Number"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.IsActive)">@L["Is Active"]</MudTableSortLabel></MudTh>
@@ -182,7 +182,7 @@
                         </div>
                     </div>
                 </MudTd>
-                <MudTd DataLabel="@L["Provider"]">@context.Site</MudTd>
+                <MudTd DataLabel="@L["Provider"]">@context.Provider</MudTd>
                 <MudTd DataLabel="@L["Email"]">@context.Email</MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Phone Number"]">@context.PhoneNumber</MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Is Active"]">
@@ -228,7 +228,7 @@
     private bool _canImport;
     private bool _canExport;
     private bool _loading;
-    private MudTable<UserModel> _table = default!;
+ 
     protected override async Task OnInitializedAsync()
     {
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
@@ -274,7 +274,7 @@
             return true;
         if (x.DisplayName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if ($"{x.Email} {x.PhoneNumber} {x.Site}".Contains(_searchString))
+        if ($"{x.Email} {x.PhoneNumber} {x.Provider}".Contains(_searchString))
             return true;
         return false;
     };
@@ -298,7 +298,7 @@
                     IsActive = x.IsActive,
                     IsLive = x.IsLive,
                     PhoneNumber = x.PhoneNumber,
-                    Site = x.Site,
+                    Provider = x.Provider,
                     UserId = x.Id,
                     UserName = x.UserName,
                     TenantId=x.TenantId,
@@ -314,7 +314,7 @@
     }
     private async Task OnCreate()
     {
-        var model = new UserFormModel() { Site="Local", AssignRoles = new string[] { RoleConstants.BasicRole } };
+        var model = new UserFormModel() { Provider="Local", AssignRoles = new string[] { RoleConstants.BasicRole } };
         var parameters = new DialogParameters { ["model"] = model };
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
@@ -323,7 +323,7 @@
         {
             var applicationUser = new ApplicationUser()
                 {
-                    Site = model.Site,
+                    Provider = model.Provider,
                     DisplayName = model.DisplayName,
                     UserName = model.UserName,
                     TenantId=model.TenantId,
@@ -352,7 +352,7 @@
                         DisplayName = applicationUser.DisplayName,
                         Email = applicationUser.Email,
                         IsActive = applicationUser.IsActive,
-                        Site = applicationUser.Site,
+                        Provider = applicationUser.Provider,
                         UserId = applicationUser.Id,
                         TenantId=applicationUser.TenantId,
                     TenantName = applicationUser.TenantName,
@@ -376,7 +376,7 @@
         var model = new UserFormModel()
             {
                 Id = item.UserId,
-                Site = item.Site,
+                Provider = item.Provider,
                 TenantId=item.TenantId,
                 TenantName = item.TenantName,
                 DisplayName = item.DisplayName,
@@ -399,7 +399,7 @@
             item.PhoneNumber = model.PhoneNumber;
             item.Avatar = model.ProfilePictureDataUrl;
             item.DisplayName = model.DisplayName;
-            item.Site = model.Site;
+            item.Provider = model.Provider;
             item.UserName = model.UserName;
             item.IsActive = model.IsActive;
             item.TenantId = model.TenantId;
@@ -413,7 +413,7 @@
             user.PhoneNumber = model.PhoneNumber;
             user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
             user.DisplayName = model.DisplayName;
-            user.Site = model.Site;
+            user.Provider = model.Provider;
             user.UserName = model.UserName;
             user.IsActive = model.IsActive;
             user.TenantId = model.TenantId;

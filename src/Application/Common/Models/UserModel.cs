@@ -2,7 +2,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Models;
 
 public class UserModel
 {
-    public string? Site { get; set; }
+    public string? Provider { get; set; }
     public string? Avatar { get; set; }
     public string? DisplayName { get; set; }
     public string? UserName { get; set; }
