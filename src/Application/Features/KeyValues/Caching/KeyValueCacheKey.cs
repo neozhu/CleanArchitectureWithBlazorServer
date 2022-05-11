@@ -6,6 +6,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 public static class KeyValueCacheKey
 {
     public const string GetAllCacheKey = "all-keyvalues";
+    public const string PicklistCacheKey = "all-picklistcachekey";
     public static string GetCacheKey(string name)
     {
         return $"{name}-keyvalues";

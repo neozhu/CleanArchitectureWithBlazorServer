@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
-using CleanArchitecture.Blazor.Infrastructure.Services.Tenant;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
@@ -12,15 +12,15 @@ public class ApplicationDbContext : IdentityDbContext<
     ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
     ApplicationRoleClaim, ApplicationUserToken>, IApplicationDbContext
 {
-    private readonly TenantProvider _tenantProvider;
+    private readonly ITenantProvider _tenantProvider;
     private readonly ICurrentUserService _currentUserService;
     private readonly IDateTime _dateTime;
     private readonly IDomainEventService _domainEventService;
-    private string _tenant = string.Empty;
+
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
-        TenantProvider tenantProvider,
+        ITenantProvider tenantProvider,
         ICurrentUserService currentUserService,
         IDomainEventService domainEventService,
         IDateTime dateTime
@@ -34,7 +34,6 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<Logger> Loggers { get; set; }
     public DbSet<AuditTrail> AuditTrails { get; set; }
-    public DbSet<DocumentType> DocumentTypes { get; set; }
     public DbSet<Document> Documents { get; set; }
 
     public DbSet<KeyValue> KeyValues { get; set; }
@@ -94,13 +93,13 @@ public class ApplicationDbContext : IdentityDbContext<
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
-        Task.Run(async () =>
-        {
-            _tenant = await _tenantProvider.GetTenant();
-            builder.ApplyGlobalFilters<IMustHaveTenant>(s => s.TenantId == _tenant);
-            builder.ApplyGlobalFilters<IMayHaveTenant>(s => s.TenantId == null || s.TenantId == _tenant);
+        //Task.Run(async () =>
+        //{
+        //    _tenant = await _tenantProvider.GetTenant();
+        //    builder.ApplyGlobalFilters<IMustHaveTenant>(s => s.TenantId == _tenant);
+        //    builder.ApplyGlobalFilters<IMayHaveTenant>(s => s.TenantId == null || s.TenantId == _tenant);
 
-        }).Wait();
+        //}).Wait();
         
     }
 

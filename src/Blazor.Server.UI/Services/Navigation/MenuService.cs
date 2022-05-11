@@ -33,8 +33,8 @@ public class MenuService : IMenuService
                              PageStatus = PageStatus.Completed,
                         },
                         new(){
-                             Title = "Customers",
-                             Href = "/pages/customers",
+                             Title = "Documents",
+                             Href = "/pages/documents",
                              PageStatus = PageStatus.ComingSoon,
                         }
                     }

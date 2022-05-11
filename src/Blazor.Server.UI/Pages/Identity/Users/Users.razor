@@ -118,9 +118,9 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh Style="width:80px">@PromptText.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Site)">@L["Site"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.TenantName)">@L["Tenant Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.DisplayName)">@L["Dispaly Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Site)">@L["Provider"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Email)">@L["Email"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.PhoneNumber)">@L["Phone Number"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.IsActive)">@L["Is Active"]</MudTableSortLabel></MudTh>
@@ -167,17 +167,22 @@
                         </MudButton>
                     }
                 </MudTd>
-                <MudTd DataLabel="@L["Site"]">@context.Site</MudTd>
+                <MudTd DataLabel="@L["Tenant Name"]">
+                    <MudText>@context.TenantName</MudText>
+                    <MudText Typo="Typo.body2">@context.TenantId</MudText>
+                </MudTd>
                 <MudTd DataLabel="@L["User Name"]">
                     <div class="d-flex align-content-center flex-wrap">
-
                         <MudBadge Color="@(context.IsLive? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
                             <MudAvatar Image="@context.Avatar" Alt="@context.UserName">@context.UserName.First()</MudAvatar>
                         </MudBadge>
-                        <MudText Class="ml-2 align-self-center">@context.UserName</MudText>
+                        <div class="d-flex flex-column">
+                            <MudText Class="ml-2 align-self-center">@context.UserName</MudText>
+                            <MudText Typo="Typo.body2" Class="ml-2 align-self-center">@context.DisplayName</MudText>
+                        </div>
                     </div>
                 </MudTd>
-                <MudTd DataLabel="@L["Display Name"]">@context.DisplayName</MudTd>
+                <MudTd DataLabel="@L["Provider"]">@context.Site</MudTd>
                 <MudTd DataLabel="@L["Email"]">@context.Email</MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Phone Number"]">@context.PhoneNumber</MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Is Active"]">
@@ -296,6 +301,8 @@
                     Site = x.Site,
                     UserId = x.Id,
                     UserName = x.UserName,
+                    TenantId=x.TenantId,
+                    TenantName = x.TenantName,
                     LockoutEnd = x.LockoutEnd,
                     Role = string.Join(", ", x.UserRoles.Select(x => x.Role.Name))
                 }).ToListAsync();
@@ -307,7 +314,7 @@
     }
     private async Task OnCreate()
     {
-        var model = new UserFormModel() { AssignRoles = new string[] { RoleConstants.BasicRole } };
+        var model = new UserFormModel() { Site="Local", AssignRoles = new string[] { RoleConstants.BasicRole } };
         var parameters = new DialogParameters { ["model"] = model };
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
@@ -319,6 +326,8 @@
                     Site = model.Site,
                     DisplayName = model.DisplayName,
                     UserName = model.UserName,
+                    TenantId=model.TenantId,
+                    TenantName = model.TenantName,
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber,
                     ProfilePictureDataUrl = model.ProfilePictureDataUrl,
@@ -345,6 +354,8 @@
                         IsActive = applicationUser.IsActive,
                         Site = applicationUser.Site,
                         UserId = applicationUser.Id,
+                        TenantId=applicationUser.TenantId,
+                    TenantName = applicationUser.TenantName,
                         UserName = applicationUser.UserName,
                         PhoneNumber = applicationUser.PhoneNumber
 
@@ -366,6 +377,8 @@
             {
                 Id = item.UserId,
                 Site = item.Site,
+                TenantId=item.TenantId,
+                TenantName = item.TenantName,
                 DisplayName = item.DisplayName,
                 UserName = item.UserName,
                 Email = item.Email,
@@ -389,8 +402,10 @@
             item.Site = model.Site;
             item.UserName = model.UserName;
             item.IsActive = model.IsActive;
+            item.TenantId = model.TenantId;
+            item.TenantName = model.TenantName;
             if(state.User.GetUserId()==item.UserId){
-               await _profileService.Update(item);
+                await _profileService.Update(item);
             }
 
 
@@ -401,6 +416,8 @@
             user.Site = model.Site;
             user.UserName = model.UserName;
             user.IsActive = model.IsActive;
+            user.TenantId = model.TenantId;
+            user.TenantName = model.TenantName;
             var identityResult = await _userManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {

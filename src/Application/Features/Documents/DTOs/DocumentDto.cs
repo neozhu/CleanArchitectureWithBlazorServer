@@ -8,7 +8,7 @@ public partial class DocumentDto : IMapFrom<Document>
     public void Mapping(Profile profile)
     {
         profile.CreateMap<Document, DocumentDto>()
-           .ForMember(x => x.DocumentTypeName, s => s.MapFrom(y => y.DocumentType.Name));
+           .ForMember(x => x.TenantName, s => s.MapFrom(y => y.Tenant.Name));
         profile.CreateMap<DocumentDto, Document>(MemberList.None);
     }
     public int Id { get; set; }
@@ -16,8 +16,7 @@ public partial class DocumentDto : IMapFrom<Document>
     public string? Description { get; set; }
     public bool IsPublic { get; set; }
     public string? URL { get; set; }
-    public string? CreatedBy { get; set; }
-    public DateTime? Created { get; set; }
-    public int DocumentTypeId { get; set; }
-    public string? DocumentTypeName { get; set; }
+    public DocumentType DocumentType { get; set; } = DocumentType.Document;
+    public string? TenantId { get; set; }
+    public string? TenantName { get; set; }
 }

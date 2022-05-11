@@ -9,6 +9,9 @@ public class ProfileService
     {
         Profile =  new UserModel()
         {
+            IsActive = principal.GetStatus(),
+            TenantId = principal.GetTenantId(),
+            TenantName = principal.GetTenantName(),
             Avatar = principal.GetProfilePictureDataUrl(),
             DisplayName = principal.GetDisplayName(),
             Email = principal.GetEmail(),

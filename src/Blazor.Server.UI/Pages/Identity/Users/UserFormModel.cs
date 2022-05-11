@@ -14,4 +14,6 @@ public class UserFormModel
     public string[]? AssignRoles { get; set; }
     public bool IsActive { get; set; }
     public bool Checked { get; set; }
+    public string? TenantId { get; set; }
+    public string? TenantName { get; set; }
 }

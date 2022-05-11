@@ -11,7 +11,6 @@ public interface IApplicationDbContext
 {
     DbSet<Logger> Loggers { get; set; }
     DbSet<AuditTrail> AuditTrails { get; set; }
-    DbSet<DocumentType> DocumentTypes { get; set; }
     DbSet<Document> Documents { get; set; }
     DbSet<KeyValue> KeyValues { get; set; }
     DbSet<Product> Products { get; set; }

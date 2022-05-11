@@ -8,7 +8,7 @@ namespace CleanArchitecture.Blazor.Application.Services.Picklist;
 
 public class PicklistService: IPicklistService
 {
-    private const string PicklistCacheKey = "PicklistCache";
+   
     private readonly SemaphoreSlim _semaphore = new(1, 1);
     private readonly IAppCache _cache;
     private readonly IApplicationDbContext _context;
@@ -27,11 +27,10 @@ public class PicklistService: IPicklistService
     }
     public async Task Initialize()
     {
-        //if (DataSource.Count > 0) return;
         await _semaphore.WaitAsync();
         try
         {
-            DataSource = await _cache.GetOrAddAsync(PicklistCacheKey,
+            DataSource = await _cache.GetOrAddAsync(KeyValueCacheKey.PicklistCacheKey,
                 () => _context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
                     .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(),
@@ -49,8 +48,8 @@ public class PicklistService: IPicklistService
         await _semaphore.WaitAsync();
         try
         {
-            _cache.Remove(PicklistCacheKey);
-            DataSource = await _cache.GetOrAddAsync(PicklistCacheKey,
+            _cache.Remove(KeyValueCacheKey.PicklistCacheKey);
+            DataSource = await _cache.GetOrAddAsync(KeyValueCacheKey.PicklistCacheKey,
                 () => _context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
                     .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(),

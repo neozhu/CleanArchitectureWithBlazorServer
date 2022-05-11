@@ -52,6 +52,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
 
         var result = new ClaimsIdentity(KEY);
         result.AddClaim(new(ClaimTypes.NameIdentifier, user.Id));
+        result.AddClaim(new(ApplicationClaimTypes.Status, user.IsActive.ToString()));
         if (!string.IsNullOrEmpty(user.UserName))
         {
             result.AddClaims(new[] {
@@ -68,6 +69,13 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         {
             result.AddClaims(new[] {
                 new Claim(ApplicationClaimTypes.TenantId, user.TenantId)
+            });
+        }
+       
+        if (!string.IsNullOrEmpty(user.Site))
+        {
+            result.AddClaims(new[] {
+                new Claim(ClaimTypes.Locality, user.Site)
             });
         }
         if (!string.IsNullOrEmpty(user.Email))
@@ -135,6 +143,10 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 {
                     await _protectedLocalStorage.SetAsync(LocalStorage.TENANTID, user.TenantId);
                 }
+                if (user.TenantName is not null)
+                {
+                    await _protectedLocalStorage.SetAsync(LocalStorage.TENANTNAME, user.TenantName);
+                }
                 var principal = new ClaimsPrincipal(identity);
                 NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
             }
@@ -184,7 +196,10 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             {
                 await _protectedLocalStorage.SetAsync(LocalStorage.TENANTID, user.TenantId);
             }
-            
+            if (user.TenantName is not null)
+            {
+                await _protectedLocalStorage.SetAsync(LocalStorage.TENANTNAME, user.TenantName);
+            }
             var principal = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
             return true;

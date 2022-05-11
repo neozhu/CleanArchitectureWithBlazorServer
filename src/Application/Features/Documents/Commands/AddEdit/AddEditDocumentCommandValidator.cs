@@ -11,9 +11,8 @@ public class AddEditDocumentCommandValidator : AbstractValidator<AddEditDocument
             .NotNull()
             .MaximumLength(256)
             .NotEmpty();
-        RuleFor(v => v.DocumentTypeId)
-            .NotNull()
-            .NotEqual(0);
+        RuleFor(v => v.DocumentType)
+            .NotNull();
         RuleFor(v => v.Description)
             .MaximumLength(256);
         RuleFor(v => v.UploadRequest)
