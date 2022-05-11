@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using CleanArchitecture.Blazor.Domain.Common;
 
 namespace CleanArchitecture.Blazor.Application.Common.Specification;
-
+#nullable disable
 public abstract class Specification<T> : ISpecification<T> where T : class, IEntity
 {
     public Expression<Func<T, bool>> Criteria { get; set; }

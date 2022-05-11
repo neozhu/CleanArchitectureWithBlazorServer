@@ -3,6 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 
+#nullable disable
 /// <summary>
 /// Specifies the class this attribute is applied to requires authorization.
 /// </summary>

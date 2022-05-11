@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchitecture.Infrastructure.Persistence.Configurations;
 
+#nullable disable
 public class AuditTrailConfiguration : IEntityTypeConfiguration<AuditTrail>
 {
     public void Configure(EntityTypeBuilder<AuditTrail> builder)

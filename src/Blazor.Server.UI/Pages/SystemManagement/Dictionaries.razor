@@ -134,10 +134,10 @@
                 <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="@L["Name"]">@context.Name</MudTd>
-                <MudTd DataLabel="@L["Value"]">@context.Value</MudTd>
-                <MudTd DataLabel="@L["Text"]">@context.Text</MudTd>
-                <MudTd DataLabel="@L["Description"]">@context.Description</MudTd>
+                <MudTd DataLabel="@L["Name"]">@context?.Name</MudTd>
+                <MudTd DataLabel="@L["Value"]">@context?.Value</MudTd>
+                <MudTd DataLabel="@L["Text"]">@context?.Text</MudTd>
+                <MudTd DataLabel="@L["Description"]">@context?.Description</MudTd>
             </RowTemplate>
             <RowEditingTemplate>
                 <MudTd DataLabel="Name">
@@ -173,7 +173,6 @@
     private KeyValueDto _elementBeforeEdit { get; set; } = new();
     private bool _canCancelEdit=true;
     private string _searchString = string.Empty;
-    private bool _sortNameByLength;
     private bool _editing;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;

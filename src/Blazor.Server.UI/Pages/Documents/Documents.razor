@@ -155,11 +155,9 @@
     public string? Title { get; private set; }
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
     private MudTable<DocumentDto> _table = default!;
-    private int _totalItems;
     private string _searchString = string.Empty;
     private bool _loading;
-    private bool _uploading;
-    private bool _downloading;
+   
     [Inject]
     private ISender _mediator { get; set; } = default!;
     [CascadingParameter]

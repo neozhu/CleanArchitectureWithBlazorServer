@@ -14,6 +14,6 @@ public interface IIdentityService : IService
     Task<bool> AuthorizeAsync(string userId, string policyName);
     Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
     Task<Result> DeleteUserAsync(string userId);
-    Task<IDictionary<string, string>> FetchUsers(string roleName);
+    Task<IDictionary<string, string?>> FetchUsers(string roleName);
     Task UpdateLiveStatus(string userId, bool isLive);
 }

@@ -142,11 +142,8 @@
     public string? Title { get; private set; }
     private HashSet<TenantDto> _selectedItems = new HashSet<TenantDto>();
     private MudTable<TenantDto> _table = default!;
-    private int _totalItems;
     private string _searchString = string.Empty;
     private bool _loading;
-    private bool _uploading;
-    private bool _downloading;
     [Inject]
     private ISender _mediator { get; set; } = default!;
     [CascadingParameter]

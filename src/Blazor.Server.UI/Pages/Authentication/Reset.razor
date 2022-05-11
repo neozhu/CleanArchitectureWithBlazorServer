@@ -11,7 +11,7 @@
     <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="mt-2">@L["Set new password"]</MudButton>
 
 @code {
-    string Password { get; set; }
+    string Password { get; set; } = string.Empty;
 
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;

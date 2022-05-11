@@ -9,7 +9,7 @@ using System.Globalization;
 using System.Reflection;
 
 namespace CleanArchitecture.Blazor.Application.Common.Extensions;
-
+#nullable disable
 public static class PredicateBuilder
 {
     public static Expression<Func<T, bool>> FromFilter<T>(string filters)
@@ -23,13 +23,15 @@ public static class PredicateBuilder
             };
             opts.Converters.Add(new AutoNumberToStringConverter());
             var filterRules = JsonSerializer.Deserialize<FilterRule[]>(filters, opts);
-
-            foreach (var filter in filterRules)
+            if (filterRules is not null)
             {
-                if (Enum.TryParse(filter.op, out OperationExpression op) && !string.IsNullOrEmpty(filter.value))
+                foreach (var filter in filterRules)
                 {
-                    var expression = GetCriteriaWhere<T>(filter.field, op, filter.value);
-                    any = any.And(expression);
+                    if (Enum.TryParse(filter.op, out OperationExpression op) && !string.IsNullOrEmpty(filter.value))
+                    {
+                        var expression = GetCriteriaWhere<T>(filter.field, op, filter.value);
+                        any = any.And(expression);
+                    }
                 }
             }
         }
@@ -342,6 +344,7 @@ internal class SubstExpressionVisitor : ExpressionVisitor
         return node;
     }
 }
+
 internal class SwapVisitor : ExpressionVisitor
 {
     private readonly Expression from, to;

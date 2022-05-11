@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
-
+#nullable disable
 public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
 {
     private readonly RoleManager<ApplicationRole> _roleManager;

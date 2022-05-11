@@ -13,7 +13,7 @@ public class LayoutService
     public string SecondaryColor { get; set; } = "#ff4081ff";
     public double BorderRadius { get; set; } = 4;
 
-    public MudTheme CurrentTheme { get; private set; }
+    public MudTheme CurrentTheme { get; private set; } = new();
 
 
     public LayoutService(IUserPreferencesService userPreferencesService)
@@ -51,7 +51,7 @@ public class LayoutService
         return _userPreferences;
     }
 
-    public event EventHandler MajorUpdateOccured;
+    public event EventHandler? MajorUpdateOccured;
 
     private void OnMajorUpdateOccured() => MajorUpdateOccured?.Invoke(this, EventArgs.Empty);
 

@@ -23,7 +23,7 @@ public partial class ThemesMenu
 
     [EditorRequired] [Parameter] public bool ThemingDrawerOpen { get; set; }
     [EditorRequired] [Parameter] public EventCallback<bool> ThemingDrawerOpenChanged { get; set; }
-    [EditorRequired] [Parameter] public UserPreferences UserPreferences { get; set; }
+    [EditorRequired] [Parameter] public UserPreferences UserPreferences { get; set; }=new();
     [EditorRequired] [Parameter] public EventCallback<UserPreferences> UserPreferencesChanged { get; set; }
 
     [Parameter]

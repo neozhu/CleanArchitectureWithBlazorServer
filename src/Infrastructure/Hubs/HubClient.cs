@@ -7,8 +7,8 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
 public class HubClient : IAsyncDisposable
 {
     private HubConnection _hubConnection;
-    private string _hubUrl;
-    private string _userId;
+    private string _hubUrl=String.Empty;
+    private string _userId = String.Empty;
     private readonly NavigationManager _navigationManager;
     private readonly AuthenticationStateProvider _authenticationStateProvider;
     private bool _started = false;

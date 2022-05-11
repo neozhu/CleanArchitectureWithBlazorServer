@@ -169,7 +169,6 @@
     private List<ApplicationRole> RoleList = new List<ApplicationRole>();
     private HashSet<ApplicationRole> SelectItems = new HashSet<ApplicationRole>();
     private string _searchString = string.Empty;
-    private bool _sortNameByLength;
     public string? Title { get; private set; }
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
@@ -207,10 +206,10 @@
            if (string.IsNullOrWhiteSpace(_searchString))
                return true;
 
-           if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+           if (x.Name is not null && x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                return true;
 
-           if (x.Description.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+           if (x.Description is not null && x.Description.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                return true;
 
            return false;
@@ -345,7 +344,7 @@
         var roleId = model.RoleId;
         var role = await _roleManager.FindByIdAsync(roleId);
         model.Assigned = !model.Assigned;
-        if (model.Assigned)
+        if (model.Assigned && model.ClaimType is not null && model.ClaimValue is not null)
         {
             await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
             Snackbar.Add($"{L["Assigned successfully"]}", MudBlazor.Severity.Info);
