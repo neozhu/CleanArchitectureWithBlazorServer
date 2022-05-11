@@ -72,10 +72,10 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             });
         }
        
-        if (!string.IsNullOrEmpty(user.Site))
+        if (!string.IsNullOrEmpty(user.Provider))
         {
             result.AddClaims(new[] {
-                new Claim(ClaimTypes.Locality, user.Site)
+                new Claim(ApplicationClaimTypes.Provider, user.Provider)
             });
         }
         if (!string.IsNullOrEmpty(user.Email))
@@ -172,7 +172,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                     IsLive = true,
                     UserName = userName,
                     Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
-                    Site = provider,
+                    Provider = provider,
                     DisplayName = name,
                 };
                 var result = await _userManager.CreateAsync(user);

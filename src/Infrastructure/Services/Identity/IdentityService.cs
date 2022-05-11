@@ -197,11 +197,13 @@ public class IdentityService : IIdentityService
 
         var claims = new List<Claim>
             {
-                new(ClaimTypes.Locality, user.Site),
+                new(ApplicationClaimTypes.Provider, user.Provider?? string.Empty),
+                new(ApplicationClaimTypes.TenantId, user.TenantId?? string.Empty),
+                new(ApplicationClaimTypes.TenantName, user.TenantName?? string.Empty),
                 new(ClaimTypes.NameIdentifier, user.Id),
-                new(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl),
+                new(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl?? string.Empty),
                 new(ClaimTypes.Email, user.Email),
-                new(ClaimTypes.GivenName, user.DisplayName),
+                new(ClaimTypes.GivenName, user.DisplayName?? string.Empty),
                 new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
             }
         .Union(userClaims)

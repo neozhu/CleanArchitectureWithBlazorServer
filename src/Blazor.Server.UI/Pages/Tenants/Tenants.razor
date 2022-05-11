@@ -157,8 +157,7 @@
     private bool _canCreate;
     private bool _canEdit;
     private bool _canDelete;
-    private bool _canImport;
-    private bool _canExport;
+
     protected override async Task OnInitializedAsync()
     {
         Title = L["Multi-Tenant"];
@@ -167,9 +166,6 @@
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Edit)).Succeeded;
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Delete)).Succeeded;
-        _canImport = false;
-        _canExport = false;
-
     }
     private async Task<TableData<TenantDto>> ServerReload(TableState state)
     {

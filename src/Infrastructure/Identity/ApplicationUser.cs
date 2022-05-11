@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Identity;
 public class ApplicationUser : IdentityUser
 {
     public string? DisplayName { get; set; }
-    public string? Site { get; set; } = "Local";
+    public string? Provider { get; set; } = "Local";
     public string? TenantId { get; set; }
     public string? TenantName { get; set; }
     [Column(TypeName = "text")]

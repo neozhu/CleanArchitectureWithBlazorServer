@@ -78,7 +78,6 @@
     AddEditProductCommandValidator modelValidator = new AddEditProductCommandValidator();
     [EditorRequired] [Parameter] public AddEditProductCommand model { get; set; } = default!;
 
-    private IList<string>? _prictures = null;
 
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {

@@ -16,7 +16,7 @@ public class ProfileService
             DisplayName = principal.GetDisplayName(),
             Email = principal.GetEmail(),
             PhoneNumber = principal.GetPhoneNumber(),
-            Site= principal.GetSite(),
+            Provider= principal.GetSite(),
             Role = principal.GetRoles().FirstOrDefault(),
             UserId = principal.GetUserId(),
             UserName = principal.GetUserName(),
