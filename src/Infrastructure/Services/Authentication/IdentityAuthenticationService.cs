@@ -215,6 +215,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         await _protectedLocalStorage.DeleteAsync(LocalStorage.USERID);
         await _protectedLocalStorage.DeleteAsync(LocalStorage.USERNAME);
         await _protectedLocalStorage.DeleteAsync(LocalStorage.TENANTID);
+        await _protectedLocalStorage.DeleteAsync(LocalStorage.TENANTNAME);
         var principal = new ClaimsPrincipal();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
     }

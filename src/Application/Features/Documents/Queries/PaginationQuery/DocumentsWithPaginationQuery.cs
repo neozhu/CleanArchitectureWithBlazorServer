@@ -9,35 +9,39 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.Pagina
 
 public class DocumentsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<DocumentDto>>, ICacheable
 {
-    public string CacheKey => $"{nameof(DocumentsWithPaginationQuery)},{this}";
+   
+    public string TenantId { get; set; }
+    public DocumentsWithPaginationQuery(string tenantId)
+    {
+        TenantId = tenantId;
+    }
+    public string CacheKey => $"{nameof(DocumentsWithPaginationQuery)},{this},{TenantId}";
     public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;
 
 }
 public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuery, PaginatedData<DocumentDto>>
 {
     private readonly ICurrentUserService _currentUserService;
-    private readonly ITenantProvider  _tenantProvider;
+ 
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
 
     public DocumentsQueryHandler(
         ICurrentUserService currentUserService,
-        ITenantProvider tenantProvider,
+  
         IApplicationDbContext context,
         IMapper mapper
         )
     {
         _currentUserService = currentUserService;
-        _tenantProvider = tenantProvider;
         _context = context;
         _mapper = mapper;
     }
     public async Task<PaginatedData<DocumentDto>> Handle(DocumentsWithPaginationQuery request, CancellationToken cancellationToken)
     {
         var userid = await _currentUserService.UserId();
-        var tenantid = await _tenantProvider.GetTenant();
         var data = await _context.Documents
-            .Specify(new DocumentsQuery(userid,tenantid,request.Keyword))
+            .Specify(new DocumentsQuery(userid,request.TenantId,request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<DocumentDto>(_mapper.ConfigurationProvider)
             .PaginatedDataAsync(request.PageNumber, request.PageSize);
