@@ -8,7 +8,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEd
 
 public class AddEditDocumentCommand : DocumentDto, IRequest<Result<int>>, ICacheInvalidator
 {
-    public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource;
+    public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource();
     public UploadRequest? UploadRequest { get; set; }
   
 }

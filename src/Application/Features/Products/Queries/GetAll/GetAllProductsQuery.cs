@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll;
 public class GetAllProductsQuery : IRequest<IEnumerable<ProductDto>>, ICacheable
 {
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(ProductCacheKey.SharedExpiryTokenSource.Token));
+    public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
 }
 
 public class GetAllProductsQueryHandler :

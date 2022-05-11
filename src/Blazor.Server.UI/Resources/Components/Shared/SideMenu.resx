@@ -177,4 +177,10 @@
   <data name="Customers" xml:space="preserve">
     <value>Customers</value>
   </data>
+  <data name="Documents" xml:space="preserve">
+    <value>Documents</value>
+  </data>
+  <data name="Multi-Tenant" xml:space="preserve">
+    <value>Multi-Tenant</value>
+  </data>
 </root>
