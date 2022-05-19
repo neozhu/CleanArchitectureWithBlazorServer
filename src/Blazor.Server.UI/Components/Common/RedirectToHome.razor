@@ -1,0 +1,12 @@
+@inherits ComponentBase
+@code {
+    [Inject]
+    protected NavigationManager NavigationManager { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(2000);
+        NavigationManager.NavigateTo("/");
+    }
+
+}
