@@ -3,14 +3,18 @@
 @attribute [AllowAnonymous]
 
 
-
-<MudText Typo="Typo.h4" GutterBottom="true">@L["Forgot Password?"]</MudText>
-
-<MudText Typo="Typo.subtitle2">@L["Enter the email address linked to your account and you will recieve an email containing a link to reset your password."]</MudText>
-
-<MudTextField T="string" Label="E-mail" Variant="Variant.Outlined" Class="my-4"></MudTextField>
-
-<MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true"  Class="mt-3">@L["Reset Password"]</MudButton>
+<AuthorizeView>
+    <NotAuthorized Context="Auth">
+        <MudText Typo="Typo.h4" GutterBottom="true">@L["Forgot Password?"]</MudText>
+        <MudText Typo="Typo.subtitle2">@L["Enter the email address linked to your account and you will recieve an email containing a link to reset your password."]</MudText>
+        <MudTextField T="string" Label="E-mail" Variant="Variant.Outlined" Class="my-4"></MudTextField>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="mt-3">@L["Reset Password"]</MudButton>
+    </NotAuthorized>
+    <Authorized>
+        <RedirectToHome></RedirectToHome>
+        <MudAlert Severity="MudBlazor.Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
+    </Authorized>
+</AuthorizeView>
 
 
 @code {

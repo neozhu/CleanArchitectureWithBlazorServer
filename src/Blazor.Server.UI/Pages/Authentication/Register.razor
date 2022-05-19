@@ -9,70 +9,78 @@
 @inject IStringLocalizer<Register> L
 @attribute [AllowAnonymous]
 
-<MudForm Model="@model" @ref="@form"  Validation="@(registerValidator.ValidateValue)">
-<MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
-<MudText>@L["have an account?"] <MudLink Href="/pages/authentication/login">@L["Sign In"]</MudLink></MudText>
+<AuthorizeView>
+    <NotAuthorized Context="Auth">
+        <MudForm Model="@model" @ref="@form" Validation="@(registerValidator.ValidateValue)">
+            <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
+            <MudText>@L["have an account?"] <MudLink Href="/pages/authentication/login">@L["Sign In"]</MudLink></MudText>
 
-<MudTextField T="string"  
-    Immediate="true"
-    Label="@L["User Name"]"
-    @bind-Value="model.UserName" 
-    For="@(() => model.UserName)" 
-    Variant="Variant.Outlined" 
-    Required="true"
-    RequiredError="@L["user name is required!"]"
-    Class="my-4"></MudTextField>
+            <MudTextField T="string"
+                          Immediate="true"
+                          Label="@L["User Name"]"
+                          @bind-Value="model.UserName"
+                          For="@(() => model.UserName)"
+                          Variant="Variant.Outlined"
+                          Required="true"
+                          RequiredError="@L["user name is required!"]"
+                          Class="my-4"></MudTextField>
 
-<MudTextField T="string" 
-    Immediate="true"
-    Label="@L["E-mail"]" 
-    @bind-Value="model.Email" 
-    For="@(() => model.Email)" 
-    Required="true"
-    RequiredError="@L["e-mail is required!"]"
-    Variant="Variant.Outlined"></MudTextField>
+            <MudTextField T="string"
+                          Immediate="true"
+                          Label="@L["E-mail"]"
+                          @bind-Value="model.Email"
+                          For="@(() => model.Email)"
+                          Required="true"
+                          RequiredError="@L["e-mail is required!"]"
+                          Variant="Variant.Outlined"></MudTextField>
 
-<MudTextField 
-     Immediate="true"
-     Label="@L["Password"]" 
-     @bind-Value="model.Password" 
-     For="@(() => model.Password)"
-     Variant="Variant.Outlined" 
-     InputType="@PasswordInput" 
-     Adornment="Adornment.End" 
-     AdornmentIcon="@PasswordInputIcon" 
-     Required="true"
-     RequiredError="@L["password is required!"]"
-     OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
-<MudTextField 
-     Immediate="true"
-     Label="@L["Confirm Password"]" 
-     @bind-Value="model.ConfirmPassword" 
-     For="@(() => model.ConfirmPassword)"
-     Variant="Variant.Outlined" 
-     InputType="@PasswordInput" 
-     Adornment="Adornment.End" 
-     AdornmentIcon="@PasswordInputIcon"
-     Required="true"
-     RequiredError="@L["password is required!"]"
-     OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
+            <MudTextField Immediate="true"
+                          Label="@L["Password"]"
+                          @bind-Value="model.Password"
+                          For="@(() => model.Password)"
+                          Variant="Variant.Outlined"
+                          InputType="@PasswordInput"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@PasswordInputIcon"
+                          Required="true"
+                          RequiredError="@L["password is required!"]"
+                          OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
+            <MudTextField Immediate="true"
+                          Label="@L["Confirm Password"]"
+                          @bind-Value="model.ConfirmPassword"
+                          For="@(() => model.ConfirmPassword)"
+                          Variant="Variant.Outlined"
+                          InputType="@PasswordInput"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@PasswordInputIcon"
+                          Required="true"
+                          RequiredError="@L["password is required!"]"
+                          OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
 
-<MudCheckBox For="@(() => model.AgreeToTerms)" @bind-Checked="@model.AgreeToTerms" Label="@L["I agree to the terms and privacy"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+            <MudCheckBox For="@(() => model.AgreeToTerms)" @bind-Checked="@model.AgreeToTerms" Label="@L["I agree to the terms and privacy"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
 
-<MudButton Variant="Variant.Filled" 
-     Color="Color.Primary" 
-     Disabled="@(!model.AgreeToTerms)"  
-     Size="Size.Large" 
-     OnClick="@(async () => await Submit())"
-     FullWidth="true">@L["Register"]</MudButton>
-</MudForm>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Disabled="@(!model.AgreeToTerms)"
+                       Size="Size.Large"
+                       OnClick="@(async () => await Submit())"
+                       FullWidth="true">@L["Register"]</MudButton>
+        </MudForm>
+    </NotAuthorized>
+    <Authorized>
+        <RedirectToHome></RedirectToHome>
+        <MudAlert Severity="MudBlazor.Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
+    </Authorized>
+</AuthorizeView>
+
+
 @code {
     [Inject] private NavigationManager _navigation { get; set; } = default!;
-    [Inject] private UserManager<ApplicationUser> _userManager { get; set; }= default!;
+    [Inject] private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     MudForm form;
-    RegisterFormModel model = new ();
-    RegisterFormModelFluentValidator registerValidator = new ();
-   
+    RegisterFormModel model = new();
+    RegisterFormModelFluentValidator registerValidator = new();
+
 
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
@@ -101,10 +109,10 @@
         {
             var user = new ApplicationUser()
                 {
-                    UserName=model.UserName,
-                    Email=model.Email
+                    UserName = model.UserName,
+                    Email = model.Email
                 };
-            var result = await _userManager.CreateAsync(user,model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
@@ -113,7 +121,7 @@
             }
             else
             {
-                Snackbar.Add($"{string.Join(",", result.Errors.Select(x=>x.Description))}", MudBlazor.Severity.Error);
+                Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
             }
 
         }
