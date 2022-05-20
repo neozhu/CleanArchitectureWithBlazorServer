@@ -33,6 +33,7 @@ public partial class MainLayout: IDisposable
         _hotKeysContext?.Dispose();
         GC.SuppressFinalize(this);
     }
+  
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
