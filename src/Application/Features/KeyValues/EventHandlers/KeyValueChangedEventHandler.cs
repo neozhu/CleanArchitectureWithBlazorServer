@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.EventHandlers;
 
-public class KeyValueChangedEventHandler : INotificationHandler<DomainEventNotification<UpdatedEvent<KeyValue>>>
+public class KeyValueChangedEventHandler : INotificationHandler<UpdatedEvent<KeyValue>>
 {
     private readonly IPicklistService _picklistService;
     private readonly ILogger<KeyValueChangedEventHandler> _logger;
@@ -16,10 +16,9 @@ public class KeyValueChangedEventHandler : INotificationHandler<DomainEventNotif
         _picklistService = picklistService;
         _logger = logger;
     }
-    public async Task Handle(DomainEventNotification<UpdatedEvent<KeyValue>> notification, CancellationToken cancellationToken)
+    public async Task Handle(UpdatedEvent<KeyValue> notification, CancellationToken cancellationToken)
     {
-        var domainEvent = notification.DomainEvent;
-        _logger.LogInformation("KeyValue Changed {DomainEvent},{Entity}", nameof(domainEvent),domainEvent.Entity);
+        _logger.LogInformation("KeyValue Changed {DomainEvent},{Entity}", nameof(notification), notification.Entity);
         await _picklistService.Refresh();
     
     }
