@@ -15,7 +15,7 @@ using MudBlazor;
 using Blazor.Analytics;
 using Blazor.Server.UI.Services.Notifications;
 using Blazor.Server.UI.Services.Navigation;
-
+using Blazor.Server.UI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,49 +29,10 @@ builder.Host.UseSerilog((context, configuration) =>
           .Enrich.WithClientAgent()
           .WriteTo.Console()
     );
-builder.Services.AddMudBlazorDialog();
-builder.Services.AddServerSideBlazor(
-    options =>
-    {
-        options.DetailedErrors = true;
-        options.DisconnectedCircuitMaxRetained = 100;
-        options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
-        options.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(1);
-        options.MaxBufferedUnacknowledgedRenderBatches = 10;
-    }
-    ).AddHubOptions(options =>
-{
-    options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
-    options.EnableDetailedErrors = false;
-    options.HandshakeTimeout = TimeSpan.FromSeconds(15);
-    options.KeepAliveInterval = TimeSpan.FromSeconds(15);
-    options.MaximumParallelInvocationsPerClient = 1;
-    options.MaximumReceiveMessageSize = 32 * 1024;
-    options.StreamBufferCapacity = 10;
-});
-builder.Services.AddHotKeys();
-builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddMudServices(config =>
-{
-    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
-    config.SnackbarConfiguration.PreventDuplicates = false;
-    config.SnackbarConfiguration.NewestOnTop = true;
-    config.SnackbarConfiguration.ShowCloseIcon = true;
-    config.SnackbarConfiguration.VisibleStateDuration = 4000;
-    config.SnackbarConfiguration.HideTransitionDuration = 500;
-    config.SnackbarConfiguration.ShowTransitionDuration = 500;
-    config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
-});
-builder.Services.AddInfrastructure(builder.Configuration)
-                .AddApplication();
 
-
-builder.Services.AddScoped<LayoutService>();
-
-builder.Services.AddScoped<IUserPreferencesService, UserPreferencesService>();
-builder.Services.AddScoped<IMenuService, MenuService>();
-builder.Services.AddTransient<INotificationService, InMemoryNotificationService>();
-builder.Services.AddGoogleAnalytics("G-PRYNCB61NV");
+builder.Services.AddBlazorUIServices();
+builder.Services.AddInfrastructureServices(builder.Configuration)
+                .AddApplicationServices();
 
 var app = builder.Build();
 

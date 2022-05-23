@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
@@ -12,24 +13,18 @@ public class ApplicationDbContext : IdentityDbContext<
     ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
     ApplicationRoleClaim, ApplicationUserToken>, IApplicationDbContext
 {
-    private readonly ITenantProvider _tenantProvider;
-    private readonly ICurrentUserService _currentUserService;
-    private readonly IDateTime _dateTime;
-    private readonly IDomainEventService _domainEventService;
 
+    private readonly IDomainEventService _domainEventService;
+    private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
-        ITenantProvider tenantProvider,
-        ICurrentUserService currentUserService,
         IDomainEventService domainEventService,
-        IDateTime dateTime
+        AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor
         ) : base(options)
     {
-        _tenantProvider = tenantProvider;
-        _currentUserService = currentUserService;
         _domainEventService = domainEventService;
-        _dateTime = dateTime;
+        _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
     }
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<Logger> Loggers { get; set; }
@@ -41,42 +36,9 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<Product> Products { get; set; }
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
-        var userId = await _currentUserService.UserId();
-        var userName = await _currentUserService.UserName();
-        var tenantId = await _tenantProvider.GetTenant();
-        var auditEntries = OnBeforeSaveChanges(userName);
-
-        foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
-        {
-            switch (entry.State)
-            {
-                case EntityState.Added:
-                    entry.Entity.CreatedBy = userId;
-                    entry.Entity.Created = _dateTime.Now;
-                    if (entry.Entity is IMustHaveTenant mustenant)
-                    {
-                        mustenant.TenantId = tenantId;
-                    }
-                    if (entry.Entity is IMayHaveTenant maytenant && !string.IsNullOrEmpty(tenantId))
-                    {
-                        maytenant.TenantId = tenantId;
-                    }
-                    break;
-
-                case EntityState.Modified:
-                    entry.Entity.LastModifiedBy = userId;
-                    entry.Entity.LastModified = _dateTime.Now;
-                    break;
-                case EntityState.Deleted:
-                    if (entry.Entity is ISoftDelete softDelete)
-                    {
-                        softDelete.DeletedBy = userId;
-                        softDelete.Deleted = _dateTime.Now;
-                        entry.State = EntityState.Modified;
-                    }
-                    break;
-            }
-        }
+   
+        //var auditEntries = OnBeforeSaveChanges(userName);
+       
         var events = ChangeTracker.Entries<IHasDomainEvent>()
                .Select(x => x.Entity.DomainEvents)
                .SelectMany(x => x)
@@ -84,7 +46,7 @@ public class ApplicationDbContext : IdentityDbContext<
                .ToArray();
         var result = await base.SaveChangesAsync(cancellationToken);
         await DispatchEvents(events);
-        await OnAfterSaveChanges(auditEntries, cancellationToken);
+        //await OnAfterSaveChanges(auditEntries, cancellationToken);
         return result;
     }
 
@@ -93,14 +55,7 @@ public class ApplicationDbContext : IdentityDbContext<
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
-        //Task.Run(async () =>
-        //{
-        //    _tenant = await _tenantProvider.GetTenant();
-        //    builder.ApplyGlobalFilters<IMustHaveTenant>(s => s.TenantId == _tenant);
-        //    builder.ApplyGlobalFilters<IMayHaveTenant>(s => s.TenantId == null || s.TenantId == _tenant);
-
-        //}).Wait();
-        
+       
     }
 
     private List<AuditTrail> OnBeforeSaveChanges(string userId)
@@ -116,7 +71,7 @@ public class ApplicationDbContext : IdentityDbContext<
 
             var auditEntry = new AuditTrail()
             {
-                DateTime = _dateTime.Now,
+                //DateTime = _dateTime.Now,
                 TableName = entry.Entity.GetType().Name,
                 UserId = userId,
                 AffectedColumns = new List<string>()
@@ -198,6 +153,9 @@ public class ApplicationDbContext : IdentityDbContext<
         }
         return SaveChangesAsync(cancellationToken);
     }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
+    }
 
-   
 }
