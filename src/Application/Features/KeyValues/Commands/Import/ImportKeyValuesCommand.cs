@@ -68,8 +68,7 @@ public class ImportKeyValuesCommandHandler :
                     var exist = await _context.KeyValues.AnyAsync(x => x.Name == item.Name && x.Value == item.Value, cancellationToken);
                     if (!exist)
                     {
-                        var changeEvent = new KeyValueChangedEvent(item);
-                        item.DomainEvents.Add(changeEvent);
+                        item.DomainEvents.Add(new CreatedEvent<KeyValue>(item));
                         await _context.KeyValues.AddAsync(item, cancellationToken);
                     }
                 }

@@ -45,8 +45,8 @@ public class Testing
             w.EnvironmentName == "Development" &&
             w.ApplicationName == "Blazor.Server.UI"));
 
-        services.AddInfrastructure(_configuration)
-                .AddApplication();
+        services.AddInfrastructureServices(_configuration)
+                .AddApplicationServices();
 
         //services.AddLogging();
 

@@ -5,7 +5,7 @@
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.EventHandlers;
 
-public class DocumentCreatedEventHandler : INotificationHandler<DomainEventNotification<CreatedEvent<Document>>>
+public class DocumentCreatedEventHandler : INotificationHandler<CreatedEvent<Document>>
 {
     private readonly IApplicationDbContext _context;
     private readonly ILogger<DocumentCreatedEventHandler> _logger;
@@ -21,9 +21,9 @@ public class DocumentCreatedEventHandler : INotificationHandler<DomainEventNotif
         _logger = logger;
 
     }
-    public async Task Handle(DomainEventNotification<CreatedEvent<Document>> notification, CancellationToken cancellationToken)
+    public Task Handle(CreatedEvent<Document> notification, CancellationToken cancellationToken)
     {
-
-        _logger.LogInformation($"Document Created");
+        _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().FullName);
+        return Task.CompletedTask;
     }
 }
