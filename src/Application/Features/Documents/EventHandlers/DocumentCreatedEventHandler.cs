@@ -23,7 +23,7 @@ public class DocumentCreatedEventHandler : INotificationHandler<CreatedEvent<Doc
     }
     public Task Handle(CreatedEvent<Document> notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("CleanArchitecture Domain Event: {DomainEvent}", notification.GetType().Name);
+        _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().FullName);
         return Task.CompletedTask;
     }
 }

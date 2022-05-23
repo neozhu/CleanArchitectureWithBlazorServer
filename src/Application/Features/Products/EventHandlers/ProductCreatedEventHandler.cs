@@ -16,7 +16,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.EventHandlers;
         }
         public Task Handle(CreatedEvent<Product> notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().Name);
+            _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().FullName);
 
             return Task.CompletedTask;
         }
