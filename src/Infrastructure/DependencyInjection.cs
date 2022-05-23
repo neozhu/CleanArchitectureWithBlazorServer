@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Configuration;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
+using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -10,6 +11,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped<AuditableEntitySaveChangesInterceptor>();
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
             services.AddDbContext<ApplicationDbContext>(options =>
