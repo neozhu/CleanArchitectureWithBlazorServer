@@ -131,7 +131,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                 }
             }
         }
-
+       
         foreach (var auditEntry in auditEntries.Where(x=>!x.HasTemporaryProperties))
         {
            context.Add(auditEntry);
