@@ -5,11 +5,6 @@ using MediatR;
 
 namespace CleanArchitecture.Blazor.Domain.Common;
 
-public interface IHasDomainEvent
-{
-    List<DomainEvent> DomainEvents { get; set; }
-}
-
 public abstract class DomainEvent: INotification
 {
     protected DomainEvent()

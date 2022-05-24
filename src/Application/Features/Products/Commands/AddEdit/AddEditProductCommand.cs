@@ -31,14 +31,14 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
         {
             var item = await _context.Products.FindAsync(new object[] { request.Id }, cancellationToken) ?? throw new NotFoundException($"Product {request.Id} Not Found.");
             item = _mapper.Map(request, item);
-            item.DomainEvents.Add(new UpdatedEvent<Product>(item));
+            item.AddDomainEvent(new UpdatedEvent<Product>(item));
             await _context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(item.Id);
         }
         else
         {
             var item = _mapper.Map<Product>(request);
-            item.DomainEvents.Add(new CreatedEvent<Product>(item));
+            item.AddDomainEvent(new CreatedEvent<Product>(item));
             _context.Products.Add(item);
             await _context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(item.Id);
