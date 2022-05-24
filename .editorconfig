@@ -3,9 +3,6 @@ root = true
 # All files
 [*]
 indent_style = space
-charset = utf-8
-trim_trailing_whitespace = true
-insert_final_newline = true
 
 # Xml files
 [*.xml]
@@ -176,8 +173,6 @@ csharp_space_between_square_brackets = false
 # Wrapping preferences
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
-csharp_style_prefer_null_check_over_type_check = true:suggestion
-csharp_style_prefer_local_over_anonymous_function = true:suggestion
 
 #### Naming styles ####
 [*.{cs,vb}]
@@ -365,8 +360,3 @@ dotnet_naming_style.s_camelcase.required_prefix = s_
 dotnet_naming_style.s_camelcase.required_suffix = 
 dotnet_naming_style.s_camelcase.word_separator = 
 dotnet_naming_style.s_camelcase.capitalization = camel_case
-tab_width = 4
-indent_size = 4
-end_of_line = crlf
-dotnet_style_namespace_match_folder = true:suggestion
-
