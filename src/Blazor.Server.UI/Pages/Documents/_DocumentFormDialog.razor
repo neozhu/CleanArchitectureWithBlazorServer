@@ -84,11 +84,11 @@
         model.UploadRequest = new UploadRequest()
         {
              Data = imgstream.ToArray(),
-              FileName= file.Name,
-               UploadType= UploadType.Document
+             FileName= file.Name,
+             UploadType= UploadType.Document
         };
         model.URL = file.Name;
-        Snackbar.Add($"Upload successfully", MudBlazor.Severity.Info);
+        Snackbar.Add(ToastText.UPLOADSUCCESS, MudBlazor.Severity.Info);
 
     }
     async Task Submit()
@@ -96,9 +96,13 @@
         await form.Validate();
         if (form.IsValid)
         {
+            if (string.IsNullOrEmpty(model.URL))
+            {
+                Snackbar.Add(L["Please choose to upload a document"], MudBlazor.Severity.Error);
+                return;
+            }
             MudDialog.Close(DialogResult.Ok(true));
         }
-
     }
     void Cancel() => MudDialog.Cancel();
 }

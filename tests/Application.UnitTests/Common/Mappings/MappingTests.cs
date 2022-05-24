@@ -20,8 +20,8 @@ public class MappingTests
     {
         _configuration = new MapperConfiguration(cfg =>
         {
-                //cfg.Advanced.AllowAdditiveTypeMapCreation = true;
-                cfg.AddProfile<MappingProfile>();
+            //cfg.Advanced.AllowAdditiveTypeMapCreation = true;
+            cfg.AddProfile<MappingProfile>();
         });
 
         _mapper = _configuration.CreateMapper();
@@ -37,6 +37,9 @@ public class MappingTests
     [TestCase(typeof(Document), typeof(DocumentDto))]
     [TestCase(typeof(KeyValue), typeof(KeyValueDto))]
     [TestCase(typeof(Product), typeof(ProductDto))]
+    [TestCase(typeof(ProductDto), typeof(Product))]
+    [TestCase(typeof(KeyValueDto), typeof(KeyValue))]
+    [TestCase(typeof(DocumentDto), typeof(Document))]
     public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
     {
         var instance = GetInstanceOf(source);

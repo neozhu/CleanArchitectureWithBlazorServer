@@ -109,7 +109,7 @@
                 }
             }
         }
-        Snackbar.Add($"upload pictures successfully", MudBlazor.Severity.Info);
+        Snackbar.Add(L["Upload pictures successfully"], MudBlazor.Severity.Info);
         model.Pictures = list;
     }
     async Task Submit()
@@ -117,6 +117,11 @@
         await form.Validate();
         if (form.IsValid)
         {
+            if (model.Pictures is null)
+            {
+                Snackbar.Add(L["Please choose to upload pictures of this product"], MudBlazor.Severity.Error);
+                return;
+            }
             MudDialog.Close(DialogResult.Ok(true));
         }
 

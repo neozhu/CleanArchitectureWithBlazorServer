@@ -9,7 +9,8 @@ public partial class DocumentDto : IMapFrom<Document>
     {
         profile.CreateMap<Document, DocumentDto>()
            .ForMember(x => x.TenantName, s => s.MapFrom(y => y.Tenant.Name));
-        profile.CreateMap<DocumentDto, Document>(MemberList.None);
+        profile.CreateMap<DocumentDto, Document>()
+           .ForMember(x => x.Tenant, s => s.Ignore());
     }
     public int Id { get; set; }
     public string? Title { get; set; }
