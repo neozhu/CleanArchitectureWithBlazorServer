@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Domain.Entities;
 
-public class Document : AuditableEntity, IHasDomainEvent,IMayHaveTenant
+public class Document : AuditableEntity, IMayHaveTenant
 {
     public int Id { get; set; }
     public string? Title { get; set; }
@@ -11,7 +11,6 @@ public class Document : AuditableEntity, IHasDomainEvent,IMayHaveTenant
     public bool IsPublic { get; set; }
     public string? URL { get; set; }
     public DocumentType DocumentType { get; set; } = default!;
-    public List<DomainEvent> DomainEvents { get; set; } = new();
     public string? TenantId { get; set; }
     public virtual Tenant? Tenant { get; set; }
 }
