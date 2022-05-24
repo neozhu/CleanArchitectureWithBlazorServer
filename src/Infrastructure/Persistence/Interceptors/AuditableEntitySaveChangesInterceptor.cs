@@ -69,6 +69,13 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                         entry.State = EntityState.Modified;
                     }
                     break;
+                case EntityState.Unchanged:
+                    if (entry.HasChangedOwnedEntities())
+                    {
+                        entry.Entity.LastModifiedBy = userId;
+                        entry.Entity.LastModified = _dateTime.Now;
+                    }
+                    break;
             }
         }
     }
@@ -129,6 +136,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                             auditEntry.NewValues[propertyName] = property.CurrentValue;
                         }
                         break;
+                    
                 }
             }
         }
