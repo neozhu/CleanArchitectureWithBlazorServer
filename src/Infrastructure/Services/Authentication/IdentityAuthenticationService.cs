@@ -181,6 +181,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                     return false;
                 }
                 await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
+                await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
             }
             var identity = await createIdentityFromApplicationUser(user);
             using (var memoryStream = new MemoryStream())
