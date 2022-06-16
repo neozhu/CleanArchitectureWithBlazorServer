@@ -10,20 +10,20 @@
             <MudCard Elevation="0" Square="true" Style="ma-0">
                 <MudCardHeader>
                     <CardHeaderAvatar>
-                        @if (string.IsNullOrEmpty(User.Avatar))
+                        @if (string.IsNullOrEmpty(UserProfile.Avatar))
                         {
                             <MudAvatar Size="Size.Medium" Color="Color.Primary" Class="ma-2">
-                                @User.UserName?.ToUpper().FirstOrDefault()
+                                @UserProfile.UserName?.ToUpper().FirstOrDefault()
                             </MudAvatar>
                         }
                         else
                         {
-                            <MudAvatar Image="@User.Avatar" />
+                            <MudAvatar Image="@UserProfile.Avatar" />
                         }
                     </CardHeaderAvatar>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.body1">@User.DisplayName</MudText>
-                        <MudText Typo="Typo.body2">@User.Email</MudText>
+                        <MudText Typo="Typo.body1">@UserProfile.DisplayName</MudText>
+                        <MudText Typo="Typo.body2">@UserProfile.Email</MudText>
                     </CardHeaderContent>
                 </MudCardHeader>
             </MudCard>

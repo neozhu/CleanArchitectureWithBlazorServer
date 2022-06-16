@@ -389,7 +389,7 @@
                 }
                 if (state.User.GetUserId() == item.Id)
                 {
-                    await _profileService.Update(new UserModel()
+                    await _profileService.Update(new UserProfile()
                         {
                             UserId = user.Id,
                             Avatar = user.ProfilePictureDataUrl,

@@ -27,11 +27,11 @@
                      RightToLeft="@LayoutService.IsRTL"
                      RightToLeftToggle ="LayoutService.ToggleRightToLeft"
                      OnSettingClick="@(() => _themingDrawerOpen = true)"
-                     User="@_profileService.Profile" />
+                     UserProfile="@_profileService.Profile" />
 
             <SideMenu SideMenuDrawerOpen="_sideMenuDrawerOpen"
                       SideMenuDrawerOpenChanged="SideMenuDrawerOpenChangedHandler"
-                      User="@_profileService.Profile" />
+                      UserProfile="@_profileService.Profile" />
 
             <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
                         ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
