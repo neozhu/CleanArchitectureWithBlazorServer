@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
-using Serilog.Context;
+
 
 namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
 
@@ -31,10 +31,6 @@ internal class ExceptionHandlingMiddleware : IMiddleware
         catch (Exception exception)
         {
             var userId =await _currentUserService.UserId();
-            if (!string.IsNullOrEmpty(userId)) LogContext.PushProperty("UserId", userId);
-            string errorId = Guid.NewGuid().ToString();
-            LogContext.PushProperty("ErrorId", errorId);
-            LogContext.PushProperty("StackTrace", exception.StackTrace);
             var responseModel = await Result.FailureAsync(new string[] { exception.Message });
             var response = context.Response;
             response.ContentType = "application/json";
