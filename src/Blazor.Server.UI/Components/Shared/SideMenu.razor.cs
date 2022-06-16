@@ -14,7 +14,7 @@ public partial class SideMenu:IDisposable
 
     [EditorRequired] [Parameter] public bool SideMenuDrawerOpen { get; set; } 
     [EditorRequired] [Parameter] public EventCallback<bool> SideMenuDrawerOpenChanged { get; set; }
-    [EditorRequired] [Parameter] public UserModel User { get; set; } = default!;
+    [EditorRequired] [Parameter] public UserProfile UserProfile { get; set; } = default!;
 
     [Inject] private IMenuService _menuService { get; set; } = default!;
     [CascadingParameter]

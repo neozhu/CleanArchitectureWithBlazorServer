@@ -12,7 +12,7 @@ namespace Blazor.Server.UI.Components.Shared;
 public partial class UserMenu
 {
 
-    [EditorRequired] [Parameter] public UserModel User { get; set; } = default!;
+    [EditorRequired] [Parameter] public UserProfile UserProfile { get; set; } = default!;
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     [Inject] private IdentityAuthenticationService _authenticationService { get; set; } = default!;
     [Inject] private IJSRuntime JS { get; set; } = default!;

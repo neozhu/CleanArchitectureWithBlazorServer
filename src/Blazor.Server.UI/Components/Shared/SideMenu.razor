@@ -25,16 +25,16 @@
                        FullWidth="true">
                 <ChildContent>
                     <div class="align-center d-flex">
-                        <MudAvatar Image="@User.Avatar" />
+                        <MudAvatar Image="@UserProfile.Avatar" />
                     </div>
                     <div class="d-flex flex-column px-4">
                         <MudText Class="d-flex justify-start"
                                  Typo="Typo.body2">
-                            @User.DisplayName
+                            @UserProfile.DisplayName
                         </MudText>
                         <MudText Class="d-flex justify-start"
                                  Typo="Typo.caption">
-                            @User.Role
+                            @UserProfile.Role
                         </MudText>
                     </div>
                 </ChildContent>
@@ -44,7 +44,7 @@
     else
     {
         <div class="d-flex justify-center my-3">
-            <MudAvatar Image="@User.Avatar" />
+            <MudAvatar Image="@UserProfile.Avatar" />
         </div>
     }
 

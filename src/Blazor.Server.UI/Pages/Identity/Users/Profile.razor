@@ -138,11 +138,11 @@
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
-    private UserModel model { get; set; } = new();
-    private UserFluentValidator userValidator = new();
+    private UserProfile model { get; set; } = new();
+    private UserProfileEditValidator userValidator = new();
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     private ChangePasswordModel changepassword { get; set; } = new();
-    private PasswordFluentValidator passwordValidator = new PasswordFluentValidator();
+    private ChangePasswordModelValidator passwordValidator = new ();
 
 
     bool PasswordVisibility;
@@ -205,6 +205,12 @@
                         UploadType = UploadType.ProfilePicture
                     });
                 model.Avatar = result;
+                var user = await _userManager.FindByIdAsync(model.UserId);
+                user.ProfilePictureDataUrl = model.Avatar;
+                await _userManager.UpdateAsync(user);
+                var state = await AuthState;
+                state.User.SetProfilePictureUrl(model.Avatar);
+                await _profileService.Update(model);
                 //Do your validations here
                 Snackbar.Add($"{ToastText.UPDATESUCCESS}", MudBlazor.Severity.Info);
             }
@@ -249,58 +255,5 @@
             }
         }
     }
-    public class UserFluentValidator : AbstractValidator<UserModel>
-    {
-        public UserFluentValidator()
-        {
-            RuleFor(x => x.DisplayName)
-                .MaximumLength(128)
-                .NotEmpty();
 
-
-            RuleFor(x => x.PhoneNumber)
-                .MaximumLength(128);
-
-        }
-
-        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-        {
-            var result = await ValidateAsync(ValidationContext<UserModel>.CreateWithOptions((UserModel)model, x => x.IncludeProperties(propertyName)));
-            if (result.IsValid)
-                return Array.Empty<string>();
-            return result.Errors.Select(e => e.ErrorMessage);
-        };
-    }
-
-    public class ChangePasswordModel
-    {
-        public string CurrentPassword { get; set; } = string.Empty;
-        public string NewPassword { get; set; } = string.Empty;
-        public string ConfirmPassword { get; set; } = string.Empty;
-    }
-
-    public class PasswordFluentValidator : AbstractValidator<ChangePasswordModel>
-    {
-        public PasswordFluentValidator()
-        {
-            RuleFor(p => p.NewPassword).NotEmpty().WithMessage("Your password cannot be empty")
-                .MinimumLength(6).WithMessage("Your password length must be at least 6.")
-                .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
-                .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
-                .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
-                .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
-                .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
-            RuleFor(x => x.ConfirmPassword)
-                 .Equal(x => x.NewPassword);
-
-        }
-
-        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-        {
-            var result = await ValidateAsync(ValidationContext<ChangePasswordModel>.CreateWithOptions((ChangePasswordModel)model, x => x.IncludeProperties(propertyName)));
-            if (result.IsValid)
-                return Array.Empty<string>();
-            return result.Errors.Select(e => e.ErrorMessage);
-        };
-    }
 }

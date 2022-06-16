@@ -4,10 +4,10 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 public class ProfileService 
 {
     public event Action? OnChange;
-    public UserModel Profile { get; private set; } = new();
+    public UserProfile Profile { get; private set; } = new();
     public Task Set(ClaimsPrincipal principal)
     {
-        Profile =  new UserModel()
+        Profile =  new UserProfile()
         {
             IsActive = principal.GetStatus(),
             TenantId = principal.GetTenantId(),
@@ -24,7 +24,7 @@ public class ProfileService
         OnChange?.Invoke();
         return Task.CompletedTask;
     }
-    public Task Update(UserModel profile)
+    public Task Update(UserProfile profile)
     {
         Profile = profile;
         OnChange?.Invoke();
