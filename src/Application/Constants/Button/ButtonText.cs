@@ -24,6 +24,8 @@ public static class ButtonText
     public static string NO => Localize("No");
     public static string NEXT => Localize("Next");
     public static string PREVIOUS => Localize("Previous");
+    public static string UPLOAD => Localize("Upload");
+    public static string DOWNLOAD => Localize("Download");
     public static string UPLOADING => Localize("Uploading...");
     public static string DOWNLOADING => Localize("Downloading...");
 

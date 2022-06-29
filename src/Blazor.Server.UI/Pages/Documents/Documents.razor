@@ -1,5 +1,6 @@
 @page "/pages/documents"
 
+@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
@@ -98,7 +99,7 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ButtonText.ACTIONS">
-                    @if (_canEdit || _canDelete)
+                    @if (_canEdit || _canDelete || _canDownload)
                     {
                         <MudMenu Label="@ButtonText.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                              Dense="true"
@@ -111,6 +112,10 @@
                             @if (_canDelete)
                             {
                                 <MudMenuItem OnClick="@(()=>OnDelete(context))">@ButtonText.DELETE</MudMenuItem>
+                            }
+                            @if (_canDownload)
+                            {
+                                <MudMenuItem Disabled="@_downloading" OnClick="@(()=>OnDownload(context))">@ButtonText.DOWNLOAD</MudMenuItem>
                             }
                         </MudMenu>
                     }
@@ -157,9 +162,12 @@
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
     private MudTable<DocumentDto> _table = default!;
     private string _searchString = string.Empty;
+    private bool _downloading = false;
     private bool _loading;
     [Inject]
     private ITenantProvider _tenantProvider { get; set; } = default!;
+    [Inject] 
+    IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
     [Inject]
     private ISender _mediator { get; set; } = default!;
     [CascadingParameter]
@@ -173,6 +181,7 @@
     private bool _canDelete;
     private bool _canImport;
     private bool _canExport;
+    private bool _canDownload;
     protected override async Task OnInitializedAsync()
     {
         Title = L["Documents"];
@@ -183,6 +192,7 @@
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
+        _canDownload= (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
         _tenantId =await _tenantProvider.GetTenant();
         _tenantProvider.Register(async () =>
         {
@@ -314,6 +324,26 @@
             ();
         }
     }
-    
-    
+    private async Task OnDownload(DocumentDto dto)
+    {
+
+        try
+        {
+            _downloading = true;
+            var file = await _mediator.Send(new GetFileStreamQuery(dto.Id));
+            if (file.Item2 != null)
+            {
+                var result = await BlazorDownloadFileService.DownloadFile(file.Item1, file.Item2, "application/octet-stream");
+            }
+        }
+        catch(Exception e)
+        {
+            Snackbar.Add($"{e.Message}", MudBlazor.Severity.Error);
+        }
+        finally
+        {
+            _downloading = false;
+        }
+    }
+
     }
