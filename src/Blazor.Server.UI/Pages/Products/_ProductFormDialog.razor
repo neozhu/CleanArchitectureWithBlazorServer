@@ -45,6 +45,7 @@
                                      @bind-Value="model.Unit"></PicklistAutocomplete>
                 </MudItem>
                 <MudItem>
+                    <div class="d-flex flex-row gap-4 mb-2">
                     <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
                     <MudText Typo="Typo.caption">@L["Product Pictures"]*</MudText>
                     <MudFab HtmlTag="label" Size="MudBlazor.Size.Small" 
@@ -52,6 +53,11 @@
                             Icon="@Icons.Filled.Image"
                             Label="Upload picture"
                             for="fileInput" />
+                    @if (fileinputInvalid)
+                    {
+                        <MudText  Color="MudBlazor.Color.Error" Typo="Typo.body2">@L["Please upload product pictures."]</MudText>
+                    }
+                    </div>
                     <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
                     <div class="d-fex">
                         @if (model.Pictures is not null)
@@ -71,6 +77,7 @@
 </MudDialog>
 
 @code {
+    private bool fileinputInvalid = false;
     MudForm form = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
@@ -111,14 +118,20 @@
         }
         Snackbar.Add(L["Upload pictures successfully"], MudBlazor.Severity.Info);
         model.Pictures = list;
+        fileinputInvalid = false;
     }
     async Task Submit()
     {
+        if (model.Pictures is null)
+        {
+            fileinputInvalid = true;
+        }
         await form.Validate();
         if (form.IsValid)
         {
             if (model.Pictures is null)
             {
+                fileinputInvalid = true;
                 Snackbar.Add(L["Please choose to upload pictures of this product"], MudBlazor.Severity.Error);
                 return;
             }
