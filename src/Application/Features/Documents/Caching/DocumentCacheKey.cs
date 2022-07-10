@@ -6,6 +6,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 public static class DocumentCacheKey
 {
     public const string GetAllCacheKey = "all-documents";
+    public static string GetStreamByIdKey(int id) => $"GetStreamByIdKey:{id}";
     static DocumentCacheKey()
     {
         _tokensource = new CancellationTokenSource(new TimeSpan(12,0,0));

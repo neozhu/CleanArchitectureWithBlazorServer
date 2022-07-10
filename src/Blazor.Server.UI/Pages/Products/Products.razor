@@ -1,5 +1,6 @@
 @page "/pages/products"
 
+@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
@@ -210,7 +211,8 @@
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
 
     private ProductsWithPaginationQuery query { get; set; } = new();
-
+    [Inject] 
+    IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
     private bool _canSearch;
     private bool _canCreate;
     private bool _canEdit;
@@ -365,8 +367,7 @@
                 SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
             };
         var result = await _mediator.Send(request);
-        using var streamRef = new DotNetStreamReference(new MemoryStream(result));
-        await JS.InvokeVoidAsync("downloadFileFromStream", $"{L["Products"]}.xlsx", streamRef);
+        var downloadresult = await BlazorDownloadFileService.DownloadFile($"{L["Products"]}.xlsx", result, contentType:"application/octet-stream");
         Snackbar.Add($"{ToastText.EXPORTSUCESS}", MudBlazor.Severity.Info);
         _downloading = false;
     }

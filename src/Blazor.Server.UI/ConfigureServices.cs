@@ -2,6 +2,7 @@ using Blazor.Analytics;
 using Blazor.Server.UI.Services;
 using Blazor.Server.UI.Services.Navigation;
 using Blazor.Server.UI.Services.Notifications;
+using BlazorDownloadFile;
 using Blazored.LocalStorage;
 using MudBlazor;
 using MudBlazor.Services;
@@ -50,7 +51,7 @@ public static class ConfigureServices
 
 
         services.AddScoped<LayoutService>();
-
+        services.AddBlazorDownloadFile();
         services.AddScoped<IUserPreferencesService, UserPreferencesService>();
         services.AddScoped<IMenuService, MenuService>();
         services.AddTransient<INotificationService, InMemoryNotificationService>();

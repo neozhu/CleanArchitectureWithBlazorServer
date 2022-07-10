@@ -42,7 +42,7 @@
     <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
     <script src="~/js/msal/authConfig.js"></script>
 
-    <script src="https://accounts.google.com/gsi/client" ></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
     <script src="~/js/gapi/auth2config.js"></script>
 
     <script src="_framework/blazor.server.js"></script>
@@ -50,76 +50,57 @@
 
     <script type="text/javascript">
 
-              async function downloadFileFromStream(fileName, contentStreamReference) {
-                  const arrayBuffer = await contentStreamReference.arrayBuffer();
-                  const blob = new Blob([arrayBuffer]);
-                  const url = URL.createObjectURL(blob);
+        async function externalLogin(provider, dotNetHelper) {
+            if (provider == 'Microsoft') {
+                await loginWithMicrosoft(provider, dotNetHelper);
+            } else if (provider == 'Google') {
+                await loginWithGoogle(provider, dotNetHelper);
+            }
 
-                  triggerFileDownload(fileName, url);
+        }
+        async function loginWithMicrosoft(provider, dotNetHelper) {
+            var client = new msal.PublicClientApplication(msalConfig);
+            var response = await client.loginPopup(loginRequest);
+            await dotNetHelper.invokeMethodAsync('ConfirmExternal', provider, response.account.username, response.account.name, response.accessToken);
+            console.log('login with microsoft success');
+            localStorage.setItem('microsoft_client_token', response.account.homeAccountId);
+        }
+        async function loginWithGoogle(provider, dotNetHelper) {
+            console.log(provider + 'initialize');
+            client = google.accounts.oauth2.initTokenClient({
+                client_id: auth2Config.clientId,
+                scope: auth2Config.scope,
+                ux_mode: 'popup',
+                callback: async (response) => {
+                    const access_token = response.access_token;
+                    const url = `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`;
+                    const data = await fetch(url).then((response) => response.json());
+                    await dotNetHelper.invokeMethodAsync('ConfirmExternal', provider, data.email, data.name, access_token);
+                    console.log('login with microsoft success');
+                    localStorage.setItem('google_client_token', access_token);
 
-                  URL.revokeObjectURL(url);
-              }
-
-              function triggerFileDownload(fileName, url) {
-                  const anchorElement = document.createElement('a');
-                  anchorElement.href = url;
-                  anchorElement.download = fileName ?? '';
-                  anchorElement.click();
-                  anchorElement.remove();
-              }
-
-
-     async function externalLogin(provider, dotNetHelper) {
-          if(provider=='Microsoft'){
-              await loginWithMicrosoft(provider,dotNetHelper);
-          }else if(provider=='Google') {
-              await loginWithGoogle(provider,dotNetHelper);
-          }
-
-      }
-      async function loginWithMicrosoft(provider, dotNetHelper){
-           var client = new msal.PublicClientApplication(msalConfig);
-           var response = await client.loginPopup(loginRequest);
-           await dotNetHelper.invokeMethodAsync('ConfirmExternal', provider, response.account.username, response.account.name, response.accessToken);
-           console.log('login with microsoft success');
-           localStorage.setItem('microsoft_client_token', response.account.homeAccountId);
-      }
-      async function loginWithGoogle(provider, dotNetHelper) {
-          console.log(provider + 'initialize');
-          client = google.accounts.oauth2.initTokenClient({
-                 client_id: auth2Config.clientId,
-                 scope: auth2Config.scope,
-                 ux_mode: 'popup',
-                 callback: async (response) => {
-                      const access_token = response.access_token;
-                      const url=`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`;
-                      const data = await fetch(url).then((response) => response.json());
-                      await dotNetHelper.invokeMethodAsync('ConfirmExternal', provider, data.email, data.name, access_token);
-                      console.log('login with microsoft success');
-                      localStorage.setItem('google_client_token', access_token);
-                 
-                   }
-                });
-         client.requestAccessToken();
-      }
-      async function externalLogout() {
+                }
+            });
+            client.requestAccessToken();
+        }
+        async function externalLogout() {
             let client_token = localStorage.getItem('microsoft_client_token');
-            if(client_token) {
-                  const client = new msal.PublicClientApplication(msalConfig);
-                  const logoutRequest = {
-                          account: client.getAccountByHomeId(client_token)
-                         }
+            if (client_token) {
+                const client = new msal.PublicClientApplication(msalConfig);
+                const logoutRequest = {
+                    account: client.getAccountByHomeId(client_token)
+                }
 
-                  await client.logoutPopup(logoutRequest);
-                  localStorage.removeItem('microsoft_client_token');
-            }else{
+                await client.logoutPopup(logoutRequest);
+                localStorage.removeItem('microsoft_client_token');
+            } else {
                 client_token = localStorage.getItem('google_client_token');
-                if(client_token) {
+                if (client_token) {
                     google.accounts.oauth2.revoke(client_token);
                     localStorage.removeItem('google_client_token');
                 }
             }
-      } 
+        }
     </script>
 
 </body>
