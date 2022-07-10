@@ -5,7 +5,7 @@ public static class ServicesCollectionExtensions
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
         => services.AddScoped<ExceptionHandlingMiddleware>()
-                   .AddSingleton<ProfileService>()
+                   .AddScoped<ProfileService>()
                    .AddScoped<ICurrentUserService, CurrentUserService>()
                    .AddScoped<IDateTime, DateTimeService>()
                    .AddScoped<IExcelService, ExcelService>()
