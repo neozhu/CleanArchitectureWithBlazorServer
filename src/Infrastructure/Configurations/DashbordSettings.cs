@@ -3,13 +3,13 @@
 
 namespace CleanArchitecture.Blazor.Infrastructure.Configurations;
 
-public class DashbordSettings
+public class DashboardSettings
 {
-    public const string SectionName = nameof(DashbordSettings);
+    public const string SectionName = nameof(DashboardSettings);
 
     public string Version { get; set; }="6.0.2";
-    public string App { get; set; } = "Dashbord";
-    public string AppName { get; set; } = "Admin Dashbord";
+    public string App { get; set; } = "Dashboard";
+    public string AppName { get; set; } = "Admin Dashboard";
     public string AppFlavor { get; set; } = String.Empty;
     public string AppFlavorSubscript { get; set; } = String.Empty;
 
