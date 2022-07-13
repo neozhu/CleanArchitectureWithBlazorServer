@@ -31,9 +31,9 @@ public static class DependencyInjection
             services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
-        services.Configure<DashbordSettings>(configuration.GetSection(DashbordSettings.SectionName));
+        services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.SectionName));
         services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.SectionName));        
-        services.AddSingleton(s => s.GetRequiredService<IOptions<DashbordSettings>>().Value);
+        services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
         services.AddScoped<IDbContextFactory<ApplicationDbContext>,BlazorContextFactory<ApplicationDbContext>>();
         services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
      
