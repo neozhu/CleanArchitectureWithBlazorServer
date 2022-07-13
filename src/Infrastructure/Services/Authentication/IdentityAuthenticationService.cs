@@ -47,7 +47,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         return new AuthenticationState(principal);
     }
 
-    private async Task<ClaimsIdentity> createIdentityFromApplicationUser(ApplicationUser user)
+    private async Task<ClaimsIdentity> CreateIdentityFromApplicationUser(ApplicationUser user)
     {
 
         var result = new ClaimsIdentity(KEY);
@@ -103,16 +103,16 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             });
         }
         var roles = await _userManager.GetRolesAsync(user);
-        foreach (var rolename in roles)
+        foreach (var roleName in roles)
         {
-            var role = await _roleManager.FindByNameAsync(rolename);
+            var role = await _roleManager.FindByNameAsync(roleName);
             var claims = await _roleManager.GetClaimsAsync(role);
             foreach (var claim in claims)
             {
                 result.AddClaim(claim);
             }
             result.AddClaims(new[] {
-                new Claim(ClaimTypes.Role, rolename) });
+                new Claim(ClaimTypes.Role, roleName) });
 
         }
         return result;
@@ -125,13 +125,13 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         try
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
-            var valid = await _userManager.CheckPasswordAsync(user, request.Password);
+            var valid = user.IsActive && await _userManager.CheckPasswordAsync(user, request.Password);
             if (valid)
             {
 
-                var identity = await createIdentityFromApplicationUser(user);
+                var identity = await CreateIdentityFromApplicationUser(user);
                 using (var memoryStream = new MemoryStream())
-                using (var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))
+                await using (var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))
                 {
                     identity.WriteTo(binaryWriter);
                     var base64 = Convert.ToBase64String(memoryStream.ToArray());
@@ -183,9 +183,13 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
                 await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
             }
-            var identity = await createIdentityFromApplicationUser(user);
+
+            if (!user.IsActive)
+                return false;
+            
+            var identity = await CreateIdentityFromApplicationUser(user);
             using (var memoryStream = new MemoryStream())
-            using (var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))
+            await using (var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))
             {
                 identity.WriteTo(binaryWriter);
                 var base64 = Convert.ToBase64String(memoryStream.ToArray());
