@@ -1,5 +1,6 @@
 @page "/pages/authentication/login"
 @using System.Text.RegularExpressions
+@using Blazor.Server.UI.Pages.Identity.Users
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 @using Microsoft.AspNetCore.Authentication
@@ -72,6 +73,7 @@
 @code {
     private string Title = "Sign In";
     private SignInManager<ApplicationUser> _signInManager { get; set; } = default!;
+    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     private List<AuthenticationScheme> _externalLogins { get; set; } = new();
     [Inject] private IdentityAuthenticationService _authenticationService { get; set; } = default!;
     [Inject] private ILogger<Login> _logger { get; set; } = default!;
@@ -91,6 +93,7 @@
     {
         Title = L["Sign In"];
         _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
+        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         var externalSchemes = await _signInManager.GetExternalAuthenticationSchemesAsync();
         _externalLogins = externalSchemes.ToList();
     }
@@ -131,19 +134,61 @@
     {
         if (context.Validate())
         {
-            var result = await _authenticationService.Login(model);
-            if (!result)
+            var user = await _userManager.FindByNameAsync(model.UserName);
+            if (user is null)
             {
-                _logger.LogWarning("{@UserName} login fail.", model.UserName);
-                Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
+                Snackbar.Add(L["No user found, or no authorization, please contact the administrator"], MudBlazor.Severity.Error);
             }
             else
             {
-                _logger.LogInformation("{@UserName} login successfully.", model.UserName);
+                if (user.IsActive == false)
+                {
+                    await OnResetPassword(user);
+                }
+                else
+                {
+                    var result = await _authenticationService.Login(model);
+                    if (!result)
+                    {
+                        _logger.LogWarning("{@UserName} login fail.", model.UserName);
+                        Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
+                    }
+                    else
+                    {
+                        _logger.LogInformation("{@UserName} login successfully.", model.UserName);
+                    }
+                }
             }
 
         }
 
+    }
+    private async Task OnResetPassword(ApplicationUser item)
+    {
+
+        var model = new ResetPasswordFormModel()
+            { Id = item.Id, DisplayName = item.DisplayName, UserName = item.UserName, ProfilePictureDataUrl = item.ProfilePictureDataUrl };
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = DialogService.Show<_ResetPasswordDialog>(L["Set new password"], parameters, options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(item);
+            var state = await _userManager.ResetPasswordAsync(item, token, model.Password);
+            if (state.Succeeded)
+            {
+                item.IsActive = true;
+                await _userManager.UpdateAsync(item);
+                Snackbar.Add($"{L["Password update successfuly"]}", MudBlazor.Severity.Info);
+                _logger.LogInformation("{@UserName} has set a new password",model.UserName);
+                this.model.Password = "";
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+            }
+        }
     }
     private async Task SignInExternal(string provider)
     {
