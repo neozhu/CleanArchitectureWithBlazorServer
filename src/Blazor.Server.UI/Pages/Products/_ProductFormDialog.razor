@@ -61,10 +61,12 @@
                     <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
                     <div class="d-fex">
                         @if (model.Pictures is not null)
+                        {
                             foreach (var img in model.Pictures)
                             {
                                 <MudImage ObjectFit="ObjectFit.Cover"   Height="80" Width="160" Src="@img" Alt="@img" Elevation="25" Class="mr-2 rounded-lg" />
                             }
+                        }
                     </div>
                 </MudItem>
             </MudGrid>
