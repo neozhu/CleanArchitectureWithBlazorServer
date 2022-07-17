@@ -69,7 +69,18 @@ public class LayoutService
         _userPreferences.RightToLeft = IsRTL;
         await _userPreferencesService.SaveUserPreferences(_userPreferences);
         OnMajorUpdateOccured();
-
+    }
+    
+    public async Task SetRightToLeft()
+    {
+        if (!IsRTL)
+            await ToggleRightToLeft();
+    }
+    
+    public async Task SetLeftToRight()
+    {
+        if (IsRTL)
+            await ToggleRightToLeft();
     }
 
     public void SetBaseTheme(MudTheme theme)

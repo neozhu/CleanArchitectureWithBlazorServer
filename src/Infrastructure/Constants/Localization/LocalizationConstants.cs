@@ -46,6 +46,11 @@ public static class LocalizationConstants
             {
                 Code = "zh-CN",
                 DisplayName = "中文"
+            },
+            new LanguageCode
+            {
+                Code = "ar-iq",
+                DisplayName = "Arabic Iraq"
             }
         };
 }
