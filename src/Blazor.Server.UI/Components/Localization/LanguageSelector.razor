@@ -2,6 +2,7 @@
 @using Microsoft.Extensions.Options
 @using Blazor.Server.UI.Models.Localization
 @using System.Globalization
+@using Blazor.Server.UI.Services
 
 <MudTooltip Text="@CurrentLanguage">
     <MudMenu Class="mx-1" Icon="@Icons.Material.Outlined.Translate" Color="Color.Default" Direction="Direction.Bottom" OffsetY="true"
@@ -28,6 +29,7 @@
     public List<CultureInfo>? SupportedLanguages { get; set; } = new();
     [Inject] private NavigationManager _navigation { get; set; } = default!;
     [Inject] private IOptions<RequestLocalizationOptions> localizationOptions { get; set; } = default!;
+    [Inject] private LayoutService LayoutService { get; set; }
 
 
     protected override Task OnInitializedAsync()
@@ -38,11 +40,16 @@
     }
 
 
-    private Task ChangeLanguageAsync(string languageCode)
+    private async Task ChangeLanguageAsync(string languageCode)
     {
         CurrentLanguage = languageCode;
         _navigation.NavigateTo(_navigation.BaseUri + "?culture=" + languageCode, forceLoad: true);
-        return Task.CompletedTask;
 
+        if (new CultureInfo(languageCode).TextInfo.IsRightToLeft)
+            await LayoutService.SetRightToLeft();
+        else
+            await LayoutService.SetLeftToRight();
+        
+        await Task.CompletedTask;
     }
 }
