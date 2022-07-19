@@ -27,10 +27,9 @@
 @code {
     public string? CurrentLanguage { get; set; } = "en-US";
     public List<CultureInfo>? SupportedLanguages { get; set; } = new();
-    [Inject] private NavigationManager _navigation { get; set; } = default!;
-    [Inject] private IOptions<RequestLocalizationOptions> localizationOptions { get; set; } = default!;
-    [Inject] private LayoutService LayoutService { get; set; }
-
+    [Inject] private NavigationManager _navigation { get; set; } = null!;
+    [Inject] private IOptions<RequestLocalizationOptions> localizationOptions { get; set; } = null!;
+    [Inject] private LayoutService LayoutService { get; set; } = null!;
 
     protected override Task OnInitializedAsync()
     {

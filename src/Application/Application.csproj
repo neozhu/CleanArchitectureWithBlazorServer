@@ -25,10 +25,10 @@
     <PackageReference Include="LazyCache" Version="2.4.0" />
     <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="6.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="6.0.7" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.19" />
   </ItemGroup>
 

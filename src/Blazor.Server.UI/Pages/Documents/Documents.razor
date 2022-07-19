@@ -27,7 +27,8 @@
                   Height="calc(100vh - 330px)"
                   Loading="@_loading"
                   SortLabel="@PromptText.ORDERBY"
-                  MultiSelection="true" @bind-SelectedItems="_selectedItems"
+                  MultiSelection="true" 
+                  SelectedItems="_selectedItems"
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
@@ -166,8 +167,8 @@
     private bool _loading;
     [Inject]
     private ITenantProvider _tenantProvider { get; set; } = default!;
-    [Inject] 
-    IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+    [Inject]
+    IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     [Inject]
     private ISender _mediator { get; set; } = default!;
     [CascadingParameter]

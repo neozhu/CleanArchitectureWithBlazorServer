@@ -8,7 +8,7 @@ public partial class NotificationMenu : MudComponentBase
 {
 
     private bool _newNotificationsAvailable = false;
-    private IDictionary<NotificationMessage, bool> _messages = null;
+    private IDictionary<NotificationMessage, bool>? _messages = null;
     [Inject] private INotificationService NotificationService { get; set; } = default!;
     private async Task MarkNotificationAsRead()
     {
@@ -20,7 +20,7 @@ public partial class NotificationMenu : MudComponentBase
     {
         if (firstRender)
         {
-           (NotificationService as InMemoryNotificationService).Preload();
+           (NotificationService as InMemoryNotificationService)?.Preload();
         }
         _newNotificationsAvailable = await NotificationService.AreNewNotificationsAvailable();
         _messages = await NotificationService.GetNotifications();

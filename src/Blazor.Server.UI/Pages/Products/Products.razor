@@ -28,7 +28,8 @@
                   Height="calc(100vh - 330px)"
                   Loading="@_loading"
                   SortLabel="@PromptText.ORDERBY"
-                  MultiSelection="true" @bind-SelectedItems="_selectedItems"
+                  MultiSelection="true"
+                  SelectedItems="_selectedItems"
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
@@ -211,8 +212,8 @@
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
 
     private ProductsWithPaginationQuery query { get; set; } = new();
-    [Inject] 
-    IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+    [Inject]
+    IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     private bool _canSearch;
     private bool _canCreate;
     private bool _canEdit;

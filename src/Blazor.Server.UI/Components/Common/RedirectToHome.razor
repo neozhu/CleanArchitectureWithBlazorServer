@@ -1,7 +1,7 @@
 @inherits ComponentBase
 @code {
     [Inject]
-    protected NavigationManager NavigationManager { get; set; }
+    protected NavigationManager NavigationManager { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {

@@ -28,8 +28,8 @@
                   Height="calc(100vh - 265px)"
                   Hover="true"
                   MultiSelection="true"
-                  @bind-SelectedItems="_selectedItems"
-                  @bind-SelectedItem="_selectedItem"
+                  SelectedItems="_selectedItems"
+                  SelectedItem="_selectedItem"
                   CommitEditTooltip="@L["Commit Edit"]"
                   RowEditPreview="BackupItem"
                   RowEditCancel="ResetItemToOriginalValues"
@@ -169,7 +169,7 @@
     public string Title { get; set; } = "Picklist";
     private IList<KeyValueDto> KeyValueList = new List<KeyValueDto>();
     private HashSet<KeyValueDto> _selectedItems = new HashSet<KeyValueDto>();
-    private KeyValueDto? _selectedItem { get; set; } = null;
+    private KeyValueDto _selectedItem { get; set; } = new();
     private KeyValueDto _elementBeforeEdit { get; set; } = new();
     private bool _canCancelEdit=true;
     private string _searchString = string.Empty;
@@ -221,8 +221,8 @@
             _editing = false;
             var cmd = new GetAllKeyValuesQuery();
             KeyValueList = (await _mediator.Send(cmd).ConfigureAwait(false)).ToList();
-            _selectedItems=new HashSet<KeyValueDto>();;
-            _selectedItem = null;
+            _selectedItems=new HashSet<KeyValueDto>();
+            _selectedItem = new();
         }
         finally
         {
