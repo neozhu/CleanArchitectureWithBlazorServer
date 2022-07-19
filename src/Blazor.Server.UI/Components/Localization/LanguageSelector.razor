@@ -31,7 +31,6 @@
     [Inject] private IOptions<RequestLocalizationOptions> localizationOptions { get; set; } = null!;
     [Inject] private LayoutService LayoutService { get; set; } = null!;
 
-
     protected override Task OnInitializedAsync()
     {
         SupportedLanguages = localizationOptions.Value.SupportedCultures?.ToList();
