@@ -102,7 +102,7 @@
                 using (var image = Image.Load(imgstream, out IImageFormat format))
                 {
                     image.Mutate(
-                       i => i.Resize(new ResizeOptions() { Mode = ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(640, 320) }));
+                       i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(640, 320) }));
                     image.Save(outStream, format);
                     var filename = file.Name;
                     var fi = new FileInfo(filename);

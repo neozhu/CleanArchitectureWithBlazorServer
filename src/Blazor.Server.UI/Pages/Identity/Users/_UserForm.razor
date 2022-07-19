@@ -114,7 +114,7 @@
 @code {
     public class keyvalue
     {
-        public string key { get; set; }
+        public string key { get; set; } = string.Empty;
         public bool value { get; set; }
     }
     MudForm form = default!;
@@ -178,7 +178,7 @@
             using (var image = Image.Load(imgstream, out IImageFormat format))
             {
                 image.Mutate(
-                   i => i.Resize(new ResizeOptions() { Mode = ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(128, 128) }));
+                   i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(128, 128) }));
                 image.Save(outStream, format);
                 var filename = e.File.Name;
                 var fi = new FileInfo(filename);
