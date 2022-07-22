@@ -147,4 +147,16 @@
   <data name="Search for brand" xml:space="preserve">
     <value>Search for brand</value>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="Product Pictures" xml:space="preserve">
+    <value>Product Pictures</value>
+  </data>
+  <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
+    <value>The recommended size for uploading images is 640X320</value>
+  </data>
 </root>

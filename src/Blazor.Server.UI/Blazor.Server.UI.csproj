@@ -58,6 +58,7 @@
         <Folder Include="Files\" />
         <Folder Include="Files\ProfilePictures\" />
         <Folder Include="Files\" />
+        <Folder Include="Resources\Components\Index\" />
     </ItemGroup>
 
 

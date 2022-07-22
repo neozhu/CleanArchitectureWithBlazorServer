@@ -124,27 +124,39 @@
     <value>Цена</value>
   </data>
   <data name="Product Name" xml:space="preserve">
-    <value>наименование</value>
+    <value>Название продукта</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>товара</value>
+    <value>Продукты</value>
   </data>
   <data name="Unit" xml:space="preserve">
-    <value>Ед. изм</value>
+    <value>Единица</value>
   </data>
   <data name="Search for maximum price" xml:space="preserve">
-    <value>Поиск по названию продукта</value>
+    <value>Поиск максимальной цены</value>
   </data>
   <data name="Search for brand" xml:space="preserve">
     <value>Поиск бренда</value>
   </data>
   <data name="Search for minimum price" xml:space="preserve">
-    <value>Поиск максимальной цены</value>
+    <value>Поиск минимальной цены</value>
   </data>
   <data name="Search for product name" xml:space="preserve">
-    <value>Поиск минимальной цены</value>
+    <value>Поиск названия продукта</value>
   </data>
   <data name="Search for unit" xml:space="preserve">
     <value>Поиск единицы измерения</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Продукт</value>
+  </data>
+  <data name="Product Pictures" xml:space="preserve">
+    <value>Изображения продукта</value>
+  </data>
+  <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
+    <value>Рекомендуемый размер загружаемых изображений - 640X320</value>
   </data>
 </root>
