@@ -121,22 +121,22 @@
     <value>英語</value>
   </data>
   <data name="Japanese" xml:space="preserve">
-    <value>日本</value>
+    <value>日本語</value>
   </data>
   <data name="French" xml:space="preserve">
     <value>フランス語</value>
   </data>
   <data name="German" xml:space="preserve">
-    <value>ドイツ人</value>
+    <value>ドイツ語</value>
   </data>
   <data name="Khmer" xml:space="preserve">
     <value>クメール語</value>
   </data>
   <data name="Russian" xml:space="preserve">
-    <value>ロシア</value>
+    <value>ロシア語</value>
   </data>
   <data name="Simplified Chinese" xml:space="preserve">
-    <value>簡体字中国語</value>
+    <value>中国語（簡体字</value>
   </data>
   <data name="Spanish" xml:space="preserve">
     <value>スペイン語</value>

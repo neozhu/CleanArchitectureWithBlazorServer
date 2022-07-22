@@ -118,27 +118,27 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="English" xml:space="preserve">
-    <value>inglés</value>
+    <value>Inglés</value>
   </data>
   <data name="Japanese" xml:space="preserve">
-    <value>japonés</value>
+    <value>Japonés</value>
   </data>
   <data name="French" xml:space="preserve">
-    <value>francés</value>
+    <value>Francés</value>
   </data>
   <data name="German" xml:space="preserve">
-    <value>alemán</value>
+    <value>Alemán</value>
   </data>
   <data name="Khmer" xml:space="preserve">
-    <value>jemer</value>
+    <value>Jemer</value>
   </data>
   <data name="Russian" xml:space="preserve">
-    <value>ruso</value>
+    <value>Ruso</value>
   </data>
   <data name="Simplified Chinese" xml:space="preserve">
-    <value>chino simplificado</value>
+    <value>Chino simplificado</value>
   </data>
   <data name="Spanish" xml:space="preserve">
-    <value>español</value>
+    <value>Español</value>
   </data>
 </root>

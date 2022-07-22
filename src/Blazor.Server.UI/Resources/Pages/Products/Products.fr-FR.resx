@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Brand Name" xml:space="preserve">
-    <value>Marque</value>
+    <value>Nom de la marque</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>Prix</value>
@@ -127,9 +127,36 @@
     <value>Nom du produit</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>Des produits</value>
+    <value>Produits</value>
   </data>
   <data name="Unit" xml:space="preserve">
     <value>Unité</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Produit</value>
+  </data>
+  <data name="Product Pictures" xml:space="preserve">
+    <value>Images du produit</value>
+  </data>
+  <data name="Search for brand" xml:space="preserve">
+    <value>Rechercher une marque</value>
+  </data>
+  <data name="Search for maximum price" xml:space="preserve">
+    <value>Recherche du prix maximum</value>
+  </data>
+  <data name="Search for minimum price" xml:space="preserve">
+    <value>Recherche du prix minimum</value>
+  </data>
+  <data name="Search for product name" xml:space="preserve">
+    <value>Recherche du nom du produit</value>
+  </data>
+  <data name="Search for unit" xml:space="preserve">
+    <value>Recherche de l'unité</value>
+  </data>
+  <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
+    <value>La taille recommandée pour le téléchargement d'images est de 640X320.</value>
   </data>
 </root>

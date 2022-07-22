@@ -124,12 +124,39 @@
     <value>価格</value>
   </data>
   <data name="Product Name" xml:space="preserve">
-    <value>商品名</value>
+    <value>製品名</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>製品</value>
+    <value>製品情報</value>
   </data>
   <data name="Unit" xml:space="preserve">
     <value>単位</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>商品説明</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>商品名</value>
+  </data>
+  <data name="Product Pictures" xml:space="preserve">
+    <value>製品写真</value>
+  </data>
+  <data name="Search for brand" xml:space="preserve">
+    <value>ブランド検索</value>
+  </data>
+  <data name="Search for maximum price" xml:space="preserve">
+    <value>最高価格検索</value>
+  </data>
+  <data name="Search for minimum price" xml:space="preserve">
+    <value>最低価格検索</value>
+  </data>
+  <data name="Search for product name" xml:space="preserve">
+    <value>製品名を検索</value>
+  </data>
+  <data name="Search for unit" xml:space="preserve">
+    <value>単位を検索する</value>
+  </data>
+  <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
+    <value>画像のアップロードは640X320サイズを推奨します。</value>
   </data>
 </root>
