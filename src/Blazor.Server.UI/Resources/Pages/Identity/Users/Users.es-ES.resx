@@ -186,4 +186,10 @@
   <data name="Users" xml:space="preserve">
     <value>Usuarios</value>
   </data>
+  <data name="Select Tenant" xml:space="preserve">
+    <value>Seleccione Tentan</value>
+  </data>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>Nombre del inquilino</value>
+  </data>
 </root>

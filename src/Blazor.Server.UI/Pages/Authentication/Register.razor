@@ -79,7 +79,7 @@
     [Inject] private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     MudForm form=null!;
     RegisterFormModel model = new();
-    RegisterFormModelFluentValidator registerValidator = new();
+    [Inject] private RegisterFormModelFluentValidator registerValidator { get; set; } = default!;
 
 
     bool PasswordVisibility;
