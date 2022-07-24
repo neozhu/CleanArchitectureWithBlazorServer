@@ -165,6 +165,9 @@
   <data name="Search for user name" xml:space="preserve">
     <value>Search for user name</value>
   </data>
+  <data name="Select Tenant" xml:space="preserve">
+    <value>Select Tenant</value>
+  </data>
   <data name="Set Active" xml:space="preserve">
     <value>Set Active</value>
   </data>
@@ -176,6 +179,9 @@
   </data>
   <data name="Site" xml:space="preserve">
     <value>Site</value>
+  </data>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>Tenant Name</value>
   </data>
   <data name="User Name" xml:space="preserve">
     <value>User Name</value>
