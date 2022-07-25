@@ -180,4 +180,16 @@
   <data name="Users" xml:space="preserve">
     <value>系统账号</value>
   </data>
+  <data name="New Password" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="password is required!" xml:space="preserve">
+    <value>密码必填</value>
+  </data>
+  <data name="Select Tenant" xml:space="preserve">
+    <value>选择租户</value>
+  </data>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>租户名称</value>
+  </data>
 </root>

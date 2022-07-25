@@ -186,4 +186,10 @@
   <data name="Users" xml:space="preserve">
     <value>Пользователи</value>
   </data>
+  <data name="Select Tenant" xml:space="preserve">
+    <value>Выберите Тентан</value>
+  </data>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>Имя арендатора</value>
+  </data>
 </root>

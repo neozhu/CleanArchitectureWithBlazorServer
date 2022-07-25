@@ -75,12 +75,11 @@
 
 
 @code {
-    [Inject] private NavigationManager Navigation { get; set; } = default!;
-    [Inject] private UserManager<ApplicationUser> UserManager { get; set; } = default!;
-    [Inject] private RegisterFormModelFluentValidator? RegisterValidator { get; set; }
-
-    MudForm _form = null!;
-    readonly RegisterFormModel _model = new();
+    [Inject] private NavigationManager _navigation { get; set; } = default!;
+    [Inject] private UserManager<ApplicationUser> _userManager { get; set; } = default!;
+    MudForm form=null!;
+    RegisterFormModel model = new();
+    [Inject] private RegisterFormModelFluentValidator registerValidator { get; set; } = default!;
 
 
     bool _passwordVisibility;
