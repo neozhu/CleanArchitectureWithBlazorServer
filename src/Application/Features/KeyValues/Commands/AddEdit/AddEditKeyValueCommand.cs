@@ -44,7 +44,7 @@ public class AddEditKeyValueCommandHandler : IRequestHandler<AddEditKeyValueComm
             keyValue.AddDomainEvent(new UpdatedEvent<KeyValue>(keyValue));
             _context.KeyValues.Add(keyValue);
             await _context.SaveChangesAsync(cancellationToken);
-            return Result<int>.Success(keyValue.Id);
+            return await Result<int>.SuccessAsync(keyValue.Id);
         }
 
 

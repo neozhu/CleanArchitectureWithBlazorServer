@@ -51,7 +51,7 @@ public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (st
             if (File.Exists(filepath))
             {
                 var fileName = (new FileInfo(filepath)).Name;
-                var buffer=  await File.ReadAllBytesAsync(filepath);
+                var buffer=  await File.ReadAllBytesAsync(filepath, cancellationToken);
                 return (fileName, buffer);
             }
             return (string.Empty,Array.Empty<byte>());

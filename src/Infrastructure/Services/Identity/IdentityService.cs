@@ -93,7 +93,7 @@ public class IdentityService : IIdentityService
             return await DeleteUserAsync(user);
         }
 
-        return Result.Success();
+        return await Result.SuccessAsync();
     }
 
     public async Task<Result> DeleteUserAsync(ApplicationUser user)

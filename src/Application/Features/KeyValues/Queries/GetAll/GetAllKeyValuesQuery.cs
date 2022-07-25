@@ -4,7 +4,7 @@
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 
-namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName;
+namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.GetAll;
 
 public class GetAllKeyValuesQuery : IRequest<IEnumerable<KeyValueDto>>, ICacheable
 {
