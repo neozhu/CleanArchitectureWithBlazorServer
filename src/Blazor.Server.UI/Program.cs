@@ -1,9 +1,5 @@
-using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MudBlazor.Services;
-using Blazor.Server.UI.Services;
-using Toolbelt.Blazor.Extensions.DependencyInjection;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using CleanArchitecture.Blazor.Infrastructure.Identity;
 using CleanArchitecture.Blazor.Infrastructure;
@@ -11,10 +7,6 @@ using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Serilog;
 using Serilog.Events;
-using MudBlazor;
-using Blazor.Analytics;
-using Blazor.Server.UI.Services.Notifications;
-using Blazor.Server.UI.Services.Navigation;
 using Blazor.Server.UI;
 
 var builder = WebApplication.CreateBuilder(args);
