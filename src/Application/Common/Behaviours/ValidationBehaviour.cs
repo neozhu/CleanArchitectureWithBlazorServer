@@ -18,7 +18,7 @@ where TRequest : IRequest<TResponse>
         if (_validators.Any())
         {
             foreach (var validator in _validators)
-                validator.ValidateAndThrow(request);
+                await validator.ValidateAndThrowAsync(request, cancellationToken);
         }
         return await next();
     }
