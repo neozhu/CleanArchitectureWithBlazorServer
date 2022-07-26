@@ -7,7 +7,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Caching;
 public static class ProductCacheKey
 {
     public const string GetAllCacheKey = "all-Products";
-    public static string GetPagtionCacheKey(string parameters)
+    public static string GetPaginationCacheKey(string parameters)
     {
         return $"ProductsWithPaginationQuery,{parameters}";
     }

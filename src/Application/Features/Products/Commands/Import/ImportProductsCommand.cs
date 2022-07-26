@@ -66,7 +66,7 @@ public class ImportProductsCommandHandler :
                 await _context.Products.AddAsync(item, cancellationToken);
             }
             await _context.SaveChangesAsync(cancellationToken);
-            return Result.Success();
+            return await Result.SuccessAsync();
         }
         else
         {

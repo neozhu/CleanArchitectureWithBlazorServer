@@ -44,7 +44,7 @@ public class DeleteTenantCommandHandler :
             _context.Tenants.Remove(item);
         }
         await _context.SaveChangesAsync(cancellationToken);
-        return Result.Success();
+        return await Result.SuccessAsync();
     }
 
 }

@@ -3,7 +3,7 @@
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CleanArchitecture.Infrastructure.Persistence.Configurations;
+namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Configurations;
 
 public class KeyConfiguration : IEntityTypeConfiguration<KeyValue>
 {

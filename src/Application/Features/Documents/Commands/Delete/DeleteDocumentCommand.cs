@@ -36,6 +36,6 @@ public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentComman
             _context.Documents.Remove(item);
         }
         await _context.SaveChangesAsync(cancellationToken);
-        return Result.Success();
+        return await Result.SuccessAsync();
     }
 }

@@ -5,7 +5,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CleanArchitecture.Infrastructure.Persistence.Configurations;
+namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Configurations;
 #nullable disable
 public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {

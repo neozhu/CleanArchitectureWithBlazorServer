@@ -19,46 +19,46 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
         var principal = await base.CreateAsync(user);
         if (!string.IsNullOrEmpty(user.Provider))
         {
-            ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
                 new Claim(ApplicationClaimTypes.Provider, user.Provider)
             });
         }
         if (!string.IsNullOrEmpty(user.TenantId))
         {
-            ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
                 new Claim(ApplicationClaimTypes.TenantId, user.TenantId)
             });
         }
         if (!string.IsNullOrEmpty(user.TenantName))
         {
-            ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
                 new Claim(ApplicationClaimTypes.TenantName, user.TenantName)
             });
         }
         if (!string.IsNullOrEmpty(user.ProfilePictureDataUrl))
         {
-            ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
                 new Claim(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl)
             });
         }
         if (!string.IsNullOrEmpty(user.DisplayName))
         {
-            ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
                 new Claim(ClaimTypes.GivenName, user.DisplayName)
             });
         }
         var appuser = await _userManager.FindByIdAsync(user.Id);
         var roles = await _userManager.GetRolesAsync(appuser);
-        foreach (var rolename in roles)
+        foreach (var roleName in roles)
         {
-            var role = await _roleManager.FindByNameAsync(rolename);
+            var role = await _roleManager.FindByNameAsync(roleName);
             var claims = await _roleManager.GetClaimsAsync(role);
             foreach (var claim in claims)
             {
-                ((ClaimsIdentity)principal.Identity).AddClaim(claim);
+                ((ClaimsIdentity)principal.Identity)?.AddClaim(claim);
             }
-            ((ClaimsIdentity)principal.Identity).AddClaims(new[] {
-                new Claim(ClaimTypes.Role, rolename) });
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+                new Claim(ClaimTypes.Role, roleName) });
 
         }
         return principal;

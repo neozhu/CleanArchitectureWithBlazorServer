@@ -7,7 +7,7 @@ public static class TenantCacheKey
 {
     public const string GetAllCacheKey = "all-Tenants";
     public const string TenantsCacheKey = "all-TenantsCacheKey";
-    public static string GetPagtionCacheKey(string parameters) {
+    public static string GetPaginationCacheKey(string parameters) {
         return $"TenantsWithPaginationQuery,{parameters}";
     }
     static TenantCacheKey()

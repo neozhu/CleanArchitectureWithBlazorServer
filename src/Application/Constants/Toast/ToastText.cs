@@ -3,6 +3,7 @@ public static class ToastText
 {
     public static string SAVESUCCESS => Localize("Save successfully");
     public static string DELETESUCCESS => Localize("Delete successfully");
+    public static string DELETEFAIL => Localize("Delete fail");
     public static string UPDATESUCCESS => Localize("Update successfully");
     public static string CREATESUCCESS => Localize("Create successfully");
     public static string LOGINSUCCESS => Localize("Login successfully");
