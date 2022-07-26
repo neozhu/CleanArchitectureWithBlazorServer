@@ -18,7 +18,7 @@ public class KeyValueChangedEventHandler : INotificationHandler<UpdatedEvent<Key
     }
     public async Task Handle(UpdatedEvent<KeyValue> notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("KeyValue Changed {DomainEvent},{Entity}", nameof(notification), notification.Entity);
+        _logger.LogInformation("KeyValue Changed {DomainEvent},{@Entity}", nameof(notification), notification.Entity);
         await _picklistService.Refresh();
     
     }

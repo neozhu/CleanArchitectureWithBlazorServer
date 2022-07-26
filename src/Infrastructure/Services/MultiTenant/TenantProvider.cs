@@ -6,7 +6,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 public sealed class TenantProvider : ITenantProvider
 {
     private readonly ProtectedLocalStorage _protectedLocalStorage;
-    private readonly IDictionary<Guid, Action> callbacks = new Dictionary<Guid, Action>();
+    private readonly IDictionary<Guid, Action> _callbacks = new Dictionary<Guid, Action>();
     public TenantProvider(
 
         ProtectedLocalStorage protectedLocalStorage)
@@ -18,7 +18,7 @@ public sealed class TenantProvider : ITenantProvider
     public async Task SetTenant(string tenant)
     {
         await _protectedLocalStorage.SetAsync(LocalStorage.TENANTID, tenant);
-        foreach (var callback in callbacks.Values)
+        foreach (var callback in _callbacks.Values)
         {
             callback();
         }
@@ -43,16 +43,16 @@ public sealed class TenantProvider : ITenantProvider
     }
     public void Unregister(Guid id)
     {
-        if (callbacks.ContainsKey(id))
+        if (_callbacks.ContainsKey(id))
         {
-            callbacks.Remove(id);
+            _callbacks.Remove(id);
         }
     }
 
     public Guid Register(Action callback)
     {
         var id = Guid.NewGuid();
-        callbacks.Add(id, callback);
+        _callbacks.Add(id, callback);
         return id;
     }
 }

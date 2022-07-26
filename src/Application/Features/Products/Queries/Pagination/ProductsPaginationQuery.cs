@@ -18,7 +18,7 @@ public class ProductsWithPaginationQuery : PaginationFilter, IRequest<PaginatedD
     {
         return $"{base.ToString()},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{MinPrice},MaxPrice:{MaxPrice}";
     }
-    public string CacheKey => ProductCacheKey.GetPagtionCacheKey($"{this}");
+    public string CacheKey => ProductCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
 }
 

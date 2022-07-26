@@ -33,7 +33,7 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
             item = _mapper.Map(request, item);
             item.AddDomainEvent(new UpdatedEvent<Product>(item));
             await _context.SaveChangesAsync(cancellationToken);
-            return Result<int>.Success(item.Id);
+            return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {
@@ -41,7 +41,7 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
             item.AddDomainEvent(new CreatedEvent<Product>(item));
             _context.Products.Add(item);
             await _context.SaveChangesAsync(cancellationToken);
-            return Result<int>.Success(item.Id);
+            return await Result<int>.SuccessAsync(item.Id);
         }
 
     }

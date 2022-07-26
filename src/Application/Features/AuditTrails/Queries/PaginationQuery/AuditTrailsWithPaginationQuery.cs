@@ -3,7 +3,7 @@
 
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 
-namespace CleanArchitecture.Blazor.Application.AuditTrails.Queries.PaginationQuery;
+namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery;
 
 public class AuditTrailsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<AuditTrailDto>>
 {

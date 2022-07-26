@@ -46,7 +46,7 @@ public class DeleteProductCommandHandler :
             _context.Products.Remove(item);
         }
         await _context.SaveChangesAsync(cancellationToken);
-        return Result.Success();
+        return await Result.SuccessAsync();
     }
 
 
