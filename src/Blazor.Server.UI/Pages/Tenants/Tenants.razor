@@ -147,9 +147,9 @@
     [Inject]
     private ISender _mediator { get; set; } = default!;
     [CascadingParameter]
-    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    private Task<AuthenticationState> _authState { get; set; } = default!;
 
-    private TenantsWithPaginationQuery query { get; set; } = new();
+    private TenantsWithPaginationQuery _query { get; set; } = new();
 
     private bool _canSearch;
     private bool _canCreate;
@@ -159,7 +159,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L["Multi-Tenant"];
-        var state = await AuthState;
+        var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Edit)).Succeeded;
@@ -170,12 +170,12 @@
         try
         {
             _loading = true;
-            query.Keyword = _searchString;
-            query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
-            query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
-            query.PageNumber = state.Page + 1;
-            query.PageSize = state.PageSize;
-            var result = await _mediator.Send(query);
+            _query.Keyword = _searchString;
+            _query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
+            _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
+            _query.PageNumber = state.Page + 1;
+            _query.PageSize = state.PageSize;
+            var result = await _mediator.Send(_query);
             return new TableData<TenantDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally

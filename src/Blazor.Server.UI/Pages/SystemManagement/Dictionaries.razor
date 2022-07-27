@@ -21,7 +21,7 @@
     <ChildContent>
 
         <MudTable @ref="_table"
-                  Items="@KeyValueList"
+                  Items="@_keyValueList"
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
@@ -168,7 +168,7 @@
 @code {
     private MudTable<KeyValueDto> _table=default!;
     public string Title { get; set; } = "Picklist";
-    private IList<KeyValueDto> KeyValueList = new List<KeyValueDto>();
+    private IList<KeyValueDto> _keyValueList = new List<KeyValueDto>();
     private HashSet<KeyValueDto> _selectedItems = new HashSet<KeyValueDto>();
     private KeyValueDto _selectedItem { get; set; } = new();
     private KeyValueDto _elementBeforeEdit { get; set; } = new();
@@ -176,7 +176,7 @@
     private string _searchString = string.Empty;
     private bool _editing;
     [CascadingParameter]
-    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    private Task<AuthenticationState> _authState { get; set; } = default!;
     [Inject]
     private ISender _mediator { get; set; } = default!;
     private bool _canCreate;
@@ -189,7 +189,7 @@
     private bool _loading;
     protected override async Task OnInitializedAsync()
     {
-        var state = await AuthState;
+        var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Dictionaries.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Dictionaries.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Dictionaries.Edit)).Succeeded;
@@ -211,8 +211,8 @@
     private Task<IEnumerable<string>> searchName(string value)
     {
         if (string.IsNullOrEmpty(value))
-            return Task.FromResult(KeyValueList.Where(x=>!string.IsNullOrEmpty(x.Name)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
-        return Task.FromResult(KeyValueList.Where(x =>!string.IsNullOrEmpty(x.Name) && x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
+            return Task.FromResult(_keyValueList.Where(x=>!string.IsNullOrEmpty(x.Name)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
+        return Task.FromResult(_keyValueList.Where(x =>!string.IsNullOrEmpty(x.Name) && x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
     }
     private async Task LoadData()
     {
@@ -221,7 +221,7 @@
             _loading = true;
             _editing = false;
             var cmd = new GetAllKeyValuesQuery();
-            KeyValueList = (await _mediator.Send(cmd).ConfigureAwait(false)).ToList();
+            _keyValueList = (await _mediator.Send(cmd).ConfigureAwait(false)).ToList();
             _selectedItems=new HashSet<KeyValueDto>();
             _selectedItem = new();
         }
@@ -265,7 +265,7 @@
                 Description = _selectedItem?.Description,
                 TrackingState = TrackingState.Added
             };
-        KeyValueList.Insert(0, newitem);
+        _keyValueList.Insert(0, newitem);
         await Task.Delay(50);
         _table.SetSelectedItem(newitem);
         _table.SetEditingItem(newitem);
@@ -294,7 +294,7 @@
             if (((KeyValueDto)element).TrackingState == TrackingState.Added)
             {
                 _table.SetEditingItem(null);
-                KeyValueList.Remove((KeyValueDto)element);
+                _keyValueList.Remove((KeyValueDto)element);
             }
             else
             {
