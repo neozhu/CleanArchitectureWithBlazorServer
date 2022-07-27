@@ -15,7 +15,7 @@
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
        
-        <PackageReference Include="MudBlazor" Version="6.0.12" />
+        <PackageReference Include="MudBlazor" Version="6.0.13" />
         <PackageReference Include="MediatR" Version="10.0.1" />
         <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys" Version="12.1.1" />
