@@ -8,6 +8,7 @@ using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Serilog;
 using Serilog.Events;
 using Blazor.Server.UI;
+using Blazor.Server.UI.Services.Notifications;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,12 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while migrating or seeding the database.");
 
         throw;
+    }
+
+    var notificationService = scope.ServiceProvider.GetService<INotificationService>();
+    if (notificationService is InMemoryNotificationService inmemoryService)
+    {
+        inmemoryService.Preload();
     }
 }
 
