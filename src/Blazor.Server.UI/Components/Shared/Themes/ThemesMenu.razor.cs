@@ -25,6 +25,8 @@ public partial class ThemesMenu
     [EditorRequired] [Parameter] public EventCallback<bool> ThemingDrawerOpenChanged { get; set; }
     [EditorRequired] [Parameter] public UserPreferences UserPreferences { get; set; }=new();
     [EditorRequired] [Parameter] public EventCallback<UserPreferences> UserPreferencesChanged { get; set; }
+    
+    [Inject] private LayoutService LayoutService { get; set; } = default!;
 
     [Parameter]
     public double Radius { get; set; }

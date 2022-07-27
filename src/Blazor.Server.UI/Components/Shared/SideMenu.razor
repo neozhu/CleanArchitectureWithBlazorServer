@@ -55,7 +55,7 @@
             {
                 @if (SideMenuDrawerOpen)
                 {
-                    <div class="ml-6 my-3">
+                    <div class="@(LayoutService.IsRTL? "mr-6":"ml-6") my-3">
                         <MudText Typo="Typo.caption">
                             <b>
                                 @(L[section.Title])
@@ -136,16 +136,6 @@
     .mud-nav-link {
         white-space: normal !important;
     }
-
-        .mud-nav-link.active:not(.mud-nav-link-disabled) {
-            border-right: 3px solid var(--mud-palette-primary);
-            background-color: rgba(var(--mud-palette-primary-rgb), 0.1)
-        }
-
-    .side-menu {
-        border-right: 1px solid var(--mud-palette-table-lines)
-    }
-
     .user-button {
         text-transform: none;
         background: rgba(var(--mud-palette-primary-rgb), 0.1)
@@ -156,3 +146,30 @@
         height: 1.125rem;
     }
 </style>
+
+@if (LayoutService.IsRTL)
+{
+    <style>
+        .mud-nav-link.active:not(.mud-nav-link-disabled) {
+            border-left: 3px solid var(--mud-palette-primary);
+            background-color: rgba(var(--mud-palette-primary-rgb), 0.1);
+        }
+        .side-menu {
+            border-left: 1px solid var(--mud-palette-table-lines)
+        }  
+    </style>
+    
+}
+else
+{
+    <style>
+        .mud-nav-link.active:not(.mud-nav-link-disabled) {
+            border-right: 3px solid var(--mud-palette-primary);
+        }
+        
+        .side-menu {
+            border-right: 1px solid var(--mud-palette-table-lines)
+        }
+    </style>
+}
+
