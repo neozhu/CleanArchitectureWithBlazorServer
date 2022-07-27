@@ -1,6 +1,6 @@
 @inject IStringLocalizer<SharedResource> L
 
-<MudDrawer Anchor="Anchor.Right"
+<MudDrawer Anchor="LayoutService.IsRTL?Anchor.Left:Anchor.Right"
            @bind-Open="ThemingDrawerOpen"
            Elevation="1"
            Variant="@DrawerVariant.Temporary"
