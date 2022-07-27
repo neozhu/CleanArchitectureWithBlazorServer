@@ -172,9 +172,9 @@
     [Inject]
     private ISender _mediator { get; set; } = default!;
     [CascadingParameter]
-    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    private Task<AuthenticationState> _authState { get; set; } = default!;
     private string _tenantId = string.Empty;
-    private DocumentsWithPaginationQuery query { get; set; } = new(string.Empty);
+    private DocumentsWithPaginationQuery _query { get; set; } = new(string.Empty);
 
     private bool _canSearch;
     private bool _canCreate;
@@ -186,7 +186,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L["Documents"];
-        var state = await AuthState;
+        var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Edit)).Succeeded;
@@ -205,13 +205,13 @@
         try
         {
             _loading = true;
-            query.Keyword = _searchString;
-            query.TenantId = _tenantId;
-            query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
-            query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
-            query.PageNumber = state.Page + 1;
-            query.PageSize = state.PageSize;
-            var result = await _mediator.Send(query).ConfigureAwait(false);
+            _query.Keyword = _searchString;
+            _query.TenantId = _tenantId;
+            _query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
+            _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
+            _query.PageNumber = state.Page + 1;
+            _query.PageSize = state.PageSize;
+            var result = await _mediator.Send(_query).ConfigureAwait(false);
             return new TableData<DocumentDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally

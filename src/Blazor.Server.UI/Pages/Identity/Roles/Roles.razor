@@ -18,13 +18,13 @@
 <ErrorBoundary>
     <ChildContent>
 
-        <MudTable Items="@RoleList"
+        <MudTable Items="@_roleList"
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 265px)"
                   Hover="true"
                   MultiSelection="true"
-                  SelectedItems="@SelectItems"
+                  SelectedItems="@_selectItems"
                   SortLabel="@PromptText.ORDERBY"
                   Loading="@_loading"
                   Filter="new Func<ApplicationRole,bool>(_quickFilter)">
@@ -51,7 +51,7 @@
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
                                    StartIcon="@Icons.Material.Filled.Delete"
-                                   Disabled="@(!(SelectItems.Count>0))"
+                                   Disabled="@(!(_selectItems.Count>0))"
                                    OnClick="OnDeleteChecked"
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
@@ -165,13 +165,13 @@
 
 @code {
 
-    private string CurrentRoleName = string.Empty;
-    private List<ApplicationRole> RoleList = new List<ApplicationRole>();
-    private HashSet<ApplicationRole> SelectItems = new HashSet<ApplicationRole>();
+    private string _currentRoleName = string.Empty;
+    private List<ApplicationRole> _roleList = new();
+    private HashSet<ApplicationRole> _selectItems = new();
     private string _searchString = string.Empty;
     public string? Title { get; private set; }
     [CascadingParameter]
-    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    private Task<AuthenticationState> _authState { get; set; } = default!;
 
     private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
 
@@ -190,7 +190,7 @@
     {
         _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
         Title = L["Roles"];
-        var state = await AuthState;
+        var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Edit)).Succeeded;
@@ -224,7 +224,7 @@
             try
             {
                 _loading = true;
-               RoleList = await _roleManager.Roles.ToListAsync();
+               _roleList = await _roleManager.Roles.ToListAsync();
             }
             finally
             {
@@ -249,7 +249,7 @@
             var state = await _roleManager.CreateAsync(applicationRole);
             if (state.Succeeded)
             {
-                RoleList.Add(applicationRole);
+                _roleList.Add(applicationRole);
                 Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
             }
             else
@@ -288,7 +288,7 @@
     }
     private async Task OnSetPermissions(ApplicationRole item)
     {
-        CurrentRoleName = item.Name;
+        _currentRoleName = item.Name;
         _permissions = await GetAllPermissions(item);
         _showPermissionsDrawer = true;
 
@@ -392,17 +392,17 @@
         string deleteContent = PromptText.DELETECONFIRMATION;
         var parameters = new DialogParameters
         {
-            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, SelectItems.Count) }
+            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, _selectItems.Count) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(PromptText.DELETECONFIRMATIONTITLE, parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            foreach (var item in SelectItems)
+            foreach (var item in _selectItems)
             {
                 await _roleManager.DeleteAsync(item);
-                RoleList.Remove(item);
+                _roleList.Remove(item);
             }
         }
     }

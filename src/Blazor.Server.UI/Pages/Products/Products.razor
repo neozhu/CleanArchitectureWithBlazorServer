@@ -19,7 +19,7 @@
 </style>
 <ErrorBoundary>
     <ChildContent>
-        <AdvancedSearchProductsComponent TRequest="query" OnFilterChanged="OnFilterChanged"></AdvancedSearchProductsComponent>
+        <AdvancedSearchProductsComponent TRequest="_query" OnFilterChanged="OnFilterChanged"></AdvancedSearchProductsComponent>
         <MudTable ServerData="@(new Func<TableState, Task<TableData<ProductDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
@@ -209,11 +209,11 @@
     [Inject]
     private ISender _mediator { get; set; } = default!;
     [CascadingParameter]
-    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    private Task<AuthenticationState> _authState { get; set; } = default!;
 
-    private ProductsWithPaginationQuery query { get; set; } = new();
+    private ProductsWithPaginationQuery _query { get; set; } = new();
     [Inject]
-    IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
+    private IBlazorDownloadFileService _blazorDownloadFileService { get; set; } = null!;
     private bool _canSearch;
     private bool _canCreate;
     private bool _canEdit;
@@ -223,7 +223,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L["Products"];
-        var state = await AuthState;
+        var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Edit)).Succeeded;
@@ -236,12 +236,12 @@
         try
         {
             _loading = true;
-            query.Keyword = _searchString;
-            query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
-            query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
-            query.PageNumber = state.Page + 1;
-            query.PageSize = state.PageSize;
-            var result = await _mediator.Send(query).ConfigureAwait(false);
+            _query.Keyword = _searchString;
+            _query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
+            _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
+            _query.PageNumber = state.Page + 1;
+            _query.PageSize = state.PageSize;
+            var result = await _mediator.Send(_query).ConfigureAwait(false);
             return new TableData<ProductDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -368,7 +368,7 @@
                 SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
             };
         var result = await _mediator.Send(request);
-        var downloadresult = await BlazorDownloadFileService.DownloadFile($"{L["Products"]}.xlsx", result, contentType:"application/octet-stream");
+        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Products"]}.xlsx", result, contentType:"application/octet-stream");
         Snackbar.Add($"{ToastText.EXPORTSUCESS}", MudBlazor.Severity.Info);
         _downloading = false;
     }
