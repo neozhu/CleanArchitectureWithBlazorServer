@@ -29,6 +29,19 @@ builder.Services.AddInfrastructureServices(builder.Configuration)
 
 var app = builder.Build();
 
+
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+app.UseInfrastructure(builder.Configuration);
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -46,8 +59,8 @@ using (var scope = app.Services.CreateScope())
         var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
 
         await ApplicationDbContextSeed.SeedSampleDataAsync(context);
-        await ApplicationDbContextSeed.SeedDefaultUserAsync(context,userManager, roleManager);
-        
+        await ApplicationDbContextSeed.SeedDefaultUserAsync(context, userManager, roleManager);
+
     }
     catch (Exception ex)
     {
@@ -64,19 +77,6 @@ using (var scope = app.Services.CreateScope())
         inmemoryService.Preload();
     }
 }
-
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-app.UseInfrastructure(builder.Configuration);
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
-
 
 
 await app.RunAsync();
