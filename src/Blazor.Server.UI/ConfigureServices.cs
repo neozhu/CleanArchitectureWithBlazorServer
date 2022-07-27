@@ -54,7 +54,7 @@ public static class ConfigureServices
         services.AddBlazorDownloadFile();
         services.AddScoped<IUserPreferencesService, UserPreferencesService>();
         services.AddScoped<IMenuService, MenuService>();
-        services.AddTransient<INotificationService, InMemoryNotificationService>();
+        services.AddScoped<INotificationService, InMemoryNotificationService>();
         services.AddGoogleAnalytics("G-PRYNCB61NV");
 
         return services;
