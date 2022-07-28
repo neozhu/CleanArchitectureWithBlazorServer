@@ -1,0 +1,50 @@
+﻿@using CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEdit
+
+@inherits MudComponentBase
+@inject IStringLocalizer<Customers> L
+
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="@model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Customer Name"]" @bind-Value="model.Name"
+                                  For="@(() => model.Name)"
+                                  Required="true"
+                                  RequiredError="@L["Customer name is required!"]"
+                                  >
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Description"]"
+                                  Lines="3"
+                                  For="@(() => model.Description)"
+                                  @bind-Value="model.Description"></MudTextField>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@ButtonText.CANCEL</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">@ButtonText.OK</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    MudForm _form = default!;
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = default!;
+    AddEditCustomerCommandValidator _modelValidator = new ();
+    [EditorRequired] [Parameter] public AddEditCustomerCommand model { get; set; } = null!;
+
+    async Task Submit()
+    {
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+
+    }
+    void Cancel() => MudDialog.Cancel();
+}
