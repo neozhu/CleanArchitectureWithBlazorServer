@@ -23,9 +23,13 @@ This is a repository for creating a  Blazor Server application following the pri
     - cmd: dotnet user-secrets init 
     - cmd: dotnet user-secrets -p Blazor.Server.UI.csproj set "Kestrel:Certificates:Development:Password" "Password@123"
 
-## Code generation
+## Improved Code generator
 - CleanArchitectureCodeGenerator 
 - https://github.com/neozhu/CleanArchitectureCodeGenerator
+- Generate all the required code from the template
+- ![image](https://user-images.githubusercontent.com/1549611/181414766-84850a90-3a21-47ed-afcf-1b5cdd602edf.png)
+- ![image](https://user-images.githubusercontent.com/1549611/181414818-5c1c2dfc-5560-4ab2-8773-dc7c816730d4.png)
+
 ## Why develop with blazor server mode
 - Develop fast
 - Runing fast
