@@ -17,6 +17,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Respawn.Graph;
 
 [SetUpFixture]
 public class Testing
@@ -67,7 +68,7 @@ public class Testing
 
         _checkpoint = new Checkpoint
         {
-            TablesToIgnore = new[] { "__EFMigrationsHistory" }
+            TablesToIgnore = new Table[]{"__EFMigrationsHistory"}
         };
 
         EnsureDatabase();
