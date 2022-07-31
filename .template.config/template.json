@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "hualin.zhu",
+    "classifications": ["Web","ASP.NET","BLAZOR","Clean Architecture"],
+    "name": "Clean Architecture for Blazor Server Solution",
+    "defaultName": "Clean.Architecture.Blazor",
+    "identity": "Clean.Architecture.Blazor.Solution.CSharp",
+    "groupIdentity": "Clean.Architecture.Blazor.Solution",
+    "shortName": "ca-blazor-sln",
+    "tags": {
+      "language": "C#",
+      "type": "project"
+    },
+    "sourceName": "CleanArchitecture.Blazor",
+    "preferNameDirectory": true,
+    "description": "Clean Architecture for Blazor Server Solution"
+  }
