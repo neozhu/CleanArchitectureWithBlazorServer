@@ -32,6 +32,18 @@ This is a repository for creating a  Blazor Server application following the pri
     - UI Pages View
         - ![image](https://user-images.githubusercontent.com/1549611/181414818-5c1c2dfc-5560-4ab2-8773-dc7c816730d4.png)
 
+## How to build solution templates
+- run CLI: dotnet new --install sayedha.templates 
+- create solution/project template
+    - create .template.config folder 
+    - run CLI: dotnet new templatejson
+    - edit templatejson file
+- install the project template
+    - run CLI:  dotnet new --install ./
+    - run CLI:  dotnet new --list
+- create a solution with the template
+    - run CLI: dotnet new ca-blazor-sln
+
 ## Why develop with blazor server mode
 - Develop fast
 - Runing fast
