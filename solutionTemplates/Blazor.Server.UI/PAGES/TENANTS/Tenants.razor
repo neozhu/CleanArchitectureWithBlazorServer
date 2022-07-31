@@ -1,0 +1,285 @@
+@page "/system/tenants"
+
+
+@using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.Delete
+@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination
+@using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit
+
+@inject IJSRuntime JS
+@inject IStringLocalizer<Tenants> L
+@attribute [Authorize(Policy = Permissions.Tenants.View)]
+<PageTitle>@Title</PageTitle>
+<style>
+    .mud-table-toolbar {
+        height: 84px !important;
+    }
+</style>
+<ErrorBoundary>
+    <ChildContent>
+        <MudTable ServerData="@(new Func<TableState, Task<TableData<TenantDto>>>(ServerReload))"
+                  FixedHeader="true"
+                  FixedFooter="true"
+                  Height="calc(100vh - 265px)"
+                  Loading="@_loading"
+                  SortLabel="@PromptText.ORDERBY"
+                  MultiSelection="true" @bind-SelectedItems="_selectedItems"
+                  Hover="true" @ref="_table">
+            <ToolBarContent>
+                <div class="justify-start pt-3">
+                    <MudText Typo="Typo.h6">@L["Tenants"]</MudText>
+                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                        <MudButton DisableElevation Variant="Variant.Outlined"
+                                   Size="Size.Small"
+                                   Disabled="@_loading"
+                                   OnClick="@(()=>OnRefresh())"
+                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                                   Style="margin-right: 4px; margin-bottom:4px">@ButtonText.REFRESH</MudButton>
+                        @if (_canCreate)
+                        {
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Add"
+                                   Disabled="@_loading"
+                                   Size="Size.Small"
+                                   OnClick="OnCreate"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   IconColor="Color.Surface">@ButtonText.CREATE</MudButton>
+                        }
+                        @if (_canDelete)
+                        {
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                                   StartIcon="@Icons.Material.Filled.Delete"
+                                   Disabled="@(!(_selectedItems.Count>0))"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   OnClick="OnDeleteChecked"
+                                   IconColor="Color.Surface">@ButtonText.DELETE</MudButton>
+                        }
+            
+                    </MudHidden>
+                    <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+                        <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
+                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ButtonText.REFRESH</MudMenuItem>
+                            @if (_canCreate)
+                            {
+                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@ButtonText.CREATE</MudMenuItem>
+                            }
+                            @if (_canDelete)
+                            {
+                                <MudMenuItem OnClick="OnDeleteChecked">@ButtonText.DELETE</MudMenuItem>
+                            }
+                            
+                        </MudMenu>
+                    </MudHidden>
+                </div>
+                <MudSpacer />
+                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@PromptText.SEARCH" Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <ColGroup>
+                <col style="width:50px;" />
+                <col style="width:120px;" />
+                <col style="width:360px;" />
+            </ColGroup>
+            <HeaderContent>
+                <MudTh Style="width:80px">@ButtonText.ACTIONS</MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Id" T="TenantDto">@L["Tenant Id"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Name" T="TenantDto">@L["Tenant Name"]</MudTableSortLabel></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="@ButtonText.ACTIONS">
+                    @if (_canEdit || _canDelete)
+                    {
+                        <MudMenu Label="@ButtonText.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                             Dense="true"
+                             EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
+                             OffsetX="true">
+                            @if (_canEdit)
+                            {
+                                <MudMenuItem OnClick="@(()=>OnEdit(context))">@ButtonText.EDIT</MudMenuItem>
+                            }
+                            @if (_canDelete)
+                            {
+                                <MudMenuItem OnClick="@(()=>OnDelete(context))">@ButtonText.DELETE</MudMenuItem>
+                            }
+                        </MudMenu>
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" DisableElevation="true"
+                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                               Color="Color.Surface">
+                            @ButtonText.NOALLOWED
+                        </MudButton>
+                    }
+                </MudTd>
+                  <MudTd DataLabel="@L["Tenant Id"]">
+                    <MudText>@context.Id</MudText>
+                </MudTd>
+                <MudTd DataLabel="@L["Tenant Name"]">
+                    <MudText>@context.Name</MudText>
+                    <MudText Typo="Typo.body2">@context.Description</MudText>
+                </MudTd>
+              
+                
+            </RowTemplate>
+            <NoRecordsContent>
+                <MudText>@PromptText.NOMACHING</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>@PromptText.LOADING</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </ChildContent>
+    <ErrorContent>
+        <CustomError Exception="context"></CustomError>
+    </ErrorContent>
+</ErrorBoundary>
+@code {
+    public string? Title { get; private set; }
+    private HashSet<TenantDto> _selectedItems = new HashSet<TenantDto>();
+    private MudTable<TenantDto> _table = default!;
+    private string _searchString = string.Empty;
+    private bool _loading;
+    [Inject]
+    private ISender _mediator { get; set; } = default!;
+    [CascadingParameter]
+    private Task<AuthenticationState> _authState { get; set; } = default!;
+
+    private TenantsWithPaginationQuery _query { get; set; } = new();
+
+    private bool _canSearch;
+    private bool _canCreate;
+    private bool _canEdit;
+    private bool _canDelete;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L["Multi-Tenant"];
+        var state = await _authState;
+        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Create)).Succeeded;
+        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Search)).Succeeded;
+        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Edit)).Succeeded;
+        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Delete)).Succeeded;
+    }
+    private async Task<TableData<TenantDto>> ServerReload(TableState state)
+    {
+        try
+        {
+            _loading = true;
+            _query.Keyword = _searchString;
+            _query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
+            _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
+            _query.PageNumber = state.Page + 1;
+            _query.PageSize = state.PageSize;
+            var result = await _mediator.Send(_query);
+            return new TableData<TenantDto>() { TotalItems = result.TotalItems, Items = result.Items };
+        }
+        finally
+        {
+            _loading = false;
+        }
+
+    }
+
+    private async Task OnSearch(string text)
+    {
+        _selectedItems = new();
+        _searchString = text;
+        await _table.ReloadServerData();
+    }
+    private async Task OnRefresh()
+    {
+        _selectedItems = new();
+        _searchString = string.Empty;
+        await _table.ReloadServerData();
+    }
+    private async Task OnCreate()
+    {
+        var command = new AddEditTenantCommand();
+        var parameters = new DialogParameters
+            {
+        { nameof(_TenantFormDialog.model),command },
+            };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<_TenantFormDialog>
+        (L["Create a new Tenant"], parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
+        }
+    }
+    private async Task OnEdit(TenantDto dto)
+    {
+        var command = new AddEditTenantCommand()
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Description = dto.Description
+            };
+        var parameters = new DialogParameters
+                {
+            { nameof(_TenantFormDialog.model),command },
+                };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<_TenantFormDialog>
+        (L["Edit the Tenant"], parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"{ToastText.UPDATESUCCESS}", MudBlazor.Severity.Info);
+        }
+    }
+
+    private async Task OnDelete(TenantDto dto)
+    {
+        var deleteContent = PromptText.DELETECONFIRMATIONWITHID;
+        var parameters = new DialogParameters
+                    {
+                { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.Id) }
+                    };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<DeleteConfirmation>
+        (string.Format(PromptText.EDITTHEITEM,L["Tenant"]), parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var command = new DeleteTenantCommand(new string[] { dto.Id });
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"{ToastText.DELETESUCCESS}", MudBlazor.Severity.Info);
+        }
+    }
+
+    private async Task OnDeleteChecked()
+    {
+        var deleteContent = PromptText.DELETECONFIRMATION;
+        var parameters = new DialogParameters
+                        {
+                    { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,_selectedItems.Count) }
+                        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<DeleteConfirmation>
+        (string.Format(PromptText.EDITTHEITEM,L["Tenant"]), parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var command = new DeleteTenantCommand(_selectedItems.Select(x => x.Id).ToArray());
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"{ToastText.DELETESUCCESS}", MudBlazor.Severity.Info);
+            _selectedItems = new HashSet<TenantDto>
+            ();
+        }
+    }
+    
+
+    }

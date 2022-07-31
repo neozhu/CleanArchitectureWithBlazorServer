@@ -1,0 +1,32 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>CleanArchitecture.Blazor.Application.UnitTests</Name>
+    <Description>CleanArchitecture.Blazor.Application.UnitTests</Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>CleanArchitecture.Blazor.Application.UnitTests</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <CreateInPlace>true</CreateInPlace>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="Application.UnitTests.csproj" File="Application.UnitTests.csproj" ReplaceParameters="true">
+      <Folder Name="Common" TargetFolderName="Common">
+        <Folder Name="Behaviours" TargetFolderName="Behaviours">
+          <ProjectItem ReplaceParameters="true" TargetFileName="RequestLoggerTests.cs">RequestLoggerTests.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Exceptions" TargetFolderName="Exceptions">
+          <ProjectItem ReplaceParameters="true" TargetFileName="ValidationExceptionTests.cs">ValidationExceptionTests.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Mappings" TargetFolderName="Mappings">
+          <ProjectItem ReplaceParameters="true" TargetFileName="MappingTests.cs">MappingTests.cs</ProjectItem>
+        </Folder>
+      </Folder>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

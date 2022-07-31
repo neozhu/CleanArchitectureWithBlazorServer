@@ -1,0 +1,63 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>CleanArchitecture.Blazor.Domain</Name>
+    <Description>CleanArchitecture.Blazor.Domain</Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>CleanArchitecture.Blazor.Domain</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <CreateInPlace>true</CreateInPlace>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="Domain.csproj" File="Domain.csproj" ReplaceParameters="true">
+      <Folder Name="Common" TargetFolderName="Common">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AuditableEntity.cs">AuditableEntity.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="DomainEvent.cs">DomainEvent.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="IAuditTrial.cs">IAuditTrial.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="IMustHaveTenant.cs">IMustHaveTenant.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ValueObject.cs">ValueObject.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Entities" TargetFolderName="Entities">
+        <Folder Name="Audit" TargetFolderName="Audit">
+          <ProjectItem ReplaceParameters="true" TargetFileName="AuditTrail.cs">AuditTrail.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Logger" TargetFolderName="Logger">
+          <ProjectItem ReplaceParameters="true" TargetFileName="Logger.cs">Logger.cs</ProjectItem>
+        </Folder>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Customer.cs">Customer.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Document.cs">Document.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="KeyValue.cs">KeyValue.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Product.cs">Product.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Tenant.cs">Tenant.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Enums" TargetFolderName="Enums">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AuditType.cs">AuditType.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="DocumentType.cs">DocumentType.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="PartnerType.cs">PartnerType.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="TrackingState.cs">TrackingState.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="UploadType.cs">UploadType.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Events" TargetFolderName="Events">
+        <ProjectItem ReplaceParameters="true" TargetFileName="CreatedEvent.cs">CreatedEvent.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="CustomerCreatedEvent.cs">CustomerCreatedEvent.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="CustomerDeletedEvent.cs">CustomerDeletedEvent.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="CustomerUpdatedEvent.cs">CustomerUpdatedEvent.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="DeletedEvent.cs">DeletedEvent.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="UpdatedEvent.cs">UpdatedEvent.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Exceptions" TargetFolderName="Exceptions">
+        <ProjectItem ReplaceParameters="true" TargetFileName="UnsupportedColourException.cs">UnsupportedColourException.cs</ProjectItem>
+      </Folder>
+      <Folder Name="ValueObjects" TargetFolderName="ValueObjects">
+        <ProjectItem ReplaceParameters="true" TargetFileName="Colour.cs">Colour.cs</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="_Imports.cs">_Imports.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

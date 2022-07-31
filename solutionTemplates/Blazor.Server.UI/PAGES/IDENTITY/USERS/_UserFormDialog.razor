@@ -1,0 +1,29 @@
+@inherits MudComponentBase
+@inject IStringLocalizer<Users> L
+<MudDialog>
+    <DialogContent>
+        <_UserForm @ref="@_userForm" model="model" OnFormSubmit="OnFormSubmitHandler"></_UserForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@ButtonText.CANCEL</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">@ButtonText.OK</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private _UserForm _userForm=default!;
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter]
+    public UserFormModel model { get; set; } = default!;
+    protected async Task Submit() {
+        await  _userForm.Submit();
+    }
+    void Cancel() => MudDialog.Cancel();
+
+    protected  Task OnFormSubmitHandler(UserFormModel model)
+    {
+        MudDialog.Close(DialogResult.Ok(model));
+        return Task.CompletedTask;
+    }
+}

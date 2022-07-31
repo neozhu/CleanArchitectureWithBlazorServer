@@ -1,0 +1,157 @@
+@page "/system/audittrails"
+@using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs
+@using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery
+
+
+@attribute [Authorize(Policy = Permissions.AuditTrails.View)]
+@inject IStringLocalizer<AuditTrails> L
+<PageTitle>@L[Title]</PageTitle>
+<style>
+    .mud-table-toolbar {
+        height: 84px !important;
+    }
+</style>
+<ErrorBoundary>
+    <ChildContent>
+        <MudTable ServerData="@(new Func<TableState, Task<TableData<AuditTrailDto>>>(ServerReload))"
+                  FixedHeader="true"
+                  FixedFooter="true"
+                  Virtualize="true"
+                  RowsPerPage="25"
+                  Height="calc(100vh - 265px)"
+                  Loading="@_loading"
+                  SortLabel="@PromptText.ORDERBY"
+                  Hover="true" @ref="_table">
+            <ToolBarContent>
+                <div class="justify-start pt-3">
+                    <MudText Typo="Typo.h6">@L[Title]</MudText>
+                    <MudButton DisableElevation Variant="Variant.Outlined"
+                               Size="Size.Small"
+                               OnClick="@(()=>OnRefresh())"
+                               StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                               Style="margin-right: 5px;">@ButtonText.REFRESH</MudButton>
+                </div>
+                <MudSpacer />
+                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <ColGroup>
+                <col style="width:190px;" />
+            </ColGroup>
+            <HeaderContent>
+                <MudTh Style="width:190px">@ButtonText.ACTIONS</MudTh>
+                <MudTh><MudTableSortLabel SortLabel="UserId" T="AuditTrailDto">@L["User Id"]</MudTableSortLabel></MudTh>
+                <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="AuditType" T="AuditTrailDto">@L["Audit Type"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="TableName" T="AuditTrailDto">@L["Table Name"]</MudTableSortLabel></MudTh>
+                <MudTh>@L["Primary Key"]</MudTh>
+                <MudTh><MudTableSortLabel SortLabel="DateTime" T="AuditTrailDto">@L["Date Time"]</MudTableSortLabel></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="@ButtonText.ACTIONS">
+                    <MudButton Variant="Variant.Filled" DisableElevation="true"
+                               OnClick="@(() => OnShowDetail(context))"
+                               StartIcon="@(context.ShowDetails == true?Icons.Material.Filled.Close:Icons.Material.Filled.Add)" IconColor="Color.Secondary" Size="Size.Small"
+                               Color="Color.Surface">
+                        @L[((context.ShowDetails == true) ? "Hide" : "Show") + " Details"]
+                    </MudButton>
+                </MudTd>
+                <MudTd DataLabel="@L["User Id"]">
+                    @context.UserId
+                </MudTd>
+                <MudTd Style="text-align:center" DataLabel="@L["Audit Type"]">
+                    @context.AuditType
+                </MudTd>
+                <MudTd DataLabel="@L["Table Name"]">
+                    @context.TableName
+                </MudTd>
+                <MudTd DataLabel="@L["Primary Key"]">
+                    @context.PrimaryKey
+                </MudTd>
+                <MudTd DataLabel="@L["Date Time"]">
+                    @context.DateTime
+                </MudTd> 
+            </RowTemplate>
+            <ChildRowContent>
+                @if (context.ShowDetails)
+                {
+                    <MudTr>
+                        <td colspan="5">
+                            <MudCard Elevation="0">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <MudText Typo="Typo.body1"><strong>@context.TableName</strong></MudText>
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                <MudCardContent Class="pt-0">
+                                    <MudText>Old Values</MudText>
+                                    <MudText Typo="Typo.body2">@context.OldValues</MudText>
+                                   
+                                   <MudText>New Value</MudText>
+                                    <MudText Typo="Typo.body2">@context.NewValues</MudText>
+                                  
+                                </MudCardContent>
+                            </MudCard>
+                        </td>
+                    </MudTr>
+                }
+            </ChildRowContent>
+            <NoRecordsContent>
+                <MudText>@PromptText.NOMACHING</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>@PromptText.LOADING</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+    </ChildContent>
+    <ErrorContent>
+        <CustomError Exception="context" ></CustomError>
+    </ErrorContent>
+</ErrorBoundary>
+@code {
+    public string Title { get; private set; } = "Audit Trails";
+    private string _searchString = string.Empty;
+    private MudTable<AuditTrailDto> _table = default!;
+    private bool _loading;
+    [Inject]
+    private ISender _mediator { get; set; } = default!;
+
+    private async Task<TableData<AuditTrailDto>> ServerReload(TableState state)
+    {
+        try
+        {
+            _loading = true;
+            var request = new AuditTrailsWithPaginationQuery()
+                {
+                    Keyword = _searchString,
+                    OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
+                    SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
+                    PageNumber = state.Page + 1,
+                    PageSize = state.PageSize
+                };
+            var result = await _mediator.Send(request).ConfigureAwait(false);
+            return new TableData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
+        }
+        finally
+        {
+             _loading = false;
+        }
+    }
+    private async Task OnSearch(string text)
+    {
+        _searchString = text;
+        await _table.ReloadServerData();
+    }
+    private async Task OnRefresh()
+    {
+        _searchString = string.Empty;
+        await _table.ReloadServerData();
+    }
+    private Task OnShowDetail(AuditTrailDto dto)
+    {
+        dto.ShowDetails = !dto.ShowDetails;
+        return Task.CompletedTask;
+    }
+}

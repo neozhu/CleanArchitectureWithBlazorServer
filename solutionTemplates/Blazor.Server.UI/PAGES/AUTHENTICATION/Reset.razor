@@ -1,0 +1,42 @@
+@page "/pages/authentication/reset-password"
+@inject IStringLocalizer<Reset> L
+@attribute [AllowAnonymous]
+
+
+<AuthorizeView>
+    <NotAuthorized Context="Auth">
+        <MudText Typo="Typo.h4" GutterBottom="true">@L["Set new password"]</MudText>
+        <MudTextField @bind-Value="@Password" Label="@L["New password"]" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" Class="my-4" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="mt-2">@L["Set new password"]</MudButton>
+    </NotAuthorized>
+    <Authorized>
+        <RedirectToHome></RedirectToHome>
+        <MudAlert Severity="MudBlazor.Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    string Password { get; set; } = string.Empty;
+
+    bool PasswordVisibility;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void TogglePasswordVisibility()
+    {
+        @if (PasswordVisibility)
+        {
+            PasswordVisibility = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            PasswordVisibility = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+}

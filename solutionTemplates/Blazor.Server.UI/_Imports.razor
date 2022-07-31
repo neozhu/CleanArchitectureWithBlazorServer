@@ -1,0 +1,38 @@
+@using System.Net.Http
+@using System.Net.Http.Json
+@using CleanArchitecture.Blazor.Infrastructure.Configurations
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Identity
+@using Blazored.LocalStorage
+@using Microsoft.JSInterop
+@using Blazor.Server.UI
+@using Blazor.Server.UI.Shared
+@using MudBlazor
+@using MediatR
+@using Blazor.Server.UI.Components.Shared
+@using Blazor.Server.UI.Components.Shared.Themes
+@using Blazor.Server.UI.Models.Localization
+@using FluentValidation;
+@using CleanArchitecture.Blazor.Application.Constants;
+@using CleanArchitecture.Blazor.Infrastructure.Identity
+@using CleanArchitecture.Blazor.Application.Constants.Permission
+@using CleanArchitecture.Blazor.Application.Common.Interfaces
+@using CleanArchitecture.Blazor.Application.Common.Models
+@using CleanArchitecture.Blazor.Domain
+@using CleanArchitecture.Blazor.Infrastructure.Extensions
+@using Blazor.Server.UI.Components.Common
+@using Blazor.Server.UI.Components.Dialogs
+@using Blazor.Server.UI.Pages.Authentication
+@inject DashboardSettings Settings
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IConfiguration Config
+@inject IAuthorizationService AuthService 
+@attribute [Authorize]

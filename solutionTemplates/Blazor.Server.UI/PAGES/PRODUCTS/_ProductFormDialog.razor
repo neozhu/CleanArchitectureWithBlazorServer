@@ -1,0 +1,145 @@
+@using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
+@using SixLabors.ImageSharp
+@using SixLabors.ImageSharp.Formats
+@using SixLabors.ImageSharp.Processing
+@inherits MudComponentBase
+@inject IStringLocalizer<Products> L
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="@model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Product Name"]" @bind-Value="model.Name"
+                                  For="@(() => model.Name)"
+                                  Required="true"
+                                  RequiredError="@L["product name is required!"]"
+                                  >
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Description"]"
+                                  Lines="3"
+                                  For="@(() => model.Description)"
+                                  @bind-Value="model.Description"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <PicklistAutocomplete Picklist="Picklist.Brand"
+                                     Label="@L["Brand Name"]"
+                                     For="@(() => model.Brand)"
+                                     ResetValueOnEmptyText="true"
+                                     @bind-Value="model.Brand"></PicklistAutocomplete>
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <MudNumericField Label="@L["Price"]"
+                                     T="decimal"
+                                     Format="N2"
+                                     For="@(() => model.Price)"
+                                     Min="0.00m"
+                                     @bind-Value="model.Price"></MudNumericField>
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <PicklistAutocomplete Picklist="Picklist.Unit"
+                                     Label="@L["Unit"]"
+                                     For="@(() => model.Unit)"
+                                     ResetValueOnEmptyText="true"
+                                     @bind-Value="model.Unit"></PicklistAutocomplete>
+                </MudItem>
+                <MudItem>
+                    <div class="d-flex flex-row gap-4 mb-2">
+                    <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
+                    <MudText Typo="Typo.caption">@L["Product Pictures"]*</MudText>
+                    <MudFab HtmlTag="label" Size="MudBlazor.Size.Small" 
+                            Color="MudBlazor.Color.Info"
+                            Icon="@Icons.Filled.Image"
+                            Label="Upload picture"
+                            for="fileInput" />
+                    @if (fileinputInvalid)
+                    {
+                        <MudText  Color="MudBlazor.Color.Error" Typo="Typo.body2">@L["Please upload product pictures."]</MudText>
+                    }
+                    </div>
+                    <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
+                    <div class="d-fex">
+                        @if (model.Pictures is not null)
+                        {
+                            foreach (var img in model.Pictures)
+                            {
+                                <MudImage ObjectFit="ObjectFit.Cover"   Height="80" Width="160" Src="@img" Alt="@img" Elevation="25" Class="mr-2 rounded-lg" />
+                            }
+                        }
+                    </div>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@ButtonText.CANCEL</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">@ButtonText.OK</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private bool fileinputInvalid = false;
+    MudForm _form = default!;
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = default!;
+    [Inject] private IUploadService _uploadService { get; set; } = default!;
+    AddEditProductCommandValidator _modelValidator = new ();
+    [EditorRequired] [Parameter] public AddEditProductCommand model { get; set; } = default!;
+
+
+    private async Task UploadFiles(InputFileChangeEventArgs e)
+    {
+        var list = new List<string>();
+        foreach (var file in e.GetMultipleFiles())
+        {
+            var filestream = file.OpenReadStream();
+            var imgstream = new MemoryStream();
+            await filestream.CopyToAsync(imgstream);
+            imgstream.Position = 0;
+            using (var outStream = new MemoryStream())
+            {
+                using (var image = Image.Load(imgstream, out IImageFormat format))
+                {
+                    image.Mutate(
+                       i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(640, 320) }));
+                    image.Save(outStream, format);
+                    var filename = file.Name;
+                    var fi = new FileInfo(filename);
+                    var ext = fi.Extension;
+                    var result = await _uploadService.UploadAsync(new UploadRequest()
+                        {
+                            Data = outStream.ToArray(),
+                            FileName = Guid.NewGuid().ToString() + ext,
+                            Extension = ext,
+                            UploadType = UploadType.Product
+                        });
+                    list.Add(result);
+                }
+            }
+        }
+        Snackbar.Add(L["Upload pictures successfully"], MudBlazor.Severity.Info);
+        model.Pictures = list;
+        fileinputInvalid = false;
+    }
+    async Task Submit()
+    {
+        if (model.Pictures is null)
+        {
+            fileinputInvalid = true;
+        }
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            if (model.Pictures is null)
+            {
+                fileinputInvalid = true;
+                Snackbar.Add(L["Please choose to upload pictures of this product"], MudBlazor.Severity.Error);
+                return;
+            }
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+
+    }
+    void Cancel() => MudDialog.Cancel();
+}

@@ -1,0 +1,32 @@
+
+@inject IStringLocalizer<SharedResource> L
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <Authorizing>
+                    <text>Please wait, we are authorizing you...</text>
+                </Authorizing>
+                <NotAuthorized>
+                    @if (@context.User.Identity?.IsAuthenticated is true)
+                    {
+                        <p>@L["You are not authorized to be here. For more information, contact your system administrator."]</p>
+                    }
+                    else
+                    {
+                        <Login />
+                    }
+                </NotAuthorized>
+            </AuthorizeRouteView>
+
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex" >
+                    <p role="alert">@L["Sorry, there's nothing at this address."] <MudButton Variant="Variant.Filled" Size="Size.Small" Link="/">@L["Go Home"]</MudButton></p>
+                </MudContainer>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
