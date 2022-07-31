@@ -1,0 +1,533 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>Blazor.Server.UI</Name>
+    <Description>Blazor.Server.UI</Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>Blazor.Server.UI</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <CreateInPlace>true</CreateInPlace>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="Blazor.Server.UI.csproj" File="Blazor.Server.UI.csproj" ReplaceParameters="true">
+      <Folder Name="Properties" TargetFolderName="Properties">
+        <Folder Name="PublishProfiles" TargetFolderName="PublishProfiles">
+          <ProjectItem ReplaceParameters="false" TargetFileName="FolderProfile.pubxml">FolderProfile.pubxml</ProjectItem>
+        </Folder>
+        <ProjectItem ReplaceParameters="true" TargetFileName="launchSettings.json">launchSettings.json</ProjectItem>
+      </Folder>
+      <Folder Name="wwwroot" TargetFolderName="wwwroot">
+        <Folder Name="css" TargetFolderName="css">
+          <ProjectItem ReplaceParameters="true" TargetFileName="app.css">app.css</ProjectItem>
+        </Folder>
+        <Folder Name="js" TargetFolderName="js">
+          <Folder Name="gapi" TargetFolderName="gapi">
+            <ProjectItem ReplaceParameters="true" TargetFileName="auth2config.js">auth2config.js</ProjectItem>
+          </Folder>
+          <Folder Name="msal" TargetFolderName="msal">
+            <ProjectItem ReplaceParameters="true" TargetFileName="authConfig.js">authConfig.js</ProjectItem>
+          </Folder>
+        </Folder>
+        <Folder Name="sample-data" TargetFolderName="sample-data">
+          <ProjectItem ReplaceParameters="true" TargetFileName="articles.json">articles.json</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="avatar.png">avatar.png</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="notifications.json">notifications.json</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="weather.json">weather.json</ProjectItem>
+        </Folder>
+        <ProjectItem ReplaceParameters="false" TargetFileName="favicon.ico">favicon.ico</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="icon-192.png">icon-192.png</ProjectItem>
+      </Folder>
+      <Folder Name="Components" TargetFolderName="Components">
+        <Folder Name="Common" TargetFolderName="Common">
+          <ProjectItem ReplaceParameters="false" TargetFileName="CustomError.razor">CustomError.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="CustomValidation.cs">CustomValidation.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="ErrorHandler.razor">ErrorHandler.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="ErrorHandler.razor.cs">ErrorHandler.razor.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="PicklistAutocomplete.cs">PicklistAutocomplete.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="RedirectToHome.razor">RedirectToHome.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="RedirectToLogin.razor">RedirectToLogin.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="TablePager.razor">TablePager.razor</ProjectItem>
+        </Folder>
+        <Folder Name="Dialogs" TargetFolderName="Dialogs">
+          <ProjectItem ReplaceParameters="false" TargetFileName="DeleteConfirmation.razor">DeleteConfirmation.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="LogoutConfirmation.razor">LogoutConfirmation.razor</ProjectItem>
+        </Folder>
+        <Folder Name="Localization" TargetFolderName="Localization">
+          <ProjectItem ReplaceParameters="false" TargetFileName="LanguageSelector.razor">LanguageSelector.razor</ProjectItem>
+        </Folder>
+        <Folder Name="Shared" TargetFolderName="Shared">
+          <Folder Name="Themes" TargetFolderName="Themes">
+            <ProjectItem ReplaceParameters="false" TargetFileName="ThemesButton.razor">ThemesButton.razor</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="ThemesButton.razor.cs">ThemesButton.razor.cs</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="ThemesMenu.razor">ThemesMenu.razor</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="ThemesMenu.razor.cs">ThemesMenu.razor.cs</ProjectItem>
+          </Folder>
+          <ProjectItem ReplaceParameters="false" TargetFileName="CommandPalette.razor">CommandPalette.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="CommandPalette.razor.cs">CommandPalette.razor.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="NavMenu.razor">NavMenu.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="NavMenu.razor.cs">NavMenu.razor.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="NotificationMenu.razor">NotificationMenu.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="NotificationMenu.razor.cs">NotificationMenu.razor.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="SideMenu.razor">SideMenu.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="SideMenu.razor.cs">SideMenu.razor.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="UserMenu.razor">UserMenu.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="UserMenu.razor.cs">UserMenu.razor.cs</ProjectItem>
+        </Folder>
+      </Folder>
+      <Folder Name="Files" TargetFolderName="Files">
+        <Folder Name="Documents" TargetFolderName="Documents">
+          <ProjectItem ReplaceParameters="false" TargetFileName="1629444222814218.jpg">1629444222814218.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="iPad-Pro-Big-Ol-Logo-Orange.jpg">iPad-Pro-Big-Ol-Logo-Orange.jpg</ProjectItem>
+        </Folder>
+        <Folder Name="EmployeePictures" TargetFolderName="EmployeePictures">
+          <ProjectItem ReplaceParameters="false" TargetFileName="2c9f8c28-d24e-4127-9b92-15d227459718.jpg">2c9f8c28-d24e-4127-9b92-15d227459718.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="3d9d3bd6-a28a-4415-8a39-f6d44316434d.jpg">3d9d3bd6-a28a-4415-8a39-f6d44316434d.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="6a939caa-173c-46bf-8d53-68b9a713c19f.jpg">6a939caa-173c-46bf-8d53-68b9a713c19f.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="85db33f8-9cf4-49fa-89c6-13dbf2bb7e90.png">85db33f8-9cf4-49fa-89c6-13dbf2bb7e90.png</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="b0d29fe6-6490-432c-ba34-b29e213b1f11.jpg">b0d29fe6-6490-432c-ba34-b29e213b1f11.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="b16ebe83-ea53-4900-9667-e2d8e880ae4d.jpg">b16ebe83-ea53-4900-9667-e2d8e880ae4d.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="cd87fd25-28ee-4052-86b8-463afe5d2766.jpg">cd87fd25-28ee-4052-86b8-463afe5d2766.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="d1790706-5cef-4d5d-88f4-0b68d4b1202d.png">d1790706-5cef-4d5d-88f4-0b68d4b1202d.png</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="ec22aae2-f39d-4d85-befb-026b0060e985.jpg">ec22aae2-f39d-4d85-befb-026b0060e985.jpg</ProjectItem>
+        </Folder>
+        <Folder Name="Products" TargetFolderName="Products">
+          <ProjectItem ReplaceParameters="false" TargetFileName="031b11bf-d567-42f2-a0fa-fa5d601c7c22.jpg">031b11bf-d567-42f2-a0fa-fa5d601c7c22.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="0b2e3767-b6f6-45b8-bcb8-16cab911340d.jpg">0b2e3767-b6f6-45b8-bcb8-16cab911340d.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="13fb9eed-d8d9-4960-b6a0-fd959902064b.png">13fb9eed-d8d9-4960-b6a0-fd959902064b.png</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="228bafd4-13ec-474b-b792-d9d383650fc6.jpg">228bafd4-13ec-474b-b792-d9d383650fc6.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="2f27f165-0737-4720-aa0c-26e237cbe1d7.jpg">2f27f165-0737-4720-aa0c-26e237cbe1d7.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="31c81eab-a5a4-4ebb-a9e8-d42e08568496.png">31c81eab-a5a4-4ebb-a9e8-d42e08568496.png</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="6a261330-bdff-4e13-8196-ecc5dbd200b4.jpg">6a261330-bdff-4e13-8196-ecc5dbd200b4.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="9b43427c-42d5-4093-8381-3c19c68d01ed.jpg">9b43427c-42d5-4093-8381-3c19c68d01ed.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="ae122e22-f1d6-409e-b946-9cc4fb990678.jpg">ae122e22-f1d6-409e-b946-9cc4fb990678.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="c7d30445-be4d-4c0b-a8b5-73c9e6811657.jpg">c7d30445-be4d-4c0b-a8b5-73c9e6811657.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="c9e4c677-8ec4-409b-9ac2-e570aa43c31e.jpg">c9e4c677-8ec4-409b-9ac2-e570aa43c31e.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="db871554-cc1f-47fb-9aad-eaaad26d2d22.jpg">db871554-cc1f-47fb-9aad-eaaad26d2d22.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="e548438d-7c03-496a-947c-5628a31cdb5a.jpg">e548438d-7c03-496a-947c-5628a31cdb5a.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="e5b5d20d-3c21-4ddc-a80d-7afc9ba6de86.png">e5b5d20d-3c21-4ddc-a80d-7afc9ba6de86.png</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="ed0efa90-57a6-4707-92bb-5d711fb6b108.jpg">ed0efa90-57a6-4707-92bb-5d711fb6b108.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="fe6be9f3-2250-47df-9ed4-7c6513a6306f.jpg">fe6be9f3-2250-47df-9ed4-7c6513a6306f.jpg</ProjectItem>
+        </Folder>
+        <Folder Name="ProfilePictures" TargetFolderName="ProfilePictures">
+          <ProjectItem ReplaceParameters="false" TargetFileName="32c53972-050d-4ecb-a609-48fda96fe08e.jpg">32c53972-050d-4ecb-a609-48fda96fe08e.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="37672389-7528-4197-9df8-82f8fbd845ff.jpg">37672389-7528-4197-9df8-82f8fbd845ff.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="3804e71d-b734-48bd-a173-3fea9509f910.jpg">3804e71d-b734-48bd-a173-3fea9509f910.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="38b29288-b0fa-4825-b601-248fd0a97fbc.jpg">38b29288-b0fa-4825-b601-248fd0a97fbc.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="5a9e298f-6b47-40ea-ad63-569ff057dcd6.jpg">5a9e298f-6b47-40ea-ad63-569ff057dcd6.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="6d78725f-ddab-4ee2-93e5-ac165ca0a7fa.png">6d78725f-ddab-4ee2-93e5-ac165ca0a7fa.png</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="77203765-01c2-4662-b2b1-135681b26a48.jpg">77203765-01c2-4662-b2b1-135681b26a48.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="7df72869-9c3b-4434-9c0c-a58f68dabe89.jpg">7df72869-9c3b-4434-9c0c-a58f68dabe89.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="86b88e65-fbf8-4f91-92f3-4e959b9499be.jpg">86b88e65-fbf8-4f91-92f3-4e959b9499be.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="a8989a9e-46ad-44f5-b7ba-ea385503a3b2.png">a8989a9e-46ad-44f5-b7ba-ea385503a3b2.png</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="c0dff4f3-3f43-4254-b62e-8b67992c1b07.png">c0dff4f3-3f43-4254-b62e-8b67992c1b07.png</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="c734384f-51f3-453d-a84b-54feb5e83e26.jpg">c734384f-51f3-453d-a84b-54feb5e83e26.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="c7581152-a1fe-459c-bdf9-8dc9240869ca.jpg">c7581152-a1fe-459c-bdf9-8dc9240869ca.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="cd103c0d-f101-4803-bcca-2cf1ea9f3705.jpg">cd103c0d-f101-4803-bcca-2cf1ea9f3705.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="cdb04621-bd91-4ab8-9505-45d62580046e.jpg">cdb04621-bd91-4ab8-9505-45d62580046e.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="d3147510-1745-4840-ad9d-a18d93d9ee15.jpg">d3147510-1745-4840-ad9d-a18d93d9ee15.jpg</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="d98808ea-fd28-4df4-b0c1-ffc7703a5ada.png">d98808ea-fd28-4df4-b0c1-ffc7703a5ada.png</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="de79b3a4-a5e3-4419-8ba2-69f972326402.png">de79b3a4-a5e3-4419-8ba2-69f972326402.png</ProjectItem>
+        </Folder>
+        <Folder Name="VisitorPrictures" TargetFolderName="VisitorPrictures">
+          <Folder Name="1obgqEnpKQLO" TargetFolderName="1obgqEnpKQLO">
+            <ProjectItem ReplaceParameters="false" TargetFileName="cc50cc2b-580e-43e5-9146-3345ddbf957a.png">cc50cc2b-580e-43e5-9146-3345ddbf957a.png</ProjectItem>
+          </Folder>
+          <Folder Name="7ojEWppr8jD5" TargetFolderName="7ojEWppr8jD5">
+            <ProjectItem ReplaceParameters="false" TargetFileName="A_8d1551be-7a99-4b99-bd91-d3e7588a8db6.jpg">A_8d1551be-7a99-4b99-bd91-d3e7588a8db6.jpg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_5f504304-5fdc-4963-a78a-31632adcb1f0.png">Q_5f504304-5fdc-4963-a78a-31632adcb1f0.png</ProjectItem>
+          </Folder>
+          <Folder Name="9oM1zMJYbjg8" TargetFolderName="9oM1zMJYbjg8">
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_47be4000-6d33-4a57-abec-dcb8ccbb8856.png">Q_47be4000-6d33-4a57-abec-dcb8ccbb8856.png</ProjectItem>
+          </Folder>
+          <Folder Name="AoypwL5m0a8B" TargetFolderName="AoypwL5m0a8B">
+            <ProjectItem ReplaceParameters="false" TargetFileName="6200f13d-82bd-4009-80f4-2a0fcd859be5.png">6200f13d-82bd-4009-80f4-2a0fcd859be5.png</ProjectItem>
+          </Folder>
+          <Folder Name="dAEQYzxDGp8v" TargetFolderName="dAEQYzxDGp8v">
+            <ProjectItem ReplaceParameters="false" TargetFileName="102b7fcf-fc28-4d26-8af1-2df8fb9d8433.png">102b7fcf-fc28-4d26-8af1-2df8fb9d8433.png</ProjectItem>
+          </Folder>
+          <Folder Name="erp0jJaYLYj5" TargetFolderName="erp0jJaYLYj5">
+            <ProjectItem ReplaceParameters="false" TargetFileName="5a9acb44-e4ad-487a-bcc1-41fba396f900.png">5a9acb44-e4ad-487a-bcc1-41fba396f900.png</ProjectItem>
+          </Folder>
+          <Folder Name="erp0jLa6G06O" TargetFolderName="erp0jLa6G06O">
+            <ProjectItem ReplaceParameters="false" TargetFileName="c001b3ac-056c-4e78-a46a-ff5e40f7964d.png">c001b3ac-056c-4e78-a46a-ff5e40f7964d.png</ProjectItem>
+          </Folder>
+          <Folder Name="erp0jwxD4xmo" TargetFolderName="erp0jwxD4xmo">
+            <ProjectItem ReplaceParameters="false" TargetFileName="A_10b5019d-7244-40c4-8424-6f5845234e0e.jpg">A_10b5019d-7244-40c4-8424-6f5845234e0e.jpg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="H_01e3dd0a-b63f-4c14-8487-66f36b0d3816.png">H_01e3dd0a-b63f-4c14-8487-66f36b0d3816.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_49377dbb-c9b4-4c00-932c-c0536f6f5769.png">Q_49377dbb-c9b4-4c00-932c-c0536f6f5769.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="T_020873d7-331c-455b-a334-d2399184e1a1.jpg">T_020873d7-331c-455b-a334-d2399184e1a1.jpg</ProjectItem>
+          </Folder>
+          <Folder Name="GbGY1M1WWwPl" TargetFolderName="GbGY1M1WWwPl">
+            <ProjectItem ReplaceParameters="false" TargetFileName="d5f046da-ef98-44fd-969b-64944e0ee5e2.png">d5f046da-ef98-44fd-969b-64944e0ee5e2.png</ProjectItem>
+          </Folder>
+          <Folder Name="geG1BGKL7qW3" TargetFolderName="geG1BGKL7qW3">
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_619c7351-df0b-4e73-badb-48eb4b4ceaf4.png">Q_619c7351-df0b-4e73-badb-48eb4b4ceaf4.png</ProjectItem>
+          </Folder>
+          <Folder Name="geG1BL6Jvkm1" TargetFolderName="geG1BL6Jvkm1">
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_d993e6ef-a72b-4cf6-92d1-c656d076f4d8.png">Q_d993e6ef-a72b-4cf6-92d1-c656d076f4d8.png</ProjectItem>
+          </Folder>
+          <Folder Name="geG1BXJp0WxK" TargetFolderName="geG1BXJp0WxK">
+            <ProjectItem ReplaceParameters="false" TargetFileName="8929673d-8d86-48b0-a5be-2cd06d09fc37.png">8929673d-8d86-48b0-a5be-2cd06d09fc37.png</ProjectItem>
+          </Folder>
+          <Folder Name="JwGkvbqjoqLp" TargetFolderName="JwGkvbqjoqLp">
+            <ProjectItem ReplaceParameters="false" TargetFileName="1093c6f0-09c8-47b7-a865-7c9008708683.png">1093c6f0-09c8-47b7-a865-7c9008708683.png</ProjectItem>
+          </Folder>
+          <Folder Name="JwGkvLLM4XE6" TargetFolderName="JwGkvLLM4XE6">
+            <ProjectItem ReplaceParameters="false" TargetFileName="7a10d740-79d1-4346-a4ee-041834dbb477.png">7a10d740-79d1-4346-a4ee-041834dbb477.png</ProjectItem>
+          </Folder>
+          <Folder Name="LJGwrlOX4oMv" TargetFolderName="LJGwrlOX4oMv">
+            <ProjectItem ReplaceParameters="false" TargetFileName="A_a4d4f8ce-f840-4ddb-9c3c-6b0d9c805b43.jpg">A_a4d4f8ce-f840-4ddb-9c3c-6b0d9c805b43.jpg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="H_d0d4b7f0-df25-4dd0-b538-1b5162cc10a0.png">H_d0d4b7f0-df25-4dd0-b538-1b5162cc10a0.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_0e6b43da-8a4b-4bc8-9e78-cfcb3887d520.png">Q_0e6b43da-8a4b-4bc8-9e78-cfcb3887d520.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="R_c1eac45e-98bc-4d94-b996-730fe442f051.jpeg">R_c1eac45e-98bc-4d94-b996-730fe442f051.jpeg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="T_3cca94d3-efb0-4e34-84bb-fc47844cf60f.jpg">T_3cca94d3-efb0-4e34-84bb-fc47844cf60f.jpg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="T_e66141e6-6522-4a42-8579-3d90ffb06fb4.jpg">T_e66141e6-6522-4a42-8579-3d90ffb06fb4.jpg</ProjectItem>
+          </Folder>
+          <Folder Name="moGq7B0rkn8a" TargetFolderName="moGq7B0rkn8a">
+            <ProjectItem ReplaceParameters="false" TargetFileName="6e3bad26-009b-4d7c-b2fe-13e78714eb32.png">6e3bad26-009b-4d7c-b2fe-13e78714eb32.png</ProjectItem>
+          </Folder>
+          <Folder Name="n9GDoBKwWwBk" TargetFolderName="n9GDoBKwWwBk">
+            <ProjectItem ReplaceParameters="false" TargetFileName="f6fe6bc8-23b2-48e4-87d8-eb0916f4e2a6.png">f6fe6bc8-23b2-48e4-87d8-eb0916f4e2a6.png</ProjectItem>
+          </Folder>
+          <Folder Name="OMGjvk8GL5nO" TargetFolderName="OMGjvk8GL5nO">
+            <ProjectItem ReplaceParameters="false" TargetFileName="A_24fa21df-cf5a-4990-b4bf-733c5cd16cb6.png">A_24fa21df-cf5a-4990-b4bf-733c5cd16cb6.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="H_4f171aec-10e6-4956-b5e0-43513c202c0c.png">H_4f171aec-10e6-4956-b5e0-43513c202c0c.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_70494e85-da96-4685-8514-c2fcc989e318.png">Q_70494e85-da96-4685-8514-c2fcc989e318.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="R_cce317be-02b0-4d38-be05-99f984bfc862.png">R_cce317be-02b0-4d38-be05-99f984bfc862.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="T_8dbcd588-5f6e-425c-bf81-cdfdec709bf0.jpg">T_8dbcd588-5f6e-425c-bf81-cdfdec709bf0.jpg</ProjectItem>
+          </Folder>
+          <Folder Name="P3GBv65Q9bM9" TargetFolderName="P3GBv65Q9bM9">
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_ec9676f2-51de-41c6-80f8-3483fb044982.png">Q_ec9676f2-51de-41c6-80f8-3483fb044982.png</ProjectItem>
+          </Folder>
+          <Folder Name="qAGbMlnn09Bb" TargetFolderName="qAGbMlnn09Bb">
+            <ProjectItem ReplaceParameters="false" TargetFileName="A_75b7ae35-645e-46c0-94b9-ae0df5242437.jpg">A_75b7ae35-645e-46c0-94b9-ae0df5242437.jpg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="H_916ec90e-ff78-4bae-b9cd-c2ddb80f8122.jpg">H_916ec90e-ff78-4bae-b9cd-c2ddb80f8122.jpg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_22b4a435-ebf2-4882-bcf1-25d5136305e3.png">Q_22b4a435-ebf2-4882-bcf1-25d5136305e3.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="R_6d8ad6ce-8f6f-46a8-a65e-a0ca4150a213.jpeg">R_6d8ad6ce-8f6f-46a8-a65e-a0ca4150a213.jpeg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="T_58c22f69-3a9e-49b5-b769-c9c43a44cb4a.png">T_58c22f69-3a9e-49b5-b769-c9c43a44cb4a.png</ProjectItem>
+          </Folder>
+          <Folder Name="rlGk6a71W5eK" TargetFolderName="rlGk6a71W5eK">
+            <ProjectItem ReplaceParameters="false" TargetFileName="A_a412fe26-7985-4d6e-a20c-d2c37cf31fe1.jpg">A_a412fe26-7985-4d6e-a20c-d2c37cf31fe1.jpg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="H_d0941718-5ecf-4a20-8fcc-30ea73f558e1.jpg">H_d0941718-5ecf-4a20-8fcc-30ea73f558e1.jpg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_03242c17-2e20-4a7f-be47-768e222ecbf5.png">Q_03242c17-2e20-4a7f-be47-768e222ecbf5.png</ProjectItem>
+          </Folder>
+          <Folder Name="XXEKDaal1Jo8" TargetFolderName="XXEKDaal1Jo8">
+            <ProjectItem ReplaceParameters="false" TargetFileName="H_8d6fdd08-8ad5-43f8-9b5b-ab03bd690d13.png">H_8d6fdd08-8ad5-43f8-9b5b-ab03bd690d13.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="R_717ab9f5-f07c-4680-802d-8f9587216c51.jpeg">R_717ab9f5-f07c-4680-802d-8f9587216c51.jpeg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="T_f22892b3-7b14-42cd-91f0-d21292feb200.jpg">T_f22892b3-7b14-42cd-91f0-d21292feb200.jpg</ProjectItem>
+          </Folder>
+          <Folder Name="yAqMBl1orPGq" TargetFolderName="yAqMBl1orPGq">
+            <ProjectItem ReplaceParameters="false" TargetFileName="88781ab8-3c50-479c-9dc8-732a24b28f02.png">88781ab8-3c50-479c-9dc8-732a24b28f02.png</ProjectItem>
+          </Folder>
+          <Folder Name="yAqMBQld0gG9" TargetFolderName="yAqMBQld0gG9">
+            <ProjectItem ReplaceParameters="false" TargetFileName="9626a75a-37c7-4e73-99cb-d6fa70a398f2.png">9626a75a-37c7-4e73-99cb-d6fa70a398f2.png</ProjectItem>
+          </Folder>
+          <Folder Name="YOEgvpKAZ9ZQ" TargetFolderName="YOEgvpKAZ9ZQ">
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_bf315af5-6de2-4172-80c9-5f2989f7c0d8.png">Q_bf315af5-6de2-4172-80c9-5f2989f7c0d8.png</ProjectItem>
+          </Folder>
+          <Folder Name="YOEgvZpvJ8me" TargetFolderName="YOEgvZpvJ8me">
+            <ProjectItem ReplaceParameters="false" TargetFileName="A_78b3a9ed-edbc-4dc8-a57e-a9612b325ba0.jpg">A_78b3a9ed-edbc-4dc8-a57e-a9612b325ba0.jpg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="H_347ebe12-6a28-43a0-adfb-5885445d5043.png">H_347ebe12-6a28-43a0-adfb-5885445d5043.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="Q_ea3abbfe-1aed-4585-9505-8ceeaa2caa9b.png">Q_ea3abbfe-1aed-4585-9505-8ceeaa2caa9b.png</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="R_063fb83e-729d-4ef4-ab47-3f746a0c89f4.jpg">R_063fb83e-729d-4ef4-ab47-3f746a0c89f4.jpg</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="T_a0617a52-f9af-4dbd-8218-01156188f98b.jpg">T_a0617a52-f9af-4dbd-8218-01156188f98b.jpg</ProjectItem>
+          </Folder>
+          <Folder Name="zoD3wl8ajwje" TargetFolderName="zoD3wl8ajwje">
+            <ProjectItem ReplaceParameters="false" TargetFileName="ff29993d-8ab5-457c-a610-cbc44b7c3472.png">ff29993d-8ab5-457c-a610-cbc44b7c3472.png</ProjectItem>
+          </Folder>
+        </Folder>
+      </Folder>
+      <Folder Name="logs" TargetFolderName="logs">
+        <ProjectItem ReplaceParameters="true" TargetFileName="log-20220615.txt">log-20220615.txt</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="log-20220710.txt">log-20220710.txt</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="log-20220714.txt">log-20220714.txt</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="log-20220721.txt">log-20220721.txt</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="log-20220724.txt">log-20220724.txt</ProjectItem>
+      </Folder>
+      <Folder Name="Models" TargetFolderName="Models">
+        <Folder Name="Localization" TargetFolderName="Localization">
+          <ProjectItem ReplaceParameters="true" TargetFileName="LanguageCode.cs">LanguageCode.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Notification" TargetFolderName="Notification">
+          <ProjectItem ReplaceParameters="true" TargetFileName="NotificationModel.cs">NotificationModel.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="NotificationTypes.cs">NotificationTypes.cs</ProjectItem>
+        </Folder>
+        <Folder Name="SideMenu" TargetFolderName="SideMenu">
+          <ProjectItem ReplaceParameters="true" TargetFileName="MenuSectionItemModel.cs">MenuSectionItemModel.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="MenuSectionModel.cs">MenuSectionModel.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="MenuSectionSubItemModel.cs">MenuSectionSubItemModel.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="PageStatus.cs">PageStatus.cs</ProjectItem>
+        </Folder>
+      </Folder>
+      <Folder Name="Pages" TargetFolderName="Pages">
+        <Folder Name="Authentication" TargetFolderName="Authentication">
+          <ProjectItem ReplaceParameters="false" TargetFileName="Forgot.razor">Forgot.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="Login.razor">Login.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="Register.razor">Register.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="Reset.razor">Reset.razor</ProjectItem>
+        </Folder>
+        <Folder Name="Customers" TargetFolderName="Customers">
+          <Folder Name="Components" TargetFolderName="Components">
+            <ProjectItem ReplaceParameters="false" TargetFileName="CustomersAdvancedSearchComponent.razor">CustomersAdvancedSearchComponent.razor</ProjectItem>
+          </Folder>
+          <ProjectItem ReplaceParameters="false" TargetFileName="_CustomerFormDialog.razor">_CustomerFormDialog.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="Customers.razor">Customers.razor</ProjectItem>
+        </Folder>
+        <Folder Name="Documents" TargetFolderName="Documents">
+          <ProjectItem ReplaceParameters="false" TargetFileName="_DocumentFormDialog.razor">_DocumentFormDialog.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="Documents.razor">Documents.razor</ProjectItem>
+        </Folder>
+        <Folder Name="Identity" TargetFolderName="Identity">
+          <Folder Name="Roles" TargetFolderName="Roles">
+            <ProjectItem ReplaceParameters="false" TargetFileName="_PermissionsDrawer.razor">_PermissionsDrawer.razor</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="_RoleFormDialog.razor">_RoleFormDialog.razor</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="PermissionsModel.cs">PermissionsModel.cs</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="RoleFormModel.cs">RoleFormModel.cs</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="Roles.razor">Roles.razor</ProjectItem>
+          </Folder>
+          <Folder Name="Users" TargetFolderName="Users">
+            <ProjectItem ReplaceParameters="false" TargetFileName="_ResetPasswordDialog.razor">_ResetPasswordDialog.razor</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="_UserForm.razor">_UserForm.razor</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="_UserFormDialog.razor">_UserFormDialog.razor</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="ChangePasswordModel.cs">ChangePasswordModel.cs</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="Profile.razor">Profile.razor</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="ResetPasswordFormModel.cs">ResetPasswordFormModel.cs</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="UserFormModel.cs">UserFormModel.cs</ProjectItem>
+            <ProjectItem ReplaceParameters="false" TargetFileName="Users.razor">Users.razor</ProjectItem>
+          </Folder>
+        </Folder>
+        <Folder Name="Products" TargetFolderName="Products">
+          <ProjectItem ReplaceParameters="false" TargetFileName="_ProductFormDialog.razor">_ProductFormDialog.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="AdvancedSearchProductsComponent.razor">AdvancedSearchProductsComponent.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="Products.razor">Products.razor</ProjectItem>
+        </Folder>
+        <Folder Name="SystemManagement" TargetFolderName="SystemManagement">
+          <ProjectItem ReplaceParameters="false" TargetFileName="AuditTrails.razor">AuditTrails.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="Dictionaries.razor">Dictionaries.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="Logs.razor">Logs.razor</ProjectItem>
+        </Folder>
+        <Folder Name="Tenants" TargetFolderName="Tenants">
+          <ProjectItem ReplaceParameters="false" TargetFileName="_TenantFormDialog.razor">_TenantFormDialog.razor</ProjectItem>
+          <ProjectItem ReplaceParameters="false" TargetFileName="Tenants.razor">Tenants.razor</ProjectItem>
+        </Folder>
+        <ProjectItem ReplaceParameters="true" TargetFileName="_Host.cshtml">_Host.cshtml</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="_Layout.cshtml">_Layout.cshtml</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="Index.razor">Index.razor</ProjectItem>
+      </Folder>
+      <Folder Name="Resources" TargetFolderName="Resources">
+        <Folder Name="Components" TargetFolderName="Components">
+          <Folder Name="Localization" TargetFolderName="Localization">
+            <ProjectItem ReplaceParameters="true" TargetFileName="LanguageSelector.de-DE.resx">LanguageSelector.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="LanguageSelector.en.resx">LanguageSelector.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="LanguageSelector.es-ES.resx">LanguageSelector.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="LanguageSelector.fr-FR.resx">LanguageSelector.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="LanguageSelector.ja-JP.resx">LanguageSelector.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="LanguageSelector.km-KH.resx">LanguageSelector.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="LanguageSelector.resx">LanguageSelector.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="LanguageSelector.ru.resx">LanguageSelector.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="LanguageSelector.zh-CN.resx">LanguageSelector.zh-CN.resx</ProjectItem>
+          </Folder>
+          <Folder Name="Shared" TargetFolderName="Shared">
+            <ProjectItem ReplaceParameters="true" TargetFileName="SideMenu.de-DE.resx">SideMenu.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="SideMenu.en.resx">SideMenu.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="SideMenu.es-ES.resx">SideMenu.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="SideMenu.fr-FR.resx">SideMenu.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="SideMenu.ja-JP.resx">SideMenu.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="SideMenu.km-KH.resx">SideMenu.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="SideMenu.resx">SideMenu.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="SideMenu.ru.resx">SideMenu.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="SideMenu.zh-CN.resx">SideMenu.zh-CN.resx</ProjectItem>
+          </Folder>
+        </Folder>
+        <Folder Name="Pages" TargetFolderName="Pages">
+          <Folder Name="Authentication" TargetFolderName="Authentication">
+            <ProjectItem ReplaceParameters="true" TargetFileName="Forgot.de-DE.resx">Forgot.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Forgot.en.resx">Forgot.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Forgot.es-ES.resx">Forgot.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Forgot.fr-FR.resx">Forgot.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Forgot.ja-JP.resx">Forgot.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Forgot.km-KH.resx">Forgot.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Forgot.resx">Forgot.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Forgot.ru.resx">Forgot.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Forgot.zh-CN.resx">Forgot.zh-CN.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Login.de-DE.resx">Login.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Login.en.resx">Login.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Login.es-ES.resx">Login.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Login.fr-FR.resx">Login.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Login.ja-JP.resx">Login.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Login.km-KH.resx">Login.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Login.resx">Login.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Login.ru.resx">Login.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Login.zh-CN.resx">Login.zh-CN.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Register.de-DE.resx">Register.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Register.en.resx">Register.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Register.es-ES.resx">Register.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Register.fr-FR.resx">Register.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Register.ja-JP.resx">Register.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Register.km-KH.resx">Register.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Register.resx">Register.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Register.ru.resx">Register.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Register.zh-CN.resx">Register.zh-CN.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Reset.de-DE.resx">Reset.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Reset.en.resx">Reset.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Reset.es-ES.resx">Reset.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Reset.fr-FR.resx">Reset.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Reset.ja-JP.resx">Reset.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Reset.km-KH.resx">Reset.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Reset.resx">Reset.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Reset.ru.resx">Reset.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Reset.zh-CN.resx">Reset.zh-CN.resx</ProjectItem>
+          </Folder>
+          <Folder Name="Documents" TargetFolderName="Documents">
+            <ProjectItem ReplaceParameters="true" TargetFileName="Documents.de-DE.resx">Documents.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Documents.en.resx">Documents.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Documents.es-ES.resx">Documents.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Documents.fr-FR.resx">Documents.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Documents.ja-JP.resx">Documents.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Documents.km-KH.resx">Documents.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Documents.resx">Documents.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Documents.ru.resx">Documents.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Documents.zh-CN.resx">Documents.zh-CN.resx</ProjectItem>
+          </Folder>
+          <Folder Name="Identity" TargetFolderName="Identity">
+            <Folder Name="Roles" TargetFolderName="Roles">
+              <ProjectItem ReplaceParameters="true" TargetFileName="Roles.de-DE.resx">Roles.de-DE.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Roles.en.resx">Roles.en.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Roles.es-ES.resx">Roles.es-ES.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Roles.fr-FR.resx">Roles.fr-FR.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Roles.ja-JP.resx">Roles.ja-JP.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Roles.km-KH.resx">Roles.km-KH.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Roles.resx">Roles.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Roles.ru.resx">Roles.ru.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Roles.zh-CN.resx">Roles.zh-CN.resx</ProjectItem>
+            </Folder>
+            <Folder Name="Users" TargetFolderName="Users">
+              <ProjectItem ReplaceParameters="true" TargetFileName="Profile.de-DE.resx">Profile.de-DE.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Profile.en.resx">Profile.en.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Profile.es-ES.resx">Profile.es-ES.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Profile.fr-FR.resx">Profile.fr-FR.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Profile.ja-JP.resx">Profile.ja-JP.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Profile.km-KH.resx">Profile.km-KH.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Profile.resx">Profile.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Profile.ru.resx">Profile.ru.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Profile.zh-CN.resx">Profile.zh-CN.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Users.de-DE.resx">Users.de-DE.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Users.en.resx">Users.en.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Users.es-ES.resx">Users.es-ES.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Users.fr-FR.resx">Users.fr-FR.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Users.ja-JP.resx">Users.ja-JP.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Users.km-KH.resx">Users.km-KH.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Users.resx">Users.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Users.ru.resx">Users.ru.resx</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="Users.zh-CN.resx">Users.zh-CN.resx</ProjectItem>
+            </Folder>
+          </Folder>
+          <Folder Name="Products" TargetFolderName="Products">
+            <ProjectItem ReplaceParameters="true" TargetFileName="Products.de-DE.resx">Products.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Products.en.resx">Products.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Products.es-ES.resx">Products.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Products.fr-FR.resx">Products.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Products.ja-JP.resx">Products.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Products.km-KH.resx">Products.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Products.resx">Products.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Products.ru.resx">Products.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Products.zh-CN.resx">Products.zh-CN.resx</ProjectItem>
+          </Folder>
+          <Folder Name="SystemManagement" TargetFolderName="SystemManagement">
+            <ProjectItem ReplaceParameters="true" TargetFileName="AuditTrails.de-DE.resx">AuditTrails.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="AuditTrails.en.resx">AuditTrails.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="AuditTrails.es-ES.resx">AuditTrails.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="AuditTrails.fr-FR.resx">AuditTrails.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="AuditTrails.ja-JP.resx">AuditTrails.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="AuditTrails.km-KH.resx">AuditTrails.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="AuditTrails.resx">AuditTrails.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="AuditTrails.ru.resx">AuditTrails.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="AuditTrails.zh-CN.resx">AuditTrails.zh-CN.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Dictionaries.de-DE.resx">Dictionaries.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Dictionaries.en.resx">Dictionaries.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Dictionaries.es-ES.resx">Dictionaries.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Dictionaries.fr-FR.resx">Dictionaries.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Dictionaries.ja-JP.resx">Dictionaries.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Dictionaries.km-KH.resx">Dictionaries.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Dictionaries.resx">Dictionaries.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Dictionaries.ru.resx">Dictionaries.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Dictionaries.zh-CN.resx">Dictionaries.zh-CN.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Logs.de-DE.resx">Logs.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Logs.en.resx">Logs.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Logs.es-ES.resx">Logs.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Logs.fr-FR.resx">Logs.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Logs.ja-JP.resx">Logs.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Logs.km-KH.resx">Logs.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Logs.resx">Logs.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Logs.ru.resx">Logs.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Logs.zh-CN.resx">Logs.zh-CN.resx</ProjectItem>
+          </Folder>
+          <Folder Name="Tenants" TargetFolderName="Tenants">
+            <ProjectItem ReplaceParameters="true" TargetFileName="Tenants.de-DE.resx">Tenants.de-DE.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Tenants.en.resx">Tenants.en.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Tenants.es-ES.resx">Tenants.es-ES.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Tenants.fr-FR.resx">Tenants.fr-FR.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Tenants.ja-JP.resx">Tenants.ja-JP.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Tenants.km-KH.resx">Tenants.km-KH.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Tenants.resx">Tenants.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Tenants.ru.resx">Tenants.ru.resx</ProjectItem>
+            <ProjectItem ReplaceParameters="true" TargetFileName="Tenants.zh-CN.resx">Tenants.zh-CN.resx</ProjectItem>
+          </Folder>
+        </Folder>
+        <Folder Name="Shared" TargetFolderName="Shared">
+          <ProjectItem ReplaceParameters="true" TargetFileName="SharedResource.de-DE.resx">SharedResource.de-DE.resx</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="SharedResource.en.resx">SharedResource.en.resx</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="SharedResource.es-ES.resx">SharedResource.es-ES.resx</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="SharedResource.fr-FR.resx">SharedResource.fr-FR.resx</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="SharedResource.ja-JP.resx">SharedResource.ja-JP.resx</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="SharedResource.km-KH.resx">SharedResource.km-KH.resx</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="SharedResource.resx">SharedResource.resx</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="SharedResource.ru.resx">SharedResource.ru.resx</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="SharedResource.zh-CN.resx">SharedResource.zh-CN.resx</ProjectItem>
+        </Folder>
+      </Folder>
+      <Folder Name="Services" TargetFolderName="Services">
+        <Folder Name="Layout" TargetFolderName="Layout">
+          <ProjectItem ReplaceParameters="true" TargetFileName="LayoutService.cs">LayoutService.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Navigation" TargetFolderName="Navigation">
+          <ProjectItem ReplaceParameters="true" TargetFileName="IMenuService.cs">IMenuService.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="MenuService.cs">MenuService.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Notifications" TargetFolderName="Notifications">
+          <ProjectItem ReplaceParameters="true" TargetFileName="InMemoryNotificationService.cs">InMemoryNotificationService.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="INotificationsService.cs">INotificationsService.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="NotificationMessages.cs">NotificationMessages.cs</ProjectItem>
+        </Folder>
+        <Folder Name="UserPreferences" TargetFolderName="UserPreferences">
+          <ProjectItem ReplaceParameters="true" TargetFileName="UserPreferences.cs">UserPreferences.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="UserPreferencesService.cs">UserPreferencesService.cs</ProjectItem>
+        </Folder>
+      </Folder>
+      <Folder Name="Shared" TargetFolderName="Shared">
+        <ProjectItem ReplaceParameters="false" TargetFileName="MainLayout.razor">MainLayout.razor</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="MainLayout.razor.cs">MainLayout.razor.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="MudBlazorLogo.razor">MudBlazorLogo.razor</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="SharedResource.cs">SharedResource.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="false" TargetFileName="UserLoginState.razor">UserLoginState.razor</ProjectItem>
+      </Folder>
+      <Folder Name="Theme" TargetFolderName="Theme">
+        <ProjectItem ReplaceParameters="true" TargetFileName="DefaultTheme.cs">DefaultTheme.cs</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="false" TargetFileName="_Imports.razor">_Imports.razor</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="App.razor">App.razor</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="appsettings.json">appsettings.json</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="appsettings.development.json">appsettings.development.json</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="ConfigureServices.cs">ConfigureServices.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="Dockerfile">Dockerfile</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="nav.json">nav.json</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Program.cs">Program.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

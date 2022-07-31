@@ -1,0 +1,62 @@
+@inherits MudComponentBase
+@inject IStringLocalizer<Roles> L
+
+<MudDrawer Open="@Open"
+           Width="400px"
+           Height="100vh"
+           OpenChanged="@(s=>OnOpenChanged.InvokeAsync(s))"
+           Anchor="Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <MudDrawerHeader>
+        <MudText Typo="Typo.h6">Set Permissions</MudText>
+    </MudDrawerHeader>
+    @foreach (var group in Permissions.Select(x=>x.Group).Distinct().ToList())
+    {
+        <MudCard class="ma-4">
+            <MudCardHeader>
+                <MudText Typo="Typo.body1" Style="font-weight:500">
+                    @group
+                </MudText>
+            </MudCardHeader>
+            <MudCardContent>
+                @for(var i=0;i<Permissions.Count;i++)
+                {
+                    var x = i;
+                    if (Permissions[x].Group == group)
+                    {
+                        <MudCheckBox Dense="true"
+                                T="bool"
+                                Size="Size.Small"
+                                Checked="@Permissions[x].Assigned"
+                                Label="@Permissions[x].ClaimValue"
+                                CheckedChanged="@(s=>OnAssignChanged.InvokeAsync(Permissions[x]))"
+                                Color="Color.Primary"></MudCheckBox>
+                    }
+                }
+            </MudCardContent>
+            <MudCardActions Class="justify-end">
+                <MudButton Variant="Variant.Text" OnClick="@(()=>OnAssignAll(group))" Size="Size.Small" Color="Color.Primary">@L["Assign All"]</MudButton>
+            </MudCardActions>
+        </MudCard>
+    }
+</MudDrawer>
+
+@code {
+    [EditorRequired] [Parameter] public List<PermissionModel> Permissions { get; set; } = new()!;
+    [EditorRequired] [Parameter] public bool Open { get; set; } = default!;
+    [EditorRequired] [Parameter] public EventCallback<PermissionModel> OnAssignChanged { get; set; }
+    [EditorRequired] [Parameter] public EventCallback<List<PermissionModel>> OnAssignAllChanged { get; set; }
+    [EditorRequired] [Parameter] public EventCallback<bool> OnOpenChanged { get; set; }
+    private async Task OnAssignAll(string? groupName)
+    {
+        var list = new List<PermissionModel>();
+        for(var i = 0; i < Permissions.Count; i++)
+        {
+            if (Permissions[i].Group == groupName)
+            {
+                Permissions[i].Assigned = true;
+                list.Add(Permissions[i]);
+            }
+        }
+        await  OnAssignAllChanged.InvokeAsync(list);
+    }
+}

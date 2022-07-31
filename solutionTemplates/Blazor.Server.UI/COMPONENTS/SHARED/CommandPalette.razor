@@ -1,0 +1,23 @@
+@inject IStringLocalizer<SharedResource> L
+<MudDialog DisableSidePadding="true">
+    <DialogContent>
+        <MudContainer>
+            <MudTextField @bind-Value="@_search"
+                          Class="mb-3"
+                          Clearable="true"
+                          Placeholder="@L["Search..."]"
+                          TextChanged="@(SearchPages)" 
+                          Immediate="true"/>
+            <MudList Clickable="true"
+                     Style="height: 300px; overflow-y: auto">
+                @foreach (var (key, value) in _pagesFiltered)
+                {
+                    <MudListItem OnClick="@(() => Navigation.NavigateTo(value))">
+                        <MudHighlighter HighlightedText="@_search"
+                                        Text="@key" />
+                    </MudListItem>
+                }
+            </MudList>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>

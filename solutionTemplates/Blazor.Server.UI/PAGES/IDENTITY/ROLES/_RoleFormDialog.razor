@@ -1,0 +1,47 @@
+@inherits MudComponentBase
+@inject IStringLocalizer<Roles> L
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="model" @ref="form">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Name"]" @bind-Value="model.Name"
+                                 Required="true"
+                                 For="@(() => model.Name)"
+                                 RequiredError="@L["Role name is required!"]"
+                                 Validation="@(modelValidator.ValidateValue)"
+                    >
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Description"]"
+                           For="@(() => model.Description)"
+                           @bind-Value="model.Description"></MudTextField>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@L["Cancel"]</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">@L["Ok"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    MudForm form = default!;
+    RoleFormModelValidator modelValidator = new RoleFormModelValidator();
+    [EditorRequired] [Parameter] public RoleFormModel model { get; set; } = default!;
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = default!;
+
+    async Task Submit() {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+
+    }
+    void Cancel() => MudDialog.Cancel();
+
+}

@@ -1,0 +1,44 @@
+﻿<VSTemplate Version="3.0.0" Type="ProjectGroup" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>CleanArchitecture Blazor Application Solution Template</Name>
+    <Description>A solution template for Blazor Server application following the principles of Clean Architecture</Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType></ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>CleanArchitecture.Blazor</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectCollection>
+      <SolutionFolder Name="src">
+        <ProjectTemplateLink ProjectName="$projectname$.UI" CopyParameters="true">
+        Blazor.Server.UI\MyTemplate.vstemplate
+        </ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="$projectname$.Application" CopyParameters="true">
+        CleanArchitecture.Blazor.Application\MyTemplate.vstemplate
+        </ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="$projectname$.Domain">
+        CleanArchitecture.Blazor.Domain\MyTemplate.vstemplate
+        </ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="$projectname$.Infrastructure" CopyParameters="true">
+        CleanArchitecture.Blazor.Infrastructure\MyTemplate.vstemplate
+        </ProjectTemplateLink>
+      </SolutionFolder>
+      <SolutionFolder Name="tests">
+        <ProjectTemplateLink ProjectName="$projectname$.Application.IntegrationTests" CopyParameters="true">
+          CleanArchitecture.Blazor.Application.IntegrationTests\MyTemplate.vstemplate
+        </ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="$projectname$.Application.UnitTests" CopyParameters="true">
+          CleanArchitecture.Blazor.Application.UnitTests\MyTemplate.vstemplate
+        </ProjectTemplateLink>
+        <ProjectTemplateLink ProjectName="$projectname$.Domain.UnitTests" CopyParameters="true">
+          CleanArchitecture.Blazor.Domain.UnitTests\MyTemplate.vstemplate
+        </ProjectTemplateLink>
+      </SolutionFolder>
+    </ProjectCollection>
+  </TemplateContent>
+</VSTemplate>

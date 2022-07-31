@@ -1,0 +1,61 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System.Reflection;
+using CleanArchitecture.Blazor.$safeprojectname$.Extensions;
+using CleanArchitecture.Blazor.$safeprojectname$.Persistence.Interceptors;
+using MediatR;
+
+namespace CleanArchitecture.Blazor.$safeprojectname$.Persistence;
+
+#nullable disable
+public class ApplicationDbContext : IdentityDbContext<
+    ApplicationUser, ApplicationRole, string,
+    ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
+    ApplicationRoleClaim, ApplicationUserToken>, IApplicationDbContext
+{
+
+
+    private readonly IMediator _mediator;
+    private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
+
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options,
+        IMediator mediator,
+        AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor
+        ) : base(options)
+    {
+        _mediator = mediator;
+        _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
+    }
+    public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<Logger> Loggers { get; set; }
+    public DbSet<AuditTrail> AuditTrails { get; set; }
+    public DbSet<Document> Documents { get; set; }
+
+    public DbSet<KeyValue> KeyValues { get; set; }
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+
+        await _mediator.DispatchDomainEvents(this);
+        return await base.SaveChangesAsync(cancellationToken);
+ 
+    }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
+       
+    }
+
+   
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
+    }
+
+}

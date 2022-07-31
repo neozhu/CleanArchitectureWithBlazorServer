@@ -1,0 +1,17 @@
+[
+  {
+    "ArticleId": 0,
+    "Title": "Article 1 - The best so far",
+    "Description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco lab. quis nostrud exercitation ullamco lab."
+  },
+  {
+    "ArticleId": 1,
+    "Title": "Article 2 - The longest so far",
+    "Description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco lab. quis nostrud exercitation ullamco lab."
+  },
+  {
+    "ArticleId": 2,
+    "Title": "Article 3 - The shortest so far",
+    "Description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco lab. quis nostrud exercitation ullamco lab."
+  }
+]

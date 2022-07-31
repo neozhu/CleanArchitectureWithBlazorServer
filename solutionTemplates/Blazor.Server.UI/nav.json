@@ -1,0 +1,91 @@
+[
+  {
+    "title": "GENERAL",
+    "sectionItems": [
+      {
+        "title": "Home",
+        "icon": "\u003Cpath d=\u0022M0 0h24v24H0z\u0022 fill=\u0022none\u0022/\u003E\u003Cpath d=\u0022M20.38 8.57l-1.23 1.85a8 8 0 0 1-.22 7.58H5.07A8 8 0 0 1 15.58 6.85l1.85-1.23A10 10 0 0 0 3.35 19a2 2 0 0 0 1.72 1h13.85a2 2 0 0 0 1.74-1 10 10 0 0 0-.27-10.44zm-9.79 6.84a2 2 0 0 0 2.83 0l5.66-8.49-8.49 5.66a2 2 0 0 0 0 2.83z\u0022/\u003E",
+        "href": "/",
+        "pageStatus": "completed",
+        "isParent": false
+      },
+      {
+        "title": "E-Commerce",
+        "icon": "\u003Cpath d=\u0022M0 0h24v24H0z\u0022 fill=\u0022none\u0022/\u003E\u003Cpath d=\u0022M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z\u0022/\u003E",
+        "href": "/ecommerce",
+        "pageStatus": "wip",
+        "isParent": true,
+        "menuItems": [
+          {
+            "title": "Products",
+            "href": "/pages/products",
+            "pageStatus": "completed"
+          }
+        ]
+      },
+      {
+        "title": "Analytics",
+        "icon": "\u003Cpath d=\u0022M0 0h24v24H0z\u0022 fill=\u0022none\u0022/\u003E\u003Cpath d=\u0022M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-5h2v5zm4 0h-2v-3h2v3zm0-5h-2v-2h2v2zm4 5h-2V7h2v10z\u0022/\u003E",
+        "href": "/analytics",
+        "pageStatus": "comingSoon",
+        "isParent": false
+      },
+      {
+        "title": "Banking",
+        "icon": "\u003Cpath d=\u0022M0 0h24v24H0V0z\u0022 fill=\u0022none\u0022/\u003E\u003Cpath d=\u0022M5 8h2v8H5zm7 0H9c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 6h-1v-4h1v4zm7-6h-3c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 6h-1v-4h1v4z\u0022/\u003E\u003Cpath d=\u0022M4 6h16v12H4z\u0022 fill=\u0022none\u0022/\u003E\u003Cpath d=\u0022M2 4v16h20V4H2zm2 14V6h16v12H4z\u0022/\u003E",
+        "href": "/banking",
+        "pageStatus": "comingSoon",
+        "isParent": false
+      },
+      {
+        "title": "Booking",
+        "icon": "\u003Cpath d=\u0022M0 0h24v24H0z\u0022 fill=\u0022none\u0022/\u003E\u003Cpath d=\u0022M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z\u0022/\u003E",
+        "href": "/booking",
+        "pageStatus": "comingSoon",
+        "isParent": false
+      }
+    ]
+  },
+  {
+    "title": "MANAGEMENT",
+    "sectionItems": [
+      {
+        "title": "Authorization",
+        "icon": "\u003Cpath d=\u0022M0 0h24v24H0z\u0022 fill=\u0022none\u0022/\u003E\u003Cpath d=\u0022M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\u0022/\u003E",
+        "pageStatus": "completed",
+        "isParent": true,
+        "menuItems": [
+          {
+            "title": "Users",
+            "href": "/indentity/users",
+            "pageStatus": "completed"
+          },
+          {
+            "title": "Roles",
+            "href": "/indentity/roles",
+            "pageStatus": "completed"
+          }
+        ]
+      },
+      {
+        "title": "System",
+        "icon": "\u003Cpath d=\u0022M0 0h24v24H0z\u0022 fill=\u0022none\u0022/\u003E\u003Cpath d=\u0022M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\u0022/\u003E",
+        "pageStatus": "completed",
+        "isParent": true,
+        "menuItems": [
+          {
+            "title": "Logs",
+            "href": "/pages/system/logs",
+            "pageStatus": "completed"
+          },
+          {
+            "title": "Audit Trails",
+            "href": "/pages/system/audittrails",
+            "pageStatus": "completed"
+          }
+        ]
+      }
+ 
+    ]
+  }
+]

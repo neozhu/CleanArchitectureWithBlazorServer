@@ -1,0 +1,108 @@
+@using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
+@using SixLabors.ImageSharp
+@using SixLabors.ImageSharp.Formats
+@using SixLabors.ImageSharp.Processing
+@inherits MudComponentBase
+@inject IStringLocalizer<Documents> L
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="model" @ref="form" Validation="@(modelValidator.ValidateValue)">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Title"]" @bind-Value="model.Title"
+                                  For="@(() => model.Title)"
+                                  Required="true"
+                                  RequiredError="@L["Title is required!"]">
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Description"]"
+                                  For="@(() => model.Description)"
+                                  @bind-Value="model.Description"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudSelect Label="@L["Select Document Type"]"
+                               For="@(() => model.DocumentType)"
+                               Required="true"
+                               RequiredError="@L["Document type is required!"]"
+                               @bind-Value="model.DocumentType">
+                        @foreach (var doctype in Enum.GetValues<DocumentType>())
+                        {
+                            <MudSelectItem Value="@doctype">@doctype</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                   <MudCheckBox Label="@L["Is Public"]"
+                                For="@(() => model.IsPublic)"
+                                @bind-Checked="model.IsPublic"></MudCheckBox>
+                </MudItem>
+                <MudItem>
+                    <InputFile id="fileInput" OnChange="UploadFiles" hidden accept=".jpg, .jpeg, .png, .docx, .pdf, .xlsx, .pptx" />
+                    <MudText Typo="Typo.caption">@L["Attachement"]*</MudText>
+                    <MudFab HtmlTag="label" Size="MudBlazor.Size.Small"
+                            Class="ml-2"
+                            Color="MudBlazor.Color.Info"
+                            Icon="@Icons.Filled.Image"
+                            Label="@L["Upload"]"
+                            for="fileInput" />
+
+                    <div class="d-fex">
+                        @if (model.URL is not null)
+                        {
+                            <MudLink Href="@model.URL">@model.URL</MudLink>
+                        }
+
+
+                    </div>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@ButtonText.CANCEL</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">@ButtonText.OK</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    MudForm form = default!;
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = default!;
+    [Inject] private IUploadService _uploadService { get; set; } = default!;
+    AddEditDocumentCommandValidator modelValidator = new AddEditDocumentCommandValidator();
+    [EditorRequired][Parameter] public AddEditDocumentCommand model { get; set; } = default!;
+
+
+    private async Task UploadFiles(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var filestream = file.OpenReadStream();
+        var imgstream = new MemoryStream();
+        await filestream.CopyToAsync(imgstream);
+
+        model.UploadRequest = new UploadRequest()
+        {
+             Data = imgstream.ToArray(),
+             FileName= file.Name,
+             UploadType= UploadType.Document
+        };
+        model.URL = file.Name;
+        Snackbar.Add(ToastText.UPLOADSUCCESS, MudBlazor.Severity.Info);
+
+    }
+    async Task Submit()
+    {
+        await form.Validate();
+        if (form.IsValid)
+        {
+            if (string.IsNullOrEmpty(model.URL))
+            {
+                Snackbar.Add(L["Please choose to upload a document"], MudBlazor.Severity.Error);
+                return;
+            }
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+    void Cancel() => MudDialog.Cancel();
+}

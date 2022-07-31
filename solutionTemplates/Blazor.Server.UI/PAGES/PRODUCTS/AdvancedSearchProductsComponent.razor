@@ -1,0 +1,56 @@
+@using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
+@inject IStringLocalizer<Products> L
+<MudExpansionPanel @bind-IsExpanded="_advancedSearchExpanded"
+                   Style="border-radius: var(--mud-default-borderradius) !important;"
+                   Class="mud-elevation-25 pa-2 mb-3" Text="@PromptText.ADVANCEDSEARCH">
+    <MudGrid>
+        <MudItem xs="12" sm="6" md="4">
+            <MudTextField @bind-Value="TRequest.Name" 
+                          Placeholder="@L["Search for product name"]"
+                          Clearable="true"
+                          TextChanged="OnSearchStringChanged">
+            </MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6"  md="4">
+           <PicklistAutocomplete Picklist="Picklist.Brand"
+                                Placeholder="@L["Search for brand"]"
+                                TextChanged="OnSearchStringChanged"
+                                ResetValueOnEmptyText="true"
+                                @bind-Value="TRequest.Brand"></PicklistAutocomplete>
+        </MudItem>
+        <MudItem xs="12" sm="6"  md="4">
+          <PicklistAutocomplete Picklist="Picklist.Unit"
+                                Placeholder="@L["Search for unit"]"
+                                TextChanged="OnSearchStringChanged"
+                                ResetValueOnEmptyText="true"
+                                @bind-Value="TRequest.Unit"></PicklistAutocomplete>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudNumericField @bind-Value="TRequest.MinPrice"
+                          Clearable="true"
+                          Placeholder="@L["Search for minimum price"]" 
+                          TextChanged="OnSearchStringChanged">
+            </MudNumericField>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="4">
+            <MudNumericField @bind-Value="TRequest.MaxPrice"
+                          Clearable="true"
+                          Placeholder="@L["Search for maximum price"]" 
+                          TextChanged="OnSearchStringChanged">
+            </MudNumericField>
+        </MudItem>
+    </MudGrid>
+</MudExpansionPanel>
+
+@code {
+    [EditorRequired][Parameter] public ProductsWithPaginationQuery TRequest { get; set; } = default!;
+    [EditorRequired][Parameter] public EventCallback<string> OnFilterChanged { get; set; }
+    private bool _advancedSearchExpanded { get; set; }
+    private async Task OnSearchStringChanged(string str)
+    {
+        if (_advancedSearchExpanded)
+        {
+          await OnFilterChanged.InvokeAsync(str);
+        }
+    }
+}

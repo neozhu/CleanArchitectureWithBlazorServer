@@ -1,0 +1,32 @@
+<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
+  <TemplateData>
+    <Name>CleanArchitecture.Blazor.Application.IntegrationTests</Name>
+    <Description>CleanArchitecture.Blazor.Application.IntegrationTests</Description>
+    <ProjectType>CSharp</ProjectType>
+    <ProjectSubType>
+    </ProjectSubType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>CleanArchitecture.Blazor.Application.IntegrationTests</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <CreateInPlace>true</CreateInPlace>
+    <Icon>__TemplateIcon.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="Application.IntegrationTests.csproj" File="Application.IntegrationTests.csproj" ReplaceParameters="true">
+      <Folder Name="KeyValues" TargetFolderName="KeyValues">
+        <Folder Name="Commands" TargetFolderName="Commands">
+          <ProjectItem ReplaceParameters="true" TargetFileName="DeleteKeyValueTests.cs">DeleteKeyValueTests.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Queries" TargetFolderName="Queries">
+          <ProjectItem ReplaceParameters="true" TargetFileName="KeyValuesQueryTests.cs">KeyValuesQueryTests.cs</ProjectItem>
+        </Folder>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="appsettings.json">appsettings.json</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="TestBase.cs">TestBase.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Testing.cs">Testing.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

@@ -1,0 +1,26 @@
+[
+  {
+    "NotificationType": 0,
+    "Message": "Alexandre sent you a new message.",
+    "DateTimeStamp": "2021-11-04T16:40:36.717696+11:00",
+    "IsActive": true
+  },
+  {
+    "NotificationType": 2,
+    "Message": "Joyce liked a message you sent.",
+    "DateTimeStamp": "2021-11-04T16:20:36.777733+11:00",
+    "IsActive": true
+  },
+  {
+    "NotificationType": 1,
+    "Message": "Peter sent you an email.",
+    "DateTimeStamp": "2021-11-02T17:14:36.777735+11:00",
+    "IsActive": true
+  },
+  {
+    "NotificationType": 4,
+    "Message": "Your order has been placed.",
+    "DateTimeStamp": "2021-10-25T17:14:36.777749+11:00",
+    "IsActive": true
+  }
+]

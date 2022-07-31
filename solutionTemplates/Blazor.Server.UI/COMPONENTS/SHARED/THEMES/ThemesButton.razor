@@ -1,0 +1,50 @@
+<div class="px-4 py-2 theme-button"
+     @onclick="OnClick">
+    <MudTooltip Arrow="true"
+                Placement="Placement.Left"
+                Text="Themes">
+        <MudIcon Icon="@Icons.Material.Filled.Brush"
+                 Style="color: #05192d" />
+    </MudTooltip>
+</div>
+
+
+@if (LayoutService.IsRTL)
+{
+    <style>
+        .theme-button {
+            position: fixed;
+            top: 50%;
+            background: var(--mud-palette-white);
+            z-index: 1150;
+            left: 0;
+            cursor: pointer;
+            box-shadow: rgba(55,55,55,0.15) 0 0 2px 0, rgba(55,55,55,0.15) 0 8px 12px 0;
+            
+            border-top-right-radius: 24px !important;
+            border-bottom-right-radius: 24px !important;
+        }
+    </style>
+    
+}
+else
+{
+ 
+    <style>
+        .theme-button {
+            position: fixed;
+            top: 50%;
+            background: var(--mud-palette-white);
+            z-index: 1150;
+            right: 0;
+            cursor: pointer;
+            box-shadow: rgba(55,55,55,0.15) 0 0 2px 0, rgba(55,55,55,0.15) 0 8px 12px 0;
+            
+            border-top-left-radius: 24px !important;
+            border-bottom-left-radius: 24px !important;            
+            
+        }
+    </style>
+
+}
+
