@@ -13,5 +13,5 @@
     },
     "sourceName": "CleanArchitecture.Blazor",
     "preferNameDirectory": true,
-    "description": "Clean Architecture for Blazor Server Solution"
+    "description": "This is a solution templates for creating a Blazor Server application following the principles of Clean Architecture"
   }
