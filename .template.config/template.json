@@ -13,5 +13,32 @@
     },
     "sourceName": "CleanArchitecture.Blazor",
     "preferNameDirectory": true,
-    "description": "This is a solution templates for creating a Blazor Server application following the principles of Clean Architecture"
+    "description": "This is a solution templates for creating a Blazor Server application following the principles of Clean Architecture",
+    "sources": [
+    {
+      "source": "./src/",
+      "target": "./src/",
+      "copyOnly": "**/*.txt",
+      "exclude": "**/*.reg",
+      "include": "**/*",
+      "modifiers": [
+        {
+          "condition": "(IndividualAuth)",
+          "exclude": "individual_auth.filelist"
+        }
+      ]
+    },
+    {
+      "source": "./tests/",
+      "target": "./tests/",
+      "condition": "TestProject"
+    }
+  ],
+    "symbols": {
+    "TestProject": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false"
+    }
+  },
   }
