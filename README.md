@@ -43,6 +43,7 @@ This is a repository for creating a  Blazor Server application following the pri
     - run CLI:  dotnet new --list
 - create a solution with the template
     - run CLI: dotnet new ca-blazor-sln
+![image](https://user-images.githubusercontent.com/1549611/182025444-04c9c8db-2b11-44b3-8091-acffcc37a899.png)
 
 ## Why develop with blazor server mode
 - Develop fast
