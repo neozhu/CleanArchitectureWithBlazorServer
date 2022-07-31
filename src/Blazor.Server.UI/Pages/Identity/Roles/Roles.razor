@@ -21,6 +21,7 @@
         <MudTable Items="@_roleList"
                   FixedHeader="true"
                   FixedFooter="true"
+                  RowsPerPage="15"                  
                   Height="calc(100vh - 265px)"
                   Hover="true"
                   MultiSelection="true"
@@ -90,7 +91,7 @@
                             }
                             @if (_canImport)
                             {
-                                   <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
+                                <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                                 <MudMenuItem for="importdataInput"
                                          HtmlTag="label">@ButtonText.IMPORT</MudMenuItem>
                             }
@@ -111,14 +112,15 @@
                 }
             </ToolBarContent>
             <ColGroup>
-                <col style="width:50px;" />
-                <col style="width:120px;" />
-
+                <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <col style="width:50px;" />
+                    <col style="width:100px;" />
+                    <col  />
+                </MudHidden>
             </ColGroup>
             <HeaderContent>
-                <MudTh Style="width:80px">@ButtonText.ACTIONS</MudTh>
+                <MudTh>@ButtonText.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Name)">@L["Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ButtonText.ACTIONS">
@@ -143,23 +145,26 @@
                         <MudButton Variant="Variant.Filled" DisableElevation="true"
                                StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
-                             @ButtonText.NOALLOWED
+                            @ButtonText.NOALLOWED
                         </MudButton>
                     }
                 </MudTd>
-                <MudTd DataLabel="@L["Name"]">@context.Name</MudTd>
-                <MudTd DataLabel="@L["Description"]">@context.Description</MudTd>
-
+                <MudTd DataLabel="@L["Name"]">
+                    <div class="d-flex flex-column">
+                        <MudText>@context.Name</MudText>
+                        <MudText Typo="Typo.body2">@context.Description</MudText>
+                    </div>
+                </MudTd>
             </RowTemplate>
             <PagerContent>
-                <MudTablePager />
+                 <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
         </MudTable>
 
         <_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
     </ChildContent>
     <ErrorContent>
-        <CustomError Exception="context" ></CustomError>
+        <CustomError Exception="context"></CustomError>
     </ErrorContent>
 </ErrorBoundary>
 
@@ -218,19 +223,19 @@
     {
         await LoadData();
     }
-     private async Task LoadData()
+    private async Task LoadData()
+    {
+        if (_loading) return;
+        try
         {
-            if (_loading) return;
-            try
-            {
-                _loading = true;
-               _roleList = await _roleManager.Roles.ToListAsync();
-            }
-            finally
-            {
-                _loading = false;
-            }
+            _loading = true;
+            _roleList = await _roleManager.Roles.ToListAsync();
         }
+        finally
+        {
+            _loading = false;
+        }
+    }
     private async Task OnCreate()
     {
         var model = new RoleFormModel();
@@ -272,7 +277,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            
+
             item.Name = model.Name;
             item.Description = model.Description;
             var state = await _roleManager.UpdateAsync(item);
@@ -358,7 +363,7 @@
             }
             Snackbar.Add($"{L["Unassigned successfully"]}", MudBlazor.Severity.Info);
         }
-        
+
 
     }
     private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
@@ -367,7 +372,7 @@
         var role = await _roleManager.FindByIdAsync(roleId);
         foreach (var model in models)
         {
-            
+
             if (model.Assigned)
             {
                 if (model.ClaimType is not null && model.ClaimValue is not null)
@@ -382,7 +387,7 @@
                 {
                     await _roleManager.RemoveClaimAsync(role, removed);
                 }
-   
+
             }
         }
         Snackbar.Add($"{L["Assign changed successfully"]}", MudBlazor.Severity.Info);

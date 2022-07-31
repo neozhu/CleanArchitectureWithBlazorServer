@@ -25,6 +25,7 @@
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 265px)"
+                  RowsPerPage="15"
                   Hover="true"
                   MultiSelection="true"
                   SelectedItems="_selectItems"
@@ -114,9 +115,10 @@
                 }
             </ToolBarContent>
             <ColGroup>
+                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
                 <col style="width:50px;" />
                 <col style="width:120px;" />
-
+                </MudHidden>
             </ColGroup>
             <HeaderContent>
                 <MudTh Style="width:80px">@PromptText.ACTIONS</MudTh>
@@ -170,8 +172,10 @@
                     }
                 </MudTd>
                 <MudTd DataLabel="@L["Tenant Name"]">
+                    <div class="d-flex flex-column">
                     <MudText>@context.TenantName</MudText>
                     <MudText Typo="Typo.body2">@context.TenantId</MudText>
+                    </div>
                 </MudTd>
                 <MudTd DataLabel="@L["User Name"]">
                     <div class="d-flex align-content-center flex-wrap">
@@ -193,7 +197,7 @@
                 <MudTd HideSmall="true" DataLabel="@L["Lock Status"]">@context.LockoutEnd</MudTd>
             </RowTemplate>
             <PagerContent>
-                <MudTablePager />
+                 <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
         </MudTable>
 

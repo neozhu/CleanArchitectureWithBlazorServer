@@ -41,6 +41,7 @@
                   ReadOnly="@_readonly"
                   Loading="@_loading"
                   SortLabel="@PromptText.ORDERBY"
+                  Breakpoint="Breakpoint.Xs"
                   Filter="new Func<KeyValueDto,bool>(_quickFilter)">
             <ToolBarContent>
                 <div class="justify-start pt-3">
@@ -126,7 +127,9 @@
                 }
             </ToolBarContent>
             <ColGroup>
+                <MudHidden Breakpoint="Breakpoint.SmAndDown">                
                 <col style="width:50px;" />
+                </MudHidden>
             </ColGroup>
             <HeaderContent>
                 <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object>(x=>x.Name)">@L["Name"]</MudTableSortLabel></MudTh>
@@ -138,7 +141,7 @@
                 <MudTd DataLabel="@L["Name"]">@context?.Name</MudTd>
                 <MudTd DataLabel="@L["Value"]">@context?.Value</MudTd>
                 <MudTd DataLabel="@L["Text"]">@context?.Text</MudTd>
-                <MudTd DataLabel="@L["Description"]">@context?.Description</MudTd>
+                <MudTd HideSmall="true" DataLabel="@L["Description"]">@context?.Description</MudTd>
             </RowTemplate>
             <RowEditingTemplate>
                 <MudTd DataLabel="Name">
