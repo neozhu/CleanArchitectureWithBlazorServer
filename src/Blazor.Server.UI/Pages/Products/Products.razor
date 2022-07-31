@@ -132,12 +132,14 @@
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
-                <col style="width:48px;" />
-                <col style="width:95px;" />
-                <col style="width:180px;" />
-                <col style="width:60%;"/>
-                <col style="width:120px;"/>
-                <col style="width:120px;"/>
+                <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <col style="width:48px;" />
+                    <col style="width:95px;" />
+                    <col style="width:180px;" />
+                    <col style="width:60%;" />
+                    <col style="width:120px;" />
+                    <col style="width:120px;" />
+                </MudHidden>
             </ColGroup>
             <HeaderContent>
                 <MudTh>@PromptText.ACTIONS</MudTh>
@@ -176,8 +178,10 @@
                 </MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Brand Name"]">@context.Brand</MudTd>
                 <MudTd DataLabel="@L["Product Name"]">
+                    <div class="d-flex flex-column">
                     <MudText>@context.Name</MudText>
                     <MudText Typo="Typo.body2">@context.Description</MudText>
+                    </div>
                 </MudTd>
                 <MudTd DataLabel="@L["Price"]" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
                 <MudTd DataLabel="@L["Unit"]">@context.Unit</MudTd>
@@ -283,7 +287,7 @@
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
-        (string.Format(PromptText.CREATEAITEM,L["Product"]), parameters, options);
+        (string.Format(PromptText.CREATEAITEM, L["Product"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
@@ -310,7 +314,7 @@
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
-        (string.Format(PromptText.EDITTHEITEM,L["Product"]), parameters, options);
+        (string.Format(PromptText.EDITTHEITEM, L["Product"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
@@ -327,7 +331,7 @@
                 { nameof(DeleteConfirmation.ContentText), string.Format(PromptText.DELETECONFIRMATION, dto.Name) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(PromptText.EDITTHEITEM,L["Product"]), parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(PromptText.EDITTHEITEM, L["Product"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
@@ -346,7 +350,7 @@
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>
-        (string.Format(PromptText.DELETETHEITEM,L["Product"]), parameters, options);
+        (string.Format(PromptText.DELETETHEITEM, L["Product"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
@@ -368,7 +372,7 @@
                 SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
             };
         var result = await _mediator.Send(request);
-        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Products"]}.xlsx", result, contentType:"application/octet-stream");
+        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Products"]}.xlsx", result, contentType: "application/octet-stream");
         Snackbar.Add($"{ToastText.EXPORTSUCESS}", MudBlazor.Severity.Info);
         _downloading = false;
     }

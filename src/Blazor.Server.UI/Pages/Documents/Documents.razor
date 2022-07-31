@@ -27,7 +27,7 @@
                   Height="calc(100vh - 330px)"
                   Loading="@_loading"
                   SortLabel="@PromptText.ORDERBY"
-                  MultiSelection="true" 
+                  MultiSelection="true"
                   SelectedItems="_selectedItems"
                   Hover="true" @ref="_table">
             <ToolBarContent>
@@ -60,8 +60,8 @@
                                    OnClick="OnDeleteChecked"
                                    IconColor="Color.Surface">@ButtonText.DELETE</MudButton>
                         }
-                        
-                        
+
+
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
@@ -74,7 +74,7 @@
                             {
                                 <MudMenuItem OnClick="OnDeleteChecked">@ButtonText.DELETE</MudMenuItem>
                             }
-                           
+
                         </MudMenu>
                     </MudHidden>
                 </div>
@@ -83,12 +83,13 @@
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
-                <col style="width:48px;" />
-                <col style="width:118px;" />
-                <col style="width:50%;" />
-                <col style="width:100px;" />
-                <col style="width:120px;" />
-   
+                <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <col style="width:48px;" />
+                    <col style="width:118px;" />
+                    <col style="width:50%;" />
+                    <col style="width:100px;" />
+                    <col style="width:120px;" />
+                </MudHidden>
             </ColGroup>
             <HeaderContent>
                 <MudTh>@PromptText.ACTIONS</MudTh>
@@ -131,16 +132,20 @@
                 </MudTd>
 
                 <MudTd DataLabel="@L["Title"]">
-                    <MudText>@context.Title</MudText>
-                    <MudText Typo="Typo.body2">@context.Description</MudText>
+                    <div class="d-flex flex-column">
+                        <MudText>@context.Title</MudText>
+                        <MudText Typo="Typo.body2">@context.Description</MudText>
+                    </div>
                 </MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Document Type"]">@context.DocumentType</MudTd>
                 <MudTd DataLabel="@L["Is Public"]" Style="text-align:right">
                     <MudCheckBox Checked="@context.IsPublic" Disabled="true"></MudCheckBox>
                 </MudTd>
                 <MudTd DataLabel="@L["Tenant Name"]">
-                    <MudText>@context.TenantName</MudText>
-                    <MudText Typo="Typo.body2">@context.TenantId</MudText>
+                    <div class="d-flex flex-column">
+                        <MudText>@context.TenantName</MudText>
+                        <MudText Typo="Typo.body2">@context.TenantId</MudText>
+                    </div>
                 </MudTd>
             </RowTemplate>
             <NoRecordsContent>
@@ -193,8 +198,8 @@
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
-        _canDownload= (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
-        _tenantId =await _tenantProvider.GetTenant();
+        _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
+        _tenantId = await _tenantProvider.GetTenant();
         _tenantProvider.Register(async () =>
         {
             await _table.ReloadServerData();
@@ -242,7 +247,7 @@
     }
     private async Task OnCreate()
     {
-        var command = new AddEditDocumentCommand() {DocumentType= DocumentType.Document };
+        var command = new AddEditDocumentCommand() { DocumentType = DocumentType.Document };
         var parameters = new DialogParameters
             {
         { nameof(_DocumentFormDialog.model),command },
@@ -337,7 +342,7 @@
                 var result = await BlazorDownloadFileService.DownloadFile(file.Item1, file.Item2, "application/octet-stream");
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Snackbar.Add($"{e.Message}", MudBlazor.Severity.Error);
         }
