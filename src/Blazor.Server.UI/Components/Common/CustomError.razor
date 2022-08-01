@@ -6,7 +6,7 @@
         <MudText Typo="Typo.subtitle2" >@DateTime.Now</MudText>
         <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(()=>_showstacktrace=!_showstacktrace)">More</MudButton>
     </div>
-    <MudText>@message For more information, contact your system administrator</MudText>
+    <MudText>@_message For more information, contact your system administrator</MudText>
     @if (_showstacktrace)
     {
         <MudText Typo="Typo.body2" Class="mt-2">@stacktrace</MudText>
@@ -20,22 +20,26 @@
 </MudPaper>
 
 @code {
-    private string? message { get; set; }
+    private string? _message { get; set; }
     private bool _showstacktrace { get; set; }
     private string? stacktrace { get; set; }
     private string? statusCode { get; set; } = HttpStatusCode.InternalServerError.ToString();
     [EditorRequired][Parameter] public Exception Exception { get; set; } = default!;
     [Inject] private NavigationManager _navigation { get; set; } = default!;
-
-    protected override Task OnInitializedAsync()
+    [Inject] private ILogger<CustomError> _logger { get; set; } = default!;
+    [CascadingParameter]
+    private Task<AuthenticationState> _authState { get; set; } = default!;
+    protected override async Task OnInitializedAsync()
     {
+        var state = await _authState;
+        var userName = state.User.GetUserName();
         switch (Exception)
         {
             case CustomException e:
                 statusCode = e.StatusCode.ToString();
                 if (e.ErrorMessages is not null)
                 {
-                    message = string.Join(", ", e.ErrorMessages.ToArray());
+                    _message = string.Join(", ", e.ErrorMessages.ToArray());
                 }
                 break;
             default:
@@ -46,11 +50,11 @@
                         Exception = Exception.InnerException;
                     }
                 }
-                message = Exception.Message;
+                _message = Exception.Message;
                 break;
         }
         stacktrace = Exception.StackTrace;
-        return base.OnInitializedAsync();
+        _logger.LogError(Exception, "{message}. request url: {@url} {@UserName}", _message, _navigation.Uri, userName);
     }
     private void OnRefresh()
     {
