@@ -9,21 +9,10 @@
         <PreserveCompilationContext>true</PreserveCompilationContext>
       <UserSecretsId>8118d19e-a6db-4446-bdb6-fa62b17f843d</UserSecretsId>
   </PropertyGroup>
-
-    <ItemGroup>
-      <Compile Remove="Resources\Components\Index\**" />
-      <Content Remove="Resources\Components\Index\**" />
-      <EmbeddedResource Remove="Resources\Components\Index\**" />
-      <None Remove="Resources\Components\Index\**" />
-    </ItemGroup>
-
-
-
-    <ItemGroup>
+  <ItemGroup>
         <PackageReference Include="Blazor-Analytics" Version="3.11.0" />
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
-       
         <PackageReference Include="MudBlazor" Version="6.0.14" />
         <PackageReference Include="MediatR" Version="10.0.1" />
         <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
@@ -42,22 +31,10 @@
 
 
     <ItemGroup>
-        <Content Update="wwwroot\sample-data\articles.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Update="wwwroot\sample-data\avatar.png">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
         <Content Update="wwwroot\favicon.ico">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Update="wwwroot\sample-data\notifications.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Update="wwwroot\js\apex-chart-wrapper.js">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
+     </ItemGroup>
 
 
 
