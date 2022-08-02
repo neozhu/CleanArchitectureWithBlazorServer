@@ -11,5 +11,5 @@ public interface IResult
 }
 public interface IResult<out T> : IResult
 {
-    T Data { get; }
+    T? Data { get; }
 }

@@ -57,6 +57,6 @@ public static class LocalizationConstants
 
 public class LanguageCode
 {
-    public string DisplayName { get; set; }
-    public string Code { get; set; }
+    public string DisplayName { get; set; } = "en-US";
+    public string Code { get; set; } = "English";
 }

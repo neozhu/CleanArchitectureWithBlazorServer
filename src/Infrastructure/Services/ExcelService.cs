@@ -51,7 +51,7 @@ public class ExcelService : IExcelService
     }
 
     public async Task<byte[]> ExportAsync<TData>(IEnumerable<TData> data
-        , Dictionary<string, Func<TData, object>> mappers
+        , Dictionary<string, Func<TData, object?>> mappers
         , string sheetName = "Sheet1")
     {
         using (var workbook = new XLWorkbook())
@@ -100,7 +100,7 @@ public class ExcelService : IExcelService
         }
     }
 
-    public async Task<IResult<IEnumerable<TEntity>>> ImportAsync<TEntity>(byte[] data, Dictionary<string, Func<DataRow, TEntity, object>> mappers, string sheetName = "Sheet1")
+    public async Task<IResult<IEnumerable<TEntity>>> ImportAsync<TEntity>(byte[] data, Dictionary<string, Func<DataRow, TEntity, object?>> mappers, string sheetName = "Sheet1")
     {
 
         using (var workbook = new XLWorkbook(new MemoryStream(data)))
@@ -138,7 +138,7 @@ public class ExcelService : IExcelService
                 try
                 {
                     DataRow datarow = dt.Rows.Add();
-                    var item = (TEntity)Activator.CreateInstance(typeof(TEntity))??throw new NullReferenceException($"{nameof(TEntity)}");
+                    var item = (TEntity?)Activator.CreateInstance(typeof(TEntity))??throw new NullReferenceException($"{nameof(TEntity)}");
                     foreach (IXLCell cell in row.Cells())
                     {
                         if (cell.DataType == XLDataType.DateTime)

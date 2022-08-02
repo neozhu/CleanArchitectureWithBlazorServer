@@ -7,7 +7,7 @@ public class Result : IResult
 {
     internal Result()
     {
-
+        Errors = new string[] { };
     }
     internal Result(bool succeeded, IEnumerable<string> errors)
     {
@@ -38,7 +38,8 @@ public class Result : IResult
 }
 public class Result<T> : Result, IResult<T>
 {
-    public T Data { get; set; }
+
+    public T? Data { get; set; } 
 
     public static new Result<T> Failure(IEnumerable<string> errors)
     {

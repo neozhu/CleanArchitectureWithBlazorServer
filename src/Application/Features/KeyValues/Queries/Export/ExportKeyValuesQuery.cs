@@ -7,7 +7,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Export
 
 public class ExportKeyValuesQuery : IRequest<byte[]>
 {
-    public string Keyword { get; set; }
+    public string? Keyword { get; set; }
     public string OrderBy { get; set; } = "Id";
     public string SortDirection { get; set; } = "desc";
 }
@@ -32,6 +32,8 @@ public class ExportKeyValuesQueryHandler :
         _excelService = excelService;
         _localizer = localizer;
     }
+#pragma warning disable CS8602
+#pragma warning disable CS8604
     public async Task<byte[]> Handle(ExportKeyValuesQuery request, CancellationToken cancellationToken)
     {
         
@@ -40,7 +42,7 @@ public class ExportKeyValuesQueryHandler :
             .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         var result = await _excelService.ExportAsync(data,
-            new Dictionary<string, Func<KeyValueDto, object>>()
+            new Dictionary<string, Func<KeyValueDto, object?>>()
             {
                     //{ _localizer["Id"], item => item.Id },
                     { _localizer["Name"], item => item.Name },

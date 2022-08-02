@@ -97,8 +97,10 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                 TableName = entry.Entity.GetType().Name,
                 UserId = userId,
                 DateTime = _dateTime.Now,
-                AffectedColumns = new List<string>()
-            };
+                AffectedColumns = new List<string>(),
+                NewValues = new(),
+                OldValues = new(),
+        };
             auditEntries.Add(auditEntry);
             foreach (var property in entry.Properties)
             {
@@ -109,7 +111,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                     continue;
                 }
                 string propertyName = property.Metadata.Name;
-                if (property.Metadata.IsPrimaryKey())
+                if (property.Metadata.IsPrimaryKey() && property.CurrentValue is not null)
                 {
                     auditEntry.PrimaryKey[propertyName] = property.CurrentValue;
                     continue;
@@ -119,20 +121,26 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                 {
                     case EntityState.Added:
                         auditEntry.AuditType = AuditType.Create;
-                        auditEntry.NewValues[propertyName] = property.CurrentValue;
+                        if (property.CurrentValue is not null)
+                        {
+                            auditEntry.NewValues[propertyName] = property.CurrentValue;
+                        }
                         break;
 
                     case EntityState.Deleted:
                         auditEntry.AuditType = AuditType.Delete;
-                        auditEntry.OldValues[propertyName] = property.OriginalValue;
+                        if (property.OriginalValue is not null)
+                        {
+                            auditEntry.OldValues[propertyName] = property.OriginalValue;
+                        }
                         break;
 
-                    case EntityState.Modified:
-                        if (property.IsModified && property.OriginalValue?.Equals(property.CurrentValue) == false)
-                        {
+                    case EntityState.Modified when property.IsModified && property.OriginalValue?.Equals(property.CurrentValue) == false:
                             auditEntry.AffectedColumns.Add(propertyName);
                             auditEntry.AuditType = AuditType.Update;
                             auditEntry.OldValues[propertyName] = property.OriginalValue;
+                        if (property.CurrentValue is not null)
+                        {
                             auditEntry.NewValues[propertyName] = property.CurrentValue;
                         }
                         break;
@@ -157,11 +165,11 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         {
             foreach (var prop in auditEntry.TemporaryProperties)
             {
-                if (prop.Metadata.IsPrimaryKey())
+                if (prop.Metadata.IsPrimaryKey() && prop.CurrentValue is not null)
                 {
                     auditEntry.PrimaryKey[prop.Metadata.Name] = prop.CurrentValue;
                 }
-                else
+                else if(auditEntry.NewValues is not null &&  prop.CurrentValue is not null)
                 {
                     auditEntry.NewValues[prop.Metadata.Name] = prop.CurrentValue;
                 }

@@ -20,7 +20,7 @@ public static class AuthenticationServiceCollectionExtensions
                          var propertyValue = prop.GetValue(null);
                          if (propertyValue is not null)
                          {
-                             options.AddPolicy(propertyValue.ToString(), policy => policy.RequireClaim(ApplicationClaimTypes.Permission, propertyValue.ToString()));
+                             options.AddPolicy((string)propertyValue, policy => policy.RequireClaim(ApplicationClaimTypes.Permission, (string)propertyValue));
                          }
                      }
                  })

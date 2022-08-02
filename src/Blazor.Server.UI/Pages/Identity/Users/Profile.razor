@@ -197,13 +197,7 @@
                 var filename = e.File.Name;
                 var fi = new FileInfo(filename);
                 var ext = fi.Extension;
-                var result = await _uploadService.UploadAsync(new UploadRequest()
-                    {
-                        Data = outStream.ToArray(),
-                        FileName = Guid.NewGuid().ToString() + ext,
-                        Extension = ext,
-                        UploadType = UploadType.ProfilePicture
-                    });
+                var result = await _uploadService.UploadAsync(new UploadRequest(Guid.NewGuid().ToString() + ext, UploadType.ProfilePicture, outStream.ToArray()));
                 model.Avatar = result;
                 var user = await _userManager.FindByIdAsync(model.UserId);
                 user.ProfilePictureDataUrl = model.Avatar;

@@ -69,19 +69,25 @@ public class IdentityService : IIdentityService
     public async Task<bool> IsInRoleAsync(string userId, string role)
     {
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
-
-        return await _userManager.IsInRoleAsync(user, role);
+        if (user is not null)
+            return await _userManager.IsInRoleAsync(user, role);
+        else
+            return false;
     }
 
     public async Task<bool> AuthorizeAsync(string userId, string policyName)
     {
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
-
-        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
-
-        var result = await _authorizationService.AuthorizeAsync(principal, policyName);
-
-        return result.Succeeded;
+        if (user is not null)
+        {
+            var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+            var result = await _authorizationService.AuthorizeAsync(principal, policyName);
+            return result.Succeeded;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public async Task<Result> DeleteUserAsync(string userId)

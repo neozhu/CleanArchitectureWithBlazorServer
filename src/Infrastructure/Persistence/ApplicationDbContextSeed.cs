@@ -57,7 +57,7 @@ public static class ApplicationDbContextSeed
                 var propertyValue = fi.GetValue(null);
 
                 if (propertyValue is not null)
-                    allPermissions.Add(propertyValue.ToString());
+                    allPermissions.Add((string)propertyValue);
             }
         }
 

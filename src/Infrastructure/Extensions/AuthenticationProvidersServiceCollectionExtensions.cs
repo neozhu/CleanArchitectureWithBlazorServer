@@ -51,9 +51,12 @@ public static class AuthenticationProvidersServiceCollectionExtensions
             {
                 OnCreatingTicket = c =>
                 {
-                    var identity = (ClaimsIdentity)c.Principal.Identity;
-                    var avatar = c.User.GetProperty("picture").GetString();
-                    identity.AddClaim(new Claim("avatar", avatar));
+                    var identity = (ClaimsIdentity?)c?.Principal?.Identity;
+                    var avatar = c?.User.GetProperty("picture").GetString();
+                    if (!string.IsNullOrEmpty(avatar))
+                    {
+                        identity?.AddClaim(new Claim("avatar", avatar));
+                    }
                     return Task.CompletedTask;
                 }
             };
