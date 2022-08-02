@@ -46,7 +46,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delet
                 _context.Customers.Remove(item);
             }
             await _context.SaveChangesAsync(cancellationToken);
-            return Result.Success();
+            return await Result.SuccessAsync();
         }
 
     }

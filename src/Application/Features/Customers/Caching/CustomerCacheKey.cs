@@ -6,8 +6,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 public static class CustomerCacheKey
 {
     public const string GetAllCacheKey = "all-Customers";
-    public static string GetPagtionCacheKey(string parameters) {
-        return "CustomersWithPaginationQuery,{parameters}";
+    public static string GetPaginationCacheKey(string parameters) {
+        return $"CustomersWithPaginationQuery,{parameters}";
     }
         static CustomerCacheKey()
     {
