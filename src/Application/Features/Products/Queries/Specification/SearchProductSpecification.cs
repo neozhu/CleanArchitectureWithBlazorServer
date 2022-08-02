@@ -1,6 +1,7 @@
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
+#pragma warning disable CS8602
 public class SearchProductSpecification : Specification<Product>
 {
     public SearchProductSpecification(ProductsWithPaginationQuery query)

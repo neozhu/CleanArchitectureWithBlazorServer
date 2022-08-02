@@ -5,6 +5,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 
 public partial class DocumentDto : IMapFrom<Document>
 {
+#pragma warning disable CS8602
     public void Mapping(Profile profile)
     {
         profile.CreateMap<Document, DocumentDto>()

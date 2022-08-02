@@ -26,6 +26,8 @@ public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, Paginat
         _context = context;
         _mapper = mapper;
     }
+#pragma warning disable CS8602
+#pragma warning disable CS8604
     public async Task<PaginatedData<LogDto>> Handle(LogsWithPaginationQuery request, CancellationToken cancellationToken)
     {
    

@@ -33,15 +33,16 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
             _excelService = excelService;
             _localizer = localizer;
         }
-
-        public async Task<byte[]> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
+#pragma warning disable CS8602
+#pragma warning disable CS8604
+    public async Task<byte[]> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
         {
             var data = await _context.Products.Where(x=>x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
                        .OrderBy($"{request.OrderBy} {request.SortDirection}")
                        .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,
-                new Dictionary<string, Func<ProductDto, object>>()
+                new Dictionary<string, Func<ProductDto, object?>>()
                 {
                     { _localizer["Brand Name"], item => item.Brand },
                     { _localizer["Product Name"], item => item.Name },

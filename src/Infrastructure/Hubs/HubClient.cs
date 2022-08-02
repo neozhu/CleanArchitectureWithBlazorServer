@@ -6,23 +6,13 @@ using Microsoft.AspNetCore.SignalR.Client;
 namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
 public class HubClient : IAsyncDisposable
 {
-    private HubConnection _hubConnection;
+    private HubConnection? _hubConnection;
     private string _hubUrl=String.Empty;
     private string _userId = String.Empty;
     private readonly NavigationManager _navigationManager;
     private readonly AuthenticationStateProvider _authenticationStateProvider;
     private bool _started = false;
-    //public HubClient(string siteUrl,string userId)
-    //{
-    //    if (string.IsNullOrWhiteSpace(siteUrl))
-    //        throw new ArgumentNullException(nameof(siteUrl));
-    //    if (string.IsNullOrWhiteSpace(userId))
-    //        throw new ArgumentNullException(nameof(userId));
-    //    // set the hub URL
-    //    _hubUrl = siteUrl.TrimEnd('/') + SignalR.HubUrl;
-    //    // save username
-    //    _userId = userId;
-    //}
+
     public HubClient(NavigationManager navigationManager,
         AuthenticationStateProvider authenticationStateProvider)
     {
@@ -77,7 +67,7 @@ public class HubClient : IAsyncDisposable
     public async Task StopAsync()
     {
 
-        if (_started)
+        if (_started && _hubConnection is not null)
         {
             // disconnect the client
             await _hubConnection.StopAsync();
@@ -94,7 +84,7 @@ public class HubClient : IAsyncDisposable
     public async Task SendAsync(string message)
     {
         // check we are connected
-        if (!_started)
+        if (!_started || _hubConnection is null)
             throw new InvalidOperationException("Client not started");
         // send the message
         await _hubConnection.SendAsync(SignalR.SendMessage, _userId, message);
@@ -102,7 +92,7 @@ public class HubClient : IAsyncDisposable
     public async Task NotifyAsync(string message)
     {
         // check we are connected
-        if (!_started)
+        if (!_started || _hubConnection is  null)
             throw new InvalidOperationException("Client not started");
         // send the message
         await _hubConnection.SendAsync(SignalR.SendNotification,  message);

@@ -81,12 +81,7 @@
         var imgstream = new MemoryStream();
         await filestream.CopyToAsync(imgstream);
 
-        model.UploadRequest = new UploadRequest()
-        {
-             Data = imgstream.ToArray(),
-             FileName= file.Name,
-             UploadType= UploadType.Document
-        };
+        model.UploadRequest = new UploadRequest(file.Name, UploadType.Document, imgstream.ToArray());
         model.URL = file.Name;
         Snackbar.Add(ToastText.UPLOADSUCCESS, MudBlazor.Severity.Info);
 

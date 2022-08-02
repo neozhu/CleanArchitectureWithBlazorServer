@@ -7,9 +7,9 @@ namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Expo
 
 public class ExportAuditTrailsQuery : IRequest<byte[]>
 {
-    public string filterRules { get; set; }
-    public string sort { get; set; } = "Id";
-    public string order { get; set; } = "desc";
+    public string? Keyword { get; set; }
+    public string OrderBy { get; set; } = "Id";
+    public string SortDirection { get; set; } = "Descending";
 }
 
 public class ExportAuditTrailsQueryHandler :
@@ -32,17 +32,18 @@ public class ExportAuditTrailsQueryHandler :
         _excelService = excelService;
         _localizer = localizer;
     }
-
+#pragma warning disable CS8602
+#pragma warning disable CS8604
     public async Task<byte[]> Handle(ExportAuditTrailsQuery request, CancellationToken cancellationToken)
     {
-        var filters = PredicateBuilder.FromFilter<AuditTrail>(request.filterRules);
+        
         var data = await _context.AuditTrails
-            .Where(filters)
-            .OrderBy($"{request.sort} {request.order}")
+            .Where(x => x.TableName.Contains(request.Keyword))
+            .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         var result = await _excelService.ExportAsync(data,
-            new Dictionary<string, Func<AuditTrailDto, object>>()
+            new Dictionary<string, Func<AuditTrailDto, object?>>()
             {
                     //{ _localizer["Id"], item => item.Id },
                     { _localizer["Date Time"], item => item.DateTime.ToString("yyyy-MM-dd HH:mm:ss") },

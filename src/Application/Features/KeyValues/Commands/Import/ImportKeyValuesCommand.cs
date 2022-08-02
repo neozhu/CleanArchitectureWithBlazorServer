@@ -47,7 +47,7 @@ public class ImportKeyValuesCommandHandler :
     }
     public async Task<Result> Handle(ImportKeyValuesCommand request, CancellationToken cancellationToken)
     {
-        var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, KeyValue, object>>
+        var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, KeyValue, object?>>
             {
                 { _localizer["Name"], (row,item) => item.Name = row[_localizer["Name"]]?.ToString() },
                 { _localizer["Value"], (row,item) => item.Value =  row[_localizer["Value"]]?.ToString() },
@@ -55,7 +55,7 @@ public class ImportKeyValuesCommandHandler :
                 { _localizer["Description"], (row,item) => item.Description =  row[_localizer["Description"]]?.ToString() }
             }, _localizer["Data"]);
 
-        if (result.Succeeded)
+        if (result.Succeeded && result.Data is not null)
         {
             var importItems = result.Data;
             var errors = new List<string>();

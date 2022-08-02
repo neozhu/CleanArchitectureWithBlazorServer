@@ -122,12 +122,12 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh Style="width:80px">@PromptText.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.TenantName)">@L["Tenant Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Provider)">@L["Provider"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.Email)">@L["Email"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.PhoneNumber)">@L["Phone Number"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.IsActive)">@L["Is Active"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.TenantName)">@L["Tenant Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.Provider)">@L["Provider"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.Email)">@L["Email"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.PhoneNumber)">@L["Phone Number"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.IsActive)">@L["Is Active"]</MudTableSortLabel></MudTh>
                 <MudTh>@L["Lock Status"]</MudTh>
             </HeaderContent>
             <RowTemplate>
@@ -180,7 +180,7 @@
                 <MudTd DataLabel="@L["User Name"]">
                     <div class="d-flex align-content-center flex-wrap">
                         <MudBadge Color="@(context.IsLive? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
-                            <MudAvatar Image="@context.ProfilePictureDataUrl" Alt="@context.UserName">@context.UserName.First()</MudAvatar>
+                            <MudAvatar Image="@context.ProfilePictureDataUrl" Alt="@context.UserName">@context?.UserName?.First()</MudAvatar>
                         </MudBadge>
                         <div class="d-flex flex-column">
                             <MudText Class="ml-2 align-self-center">@context.UserName</MudText>

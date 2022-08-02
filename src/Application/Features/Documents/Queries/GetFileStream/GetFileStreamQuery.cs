@@ -61,6 +61,8 @@ public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (st
 
     internal class DocumentsQuery : Specification<Document>
     {
+#pragma warning disable CS8602
+#pragma warning disable CS8604
         public DocumentsQuery(string userId,string tenantId,string keyword)
         {
             this.Criteria = p => (p.CreatedBy == userId && p.IsPublic == false) || p.IsPublic == true;

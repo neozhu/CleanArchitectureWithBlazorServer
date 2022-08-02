@@ -26,6 +26,8 @@ public class AuditTrailsQueryHandler : IRequestHandler<AuditTrailsWithPagination
         _context = context;
         _mapper = mapper;
     }
+#pragma warning disable CS8602
+#pragma warning disable CS8604
     public async Task<PaginatedData<AuditTrailDto>> Handle(AuditTrailsWithPaginationQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.AuditTrails

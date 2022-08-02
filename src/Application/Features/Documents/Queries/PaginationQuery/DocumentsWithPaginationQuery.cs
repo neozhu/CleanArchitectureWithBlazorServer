@@ -48,10 +48,11 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
 
         return data;
     }
-
+#pragma warning disable CS8602
+#pragma warning disable CS8604
     internal class DocumentsQuery : Specification<Document>
     {
-        public DocumentsQuery(string userId,string tenantId,string keyword)
+        public DocumentsQuery(string userId,string tenantId,string? keyword)
         {
             this.Criteria = p => (p.CreatedBy == userId && p.IsPublic == false) || p.IsPublic == true;
             And(x => x.TenantId == tenantId);

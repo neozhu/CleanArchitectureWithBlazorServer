@@ -43,7 +43,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export
                        .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,
-                new Dictionary<string, Func<CustomerDto, object>>()
+                new Dictionary<string, Func<CustomerDto, object?>>()
                 {
                     //{ _localizer["Id"], item => item.Id },
                 }

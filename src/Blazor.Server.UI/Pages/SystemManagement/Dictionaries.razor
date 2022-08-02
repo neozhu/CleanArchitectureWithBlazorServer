@@ -132,10 +132,10 @@
                 </MudHidden>
             </ColGroup>
             <HeaderContent>
-                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object>(x=>x.Name)">@L["Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object>(x=>x.Value)">@L["Value"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object>(x=>x.Text)">@L["Text"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object?>(x=>x.Name)">@L["Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object?>(x=>x.Value)">@L["Value"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object?>(x=>x.Text)">@L["Text"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object?>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@L["Name"]">@context?.Name</MudTd>
@@ -211,7 +211,7 @@
             return true;
         return false;
     }
-    private Task<IEnumerable<string>> searchName(string value)
+    private Task<IEnumerable<string?>> searchName(string? value)
     {
         if (string.IsNullOrEmpty(value))
             return Task.FromResult(_keyValueList.Where(x=>!string.IsNullOrEmpty(x.Name)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
