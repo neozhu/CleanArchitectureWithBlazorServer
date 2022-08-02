@@ -37,7 +37,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEd
 				// add update domain events if this entity implement the IHasDomainEvent interface
 				// item.AddDomainEvent(new UpdatedEvent<Customer>(item));
                 await _context.SaveChangesAsync(cancellationToken);
-                return Result<int>.Success(item.Id);
+                return await Result<int>.SuccessAsync(item.Id);
             }
             else
             {
@@ -46,7 +46,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEd
 				// item.AddDomainEvent(new CreatedEvent<Customer>(item));
                 _context.Customers.Add(item);
                 await _context.SaveChangesAsync(cancellationToken);
-                return Result<int>.Success(item.Id);
+                return await Result<int>.SuccessAsync(item.Id);
             }
            
         }

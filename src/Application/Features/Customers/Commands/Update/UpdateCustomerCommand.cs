@@ -38,7 +38,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Updat
 				// item.AddDomainEvent(new UpdatedEvent<Customer>(item));
                 await _context.SaveChangesAsync(cancellationToken);
            }
-           return Result.Success();
+           return await Result.SuccessAsync();
         }
     }
 

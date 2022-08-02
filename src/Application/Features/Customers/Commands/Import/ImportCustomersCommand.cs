@@ -56,7 +56,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
             {
                 foreach (var dto in result.Data)
                 {
-                    var exists = await _context.Customers.AnyAsync(x => x.Name == dto.Name);
+                    var exists = await _context.Customers.AnyAsync(x => x.Name == dto.Name,cancellationToken);
                     if (!exists)
                     {
                         var item = _mapper.Map<Customer>(dto);
@@ -66,11 +66,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
                     }
                  }
                  await _context.SaveChangesAsync(cancellationToken);
-                 return Result.Success();
+                 return await Result.SuccessAsync();
            }
            else
            {
-               return Result.Failure(result.Errors);
+               return await Result.FailureAsync(result.Errors);
            }
         }
         public async Task<byte[]> Handle(CreateCustomersTemplateCommand request, CancellationToken cancellationToken)
