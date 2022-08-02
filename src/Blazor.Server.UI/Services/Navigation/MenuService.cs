@@ -21,6 +21,13 @@ public class MenuService : IMenuService
                 },
                 new()
                 {
+                    Title = "Customer",
+                    Icon = Icons.Material.Filled.Person,
+                    PageStatus = PageStatus.Completed,
+                    Href = "/pages/customers"
+                },
+                new()
+                {
                     Title = "E-Commerce",
                     Icon = Icons.Material.Filled.ShoppingCart,
                     PageStatus = PageStatus.Completed,
