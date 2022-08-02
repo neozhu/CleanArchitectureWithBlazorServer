@@ -57,7 +57,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
             {
                 foreach (var dto in result.Data)
                 {
-                    var exists = await _context.Customers.AnyAsync(x => x.Name == dto.Name, cancellationToken: cancellationToken);
+                    var exists = await _context.Customers.AnyAsync(x => x.Name == dto.Name,cancellationToken);
                     if (!exists)
                     {
                         var item = _mapper.Map<Customer>(dto);
