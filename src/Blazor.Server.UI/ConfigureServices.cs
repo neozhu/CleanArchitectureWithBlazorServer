@@ -33,7 +33,8 @@ public static class ConfigureServices
                 options.MaximumParallelInvocationsPerClient = 1;
                 options.MaximumReceiveMessageSize = 32 * 1024;
                 options.StreamBufferCapacity = 10;
-            });
+            })
+            .AddCircuitOptions(option => { option.DetailedErrors = true; });
         services.AddHotKeys();
         services.AddBlazoredLocalStorage();
         services.AddMudServices(config =>
