@@ -4,6 +4,7 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 
@@ -11,16 +12,13 @@ public class AuditTrailDto : IMapFrom<AuditTrail>
 {
     public void Mapping(Profile profile)
     {
-        var options = new JsonSerializerOptions
-        {
-            Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs)
-        };
+ 
         profile.CreateMap<AuditTrail, AuditTrailDto>()
            .ForMember(x => x.AuditType, s => s.MapFrom(y => y.AuditType.ToString()))
-           .ForMember(x => x.OldValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.OldValues, options)))
-           .ForMember(x => x.NewValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.NewValues, options)))
-           .ForMember(x => x.PrimaryKey, s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, options)))
-           .ForMember(x => x.AffectedColumns, s => s.MapFrom(y => JsonSerializer.Serialize(y.AffectedColumns, options)))
+           .ForMember(x => x.OldValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.OldValues, DefaultJsonSerializerOptions.Options)))
+           .ForMember(x => x.NewValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.NewValues, DefaultJsonSerializerOptions.Options)))
+           .ForMember(x => x.PrimaryKey, s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, DefaultJsonSerializerOptions.Options)))
+           .ForMember(x => x.AffectedColumns, s => s.MapFrom(y => JsonSerializer.Serialize(y.AffectedColumns, DefaultJsonSerializerOptions.Options)))
            ;
 
     }
