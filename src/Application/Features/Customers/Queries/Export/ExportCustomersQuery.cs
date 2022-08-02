@@ -36,18 +36,20 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export
 
         public async Task<byte[]> Handle(ExportCustomersQuery request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing ExportCustomersQueryHandler method 
-  
-            var data = await _context.Customers//.Where(x=>x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
-                       .OrderBy("{request.OrderBy} {request.SortDirection}")
+            var data = await _context.Customers.Where(x=>x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
+                       .OrderBy($"{request.OrderBy} {request.SortDirection}")
                        .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
+            
             var result = await _excelService.ExportAsync(data,
                 new Dictionary<string, Func<CustomerDto, object?>>()
                 {
-                    //{ _localizer["Id"], item => item.Id },
+                    { _localizer["Id"], item => item.Id },
+                    { _localizer["Name"], item => item.Name! },
+                    { _localizer["Description"], item => item.Description! },
                 }
                 , _localizer["Customers"]);
+            
             return result;
         }
     }

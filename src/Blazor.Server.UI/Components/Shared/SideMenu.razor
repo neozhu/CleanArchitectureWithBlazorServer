@@ -51,7 +51,7 @@
     <MudNavMenu>
         @foreach (var section in _menuSections.Where(x => x.Roles == null || x.Roles.Any(x => _roles.Contains(x))))
         {
-            @if (section is not null)
+            @if(section is not null)
             {
                 @if (SideMenuDrawerOpen)
                 {
@@ -63,30 +63,25 @@
                         </MudText>
                     </div>
                 }
+                
                 @if (section.SectionItems is not null)
                 {
                     @foreach (var sectionItem in section.SectionItems.Where(x => x.Roles == null || x.Roles.Any(x => _roles.Contains(x))))
                     {
                         @if (sectionItem.IsParent && sectionItem.MenuItems is not null)
                         {
-                            <MudNavGroup Icon="@sectionItem.Icon"
-                     Title="@L[sectionItem.Title]">
+                            <MudNavGroup Icon="@sectionItem.Icon" Title="@L[sectionItem.Title]">
                                 @foreach (var menuItem in sectionItem.MenuItems.Where(x => x.Roles == null || x.Roles.Any(x => _roles.Contains(x))))
                                 {
                                     @if (SideMenuDrawerOpen)
                                     {
-                                        <MudNavLink Disabled="@(menuItem.PageStatus != PageStatus.Completed)"
-                        Href="@(menuItem.Href)"
-                        Match="NavLinkMatch.All">
+                                        <MudNavLink Disabled="@(menuItem.PageStatus != PageStatus.Completed)" Href="@(menuItem.Href)" Match="NavLinkMatch.All">
                                             <div class="d-flex">
                                                 @(L[menuItem.Title])
                                                 @if (menuItem.PageStatus != PageStatus.Completed)
                                                 {
                                                     <MudSpacer />
-                                                    <MudChip Class="mr-4"
-                             Color="@Color.Primary"
-                             Size="Size.Small"
-                             Variant="Variant.Text">
+                                                    <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
                                                         @(L[menuItem.PageStatus.ToDescriptionString()])
                                                     </MudChip>
                                                 }
@@ -98,19 +93,13 @@
                         }
                         else
                         {
-                            <MudNavLink Disabled="@(sectionItem.PageStatus != PageStatus.Completed)"
-                    Href="@(sectionItem.Href)"
-                    Icon="@(sectionItem.Icon)"
-                    Match="NavLinkMatch.All">
+                            <MudNavLink Disabled="@(sectionItem.PageStatus != PageStatus.Completed)" Href="@(sectionItem.Href)" Icon="@(sectionItem.Icon)" Match="NavLinkMatch.All">
                                 <div class="d-flex">
                                     @(L[sectionItem.Title])
                                     @if (sectionItem.PageStatus != PageStatus.Completed)
                                     {
                                         <MudSpacer />
-                                        <MudChip Class="mr-4"
-                         Color="@Color.Primary"
-                         Size="Size.Small"
-                         Variant="Variant.Text">
+                                        <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
                                             @(L[sectionItem.PageStatus.ToDescriptionString()])
                                         </MudChip>
                                     }

@@ -46,13 +46,14 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
         }
         public async Task<Result> Handle(ImportCustomersCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing ImportCustomersCommandHandler method
-           var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, CustomerDto, object?>>
-            {
-                //eg. { _localizer["Name"], (row,item) => item.Name = row[_localizer["Name"]]?.ToString() },
 
+           var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, CustomerDto, object?>> 
+            {
+                { _localizer["Name"], (row,item) => item.Name = row[_localizer["Name"]]?.ToString() },
+                { _localizer["Description"], (row,item) => item.Description = row[_localizer["Description"]]?.ToString() },
             }, _localizer["Customers"]);
-            if (result.Succeeded && result.Data is not null)
+
+            if (result.Succeeded && result.Data is not null) 
             {
                 foreach (var dto in result.Data)
                 {
@@ -60,8 +61,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
                     if (!exists)
                     {
                         var item = _mapper.Map<Customer>(dto);
-                        // add create domain events if this entity implement the IHasDomainEvent interface
-				        // item.AddDomainEvent(new CreatedEvent<Customer>(item));
+				        item.AddDomainEvent(new CreatedEvent<Customer>(item));
                         await _context.Customers.AddAsync(item, cancellationToken);
                     }
                  }
@@ -73,12 +73,12 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
                return await Result.FailureAsync(result.Errors);
            }
         }
+        
         public async Task<byte[]> Handle(CreateCustomersTemplateCommand request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing ImportCustomersCommandHandler method 
             var fields = new string[] {
-                   //TODO:Defines the title and order of the fields to be imported's template
-                   //_localizer["Name"],
+                   _localizer["Name"],
+                   _localizer["Description"],
                 };
             var result = await _excelService.CreateTemplateAsync(fields, _localizer["Customers"]);
             return result;
