@@ -55,7 +55,7 @@ public class ImportProductsCommandHandler :
               { _localizer["Product Name"], (row,item) => item.Name = row[_localizer["Product Name"]]?.ToString() },
               { _localizer["Description"], (row,item) => item.Description = row[_localizer["Description"]]?.ToString() },
               { _localizer["Unit"], (row,item) => item.Unit = row[_localizer["Unit"]]?.ToString() },
-              { _localizer["Price of unit"], (row,item) => item.Price =row.IsNull(_localizer["Price of unit"])? 0m:Convert.ToDecimal(row[_localizer["Price of unit"]]) },
+              { _localizer["Price of unit"], (row,item) => item.Price =row.FieldDecimalOrDefault(_localizer["Price of unit"]) },
               { _localizer["Pictures"], (row,item) => item.Pictures =row.IsNull(_localizer["Pictures"])? null:row[_localizer["Pictures"]]?.ToString().Split(",").ToList() },
             }, _localizer["Products"]);
         if (result.Succeeded)
@@ -75,10 +75,13 @@ public class ImportProductsCommandHandler :
     }
     public async Task<byte[]> Handle(CreateProductsTemplateCommand request, CancellationToken cancellationToken)
     {
-        //TODO:Implementing ImportProductsCommandHandler method 
         var fields = new string[] {
-                   //TODO:Defines the title and order of the fields to be imported's template
-                   //_localizer["Name"],
+                   _localizer["Brand Name"],
+                   _localizer["Product Name"],
+                   _localizer["Description"],
+                   _localizer["Unit"],
+                   _localizer["Price of unit"],
+                   _localizer["Pictures"],
                 };
         var result = await _excelService.CreateTemplateAsync(fields, _localizer["Products"]);
         return result;
