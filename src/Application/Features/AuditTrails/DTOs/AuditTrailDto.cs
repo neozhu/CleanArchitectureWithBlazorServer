@@ -3,6 +3,7 @@
 
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 
@@ -12,7 +13,16 @@ public class AuditTrailDto : IMapFrom<AuditTrail>
 {
     public void Mapping(Profile profile)
     {
- 
+        var options = new JsonSerializerOptions()
+        {
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs),
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+        };
+        
+
+
         profile.CreateMap<AuditTrail, AuditTrailDto>()
            .ForMember(x => x.AuditType, s => s.MapFrom(y => y.AuditType.ToString()))
            .ForMember(x => x.OldValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.OldValues, DefaultJsonSerializerOptions.Options)))

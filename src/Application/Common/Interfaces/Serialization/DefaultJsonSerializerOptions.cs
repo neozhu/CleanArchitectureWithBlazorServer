@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 public class DefaultJsonSerializerOptions
 {
-    public static readonly JsonSerializerOptions Options = new()
+    public static  JsonSerializerOptions Options => new()
     {
         Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs),
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
