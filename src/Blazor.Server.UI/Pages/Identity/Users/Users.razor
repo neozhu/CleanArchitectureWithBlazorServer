@@ -224,7 +224,7 @@
     [Inject]
     private ProfileService ProfileService { get; set; } = default!;
     [Inject]
-    private ITenantProvider TenantProvider{ get; set; }= default!;
+    private ITenantProvider _tenantProvider{ get; set; }= default!;
 
     private bool _canCreate;
     private bool _canSearch;
@@ -415,7 +415,7 @@
                         });
                     if (user.TenantId is not null && user.TenantName is not null && state.User.GetTenantId() != user.TenantId)
                     {
-                        await TenantProvider.SetTenant(user.TenantId);
+                        await _tenantProvider.SetTenant(user.TenantId,user.TenantName);
                         state.User.SetTenantId(user.TenantId);
                         state.User.SetTenantName(user.TenantName);
                     }

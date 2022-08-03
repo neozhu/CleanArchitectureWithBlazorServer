@@ -27,7 +27,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
         var userId = await _currentUserService.UserId();
-        var tenantId = await _tenantProvider.GetTenant();
+        var tenantId = await _tenantProvider.GetTenantId();
         if (eventData.Context is not null)
         {
             UpdateEntities(eventData.Context, userId, tenantId);
