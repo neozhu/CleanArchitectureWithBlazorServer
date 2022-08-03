@@ -52,4 +52,15 @@ public class CurrentUserService : ICurrentUserService
             return String.Empty;
         }
     }
+
+    public async Task SetUser(string userId,string userName)
+    {
+        await _protectedLocalStorage.SetAsync(LocalStorage.USERID, userId);
+        await _protectedLocalStorage.SetAsync(LocalStorage.USERNAME, userName);
+    }
+    public async Task Clear()
+    {
+        await _protectedLocalStorage.DeleteAsync(LocalStorage.USERID);
+        await _protectedLocalStorage.DeleteAsync(LocalStorage.USERNAME);
+    }
 }
