@@ -206,7 +206,7 @@
                 state.User.SetProfilePictureUrl(model.Avatar);
                 await _profileService.Update(model);
                 //Do your validations here
-                Snackbar.Add($"{ToastText.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                Snackbar.Add(L["The avatar has been updated."], MudBlazor.Severity.Info);
             }
         }
     }

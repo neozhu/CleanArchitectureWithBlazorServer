@@ -225,7 +225,7 @@
     private ProfileService ProfileService { get; set; } = default!;
     [Inject]
     private ITenantProvider _tenantProvider{ get; set; }= default!;
-    
+
     private bool _canCreate;
     private bool _canSearch;
     private bool _canEdit;
@@ -389,10 +389,13 @@
             var identityResult = await UserManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
-                if (item.AssignRoles is not null && item.AssignRoles.Length > 0)
+                var removeRoleResult = await UserManager.RemoveFromRolesAsync(user, roles);
+                if (removeRoleResult.Succeeded)
                 {
-                    await UserManager.RemoveFromRolesAsync(user, roles);
-                    await UserManager.AddToRolesAsync(user, item.AssignRoles);
+                    if (item.AssignRoles is not null && item.AssignRoles.Length > 0)
+                    {
+                        await UserManager.AddToRolesAsync(user, item.AssignRoles);
+                    }
                 }
                 if (state.User.GetUserId() == item.Id)
                 {
@@ -407,7 +410,8 @@
                             UserName = user.UserName,
                             IsActive = user.IsActive,
                             TenantId = user.TenantId,
-                            TenantName = user.TenantName
+                            TenantName = user.TenantName,
+                            Role = item.AssignRoles?.FirstOrDefault()
                         });
                     if (user.TenantId is not null && user.TenantName is not null && state.User.GetTenantId() != user.TenantId)
                     {
