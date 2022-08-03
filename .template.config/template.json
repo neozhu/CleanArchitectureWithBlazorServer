@@ -1,7 +1,7 @@
 {
     "$schema": "http://json.schemastore.org/template",
     "author": "hualin.zhu",
-    "classifications": ["Web","ASP.NET","BLAZOR","Clean Architecture"],
+    "classifications": ["Web","Blazor","Clean Architecture"],
     "name": "Clean Architecture for Blazor Server Solution",
     "defaultName": "Clean.Architecture.Blazor",
     "identity": "Clean.Architecture.Blazor.Solution.CSharp",
