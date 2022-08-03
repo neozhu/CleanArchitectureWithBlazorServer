@@ -3,23 +3,31 @@ using CleanArchitecture.Blazor.Application.Common.Security;
 using System.Text;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using CleanArchitecture.Blazor.Infrastructure.Constants.LocalStorage;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using Microsoft.AspNetCore.Components;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
 public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthenticationService
 {
     private readonly SemaphoreSlim _semaphore = new(1, 1);
+    private readonly ITenantProvider _tenantProvider;
+    private readonly ICurrentUserService _currentUserService;
     private readonly ProtectedLocalStorage _protectedLocalStorage;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private const string KEY = "Basic";
  
     public IdentityAuthenticationService(
-        ProtectedLocalStorage protectedLocalStorage,
+    ITenantProvider tenantProvider,
+    ICurrentUserService currentUserService,
+    ProtectedLocalStorage protectedLocalStorage,
         RoleManager<ApplicationRole> roleManager,
         UserManager<ApplicationUser> userManager
         )
     {
+        _tenantProvider = tenantProvider;
+        _currentUserService = currentUserService;
         _protectedLocalStorage = protectedLocalStorage;
         _userManager = userManager;
         _roleManager = roleManager;
@@ -137,15 +145,10 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                     var base64 = Convert.ToBase64String(memoryStream.ToArray());
                     await _protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
                 }
-                await _protectedLocalStorage.SetAsync(LocalStorage.USERID, user.Id);
-                await _protectedLocalStorage.SetAsync(LocalStorage.USERNAME, user.UserName);
-                if (user.TenantId is not null)
+                await _currentUserService.SetUser(user.Id, user.UserName);
+                if (user.TenantId is not null && user.TenantName is not null)
                 {
-                    await _protectedLocalStorage.SetAsync(LocalStorage.TENANTID, user.TenantId);
-                }
-                if (user.TenantName is not null)
-                {
-                    await _protectedLocalStorage.SetAsync(LocalStorage.TENANTNAME, user.TenantName);
+                    await _tenantProvider.SetTenant(user.TenantId, user.TenantName);
                 }
                 var principal = new ClaimsPrincipal(identity);
                 NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
@@ -195,15 +198,10 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 var base64 = Convert.ToBase64String(memoryStream.ToArray());
                 await _protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
             }
-            await _protectedLocalStorage.SetAsync(LocalStorage.USERID, user.Id);
-            await _protectedLocalStorage.SetAsync(LocalStorage.USERNAME, user.UserName);
-            if(user.TenantId is not null)
+            await _currentUserService.SetUser(user.Id, user.UserName);
+            if (user.TenantId is not null && user.TenantName is not null)
             {
-                await _protectedLocalStorage.SetAsync(LocalStorage.TENANTID, user.TenantId);
-            }
-            if (user.TenantName is not null)
-            {
-                await _protectedLocalStorage.SetAsync(LocalStorage.TENANTNAME, user.TenantName);
+                await _tenantProvider.SetTenant(user.TenantId, user.TenantName);
             }
             var principal = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
@@ -217,10 +215,8 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
     public async Task Logout()
     {
         await _protectedLocalStorage.DeleteAsync(LocalStorage.CLAIMSIDENTITY);
-        await _protectedLocalStorage.DeleteAsync(LocalStorage.USERID);
-        await _protectedLocalStorage.DeleteAsync(LocalStorage.USERNAME);
-        await _protectedLocalStorage.DeleteAsync(LocalStorage.TENANTID);
-        await _protectedLocalStorage.DeleteAsync(LocalStorage.TENANTNAME);
+        await _currentUserService.Clear();
+        await _tenantProvider.Clear();
         var principal = new ClaimsPrincipal();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
     }

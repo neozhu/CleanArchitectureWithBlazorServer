@@ -7,23 +7,29 @@ public sealed class TenantProvider : ITenantProvider
 {
     private readonly ProtectedLocalStorage _protectedLocalStorage;
     private readonly IDictionary<Guid, Action> _callbacks = new Dictionary<Guid, Action>();
-    public TenantProvider(
-
-        ProtectedLocalStorage protectedLocalStorage)
+    public TenantProvider(ProtectedLocalStorage protectedLocalStorage)
     {
-
         _protectedLocalStorage = protectedLocalStorage;
-
     }
-    public async Task SetTenant(string tenant)
+    public async Task SetTenant(string tenantId,string tenantName)
     {
-        await _protectedLocalStorage.SetAsync(LocalStorage.TENANTID, tenant);
+        await _protectedLocalStorage.SetAsync(LocalStorage.TENANTID, tenantId);
+        await _protectedLocalStorage.SetAsync(LocalStorage.TENANTNAME, tenantName);
         foreach (var callback in _callbacks.Values)
         {
             callback();
         }
     }
-    public async Task<string> GetTenant()
+    public async Task Clear()
+    {
+        await _protectedLocalStorage.DeleteAsync(LocalStorage.TENANTID);
+        await _protectedLocalStorage.DeleteAsync(LocalStorage.TENANTNAME);
+        foreach (var callback in _callbacks.Values)
+        {
+            callback();
+        }
+    }
+    public async Task<string> GetTenantId()
     {
         try
         {
