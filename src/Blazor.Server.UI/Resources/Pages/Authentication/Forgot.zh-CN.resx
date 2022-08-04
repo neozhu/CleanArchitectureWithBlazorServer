@@ -118,12 +118,54 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Enter the email address linked to your account and you will recieve an email containing a link to reset your password." xml:space="preserve">
-    <value>输入注册的电子邮件地址</value>
+    <value>输入与您的账户相连的电子邮件地址，您将收到一封包含重置密码链接的电子邮件。</value>
   </data>
   <data name="Forgot Password?" xml:space="preserve">
-    <value>忘记密码?</value>
+    <value>忘记密码？</value>
   </data>
   <data name="Reset Password" xml:space="preserve">
     <value>重置密码</value>
+  </data>
+  <data name="{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password." xml:space="preserve">
+    <value>{0}收到了一个使用电子邮件作为帐户{1}的恢复电子邮件的请求。使用此令牌：[ {2} ] 完成恢复密码。</value>
+  </data>
+  <data name="{0}, please contact the administrator" xml:space="preserve">
+    <value>{0}，请联系管理员</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>电子邮件</value>
+  </data>
+  <data name="Enter the email address linked to your account and you will recieve an email containing a token string to reset your password." xml:space="preserve">
+    <value>输入与您的账户相关联的电子邮件地址，您将收到一封包含令牌字符串的电子邮件来重置您的密码。</value>
+  </data>
+  <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
+    <value>输入恢复邮件中的令牌字符串来设置你的新密码。</value>
+  </data>
+  <data name="No user found by email, please contact the administrator" xml:space="preserve">
+    <value>通过电子邮件没有找到用户，请联系管理员</value>
+  </data>
+  <data name="Set a new password" xml:space="preserve">
+    <value>设置一个新的密码</value>
+  </data>
+  <data name="Set New Password" xml:space="preserve">
+    <value>设置新密码</value>
+  </data>
+  <data name="The input token string must be equal to the token string in the recovery email" xml:space="preserve">
+    <value>输入的令牌字符串必须与恢复邮件中的令牌字符串相等</value>
+  </data>
+  <data name="The new password has been set successfully, please login again" xml:space="preserve">
+    <value>新密码已经设置成功，请再次登录</value>
+  </data>
+  <data name="Token String" xml:space="preserve">
+    <value>代币字符串</value>
+  </data>
+  <data name="Verify your recovery email" xml:space="preserve">
+    <value>验证您的恢复邮件</value>
+  </data>
+  <data name="Waiting" xml:space="preserve">
+    <value>正在等待</value>
+  </data>
+  <data name="You are already logged in." xml:space="preserve">
+    <value>你已经登录了。</value>
   </data>
 </root>

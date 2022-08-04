@@ -121,9 +121,51 @@
     <value>Entrez l'adresse e-mail liée à votre compte et vous recevrez un e-mail contenant un lien pour réinitialiser votre mot de passe.</value>
   </data>
   <data name="Forgot Password?" xml:space="preserve">
-    <value>Mot de passe oublié ?</value>
+    <value>Vous avez oublié votre mot de passe ?</value>
   </data>
   <data name="Reset Password" xml:space="preserve">
     <value>Réinitialiser le mot de passe</value>
+  </data>
+  <data name="{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password." xml:space="preserve">
+    <value>{0} a reçu une demande d'utilisation de l'email comme email de récupération pour le compte {1}. Utilisez ce jeton :[ {2} ] pour finir de restaurer le mot de passe.</value>
+  </data>
+  <data name="{0}, please contact the administrator" xml:space="preserve">
+    <value>{0}, veuillez contacter l'administrateur</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Enter the email address linked to your account and you will recieve an email containing a token string to reset your password." xml:space="preserve">
+    <value>Entrez l'adresse e-mail liée à votre compte et vous recevrez un e-mail contenant une chaîne de caractères pour réinitialiser votre mot de passe.</value>
+  </data>
+  <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
+    <value>Saisissez la chaîne de caractères du courriel de récupération pour définir votre nouveau mot de passe.</value>
+  </data>
+  <data name="No user found by email, please contact the administrator" xml:space="preserve">
+    <value>Aucun utilisateur trouvé par email, veuillez contacter l'administrateur.</value>
+  </data>
+  <data name="Set a new password" xml:space="preserve">
+    <value>Définir un nouveau mot de passe</value>
+  </data>
+  <data name="Set New Password" xml:space="preserve">
+    <value>Définir un nouveau mot de passe</value>
+  </data>
+  <data name="The input token string must be equal to the token string in the recovery email" xml:space="preserve">
+    <value>La chaîne du jeton d'entrée doit être égale à la chaîne du jeton dans l'e-mail de récupération.</value>
+  </data>
+  <data name="The new password has been set successfully, please login again" xml:space="preserve">
+    <value>Le nouveau mot de passe a été défini avec succès, veuillez vous connecter à nouveau.</value>
+  </data>
+  <data name="Token String" xml:space="preserve">
+    <value>Chaîne du jeton</value>
+  </data>
+  <data name="Verify your recovery email" xml:space="preserve">
+    <value>Vérifiez l'e-mail de récupération</value>
+  </data>
+  <data name="Waiting" xml:space="preserve">
+    <value>En attente de</value>
+  </data>
+  <data name="You are already logged in." xml:space="preserve">
+    <value>Vous êtes déjà connecté.</value>
   </data>
 </root>
