@@ -86,20 +86,24 @@
                 return;
             }
             _resetpasswordToken = await _userManager.GeneratePasswordResetTokenAsync(_user);
-            //var response = await sendResetPasswordToken(_emailaddress, _user.UserName, _resetpasswordToken);
-            //if (response.Successful)
-            //{
-            //    _step = 2;
-            //}
-            //else
-            //{
-            //    Snackbar.Add(string.Format(L["{0}, please contact the administrator"],response.ErrorMessages.FirstOrDefault()), MudBlazor.Severity.Error);
-            //}
+            var response = await sendResetPasswordToken(_emailaddress, _user.UserName, _resetpasswordToken);
+            if (response.Successful)
+            {
+                _step = 2;
+                Snackbar.Clear();
+               
+                Snackbar.Add(string.Format(L["The email has been sent, please check the email:{0} "],_emailaddress), MudBlazor.Severity.Success,config=> { config.ShowCloseIcon = false; config.HideTransitionDuration = 5000; });
+                //Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomRight;
+            }
+            else
+            {
+                Snackbar.Add(string.Format(L["{0}, please contact the administrator"],response.ErrorMessages.FirstOrDefault()), MudBlazor.Severity.Error);
+            }
 
             // The following code is just for testing 
             // prompt token string
-            Snackbar.Add(_resetpasswordToken, MudBlazor.Severity.Warning);
-            _step = 2;
+            //Snackbar.Add(_resetpasswordToken, MudBlazor.Severity.Warning);
+            //_step = 2;
 
         }
         catch (Exception e)
@@ -116,7 +120,7 @@
     {
 
         var subject = L["Verify your recovery email"];
-        var body = string.Format(L["<p>{0} received a request to use email as a recovery email for the account {1}.</p> <p>Use this token string  to finish resting password:<p> {2} <p>This token string will expire in 1 hours.</p> <p>If you don¡¯t recognize {3}, you can safely ignore this email.</p>"], Settings.AppName, userName, token,toemail);
+        var body = string.Format(L["  {0} received a request to use email as a recovery email for the account {1}.\r\n  Use this token string to finish resting password:\r\n \r\n  {2} \r\n \r\n This token string will expire in 1 hours. \r\n  If you don¡¯t recognize {3}, you can safely ignore this email."], Settings.AppName, userName, token,toemail);
         return _fluentEmail.To(toemail).Subject(subject).Body(body).SendAsync();
     }
 
