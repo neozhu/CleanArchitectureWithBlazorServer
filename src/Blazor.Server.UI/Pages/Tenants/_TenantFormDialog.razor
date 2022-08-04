@@ -6,7 +6,7 @@
 @inject IStringLocalizer<Tenants> L
 <MudDialog>
     <DialogContent>
-        <MudForm Model="model" @ref="form" Validation="@(modelValidator.ValidateValue)">
+        <MudForm Model="model" @ref="_form" Validation="@(modelValidator.ValidateValue)">
             <MudGrid>
                 <MudItem xs="12">
                     <MudTextField Label="@L["Tenant Id"]" @bind-Value="model.Id"
@@ -42,7 +42,7 @@
 </MudDialog>
 
 @code {
-    MudForm form = default!;
+    MudForm? _form = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
     AddEditTenantCommandValidator modelValidator = new AddEditTenantCommandValidator();
@@ -50,12 +50,14 @@
 
     async Task Submit()
     {
-        await form.Validate();
-        if (form.IsValid)
+        if (_form is not null)
         {
-            MudDialog.Close(DialogResult.Ok(true));
+            await _form.Validate();
+            if (_form.IsValid)
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+            }
         }
-
     }
     void Cancel() => MudDialog.Cancel();
 }

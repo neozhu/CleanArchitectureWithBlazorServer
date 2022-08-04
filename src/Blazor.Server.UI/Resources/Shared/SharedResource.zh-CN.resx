@@ -177,4 +177,10 @@
   <data name="Search..." xml:space="preserve">
     <value>搜索</value>
   </data>
+  <data name="sign in" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="authentication is required, click" xml:space="preserve">
+    <value>需要登录后访问, 单击</value>
+  </data>
 </root>

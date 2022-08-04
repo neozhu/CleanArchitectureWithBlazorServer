@@ -177,4 +177,10 @@
   <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
     <value>Vous n'êtes pas autorisé à être ici. Pour plus d'informations, contactez votre administrateur système.</value>
   </data>
+  <data name="authentication is required, click" xml:space="preserve">
+    <value>Une authentification est requise, cliquez sur</value>
+  </data>
+  <data name="sign in" xml:space="preserve">
+    <value>sign in</value>
+  </data>
 </root>

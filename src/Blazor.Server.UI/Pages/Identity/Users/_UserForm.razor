@@ -117,7 +117,7 @@
         public string key { get; set; } = string.Empty;
         public bool value { get; set; }
     }
-    MudForm form = default!;
+    MudForm? form = default!;
     private List<keyvalue> _roles { get; set; } = new();
 
     [Inject] private IUploadService _uploadService { get; set; } = default!;
@@ -192,11 +192,14 @@
     }
     public async Task Submit()
     {
-        await form.Validate();
-        if (form.IsValid)
+        if (form is not null)
         {
-            model.AssignRoles = _roles.Where(x => x.value).Select(x => x.key).ToArray();
-            await OnFormSubmit.InvokeAsync(model);
+            await form.Validate();
+            if (form.IsValid)
+            {
+                model.AssignRoles = _roles.Where(x => x.value).Select(x => x.key).ToArray();
+                await OnFormSubmit.InvokeAsync(model);
+            }
         }
     }
 }

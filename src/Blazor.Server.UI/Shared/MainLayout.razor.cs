@@ -14,8 +14,9 @@ public partial class MainLayout: IDisposable
     private HotKeysContext? _hotKeysContext;
     private bool _sideMenuDrawerOpen = true;
     private UserPreferences UserPreferences = new();
-    [Inject] private LayoutService LayoutService { get; set; } = default!;
-    private MudThemeProvider _mudThemeProvider=default!;
+    [Inject] 
+    private LayoutService _layoutService { get; set; } = null!;
+    private MudThemeProvider? _mudThemeProvider;
     private bool _themingDrawerOpen;
     [Inject] private IDialogService _dialogService { get; set; } = default!;
     [Inject] private HotKeys _hotKeys { get; set; } = default!;
@@ -28,7 +29,7 @@ public partial class MainLayout: IDisposable
     public void Dispose()
     {
         _profileService.OnChange -= _profileService_OnChange;
-        LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
+        _layoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         _hotKeysContext?.Dispose();
         GC.SuppressFinalize(this);
@@ -36,7 +37,6 @@ public partial class MainLayout: IDisposable
   
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
             await ApplyUserPreferences();
@@ -46,14 +46,17 @@ public partial class MainLayout: IDisposable
     }
     private async Task ApplyUserPreferences()
     {
-        var defaultDarkMode = await _mudThemeProvider.GetSystemPreference();
-        UserPreferences= await LayoutService.ApplyUserPreferences(defaultDarkMode);
+        if (_mudThemeProvider is not null)
+        {
+            var defaultDarkMode = await _mudThemeProvider.GetSystemPreference();
+            UserPreferences = await _layoutService.ApplyUserPreferences(defaultDarkMode);
+        }
     }
     protected override async Task OnInitializedAsync()
     {
-        LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
+        _layoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         _profileService.OnChange += _profileService_OnChange;
-        LayoutService.SetBaseTheme(Theme.ApplicationTheme());
+        _layoutService.SetBaseTheme(Theme.ApplicationTheme());
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
         _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
