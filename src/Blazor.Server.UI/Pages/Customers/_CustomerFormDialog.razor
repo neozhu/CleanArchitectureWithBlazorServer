@@ -31,7 +31,7 @@
 </MudDialog>
 
 @code {
-    MudForm _form = default!;
+    MudForm? _form = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
     AddEditCustomerCommandValidator _modelValidator = new ();
@@ -39,12 +39,14 @@
 
     async Task Submit()
     {
-        await _form.Validate();
-        if (_form.IsValid)
+        if (_form is not null)
         {
-            MudDialog.Close(DialogResult.Ok(true));
+            await _form.Validate();
+            if (_form.IsValid)
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+            }
         }
-
     }
     void Cancel() => MudDialog.Cancel();
 }

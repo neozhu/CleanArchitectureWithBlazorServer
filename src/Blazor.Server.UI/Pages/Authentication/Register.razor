@@ -77,7 +77,7 @@
 @code {
     [Inject] private NavigationManager _navigation { get; set; } = default!;
     [Inject] private UserManager<ApplicationUser> _userManager { get; set; } = default!;
-    MudForm _form=null!;
+    MudForm? _form=null!;
     RegisterFormModel _model = new();
     [Inject] private RegisterFormModelFluentValidator _registerValidator { get; set; } = default!;
 
@@ -103,27 +103,28 @@
     }
     private async Task Submit()
     {
-        await _form.Validate();
-
-        if (_form.IsValid)
+        if (_form is not null)
         {
-            var user = new ApplicationUser()
+            await _form.Validate();
+            if (_form.IsValid)
+            {
+                var user = new ApplicationUser()
+                    {
+                        UserName = _model.UserName,
+                        Email = _model.Email
+                    };
+                var result = await _userManager.CreateAsync(user, _model.Password);
+                if (result.Succeeded)
                 {
-                    UserName = _model.UserName,
-                    Email = _model.Email
-                };
-            var result = await _userManager.CreateAsync(user, _model.Password);
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
-                _navigation.NavigateTo("/pages/authentication/login");
-                Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
+                    await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
+                    Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
+                    _navigation.NavigateTo("/");
+                }
+                else
+                {
+                    Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
+                }
             }
-            else
-            {
-                Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
-            }
-
         }
     }
 }

@@ -80,7 +80,7 @@
 
 @code {
     private bool fileinputInvalid = false;
-    MudForm _form = default!;
+    MudForm? _form = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
     [Inject] private IUploadService _uploadService { get; set; } = default!;
@@ -118,20 +118,23 @@
     }
     async Task Submit()
     {
-        if (model.Pictures is null)
-        {
-            fileinputInvalid = true;
-        }
-        await _form.Validate();
-        if (_form.IsValid)
+        if (_form is not null)
         {
             if (model.Pictures is null)
             {
                 fileinputInvalid = true;
-                Snackbar.Add(L["Please choose to upload pictures of this product"], MudBlazor.Severity.Error);
-                return;
             }
-            MudDialog.Close(DialogResult.Ok(true));
+            await _form.Validate();
+            if (_form.IsValid)
+            {
+                if (model.Pictures is null)
+                {
+                    fileinputInvalid = true;
+                    Snackbar.Add(L["Please choose to upload pictures of this product"], MudBlazor.Severity.Error);
+                    return;
+                }
+                MudDialog.Close(DialogResult.Ok(true));
+            }
         }
 
     }

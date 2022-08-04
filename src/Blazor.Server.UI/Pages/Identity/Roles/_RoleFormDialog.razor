@@ -2,7 +2,7 @@
 @inject IStringLocalizer<Roles> L
 <MudDialog>
     <DialogContent>
-        <MudForm Model="model" @ref="form">
+        <MudForm Model="model" @ref="_form">
             <MudGrid>
                 <MudItem xs="12">
                     <MudTextField Label="@L["Name"]" @bind-Value="model.Name"
@@ -28,19 +28,22 @@
 </MudDialog>
 
 @code {
-    MudForm form = default!;
+    MudForm? _form = default!;
     RoleFormModelValidator modelValidator = new RoleFormModelValidator();
-    [EditorRequired] [Parameter] public RoleFormModel model { get; set; } = default!;
+    [EditorRequired] [Parameter] 
+    public RoleFormModel model { get; set; } = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
 
     async Task Submit() {
-        await form.Validate();
-        if (form.IsValid)
+        if (_form is not null)
         {
-            MudDialog.Close(DialogResult.Ok(true));
+            await _form.Validate();
+            if (_form.IsValid)
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+            }
         }
-
     }
     void Cancel() => MudDialog.Cancel();
 

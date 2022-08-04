@@ -6,7 +6,7 @@
 @inject IStringLocalizer<Documents> L
 <MudDialog>
     <DialogContent>
-        <MudForm Model="model" @ref="form" Validation="@(modelValidator.ValidateValue)">
+        <MudForm Model="model" @ref="_form" Validation="@(modelValidator.ValidateValue)">
             <MudGrid>
                 <MudItem xs="12">
                     <MudTextField Label="@L["Title"]" @bind-Value="model.Title"
@@ -66,7 +66,7 @@
 </MudDialog>
 
 @code {
-    MudForm form = default!;
+    MudForm? _form = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
     [Inject] private IUploadService _uploadService { get; set; } = default!;
@@ -88,15 +88,18 @@
     }
     async Task Submit()
     {
-        await form.Validate();
-        if (form.IsValid)
+        if (_form is not null)
         {
-            if (string.IsNullOrEmpty(model.URL))
+            await _form.Validate();
+            if (_form.IsValid)
             {
-                Snackbar.Add(L["Please choose to upload a document"], MudBlazor.Severity.Error);
-                return;
+                if (string.IsNullOrEmpty(model.URL))
+                {
+                    Snackbar.Add(L["Please choose to upload a document"], MudBlazor.Severity.Error);
+                    return;
+                }
+                MudDialog.Close(DialogResult.Ok(true));
             }
-            MudDialog.Close(DialogResult.Ok(true));
         }
     }
     void Cancel() => MudDialog.Cancel();
