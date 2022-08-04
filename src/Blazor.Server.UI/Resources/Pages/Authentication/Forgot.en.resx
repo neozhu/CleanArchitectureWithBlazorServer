@@ -126,4 +126,46 @@
   <data name="Reset Password" xml:space="preserve">
     <value>Reset Password</value>
   </data>
+  <data name="{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password." xml:space="preserve">
+    <value>{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password.</value>
+  </data>
+  <data name="{0}, please contact the administrator" xml:space="preserve">
+    <value>{0}, please contact the administrator</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Enter the email address linked to your account and you will recieve an email containing a token string to reset your password." xml:space="preserve">
+    <value>Enter the email address linked to your account and you will recieve an email containing a token string to reset your password.</value>
+  </data>
+  <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
+    <value>Enter the token string from the recovery email to set your new password.</value>
+  </data>
+  <data name="No user found by email, please contact the administrator" xml:space="preserve">
+    <value>No user found by email, please contact the administrator</value>
+  </data>
+  <data name="Set a new password" xml:space="preserve">
+    <value>Set a new password</value>
+  </data>
+  <data name="Set New Password" xml:space="preserve">
+    <value>Set New Password</value>
+  </data>
+  <data name="The input token string must be equal to the token string in the recovery email" xml:space="preserve">
+    <value>The input token string must be equal to the token string in the recovery email</value>
+  </data>
+  <data name="The new password has been set successfully, please login again" xml:space="preserve">
+    <value>The new password has been set successfully, please login again</value>
+  </data>
+  <data name="Token String" xml:space="preserve">
+    <value>Token String</value>
+  </data>
+  <data name="Verify your recovery email" xml:space="preserve">
+    <value>Verify your recovery email</value>
+  </data>
+  <data name="Waiting" xml:space="preserve">
+    <value>Waiting</value>
+  </data>
+  <data name="You are already logged in." xml:space="preserve">
+    <value>You are already logged in.</value>
+  </data>
 </root>

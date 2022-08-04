@@ -124,6 +124,48 @@
     <value>Забыли пароль?</value>
   </data>
   <data name="Reset Password" xml:space="preserve">
-    <value>Сбросить пароль</value>
+    <value>Сброс пароля</value>
+  </data>
+  <data name="{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password." xml:space="preserve">
+    <value>{0} получил запрос на использование электронной почты в качестве почты восстановления для учетной записи {1}. Используйте этот токен:[ {2} ] для завершения восстановления пароля.</value>
+  </data>
+  <data name="{0}, please contact the administrator" xml:space="preserve">
+    <value>{0}, пожалуйста, свяжитесь с администратором</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>Электронная почта</value>
+  </data>
+  <data name="Enter the email address linked to your account and you will recieve an email containing a token string to reset your password." xml:space="preserve">
+    <value>Введите адрес электронной почты, привязанный к вашей учетной записи, и вы получите письмо, содержащее маркерную строку для сброса пароля.</value>
+  </data>
+  <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
+    <value>Введите маркерную строку из письма для восстановления, чтобы установить новый пароль.</value>
+  </data>
+  <data name="No user found by email, please contact the administrator" xml:space="preserve">
+    <value>Пользователь не найден по электронной почте, обратитесь к администратору</value>
+  </data>
+  <data name="Set a new password" xml:space="preserve">
+    <value>Установить новый пароль</value>
+  </data>
+  <data name="Set New Password" xml:space="preserve">
+    <value>Установить новый пароль</value>
+  </data>
+  <data name="The input token string must be equal to the token string in the recovery email" xml:space="preserve">
+    <value>Вводимая строка маркера должна быть равна строке маркера в письме о восстановлении пароля</value>
+  </data>
+  <data name="The new password has been set successfully, please login again" xml:space="preserve">
+    <value>Новый пароль был установлен успешно, пожалуйста, войдите в систему снова</value>
+  </data>
+  <data name="Token String" xml:space="preserve">
+    <value>Строка маркера</value>
+  </data>
+  <data name="Verify your recovery email" xml:space="preserve">
+    <value>Проверьте письмо о восстановлении</value>
+  </data>
+  <data name="Waiting" xml:space="preserve">
+    <value>Ожидание</value>
+  </data>
+  <data name="You are already logged in." xml:space="preserve">
+    <value>Вы уже вошли в систему.</value>
   </data>
 </root>

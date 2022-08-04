@@ -21,7 +21,7 @@ public class ResetPasswordFormModelValidator : AbstractValidator<ResetPasswordFo
                  .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
                  .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
                  .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
-                 .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
+                 .Matches(@"[\@\!\?\*\.]+").WithMessage("Your password must contain at least one (@!? *.).");
         RuleFor(x => x.ConfirmPassword)
              .Equal(x => x.Password);
     }
