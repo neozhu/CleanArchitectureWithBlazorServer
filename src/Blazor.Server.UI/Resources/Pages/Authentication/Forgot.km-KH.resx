@@ -126,4 +126,46 @@
   <data name="Reset Password" xml:space="preserve">
     <value>암호를 재설정</value>
   </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>이메일</value>
+  </data>
+  <data name="Enter the email address linked to your account and you will recieve an email containing a token string to reset your password." xml:space="preserve">
+    <value>បញ្ចូល អាសយដ្ឋាន អ៊ីមែល ដែល ភ្ជាប់ ទៅ គណនី របស់ អ្នក ហើយ អ្នក នឹង ទទួល អ៊ីមែល ដែល មាន ខ្សែ អក្សរ ថូខេន ដើម្បី កំណត់ ពាក្យ សម្ងាត់ របស់ អ្នក ឡើង វិញ &amp; # 160; ។</value>
+  </data>
+  <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
+    <value>បញ្ចូល ខ្សែអក្សរ token ពី អ៊ីមែល recovery ដើម្បី កំណត់ ពាក្យ សម្ងាត់ ថ្មី របស់ អ្នក ។</value>
+  </data>
+  <data name="No user found by email, please contact the administrator" xml:space="preserve">
+    <value>គ្មាន អ្នក ប្រើ រក ឃើញ តាម អ៊ីមែល ទេ សូម ទាក់ទង ទៅ អ្នក គ្រប់គ្រង</value>
+  </data>
+  <data name="Set a new password" xml:space="preserve">
+    <value>កំណត់ពាក្យសម្ងាត់ថ្មី</value>
+  </data>
+  <data name="Set New Password" xml:space="preserve">
+    <value>កំណត់ពាក្យសម្ងាត់ថ្មី</value>
+  </data>
+  <data name="The input token string must be equal to the token string in the recovery email" xml:space="preserve">
+    <value>ខ្សែអក្សរ token input ត្រូវតែស្មើទៅនឹង string token នៅក្នុង អ៊ីមែល recovery</value>
+  </data>
+  <data name="The new password has been set successfully, please login again" xml:space="preserve">
+    <value>ពាក្យ សម្ងាត់ ថ្មី ត្រូវ បាន កំណត់ ដោយ ជោគជ័យ សូម ចូល ម្តង ទៀត</value>
+  </data>
+  <data name="Token String" xml:space="preserve">
+    <value>ខ្សែអក្សរ Token</value>
+  </data>
+  <data name="Verify your recovery email" xml:space="preserve">
+    <value>ផ្ទៀងផ្ទាត់អ៊ីមែល recovery របស់អ្នក</value>
+  </data>
+  <data name="Waiting" xml:space="preserve">
+    <value>រង់ចាំ</value>
+  </data>
+  <data name="You are already logged in." xml:space="preserve">
+    <value>អ្នក បាន ចូល រួច ហើយ ។</value>
+  </data>
+  <data name="{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password." xml:space="preserve">
+    <value>{0} បាន ទទួល សំណើ មួយ ដើម្បី ប្រើ អ៊ីមែល ជា អ៊ីមែល ស្តារ ឡើង វិញ សម្រាប់ គណនី {1} ។ ប្រើ token នេះ:[ {2} ] ដើម្បី បញ្ចប់ ការ សម្រាក ពាក្យ សម្ងាត់ ។</value>
+  </data>
+  <data name="{0}, please contact the administrator" xml:space="preserve">
+    <value>{0} សូមទាក់ទងទៅអ្នកគ្រប់គ្រង</value>
+  </data>
 </root>

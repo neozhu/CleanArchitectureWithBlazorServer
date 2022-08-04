@@ -144,4 +144,7 @@
   <data name="Unassigned successfully" xml:space="preserve">
     <value>取消授权成功</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>参数名</value>
+  </data>
 </root>

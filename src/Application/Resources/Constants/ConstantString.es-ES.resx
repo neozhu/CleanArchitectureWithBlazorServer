@@ -264,4 +264,10 @@
   <data name="Yes" xml:space="preserve">
     <value>Sí</value>
   </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
+    <value>Está intentando cerrar sesión en la aplicación. ¿Realmente quieres cerrar sesión?</value>
+  </data>
 </root>
