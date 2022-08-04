@@ -77,7 +77,7 @@
 @code {
     [Inject] private NavigationManager _navigation { get; set; } = default!;
     [Inject] private UserManager<ApplicationUser> _userManager { get; set; } = default!;
-    MudForm? _form=null!;
+    MudForm? _form;
     RegisterFormModel _model = new();
     [Inject] private RegisterFormModelFluentValidator _registerValidator { get; set; } = default!;
 
