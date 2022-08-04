@@ -210,19 +210,19 @@
 
 @code {
     [Inject]
-    private IUsersStateContainer UsersStateContainer { get; set; } = default!;
+    private IUsersStateContainer _usersStateContainer { get; set; } = default!;
     private List<UserFormModel> _userList = new();
     private HashSet<UserFormModel> _selectItems = new();
     private string _searchString = string.Empty;
     private string Title { get; set; } = "Users";
 
     [CascadingParameter]
-    protected Task<AuthenticationState> AuthState { get; set; } = default!;
-    private UserManager<ApplicationUser> UserManager { get; set; } = default!;
+    private Task<AuthenticationState> _authState { get; set; } = default!;
+    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     [Inject]
-    public CircuitHandler CircuitHandler { get; set; } = default!;
+    private CircuitHandler _circuitHandler { get; set; } = default!;
     [Inject]
-    private ProfileService ProfileService { get; set; } = default!;
+    private ProfileService _profileService { get; set; } = default!;
     [Inject]
     private ITenantProvider _tenantProvider{ get; set; }= default!;
 
@@ -239,10 +239,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
 
         Title = L["Users"];
-        var state = await AuthState;
+        var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Edit)).Succeeded;
@@ -253,20 +253,20 @@
         _canImport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         await LoadData();
-        UsersStateContainer.OnChange += HandleCircuitsChanged;
+        _usersStateContainer.OnChange += HandleCircuitsChanged;
 
 
     }
     public void Dispose()
     {
-        UsersStateContainer.OnChange -= HandleCircuitsChanged;
+        _usersStateContainer.OnChange -= HandleCircuitsChanged;
     }
 
     private void HandleCircuitsChanged()
     {
         InvokeAsync(() =>
         {
-            foreach (var session in UsersStateContainer.UsersByConnectionId)
+            foreach (var session in _usersStateContainer.UsersByConnectionId)
             {
                 Snackbar.Add(string.Format(
                        L["{0} session changed."], session.Value), MudBlazor.Severity.Info);
@@ -299,7 +299,7 @@
         try
         {
             _loading = true;
-            _userList = await UserManager.Users.Select(x => new UserFormModel()
+            _userList = await _userManager.Users.Select(x => new UserFormModel()
                 {
                     ProfilePictureDataUrl = x.ProfilePictureDataUrl,
                     DisplayName = x.DisplayName,
@@ -343,17 +343,17 @@
                     IsActive = model.IsActive,
                 };
             var password = model.Password;
-            var state = await UserManager.CreateAsync(applicationUser, password);
+            var state = await _userManager.CreateAsync(applicationUser, password);
 
             if (state.Succeeded)
             {
                 if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
                 {
-                    await UserManager.AddToRolesAsync(applicationUser, model.AssignRoles);
+                    await _userManager.AddToRolesAsync(applicationUser, model.AssignRoles);
                 }
                 else
                 {
-                    await UserManager.AddToRoleAsync(applicationUser, RoleConstants.BasicRole);
+                    await _userManager.AddToRoleAsync(applicationUser, RoleConstants.BasicRole);
                 }
                 _userList.Add(model);
                 Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
@@ -367,8 +367,8 @@
 
     private async Task OnEdit(UserFormModel item)
     {
-        var user = await UserManager.FindByIdAsync(item.Id);
-        var roles = await UserManager.GetRolesAsync(user);
+        var user = await _userManager.FindByIdAsync(item.Id);
+        var roles = await _userManager.GetRolesAsync(user);
         item.AssignRoles = roles.ToArray();
         var parameters = new DialogParameters { ["model"] = item };
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
@@ -376,7 +376,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var state = await AuthState;
+            var state = await _authState;
             user.Email = item.Email;
             user.PhoneNumber = item.PhoneNumber;
             user.ProfilePictureDataUrl = item.ProfilePictureDataUrl;
@@ -386,20 +386,20 @@
             user.IsActive = item.IsActive;
             user.TenantId = item.TenantId;
             user.TenantName = item.TenantName;
-            var identityResult = await UserManager.UpdateAsync(user);
+            var identityResult = await _userManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
-                var removeRoleResult = await UserManager.RemoveFromRolesAsync(user, roles);
+                var removeRoleResult = await _userManager.RemoveFromRolesAsync(user, roles);
                 if (removeRoleResult.Succeeded)
                 {
                     if (item.AssignRoles is not null && item.AssignRoles.Length > 0)
                     {
-                        await UserManager.AddToRolesAsync(user, item.AssignRoles);
+                        await _userManager.AddToRolesAsync(user, item.AssignRoles);
                     }
                 }
                 if (state.User.GetUserId() == item.Id)
                 {
-                    await ProfileService.Update(new UserProfile()
+                    await _profileService.Update(new UserProfile()
                         {
                             UserId = user.Id,
                             Avatar = user.ProfilePictureDataUrl,
@@ -431,7 +431,7 @@
 
     private async Task OnDeleteChecked()
     {
-        var state = await AuthState;
+        var state = await _authState;
         var currentUserId = state.User.GetUserId();
         var isSelectedItemContainCurrentUser = _selectItems.Any(x => x.Id == currentUserId);
 
@@ -455,10 +455,10 @@
         if (!result.Cancelled)
         {
             var deleteId = _selectItems.Select(x => x.Id).ToArray();
-            var deleteUsers = await UserManager.Users.Where(x => deleteId.Contains(x.Id) ).ToListAsync();
+            var deleteUsers = await _userManager.Users.Where(x => deleteId.Contains(x.Id) ).ToListAsync();
             
             foreach (var deleteUser in deleteUsers)
-                await UserManager.DeleteAsync(deleteUser);
+                await _userManager.DeleteAsync(deleteUser);
             
             foreach (var item in _selectItems)
                 _userList.Remove(item);
@@ -468,9 +468,9 @@
 
     private async Task OnSetActive(UserFormModel item)
     {
-        var user = await UserManager.FindByIdAsync(item.Id);
+        var user = await _userManager.FindByIdAsync(item.Id);
         user.IsActive = !item.IsActive;
-        var state = await UserManager.UpdateAsync(user);
+        var state = await _userManager.UpdateAsync(user);
         item.IsActive = !item.IsActive;
         if (state.Succeeded)
         {
@@ -494,9 +494,9 @@
         if (!result.Cancelled)
         {
 
-            var user = await UserManager.FindByIdAsync(item.Id);
-            var token = await UserManager.GeneratePasswordResetTokenAsync(user);
-            var state = await UserManager.ResetPasswordAsync(user, token, model.Password);
+            var user = await _userManager.FindByIdAsync(item.Id);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var state = await _userManager.ResetPasswordAsync(user, token, model.Password);
             if (state.Succeeded)
             {
                 Snackbar.Add($"{L["Reset password successfully"]}", MudBlazor.Severity.Info);
