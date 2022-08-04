@@ -86,7 +86,7 @@
                 return;
             }
             _resetpasswordToken = await _userManager.GeneratePasswordResetTokenAsync(_user);
-            //var response = await sendResetPasswordToken(_emailaddress, user.UserName, _resetpasswordToken);
+            //var response = await sendResetPasswordToken(_emailaddress, _user.UserName, _resetpasswordToken);
             //if (response.Successful)
             //{
             //    _step = 2;
@@ -116,7 +116,7 @@
     {
 
         var subject = L["Verify your recovery email"];
-        var body =string.Format(L["{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password."],Settings.AppName,userName,token);
+        var body = string.Format(L["<p>{0} received a request to use email as a recovery email for the account {1}.</p> <p>Use this token string  to finish resting password:<p> {2} <p>This token string will expire in 1 hours.</p> <p>If you don¡¯t recognize {3}, you can safely ignore this email.</p>"], Settings.AppName, userName, token,toemail);
         return _fluentEmail.To(toemail).Subject(subject).Body(body).SendAsync();
     }
 
@@ -145,7 +145,7 @@
                     await _userManager.UpdateAsync(_user);
                     Snackbar.Add($"{L["The new password has been set successfully, please login again"]}", MudBlazor.Severity.Info);
                     _logger.LogInformation("{@UserName} has set a new password", model.UserName);
-                    _navigation.NavigateTo("/pages/authentication/login");
+                    _navigation.NavigateTo("/");
                 }
                 else
                 {

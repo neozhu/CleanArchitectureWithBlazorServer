@@ -177,4 +177,10 @@
   <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
     <value>당신은 여기에 올 권한이 없습니다. 자세한 내용은 시스템 관리자에게 문의하십시오.</value>
   </data>
+  <data name="authentication is required, click" xml:space="preserve">
+    <value>인증이 필요합니다. 로그인을 클릭하세요.</value>
+  </data>
+  <data name="sign in" xml:space="preserve">
+    <value>sign in</value>
+  </data>
 </root>
