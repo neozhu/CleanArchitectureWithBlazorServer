@@ -4,7 +4,7 @@ This is a repository for creating a  Blazor Server application following the pri
 -  Blazor Server mode: https://mudblazor-s.dotnet6.cn/
 -  (IP accelerate): http://106.52.105.140:6101/
 ## Screenshots and video
-[![Everything Is AWESOME](doc/main_screenshot.png)](https://www.youtube.com/embed/GyZJl_dG-Pg "Everything Is AWESOME")
+[![Everything Is AWESOME](doc/page.png)](https://www.youtube.com/embed/GyZJl_dG-Pg "Everything Is AWESOME")
 
 ## Development Enviroment
 - Microsoft Visual Studio Community 2022 (64-bit) 
