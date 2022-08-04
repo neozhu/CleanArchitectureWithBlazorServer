@@ -13,7 +13,7 @@
         <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" Elevation="6"
                  ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
             <MudTabPanel Text="@L["Profile"]">
-                <MudForm Model="@model" @ref="@form" Validation="@(userValidator.ValidateValue)" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
+                <MudForm Model="@model" @ref="@_form" Validation="@(_userValidator.ValidateValue)" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
                     <MudGrid Justify="Justify.Center" Style="max-width:600px;display:flex;">
                         <MudItem sm="12" xs="12">
                             <div class="d-flex justify-center">
@@ -75,13 +75,13 @@
                 </MudForm>
             </MudTabPanel>
             <MudTabPanel Text="@L["Change Password"]">
-                <MudForm Model="@changepassword" @ref="@passwordform" Validation="@(passwordValidator.ValidateValue)" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
+                <MudForm Model="@_changepassword" @ref="@_passwordform" Validation="@(_passwordValidator.ValidateValue)" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
                     <MudGrid Justify="Justify.Center" Style="max-width:300px">
                         <MudItem sm="12" xs="12">
                             <MudTextField Immediate="true"
                                           Label="@L["Current Password"]"
-                                          For="@(()=>changepassword.CurrentPassword)"
-                                          @bind-Value="changepassword.CurrentPassword"
+                                          For="@(()=>_changepassword.CurrentPassword)"
+                                          @bind-Value="_changepassword.CurrentPassword"
                                           Variant="Variant.Text"
                                           InputType="@PasswordInput"
                                           Adornment="Adornment.End"
@@ -93,8 +93,8 @@
                         <MudItem xs="12">
                             <MudTextField Immediate="true"
                                           Label="@L["New Password"]"
-                                          For="@(()=>changepassword.NewPassword)"
-                                          @bind-Value="changepassword.NewPassword"
+                                          For="@(()=>_changepassword.NewPassword)"
+                                          @bind-Value="_changepassword.NewPassword"
                                           Variant="Variant.Text"
                                           InputType="@PasswordInput"
                                           Adornment="Adornment.End"
@@ -106,8 +106,8 @@
                         <MudItem xs="12">
                             <MudTextField Immediate="true"
                                           Label="@L["Confirm New Password"]"
-                                          For="@(()=>changepassword.ConfirmPassword)"
-                                          @bind-Value="changepassword.ConfirmPassword"
+                                          For="@(()=>_changepassword.ConfirmPassword)"
+                                          @bind-Value="_changepassword.ConfirmPassword"
                                           Variant="Variant.Text"
                                           InputType="@PasswordInput"
                                           Adornment="Adornment.End"
@@ -130,19 +130,19 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
-    private MudForm form = default!;
-    private MudForm passwordform = default!;
+    private MudForm _form = default!;
+    private MudForm _passwordform = default!;
     public string Title { get; set; } = "Profile";
     [CascadingParameter]
-    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    private Task<AuthenticationState> _authState { get; set; } = default!;
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
     private UserProfile model { get; set; } = new();
-    private UserProfileEditValidator userValidator = new();
+    private UserProfileEditValidator _userValidator = new();
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
-    private ChangePasswordModel changepassword { get; set; } = new();
-    private ChangePasswordModelValidator passwordValidator = new ();
+    private ChangePasswordModel _changepassword { get; set; } = new();
+    private ChangePasswordModelValidator _passwordValidator = new ();
 
 
     bool PasswordVisibility;
@@ -202,7 +202,7 @@
                 var user = await _userManager.FindByIdAsync(model.UserId);
                 user.ProfilePictureDataUrl = model.Avatar;
                 await _userManager.UpdateAsync(user);
-                var state = await AuthState;
+                var state = await _authState;
                 state.User.SetProfilePictureUrl(model.Avatar);
                 await _profileService.Update(model);
                 //Do your validations here
@@ -212,10 +212,10 @@
     }
     private async Task Submit()
     {
-        await form.Validate();
-        if (form.IsValid)
+        await _form.Validate();
+        if (_form.IsValid)
         {
-            var state = await AuthState;
+            var state = await _authState;
             var user = await _userManager.FindByIdAsync(model.UserId);
             user.PhoneNumber = model.PhoneNumber;
             user.DisplayName = model.DisplayName;
@@ -234,11 +234,11 @@
     }
     private async Task ChangePassword()
     {
-        await passwordform.Validate();
-        if (passwordform.IsValid)
+        await _passwordform.Validate();
+        if (_passwordform.IsValid)
         {
             var user = await _userManager.FindByIdAsync(model.UserId);
-            var result = await _userManager.ChangePasswordAsync(user, changepassword.CurrentPassword, changepassword.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(user, _changepassword.CurrentPassword, _changepassword.NewPassword);
             if (result.Succeeded)
             {
                 Snackbar.Add($"{L["Changed password successfully."]}", MudBlazor.Severity.Info);
