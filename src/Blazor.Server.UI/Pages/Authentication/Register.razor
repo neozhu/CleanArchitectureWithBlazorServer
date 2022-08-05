@@ -61,10 +61,20 @@
 
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
-                       Disabled="@(!_model.AgreeToTerms)"
+                       Disabled="@(!_model.AgreeToTerms || _loading)"
                        Size="Size.Large"
                        OnClick="@(async () => await Submit())"
-                       FullWidth="true">@L["Register"]</MudButton>
+                       FullWidth="true">
+                @if (_loading)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2"> @PromptText.LOADING</MudText>
+                }
+                else
+                {
+                    <MudText>@L["Register"]</MudText>
+                }
+            </MudButton>
         </MudForm>
     </NotAuthorized>
     <Authorized>
@@ -78,6 +88,7 @@
     [Inject] private NavigationManager _navigation { get; set; } = default!;
     [Inject] private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     MudForm? _form;
+    bool _loading;
     RegisterFormModel _model = new();
     [Inject] private RegisterFormModelFluentValidator _registerValidator { get; set; } = default!;
 
@@ -103,28 +114,36 @@
     }
     private async Task Submit()
     {
-        if (_form is not null)
+        try
         {
-            await _form.Validate();
-            if (_form.IsValid)
+            _loading = true;
+            if (_form is not null)
             {
-                var user = new ApplicationUser()
+                await _form.Validate();
+                if (_form.IsValid)
+                {
+                    var user = new ApplicationUser()
                     {
                         UserName = _model.UserName,
                         Email = _model.Email
                     };
-                var result = await _userManager.CreateAsync(user, _model.Password);
-                if (result.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
-                    Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
-                    _navigation.NavigateTo("/");
-                }
-                else
-                {
-                    Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
+                    var result = await _userManager.CreateAsync(user, _model.Password);
+                    if (result.Succeeded)
+                    {
+                        await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
+                        Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
+                        _navigation.NavigateTo("/");
+                    }
+                    else
+                    {
+                        Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
+                    }
                 }
             }
+        }
+        finally
+        {
+            _loading = false;
         }
     }
 }
