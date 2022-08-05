@@ -264,4 +264,10 @@
   <data name="Yes" xml:space="preserve">
     <value>예</value>
   </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>បញ្ជាក់</value>
+  </data>
+  <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
+    <value>អ្នក កំពុង ព្យាយាម log ចេញ ពី កម្មវិធី &amp; # 160; ។ តើ អ្នក ពិត ជា ចង់ ចុះ កំណត់ ហេតុ ឬ ទេ ?</value>
+  </data>
 </root>
