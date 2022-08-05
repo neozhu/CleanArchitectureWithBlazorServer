@@ -264,4 +264,10 @@
   <data name="Yes" xml:space="preserve">
     <value>Да</value>
   </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Подтверждать</value>
+  </data>
+  <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
+    <value>Вы пытаетесь выйти из приложения. Вы действительно хотите выйти из системы?</value>
+  </data>
 </root>

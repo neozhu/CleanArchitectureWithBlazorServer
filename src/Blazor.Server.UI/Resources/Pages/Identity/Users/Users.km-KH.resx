@@ -186,4 +186,10 @@
   <data name="Users" xml:space="preserve">
     <value>사용자</value>
   </data>
+  <data name="Select Tenant" xml:space="preserve">
+    <value>ជ្រើស អ្នក ជួល</value>
+  </data>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>세입자 이름</value>
+  </data>
 </root>
