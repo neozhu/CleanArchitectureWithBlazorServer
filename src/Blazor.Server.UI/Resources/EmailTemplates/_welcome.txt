@@ -1,0 +1,7 @@
+﻿  <p>Hi @Model.UserName,</p>
+  <p>Thank you for signing up for @Model.AppName. We are here to help you get the most out of your trial to show how you and your team can develop smarter and faster.</p>
+  <br>
+  <p><a href="https://mudblazor-s.dotnet6.cn/">Log in</a> and pick one of the walk-throughs to learn how.</p> 
+  <br>
+  <p>if you have any question at any time, give us a call at 0800(Freephone). We're here to support you. </p> 
+  <p>Welcome to @Model.AppName.</p>

@@ -12,7 +12,7 @@ public static class MessageServiceCollectionExtensions
         services.AddScoped<IMailService, SMTPMailService>();
         // configure your sender and template choices with dependency injection.
         services.AddFluentEmail(mailSettings.From)
-                .AddRazorRenderer()
+                .AddRazorRenderer(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates"))
                 .AddSmtpSender(new System.Net.Mail.SmtpClient()
                 {
                     Host = mailSettings.Host,

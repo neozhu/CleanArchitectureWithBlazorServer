@@ -2,6 +2,8 @@
 @using System.Text.RegularExpressions
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
+@using FluentEmail.Core
+@using FluentEmail.Core.Models
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
@@ -91,7 +93,8 @@
     bool _loading;
     RegisterFormModel _model = new();
     [Inject] private RegisterFormModelFluentValidator _registerValidator { get; set; } = default!;
-
+    [Inject]
+    private IFluentEmail _fluentEmail { get; set; } = null!;
 
     bool _passwordVisibility;
     InputType _passwordInput = InputType.Password;
@@ -130,9 +133,17 @@
                     var result = await _userManager.CreateAsync(user, _model.Password);
                     if (result.Succeeded)
                     {
-                        await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
-                        Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
-                        _navigation.NavigateTo("/");
+                        var assignResult= await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
+                        if (assignResult.Succeeded)
+                        {
+                            await sendWelcome(user.Email, user.UserName);
+                            Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
+                            _navigation.NavigateTo("/");
+                        }
+                        else
+                        {
+                            Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
+                        }
                     }
                     else
                     {
@@ -145,5 +156,13 @@
         {
             _loading = false;
         }
+    }
+
+    private Task<SendResponse> sendWelcome(string toemail, string userName)
+    {
+
+        var subject =string.Format(L["Welcome to {0}"],Settings.AppName);
+        var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_welcome.txt");
+        return _fluentEmail.To(toemail).Subject(subject).UsingTemplateFromFile(template,new { AppName=Settings.AppName,Email=toemail,UserName =userName},true).SendAsync();
     }
 }
