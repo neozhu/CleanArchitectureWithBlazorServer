@@ -7,11 +7,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Creat
     {
         public CreateCustomerCommandValidator()
         {
-            RuleFor(v => v.Name)
-            .MaximumLength(256)
-            .NotEmpty();
-            RuleFor(v => v.Description)
-                .MaximumLength(1024);
+           //TODO:Implementing CreateCustomerCommandValidator method 
+           //eg. RuleFor(v => v.Name)
+           //      .MaximumLength(256)
+           //      .NotEmpty();
+           throw new System.NotImplementedException();
         }
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
      {

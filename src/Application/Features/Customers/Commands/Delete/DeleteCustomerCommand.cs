@@ -18,7 +18,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delet
       }
     }
 
-    public class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustomerCommand, Result>
+    public class DeleteCustomerCommandHandler : 
+                 IRequestHandler<DeleteCustomerCommand, Result>
+
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -35,10 +37,12 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delet
         }
         public async Task<Result> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
+            //TODO:Implementing DeleteCheckedCustomersCommandHandler method 
             var items = await _context.Customers.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {
-				item.AddDomainEvent(new DeletedEvent<Customer>(item));
+			    // add delete domain events if this entity implement the IHasDomainEvent interface
+				// item.AddDomainEvent(new DeletedEvent<Customer>(item));
                 _context.Customers.Remove(item);
             }
             await _context.SaveChangesAsync(cancellationToken);

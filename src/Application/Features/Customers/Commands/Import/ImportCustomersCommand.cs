@@ -31,8 +31,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<ImportCustomersCommandHandler> _localizer;
         private readonly IExcelService _excelService;
-
-        public ImportCustomersCommandHandler(
+    private readonly CustomerDto _dto = new();
+    public ImportCustomersCommandHandler(
             IApplicationDbContext context,
             IExcelService excelService,
             IStringLocalizer<ImportCustomersCommandHandler> localizer,
@@ -46,22 +46,23 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
         }
         public async Task<Result> Handle(ImportCustomersCommand request, CancellationToken cancellationToken)
         {
-
-           var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, CustomerDto, object?>> 
+           //TODO:Implementing ImportCustomersCommandHandler method
+           var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, CustomerDto, object?>>
             {
-                { _localizer["Name"], (row,item) => item.Name = row[_localizer["Name"]]?.ToString() },
-                { _localizer["Description"], (row,item) => item.Description = row[_localizer["Description"]]?.ToString() },
-            }, _localizer["Customers"]);
+                { _localizer[_dto.GetMemberDescription("Name")], (row,item) => item.Name = row[_localizer[_dto.GetMemberDescription("Name")]]?.ToString() },
+                { _localizer[_dto.GetMemberDescription("Description")], (row,item) => item.Name = row[_localizer[_dto.GetMemberDescription("Description")]]?.ToString() },
 
-            if (result.Succeeded && result.Data is not null) 
+            }, _localizer["Customers"]);
+            if (result.Succeeded && result.Data is not null)
             {
                 foreach (var dto in result.Data)
                 {
-                    var exists = await _context.Customers.AnyAsync(x => x.Name == dto.Name,cancellationToken);
+                    var exists = await _context.Customers.AnyAsync(x => x.Name == dto.Name, cancellationToken);
                     if (!exists)
                     {
                         var item = _mapper.Map<Customer>(dto);
-				        item.AddDomainEvent(new CreatedEvent<Customer>(item));
+                        // add create domain events if this entity implement the IHasDomainEvent interface
+				        // item.AddDomainEvent(new CreatedEvent<Customer>(item));
                         await _context.Customers.AddAsync(item, cancellationToken);
                     }
                  }
@@ -73,12 +74,13 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
                return await Result.FailureAsync(result.Errors);
            }
         }
-        
         public async Task<byte[]> Handle(CreateCustomersTemplateCommand request, CancellationToken cancellationToken)
         {
+            //TODO:Implementing ImportCustomersCommandHandler method 
             var fields = new string[] {
-                   _localizer["Name"],
-                   _localizer["Description"],
+                   //TODO:Defines the title and order of the fields to be imported's template
+                   _localizer[_dto.GetMemberDescription("Name")],
+                   _localizer[_dto.GetMemberDescription("Description")],
                 };
             var result = await _excelService.CreateTemplateAsync(fields, _localizer["Customers"]);
             return result;
