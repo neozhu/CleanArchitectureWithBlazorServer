@@ -91,9 +91,9 @@
             {
                 _step = 2;
                 Snackbar.Clear();
-
+                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
                 Snackbar.Add(string.Format(L["The email has been sent, please check the email:{0} "],_emailaddress), MudBlazor.Severity.Success,config=> { config.ShowCloseIcon = false; config.HideTransitionDuration = 5000; });
-                //Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomRight;
+                 _logger.LogInformation("{@UserName}'s token: {@token} for resetting the password has been sent.", _user.UserName,_resetpasswordToken);
             }
             else
             {

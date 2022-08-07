@@ -136,7 +136,11 @@
                         var assignResult= await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
                         if (assignResult.Succeeded)
                         {
-                            await sendWelcome(user.Email, user.UserName);
+                            var response= await sendWelcome(user.Email, user.UserName);
+                            if (response.Successful == false)
+                            {
+                                Snackbar.Add(string.Format(L["{0}"],response.ErrorMessages.FirstOrDefault()), MudBlazor.Severity.Warning);
+                            }
                             Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
                             _navigation.NavigateTo("/");
                         }
