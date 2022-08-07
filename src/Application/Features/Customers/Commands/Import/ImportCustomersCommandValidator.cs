@@ -7,9 +7,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
     {
         public ImportCustomersCommandValidator()
         {
-           RuleFor(v => v.Data)
-                 .NotNull()
-                 .NotEmpty();
+           //TODO:Implementing ImportCustomerCommandValidator method 
+           //eg. RuleFor(v => v.Data)
+           //      .NotNull()
+           //      .NotEmpty();
+           throw new System.NotImplementedException();
         }
     }
 

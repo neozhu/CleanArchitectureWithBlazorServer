@@ -132,7 +132,11 @@
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
-                <col style="width:48px;" />
+                <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <col style="width:50px;" />
+                    <col style="width:100px;" />
+                    <col />
+                </MudHidden>
             </ColGroup>
             <HeaderContent>
                 <MudTh>@PromptText.ACTIONS</MudTh>
@@ -167,8 +171,10 @@
                     }
                 </MudTd>
                 <MudTd HideSmall="false" DataLabel="@L["Customer Name"]">
-                    <MudText>@context.Name</MudText>
-                    <MudText Typo="Typo.body2">@context.Description</MudText>
+                    <div class="d-flex flex-column">
+                        <MudText>@context.Name</MudText>
+                        <MudText Typo="Typo.body2">@context.Description</MudText>
+                    </div>
                 </MudTd>
                 @*Add the fields to be displayed according to the actual situation*@
             </RowTemplate>
@@ -272,7 +278,7 @@
         {
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add("{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
         }
     }
 

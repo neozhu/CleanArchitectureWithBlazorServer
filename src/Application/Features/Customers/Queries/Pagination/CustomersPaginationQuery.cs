@@ -3,18 +3,11 @@
 
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
-using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Specification;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagination;
 
     public class CustomersWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<CustomerDto>>, ICacheable
     {
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public override string ToString()
-        {
-            return $"{base.ToString()},Name:{Name},Description:{Description}";
-        }
         public string CacheKey => CustomerCacheKey.GetPaginationCacheKey($"{this}");
         public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
     }
@@ -39,7 +32,10 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagina
 
         public async Task<PaginatedData<CustomerDto>> Handle(CustomersWithPaginationQuery request, CancellationToken cancellationToken)
         {
-           var data = await _context.Customers.Specify(new SearchCustomerSpecification(request))
+#pragma warning disable CS8602
+#pragma warning disable CS8604
+            //TODO:Implementing CustomersWithPaginationQueryHandler method 
+           var data = await _context.Customers
                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
