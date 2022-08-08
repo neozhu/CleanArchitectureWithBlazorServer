@@ -20,7 +20,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export
         private readonly IMapper _mapper;
         private readonly IExcelService _excelService;
         private readonly IStringLocalizer<ExportCustomersQueryHandler> _localizer;
-    private readonly CustomerDto _dto = new();
+        private readonly CustomerDto _dto = new();
         public ExportCustomersQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
@@ -39,7 +39,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export
             #pragma warning disable CS8602
 #pragma warning disable CS8602
 #pragma warning disable CS8604
-            //TODO:Implementing ExportCustomersQueryHandler method 
+            //TODO: Implementing ExportCustomersQueryHandler method 
             var data = await _context.Customers//.Where(x=>x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
                        .OrderBy($"{request.OrderBy} {request.SortDirection}")
                        .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
@@ -47,9 +47,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export
             var result = await _excelService.ExportAsync(data,
                 new Dictionary<string, Func<CustomerDto, object?>>()
                 {
-                    { _localizer[_dto.GetMemberDescription("Id")], item => item.Id },
-                    { _localizer[_dto.GetMemberDescription("Name")], item => item.Id },
-                    { _localizer[_dto.GetMemberDescription("Description")], item => item.Id },
+                    // TODO: Define the fields to be exported here, for example
+                    {_localizer[_dto.GetMemberDescription("Id")],item => item.Id}, 
+{_localizer[_dto.GetMemberDescription("Name")],item => item.Name}, 
+{_localizer[_dto.GetMemberDescription("Description")],item => item.Description}, 
+
                 }
                 , _localizer["Customers"]);
             return result;

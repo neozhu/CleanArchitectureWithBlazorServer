@@ -31,8 +31,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
         private readonly IMapper _mapper;
         private readonly IStringLocalizer<ImportCustomersCommandHandler> _localizer;
         private readonly IExcelService _excelService;
-    private readonly CustomerDto _dto = new();
-    public ImportCustomersCommandHandler(
+        private readonly CustomerDto _dto = new();
+
+        public ImportCustomersCommandHandler(
             IApplicationDbContext context,
             IExcelService excelService,
             IStringLocalizer<ImportCustomersCommandHandler> localizer,
@@ -49,8 +50,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
            //TODO:Implementing ImportCustomersCommandHandler method
            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, CustomerDto, object?>>
             {
-                { _localizer[_dto.GetMemberDescription("Name")], (row,item) => item.Name = row[_localizer[_dto.GetMemberDescription("Name")]]?.ToString() },
-                { _localizer[_dto.GetMemberDescription("Description")], (row,item) => item.Name = row[_localizer[_dto.GetMemberDescription("Description")]]?.ToString() },
+                // TODO: Define the fields that need to be read from Excel here, for example
+                { _localizer[_dto.GetMemberDescription("Name")], (row, item) => item.Name = row[_localizer[_dto.GetMemberDescription("Name")]]?.ToString() }, 
+{ _localizer[_dto.GetMemberDescription("Description")], (row, item) => item.Description = row[_localizer[_dto.GetMemberDescription("Description")]]?.ToString() }, 
 
             }, _localizer["Customers"]);
             if (result.Succeeded && result.Data is not null)
@@ -78,9 +80,10 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
         {
             //TODO:Implementing ImportCustomersCommandHandler method 
             var fields = new string[] {
-                   //TODO:Defines the title and order of the fields to be imported's template
-                   _localizer[_dto.GetMemberDescription("Name")],
-                   _localizer[_dto.GetMemberDescription("Description")],
+                   // TODO: Define the fields and order needed to generate the template here, for example
+                   _localizer[_dto.GetMemberDescription("Name")], 
+_localizer[_dto.GetMemberDescription("Description")], 
+
                 };
             var result = await _excelService.CreateTemplateAsync(fields, _localizer["Customers"]);
             return result;
