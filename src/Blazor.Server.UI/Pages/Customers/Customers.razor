@@ -140,8 +140,10 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh>@PromptText.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L["Customer Name"]</MudTableSortLabel></MudTh>
-                @*Add the fields to be displayed according to the actual situation*@
+                @*TODO: Display the required fields in the table*@
+                <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh> 
+                <MudTh><MudTableSortLabel SortLabel="Id" T="CustomerDto">@L[_currentDto.GetMemberDescription("Id")]</MudTableSortLabel></MudTh> 
+
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ButtonText.ACTIONS">
@@ -170,13 +172,15 @@
                         </MudButton>
                     }
                 </MudTd>
-                <MudTd HideSmall="false" DataLabel="@L["Customer Name"]">
+                @*TODO: Display the required fields in the table*@
+                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Name")]"> 
                     <div class="d-flex flex-column">
                         <MudText>@context.Name</MudText>
                         <MudText Typo="Typo.body2">@context.Description</MudText>
                     </div>
                 </MudTd>
-                @*Add the fields to be displayed according to the actual situation*@
+                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Id")]" >@context.Id</MudTd> 
+
             </RowTemplate>
             <NoRecordsContent>
                 <MudText>@PromptText.NOMACHING</MudText>
@@ -199,7 +203,7 @@
     public string? Title { get; private set; }
     private HashSet<CustomerDto> _selectedItems = new HashSet<CustomerDto>();
     private MudTable<CustomerDto> _table = default!;
-
+    private CustomerDto _currentDto = new();
     private string _searchString = string.Empty;
     private bool _loading;
     private bool _uploading;

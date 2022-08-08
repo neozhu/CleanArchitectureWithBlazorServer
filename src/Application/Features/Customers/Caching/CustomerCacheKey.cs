@@ -9,7 +9,7 @@ public static class CustomerCacheKey
     public static string GetPaginationCacheKey(string parameters) {
         return $"CustomersWithPaginationQuery,{parameters}";
     }
-        static CustomerCacheKey()
+    static CustomerCacheKey()
     {
         _tokensource = new CancellationTokenSource(new TimeSpan(3,0,0));
     }
