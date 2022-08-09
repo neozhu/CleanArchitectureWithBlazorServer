@@ -1,5 +1,5 @@
 # Clean Architecture With Blazor Server
-This is a repository for creating a  Blazor Server application following the principles of Clean Architecture
+This is a repository for creating a  Blazor Server application following the principles of Clean Architecture. It has a nice user interface, and an efficient code generator that allows you to quickly build amazing web application with .net Blazor technology.
 ## Live Demo
 -  Blazor Server mode: https://mudblazor-s.dotnet6.cn/
 -  (IP accelerate): http://106.52.105.140:6101/
