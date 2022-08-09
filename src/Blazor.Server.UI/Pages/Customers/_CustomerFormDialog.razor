@@ -8,12 +8,16 @@
         <MudForm Model="@model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)">
             <MudGrid>
                 @*TODO: define mudform that should be edit fields, for example:*@
-                <MudItem xs="12">
-                    <MudTextField Label="@L[model.GetMemberDescription("Name")]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
-                </MudItem>
-                <MudItem xs="12">
-                    <MudTextField Label="@L[model.GetMemberDescription("Description")]" Lines="3" For="@(() => model.Description)" @bind-Value="model.Description"></MudTextField>
-                </MudItem>
+                <MudItem xs="12"> 
+                        <MudTextField Label="@L[model.GetMemberDescription("Name")]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
+                </MudItem> 
+<MudItem xs="12"> 
+                        <MudTextField Label="@L[model.GetMemberDescription("Description")]" Lines="3" For="@(() => model.Description)" @bind-Value="model.Description"></MudTextField>
+                </MudItem> 
+<MudItem xs="12"> 
+                        <MudTextField Label="@L[model.GetMemberDescription("Id")]" @bind-Value="model.Id" For="@(() => model.Id)" Required="false" RequiredError="@L["Id is required!"]"></MudTextField>
+                </MudItem> 
+
             </MudGrid>
         </MudForm>
     </DialogContent>
@@ -27,13 +31,12 @@
     MudForm? _form;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
-    AddEditCustomerCommandValidator _modelValidator = new();
-    [EditorRequired][Parameter] public AddEditCustomerCommand model { get; set; } = null!;
+    AddEditCustomerCommandValidator _modelValidator = new ();
+    [EditorRequired] [Parameter] public AddEditCustomerCommand model { get; set; } = null!;
 
     async Task Submit()
     {
-        if (_form is not null)
-        {
+        if(_form is not null) {
             await _form.Validate();
             if (_form.IsValid)
             {

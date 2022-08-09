@@ -5,7 +5,7 @@ using System.ComponentModel;
 namespace CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 
 
-public class CustomerDto:IMapFrom<Customer>
+public class CustomerDto : IMapFrom<Customer>
 {
     public void Mapping(Profile profile)
     {
@@ -13,11 +13,11 @@ public class CustomerDto:IMapFrom<Customer>
     }
     // TODO: define data transfer object (DTO) fields, for example:
     [Description("Id")]
-public int Id {get;set;} 
-[Description("Name")]
-    public string? Name {get;set;} 
-[Description("Description")]
-    public string? Description {get;set;} 
+    public int Id { get; set; }
+    [Description("Name")]
+    public string? Name { get; set; }
+    [Description("Description")]
+    public string? Description { get; set; }
 
 }
 

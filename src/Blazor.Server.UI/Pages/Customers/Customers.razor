@@ -135,7 +135,7 @@
             <ColGroup>
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
                     <col style="width:50px;" />
-                    <col style="width:110px;" />
+                    <col style="width:100px;" />
                     <col />
                 </MudHidden>
             </ColGroup>
@@ -143,7 +143,8 @@
                 <MudTh>@PromptText.ACTIONS</MudTh>
                 @*TODO: Define the fields that should be displayed in data table*@
                 <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh> 
-            
+                <MudTh><MudTableSortLabel SortLabel="Id" T="CustomerDto">@L[_currentDto.GetMemberDescription("Id")]</MudTableSortLabel></MudTh> 
+
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ButtonText.ACTIONS">
@@ -179,6 +180,8 @@
                         <MudText Typo="Typo.body2">@context.Description</MudText>
                     </div>
                 </MudTd>
+                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Id")]" >@context.Id</MudTd> 
+
             </RowTemplate>
             <NoRecordsContent>
                 <MudText>@PromptText.NOMACHING</MudText>
@@ -290,7 +293,7 @@
         // TODO: define assignment that should be edit fields, for example:
         var command = new AddEditCustomerCommand()
             {
-                Id = dto.Id, 
+                               Id = dto.Id, 
                 Name = dto.Name, 
                 Description = dto.Description, 
 
@@ -351,59 +354,39 @@
 
     private async Task OnExport()
     {
-        try
-        {
-            _downloading = true;
-            var request = new ExportCustomersQuery()
-                {
-                    Keyword = _searchString,
-                    OrderBy = string.IsNullOrEmpty(_table.TableContext.SortFieldLabel) ? "Id" : _table.TableContext.SortFieldLabel,
-                    SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
-                };
-            var result = await _mediator.Send(request);
-            var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result, contentType: "application/octet-stream");
-            Snackbar.Add($"{ToastText.EXPORTSUCESS}", MudBlazor.Severity.Info);
-            
-        }catch(Exception ex)
-        {
-            throw ex;
-        }
-        finally
-        {
-           _downloading = false;
-        }
+        _downloading = true;
+        var request = new ExportCustomersQuery()
+            {
+                Keyword = _searchString,
+                OrderBy = string.IsNullOrEmpty(_table.TableContext.SortFieldLabel) ? "Id" : _table.TableContext.SortFieldLabel,
+                SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
+            };
+        var result = await _mediator.Send(request);
+        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result, contentType:"application/octet-stream");
+        Snackbar.Add($"{ToastText.EXPORTSUCESS}", MudBlazor.Severity.Info);
+        _downloading = false;
     }
     private async Task OnImportData(InputFileChangeEventArgs e)
     {
-        try
-        {
-            _uploading = true;
-            var stream = new MemoryStream();
-            await e.File.OpenReadStream().CopyToAsync(stream);
-            var command = new ImportCustomersCommand(e.File.Name, stream.ToArray());
+        _uploading = true;
+        var stream = new MemoryStream();
+        await e.File.OpenReadStream().CopyToAsync(stream);
+        var command = new ImportCustomersCommand(e.File.Name, stream.ToArray());
 
-            var result = await _mediator.Send(command);
-            if (result.Succeeded)
-            {
-                await _table.ReloadServerData();
-                Snackbar.Add($"{ToastText.IMPORTSUCCESS}", MudBlazor.Severity.Info);
-            }
-            else
-            {
-                foreach (var msg in result.Errors)
-                {
-                    Snackbar.Add($"{msg}", MudBlazor.Severity.Error);
-                }
-            }
-
-        }catch(Exception ex)
+        var result = await _mediator.Send(command);
+        if (result.Succeeded)
         {
-            throw ex;
+            await _table.ReloadServerData();
+            Snackbar.Add($"{ToastText.IMPORTSUCCESS}", MudBlazor.Severity.Info);
         }
-        finally
+        else
         {
-            _uploading = false;
+            foreach (var msg in result.Errors)
+            {
+                Snackbar.Add($"{msg}", MudBlazor.Severity.Error);
+            }
         }
+        _uploading = false;
     }
 
 }

@@ -19,7 +19,7 @@
 </style>
 <ErrorBoundary>
     <ChildContent>
-        <AdvancedSearchProductsComponent TRequest="_query" OnFilterChanged="OnFilterChanged"></AdvancedSearchProductsComponent>
+        <AdvancedSearchProductsComponent TRequest="_query" OnConditionChanged="ConditionChanged"></AdvancedSearchProductsComponent>
         <MudTable ServerData="@(new Func<TableState, Task<TableData<ProductDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
@@ -259,7 +259,7 @@
     //      await _table.ReloadServerData();
 
     //}
-    private void OnFilterChanged(string s)
+    private void ConditionChanged(string s)
     {
         InvokeAsync(async () =>
         {
