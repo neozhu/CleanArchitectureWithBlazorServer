@@ -12,8 +12,7 @@
                     <MudTextField Label="@L["Product Name"]" @bind-Value="model.Name"
                                   For="@(() => model.Name)"
                                   Required="true"
-                                  RequiredError="@L["product name is required!"]"
-                                  >
+                                  RequiredError="@L["product name is required!"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
@@ -24,10 +23,15 @@
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <PicklistAutocomplete Picklist="Picklist.Brand"
-                                     Label="@L["Brand Name"]"
-                                     For="@(() => model.Brand)"
-                                     ResetValueOnEmptyText="true"
-                                     @bind-Value="model.Brand"></PicklistAutocomplete>
+                                          Label="@L["Brand Name"]"
+                                          For="@(() => model.Brand)"
+                                          ResetValueOnEmptyText="true"
+                                          ShowProgressIndicator="true"
+                                          @bind-Value="model.Brand">
+                        <ProgressIndicatorTemplate>
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                        </ProgressIndicatorTemplate>
+                    </PicklistAutocomplete>
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <MudNumericField Label="@L["Price"]"
@@ -39,24 +43,29 @@
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <PicklistAutocomplete Picklist="Picklist.Unit"
-                                     Label="@L["Unit"]"
-                                     For="@(() => model.Unit)"
-                                     ResetValueOnEmptyText="true"
-                                     @bind-Value="model.Unit"></PicklistAutocomplete>
+                                          Label="@L["Unit"]"
+                                          For="@(() => model.Unit)"
+                                          ResetValueOnEmptyText="true"
+                                          ShowProgressIndicator="true"
+                                          @bind-Value="model.Unit">
+                        <ProgressIndicatorTemplate>
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                        </ProgressIndicatorTemplate>
+                    </PicklistAutocomplete>
                 </MudItem>
                 <MudItem>
                     <div class="d-flex flex-row gap-4 mb-2">
-                    <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
-                    <MudText Typo="Typo.caption">@L["Product Pictures"]*</MudText>
-                    <MudFab HtmlTag="label" Size="MudBlazor.Size.Small" 
-                            Color="MudBlazor.Color.Info"
-                            Icon="@Icons.Filled.Image"
-                            Label="Upload picture"
-                            for="fileInput" />
-                    @if (fileinputInvalid)
-                    {
-                        <MudText  Color="MudBlazor.Color.Error" Typo="Typo.body2">@L["Please upload product pictures."]</MudText>
-                    }
+                        <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
+                        <MudText Typo="Typo.caption">@L["Product Pictures"]*</MudText>
+                        <MudFab HtmlTag="label" Size="MudBlazor.Size.Small"
+                                Color="MudBlazor.Color.Info"
+                                Icon="@Icons.Filled.Image"
+                                Label="Upload picture"
+                                for="fileInput" />
+                        @if (fileinputInvalid)
+                        {
+                            <MudText Color="MudBlazor.Color.Error" Typo="Typo.body2">@L["Please upload product pictures."]</MudText>
+                        }
                     </div>
                     <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
                     <div class="d-fex">
@@ -64,7 +73,7 @@
                         {
                             foreach (var img in model.Pictures)
                             {
-                                <MudImage ObjectFit="ObjectFit.Cover"   Height="80" Width="160" Src="@img" Alt="@img" Elevation="25" Class="mr-2 rounded-lg" />
+                                <MudImage ObjectFit="ObjectFit.Cover" Height="80" Width="160" Src="@img" Alt="@img" Elevation="25" Class="mr-2 rounded-lg" />
                             }
                         }
                     </div>
@@ -84,8 +93,8 @@
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
     [Inject] private IUploadService _uploadService { get; set; } = default!;
-    AddEditProductCommandValidator _modelValidator = new ();
-    [EditorRequired] [Parameter] public AddEditProductCommand model { get; set; } = default!;
+    AddEditProductCommandValidator _modelValidator = new();
+    [EditorRequired][Parameter] public AddEditProductCommand model { get; set; } = default!;
 
 
     private async Task UploadFiles(InputFileChangeEventArgs e)

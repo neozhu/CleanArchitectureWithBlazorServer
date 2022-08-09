@@ -7,8 +7,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Creat
     {
         public CreateCustomerCommandValidator()
         {
-           //TODO:Implementing CreateCustomerCommandValidator method 
-           //eg. RuleFor(v => v.Name)
+           // TODO: Implement CreateCustomerCommandValidator method, for example: 
+           // RuleFor(v => v.Name)
            //      .MaximumLength(256)
            //      .NotEmpty();
            throw new System.NotImplementedException();

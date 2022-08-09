@@ -7,11 +7,12 @@ public class AddEditCustomerCommandValidator : AbstractValidator<AddEditCustomer
 {
     public AddEditCustomerCommandValidator()
     {
-           //TODO:Implementing AddEditCustomerCommandValidator method 
-           //eg. RuleFor(v => v.Name)
-           //      .MaximumLength(256)
-           //      .NotEmpty();
-           throw new System.NotImplementedException();
+        // TODO: Implement AddEditCustomerCommandValidator method, for example: 
+        
+        RuleFor(v => v.Name)
+             .MaximumLength(256)
+             .NotEmpty();
+     
      }
      public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
      {

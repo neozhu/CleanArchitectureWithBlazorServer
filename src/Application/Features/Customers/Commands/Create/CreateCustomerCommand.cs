@@ -29,10 +29,10 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Creat
         }
         public async Task<Result<int>> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing CreateCustomerCommandHandler method 
+           // TODO: Implement CreateCustomerCommandHandler method 
            var item = _mapper.Map<Customer>(request);
-           // add create domain events if this entity implement the IHasDomainEvent interface
-	       // item.AddDomainEvent(new CreatedEvent<Customer>(item));
+           // raise a create domain event
+	       item.AddDomainEvent(new CreatedEvent<Customer>(item));
            _context.Customers.Add(item);
            await _context.SaveChangesAsync(cancellationToken);
            return  await Result<int>.SuccessAsync(item.Id);

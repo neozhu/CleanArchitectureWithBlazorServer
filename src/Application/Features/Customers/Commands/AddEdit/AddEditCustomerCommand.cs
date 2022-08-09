@@ -29,21 +29,21 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEd
         }
         public async Task<Result<int>> Handle(AddEditCustomerCommand request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing AddEditCustomerCommandHandler method 
+            // TODO: Implement AddEditCustomerCommandHandler method 
             if (request.Id > 0)
             {
                 var item = await _context.Customers.FindAsync(new object[] { request.Id }, cancellationToken) ?? throw new NotFoundException($"Customer {request.Id} Not Found.");
                 item = _mapper.Map(request, item);
-				// add update domain events if this entity implement the IHasDomainEvent interface
-				// item.AddDomainEvent(new UpdatedEvent<Customer>(item));
+				// raise a update domain event
+				item.AddDomainEvent(new UpdatedEvent<Customer>(item));
                 await _context.SaveChangesAsync(cancellationToken);
                 return await Result<int>.SuccessAsync(item.Id);
             }
             else
             {
                 var item = _mapper.Map<Customer>(request);
-                // add create domain events if this entity implement the IHasDomainEvent interface
-				// item.AddDomainEvent(new CreatedEvent<Customer>(item));
+                // raise a create domain event
+				item.AddDomainEvent(new CreatedEvent<Customer>(item));
                 _context.Customers.Add(item);
                 await _context.SaveChangesAsync(cancellationToken);
                 return await Result<int>.SuccessAsync(item.Id);

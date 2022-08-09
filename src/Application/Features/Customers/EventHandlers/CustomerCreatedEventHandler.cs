@@ -3,8 +3,8 @@
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.EventHandlers;
 
-    public class CustomerCreatedEventHandler : INotificationHandler<CreatedEvent<Customer>>
-    {
+public class CustomerCreatedEventHandler : INotificationHandler<CreatedEvent<Customer>>
+{
         private readonly ILogger<CustomerCreatedEventHandler> _logger;
 
         public CustomerCreatedEventHandler(
@@ -18,4 +18,4 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.EventHandlers;
             _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().FullName);
             return Task.CompletedTask;
         }
-    }
+}
