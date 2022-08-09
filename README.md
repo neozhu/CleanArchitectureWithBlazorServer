@@ -29,8 +29,13 @@ This is a repository for creating a  Blazor Server application following the pri
 - The code generator can automatically generate the standard code
     - Application Layer Code
         - ![image](https://user-images.githubusercontent.com/1549611/181414766-84850a90-3a21-47ed-afcf-1b5cdd602edf.png)
+    - Domain Event
+        - ![image](https://user-images.githubusercontent.com/1549611/183537303-058d6f49-fc45-4b77-8924-cc2e8266cad7.png)
     - Blazor UI Layer Code
         - ![image](https://user-images.githubusercontent.com/1549611/181414818-5c1c2dfc-5560-4ab2-8773-dc7c816730d4.png)
+    - Task List
+        - ![image](https://user-images.githubusercontent.com/1549611/183537444-3d1b2980-b131-4e9d-bfe1-7b475f760b57.png)
+
 
 ## How to build solution templates
 - run CLI: dotnet new --install sayedha.templates 
