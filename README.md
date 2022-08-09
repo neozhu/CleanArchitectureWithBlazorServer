@@ -50,15 +50,15 @@ This is a repository for creating a  Blazor Server application following the pri
     - run CLI: dotnet new ca-blazor-sln
 ![image](https://user-images.githubusercontent.com/1549611/182025444-04c9c8db-2b11-44b3-8091-acffcc37a899.png)
 
-## Why develop with blazor server mode
-- Develop fast
-- Runing fast
-- Keep simple
+## Why choose blazor server mode
+- I hate switching between C# and JavaScript at the same time in order to develop a project
+
 
 ## Characteristic
-- Clean principles
-- Simple principles
-- Easy to start with
+- Avoid repeating work
+- Focus on story implementation
+
+
 
 ## About
 Coming up.
