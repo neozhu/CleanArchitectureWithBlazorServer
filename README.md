@@ -23,13 +23,13 @@ This is a repository for creating a  Blazor Server application following the pri
     - cmd: dotnet user-secrets init 
     - cmd: dotnet user-secrets -p Blazor.Server.UI.csproj set "Kestrel:Certificates:Development:Password" "Password@123"
 
-## Improved Code generator
-- CleanArchitectureCodeGenerator 
-- https://github.com/neozhu/CleanArchitectureCodeGenerator
-- Generate all the required code from the template
-    - Application Features Code
+## Code Generator Extension Plugin for visual studio.net 2022
+- CleanArchitectureCodeGenerator(branch: blazor) 
+- https://github.com/neozhu/CleanArchitectureCodeGenerator/tree/blazor
+- The code generator can automatically generate the standard code
+    - Application Layer Code
         - ![image](https://user-images.githubusercontent.com/1549611/181414766-84850a90-3a21-47ed-afcf-1b5cdd602edf.png)
-    - UI Pages View
+    - Blazor UI Layer Code
         - ![image](https://user-images.githubusercontent.com/1549611/181414818-5c1c2dfc-5560-4ab2-8773-dc7c816730d4.png)
 
 ## How to build solution templates
