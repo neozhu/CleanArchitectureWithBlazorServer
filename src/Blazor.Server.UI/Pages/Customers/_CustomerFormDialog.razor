@@ -7,20 +7,17 @@
     <DialogContent>
         <MudForm Model="@model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)">
             <MudGrid>
-                <MudItem xs="12">
-                    <MudTextField Label="@L["Customer Name"]" @bind-Value="model.Name"
-                                  For="@(() => model.Name)"
-                                  Required="true"
-                                  RequiredError="@L["Customer name is required!"]"
-                                  >
-                    </MudTextField>
-                </MudItem>
-                <MudItem xs="12">
-                    <MudTextField Label="@L["Description"]"
-                                  Lines="3"
-                                  For="@(() => model.Description)"
-                                  @bind-Value="model.Description"></MudTextField>
-                </MudItem>
+                @*TODO: define mudform that should be edit fields, for example:*@
+                <MudItem xs="12"> 
+                        <MudTextField Label="@L[model.GetMemberDescription("Name")]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
+                </MudItem> 
+<MudItem xs="12"> 
+                        <MudTextField Label="@L[model.GetMemberDescription("Description")]" Lines="3" For="@(() => model.Description)" @bind-Value="model.Description"></MudTextField>
+                </MudItem> 
+<MudItem xs="12"> 
+                        <MudTextField Label="@L[model.GetMemberDescription("Id")]" @bind-Value="model.Id" For="@(() => model.Id)" Required="false" RequiredError="@L["Id is required!"]"></MudTextField>
+                </MudItem> 
+
             </MudGrid>
         </MudForm>
     </DialogContent>

@@ -37,9 +37,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export
         public async Task<byte[]> Handle(ExportCustomersQuery request, CancellationToken cancellationToken)
         {
             #pragma warning disable CS8602
-#pragma warning disable CS8602
-#pragma warning disable CS8604
-            //TODO: Implementing ExportCustomersQueryHandler method 
+            #pragma warning disable CS8602
+            #pragma warning disable CS8604
+            // TODO:  Implement ExportCustomersQueryHandler method 
             var data = await _context.Customers//.Where(x=>x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
                        .OrderBy($"{request.OrderBy} {request.SortDirection}")
                        .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
@@ -47,7 +47,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export
             var result = await _excelService.ExportAsync(data,
                 new Dictionary<string, Func<CustomerDto, object?>>()
                 {
-                    // TODO: Define the fields to be exported here, for example
+                    // TODO: Define the fields that should be exported, for example:
                     {_localizer[_dto.GetMemberDescription("Id")],item => item.Id}, 
 {_localizer[_dto.GetMemberDescription("Name")],item => item.Name}, 
 {_localizer[_dto.GetMemberDescription("Description")],item => item.Description}, 

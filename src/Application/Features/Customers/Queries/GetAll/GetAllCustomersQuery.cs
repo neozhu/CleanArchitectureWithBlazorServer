@@ -32,7 +32,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.GetAll
 
         public async Task<IEnumerable<CustomerDto>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing GetAllCustomersQueryHandler method 
+            // TODO: Implement GetAllCustomersQueryHandler method 
             var data = await _context.Customers
                          .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);

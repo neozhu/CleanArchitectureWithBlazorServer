@@ -37,12 +37,12 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delet
         }
         public async Task<Result> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing DeleteCheckedCustomersCommandHandler method 
+            // TODO: Implement DeleteCheckedCustomersCommandHandler method 
             var items = await _context.Customers.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {
-			    // add delete domain events if this entity implement the IHasDomainEvent interface
-				// item.AddDomainEvent(new DeletedEvent<Customer>(item));
+			    // raise a delete domain event
+				item.AddDomainEvent(new DeletedEvent<Customer>(item));
                 _context.Customers.Remove(item);
             }
             await _context.SaveChangesAsync(cancellationToken);

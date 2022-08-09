@@ -47,10 +47,10 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
         }
         public async Task<Result> Handle(ImportCustomersCommand request, CancellationToken cancellationToken)
         {
-           //TODO:Implementing ImportCustomersCommandHandler method
+           // TODO: Implement ImportCustomersCommandHandler method
            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, CustomerDto, object?>>
             {
-                // TODO: Define the fields that need to be read from Excel here, for example
+                // TODO: Define the fields that should be read from Excel, for example:
                 { _localizer[_dto.GetMemberDescription("Name")], (row, item) => item.Name = row[_localizer[_dto.GetMemberDescription("Name")]]?.ToString() }, 
 { _localizer[_dto.GetMemberDescription("Description")], (row, item) => item.Description = row[_localizer[_dto.GetMemberDescription("Description")]]?.ToString() }, 
 
@@ -78,9 +78,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
         }
         public async Task<byte[]> Handle(CreateCustomersTemplateCommand request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing ImportCustomersCommandHandler method 
+            // TODO: Implement ImportCustomersCommandHandler method 
             var fields = new string[] {
-                   // TODO: Define the fields and order needed to generate the template here, for example
+                   // TODO: Define the fields that should be generate in the template, for example:
                    _localizer[_dto.GetMemberDescription("Name")], 
 _localizer[_dto.GetMemberDescription("Description")], 
 

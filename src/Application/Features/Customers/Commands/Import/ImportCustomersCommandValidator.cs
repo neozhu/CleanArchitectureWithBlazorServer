@@ -7,8 +7,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
     {
         public ImportCustomersCommandValidator()
         {
-           //TODO:Implementing ImportCustomerCommandValidator method 
-           //eg. RuleFor(v => v.Data)
+           // TODO: Implement ImportCustomerCommandValidator method, for example: 
+           // RuleFor(v => v.Data)
            //      .NotNull()
            //      .NotEmpty();
            throw new System.NotImplementedException();

@@ -7,8 +7,8 @@ public class AddEditCustomerCommandValidator : AbstractValidator<AddEditCustomer
 {
     public AddEditCustomerCommandValidator()
     {
-           //TODO:Implementing AddEditCustomerCommandValidator method 
-           //eg. RuleFor(v => v.Name)
+           // TODO: Implement AddEditCustomerCommandValidator method, for example: 
+           // RuleFor(v => v.Name)
            //      .MaximumLength(256)
            //      .NotEmpty();
            throw new System.NotImplementedException();

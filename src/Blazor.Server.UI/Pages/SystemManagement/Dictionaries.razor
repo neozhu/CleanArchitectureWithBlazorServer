@@ -145,7 +145,17 @@
             </RowTemplate>
             <RowEditingTemplate>
                 <MudTd DataLabel="Name">
-                   <MudAutocomplete @bind-Value="@context.Name" Clearable="true" CoerceText="true" CoerceValue="true" SearchFunc="searchName" Required />
+                   <MudAutocomplete @bind-Value="@context.Name" 
+                   Clearable="true" 
+                   CoerceText="true" 
+                   CoerceValue="true" 
+                   SearchFunc="searchName" 
+                   Required 
+                   ShowProgressIndicator="true" >
+                        <ProgressIndicatorTemplate>
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                        </ProgressIndicatorTemplate>
+                   </MudAutocomplete>
                 </MudTd>
                 <MudTd DataLabel="Value">
                     <MudTextField @bind-Value="@context.Value" Required />

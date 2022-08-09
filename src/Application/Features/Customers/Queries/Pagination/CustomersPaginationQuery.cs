@@ -34,7 +34,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagina
         {
 #pragma warning disable CS8602
 #pragma warning disable CS8604
-            //TODO:Implementing CustomersWithPaginationQueryHandler method 
+            // TODO: Implement CustomersWithPaginationQueryHandler method 
            var data = await _context.Customers
                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)

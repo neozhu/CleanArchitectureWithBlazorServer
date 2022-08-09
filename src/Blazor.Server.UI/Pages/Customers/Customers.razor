@@ -30,6 +30,7 @@
                   SortLabel="@PromptText.ORDERBY"
                   MultiSelection="true"
                   SelectedItems="_selectedItems"
+                  SelectedItem="_currentDto"
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
@@ -140,7 +141,7 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh>@PromptText.ACTIONS</MudTh>
-                @*TODO: Display the required fields in the table*@
+                @*TODO: Define the fields that should be displayed in data table*@
                 <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh> 
                 <MudTh><MudTableSortLabel SortLabel="Id" T="CustomerDto">@L[_currentDto.GetMemberDescription("Id")]</MudTableSortLabel></MudTh> 
 
@@ -172,7 +173,7 @@
                         </MudButton>
                     }
                 </MudTd>
-                @*TODO: Display the required fields in the table*@
+                @*TODO: Define the fields that should be displayed in data table*@
                 <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Name")]"> 
                     <div class="d-flex flex-column">
                         <MudText>@context.Name</MudText>
@@ -204,6 +205,7 @@
     private HashSet<CustomerDto> _selectedItems = new HashSet<CustomerDto>();
     private MudTable<CustomerDto> _table = default!;
     private CustomerDto _currentDto = new();
+
     private string _searchString = string.Empty;
     private bool _loading;
     private bool _uploading;
@@ -288,12 +290,13 @@
 
     private async Task OnEdit(CustomerDto dto)
     {
-        // TODO: Add the fields to be displayed according to the actual situation
+        // TODO: define assignment that should be edit fields, for example:
         var command = new AddEditCustomerCommand()
             {
-                Id = dto.Id,
-                Name = dto.Name,
-                Description = dto.Description,
+                               Id = dto.Id, 
+                Name = dto.Name, 
+                Description = dto.Description, 
+
             };
         var parameters = new DialogParameters
             {
@@ -315,7 +318,7 @@
     {
         var parameters = new DialogParameters
                     {
-                { nameof(DeleteConfirmation.ContentText), string.Format(PromptText.DELETECONFIRMATION, dto.Name) }
+                        { nameof(DeleteConfirmation.ContentText), string.Format(PromptText.DELETECONFIRMATION, dto.Name) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(string.Format(PromptText.EDITTHEITEM,L["Customer"]), parameters, options);

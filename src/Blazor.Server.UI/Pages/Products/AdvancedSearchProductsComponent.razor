@@ -8,35 +8,35 @@
             <MudTextField @bind-Value="TRequest.Name" 
                           Placeholder="@L["Search for product name"]"
                           Clearable="true"
-                          TextChanged="OnSearchStringChanged">
+                          TextChanged="TextChanged">
             </MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6"  md="4">
            <PicklistAutocomplete Picklist="Picklist.Brand"
                                 Placeholder="@L["Search for brand"]"
-                                TextChanged="OnSearchStringChanged"
+                                TextChanged="TextChanged"
                                 ResetValueOnEmptyText="true"
                                 @bind-Value="TRequest.Brand"></PicklistAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6"  md="4">
           <PicklistAutocomplete Picklist="Picklist.Unit"
                                 Placeholder="@L["Search for unit"]"
-                                TextChanged="OnSearchStringChanged"
+                                TextChanged="TextChanged"
                                 ResetValueOnEmptyText="true"
                                 @bind-Value="TRequest.Unit"></PicklistAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <MudNumericField @bind-Value="TRequest.MinPrice"
                           Clearable="true"
-                          Placeholder="@L["Search for minimum price"]" 
-                          TextChanged="OnSearchStringChanged">
+                          Placeholder="@L["Search for minimum price"]"
+                          TextChanged="TextChanged">
             </MudNumericField>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <MudNumericField @bind-Value="TRequest.MaxPrice"
                           Clearable="true"
-                          Placeholder="@L["Search for maximum price"]" 
-                          TextChanged="OnSearchStringChanged">
+                          Placeholder="@L["Search for maximum price"]"
+                          TextChanged="TextChanged">
             </MudNumericField>
         </MudItem>
     </MudGrid>
@@ -44,13 +44,13 @@
 
 @code {
     [EditorRequired][Parameter] public ProductsWithPaginationQuery TRequest { get; set; } = default!;
-    [EditorRequired][Parameter] public EventCallback<string> OnFilterChanged { get; set; }
-    private bool _advancedSearchExpanded { get; set; }
-    private async Task OnSearchStringChanged(string str)
+    [EditorRequired][Parameter] public EventCallback<string> OnConditionChanged { get; set; }
+    private bool _advancedSearchExpanded
+    private async Task TextChanged(string str)
     {
         if (_advancedSearchExpanded)
         {
-          await OnFilterChanged.InvokeAsync(str);
+            await OnConditionChanged.InvokeAsync(str);
         }
     }
 }
