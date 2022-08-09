@@ -8,6 +8,7 @@ using CleanArchitecture.Blazor.Domain.Entities;
 using NUnit.Framework;
 using System;
 using System.Runtime.Serialization;
+using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Mappings;
 
@@ -34,6 +35,7 @@ public class MappingTests
     }
 
     [Test]
+    [TestCase(typeof(Customer), typeof(CustomerDto))]
     [TestCase(typeof(Document), typeof(DocumentDto))]
     [TestCase(typeof(KeyValue), typeof(KeyValueDto))]
     [TestCase(typeof(Product), typeof(ProductDto))]

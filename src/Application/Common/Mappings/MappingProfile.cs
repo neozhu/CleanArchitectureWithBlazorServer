@@ -17,7 +17,7 @@ public class MappingProfile : Profile
         var mapFromType = typeof(IMapFrom<>);
         var mappingMethodName = nameof(IMapFrom<object>.Mapping);
         bool HasInterface(Type t) => t.IsGenericType && t.GetGenericTypeDefinition() == mapFromType;
-        var types = assembly.GetExportedTypes().Where(t => t.GetInterfaces().Any(HasInterface)).ToList();
+        var types = assembly.GetExportedTypes().Where(t => t.GetInterfaces().Any(HasInterface) && t.Name.EndsWith("Dto")).ToList();
         var argumentTypes = new Type[] { typeof(Profile) };
         foreach (var type in types)
         {

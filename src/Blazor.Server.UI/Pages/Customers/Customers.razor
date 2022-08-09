@@ -20,7 +20,7 @@
 
 <ErrorBoundary>
     <ChildContent>
-       <MudTable ServerData="@(new Func<TableState, Task<TableData<CustomerDto>>>(ServerReload))"
+        <MudTable ServerData="@(new Func<TableState, Task<TableData<CustomerDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
@@ -142,8 +142,8 @@
             <HeaderContent>
                 <MudTh>@PromptText.ACTIONS</MudTh>
                 @*TODO: Define the fields that should be displayed in data table*@
-                <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh> 
-                <MudTh><MudTableSortLabel SortLabel="Id" T="CustomerDto">@L[_currentDto.GetMemberDescription("Id")]</MudTableSortLabel></MudTh> 
+                <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Id" T="CustomerDto">@L[_currentDto.GetMemberDescription("Id")]</MudTableSortLabel></MudTh>
 
             </HeaderContent>
             <RowTemplate>
@@ -174,13 +174,13 @@
                     }
                 </MudTd>
                 @*TODO: Define the fields that should be displayed in data table*@
-                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Name")]"> 
+                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Name")]">
                     <div class="d-flex flex-column">
                         <MudText>@context.Name</MudText>
                         <MudText Typo="Typo.body2">@context.Description</MudText>
                     </div>
                 </MudTd>
-                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Id")]" >@context.Id</MudTd> 
+                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Id")]">@context.Id</MudTd>
 
             </RowTemplate>
             <NoRecordsContent>
@@ -231,7 +231,7 @@
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Search)).Succeeded;
-        _canEdit   = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Edit)).Succeeded;
+        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Edit)).Succeeded;
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Export)).Succeeded;
@@ -271,21 +271,23 @@
 
     private async Task OnCreate()
     {
-        var command = new AddEditCustomerCommand();
-        var parameters = new DialogParameters
+ 
+            var command = new AddEditCustomerCommand();
+            var parameters = new DialogParameters
             {
-        { nameof(_CustomerFormDialog.model),command },
+                   { nameof(_CustomerFormDialog.model),command },
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<_CustomerFormDialog>
-        (string.Format(PromptText.CREATEAITEM,L["Customer"]), parameters, options);
-        var state = await dialog.Result;
-        if (!state.Cancelled)
-        {
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
-        }
+            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+            var dialog = DialogService.Show<_CustomerFormDialog>
+            (string.Format(PromptText.CREATEAITEM, L["Customer"]), parameters, options);
+            var state = await dialog.Result;
+            if (!state.Cancelled)
+            {
+                var result = await _mediator.Send(command);
+                await _table.ReloadServerData();
+                Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
+            }
+  
     }
 
     private async Task OnEdit(CustomerDto dto)
@@ -293,9 +295,9 @@
         // TODO: define assignment that should be edit fields, for example:
         var command = new AddEditCustomerCommand()
             {
-                               Id = dto.Id, 
-                Name = dto.Name, 
-                Description = dto.Description, 
+                Id = dto.Id,
+                Name = dto.Name,
+                Description = dto.Description,
 
             };
         var parameters = new DialogParameters
@@ -304,7 +306,7 @@
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_CustomerFormDialog>
-        (string.Format(PromptText.EDITTHEITEM,L["Customer"]), parameters, options);
+        (string.Format(PromptText.EDITTHEITEM, L["Customer"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
@@ -321,7 +323,7 @@
                         { nameof(DeleteConfirmation.ContentText), string.Format(PromptText.DELETECONFIRMATION, dto.Name) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(PromptText.EDITTHEITEM,L["Customer"]), parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(PromptText.EDITTHEITEM, L["Customer"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
@@ -340,7 +342,7 @@
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>
-        (string.Format(PromptText.DELETETHEITEM,L["Customer"]), parameters, options);
+        (string.Format(PromptText.DELETETHEITEM, L["Customer"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
@@ -362,7 +364,7 @@
                 SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
             };
         var result = await _mediator.Send(request);
-        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result, contentType:"application/octet-stream");
+        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result, contentType: "application/octet-stream");
         Snackbar.Add($"{ToastText.EXPORTSUCESS}", MudBlazor.Severity.Info);
         _downloading = false;
     }

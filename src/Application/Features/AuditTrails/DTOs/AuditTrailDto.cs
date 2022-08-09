@@ -23,7 +23,7 @@ public class AuditTrailDto : IMapFrom<AuditTrail>
         
 
 
-        profile.CreateMap<AuditTrail, AuditTrailDto>()
+        profile.CreateMap<AuditTrail, AuditTrailDto>( MemberList.None)
            .ForMember(x => x.AuditType, s => s.MapFrom(y => y.AuditType.ToString()))
            .ForMember(x => x.OldValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.OldValues, DefaultJsonSerializerOptions.Options)))
            .ForMember(x => x.NewValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.NewValues, DefaultJsonSerializerOptions.Options)))
