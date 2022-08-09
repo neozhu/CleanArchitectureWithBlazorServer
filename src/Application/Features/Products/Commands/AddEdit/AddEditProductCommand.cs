@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 
-public class AddEditProductCommand : ProductDto, IRequest<Result<int>>, IMapFrom<Product>, ICacheInvalidator
+public class AddEditProductCommand : ProductDto, IRequest<Result<int>>, ICacheInvalidator
 {
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource();

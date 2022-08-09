@@ -1,5 +1,6 @@
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Identity;
@@ -25,6 +26,7 @@ public class Testing
     private static IServiceScopeFactory _scopeFactory;
     private static Checkpoint _checkpoint;
     private static string _currentUserId;
+    private static string _currentTenantId;
 
     [OneTimeSetUp]
     public void RunBeforeAnyTests()
@@ -60,8 +62,10 @@ public class Testing
         services.Remove(currentUserServiceDescriptor);
 
         // Register testing version
-        services.AddTransient(provider =>
+        services.AddScoped(provider =>
             Mock.Of<ICurrentUserService>(s =>  s.UserId().Result == _currentUserId));
+        services.AddScoped(provider =>
+            Mock.Of<ITenantProvider>(s => s.GetTenantId().Result == _currentTenantId));
 
         _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
 

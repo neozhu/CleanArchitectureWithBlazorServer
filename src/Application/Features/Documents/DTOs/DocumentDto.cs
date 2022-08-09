@@ -8,9 +8,9 @@ public partial class DocumentDto : IMapFrom<Document>
 #pragma warning disable CS8602
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<Document, DocumentDto>()
+        profile.CreateMap<Document, DocumentDto>(MemberList.None)
            .ForMember(x => x.TenantName, s => s.MapFrom(y => y.Tenant.Name));
-        profile.CreateMap<DocumentDto, Document>()
+        profile.CreateMap<DocumentDto, Document>(MemberList.None)
            .ForMember(x => x.Tenant, s => s.Ignore());
     }
     public int Id { get; set; }

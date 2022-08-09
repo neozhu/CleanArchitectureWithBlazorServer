@@ -7,10 +7,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 
 public class CustomerDto : IMapFrom<Customer>
 {
-    public void Mapping(Profile profile)
-    {
-        profile.CreateMap<Customer, CustomerDto>().ReverseMap();
-    }
     // TODO: define data transfer object (DTO) fields, for example:
     [Description("Id")]
     public int Id { get; set; }
