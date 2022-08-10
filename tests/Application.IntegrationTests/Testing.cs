@@ -143,6 +143,7 @@ public class Testing
     {
         await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
         _currentUserId = null;
+        _currentTenantId = null;
     }
 
     public static async Task<TEntity> FindAsync<TEntity>(params object[] keyValues)
