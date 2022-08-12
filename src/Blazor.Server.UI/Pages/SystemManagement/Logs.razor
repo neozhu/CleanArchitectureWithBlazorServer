@@ -16,7 +16,6 @@
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
-                  RowsPerPage="25"
                   Height="calc(100vh - 265px)"
                   Style="min-height:700px"
                   Loading="@_loading"
@@ -37,14 +36,16 @@
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
-                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                <col style="width:190px;" />
-                <col style="width:180px;" />
-                <col style="width:90px;" />
+                <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <col style="width:110px;" />
+                    <col style="width:120px;" />
+                    <col style="width:90px;" />
+                    <col />
+                    <col />
                 </MudHidden>
             </ColGroup>
             <HeaderContent>
-                <MudTh Style="width:190px">@ButtonText.ACTIONS</MudTh>
+                <MudTh>@ButtonText.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortLabel="TimeStamp" T="LogDto">@L["Time Stamp"]</MudTableSortLabel></MudTh>
                 <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="Level" T="LogDto">@L["Level"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Message" T="LogDto">@L["Message"]</MudTableSortLabel></MudTh>
@@ -60,26 +61,34 @@
                     </MudButton>
                 </MudTd>
                 <MudTd DataLabel="@L["Time Stamp"]">
-                    @context.TimeStamp
+                    @context.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss")
                 </MudTd>
                 <MudTd Style="text-align:center" DataLabel="@L["Level"]">
-                    @switch(context.Level) {
-                         case "Trace" : <MudChip Label="true">@context.Level</MudChip>
+                    @switch (context.Level)
+                    {
+                        case "Trace":
+                            <MudChip Label="true">@context.Level</MudChip>
                             break;
-                        case "Debug" : <MudChip Label="true">@context.Level</MudChip>
+                        case "Debug":
+                            <MudChip Label="true">@context.Level</MudChip>
                             break;
-                        case "Information": <MudChip Color="Color.Info" Label="true">@context.Level</MudChip>
+                        case "Information":
+                            <MudChip Color="Color.Info" Label="true">@context.Level</MudChip>
                             break;
-                        case "Warning": <MudChip Color="Color.Warning" Label="true">@context.Level</MudChip>
+                        case "Warning":
+                            <MudChip Color="Color.Warning" Label="true">@context.Level</MudChip>
                             break;
-                       case "Error": <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
+                        case "Error":
+                            <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
                             break;
-                        case "Critical":  <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
+                        case "Critical":
+                              <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
                             break;
-                       default: <MudChip Label="true">@context.Level</MudChip>
-                         break;
+                        default:
+                            <MudChip Label="true">@context.Level</MudChip>
+                            break;
                     }
-                       
+
                 </MudTd>
                 <MudTd DataLabel="@L["Message"]">
                     @context.Message
@@ -122,12 +131,12 @@
                 <MudText>@PromptText.LOADING</MudText>
             </LoadingContent>
             <PagerContent>
-                <MudTablePager  />
+                <MudTablePager />
             </PagerContent>
         </MudTable>
     </ChildContent>
     <ErrorContent>
-        <CustomError Exception="context" ></CustomError>
+        <CustomError Exception="context"></CustomError>
     </ErrorContent>
 </ErrorBoundary>
 @code {
@@ -145,16 +154,17 @@
 
     private async Task<TableData<LogDto>> ServerReload(TableState state)
     {
-        try{
+        try
+        {
             _loading = true;
             var request = new LogsWithPaginationQuery()
-            {
-                Keyword = _searchString,
-                OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
-                SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
-                PageNumber = state.Page + 1,
-                PageSize = state.PageSize
-            };
+                {
+                    Keyword = _searchString,
+                    OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
+                    SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
+                    PageNumber = state.Page + 1,
+                    PageSize = state.PageSize
+                };
             var result = await _mediator.Send(request).ConfigureAwait(false);
             return new TableData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
