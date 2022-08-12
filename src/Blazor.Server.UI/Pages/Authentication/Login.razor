@@ -15,7 +15,7 @@
 <PageTitle>@Title</PageTitle>
 <AuthorizeView>
     <NotAuthorized Context="Auth">
-        <MudForm Model="@_model" @ref="@_form" @bind-IsValid="@_success" Validation="@(_loginValidator.ValidateValue)">
+        <MudForm Model="@_model" @ref="@_form" @bind-IsTouched="@_touched" @bind-IsValid="@_success" Validation="@(_loginValidator.ValidateValue)">
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
 
             <MudText>@L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink></MudText>
@@ -47,7 +47,7 @@
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
                        Size="Size.Large"
-                       Disabled="@(!_success || _loading)"
+                       Disabled="_loading"
                        ButtonType="ButtonType.Button"
                        OnClick="@(() => OnSubmit())"
                        FullWidth="true">
@@ -96,6 +96,7 @@
     MudForm? _form;
     bool _success;
     bool _loading;
+    bool _touched;
     [Inject] private LoginFormModellFluentValidator _loginValidator { get; set; } = default!;
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
