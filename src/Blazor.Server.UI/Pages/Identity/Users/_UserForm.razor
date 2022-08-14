@@ -43,7 +43,7 @@
                        Value="@model.TenantId">
                 @foreach (var item in _tenantsService.DataSource)
                 {
-                    <MudSelectItem T="string" Value="@item.Id" >@item.Name</MudSelectItem>
+                    <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
                 }
             </MudSelect>
         </MudItem>
@@ -59,7 +59,7 @@
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
-         <MudItem xs="12" sm="6">
+        <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.PhoneNumber)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         @if (string.IsNullOrEmpty(model.Id))
@@ -91,23 +91,28 @@
                           OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
             </MudItem>
         }
-       
-       <MudItem xs="12" sm="6">
+
+        <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
             <div class="d-fex">
-                 <MudCheckBox For="@(() =>model.IsActive)" T="bool" @bind-Checked="model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
+                <MudCheckBox For="@(() =>model.IsActive)" T="bool" @bind-Checked="model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
             </div>
         </MudItem>
         <MudItem xs="12" sm="12">
             <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
-            <div class="d-fex">
+            <MudGrid Class="mt-1">
                 @for (int i = 0; i < _roles.Count; i++)
                 {
                     var x = i;
-                    <MudCheckBox For="@(() =>model.Checked)" T="bool" Checked="@_roles[x].value" Label="@_roles[i].key" CheckedChanged="@(s=>_roles[x].value=s)"></MudCheckBox>
+                    <MudItem xs="6" sm="6" Class="py-0 my=0">
+                        <MudCheckBox For="@(() =>model.Checked)" T="bool" Checked="@_roles[x].value" Label="@_roles[x].key" CheckedChanged="@(s=>_roles[x].value=s)"></MudCheckBox>
+                    </MudItem>
                 }
-            </div>
+            </MudGrid>
         </MudItem>
+
+
+
     </MudGrid>
 </MudForm>
 
@@ -121,7 +126,7 @@
     private List<keyvalue> _roles { get; set; } = new();
 
     [Inject] private IUploadService _uploadService { get; set; } = default!;
-    [Inject] private ITenantsService  _tenantsService { get; set; } = default!;
+    [Inject] private ITenantsService _tenantsService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     UserFormModelValidator modelValidator = new();
     [EditorRequired][Parameter] public UserFormModel model { get; set; } = default!;
@@ -133,7 +138,7 @@
     protected override async Task OnInitializedAsync()
     {
         var array = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
-       await _tenantsService.Initialize();
+        await _tenantsService.Initialize();
         foreach (var role in array)
         {
             if (model.AssignRoles != null && model.AssignRoles.Contains(role))
