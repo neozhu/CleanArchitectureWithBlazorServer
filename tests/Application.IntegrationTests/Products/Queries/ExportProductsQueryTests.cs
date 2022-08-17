@@ -20,4 +20,12 @@ internal class ExportProductsQueryTests : TestBase
         var result = await SendAsync(query);
         result.Should().NotBeNull();
     }
+
+    [Test]
+    public async Task ShouldNotEmptyExportQueryWithFilter()
+    {
+        var query = new ExportProductsQuery() { Keyword="1" };
+        var result = await SendAsync(query);
+        result.Should().NotBeNull();
+    }
 }
