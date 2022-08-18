@@ -167,6 +167,7 @@ public static class Permissions
     public static class Hangfire
     {
         public const string View = "Permissions.Hangfire.View";
+        public const string Jobs = "Permissions.Hangfire.Jobs";
     }
 
 

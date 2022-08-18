@@ -46,6 +46,7 @@ public static class DependencyInjection
         
         services.AddLocalizationServices();
         services.AddServices()
+                .AddHangfireService()
                 .AddSerialization()
                 .AddMultiTenantService()
                 .AddMessageServices(configuration)

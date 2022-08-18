@@ -102,7 +102,14 @@ public class MenuService : IMenuService
                             Title = "Profile",
                             Href = "/user/profile",
                             PageStatus = PageStatus.Completed
+                        },
+                        new()
+                        {
+                            Title = "Jobs",
+                            Href = "/jobs",
+                            PageStatus = PageStatus.Completed
                         }
+
                     }
                 },
                 new()
@@ -132,8 +139,8 @@ public class MenuService : IMenuService
                         new()
                         {
                             Title = "Jobs",
-                            Href = "/hangfire/index",
-                            PageStatus = PageStatus.ComingSoon
+                            Href = "/jobs",
+                            PageStatus = PageStatus.Completed
                         }
                     }
                 }

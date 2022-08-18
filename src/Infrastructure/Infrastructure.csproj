@@ -41,6 +41,9 @@
       <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="1.2.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
       <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.7.1" />
+      <PackageReference Include="Hangfire.InMemory" Version="0.3.4" />
+      <PackageReference Include="Hangfire.Core" Version="1.8.0-beta3" />
+      <PackageReference Include="Hangfire.AspNetCore" Version="1.7.30" />
   </ItemGroup>
 
   <ItemGroup>
