@@ -9,7 +9,10 @@
 
 @inject IJSRuntime JS
 @inject IStringLocalizer<Documents> L
+@implements IAsyncDisposable
+
 @attribute [Authorize(Policy = Permissions.Documents.View)]
+
 <PageTitle>@Title</PageTitle>
 <style>
     .mud-table-toolbar {
@@ -165,6 +168,7 @@
 </ErrorBoundary>
 @code {
     public string? Title { get; private set; }
+    private Lazy<IJSObjectReference> _jsModule = new();
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
     private MudTable<DocumentDto> _table = default!;
     private string _searchString = string.Empty;
@@ -204,6 +208,22 @@
         {
             await _table.ReloadServerData();
         });
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _jsModule = new(await JS.InvokeAsync<IJSObjectReference>("import", "./Pages/Documents/Documents.razor.js"));
+            await _jsModule.Value.InvokeAsync<IJSObjectReference>("loadscript");
+        }
+    }
+    public async ValueTask DisposeAsync()
+    {
+        if (_jsModule.IsValueCreated)
+        {
+            await _jsModule.Value.InvokeAsync<IJSObjectReference>("destroyscript");
+            await _jsModule.Value.DisposeAsync();
+        }
     }
     private async Task<TableData<DocumentDto>> ServerReload(TableState state)
     {
