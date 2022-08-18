@@ -11,7 +11,6 @@ public static class DataRowExtensions
     {
         return (row.IsNull(columnName) || string.IsNullOrEmpty(row[columnName].ToString()) ) ? default(T) : row.Field<T>(columnName);
     }
-
     public static decimal? FieldDecimalOrNull(this DataRow row, string columnName)
     {
         return (row.IsNull(columnName) || string.IsNullOrEmpty(row[columnName].ToString())) ? default(decimal?) : Convert.ToDecimal(row[columnName]);

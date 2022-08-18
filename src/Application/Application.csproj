@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -34,6 +34,21 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Features\Products\Queries\Export\ExportProductsQueryHandler.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExportProductsQueryHandler.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Features\Products\Queries\Export\ExportProductsQueryHandler.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ExportProductsQueryHandler.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 

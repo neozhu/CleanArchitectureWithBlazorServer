@@ -118,24 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Brand Name" xml:space="preserve">
-    <value>Nombre de la marca</value>
+    <value>ブランド名</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Descripción</value>
+    <value>商品説明</value>
   </data>
   <data name="Pictures" xml:space="preserve">
-    <value>Fotos</value>
+    <value>画像</value>
   </data>
   <data name="Price of unit" xml:space="preserve">
-    <value>Precio de la unidad</value>
+    <value>本体価格</value>
   </data>
   <data name="Product Name" xml:space="preserve">
-    <value>Nombre del producto</value>
+    <value>商品名</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>Productos</value>
+    <value>製品名</value>
   </data>
   <data name="Unit" xml:space="preserve">
-    <value>Unidad</value>
+    <value>単位</value>
   </data>
 </root>

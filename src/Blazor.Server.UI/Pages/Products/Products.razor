@@ -179,8 +179,8 @@
                 <MudTd HideSmall="true" DataLabel="@L["Brand Name"]">@context.Brand</MudTd>
                 <MudTd DataLabel="@L["Product Name"]">
                     <div class="d-flex flex-column">
-                    <MudText>@context.Name</MudText>
-                    <MudText Typo="Typo.body2">@context.Description</MudText>
+                        <MudText>@context.Name</MudText>
+                        <MudText Typo="Typo.body2">@context.Description</MudText>
                     </div>
                 </MudTd>
                 <MudTd DataLabel="@L["Price"]" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
@@ -310,7 +310,7 @@
             };
         var parameters = new DialogParameters
                 {
-                 { nameof(_ProductFormDialog.model),command },
+                    { nameof(_ProductFormDialog.model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
@@ -328,7 +328,7 @@
     {
         var parameters = new DialogParameters
                     {
-                { nameof(DeleteConfirmation.ContentText), string.Format(PromptText.DELETECONFIRMATION, dto.Name) }
+                        { nameof(DeleteConfirmation.ContentText), string.Format(PromptText.DELETECONFIRMATION, dto.Name) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(string.Format(PromptText.EDITTHEITEM, L["Product"]), parameters, options);
@@ -358,8 +358,7 @@
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
             Snackbar.Add($"{ToastText.DELETESUCCESS}", MudBlazor.Severity.Info);
-            _selectedItems = new HashSet<ProductDto>
-            ();
+            _selectedItems = new HashSet<ProductDto>();
         }
     }
     private async Task OnExport()
@@ -398,4 +397,4 @@
         }
         _uploading = false;
     }
-    }
+}

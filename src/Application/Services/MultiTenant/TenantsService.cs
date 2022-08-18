@@ -17,7 +17,7 @@ public class TenantsService : ITenantsService
 
     public TenantsService(
       IAppCache  cache,  
-    IApplicationDbContext context, IMapper mapper)
+      IApplicationDbContext context, IMapper mapper)
     {
         _cache = cache;
         _context = context;
