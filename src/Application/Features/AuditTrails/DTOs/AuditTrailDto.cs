@@ -13,23 +13,12 @@ public class AuditTrailDto : IMapFrom<AuditTrail>
 {
     public void Mapping(Profile profile)
     {
-        var options = new JsonSerializerOptions()
-        {
-            Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs),
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true,
-            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
-        };
-        
-
-
         profile.CreateMap<AuditTrail, AuditTrailDto>( MemberList.None)
            .ForMember(x => x.AuditType, s => s.MapFrom(y => y.AuditType.ToString()))
            .ForMember(x => x.OldValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.OldValues, DefaultJsonSerializerOptions.Options)))
            .ForMember(x => x.NewValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.NewValues, DefaultJsonSerializerOptions.Options)))
            .ForMember(x => x.PrimaryKey, s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, DefaultJsonSerializerOptions.Options)))
-           .ForMember(x => x.AffectedColumns, s => s.MapFrom(y => JsonSerializer.Serialize(y.AffectedColumns, DefaultJsonSerializerOptions.Options)))
-           ;
+           .ForMember(x => x.AffectedColumns, s => s.MapFrom(y => JsonSerializer.Serialize(y.AffectedColumns, DefaultJsonSerializerOptions.Options)));
 
     }
     public int Id { get; set; }

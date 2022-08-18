@@ -118,24 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Brand Name" xml:space="preserve">
-    <value>Название бренда</value>
+    <value>Nom de la marque</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Описание</value>
+    <value>Description</value>
   </data>
   <data name="Pictures" xml:space="preserve">
-    <value>Картинки</value>
+    <value>Images</value>
   </data>
   <data name="Price of unit" xml:space="preserve">
-    <value>Цена за единицу</value>
+    <value>Prix de l'unité</value>
   </data>
   <data name="Product Name" xml:space="preserve">
-    <value>Название продукта</value>
+    <value>Nom du produit</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>Продукция</value>
+    <value>Produits</value>
   </data>
   <data name="Unit" xml:space="preserve">
-    <value>Единица</value>
+    <value>Unité</value>
   </data>
 </root>

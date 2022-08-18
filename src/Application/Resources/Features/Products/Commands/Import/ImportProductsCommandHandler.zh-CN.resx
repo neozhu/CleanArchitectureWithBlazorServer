@@ -121,7 +121,7 @@
     <value>品牌名称</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>描写</value>
+    <value>描述</value>
   </data>
   <data name="Pictures" xml:space="preserve">
     <value>图片</value>
@@ -133,7 +133,7 @@
     <value>产品名称</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>产品介绍</value>
+    <value>产品</value>
   </data>
   <data name="Unit" xml:space="preserve">
     <value>单位</value>

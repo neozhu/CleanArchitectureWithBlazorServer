@@ -177,6 +177,17 @@ public class Testing
         return await context.Set<TEntity>().CountAsync();
     }
 
+    public static IPicklistService CreatePicklistService()
+    {
+        var scope = _scopeFactory.CreateScope();
+        return scope.ServiceProvider.GetRequiredService<IPicklistService>();
+    }
+    public static ITenantsService CreateTenantsService()
+    {
+        var scope = _scopeFactory.CreateScope();
+        return scope.ServiceProvider.GetRequiredService<ITenantsService>();
+    }
+
     [OneTimeTearDown]
     public void RunAfterAnyTests()
     {
