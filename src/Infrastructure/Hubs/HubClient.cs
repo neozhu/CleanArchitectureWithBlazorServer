@@ -31,11 +31,12 @@ public class HubClient : IAsyncDisposable
                 .WithUrl(_hubUrl)
                 .Build();
             // add handler for receiving messages
-            _hubConnection.On<string>(SignalR.ConnectUser, (userId) =>
+            _hubConnection.On<string>(SignalR.OnConnect, (userId) =>
             {
                 LoggedIn?.Invoke(this, userId);
             });
-            _hubConnection.On<string>(SignalR.DisconnectUser, (userId) =>
+ 
+            _hubConnection.On<string>(SignalR.OnDisconnect, (userId) =>
             {
                 LoggedOut?.Invoke(this, userId);
             });
@@ -47,12 +48,20 @@ public class HubClient : IAsyncDisposable
             {
                 HandleReceiveMessage(userId, message);
             });
+            _hubConnection.On<string>(SignalR.JobCompleted, (message) =>
+            {
+                JobCompleted?.Invoke(this,message);
+            });
+            _hubConnection.On<string>(SignalR.JobStart, (message) =>
+            {
+                JobStarted?.Invoke(this, message);
+            });
             // start the connection
             await _hubConnection.StartAsync();
 
 
             // register user on hub to let other clients know they've joined
-            await _hubConnection.SendAsync(SignalR.ConnectUser, _userId);
+            await _hubConnection.SendAsync(SignalR.OnConnect, _userId);
             _started = true;
         }
      
@@ -103,6 +112,8 @@ public class HubClient : IAsyncDisposable
     }
 
     public event EventHandler<string>? LoggedIn;
+    public event EventHandler<string>? JobStarted;
+    public event EventHandler<string>? JobCompleted;
     public event EventHandler<string>? LoggedOut;
     public event EventHandler<string>? NotificationReceived;
     public event MessageReceivedEventHandler? MessageReceived;
