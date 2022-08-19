@@ -52,6 +52,7 @@ public static class DependencyInjection
                 .AddMessageServices(configuration)
                 .AddSignalRServices();
         services.AddAuthenticationService(configuration);
+        services.AddHttpClientService();
         services.AddControllers();
         return services;
     }

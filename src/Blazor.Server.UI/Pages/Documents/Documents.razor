@@ -6,6 +6,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
+@using CleanArchitecture.Blazor.Infrastructure.Hubs
 
 @inject IJSRuntime JS
 @inject IStringLocalizer<Documents> L
@@ -46,12 +47,12 @@
                         @if (_canCreate)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Add"
+                                   StartIcon="@Icons.Material.Filled.Camera"
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="OnCreate"
                                    Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ButtonText.CREATE</MudButton>
+                                   IconColor="Color.Surface">@L["Upload Pictures"]</MudButton>
                         }
                         @if (_canDelete)
                         {
@@ -71,7 +72,7 @@
                             <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ButtonText.REFRESH</MudMenuItem>
                             @if (_canCreate)
                             {
-                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@ButtonText.CREATE</MudMenuItem>
+                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@L["Upload Pictures"]</MudMenuItem>
                             }
                             @if (_canDelete)
                             {
@@ -89,16 +90,13 @@
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
                     <col style="width:48px;" />
                     <col style="width:118px;" />
-                    <col style="width:50%;" />
-                    <col style="width:100px;" />
-                    <col style="width:120px;" />
-                </MudHidden>
+                 </MudHidden>
             </ColGroup>
             <HeaderContent>
                 <MudTh>@PromptText.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Title" T="DocumentDto">@L["Title"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Title" T="DocumentDto">@L["Recognize result"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="DocumentType" T="DocumentDto">@L["Document Type"]</MudTableSortLabel></MudTh>
-                <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="IsPublic" T="DocumentDto">@L["Is Public"]</MudTableSortLabel></MudTh>
                 <MudTh>@L["Tenant Name"]</MudTh>
 
             </HeaderContent>
@@ -140,9 +138,17 @@
                         <MudText Typo="Typo.body2">@context.Description</MudText>
                     </div>
                 </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L["Document Type"]">@context.DocumentType</MudTd>
-                <MudTd DataLabel="@L["Is Public"]" Style="text-align:right">
-                    <MudCheckBox Checked="@context.IsPublic" Disabled="true"></MudCheckBox>
+                 <MudTd DataLabel="@L["Recognize result"]">
+                    <div class="d-flex flex-column">
+                        <MudText>@context.Status</MudText>
+                        <MudText Typo="Typo.body2">@context.Content</MudText>
+                    </div>
+                </MudTd>
+                <MudTd HideSmall="true" DataLabel="@L["Document Type"]">
+                    <div class="d-flex flex-column">
+                        <MudCheckBox Size="Size.Small" Label="@L["Is Public"]" Checked="@context.IsPublic" Disabled="true"></MudCheckBox>
+                        <MudText Typo="Typo.body2">@context.DocumentType</MudText>
+                    </div>
                 </MudTd>
                 <MudTd DataLabel="@L["Tenant Name"]">
                     <div class="d-flex flex-column">
@@ -180,6 +186,8 @@
     IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     [Inject]
     private ISender _mediator { get; set; } = default!;
+    [Inject]
+    private HubClient _client { get; set; } = default!;
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     private string _tenantId = string.Empty;
@@ -208,6 +216,25 @@
         {
             await _table.ReloadServerData();
         });
+
+         _client.JobCompleted += _client_JobCompleted;
+        _client.JobStarted += _client_JobStarted;
+    }
+    private void _client_JobCompleted(object? sender, string e)
+    {
+        InvokeAsync(async () =>
+        {
+            await _table.ReloadServerData();
+            Snackbar.Add($"{e} recognize completed.", MudBlazor.Severity.Success);
+        });
+    }
+    private void _client_JobStarted(object? sender, string e)
+    {
+        InvokeAsync(async () =>
+        {
+            await _table.ReloadServerData();
+            Snackbar.Add($"{e} job started.", MudBlazor.Severity.Info);
+        });
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -219,6 +246,8 @@
     }
     public async ValueTask DisposeAsync()
     {
+         _client.JobCompleted -= _client_JobCompleted;
+        _client.JobStarted -= _client_JobStarted;
         if (_jsModule.IsValueCreated)
         {
             await _jsModule.Value.InvokeAsync<IJSObjectReference>("destroyscript");
@@ -272,15 +301,14 @@
             {
         { nameof(_DocumentFormDialog.model),command },
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<_DocumentFormDialog>
-        (string.Format(PromptText.CREATEAITEM, L["Document"]), parameters, options);
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<_UploadFilesFormDialog>
+        (L["Upload pictures"], parameters, options);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add(ToastText.UPLOADSUCCESS, MudBlazor.Severity.Info);
         }
     }
     private async Task OnEdit(DocumentDto dto)
@@ -290,6 +318,8 @@
                 Id = dto.Id,
                 Title = dto.Title,
                 URL = dto.URL,
+                Content=dto.Content,
+                Status=dto.Status,
                 Description = dto.Description,
                 DocumentType = dto.DocumentType,
                 IsPublic = dto.IsPublic,

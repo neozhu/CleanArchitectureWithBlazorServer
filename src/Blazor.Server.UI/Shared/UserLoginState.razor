@@ -32,6 +32,7 @@
         _identityService = ScopedServices.GetRequiredService<IIdentityService>();
         _client.LoggedOut += _client_LoggedOut;
         _client.LoggedIn += _client_LoggedIn;
+       
         var state = await _authState;
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
@@ -59,7 +60,7 @@
             await _identityService.UpdateLiveStatus(e, true);
         });
     }
-
+    
     private void _client_LoggedOut(object? sender, string e)
     {
         InvokeAsync(async () =>

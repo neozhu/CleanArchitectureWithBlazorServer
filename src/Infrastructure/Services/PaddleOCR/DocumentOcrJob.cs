@@ -1,0 +1,110 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
+using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
+using CleanArchitecture.Blazor.Application.Services.PaddleOCR;
+using CleanArchitecture.Blazor.Infrastructure.Hubs;
+using Microsoft.AspNetCore.SignalR;
+
+namespace CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
+public class DocumentOcrJob : IDocumentOcrJob
+{
+    private readonly IHubContext<SignalRHub, ISignalRHub> _hubContext;
+    private readonly IApplicationDbContext _context;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ISerializer _serializer;
+
+    public DocumentOcrJob(
+        IHubContext<SignalRHub,ISignalRHub> hubContext,
+        IApplicationDbContext context,
+        IHttpClientFactory httpClientFactory,
+        ISerializer serializer
+        )
+    {
+        _hubContext = hubContext;
+        _context = context;
+        _httpClientFactory = httpClientFactory;
+        _serializer = serializer;
+    }
+    private string readbase64string(string path)
+    {
+        using (Image image = Image.FromFile(path))
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                image.Save(m, image.RawFormat);
+                byte[] imageBytes = m.ToArray();
+
+                // Convert byte[] to Base64 String
+                string base64String = Convert.ToBase64String(imageBytes);
+                return base64String;
+            }
+        }
+
+    }
+    public async Task Recognition(int id, CancellationToken cancellationToken)
+    {
+        using (var client = _httpClientFactory.CreateClient("ocr"))
+        {
+            var doc = _context.Documents.Find(id);
+            doc.Status = JobStatus.Doing;
+            await _hubContext.Clients.All.Start(doc.Title);
+            await _context.SaveChangesAsync(default);
+            DocumentCacheKey.SharedExpiryTokenSource().Cancel();
+                        var imgfile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
+
+            string base64string = readbase64string(imgfile);
+            doc = _context.Documents.Find(id);
+            var response = client.PostAsJsonAsync<dynamic>("", new { images = new string[] { base64string } }).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                var ocr_result = JsonSerializer.Deserialize<ocr_result>(result);
+                var ocr_status = "";
+                doc.Status = JobStatus.Done;
+                doc.Description = "recognize the result: " +  ocr_result.status;
+                if (ocr_result.status == "000")
+                {
+                    var content = _serializer.Serialize(ocr_result.results);
+                    doc.Content = content;
+
+                }
+                await _context.SaveChangesAsync(cancellationToken);
+                await _hubContext.Clients.All.Completed(doc.Title);
+                DocumentCacheKey.SharedExpiryTokenSource().Cancel();
+
+
+            }
+
+        }
+        Console.WriteLine($"{id}, completed.");
+    }
+}
+
+class result
+{
+    public decimal confidence { get; set; }
+    public string text { get; set; }
+    public List<int[]> text_region { get; set; }
+}
+class ocr_result
+{
+    public string msg { get; set; }
+    public List<result[]> results { get; set; }
+    public string status { get; set; }
+}
+    
+

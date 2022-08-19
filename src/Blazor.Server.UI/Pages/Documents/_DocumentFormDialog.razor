@@ -8,17 +8,12 @@
     <DialogContent>
         <MudForm Model="model" @ref="_form" Validation="@(modelValidator.ValidateValue)">
             <MudGrid>
-                <MudItem xs="12">
+                <MudItem xs="12" sm="6">
                     <MudTextField Label="@L["Title"]" @bind-Value="model.Title"
                                   For="@(() => model.Title)"
                                   Required="true"
                                   RequiredError="@L["Title is required!"]">
                     </MudTextField>
-                </MudItem>
-                <MudItem xs="12">
-                    <MudTextField Label="@L["Description"]"
-                                  For="@(() => model.Description)"
-                                  @bind-Value="model.Description"></MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <MudSelect Label="@L["Select Document Type"]"
@@ -32,30 +27,32 @@
                         }
                     </MudSelect>
                 </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Description"]"
+                                  For="@(() => model.Description)"
+                                  @bind-Value="model.Description"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Content"]"
+                                  Lines="3" ReadOnly
+                                  For="@(() => model.Content)"
+                                  @bind-Value="model.Content"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                   <MudTextField Label="@L["Job Status"]"
+                                For="@(() => model.Status)"
+                                ReadOnly
+                                @bind-Value="model.Status"></MudTextField>
+                </MudItem>
                 <MudItem xs="12" sm="6">
                    <MudCheckBox Label="@L["Is Public"]"
                                 For="@(() => model.IsPublic)"
                                 @bind-Checked="model.IsPublic"></MudCheckBox>
                 </MudItem>
                 <MudItem>
-                    <InputFile id="fileInput" OnChange="UploadFiles" hidden accept=".jpg, .jpeg, .png, .docx, .pdf, .xlsx, .pptx" />
-                    <MudText Typo="Typo.caption">@L["Attachement"]*</MudText>
-                    <MudFab HtmlTag="label" Size="MudBlazor.Size.Small"
-                            Class="ml-2"
-                            Color="MudBlazor.Color.Info"
-                            Icon="@Icons.Filled.Image"
-                            Label="@L["Upload"]"
-                            for="fileInput" />
-
-                    <div class="d-fex">
-                        @if (model.URL is not null)
-                        {
-                            <MudLink Href="@model.URL">@model.URL</MudLink>
-                        }
-
-
-                    </div>
+                    <MudImage  Fluid="true" Src="@model.URL" Alt="@model.Description" Class="rounded-lg"/>
                 </MudItem>
+                
             </MudGrid>
         </MudForm>
     </DialogContent>
@@ -69,23 +66,10 @@
     MudForm? _form = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
-    [Inject] private IUploadService _uploadService { get; set; } = default!;
     AddEditDocumentCommandValidator modelValidator = new AddEditDocumentCommandValidator();
     [EditorRequired][Parameter] public AddEditDocumentCommand model { get; set; } = default!;
 
 
-    private async Task UploadFiles(InputFileChangeEventArgs e)
-    {
-        var file = e.File;
-        var filestream = file.OpenReadStream();
-        var imgstream = new MemoryStream();
-        await filestream.CopyToAsync(imgstream);
-
-        model.UploadRequest = new UploadRequest(file.Name, UploadType.Document, imgstream.ToArray());
-        model.URL = file.Name;
-        Snackbar.Add(ToastText.UPLOADSUCCESS, MudBlazor.Severity.Info);
-
-    }
     async Task Submit()
     {
         if (_form is not null)
@@ -93,11 +77,6 @@
             await _form.Validate();
             if (_form.IsValid)
             {
-                if (string.IsNullOrEmpty(model.URL))
-                {
-                    Snackbar.Add(L["Please choose to upload a document"], MudBlazor.Severity.Error);
-                    return;
-                }
                 MudDialog.Close(DialogResult.Ok(true));
             }
         }
