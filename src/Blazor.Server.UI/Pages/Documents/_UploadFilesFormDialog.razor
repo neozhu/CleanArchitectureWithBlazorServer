@@ -34,10 +34,10 @@
     </DialogContent>
     <DialogActions>
         <InputFile id="fileInput" OnChange="(async (e) =>await LoadFiles(e))" hidden multiple AllowedExtensions=".jpg;.png;"
-                 CustomExtensionMessage="Only .jpg and .png files are allowed."  />
+                   CustomExtensionMessage="Only .jpg and .png files are allowed." />
         <MudButton Color="MudBlazor.Color.Secondary" StartIcon="@Icons.Filled.Clear" Disabled="@(!uploadedFiles.Any())" OnClick="Clear">@L["Clear"]</MudButton>
         <MudButton Color="MudBlazor.Color.Info" StartIcon="@Icons.Filled.AttachFile" HtmlTag="label" for="fileInput">@L["Choose files"]</MudButton>
-        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit" Disabled="_processing">
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit" Disabled="@(_processing || _uploading || !uploadedFiles.Any())">
             @if (_processing)
             {
                 <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
@@ -57,6 +57,7 @@
     MudDialogInstance MudDialog { get; set; } = default!;
     [EditorRequired][Parameter] public AddEditDocumentCommand model { get; set; } = default!;
     bool _processing;
+    bool _uploading;
     [Inject]
     private IJSRuntime _js { get; set; } = default!;
     [Inject]
@@ -65,46 +66,53 @@
     List<FileUploadProgress> uploadedFiles = new();
     private async ValueTask LoadFiles(InputFileChangeEventArgs e)
     {
-        var files = e.GetMultipleFiles(maximumFileCount: 100);
-
-        var startIndex = uploadedFiles.Count;
-        // Add all files to the UI
-        foreach (var file in files)
-        {
-            var progress = new FileUploadProgress(file.Name, file.Size, file);
-            uploadedFiles.Add(progress);
-        }
-
-        // We don't want to refresh the UI too frequently,
-        // So, we use a timer to update the UI every few hundred milliseconds
-        await using var timer = new Timer(_ => InvokeAsync(() => StateHasChanged()));
-        timer.Change(TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500));
-
-        // Upload files
-        byte[] buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(4096);
         try
         {
+            _uploading = true;
+            var files = e.GetMultipleFiles(maximumFileCount: 100);
+            var startIndex = uploadedFiles.Count;
+            // Add all files to the UI
             foreach (var file in files)
             {
-                using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
-                while (await stream.ReadAsync(buffer) is int read && read > 0)
+                var progress = new FileUploadProgress(file.Name, file.Size, file);
+                uploadedFiles.Add(progress);
+            }
+
+            // We don't want to refresh the UI too frequently,
+            // So, we use a timer to update the UI every few hundred milliseconds
+            await using var timer = new Timer(_ => InvokeAsync(() => StateHasChanged()));
+            timer.Change(TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500));
+
+            // Upload files
+            byte[] buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(4096);
+            try
+            {
+                foreach (var file in files)
                 {
-                    uploadedFiles[startIndex].UploadedBytes += read;
+                    using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+                    while (await stream.ReadAsync(buffer) is int read && read > 0)
+                    {
+                        uploadedFiles[startIndex].UploadedBytes += read;
 
-                    // TODO Do something with the file chunk, such as save it
-                    // to a database or a local file system
-                    var readData = buffer.AsMemory().Slice(0, read);
+                        // TODO Do something with the file chunk, such as save it
+                        // to a database or a local file system
+                        var readData = buffer.AsMemory().Slice(0, read);
+                    }
+
+                    startIndex++;
                 }
+            }
+            finally
+            {
+                System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
 
-                startIndex++;
+                // Update the UI with the final progress
+                StateHasChanged();
             }
         }
         finally
         {
-            System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
-
-            // Update the UI with the final progress
-            StateHasChanged();
+            _uploading = false;
         }
     }
     // Use the Meziantou.Framework.ByteSize NuGet package.
@@ -158,7 +166,7 @@
                         var request = new UploadRequest(uploaded.FileName, UploadType.Document, outStream.ToArray());
                         list.Add(request);
                     }
-                    
+
                 }
                 var uploadcommand = new UploadDocumentCommand(list);
                 await _mediator.Send(uploadcommand);
