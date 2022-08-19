@@ -64,6 +64,7 @@
     private ISender _mediator { get; set; } = default!;
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     List<FileUploadProgress> uploadedFiles = new();
+    const long MAXALLOWEDSIZE =  5242880;
     private async ValueTask LoadFiles(InputFileChangeEventArgs e)
     {
         try
@@ -138,34 +139,42 @@
                 var list = new List<UploadRequest>();
                 foreach (var uploaded in uploadedFiles)
                 {
-                    var filestream = uploaded.File.OpenReadStream();
-                    var imgstream = new MemoryStream();
-                    await filestream.CopyToAsync(imgstream);
-                    imgstream.Position = 0;
-                    using (var outStream = new MemoryStream())
+                    try
                     {
-                        using (var image = Image.Load(imgstream, out IImageFormat format))
+                        var filestream = uploaded.File.OpenReadStream(MAXALLOWEDSIZE);
+                        var imgstream = new MemoryStream();
+                        await filestream.CopyToAsync(imgstream);
+                        imgstream.Position = 0;
+                        using (var outStream = new MemoryStream())
                         {
-                            var scale = 0m;
-                            if (image.Width > 900)
+                            using (var image = Image.Load(imgstream, out IImageFormat format))
                             {
-                                scale = 0.3m;
+                                var scale = 0m;
+                                if (image.Width > 900)
+                                {
+                                    scale = 0.3m;
+                                }
+                                else if (image.Width <= 900 && image.Width > 300)
+                                {
+                                    scale = 0.5m;
+                                }
+                                else
+                                {
+                                    scale = 0.8m;
+                                }
+                                image.Mutate(
+                                   i => i.AutoOrient().Resize(Convert.ToInt32((image.Width * scale)), 0));
+                                image.Save(outStream, format);
                             }
-                            else if (image.Width <= 900 && image.Width > 300)
-                            {
-                                scale = 0.5m;
-                            }
-                            else
-                            {
-                                scale = 0.8m;
-                            }
-                            image.Mutate(
-                               i => i.AutoOrient().Resize(Convert.ToInt32((image.Width * scale)), 0));
-                            image.Save(outStream, format);
+                            var request = new UploadRequest(uploaded.FileName, UploadType.Document, outStream.ToArray());
+                            list.Add(request);
                         }
-                        var request = new UploadRequest(uploaded.FileName, UploadType.Document, outStream.ToArray());
-                        list.Add(request);
                     }
+                    catch (Exception e)
+                    {
+                        Snackbar.Add($"{e.Message}", MudBlazor.Severity.Error);
+                    }
+                
 
                 }
                 var uploadcommand = new UploadDocumentCommand(list);
