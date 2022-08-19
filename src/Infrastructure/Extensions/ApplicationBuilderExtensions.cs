@@ -16,7 +16,7 @@ public static class ApplicationBuilderExtensions
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-        
+
         if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
         {
             Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
@@ -33,11 +33,11 @@ public static class ApplicationBuilderExtensions
 
         app.UseRequestLocalization(localizationOptions);
         app.UseMiddlewares();
-        app.UseHangfireDashboard("/jobs",new DashboardOptions {
-             AsyncAuthorization=new [] { 
-                 new HangfireDashboardAuthorizationFilter()
-                 }
-            });
+        app.UseHangfireDashboard("/jobs", new DashboardOptions
+        {
+            Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
+            AsyncAuthorization = new[] { new HangfireDashboardAsyncAuthorizationFilter() }
+        });
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();

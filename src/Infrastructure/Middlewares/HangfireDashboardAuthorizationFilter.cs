@@ -6,11 +6,20 @@ using System.Threading.Tasks;
 using Hangfire.Dashboard;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
-public class HangfireDashboardAuthorizationFilter : IDashboardAsyncAuthorizationFilter
+public class HangfireDashboardAsyncAuthorizationFilter : IDashboardAsyncAuthorizationFilter
 {
 
     public Task<bool> AuthorizeAsync(DashboardContext context)
     {
         return Task.FromResult(true);
+    }
+}
+
+public class HangfireDashboardAuthorizationFilter : IDashboardAuthorizationFilter
+{
+    public bool Authorize(DashboardContext context)
+    {
+
+        return true;
     }
 }
