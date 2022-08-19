@@ -12,7 +12,6 @@ public static class SignalR
     public const string OnConnect = "Connect";
     public const string OnDisconnect = "Disconnect";
     public const string OnChangeRolePermissions = "OnChangeRolePermissions";
-    public const string LogoutUsersByRole = "LogoutUsersByRole";
     public const string PingRequest = "PingRequestAsync";
     public const string PingResponse = "PingResponseAsync";
     public const string UpdateOnlineUsers = "UpdateOnlineUsers";
