@@ -58,7 +58,7 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
             And(x => x.TenantId == tenantId);
             if (!string.IsNullOrEmpty(keyword))
             {
-                And(x => x.Title.Contains(keyword) || x.Description.Contains(keyword));
+                And(x => x.Title.Contains(keyword) || x.Description.Contains(keyword) || x.Content.Contains(keyword));
             }
         }
     }

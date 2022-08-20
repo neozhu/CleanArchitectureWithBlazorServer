@@ -150,17 +150,17 @@
                             using (var image = Image.Load(imgstream, out IImageFormat format))
                             {
                                 var scale = 0m;
-                                if (image.Width > 900)
+                                if (image.Width > 1600)
                                 {
                                     scale = 0.3m;
                                 }
-                                else if (image.Width <= 900 && image.Width > 300)
+                                else if (image.Width <= 1600 && image.Width > 800)
                                 {
                                     scale = 0.5m;
                                 }
                                 else
                                 {
-                                    scale = 0.8m;
+                                    scale = 0.9m;
                                 }
                                 image.Mutate(
                                    i => i.AutoOrient().Resize(Convert.ToInt32((image.Width * scale)), 0));
