@@ -132,8 +132,10 @@ public class MenuService : IMenuService
                         new()
                         {
                             Title = "Jobs",
-                            Href = "/hangfire/index",
-                            PageStatus = PageStatus.ComingSoon
+                            Href = "/jobs",
+                            PageStatus = PageStatus.ComingSoon,
+                            Target="_blank"
+
                         }
                     }
                 }
