@@ -3,7 +3,7 @@
 
 
 namespace CleanArchitecture.Blazor.Domain.Events;
-public class DeletedEvent<T> : DomainEvent
+public class DeletedEvent<T> : DomainEvent where T : BaseEntity
 {
     public DeletedEvent(T entity)
     {
