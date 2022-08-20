@@ -72,18 +72,23 @@
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     AddEditDocumentCommandValidator modelValidator = new AddEditDocumentCommandValidator();
     [EditorRequired][Parameter] public AddEditDocumentCommand model { get; set; } = default!;
-
+    const long MAXALLOWEDSIZE = 3145728;
 
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
-        var file = e.File;
-        var filestream = file.OpenReadStream();
-        var imgstream = new MemoryStream();
-        await filestream.CopyToAsync(imgstream);
-
-        model.UploadRequest = new UploadRequest(file.Name, UploadType.Document, imgstream.ToArray());
-        model.URL = file.Name;
-        Snackbar.Add(ToastText.UPLOADSUCCESS, MudBlazor.Severity.Info);
+        try
+        {
+            var file = e.File;
+            var filestream = file.OpenReadStream(MAXALLOWEDSIZE);
+            var imgstream = new MemoryStream();
+            await filestream.CopyToAsync(imgstream);
+            model.UploadRequest = new UploadRequest(file.Name, UploadType.Document, imgstream.ToArray());
+            model.URL = file.Name;
+            Snackbar.Add(ToastText.UPLOADSUCCESS, MudBlazor.Severity.Info);
+        }catch(Exception ex)
+        {
+            Snackbar.Add($"{ex.Message}", MudBlazor.Severity.Error);
+        }
 
     }
     async Task Submit()
