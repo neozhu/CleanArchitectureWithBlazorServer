@@ -74,7 +74,7 @@
                                 {
                                     @if (SideMenuDrawerOpen)
                                     {
-                                        <MudNavLink Disabled="@(menuItem.PageStatus != PageStatus.Completed)" Href="@(menuItem.Href)" Match="NavLinkMatch.All">
+                                        <MudNavLink Disabled="@(menuItem.PageStatus != PageStatus.Completed)" Href="@(menuItem.Href)" Target="@(menuItem.Target)" Match="NavLinkMatch.All">
                                             <div class="d-flex">
                                                 @(L[menuItem.Title])
                                                 @if (menuItem.PageStatus != PageStatus.Completed)
@@ -92,7 +92,7 @@
                         }
                         else
                         {
-                            <MudNavLink Disabled="@(sectionItem.PageStatus != PageStatus.Completed)" Href="@(sectionItem.Href)" Icon="@(sectionItem.Icon)" Match="NavLinkMatch.All">
+                            <MudNavLink Disabled="@(sectionItem.PageStatus != PageStatus.Completed)" Href="@(sectionItem.Href)" Icon="@(sectionItem.Icon)" Target="@(sectionItem.Target)" Match="NavLinkMatch.All">
                                 <div class="d-flex">
                                     @(L[sectionItem.Title])
                                     @if (sectionItem.PageStatus != PageStatus.Completed)
