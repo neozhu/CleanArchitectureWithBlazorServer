@@ -60,13 +60,8 @@
                         <MudFab HtmlTag="label" Size="MudBlazor.Size.Small" Disabled="_uploading"
                                 Color="MudBlazor.Color.Info"
                                 Icon="@Icons.Filled.Image"
-                                Label="Upload picture"
+                                Label="@(L[!_uploading?"Upload picture":"Processing"])"
                                 for="fileInput">
-                            @if (_uploading)
-                            {
-                                <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
-                                <MudText Class="ms-2">Processing</MudText>
-                            }
                         </MudFab>
                         @if (fileinputInvalid)
                         {
