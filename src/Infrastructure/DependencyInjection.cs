@@ -22,28 +22,37 @@ public static class DependencyInjection
         }
         else
         {
-            services.AddDbContext<ApplicationDbContext>(options => {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
                 options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
-                 options.EnableSensitiveDataLogging();
+                      configuration.GetConnectionString("DefaultConnection"),
+                      builder =>
+                      {
+                          builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                          builder.EnableRetryOnFailure(maxRetryCount: 5,
+                                                       maxRetryDelay: TimeSpan.FromSeconds(10),
+                                                       errorNumbersToAdd: null);
+                          builder.CommandTimeout(15);
+                      });
+                options.EnableDetailedErrors(detailedErrorsEnabled: true);
+                options.EnableSensitiveDataLogging();
             });
             services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
         services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.SectionName));
-        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.SectionName));        
+        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.SectionName));
         services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
-        services.AddScoped<IDbContextFactory<ApplicationDbContext>,BlazorContextFactory<ApplicationDbContext>>();
+        services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
         services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
-     
+
 
         services
             .AddDefaultIdentity<ApplicationUser>()
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-        
+
         services.AddLocalizationServices();
         services.AddServices()
                 .AddHangfireService()
