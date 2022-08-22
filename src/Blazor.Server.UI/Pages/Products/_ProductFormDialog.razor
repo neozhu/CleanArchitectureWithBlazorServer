@@ -57,11 +57,12 @@
                     <div class="d-flex flex-row gap-4 mb-2">
                         <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
                         <MudText Typo="Typo.caption">@L["Product Pictures"]*</MudText>
-                        <MudFab HtmlTag="label" Size="MudBlazor.Size.Small"
+                        <MudFab HtmlTag="label" Size="MudBlazor.Size.Small" Disabled="_uploading"
                                 Color="MudBlazor.Color.Info"
                                 Icon="@Icons.Filled.Image"
-                                Label="Upload picture"
-                                for="fileInput" />
+                                Label="@(L[!_uploading?"Upload picture":"Processing"])"
+                                for="fileInput">
+                        </MudFab>
                         @if (fileinputInvalid)
                         {
                             <MudText Color="MudBlazor.Color.Error" Typo="Typo.body2">@L["Please upload product pictures."]</MudText>
@@ -95,35 +96,50 @@
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     AddEditProductCommandValidator _modelValidator = new();
     [EditorRequired][Parameter] public AddEditProductCommand model { get; set; } = default!;
-
-
+    const long MAXALLOWEDSIZE = 3145728;
+    bool _uploading;
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
-        var list = new List<string>();
-        foreach (var file in e.GetMultipleFiles())
+        try
         {
-            var filestream = file.OpenReadStream();
-            var imgstream = new MemoryStream();
-            await filestream.CopyToAsync(imgstream);
-            imgstream.Position = 0;
-            using (var outStream = new MemoryStream())
+            _uploading = true;
+            var list = new List<string>();
+            foreach (var file in e.GetMultipleFiles())
             {
-                using (var image = Image.Load(imgstream, out IImageFormat format))
+                try
                 {
-                    image.Mutate(
-                       i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(640, 320) }));
-                    image.Save(outStream, format);
-                    var filename = file.Name;
-                    var fi = new FileInfo(filename);
-                    var ext = fi.Extension;
-                    var result = await _uploadService.UploadAsync(new UploadRequest(Guid.NewGuid().ToString() + ext, UploadType.Product, outStream.ToArray()));
-                    list.Add(result);
+                    var filestream = file.OpenReadStream(MAXALLOWEDSIZE);
+                    var imgstream = new MemoryStream();
+                    await filestream.CopyToAsync(imgstream);
+                    imgstream.Position = 0;
+                    using (var outStream = new MemoryStream())
+                    {
+                        using (var image = Image.Load(imgstream, out IImageFormat format))
+                        {
+                            image.Mutate(
+                               i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(640, 320) }));
+                            image.Save(outStream, format);
+                            var filename = file.Name;
+                            var fi = new FileInfo(filename);
+                            var ext = fi.Extension;
+                            var result = await _uploadService.UploadAsync(new UploadRequest(Guid.NewGuid().ToString() + ext, UploadType.Product, outStream.ToArray()));
+                            list.Add(result);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Snackbar.Add($"{ex.Message}", MudBlazor.Severity.Error);
                 }
             }
+            Snackbar.Add(L["Upload pictures successfully"], MudBlazor.Severity.Info);
+            model.Pictures = list;
+            fileinputInvalid = false;
         }
-        Snackbar.Add(L["Upload pictures successfully"], MudBlazor.Severity.Info);
-        model.Pictures = list;
-        fileinputInvalid = false;
+        finally
+        {
+            _uploading = false;
+        }
     }
     async Task Submit()
     {
