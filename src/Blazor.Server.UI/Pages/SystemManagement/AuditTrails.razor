@@ -17,7 +17,7 @@
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
-                  RowsPerPage="25"
+                  @bind-RowsPerPage="_defaultPageSize"
                   Height="calc(100vh - 265px)"
                   Loading="@_loading"
                   SortLabel="@PromptText.ORDERBY"
@@ -104,7 +104,7 @@
                 <MudText>@PromptText.LOADING</MudText>
             </LoadingContent>
             <PagerContent>
-                <MudTablePager />
+                <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
         </MudTable>
     </ChildContent>
@@ -117,6 +117,7 @@
     private string _searchString = string.Empty;
     private MudTable<AuditTrailDto> _table = default!;
     private bool _loading;
+    private int _defaultPageSize = 15;
     [Inject]
     private ISender _mediator { get; set; } = default!;
 

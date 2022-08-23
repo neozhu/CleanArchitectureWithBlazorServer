@@ -27,12 +27,12 @@
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
-                  RowsPerPage="15"
+                  @bind-RowsPerPage="_defaultPageSize"
                   Height="calc(100vh - 330px)"
                   Loading="@_loading"
                   SortLabel="@PromptText.ORDERBY"
                   MultiSelection="true"
-                  SelectedItems="_selectedItems"
+                  @bind-SelectedItems="_selectedItems"
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
@@ -177,6 +177,7 @@
     private Lazy<IJSObjectReference> _jsModule = new();
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
     private MudTable<DocumentDto> _table = default!;
+    private int _defaultPageSize = 15;
     private string _searchString = string.Empty;
     private bool _downloading = false;
     private bool _loading;

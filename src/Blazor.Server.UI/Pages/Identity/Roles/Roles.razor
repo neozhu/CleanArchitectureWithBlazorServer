@@ -21,11 +21,11 @@
         <MudTable Items="@_roleList"
                   FixedHeader="true"
                   FixedFooter="true"
-                  RowsPerPage="15"                  
                   Height="calc(100vh - 265px)"
                   Hover="true"
                   MultiSelection="true"
-                  SelectedItems="@_selectItems"
+                  @bind-RowsPerPage="_defaultPageSize"
+                  @bind-SelectedItems="_selectItems"
                   SortLabel="@PromptText.ORDERBY"
                   Loading="@_loading"
                   Filter="new Func<ApplicationRole,bool>(_quickFilter)">
@@ -172,6 +172,7 @@
 
     private string _currentRoleName = string.Empty;
     private List<ApplicationRole> _roleList = new();
+    private int _defaultPageSize = 15;
     private HashSet<ApplicationRole> _selectItems = new();
     private string _searchString = string.Empty;
     public string? Title { get; private set; }
