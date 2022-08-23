@@ -25,10 +25,10 @@
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 265px)"
-                  RowsPerPage="15"
+                  @bind-RowsPerPage="_defaultPageSize"
                   Hover="true"
                   MultiSelection="true"
-                  SelectedItems="_selectItems"
+                  @bind-SelectedItems="_selectItems"
                   SortLabel="@PromptText.ORDERBY"
                   Loading="@_loading"
                   Filter="new Func<UserFormModel,bool>(_quickFilter)">
@@ -212,6 +212,7 @@
     [Inject]
     private IUsersStateContainer _usersStateContainer { get; set; } = default!;
     private List<UserFormModel> _userList = new();
+    private int _defaultPageSize = 15;
     private HashSet<UserFormModel> _selectItems = new();
     private string _searchString = string.Empty;
     private string Title { get; set; } = "Users";

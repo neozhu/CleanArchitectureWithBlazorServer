@@ -22,9 +22,10 @@
                   FixedFooter="true"
                   Height="calc(100vh - 265px)"
                   Loading="@_loading"
+                  @bind-RowsPerPage="_defaultPageSize"
                   SortLabel="@PromptText.ORDERBY"
                   MultiSelection="true" 
-                  SelectedItems="_selectedItems"
+                  @bind-SelectedItems="_selectedItems"
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
@@ -143,6 +144,7 @@
 </ErrorBoundary>
 @code {
     public string? Title { get; private set; }
+    private int _defaultPageSize = 15;
     private HashSet<TenantDto> _selectedItems = new HashSet<TenantDto>();
     private MudTable<TenantDto> _table = default!;
     private string _searchString = string.Empty;
