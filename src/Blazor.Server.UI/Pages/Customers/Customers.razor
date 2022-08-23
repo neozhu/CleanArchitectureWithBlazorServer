@@ -24,12 +24,12 @@
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
-                  RowsPerPage="15"
+                  @bind-RowsPerPage="_defaultPageSize"
                   Height="calc(100vh - 330px)"
                   Loading="@_loading"
                   SortLabel="@PromptText.ORDERBY"
                   MultiSelection="true"
-                  SelectedItems="_selectedItems"
+                  @bind-SelectedItems="_selectedItems"
                   SelectedItem="_currentDto"
                   Hover="true" @ref="_table">
             <ToolBarContent>
@@ -204,6 +204,7 @@
     public string? Title { get; private set; }
     private HashSet<CustomerDto> _selectedItems = new HashSet<CustomerDto>();
     private MudTable<CustomerDto> _table = default!;
+    private int _defaultPageSize = 15;
     private CustomerDto _currentDto = new();
 
     private string _searchString = string.Empty;

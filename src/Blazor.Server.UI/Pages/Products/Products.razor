@@ -24,12 +24,12 @@
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
-                  RowsPerPage="15"
+                  @bind-RowsPerPage="_defaultPageSize"
                   Height="calc(100vh - 330px)"
                   Loading="@_loading"
                   SortLabel="@PromptText.ORDERBY"
                   MultiSelection="true"
-                  SelectedItems="_selectedItems"
+                  @bind-SelectedItems="_selectedItems"
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
@@ -210,6 +210,7 @@
     private bool _loading;
     private bool _uploading;
     private bool _downloading;
+    private int _defaultPageSize = 15;
     [Inject]
     private ISender _mediator { get; set; } = default!;
     [CascadingParameter]
@@ -245,7 +246,7 @@
             _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
             _query.PageNumber = state.Page + 1;
             _query.PageSize = state.PageSize;
-            var result = await _mediator.Send(_query).ConfigureAwait(false);
+            var result =  await _mediator.Send(_query).ConfigureAwait(false);
             return new TableData<ProductDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
