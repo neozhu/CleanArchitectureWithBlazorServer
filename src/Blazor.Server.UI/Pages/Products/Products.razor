@@ -30,6 +30,7 @@
                   SortLabel="@PromptText.ORDERBY"
                   MultiSelection="true"
                   @bind-SelectedItems="_selectedItems"
+                  @bind-SelectedItem="_selectItem"
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
@@ -205,7 +206,7 @@
     public string? Title { get; private set; }
     private HashSet<ProductDto> _selectedItems = new HashSet<ProductDto>();
     private MudTable<ProductDto> _table = default!;
-
+    private ProductDto _selectItem = new();
     private string _searchString = string.Empty;
     private bool _loading;
     private bool _uploading;
