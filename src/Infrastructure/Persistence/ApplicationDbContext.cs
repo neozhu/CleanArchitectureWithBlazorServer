@@ -16,16 +16,14 @@ public class ApplicationDbContext : IdentityDbContext<
 {
 
 
-    private readonly IMediator _mediator;
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
-        IMediator mediator,
+
         AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor
         ) : base(options)
     {
-        _mediator = mediator;
         _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
     }
     public DbSet<Tenant> Tenants { get; set; }
@@ -36,11 +34,10 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<KeyValue> KeyValues { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Product> Products { get; set; }
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var result= await base.SaveChangesAsync(cancellationToken);
-        await _mediator.DispatchDomainEvents(this);
-        return result;
+        return base.SaveChangesAsync(cancellationToken);
+
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
