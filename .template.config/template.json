@@ -16,7 +16,6 @@
     "description": "This is a solution templates for creating a Blazor Server application following the principles of Clean Architecture",
     "sources": [
     {
-      "source": "./src/",
       "target": "./src/",
       "copyOnly": "**/*.txt",
       "exclude": "**/*.reg",
@@ -29,7 +28,6 @@
       ]
     },
     {
-      "source": "./tests/",
       "target": "./tests/",
       "condition": "TestProject"
     }
