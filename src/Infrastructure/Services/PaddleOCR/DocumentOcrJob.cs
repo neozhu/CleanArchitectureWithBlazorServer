@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -26,18 +27,22 @@ public class DocumentOcrJob : IDocumentOcrJob
     private readonly IApplicationDbContext _context;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ISerializer _serializer;
-
+    private readonly ILogger<DocumentOcrJob> _logger;
+    private readonly Stopwatch _timer;
     public DocumentOcrJob(
-        IHubContext<SignalRHub,ISignalRHub> hubContext,
+        IHubContext<SignalRHub, ISignalRHub> hubContext,
         IApplicationDbContext context,
         IHttpClientFactory httpClientFactory,
-        ISerializer serializer
+        ISerializer serializer,
+        ILogger<DocumentOcrJob> logger
         )
     {
         _hubContext = hubContext;
         _context = context;
         _httpClientFactory = httpClientFactory;
         _serializer = serializer;
+        _logger = logger;
+        _timer=new Stopwatch();
     }
     private string readbase64string(string path)
     {
@@ -57,41 +62,52 @@ public class DocumentOcrJob : IDocumentOcrJob
     }
     public async Task Recognition(int id, CancellationToken cancellationToken)
     {
-        using (var client = _httpClientFactory.CreateClient("ocr"))
+        try
         {
-            var doc = _context.Documents.Find(id);
-            doc.Status = JobStatus.Doing;
-            await _hubContext.Clients.All.Start(doc.Title);
-            await _context.SaveChangesAsync(default);
-            DocumentCacheKey.SharedExpiryTokenSource().Cancel();
-                        var imgfile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
-
-            string base64string = readbase64string(imgfile);
-            doc = _context.Documents.Find(id);
-            var response = client.PostAsJsonAsync<dynamic>("", new { images = new string[] { base64string } }).Result;
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            using (var client = _httpClientFactory.CreateClient("ocr"))
             {
-                var result = await response.Content.ReadAsStringAsync();
-                var ocr_result = JsonSerializer.Deserialize<ocr_result>(result);
-                var ocr_status = "";
-                doc.Status = JobStatus.Done;
-                doc.Description = "recognize the result: " +  ocr_result.status;
-                if (ocr_result.status == "000")
+                _timer.Start();
+                var doc = _context.Documents.Find(id);
+                doc.Status = JobStatus.Doing;
+                await _hubContext.Clients.All.Start(doc.Title);
+                await _context.SaveChangesAsync(default);
+                DocumentCacheKey.SharedExpiryTokenSource().Cancel();
+                var imgfile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
+
+                string base64string = readbase64string(imgfile);
+                doc = _context.Documents.Find(id);
+                var response = client.PostAsJsonAsync<dynamic>("", new { images = new string[] { base64string } }).Result;
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    var content = _serializer.Serialize(ocr_result.results);
-                    doc.Content = content;
+                    var result = await response.Content.ReadAsStringAsync();
+                    var ocr_result = JsonSerializer.Deserialize<ocr_result>(result);
+                    var ocr_status = "";
+                    doc.Status = JobStatus.Done;
+                    doc.Description = "recognize the result: " + ocr_result.status;
+                    if (ocr_result.status == "000")
+                    {
+                        var content = _serializer.Serialize(ocr_result.results);
+                        doc.Content = content;
+
+                    }
+                    await _context.SaveChangesAsync(cancellationToken);
+                    await _hubContext.Clients.All.Completed(doc.Title);
+                    DocumentCacheKey.SharedExpiryTokenSource().Cancel();
+                    _timer.Stop();
+                    var elapsedMilliseconds = _timer.ElapsedMilliseconds;
+                    _logger.LogInformation("{id}: {elapsedMilliseconds} recognize the result: {@result},{@content}",id, elapsedMilliseconds, ocr_result, doc.Content);
 
                 }
-                await _context.SaveChangesAsync(cancellationToken);
-                await _hubContext.Clients.All.Completed(doc.Title);
-                DocumentCacheKey.SharedExpiryTokenSource().Cancel();
-
 
             }
-
         }
-        Console.WriteLine($"{id}, completed.");
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"{id}: recognize error {ex.Message}");
+        }
+
     }
+
 }
 
 class result
@@ -106,5 +122,5 @@ class ocr_result
     public List<result[]> results { get; set; }
     public string status { get; set; }
 }
-    
+
 
