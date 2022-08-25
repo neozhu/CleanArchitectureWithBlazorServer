@@ -28,6 +28,19 @@
     {
 
         options = new ApexChartOptions<LogTimeLineDto>();
+        options.Fill = new Fill
+            {
+                Type = new List<FillType> { FillType.Gradient },
+                Gradient = new FillGradient
+                {
+                    Type= GradientType.Vertical,
+                    ShadeIntensity = 1,
+                    OpacityFrom = 1,
+                    OpacityTo = 0.6,
+                    GradientToColors = new List<string>() { "#1976D2",  "#BBDEFB" },
+                    Stops = new List<double>() {0,100 }
+                }
+            };
         options.Yaxis = new List<YAxis>();
         options.Yaxis.Add(new YAxis
             {
