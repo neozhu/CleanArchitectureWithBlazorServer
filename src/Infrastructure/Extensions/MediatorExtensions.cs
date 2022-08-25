@@ -22,12 +22,33 @@ public static class MediatorExtensions
             entities = GetEntitiesWithPendingEvents(context);
         }
     }
-
+    public static async Task DispatchPreviousSaveDomainEvents(this IMediator mediator, DbContext context)
+    {
+        var entities = GetEntitiesWithDeleteingEvents(context);
+        while (entities.Any())
+        {
+            foreach (var entity in entities)
+                foreach (var domainEvent in entity.DomainEvents.ToList())
+                {
+                    await mediator.Publish(domainEvent);
+                    entity.RemoveDomainEvent(domainEvent);
+                }
+            entities = GetEntitiesWithDeleteingEvents(context);
+        }
+    }
     private static List<BaseEntity> GetEntitiesWithPendingEvents(DbContext context)
     {
         return context.ChangeTracker
             .Entries<BaseEntity>()
-            .Where(e => e.Entity.DomainEvents.Any())
+            .Where(e => e.Entity.DomainEvents.Any() && e.State != EntityState.Deleted)
+            .Select(e => e.Entity)
+            .ToList();
+    }
+    private static List<BaseEntity> GetEntitiesWithDeleteingEvents(DbContext context)
+    {
+        return context.ChangeTracker
+            .Entries<BaseEntity>()
+            .Where(e => e.Entity.DomainEvents.Any() && e.State==EntityState.Deleted)
             .Select(e => e.Entity)
             .ToList();
     }
