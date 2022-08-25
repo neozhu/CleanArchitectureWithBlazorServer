@@ -14,7 +14,7 @@
 </style>
 <ErrorBoundary>
     <ChildContent>
-        <Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts @ref="chartcomponent" Data="_data" ></Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts>
+        <Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts @ref="chartcomponent" Data="_data"></Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts>
         <MudTable ServerData="@(new Func<TableState, Task<TableData<LogDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
@@ -85,7 +85,7 @@
                             <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
                             break;
                         case "Critical":
-                              <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
+                            <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
                             break;
                         default:
                             <MudChip Label="true">@context.Level</MudChip>
@@ -148,21 +148,24 @@
     private string _searchString = string.Empty;
     private MudTable<LogDto> _table = default!;
 
-    public List<LogTimeLineDto> _data { get; set; } =new();
+    public List<LogTimeLineDto> _data { get; set; } = new();
     private bool _loading;
     [Inject]
     private ISender _mediator { get; set; } = default!;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         Title = L["Logs"];
-        _data = await _mediator.Send(new LogsTimeLineChatDataQuery());
-        StateHasChanged();
-        if(chartcomponent is not null)
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
         {
-          await  chartcomponent.RenderChart();
+            _data = await _mediator.Send(new LogsTimeLineChatDataQuery());
+            StateHasChanged();
+            await chartcomponent!.RenderChart();
+          
         }
-
     }
 
     private async Task<TableData<LogDto>> ServerReload(TableState state)
