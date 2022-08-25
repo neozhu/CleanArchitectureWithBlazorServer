@@ -133,10 +133,10 @@
     <value>Es público</value>
   </data>
   <data name="Select Document Type" xml:space="preserve">
-    <value>Seleccionar tipo de documento</value>
+    <value>Seleccione el tipo de documento</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
-    <value>Nombre del arrendatario</value>
+    <value>Nombre del inquilino</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Título</value>
@@ -148,6 +148,30 @@
     <value>Cargar</value>
   </data>
   <data name="Upload successfully" xml:space="preserve">
-    <value>Cargar con éxito</value>
+    <value>Subir con éxito</value>
+  </data>
+  <data name="{0} job started." xml:space="preserve">
+    <value>{0} trabajo iniciado.</value>
+  </data>
+  <data name="{0} recognize completed." xml:space="preserve">
+    <value>{0} reconocer completado.</value>
+  </data>
+  <data name="Choose files" xml:space="preserve">
+    <value>Elija los archivos</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Contenido</value>
+  </data>
+  <data name="Only .jpg and .png files are allowed." xml:space="preserve">
+    <value>Sólo se permiten archivos .jpg y .png.</value>
+  </data>
+  <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
+    <value>Por favor, haga clic en el botón [Choose Files] para subir su foto.</value>
+  </data>
+  <data name="Recognize result" xml:space="preserve">
+    <value>Reconocer resultado</value>
+  </data>
+  <data name="Upload Pictures" xml:space="preserve">
+    <value>Subir fotos</value>
   </data>
 </root>

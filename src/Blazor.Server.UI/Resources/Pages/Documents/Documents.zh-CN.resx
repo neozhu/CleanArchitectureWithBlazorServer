@@ -150,4 +150,28 @@
   <data name="Upload successfully" xml:space="preserve">
     <value>上传成功</value>
   </data>
+  <data name="{0} job started." xml:space="preserve">
+    <value>{0} 开始处理.</value>
+  </data>
+  <data name="{0} recognize completed." xml:space="preserve">
+    <value>{0} 识别完成.</value>
+  </data>
+  <data name="Choose files" xml:space="preserve">
+    <value>选择上传的图片</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>文本内容</value>
+  </data>
+  <data name="Only .jpg and .png files are allowed." xml:space="preserve">
+    <value>只允许上传 .jpg 和 .png 文件.</value>
+  </data>
+  <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
+    <value>请单击【上传】按钮上传需要解析的图片</value>
+  </data>
+  <data name="Recognize result" xml:space="preserve">
+    <value>识别结果</value>
+  </data>
+  <data name="Upload Pictures" xml:space="preserve">
+    <value>上传图片</value>
+  </data>
 </root>

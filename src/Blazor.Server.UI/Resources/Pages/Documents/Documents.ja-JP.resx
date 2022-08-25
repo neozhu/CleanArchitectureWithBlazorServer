@@ -118,36 +118,60 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Attachement" xml:space="preserve">
-    <value>アタッチメント</value>
+    <value>添付ファイル</value>
   </data>
   <data name="Document Type" xml:space="preserve">
     <value>ドキュメントタイプ</value>
   </data>
   <data name="Document type is required!" xml:space="preserve">
-    <value>ドキュメントタイプは必須項目です。</value>
+    <value>ドキュメントの種類は必須です</value>
   </data>
   <data name="Documents" xml:space="preserve">
     <value>ドキュメント</value>
   </data>
   <data name="Is Public" xml:space="preserve">
-    <value>公開中</value>
+    <value>公開</value>
   </data>
   <data name="Select Document Type" xml:space="preserve">
-    <value>文書の種類を選択する</value>
+    <value>書類の種類を選択</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>テナント名</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>タイトル</value>
+    <value>役職名</value>
   </data>
   <data name="Title is required!" xml:space="preserve">
-    <value>タイトルが必要です</value>
+    <value>タイトルが必要です。</value>
   </data>
   <data name="Upload" xml:space="preserve">
     <value>アップロード</value>
   </data>
   <data name="Upload successfully" xml:space="preserve">
     <value>アップロードに成功しました。</value>
+  </data>
+  <data name="{0} job started." xml:space="preserve">
+    <value>{0} ジョブを開始しました。</value>
+  </data>
+  <data name="{0} recognize completed." xml:space="preserve">
+    <value>{0}の認識が完了しました。</value>
+  </data>
+  <data name="Choose files" xml:space="preserve">
+    <value>ファイルを選択</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>内容</value>
+  </data>
+  <data name="Only .jpg and .png files are allowed." xml:space="preserve">
+    <value>.jpgと.pngのファイルのみ使用可能です。</value>
+  </data>
+  <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
+    <value>ファイルを選択]ボタンをクリックして、写真をアップロードしてください。</value>
+  </data>
+  <data name="Recognize result" xml:space="preserve">
+    <value>認識結果</value>
+  </data>
+  <data name="Upload Pictures" xml:space="preserve">
+    <value>写真をアップロードする</value>
   </data>
 </root>

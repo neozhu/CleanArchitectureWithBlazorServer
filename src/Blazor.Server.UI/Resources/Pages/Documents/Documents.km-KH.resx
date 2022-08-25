@@ -118,28 +118,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Attachement" xml:space="preserve">
-    <value>첨부 파일</value>
+    <value>부착</value>
   </data>
   <data name="Document Type" xml:space="preserve">
     <value>문서 유형</value>
   </data>
   <data name="Document type is required!" xml:space="preserve">
-    <value>문서 유형은 필수 항목입니다!</value>
+    <value>문서 유형이 필요합니다!</value>
   </data>
   <data name="Documents" xml:space="preserve">
-    <value>서류</value>
+    <value>문서</value>
   </data>
   <data name="Is Public" xml:space="preserve">
-    <value>공개</value>
+    <value>공개됨</value>
   </data>
   <data name="Select Document Type" xml:space="preserve">
     <value>문서 유형 선택</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
-    <value>세입자 이름</value>
+    <value>테넌트 이름</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>제목</value>
+    <value>타이틀</value>
   </data>
   <data name="Title is required!" xml:space="preserve">
     <value>제목이 필요합니다!</value>
@@ -148,6 +148,30 @@
     <value>업로드</value>
   </data>
   <data name="Upload successfully" xml:space="preserve">
-    <value>업로드 성공</value>
+    <value>업로드에 성공했습니다.</value>
+  </data>
+  <data name="{0} job started." xml:space="preserve">
+    <value>작업{0} 시작되었습니다.</value>
+  </data>
+  <data name="{0} recognize completed." xml:space="preserve">
+    <value>{0} 완료를 인식합니다.</value>
+  </data>
+  <data name="Choose files" xml:space="preserve">
+    <value>파일 선택</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>콘텐츠</value>
+  </data>
+  <data name="Only .jpg and .png files are allowed." xml:space="preserve">
+    <value>.jpg 및 .png 파일만 허용됩니다.</value>
+  </data>
+  <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
+    <value>[파일 선택] 버튼을 클릭하여 사진을 업로드하십시오.</value>
+  </data>
+  <data name="Recognize result" xml:space="preserve">
+    <value>결과 인식</value>
+  </data>
+  <data name="Upload Pictures" xml:space="preserve">
+    <value>사진 업로드</value>
   </data>
 </root>

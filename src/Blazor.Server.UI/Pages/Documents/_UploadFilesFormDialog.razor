@@ -29,12 +29,12 @@
         }
         else
         {
-            <MudAlert Severity="MudBlazor.Severity.Info"> Please click [Choose Files] button to upload your photo.</MudAlert>
+            <MudAlert Severity="MudBlazor.Severity.Info"> @L["Please click [Choose Files] button to upload your photo."]</MudAlert>
         }
     </DialogContent>
     <DialogActions>
         <InputFile id="fileInput" OnChange="(async (e) =>await LoadFiles(e))" hidden multiple AllowedExtensions=".jpg;.png;"
-                   CustomExtensionMessage="Only .jpg and .png files are allowed." />
+                   CustomExtensionMessage="@L["Only .jpg and .png files are allowed."]" />
         <MudButton Color="MudBlazor.Color.Secondary" StartIcon="@Icons.Filled.Clear" Disabled="@(!uploadedFiles.Any())" OnClick="Clear">@L["Clear"]</MudButton>
         <MudButton Color="MudBlazor.Color.Info" StartIcon="@Icons.Filled.AttachFile" HtmlTag="label" for="fileInput">@L["Choose files"]</MudButton>
         <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit" Disabled="@(_processing || _uploading || !uploadedFiles.Any())">

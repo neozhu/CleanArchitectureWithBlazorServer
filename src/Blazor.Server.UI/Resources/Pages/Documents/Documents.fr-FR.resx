@@ -133,7 +133,7 @@
     <value>Est public</value>
   </data>
   <data name="Select Document Type" xml:space="preserve">
-    <value>Sélectionner le type de document</value>
+    <value>Sélectionnez le type de document</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>Nom du locataire</value>
@@ -148,6 +148,30 @@
     <value>Télécharger</value>
   </data>
   <data name="Upload successfully" xml:space="preserve">
-    <value>Téléchargement réussi</value>
+    <value>Télécharger avec succès</value>
+  </data>
+  <data name="{0} job started." xml:space="preserve">
+    <value>{0} travail commencé.</value>
+  </data>
+  <data name="{0} recognize completed." xml:space="preserve">
+    <value>{0} reconnaissance terminée.</value>
+  </data>
+  <data name="Choose files" xml:space="preserve">
+    <value>Choisir les fichiers</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Contenu</value>
+  </data>
+  <data name="Only .jpg and .png files are allowed." xml:space="preserve">
+    <value>Seuls les fichiers .jpg et .png sont autorisés.</value>
+  </data>
+  <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
+    <value>Veuillez cliquer sur le bouton [Choose Files] pour télécharger votre photo.</value>
+  </data>
+  <data name="Recognize result" xml:space="preserve">
+    <value>Reconnaître le résultat</value>
+  </data>
+  <data name="Upload Pictures" xml:space="preserve">
+    <value>Télécharger les photos</value>
   </data>
 </root>
