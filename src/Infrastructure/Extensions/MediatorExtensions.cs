@@ -22,9 +22,9 @@ public static class MediatorExtensions
             entities = GetEntitiesWithPendingEvents(context);
         }
     }
-    public static async Task DispatchPreviousSaveDomainEvents(this IMediator mediator, DbContext context)
+    public static async Task DispatchDeletedDomainEvents(this IMediator mediator, DbContext context)
     {
-        var entities = GetEntitiesWithDeleteingEvents(context);
+        var entities = GetEntitiesWithDeletingEvents(context);
         while (entities.Any())
         {
             foreach (var entity in entities)
@@ -33,7 +33,7 @@ public static class MediatorExtensions
                     await mediator.Publish(domainEvent);
                     entity.RemoveDomainEvent(domainEvent);
                 }
-            entities = GetEntitiesWithDeleteingEvents(context);
+            entities = GetEntitiesWithDeletingEvents(context);
         }
     }
     private static List<BaseEntity> GetEntitiesWithPendingEvents(DbContext context)
@@ -44,7 +44,7 @@ public static class MediatorExtensions
             .Select(e => e.Entity)
             .ToList();
     }
-    private static List<BaseEntity> GetEntitiesWithDeleteingEvents(DbContext context)
+    private static List<BaseEntity> GetEntitiesWithDeletingEvents(DbContext context)
     {
         return context.ChangeTracker
             .Entries<BaseEntity>()
