@@ -11,6 +11,7 @@
   </PropertyGroup>
   <ItemGroup>
         <PackageReference Include="Blazor-Analytics" Version="3.11.0" />
+        <PackageReference Include="Blazor-ApexCharts" Version="0.9.13-beta" />
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
        <PackageReference Include="MudBlazor" Version="6.0.14" />

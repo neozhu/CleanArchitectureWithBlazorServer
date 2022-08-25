@@ -1,0 +1,77 @@
+﻿@using ApexCharts
+@using CleanArchitecture.Blazor.Application.Features.Logs.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Logs.Queries.ChatData
+@inject IStringLocalizer<Logs> L
+@inherits ComponentBase
+<div class="d-flex flex-grow-1 mb-2">
+    <MudPaper Class="pa-5 flex-grow-1" Elevation="3">
+        <ApexChart @ref="chart" Options="options" TItem="LogTimeLineDto" Height="180"
+                  Debug 
+                     Title="@L["Collect logs by day"]">
+            <ApexPointSeries TItem="LogTimeLineDto"
+                             Items="Data"
+                             Name="Count"
+                             XValue="@(e => e.dt.ToString("MMM-d"))"
+                             YValue="@(e=>e.total)"
+                             YAggregate="@(e => e.Sum(e => e.total))"
+                             OrderBy="e=>e.X"
+                             SeriesType="SeriesType.Bar" />
+        </ApexChart>
+    </MudPaper>
+</div>
+
+@code {
+    private ApexChart<LogTimeLineDto>? chart; 
+    private ApexChartOptions<LogTimeLineDto> options=new();
+    [EditorRequired][Parameter] public List<LogTimeLineDto> Data { get; set; } =new();
+    protected override Task OnInitializedAsync()
+    {
+
+        options = new ApexChartOptions<LogTimeLineDto>();
+        options.Yaxis = new List<YAxis>();
+        options.Yaxis.Add(new YAxis
+            {
+                Labels = new YAxisLabels
+                {
+                    Formatter = @"function (value) {return Number(value).toLocaleString();}"
+                }
+            }
+        );
+
+        options.Xaxis = new XAxis
+            {
+                Labels = new XAxisLabels
+                {
+                    Formatter = @"function (value) {
+                    if (value === undefined) {return '';}
+                    return value;}"
+                }
+            };
+
+        options.DataLabels = new DataLabels
+            {
+                Formatter = @"function(value, opts) {
+                   return  Number(value).toLocaleString();}"
+            };
+
+        options.Tooltip = new ApexCharts.Tooltip
+            {
+                X = new TooltipX
+                {
+                    Formatter = @"function(value, opts) {
+                    if (value === undefined) {return '';}
+                    return  value}"
+                }
+            };
+
+
+        return base.OnInitializedAsync();
+    }
+    public async Task RenderChart()
+    {
+        if (chart is null ) return;
+        await chart.UpdateSeriesAsync(true);
+        await chart.RenderAsync();
+    }
+
+}
