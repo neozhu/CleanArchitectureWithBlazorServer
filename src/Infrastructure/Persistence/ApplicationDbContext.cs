@@ -37,7 +37,6 @@ public class ApplicationDbContext : IdentityDbContext<
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return base.SaveChangesAsync(cancellationToken);
-
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -45,10 +44,10 @@ public class ApplicationDbContext : IdentityDbContext<
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
-       
+
     }
 
-   
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
