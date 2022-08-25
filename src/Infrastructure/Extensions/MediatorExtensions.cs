@@ -8,19 +8,14 @@ using MediatR;
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class MediatorExtensions
 {
-    public static async Task DispatchDomainEvents(this IMediator mediator, DbContext context)
+    public static async Task DispatchDomainEvents(this IMediator mediator, List<BaseEntity> entities)
     {
-        var entities = GetEntitiesWithPendingEvents(context);
-        while (entities.Any())
-        {
-            foreach (var entity in entities)
-                foreach (var domainEvent in entity.DomainEvents.ToList())
-                {
-                    await mediator.Publish(domainEvent);
-                    entity.RemoveDomainEvent(domainEvent);
-                }
-            entities = GetEntitiesWithPendingEvents(context);
-        }
+        foreach (var entity in entities)
+            foreach (var domainEvent in entity.DomainEvents.ToList())
+            {
+                await mediator.Publish(domainEvent);
+                entity.RemoveDomainEvent(domainEvent);
+            }
     }
 
     private static List<BaseEntity> GetEntitiesWithPendingEvents(DbContext context)

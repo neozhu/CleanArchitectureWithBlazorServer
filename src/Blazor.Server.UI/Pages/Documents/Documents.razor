@@ -140,7 +140,23 @@
                 </MudTd>
                  <MudTd DataLabel="@L["Recognize result"]">
                     <div class="d-flex flex-column">
-                        <MudText>@context.Status</MudText>
+                        <div class="flex-grow-0">
+                        @switch (context.Status)
+                        {
+                            case JobStatus.Queueing:
+                                <MudChip  Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" Disabled="true">@context.Status</MudChip>
+                                break;
+                            case JobStatus.Doing:
+                                <MudChip  Icon="@Icons.Material.Outlined.DocumentScanner" Variant="Variant.Outlined" Size="Size.Small" Color="Color.Info"> @context.Status</MudChip>
+                                break;
+                            case JobStatus.Done:
+                                <MudChip  Icon="@Icons.Material.Filled.Done" Variant="Variant.Filled" Size="Size.Small" Color="Color.Success">@context.Status</MudChip>
+                                break;
+                            default:
+                                <MudChip Variant="Variant.Outlined" Size="Size.Small" Color="Color.Primary">@context.Status</MudChip>
+                                break;
+                        }
+                        </div>
                         <MudText Typo="Typo.body2">@context.Content</MudText>
                     </div>
                 </MudTd>

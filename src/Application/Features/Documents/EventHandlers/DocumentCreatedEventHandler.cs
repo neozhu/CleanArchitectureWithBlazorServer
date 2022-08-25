@@ -29,7 +29,7 @@ public class DocumentCreatedEventHandler : INotificationHandler<CreatedEvent<Doc
     }
     public async Task Handle(CreatedEvent<Document> notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().FullName);
+        _logger.LogInformation("begin recognition: {id}", notification.Entity.Id);
         var domainEvent = notification.Entity;
         var id = domainEvent.Id;
         var item = await _context.Documents.FindAsync(new object[] { id }, cancellationToken);
