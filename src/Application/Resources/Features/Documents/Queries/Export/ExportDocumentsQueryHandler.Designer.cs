@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CleanArchitecture.Blazor.Application.Resources.Common.Security {
+namespace CleanArchitecture.Blazor.Application.Resources.Features.Documents.Queries.Export {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace CleanArchitecture.Blazor.Application.Resources.Common.Security {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class RegisterFormModelFluentValidator {
+    internal class ExportDocumentsQueryHandler {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal RegisterFormModelFluentValidator() {
+        internal ExportDocumentsQueryHandler() {
         }
         
         /// <summary>
@@ -39,8 +39,8 @@ namespace CleanArchitecture.Blazor.Application.Resources.Common.Security {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.Common.Security.RegisterFormModelF" +
-                            "luentValidator", typeof(RegisterFormModelFluentValidator).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.Features.Documents.Queries.Export." +
+                            "ExportDocumentsQueryHandler", typeof(ExportDocumentsQueryHandler).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -62,65 +62,47 @@ namespace CleanArchitecture.Blazor.Application.Resources.Common.Security {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your password cannot be empty.
+        ///   Looks up a localized string similar to Created By.
         /// </summary>
-        internal static string Your_password_cannot_be_empty {
+        internal static string Created_By {
             get {
-                return ResourceManager.GetString("Your password cannot be empty", resourceCulture);
+                return ResourceManager.GetString("Created By", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your password length must be at least 6..
+        ///   Looks up a localized string similar to Description.
         /// </summary>
-        internal static string Your_password_length_must_be_at_least_6_ {
+        internal static string Description {
             get {
-                return ResourceManager.GetString("Your password length must be at least 6.", resourceCulture);
+                return ResourceManager.GetString("Description", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your password length must not exceed 16..
+        ///   Looks up a localized string similar to Documents.
         /// </summary>
-        internal static string Your_password_length_must_not_exceed_16_ {
+        internal static string Documents {
             get {
-                return ResourceManager.GetString("Your password length must not exceed 16.", resourceCulture);
+                return ResourceManager.GetString("Documents", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your password must contain at least one (@!? *.)..
+        ///   Looks up a localized string similar to Title.
         /// </summary>
-        internal static string Your_password_must_contain_at_least_one__________ {
+        internal static string Title {
             get {
-                return ResourceManager.GetString("Your password must contain at least one (@!? *.).", resourceCulture);
+                return ResourceManager.GetString("Title", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your password must contain at least one lowercase letter..
+        ///   Looks up a localized string similar to URL.
         /// </summary>
-        internal static string Your_password_must_contain_at_least_one_lowercase_letter_ {
+        internal static string URL {
             get {
-                return ResourceManager.GetString("Your password must contain at least one lowercase letter.", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your password must contain at least one number..
-        /// </summary>
-        internal static string Your_password_must_contain_at_least_one_number_ {
-            get {
-                return ResourceManager.GetString("Your password must contain at least one number.", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your password must contain at least one uppercase letter..
-        /// </summary>
-        internal static string Your_password_must_contain_at_least_one_uppercase_letter_ {
-            get {
-                return ResourceManager.GetString("Your password must contain at least one uppercase letter.", resourceCulture);
+                return ResourceManager.GetString("URL", resourceCulture);
             }
         }
     }
