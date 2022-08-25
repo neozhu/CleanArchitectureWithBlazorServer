@@ -6,8 +6,9 @@
 <div class="d-flex flex-grow-1 mb-2">
     <MudPaper Class="pa-5 flex-grow-1" Elevation="3">
         <ApexChart @ref="chart" Options="options" TItem="LogTimeLineDto" Height="180"
-                  Debug 
+                  Debug   
                      Title="@L["Collect logs by day"]">
+             
             <ApexPointSeries TItem="LogTimeLineDto"
                              Items="Data"
                              Name="Count"
@@ -21,13 +22,24 @@
 </div>
 
 @code {
-    private ApexChart<LogTimeLineDto>? chart; 
-    private ApexChartOptions<LogTimeLineDto> options=new();
+    private ApexChart<LogTimeLineDto>? chart { get; set; }
+    private ApexChartOptions<LogTimeLineDto> options { get; set; }=   new();
     [EditorRequired][Parameter] public List<LogTimeLineDto> Data { get; set; } =new();
-    protected override Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-
-        options = new ApexChartOptions<LogTimeLineDto>();
+        options.Fill = new Fill
+            {
+                Type = new List<FillType> { FillType.Gradient },
+                Gradient = new FillGradient
+                {
+                    Type= GradientType.Vertical,
+                    ShadeIntensity = 1,
+                    OpacityFrom = 1,
+                    OpacityTo = 0.7,
+                    GradientToColors = new List<string>() { "#1976D2", "#90CAF9" },
+                    Stops = new List<double>() {0,100 }
+                }
+            };
         options.Yaxis = new List<YAxis>();
         options.Yaxis.Add(new YAxis
             {
@@ -65,7 +77,7 @@
             };
 
 
-        return base.OnInitializedAsync();
+
     }
     public async Task RenderChart()
     {
