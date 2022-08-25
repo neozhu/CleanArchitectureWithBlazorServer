@@ -1,5 +1,7 @@
 @page "/system/logs"
+@using Blazor.Server.UI.Pages.SystemManagement.Components
 @using CleanArchitecture.Blazor.Application.Features.Logs.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Logs.Queries.ChatData
 @using CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery
 
 @attribute [Authorize(Policy = Permissions.Logs.View)]
@@ -12,6 +14,7 @@
 </style>
 <ErrorBoundary>
     <ChildContent>
+        <Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts @ref="chartcomponent" Data="_data" ></Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts>
         <MudTable ServerData="@(new Func<TableState, Task<TableData<LogDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
@@ -140,16 +143,26 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
+    private LogsLineCharts? chartcomponent;
     public string Title { get; private set; } = "Logs";
     private string _searchString = string.Empty;
     private MudTable<LogDto> _table = default!;
+
+    public List<LogTimeLineDto> _data { get; set; } =new();
     private bool _loading;
     [Inject]
     private ISender _mediator { get; set; } = default!;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Title = L["Logs"];
+        _data = await _mediator.Send(new LogsTimeLineChatDataQuery());
+        StateHasChanged();
+        if(chartcomponent is not null)
+        {
+          await  chartcomponent.RenderChart();
+        }
+
     }
 
     private async Task<TableData<LogDto>> ServerReload(TableState state)
