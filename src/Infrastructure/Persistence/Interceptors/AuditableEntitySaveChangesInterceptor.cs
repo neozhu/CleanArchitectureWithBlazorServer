@@ -36,20 +36,18 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         if (eventData.Context is not null)
         {
             UpdateEntities(eventData.Context, userId, tenantId);
-            _temporaryAuditTrailList = InsertTemporaryAuditTrail(eventData.Context, userId, tenantId);
+            _temporaryAuditTrailList = TryInsertTemporaryAuditTrail(eventData.Context, userId, tenantId);
             await _mediator.DispatchDeletedDomainEvents(eventData.Context);
         }
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
     public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
     {
-        
         var resultvalueTask = await base.SavedChangesAsync(eventData, result, cancellationToken);
-
         if (eventData.Context is not null)
         {
+            await TryUpdateTemporaryPropertiesForAuditTrail(eventData.Context, _temporaryAuditTrailList, cancellationToken);
             await _mediator.DispatchDomainEvents(eventData.Context);
-            await UpdateTemporaryPropertiesForAuditTrail(eventData.Context, _temporaryAuditTrailList, cancellationToken);
         }
         return resultvalueTask;
     }
@@ -95,7 +93,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         }
     }
 
-    private List<AuditTrail> InsertTemporaryAuditTrail(DbContext context, string userId, string tenantId)
+    private List<AuditTrail> TryInsertTemporaryAuditTrail(DbContext context, string userId, string tenantId)
     {
         context.ChangeTracker.DetectChanges();
         var temporaryAuditEntries = new List<AuditTrail>();
@@ -115,7 +113,6 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                 NewValues = new(),
                 OldValues = new(),
             };
-            temporaryAuditEntries.Add(auditEntry);
             foreach (var property in entry.Properties)
             {
 
@@ -161,6 +158,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 
                 }
             }
+            temporaryAuditEntries.Add(auditEntry);
         }
 
         foreach (var auditEntry in temporaryAuditEntries.Where(x => !x.HasTemporaryProperties))
@@ -170,7 +168,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         return temporaryAuditEntries.Where(_ => _.HasTemporaryProperties).ToList();
     }
 
-    private async Task UpdateTemporaryPropertiesForAuditTrail(DbContext context, List<AuditTrail> auditEntries, CancellationToken cancellationToken = default)
+    private async Task TryUpdateTemporaryPropertiesForAuditTrail(DbContext context, List<AuditTrail> auditEntries, CancellationToken cancellationToken = default)
     {
         foreach (var auditEntry in auditEntries)
         {
