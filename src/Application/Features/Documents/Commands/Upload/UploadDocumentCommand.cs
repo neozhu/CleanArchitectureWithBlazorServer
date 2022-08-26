@@ -44,11 +44,10 @@ public class UploadDocumentCommandHandler : IRequestHandler<UploadDocumentComman
             var document = new Document() { Title = fileName, URL = url, Status = JobStatus.NotStart, IsPublic = true, DocumentType = DocumentType.Image };
             document.AddDomainEvent(new CreatedEvent<Document>(document));
             list.Add(document);
-    
         }
         if (list.Any())
         {
-           await _context.Documents.AddRangeAsync(list, cancellationToken);
+            await _context.Documents.AddRangeAsync(list, cancellationToken);
             var result = await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(result);
         }
