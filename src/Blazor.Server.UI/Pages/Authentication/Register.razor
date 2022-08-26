@@ -134,9 +134,9 @@
                     if (result.Succeeded)
                     {
                         var assignResult= await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
-                        if (assignResult.Succeeded && !string.IsNullOrEmpty(user.Email) , !string.IsNullOrEmpty(user.UserName))
+                        if (assignResult.Succeeded )
                         {
-                            var response= await sendWelcome(user.Email, user.UserName);
+                            var response= await sendWelcome(user.Email!, user.UserName!);
                             if (response.Successful == false)
                             {
                                 Snackbar.Add(string.Format(L["{0}"],response.ErrorMessages.FirstOrDefault()), MudBlazor.Severity.Warning);

@@ -29,11 +29,10 @@ namespace CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Paginati
             _mapper = mapper;
             _localizer = localizer;
         }
-#pragma warning disable CS8602
-#pragma warning disable CS8604
+ 
     public async Task<PaginatedData<TenantDto>> Handle(TenantsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-           var data = await _context.Tenants.Where(x=>x.Name.Contains(request.Keyword))
+           var data = await _context.Tenants.Where(x=>x.Name!.Contains(request.Keyword))
                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<TenantDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.PageNumber, request.PageSize);

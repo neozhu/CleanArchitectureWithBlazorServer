@@ -48,8 +48,6 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
 
         return data;
     }
-#pragma warning disable CS8602
-#pragma warning disable CS8604
     internal class DocumentsQuery : Specification<Document>
     {
         public DocumentsQuery(string userId,string tenantId,string? keyword)
@@ -58,7 +56,7 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
             And(x => x.TenantId == tenantId);
             if (!string.IsNullOrEmpty(keyword))
             {
-                And(x => x.Title.Contains(keyword) || x.Description.Contains(keyword));
+                And(x => x.Title!.Contains(keyword) || x.Description!.Contains(keyword));
             }
         }
     }
