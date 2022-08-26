@@ -26,12 +26,11 @@ public class AuditTrailsQueryHandler : IRequestHandler<AuditTrailsWithPagination
         _context = context;
         _mapper = mapper;
     }
-#pragma warning disable CS8602
-#pragma warning disable CS8604
+
     public async Task<PaginatedData<AuditTrailDto>> Handle(AuditTrailsWithPaginationQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.AuditTrails
-            .Where(x=>x.TableName.Contains(request.Keyword))
+            .Where(x=>x.TableName!.Contains(request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.PageNumber, request.PageSize);

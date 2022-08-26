@@ -1,7 +1,7 @@
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
-#pragma warning disable CS8602
+
 public class SearchProductSpecification : Specification<Product>
 {
     public SearchProductSpecification(ProductsWithPaginationQuery query)
@@ -9,11 +9,11 @@ public class SearchProductSpecification : Specification<Product>
         Criteria = q => q.Name != null;
         if (!string.IsNullOrEmpty(query.Keyword))
         {
-            And(x => x.Name.Contains(query.Keyword) || x.Description.Contains(query.Keyword) || x.Brand.Contains(query.Keyword));
+            And(x => x.Name!.Contains(query.Keyword) || x.Description!.Contains(query.Keyword) || x.Brand!.Contains(query.Keyword));
         }
         if (!string.IsNullOrEmpty(query.Name))
         {
-            And(x => x.Name.Contains(query.Name));
+            And(x => x.Name!.Contains(query.Name));
         }
         if (!string.IsNullOrEmpty(query.Unit))
         {

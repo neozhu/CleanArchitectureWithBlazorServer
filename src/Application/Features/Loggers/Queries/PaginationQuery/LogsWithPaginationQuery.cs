@@ -26,14 +26,12 @@ public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, Paginat
         _context = context;
         _mapper = mapper;
     }
-#pragma warning disable CS8602
-#pragma warning disable CS8604
     public async Task<PaginatedData<LogDto>> Handle(LogsWithPaginationQuery request, CancellationToken cancellationToken)
     {
    
 
         var data = await _context.Loggers
-            .Where(x=>x.Message.Contains(request.Keyword) || x.Exception.Contains(request.Keyword))
+            .Where(x=>x.Message!.Contains(request.Keyword) || x.Exception!.Contains(request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<LogDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.PageNumber, request.PageSize);

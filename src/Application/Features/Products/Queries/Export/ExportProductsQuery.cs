@@ -33,11 +33,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
             _excelService = excelService;
             _localizer = localizer;
         }
-#pragma warning disable CS8602
-#pragma warning disable CS8604
     public async Task<byte[]> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.Products.Where(x=>x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
+            var data = await _context.Products.Where(x=>x.Name!.Contains(request.Keyword) || x.Description!.Contains(request.Keyword))
                        .OrderBy($"{request.OrderBy} {request.SortDirection}")
                        .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);

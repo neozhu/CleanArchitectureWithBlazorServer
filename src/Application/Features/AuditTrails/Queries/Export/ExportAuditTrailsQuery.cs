@@ -7,7 +7,7 @@ namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Expo
 
 public class ExportAuditTrailsQuery : IRequest<byte[]>
 {
-    public string? Keyword { get; set; }
+    public string Keyword { get; set; } = string.Empty;
     public string OrderBy { get; set; } = "Id";
     public string SortDirection { get; set; } = "Descending";
 }
@@ -32,13 +32,11 @@ public class ExportAuditTrailsQueryHandler :
         _excelService = excelService;
         _localizer = localizer;
     }
-#pragma warning disable CS8602
-#pragma warning disable CS8604
     public async Task<byte[]> Handle(ExportAuditTrailsQuery request, CancellationToken cancellationToken)
     {
         
         var data = await _context.AuditTrails
-            .Where(x => x.TableName.Contains(request.Keyword))
+            .Where(x => x.TableName!.Contains(request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
