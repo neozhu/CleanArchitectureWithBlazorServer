@@ -157,7 +157,9 @@
                                 break;
                         }
                         </div>
-                        <MudText Typo="Typo.body2">@context.Content</MudText>
+                        <div class="flex-grow-0">
+                        <MudHighlighter Typo="Typo.body2" Text="@context.Content" HighlightedText="@_searchString"></MudHighlighter>
+                        </div>
                     </div>
                 </MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Document Type"]">
