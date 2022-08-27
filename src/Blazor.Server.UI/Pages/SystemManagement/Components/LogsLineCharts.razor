@@ -5,9 +5,9 @@
 @inject IStringLocalizer<Logs> L
 @inherits ComponentBase
 <div class="d-flex flex-grow-1 mb-2">
-    <MudPaper Class="pa-5 flex-grow-1" Elevation="3">
+    <MudPaper Class="pa-5 flex-grow-1" Elevation="3" Style="@backgroundColor" >
         <ApexChart @ref="chart" Options="options" TItem="LogTimeLineDto" Height="180"
-                  Debug   
+                  Debug 
                      Title="@L["Collect logs by day"]">
              
             <ApexPointSeries TItem="LogTimeLineDto"
@@ -16,7 +16,6 @@
                              XValue="@(e => e.dt.ToString("MMM-d"))"
                              YValue="@(e=>e.total)"
                              YAggregate="@(e => e.Sum(e => e.total))"
-                             OrderBy="e=>e.X"
                              SeriesType="SeriesType.Bar" />
         </ApexChart>
     </MudPaper>
@@ -28,15 +27,19 @@
     [EditorRequired][Parameter] public List<LogTimeLineDto> Data { get; set; } =new();
     [Inject]
     private LayoutService _layoutService { get; set; } = null!;
+    public string backgroundColor = "background:#fff";
     protected override void OnInitialized()
     {
 
         var isdarkmode = _layoutService.IsDarkMode;
+        var colors = isdarkmode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
+        backgroundColor = isdarkmode ? "background:rgb(66, 66, 66)" : "background:#fff";
 
         options.Theme = new ApexCharts.Theme()
         {
-                Mode = (isdarkmode? Mode.Dark:Mode.Light )
+                Mode = (isdarkmode? Mode.Dark:Mode.Light ),
         };
+
         options.Fill = new Fill
             {
                 Type = new List<FillType> { FillType.Gradient },
@@ -46,9 +49,10 @@
                     ShadeIntensity = 1,
                     OpacityFrom = 1,
                     OpacityTo = 0.7,
-                    GradientToColors = (isdarkmode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" }),
+                    GradientToColors = colors,
                     Stops = new List<double>() {0,100 }
-                }
+                },
+
             };
         options.Yaxis = new List<YAxis>();
         options.Yaxis.Add(new YAxis
@@ -89,14 +93,13 @@
         _layoutService.MajorUpdateOccured += async (s, e) =>
                 {
                     var isdarkmode = _layoutService.IsDarkMode;
-
-                    options.Theme = new ApexCharts.Theme()
-                        {
-                            Mode = (isdarkmode ? Mode.Dark : Mode.Light)
-                        };
-                    options.Fill.Gradient.GradientToColors = ((isdarkmode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" }));
+                    var colors = isdarkmode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
+                    backgroundColor = isdarkmode ? "background:rgb(66, 66, 66)" : "background:#fff";
+                    options.Theme.Mode = (isdarkmode ? Mode.Dark : Mode.Light);
+                    options.Fill.Gradient.GradientToColors = colors;
                     await chart!.UpdateOptionsAsync(true, true, false);
-                    await chart.RenderAsync();
+                    await chart!.RenderAsync();
+                    StateHasChanged();
                 };
 
     }
