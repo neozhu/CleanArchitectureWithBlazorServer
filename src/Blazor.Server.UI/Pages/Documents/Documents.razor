@@ -192,7 +192,7 @@
 </ErrorBoundary>
 @code {
     public string? Title { get; private set; }
-    private Lazy<IJSObjectReference> _jsModule = new();
+    //private Lazy<IJSObjectReference> _jsModule = new();
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
     private MudTable<DocumentDto> _table = default!;
     private int _defaultPageSize = 15;
@@ -255,23 +255,23 @@
             Snackbar.Add(string.Format(L["{0} job started."],e), MudBlazor.Severity.Info);
         });
     }
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _jsModule = new(await JS.InvokeAsync<IJSObjectReference>("import", "./Pages/Documents/Documents.razor.js"));
-            await _jsModule.Value.InvokeAsync<IJSObjectReference>("loadscript");
-        }
-    }
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (firstRender)
+    //    {
+    //        _jsModule = new(await JS.InvokeAsync<IJSObjectReference>("import", "./Pages/Documents/Documents.razor.js"));
+    //        await _jsModule.Value.InvokeAsync<IJSObjectReference>("loadscript");
+    //    }
+    //}
     public async ValueTask DisposeAsync()
     {
          _client.JobCompleted -= _client_JobCompleted;
         _client.JobStarted -= _client_JobStarted;
-        if (_jsModule.IsValueCreated)
-        {
-            await _jsModule.Value.InvokeAsync<IJSObjectReference>("destroyscript");
-            await _jsModule.Value.DisposeAsync();
-        }
+        //if (_jsModule.IsValueCreated)
+        //{
+        //    await _jsModule.Value.InvokeAsync<IJSObjectReference>("destroyscript");
+        //    await _jsModule.Value.DisposeAsync();
+        //}
     }
     private async Task<TableData<DocumentDto>> ServerReload(TableState state)
     {

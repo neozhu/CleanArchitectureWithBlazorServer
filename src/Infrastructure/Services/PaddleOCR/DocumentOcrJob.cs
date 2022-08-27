@@ -67,31 +67,34 @@ public class DocumentOcrJob : IDocumentOcrJob
             using (var client = _httpClientFactory.CreateClient("ocr"))
             {
                 _timer.Start();
-                var doc = _context.Documents.Find(id);
+                var doc =await _context.Documents.FindAsync(id);
+                if (doc == null) return;
                 doc.Status = JobStatus.Doing;
-                await _hubContext.Clients.All.Start(doc.Title);
-                await _context.SaveChangesAsync(default);
+                await _hubContext.Clients.All.Start(doc.Title!);
+                await _context.SaveChangesAsync(cancellationToken);
                 DocumentCacheKey.SharedExpiryTokenSource().Cancel();
+                if (string.IsNullOrEmpty(doc.URL)) return;
                 var imgfile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
-
+                if (!File.Exists(imgfile)) return;
                 string base64string = readbase64string(imgfile);
-                doc = _context.Documents.Find(id);
+               
                 var response = client.PostAsJsonAsync<dynamic>("", new { images = new string[] { base64string } }).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var result = await response.Content.ReadAsStringAsync();
                     var ocr_result = JsonSerializer.Deserialize<ocr_result>(result);
-                    var ocr_status = "";
-                    doc.Status = JobStatus.Done;
-                    doc.Description = "recognize the result: " + ocr_result.status;
+                    var ocr_status = ocr_result!.status;
+                    doc =await _context.Documents.FindAsync(id);
+                    doc!.Status = JobStatus.Done;
+                    doc!.Description = "recognize the result: " + ocr_status;
                     if (ocr_result.status == "000")
                     {
                         var content = _serializer.Serialize(ocr_result.results);
-                        doc.Content = content;
+                        doc!.Content = content;
 
                     }
                     await _context.SaveChangesAsync(cancellationToken);
-                    await _hubContext.Clients.All.Completed(doc.Title);
+                    await _hubContext.Clients.All.Completed(doc.Title!);
                     DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                     _timer.Stop();
                     var elapsedMilliseconds = _timer.ElapsedMilliseconds;
