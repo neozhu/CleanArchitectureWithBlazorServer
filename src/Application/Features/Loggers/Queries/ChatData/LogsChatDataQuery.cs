@@ -55,6 +55,6 @@ public class LogsChatDataQueryHandler :
             
             start = start.AddDays(1);
         }
-        return result;
+        return result.OrderBy(x=>x.dt).ToList();
     }
 }
