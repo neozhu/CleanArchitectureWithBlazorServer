@@ -49,10 +49,14 @@
                                 For="@(() => model.IsPublic)"
                                 @bind-Checked="model.IsPublic"></MudCheckBox>
                 </MudItem>
+
                 <MudItem>
-                    <MudImage  Fluid="true" Src="@model.URL" Alt="@model.Description" Class="rounded-lg"/>
+                    <MudPaper Elevation="3">
+                        <div id="openseadragon" style="width: 600px; height: 300px;"></div>
+                    </MudPaper>
+                   
                 </MudItem>
-                
+
             </MudGrid>
         </MudForm>
     </DialogContent>
@@ -82,4 +86,6 @@
         }
     }
     void Cancel() => MudDialog.Cancel();
+
+ 
 }

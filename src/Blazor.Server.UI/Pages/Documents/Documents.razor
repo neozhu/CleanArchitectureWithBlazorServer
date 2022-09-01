@@ -236,7 +236,7 @@
             await _table.ReloadServerData();
         });
 
-         _client.JobCompleted += _client_JobCompleted;
+        _client.JobCompleted += _client_JobCompleted;
         _client.JobStarted += _client_JobStarted;
     }
     private void _client_JobCompleted(object? sender, string e)
@@ -265,7 +265,7 @@
     //}
     public async ValueTask DisposeAsync()
     {
-         _client.JobCompleted -= _client_JobCompleted;
+        _client.JobCompleted -= _client_JobCompleted;
         _client.JobStarted -= _client_JobStarted;
         //if (_jsModule.IsValueCreated)
         //{
@@ -350,8 +350,10 @@
                  { nameof(_DocumentFormDialog.model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<_DocumentFormDialog>
-        (string.Format(PromptText.EDITTHEITEM, L["Document"]), parameters, options);
+        var dialog = DialogService.Show<_DocumentFormDialog>(string.Format(PromptText.EDITTHEITEM, L["Document"]), parameters, options);
+
+        await Task.Delay(300);
+        await JS.InvokeVoidAsync("showOpenSeadragon", "openseadragon", dto.URL);
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
