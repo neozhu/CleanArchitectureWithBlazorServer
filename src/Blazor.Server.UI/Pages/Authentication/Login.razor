@@ -15,16 +15,17 @@
 <PageTitle>@Title</PageTitle>
 <AuthorizeView>
     <NotAuthorized Context="Auth">
-        <MudForm Model="@_model" @ref="@_form" @bind-IsTouched="@_touched" @bind-IsValid="@_success" Validation="@(_loginValidator.ValidateValue)">
-            <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
+        <MudForm Model="@_model" @ref="@_form"  @bind-IsValid="@_success" ValidationDelay="0" Validation="@(_loginValidator.ValidateValue)">
+            <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"] @_success </MudText>
 
             <MudText>@L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink></MudText>
 
-            <MudTextField T="string"
-                          @bind-Value="_model.UserName" For="@(() => _model.UserName)"
+            <MudTextField @bind-Value="_model.UserName" For="@(() => _model.UserName)"
                           Label="@L["User name"]"
                           Variant="Variant.Outlined"
                           Required="true"
+                          OnlyValidateIfDirty="true"
+                          Immediate="true"
                           RequiredError="@L["user name is required!"]"
                           Class="my-6"></MudTextField>
 
@@ -34,12 +35,14 @@
                           InputType="@PasswordInput"
                           Adornment="Adornment.End"
                           AdornmentIcon="@PasswordInputIcon"
+                          OnlyValidateIfDirty="true"
+                          Immediate="true"
                           Required="true"
                           RequiredError="@L["password is required!"]"
                           OnAdornmentClick="TogglePasswordVisibility" />
 
             <div Class="d-flex justify-space-between align-center">
-                <MudCheckBox For="@(() => _model.RememberMe)" @bind-Checked="_model.RememberMe" Label="@L["Remember me?"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+                <MudCheckBox For="@(() => _model.RememberMe)" @bind-Checked="_model.RememberMe"   Label="@L["Remember me?"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
                 <MudLink Href="/pages/authentication/forgot-password">@L["Forgot password?"]</MudLink>
             </div>
 
@@ -47,7 +50,7 @@
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
                        Size="Size.Large"
-                       Disabled="_loading"
+                       Disabled="@(_loading)"
                        ButtonType="ButtonType.Button"
                        OnClick="@(() => OnSubmit())"
                        FullWidth="true">
