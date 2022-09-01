@@ -36,7 +36,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         if (eventData.Context is not null)
         {
             UpdateEntities(eventData.Context, userId, tenantId);
-            _temporaryAuditTrailList = TryInsertTemporaryAuditTrail(eventData.Context, userId, tenantId);
+            _temporaryAuditTrailList =await TryInsertTemporaryAuditTrail(eventData.Context, userId, tenantId,cancellationToken);
             await _mediator.DispatchDeletedDomainEvents(eventData.Context);
         }
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
@@ -93,7 +93,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         }
     }
 
-    private List<AuditTrail> TryInsertTemporaryAuditTrail(DbContext context, string userId, string tenantId)
+    private Task<List<AuditTrail>> TryInsertTemporaryAuditTrail(DbContext context, string userId, string tenantId,CancellationToken cancellationToken = default)
     {
         context.ChangeTracker.DetectChanges();
         var temporaryAuditEntries = new List<AuditTrail>();
@@ -146,10 +146,10 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                         }
                         break;
 
-                    case EntityState.Modified when property.IsModified && property.OriginalValue?.Equals(property.CurrentValue) == false:
+                    case EntityState.Modified when property.IsModified && ((property.OriginalValue is null && property.CurrentValue is not null) || (property.OriginalValue is not null && property.OriginalValue.Equals(property.CurrentValue) == false)):
                         auditEntry.AffectedColumns.Add(propertyName);
                         auditEntry.AuditType = AuditType.Update;
-                        auditEntry.OldValues[propertyName] = property.OriginalValue;
+                        auditEntry.OldValues[propertyName] = property!.OriginalValue;
                         if (property.CurrentValue is not null)
                         {
                             auditEntry.NewValues[propertyName] = property.CurrentValue;
@@ -161,29 +161,34 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
             temporaryAuditEntries.Add(auditEntry);
         }
 
-        foreach (var auditEntry in temporaryAuditEntries.Where(x => !x.HasTemporaryProperties))
-        {
-            context.Add(auditEntry);
-        }
-        return temporaryAuditEntries.Where(_ => _.HasTemporaryProperties).ToList();
+        //if( temporaryAuditEntries.Any(x => !x.HasTemporaryProperties))
+        //{
+        //    await context.AddRangeAsync(temporaryAuditEntries.Where(x => !x.HasTemporaryProperties), cancellationToken);
+        //    //await context.SaveChangesAsync(cancellationToken);
+        //}
+        //return temporaryAuditEntries.Where(_ => _.HasTemporaryProperties).ToList();
+        return Task.FromResult(temporaryAuditEntries);
     }
 
     private async Task TryUpdateTemporaryPropertiesForAuditTrail(DbContext context, List<AuditTrail> auditEntries, CancellationToken cancellationToken = default)
     {
-        foreach (var auditEntry in auditEntries)
+        if (auditEntries.Any())
         {
-            foreach (var prop in auditEntry.TemporaryProperties)
+            foreach (var auditEntry in auditEntries)
             {
-                if (prop.Metadata.IsPrimaryKey() && prop.CurrentValue is not null)
+                foreach (var prop in auditEntry.TemporaryProperties)
                 {
-                    auditEntry.PrimaryKey[prop.Metadata.Name] = prop.CurrentValue;
+                    if (prop.Metadata.IsPrimaryKey() && prop.CurrentValue is not null)
+                    {
+                        auditEntry.PrimaryKey[prop.Metadata.Name] = prop.CurrentValue;
+                    }
+                    else if (auditEntry.NewValues is not null && prop.CurrentValue is not null)
+                    {
+                        auditEntry.NewValues[prop.Metadata.Name] = prop.CurrentValue;
+                    }
                 }
-                else if (auditEntry.NewValues is not null && prop.CurrentValue is not null)
-                {
-                    auditEntry.NewValues[prop.Metadata.Name] = prop.CurrentValue;
-                }
+                context.Add(auditEntry);
             }
-            context.Add(auditEntry);
             await context.SaveChangesAsync(cancellationToken);
         }
     }
