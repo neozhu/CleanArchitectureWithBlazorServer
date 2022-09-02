@@ -16,7 +16,7 @@
 <AuthorizeView>
     <NotAuthorized Context="Auth">
         <MudForm Model="@_model" @ref="@_form"  @bind-IsValid="@_success" ValidationDelay="0" Validation="@(_loginValidator.ValidateValue)">
-            <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"] @_success </MudText>
+            <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
 
             <MudText>@L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink></MudText>
 
@@ -26,7 +26,7 @@
                           Required="true"
                           OnlyValidateIfDirty="true"
                           Immediate="true"
-                          RequiredError="@L["user name is required!"]"
+                          RequiredError="@L["User name is required!"]"
                           Class="my-6"></MudTextField>
 
             <MudTextField @bind-Value="_model.Password" For="@(() => _model.Password)"
@@ -38,7 +38,7 @@
                           OnlyValidateIfDirty="true"
                           Immediate="true"
                           Required="true"
-                          RequiredError="@L["password is required!"]"
+                          RequiredError="@L["Password is required!"]"
                           OnAdornmentClick="TogglePasswordVisibility" />
 
             <div Class="d-flex justify-space-between align-center">
