@@ -116,14 +116,14 @@ public class DocumentOcrJob : IDocumentOcrJob
 class result
 {
     public decimal confidence { get; set; }
-    public string text { get; set; }
-    public List<int[]> text_region { get; set; }
+    public string text { get; set; } = String.Empty;
+    public List<int[]> text_region { get; set; } = new();
 }
 class ocr_result
 {
-    public string msg { get; set; }
-    public List<result[]> results { get; set; }
-    public string status { get; set; }
+    public string msg { get; set; } = String.Empty;
+    public List<result[]> results { get; set; } = new();
+    public string status { get; set; }=String.Empty;
 }
 
 
