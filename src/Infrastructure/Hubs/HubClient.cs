@@ -33,12 +33,12 @@ public class HubClient : IAsyncDisposable
             // add handler for receiving messages
             _hubConnection.On<string>(SignalR.OnConnect, (userId) =>
             {
-                LoggedIn?.Invoke(this, userId);
+                Login?.Invoke(this, userId);
             });
  
             _hubConnection.On<string>(SignalR.OnDisconnect, (userId) =>
             {
-                LoggedOut?.Invoke(this, userId);
+                Logout?.Invoke(this, userId);
             });
             _hubConnection.On<string>(SignalR.SendNotification, (message) =>
             {
@@ -92,29 +92,21 @@ public class HubClient : IAsyncDisposable
     }
     public async Task SendAsync(string message)
     {
-        // check we are connected
-        if (!_started || _hubConnection is null)
-            throw new InvalidOperationException("Client not started");
-        // send the message
-        await _hubConnection.SendAsync(SignalR.SendMessage, _userId, message);
+        await _hubConnection!.SendAsync(SignalR.SendMessage, _userId, message);
     }
     public async Task NotifyAsync(string message)
     {
-        // check we are connected
-        if (!_started || _hubConnection is  null)
-            throw new InvalidOperationException("Client not started");
-        // send the message
-        await _hubConnection.SendAsync(SignalR.SendNotification,  message);
+        await _hubConnection!.SendAsync(SignalR.SendNotification,  message);
     }
     public async ValueTask DisposeAsync()
     {
         await StopAsync();
     }
 
-    public event EventHandler<string>? LoggedIn;
+    public event EventHandler<string>? Login;
     public event EventHandler<string>? JobStarted;
     public event EventHandler<string>? JobCompleted;
-    public event EventHandler<string>? LoggedOut;
+    public event EventHandler<string>? Logout;
     public event EventHandler<string>? NotificationReceived;
     public event MessageReceivedEventHandler? MessageReceived;
     public delegate Task MessageReceivedEventHandler(object sender, MessageReceivedEventArgs e);
