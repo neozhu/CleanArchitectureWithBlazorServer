@@ -96,6 +96,7 @@
     MudForm? _form;
     bool _success;
     bool _loading;
+    bool _touched;
     [Inject] private LoginFormModellFluentValidator _loginValidator { get; set; } = default!;
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
