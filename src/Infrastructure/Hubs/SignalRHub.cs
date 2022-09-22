@@ -75,7 +75,7 @@ public class SignalRHub : Hub<ISignalRHub>
         }
         else
         {
-            _onlineUsers.TryUpdate(id, userId, userId);
+            _onlineUsers.TryUpdate(id, userId, String.Empty);
             await Clients.All.Connect(userId);
         }
       
