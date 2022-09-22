@@ -19,8 +19,8 @@
     public async ValueTask DisposeAsync()
     {
         await _client.StopAsync();
-        _client.LoggedOut -= _client_LoggedOut;
-        _client.LoggedIn -= _client_LoggedIn;
+        _client.Login -= _client_Login;
+        _client.Logout -= _client_Logout;
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         Dispose(true);
         GC.SuppressFinalize(this);
@@ -30,9 +30,8 @@
     protected override async Task OnInitializedAsync()
     {
         _identityService = ScopedServices.GetRequiredService<IIdentityService>();
-        _client.LoggedOut += _client_LoggedOut;
-        _client.LoggedIn += _client_LoggedIn;
-       
+        _client.Logout += _client_Logout;
+        _client.Login += _client_Login;
         var state = await _authState;
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
@@ -51,7 +50,7 @@
             }
         });
     }
-    private void _client_LoggedIn(object? sender, string e)
+    private void _client_Login(object? sender, string e)
     {
         InvokeAsync(async () =>
         {
@@ -60,8 +59,8 @@
             await _identityService.UpdateLiveStatus(e, true);
         });
     }
-    
-    private void _client_LoggedOut(object? sender, string e)
+
+    private void _client_Logout(object? sender, string e)
     {
         InvokeAsync(async () =>
         {
