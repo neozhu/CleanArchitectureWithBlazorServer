@@ -270,4 +270,7 @@
   <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
     <value>تحاول تسجيل الخروج من التطبيق. هل تريد حقا تسجيل الخروج؟</value>
   </data>
+  <data name="Sign In" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
 </root>

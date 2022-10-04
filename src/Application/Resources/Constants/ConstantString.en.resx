@@ -270,4 +270,7 @@
   <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
     <value>You are attempting to log out of application. Do you really want to log out?</value>
   </data>
+  <data name="Sign In" xml:space="preserve">
+    <value>Sign In</value>
+  </data>
 </root>

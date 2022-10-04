@@ -270,4 +270,7 @@
   <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
     <value>アプリケーションからログアウトしようとしています。ログアウトしてもよろしいですか?</value>
   </data>
+  <data name="Sign In" xml:space="preserve">
+    <value>ログイン</value>
+  </data>
 </root>
