@@ -183,4 +183,10 @@
   <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
     <value>You are not authorized to be here. For more information, contact your system administrator.</value>
   </data>
+  <data name="Notification" xml:space="preserve">
+    <value>Notification</value>
+  </data>
+  <data name="User Profile" xml:space="preserve">
+    <value>User Profile</value>
+  </data>
 </root>

@@ -174,4 +174,7 @@
   <data name="Upload Pictures" xml:space="preserve">
     <value>사진 업로드</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>다운로드</value>
+  </data>
 </root>

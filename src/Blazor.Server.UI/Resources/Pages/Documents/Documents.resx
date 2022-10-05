@@ -174,4 +174,7 @@
   <data name="{0} recognize completed." xml:space="preserve">
     <value>{0} recognize completed.</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
 </root>

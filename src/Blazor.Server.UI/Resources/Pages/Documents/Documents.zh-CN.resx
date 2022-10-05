@@ -174,4 +174,7 @@
   <data name="Upload Pictures" xml:space="preserve">
     <value>上传图片</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
 </root>

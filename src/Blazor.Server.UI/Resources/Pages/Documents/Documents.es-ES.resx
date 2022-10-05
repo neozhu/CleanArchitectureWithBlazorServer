@@ -174,4 +174,7 @@
   <data name="Upload Pictures" xml:space="preserve">
     <value>Subir fotos</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>Descargar</value>
+  </data>
 </root>

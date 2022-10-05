@@ -46,6 +46,7 @@
       <PackageReference Include="Hangfire.InMemory" Version="0.3.4" />
       <PackageReference Include="Hangfire.Core" Version="1.8.0-beta3" />
       <PackageReference Include="Hangfire.AspNetCore" Version="1.7.31" />
+      <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.8.0" />
   </ItemGroup>
 
   <ItemGroup>

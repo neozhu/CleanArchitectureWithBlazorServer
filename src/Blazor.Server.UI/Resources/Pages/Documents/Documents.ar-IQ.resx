@@ -174,4 +174,7 @@
   <data name="Upload Pictures" xml:space="preserve">
     <value>تحميل الصور</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>تحميل</value>
+  </data>
 </root>
