@@ -150,4 +150,7 @@
   <data name="Upload successfully" xml:space="preserve">
     <value>Cargar con éxito</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>Descargar</value>
+  </data>
 </root>

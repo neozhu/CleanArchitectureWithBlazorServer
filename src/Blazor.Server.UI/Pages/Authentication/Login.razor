@@ -16,7 +16,7 @@
 <AuthorizeView>
     <NotAuthorized Context="Auth">
         <MudForm Model="@_model" @ref="@_form"  @bind-IsValid="@_success" ValidationDelay="0" Validation="@(_loginValidator.ValidateValue)">
-            <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"] @_success </MudText>
+            <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
 
             <MudText>@L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink></MudText>
 

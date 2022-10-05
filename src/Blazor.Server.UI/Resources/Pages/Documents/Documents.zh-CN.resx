@@ -150,4 +150,7 @@
   <data name="Upload successfully" xml:space="preserve">
     <value>上传成功</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
 </root>
