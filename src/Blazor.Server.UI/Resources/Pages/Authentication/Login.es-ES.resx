@@ -153,7 +153,7 @@
   <data name="Sign Up" xml:space="preserve">
     <value>Registrarse</value>
   </data>
-  <data name="User Name" xml:space="preserve">
+  <data name="User name" xml:space="preserve">
     <value>Nombre de usuario</value>
   </data>
   <data name="User name is required!" xml:space="preserve">

@@ -150,4 +150,7 @@
   <data name="Upload successfully" xml:space="preserve">
     <value>Выгрузка успешно</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>Скачать</value>
+  </data>
 </root>

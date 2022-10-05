@@ -183,4 +183,10 @@
   <data name="authentication is required, click" xml:space="preserve">
     <value>需要登录后访问, 单击</value>
   </data>
+  <data name="Notification" xml:space="preserve">
+    <value>新消息</value>
+  </data>
+  <data name="User Profile" xml:space="preserve">
+    <value>用户信息</value>
+  </data>
 </root>

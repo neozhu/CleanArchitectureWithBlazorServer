@@ -183,4 +183,10 @@
   <data name="sign in" xml:space="preserve">
     <value>sign in</value>
   </data>
+  <data name="User Profile" xml:space="preserve">
+    <value>User Profile</value>
+  </data>
+  <data name="Notification" xml:space="preserve">
+    <value>Notification</value>
+  </data>
 </root>

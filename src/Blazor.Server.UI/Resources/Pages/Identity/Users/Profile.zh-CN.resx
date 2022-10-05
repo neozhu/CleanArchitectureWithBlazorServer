@@ -162,4 +162,10 @@
   <data name="User Name" xml:space="preserve">
     <value>用户名</value>
   </data>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>租户</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
 </root>
