@@ -62,9 +62,9 @@ This is a repository for creating a  Blazor Server application following the pri
 - Focus on story implementation
 - Integration Hangfire dasboard
 - Implementation OCR image recognition
-
 ![image](https://user-images.githubusercontent.com/1549611/185576711-31ab3081-ba22-43f3-b837-c8f1de981442.png)
-
+- org chart
+ <img width="566" alt="image" src="https://user-images.githubusercontent.com/1549611/194710116-244eb382-66ef-4bc8-b4c5-c69257f0baf0.png">
 
 
 ## About
