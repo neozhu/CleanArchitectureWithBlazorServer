@@ -124,6 +124,7 @@
                 <MudTh Style="width:80px">@PromptText.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.TenantName)">@L["Tenant Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
+                <MudTh>@L["Superior Name"]</MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.Provider)">@L["Provider"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.Email)">@L["Email"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.PhoneNumber)">@L["Phone Number"]</MudTableSortLabel></MudTh>
@@ -188,6 +189,7 @@
                         </div>
                     </div>
                 </MudTd>
+                <MudTd DataLabel="@L["Superior Name"]">@context.Superior</MudTd>
                 <MudTd DataLabel="@L["Provider"]">@context.Provider</MudTd>
                 <MudTd DataLabel="@L["Email"]">@context.Email</MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Phone Number"]">@context.PhoneNumber</MudTd>
@@ -298,7 +300,7 @@
         try
         {
             _loading = true;
-            _userList = await _userManager.Users.Select(x => new UserFormModel()
+            _userList = await _userManager.Users.Include(x=>x.Superior).Select(x => new UserFormModel()
                 {
                     ProfilePictureDataUrl = x.ProfilePictureDataUrl,
                     DisplayName = x.DisplayName,
@@ -312,6 +314,8 @@
                     TenantId = x.TenantId,
                     TenantName = x.TenantName,
                     LockoutEnd = x.LockoutEnd,
+                    SuperiorId=x.SuperiorId,
+                    Superior = (x.Superior!=null?x.Superior.UserName:null),
                     Role = string.Join(", ", x.UserRoles.Select(x => x.Role.Name))
                 }).ToListAsync();
         }
@@ -323,8 +327,10 @@
     private async Task OnCreate()
     {
         var model = new UserFormModel() { Provider = "Local", AssignRoles = new string[] { RoleConstants.BasicRole } };
-        var parameters = new DialogParameters { ["model"] = model };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var parameters = new DialogParameters {
+            { nameof(_UserFormDialog.model),model },
+            { nameof(_UserFormDialog.superiorList),this._userList } };
+        var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
@@ -338,6 +344,7 @@
                     TenantName = model.TenantName,
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber,
+                    SuperiorId = model.SuperiorId,
                     ProfilePictureDataUrl = model.ProfilePictureDataUrl,
                     IsActive = model.IsActive,
                 };
@@ -369,7 +376,10 @@
         var user = await _userManager.FindByIdAsync(item.Id);
         var roles = await _userManager.GetRolesAsync(user);
         item.AssignRoles = roles.ToArray();
-        var parameters = new DialogParameters { ["model"] = item };
+        var parameters = new DialogParameters {
+            { nameof(_UserFormDialog.model),item },
+            { nameof(_UserFormDialog.superiorList),this._userList } };
+
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;

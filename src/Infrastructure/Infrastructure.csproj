@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.96.0" />
-    <PackageReference Include="Hangfire.Core" Version="1.8.0-beta3" />
    <PackageReference Include="FluentEmail.Core" Version="3.0.2" />
    <PackageReference Include="FluentEmail.Razor" Version="3.0.2" />
    <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
@@ -39,14 +38,13 @@
     <PackageReference Include="Duende.IdentityServer.EntityFramework.Storage" Version="6.0.4" />
     <PackageReference Include="Duende.IdentityServer.Storage" Version="6.0.4" />
     <PackageReference Include="Polly" Version="7.2.3" />
+      <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.8.0" />
       <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
       <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="1.2.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-      <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.7.1" />
       <PackageReference Include="Hangfire.InMemory" Version="0.3.4" />
-      <PackageReference Include="Hangfire.Core" Version="1.8.0-rc1" />
-      <PackageReference Include="Hangfire.AspNetCore" Version="1.7.31" />
-      <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.8.0" />
+      <PackageReference Include="Hangfire.AspNetCore" Version="1.8.0-rc1" />
+      
   </ItemGroup>
 
   <ItemGroup>

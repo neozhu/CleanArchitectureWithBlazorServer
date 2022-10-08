@@ -122,7 +122,6 @@
                     </MudGrid>
                 </MudForm>
             </MudTabPanel>
-
         </MudTabs>
     </ChildContent>
     <ErrorContent>
@@ -130,8 +129,8 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
-    private MudForm _form = default!;
-    private MudForm _passwordform = default!;
+    private MudForm _form=null!;
+    private MudForm _passwordform = null!;
     public string Title { get; set; } = "Profile";
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;

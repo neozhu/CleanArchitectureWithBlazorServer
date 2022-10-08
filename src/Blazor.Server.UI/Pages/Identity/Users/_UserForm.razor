@@ -50,17 +50,22 @@
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.Provider)" @bind-Value="model.Provider" Label="@L["Provider"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
+       
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.PhoneNumber)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
+            <MudSelect For="@(() => model.SuperiorId)"
+                       T="string"
+                       Label="@L["Select Superior"]"
+                       Text="@model.Superior"
+                       ValueChanged="SuperiorIdChanged"
+                       Value="@model.SuperiorId">
+                @foreach (var item in superiorList)
+                {
+                    <MudSelectItem T="string" Value="@item.Id">@item.UserName</MudSelectItem>
+                }
+            </MudSelect>
         </MudItem>
         @if (string.IsNullOrEmpty(model.Id))
         {
@@ -91,6 +96,16 @@
                           OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
             </MudItem>
         }
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => model.PhoneNumber)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        
 
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
@@ -131,6 +146,7 @@
     UserFormModelValidator modelValidator = new();
     [EditorRequired][Parameter] public UserFormModel model { get; set; } = default!;
     [EditorRequired][Parameter] public EventCallback<UserFormModel> OnFormSubmit { get; set; }
+    [EditorRequired][Parameter] public List<UserFormModel> superiorList { get; set; } = new();
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
@@ -171,6 +187,11 @@
     {
         model.TenantId = id;
         model.TenantName = _tenantsService.DataSource.FirstOrDefault(x => x.Id == id)?.Name;
+    }
+    private void SuperiorIdChanged(string id)
+    {
+        model.SuperiorId = id;
+        model.Superior = this.superiorList.Where(x => x.Id == id).FirstOrDefault()?.UserName;
     }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {

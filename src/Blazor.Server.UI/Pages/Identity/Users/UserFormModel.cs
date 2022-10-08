@@ -1,3 +1,5 @@
+using CleanArchitecture.Blazor.Infrastructure.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 using FluentValidation;
 
 namespace Blazor.Server.UI.Pages.Identity.Users;
@@ -8,6 +10,8 @@ public class UserFormModel
     public string? UserName { get; set; }
     public string? DisplayName { get; set; }
     public string? Provider { get; set; }
+    public string? SuperiorId { get; set; }
+    public string? Superior { get; set; }
     public string? ProfilePictureDataUrl { get; set; }
     public string? Email { get; set; }
     public string? Password { get; set; }

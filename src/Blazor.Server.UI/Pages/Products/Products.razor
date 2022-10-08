@@ -285,7 +285,7 @@
         var command = new AddEditProductCommand();
         var parameters = new DialogParameters
             {
-        { nameof(_ProductFormDialog.model),command },
+                  { nameof(_ProductFormDialog.model),command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
