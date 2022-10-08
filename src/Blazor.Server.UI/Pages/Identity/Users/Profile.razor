@@ -6,11 +6,12 @@
 @using SixLabors.ImageSharp.Formats
 @using SixLabors.ImageSharp.Processing
 @inject IStringLocalizer<Profile> L
+@inject IJSRuntime JS
 <PageTitle>@Title</PageTitle>
 
 <ErrorBoundary>
     <ChildContent>
-        <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" Elevation="6"
+        <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" Elevation="6" ActivePanelIndexChanged="ActivePanelIndexChanged"
                  ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
             <MudTabPanel Text="@L["Profile"]">
                 <MudForm Model="@model" @ref="@_form" Validation="@(_userValidator.ValidateValue)" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
@@ -119,6 +120,10 @@
                     </MudGrid>
                 </MudForm>
             </MudTabPanel>
+            <MudTabPanel Text="@L["Org Chart"]">
+                <div class="chart-container"
+                     style="height: calc(100vh - 265px);"></div>
+            </MudTabPanel>
         </MudTabs>
     </ChildContent>
     <ErrorContent>
@@ -126,7 +131,7 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
-    private MudForm? _form=null!;
+    private MudForm? _form = null!;
     private MudForm? _passwordform = null!;
     public string Title { get; set; } = "Profile";
     [CascadingParameter]
@@ -138,8 +143,8 @@
     private UserProfileEditValidator _userValidator = new();
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     private ChangePasswordModel _changepassword { get; set; } = new();
-    private ChangePasswordModelValidator _passwordValidator = new ();
-
+    private ChangePasswordModelValidator _passwordValidator = new();
+    private List<OrgItem> _orgData = new();
 
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
@@ -164,14 +169,53 @@
     {
         _profileService.OnChange -= _profileService_OnChange;
     }
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         Title = L["Profile"];
         _profileService.OnChange += _profileService_OnChange;
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         model = _profileService.Profile;
-        return Task.CompletedTask;
+
+        await LoadOrgData();
+
     }
+    private async void ActivePanelIndexChanged(int index)
+    {
+        if(index==2){
+            await Task.Delay(400);
+            await JS.InvokeVoidAsync("createOrgChart", this._orgData);
+        }
+    }
+    private async Task LoadOrgData()
+    {
+        var currerntuserName = (await _authState).User.GetUserName();
+        var list = await _userManager.Users.Include(x => x.UserRoles).Include(x => x.Superior).ToListAsync();
+        foreach (var item in list)
+        {
+            var roles = await _userManager.GetRolesAsync(item);
+            var count = await _userManager.Users.Where(x => x.SuperiorId == item.Id).CountAsync();
+            var orgitem = new OrgItem();
+            orgitem.id = item.Id;
+            orgitem.name = item.DisplayName ?? item.UserName;
+            orgitem.area = item.TenantName;
+            orgitem.profileUrl = item.ProfilePictureDataUrl;
+            orgitem.imageUrl = item.ProfilePictureDataUrl;
+            if (currerntuserName == item.UserName)
+                orgitem.isLoggedUser = true;
+            orgitem.size = "";
+            orgitem.tags = item.PhoneNumber ?? item.Email;
+            if (roles != null && roles.Count > 0)
+                orgitem.positionName = string.Join(',', roles);
+            orgitem.parentId = item.SuperiorId;
+
+            orgitem._directSubordinates = count;
+            this._orgData.Add(orgitem);
+        }
+
+
+    }
+
+ 
     private void _profileService_OnChange()
     {
         model = _profileService.Profile;
