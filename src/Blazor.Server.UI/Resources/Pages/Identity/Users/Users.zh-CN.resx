@@ -192,4 +192,13 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>租户名称</value>
   </data>
+  <data name="Provider" xml:space="preserve">
+    <value>来源</value>
+  </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>上级</value>
+  </data>
+  <data name="Select Superior" xml:space="preserve">
+    <value>选择上级</value>
+  </data>
 </root>

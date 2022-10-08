@@ -123,6 +123,14 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 new Claim(ClaimTypes.Role, roleName) });
 
         }
+        var superior = await _userManager.FindByIdAsync(user.SuperiorId);
+        if (superior is not null)
+        {
+            result.AddClaims(new[] {
+                new Claim(ApplicationClaimTypes.SuperiorId, superior.Id),
+                new Claim(ApplicationClaimTypes.SuperiorName, superior.UserName)
+            });
+        }
         return result;
     }
 
@@ -136,7 +144,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             var valid = user.IsActive && await _userManager.CheckPasswordAsync(user, request.Password);
             if (valid)
             {
-
+               
                 var identity = await CreateIdentityFromApplicationUser(user);
                 using (var memoryStream = new MemoryStream())
                 await using (var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))

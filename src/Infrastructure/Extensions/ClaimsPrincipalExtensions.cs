@@ -22,6 +22,11 @@ public static class ClaimsPrincipalExtensions
          => claimsPrincipal.FindFirstValue(ClaimTypes.GivenName);
     public static string GetProfilePictureDataUrl(this ClaimsPrincipal claimsPrincipal)
         => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.ProfilePictureDataUrl);
+    public static string GetSuperiorName(this ClaimsPrincipal claimsPrincipal)
+        => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.SuperiorName);
+    public static string GetSuperiorId(this ClaimsPrincipal claimsPrincipal)
+        => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.SuperiorId);
+
     public static string GetTenantName(this ClaimsPrincipal claimsPrincipal)
         => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.TenantName);
     public static string GetTenantId(this ClaimsPrincipal claimsPrincipal)

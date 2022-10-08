@@ -192,4 +192,13 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>Tenant Name</value>
   </data>
+  <data name="Provider" xml:space="preserve">
+    <value>Anbieter</value>
+  </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>Vorgesetzter Name</value>
+  </data>
+  <data name="Select Superior" xml:space="preserve">
+    <value>Wählen Sie Superior</value>
+  </data>
 </root>

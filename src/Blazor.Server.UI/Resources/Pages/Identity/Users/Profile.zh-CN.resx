@@ -163,9 +163,12 @@
     <value>用户名</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
-    <value>租户</value>
+    <value>租户名称</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>状态</value>
+  </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>上级</value>
   </data>
 </root>

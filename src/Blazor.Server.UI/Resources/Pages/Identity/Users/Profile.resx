@@ -168,4 +168,7 @@
   <data name="Status" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>Superior Name</value>
+  </data>
 </root>

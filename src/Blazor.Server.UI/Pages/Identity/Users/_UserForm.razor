@@ -61,7 +61,7 @@
                        Text="@model.Superior"
                        ValueChanged="SuperiorIdChanged"
                        Value="@model.SuperiorId">
-                @foreach (var item in superiorList)
+                @foreach (var item in superiorList.Where(x=>x.Id!=model.Id))
                 {
                     <MudSelectItem T="string" Value="@item.Id">@item.UserName</MudSelectItem>
                 }

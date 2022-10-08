@@ -192,4 +192,13 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>세입자 이름</value>
   </data>
+  <data name="Provider" xml:space="preserve">
+    <value>공급자</value>
+  </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>상위 이름</value>
+  </data>
+  <data name="Select Superior" xml:space="preserve">
+    <value>슈페리어 선택</value>
+  </data>
 </root>

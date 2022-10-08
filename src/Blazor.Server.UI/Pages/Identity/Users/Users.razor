@@ -361,6 +361,7 @@
                 {
                     await _userManager.AddToRoleAsync(applicationUser, RoleConstants.BasicRole);
                 }
+                model.Id = applicationUser.Id;
                 _userList.Add(model);
                 Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
             }
@@ -380,7 +381,7 @@
             { nameof(_UserFormDialog.model),item },
             { nameof(_UserFormDialog.superiorList),this._userList } };
 
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
@@ -395,6 +396,7 @@
             user.IsActive = item.IsActive;
             user.TenantId = item.TenantId;
             user.TenantName = item.TenantName;
+            user.SuperiorId = item.SuperiorId;
             var identityResult = await _userManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
@@ -420,6 +422,8 @@
                             IsActive = user.IsActive,
                             TenantId = user.TenantId,
                             TenantName = user.TenantName,
+                            SuperiorId=user.SuperiorId,
+                            Superior=user.Superior?.UserName,
                             Role = item.AssignRoles?.FirstOrDefault()
                         });
                     if (user.TenantId is not null && user.TenantName is not null && state.User.GetTenantId() != user.TenantId)

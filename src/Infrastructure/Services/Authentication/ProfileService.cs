@@ -12,6 +12,8 @@ public class ProfileService
             IsActive = principal.GetStatus(),
             TenantId = principal.GetTenantId(),
             TenantName = principal.GetTenantName(),
+            SuperiorId = principal.GetSuperiorId(),
+            Superior = principal.GetSuperiorName(),
             Avatar = principal.GetProfilePictureDataUrl(),
             DisplayName = principal.GetDisplayName(),
             Email = principal.GetEmail(),

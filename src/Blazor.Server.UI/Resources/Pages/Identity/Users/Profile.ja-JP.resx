@@ -162,4 +162,10 @@
   <data name="User Name" xml:space="preserve">
     <value>ユーザー名</value>
   </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>上司の名前</value>
+  </data>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>テナント名</value>
+  </data>
 </root>

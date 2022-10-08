@@ -51,10 +51,7 @@
                             <MudTextField For="@(() => model.TenantName)" @bind-Value="model.TenantName" Label="@L["Tenant Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudText Typo="Typo.caption">@L["Status"]</MudText>
-                            <div class="d-fex">
-                                <MudCheckBox For="@(() =>model.IsActive)" T="bool" @bind-Checked="model.IsActive" Label="@L["Is Active"]" ReadOnly="true"></MudCheckBox>
-                            </div>
+                            <MudTextField For="@(() => model.Superior)" @bind-Value="model.Superior" Label="@L["Superior Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                         </MudItem>
                         <MudItem sm="6" xs="12">
                             <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
@@ -129,8 +126,8 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
-    private MudForm _form=null!;
-    private MudForm _passwordform = null!;
+    private MudForm? _form=null!;
+    private MudForm? _passwordform = null!;
     public string Title { get; set; } = "Profile";
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
@@ -211,7 +208,7 @@
     }
     private async Task Submit()
     {
-        await _form.Validate();
+        await _form!.Validate();
         if (_form.IsValid)
         {
             var state = await _authState;
@@ -233,7 +230,7 @@
     }
     private async Task ChangePassword()
     {
-        await _passwordform.Validate();
+        await _passwordform!.Validate();
         if (_passwordform.IsValid)
         {
             var user = await _userManager.FindByIdAsync(model.UserId);
