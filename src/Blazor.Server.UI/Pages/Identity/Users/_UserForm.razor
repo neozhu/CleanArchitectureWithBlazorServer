@@ -57,11 +57,13 @@
         <MudItem xs="12" sm="6">
             <MudSelect For="@(() => model.SuperiorId)"
                        T="string"
+                       Required="true"
+                       RequiredError="@L["Superior is required."]"
                        Label="@L["Select Superior"]"
                        Text="@model.Superior"
                        ValueChanged="SuperiorIdChanged"
                        Value="@model.SuperiorId"
-                       Clearable >
+                        >
                 @foreach (var item in superiorList.Where(x=>x.Id!=model.Id))
                 {
                     <MudSelectItem T="string" Value="@item.Id">@item.UserName</MudSelectItem>
