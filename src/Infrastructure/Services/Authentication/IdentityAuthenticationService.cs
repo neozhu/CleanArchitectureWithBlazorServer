@@ -176,6 +176,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             var user = await _userManager.FindByNameAsync(userName);
             if (user is null)
             {
+                var admin = await _userManager.FindByNameAsync("administrator");
                 user = new ApplicationUser
                 {
                     EmailConfirmed = true,
@@ -185,6 +186,9 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                     Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
                     Provider = provider,
                     DisplayName = name,
+                    SuperiorId=admin.Id,
+                    TenantId=admin.TenantId,
+                    TenantName=admin.TenantName
                 };
                 var result = await _userManager.CreateAsync(user);
                 if (!result.Succeeded)
