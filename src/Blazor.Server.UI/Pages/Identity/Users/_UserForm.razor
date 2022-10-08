@@ -60,7 +60,8 @@
                        Label="@L["Select Superior"]"
                        Text="@model.Superior"
                        ValueChanged="SuperiorIdChanged"
-                       Value="@model.SuperiorId">
+                       Value="@model.SuperiorId"
+                       Clearable >
                 @foreach (var item in superiorList.Where(x=>x.Id!=model.Id))
                 {
                     <MudSelectItem T="string" Value="@item.Id">@item.UserName</MudSelectItem>
