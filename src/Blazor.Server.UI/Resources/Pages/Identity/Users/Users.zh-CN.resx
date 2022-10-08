@@ -192,4 +192,19 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>租户名称</value>
   </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>电子邮件</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>登录密码</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>来源</value>
+  </data>
 </root>

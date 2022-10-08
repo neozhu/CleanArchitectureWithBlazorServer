@@ -192,4 +192,19 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>テナント名</value>
   </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>Eメール</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>プロバイダー</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>パスワード</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>状態</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>パスワードを認証する</value>
+  </data>
 </root>
