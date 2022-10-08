@@ -354,6 +354,7 @@
                 {
                     await _userManager.AddToRoleAsync(applicationUser, RoleConstants.BasicRole);
                 }
+                model.Id = applicationUser.Id;
                 _userList.Add(model);
                 Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
             }
