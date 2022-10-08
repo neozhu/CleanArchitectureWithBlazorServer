@@ -135,9 +135,6 @@
   <data name="Create a new user" xml:space="preserve">
     <value>새 사용자 만들기</value>
   </data>
-  <data name="Dispaly Name" xml:space="preserve">
-    <value>디스플레이 이름</value>
-  </data>
   <data name="Edit the user" xml:space="preserve">
     <value>사용자 편집</value>
   </data>
@@ -200,5 +197,20 @@
   </data>
   <data name="Select Superior" xml:space="preserve">
     <value>슈페리어 선택</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>이메일</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>비밀번호</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>상태</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>비밀번호 확인</value>
+  </data>
+  <data name="Display Name" xml:space="preserve">
+    <value>이름 표시하기</value>
   </data>
 </root>

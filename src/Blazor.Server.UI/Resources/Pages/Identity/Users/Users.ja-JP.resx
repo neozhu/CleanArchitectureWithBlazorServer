@@ -135,9 +135,6 @@
   <data name="Create a new user" xml:space="preserve">
     <value>新しいユーザーを作成する</value>
   </data>
-  <data name="Dispaly Name" xml:space="preserve">
-    <value>表示名</value>
-  </data>
   <data name="Edit the user" xml:space="preserve">
     <value>ユーザーを編集する</value>
   </data>
@@ -200,5 +197,20 @@
   </data>
   <data name="Select Superior" xml:space="preserve">
     <value>スーペリアを選択</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>Eメール</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>パスワード</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>状態</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>パスワードを認証する</value>
+  </data>
+  <data name="Display Name" xml:space="preserve">
+    <value>表示名</value>
   </data>
 </root>

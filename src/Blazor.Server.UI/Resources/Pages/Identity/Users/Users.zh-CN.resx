@@ -135,9 +135,6 @@
   <data name="Create a new user" xml:space="preserve">
     <value>创建新用户</value>
   </data>
-  <data name="Dispaly Name" xml:space="preserve">
-    <value>显示名称</value>
-  </data>
   <data name="Edit the user" xml:space="preserve">
     <value>编辑用户</value>
   </data>
@@ -200,5 +197,20 @@
   </data>
   <data name="Select Superior" xml:space="preserve">
     <value>选择上级</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>电子邮件</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>登录密码</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
+  <data name="Display Name" xml:space="preserve">
+    <value>显示名称</value>
   </data>
 </root>

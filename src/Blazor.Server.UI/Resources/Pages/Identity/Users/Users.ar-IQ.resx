@@ -132,9 +132,6 @@
   <data name="Create a new user" xml:space="preserve">
     <value>إنشاء مستخدم جديد</value>
   </data>
-  <data name="Dispaly Name" xml:space="preserve">
-    <value>اسم متقطع</value>
-  </data>
   <data name="Edit the user" xml:space="preserve">
     <value>تحرير المستخدم</value>
   </data>
@@ -200,5 +197,20 @@
   </data>
   <data name="Select Superior" xml:space="preserve">
     <value>حدد سوبريور</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>حالة</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>تأكيد كلمة المرور</value>
+  </data>
+  <data name="Display Name" xml:space="preserve">
+    <value>اسم العرض</value>
   </data>
 </root>
