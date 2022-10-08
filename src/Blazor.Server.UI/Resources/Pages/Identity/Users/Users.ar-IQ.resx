@@ -132,9 +132,6 @@
   <data name="Create a new user" xml:space="preserve">
     <value>إنشاء مستخدم جديد</value>
   </data>
-  <data name="Dispaly Name" xml:space="preserve">
-    <value>اسم متقطع</value>
-  </data>
   <data name="Edit the user" xml:space="preserve">
     <value>تحرير المستخدم</value>
   </data>
@@ -206,5 +203,8 @@
   </data>
   <data name="Confirm Password" xml:space="preserve">
     <value>تأكيد كلمة المرور</value>
+  </data>
+  <data name="Display Name" xml:space="preserve">
+    <value>اسم العرض</value>
   </data>
 </root>
