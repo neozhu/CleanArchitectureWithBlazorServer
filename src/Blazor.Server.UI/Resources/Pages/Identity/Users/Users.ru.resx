@@ -192,4 +192,19 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>Имя арендатора</value>
   </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>Эл. почта</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>Провайдер</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>Подтвердить Пароль</value>
+  </data>
 </root>
