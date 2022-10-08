@@ -132,9 +132,6 @@
   <data name="Create a new user" xml:space="preserve">
     <value>Create a new user</value>
   </data>
-  <data name="Dispaly Name" xml:space="preserve">
-    <value>Dispaly Name</value>
-  </data>
   <data name="Edit the user" xml:space="preserve">
     <value>Edit the user</value>
   </data>
@@ -206,5 +203,8 @@
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>E-mail</value>
+  </data>
+  <data name="Display Name" xml:space="preserve">
+    <value>Display Name</value>
   </data>
 </root>

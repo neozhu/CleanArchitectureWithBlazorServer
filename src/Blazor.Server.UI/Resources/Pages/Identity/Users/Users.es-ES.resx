@@ -135,9 +135,6 @@
   <data name="Create a new user" xml:space="preserve">
     <value>Crear un nuevo usuario</value>
   </data>
-  <data name="Dispaly Name" xml:space="preserve">
-    <value>Nombre de la pantalla</value>
-  </data>
   <data name="Edit the user" xml:space="preserve">
     <value>Editar el usuario</value>
   </data>
@@ -206,5 +203,8 @@
   </data>
   <data name="Confirm Password" xml:space="preserve">
     <value>Confirmar contraseña</value>
+  </data>
+  <data name="Display Name" xml:space="preserve">
+    <value>Nombre para mostrar</value>
   </data>
 </root>

@@ -135,9 +135,6 @@
   <data name="Create a new user" xml:space="preserve">
     <value>Neuen Benutzer anlegen</value>
   </data>
-  <data name="Dispaly Name" xml:space="preserve">
-    <value>Name des Wörterbuchs</value>
-  </data>
   <data name="Edit the user" xml:space="preserve">
     <value>Bearbeiten Sie den Benutzer</value>
   </data>
@@ -206,5 +203,8 @@
   </data>
   <data name="Confirm Password" xml:space="preserve">
     <value>Passwort bestätigen</value>
+  </data>
+  <data name="Display Name" xml:space="preserve">
+    <value>Anzeigename</value>
   </data>
 </root>
