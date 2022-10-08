@@ -1,7 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Application.Features.Logs.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery;
 
