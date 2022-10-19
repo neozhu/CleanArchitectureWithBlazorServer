@@ -57,7 +57,7 @@ public static class ConfigureServices
         services.AddScoped<IMenuService, MenuService>();
         services.AddScoped<INotificationService, InMemoryNotificationService>();
         services.AddGoogleAnalytics("G-PRYNCB61NV");
-
+        services.AddHealthChecks();
         return services;
     }
 }
