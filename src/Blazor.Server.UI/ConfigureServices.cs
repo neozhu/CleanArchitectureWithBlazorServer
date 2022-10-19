@@ -4,6 +4,7 @@ using Blazor.Server.UI.Services.Navigation;
 using Blazor.Server.UI.Services.Notifications;
 using BlazorDownloadFile;
 using Blazored.LocalStorage;
+using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using MudBlazor;
 using MudBlazor.Services;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
@@ -57,7 +58,7 @@ public static class ConfigureServices
         services.AddScoped<IMenuService, MenuService>();
         services.AddScoped<INotificationService, InMemoryNotificationService>();
         services.AddGoogleAnalytics("G-PRYNCB61NV");
-
+        services.AddHealthChecks();   
         return services;
     }
 }
