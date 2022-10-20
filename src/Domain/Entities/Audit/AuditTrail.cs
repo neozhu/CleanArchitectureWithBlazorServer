@@ -12,8 +12,8 @@ public class AuditTrail : IEntity
     public AuditType AuditType { get; set; }
     public string? TableName { get; set; }
     public DateTime DateTime { get; set; }
-    public Dictionary<string, object>? OldValues { get; set; } 
-    public Dictionary<string, object>? NewValues { get; set; }
+    public Dictionary<string, object?>? OldValues { get; set; } 
+    public Dictionary<string, object?>? NewValues { get; set; }
     public ICollection<string>? AffectedColumns { get; set; }
     public Dictionary<string, object> PrimaryKey { get; set; } = new();
 
