@@ -8,48 +8,30 @@ using MediatR;
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class MediatorExtensions
 {
-    public static async Task DispatchDomainEvents(this IMediator mediator, DbContext context)
+    public static async Task DispatchDomainEvents(this IMediator mediator, DbContext context,List<DomainEvent> deletedDomainEvents)
     {
-        var entities = GetEntitiesWithPendingEvents(context);
-        while (entities.Any())
+        // If the delete domain events list has a value publish it first.
+        if (deletedDomainEvents.Any())
         {
-            foreach (var entity in entities)
-                foreach (var domainEvent in entity.DomainEvents.ToList())
-                {
-                    await mediator.Publish(domainEvent);
-                    entity.RemoveDomainEvent(domainEvent);
-                }
-            entities = GetEntitiesWithPendingEvents(context);
+            foreach (var domainEvent in deletedDomainEvents)
+                await mediator.Publish(domainEvent);
         }
-    }
-    public static async Task DispatchDeletedDomainEvents(this IMediator mediator, DbContext context)
-    {
-        var entities = GetEntitiesWithDeletingEvents(context);
-        while (entities.Any())
-        {
-            foreach (var entity in entities)
-                foreach (var domainEvent in entity.DomainEvents.ToList())
-                {
-                    await mediator.Publish(domainEvent);
-                    entity.RemoveDomainEvent(domainEvent);
-                }
-            entities = GetEntitiesWithDeletingEvents(context);
-        }
-    }
-    private static List<BaseEntity> GetEntitiesWithPendingEvents(DbContext context)
-    {
-        return context.ChangeTracker
+
+        var entities = context.ChangeTracker
             .Entries<BaseEntity>()
-            .Where(e => e.Entity.DomainEvents.Any() && e.State != EntityState.Deleted)
-            .Select(e => e.Entity)
+            .Where(e => e.Entity.DomainEvents.Any())
+            .Select(e => e.Entity);
+
+        var domainEvents = entities
+            .SelectMany(e => e.DomainEvents)
             .ToList();
+
+        entities.ToList().ForEach(e => e.ClearDomainEvents());
+
+        foreach (var domainEvent in domainEvents)
+            await mediator.Publish(domainEvent);
     }
-    private static List<BaseEntity> GetEntitiesWithDeletingEvents(DbContext context)
-    {
-        return context.ChangeTracker
-            .Entries<BaseEntity>()
-            .Where(e => e.Entity.DomainEvents.Any() && e.State==EntityState.Deleted)
-            .Select(e => e.Entity)
-            .ToList();
-    }
+    
+    
+   
 }
