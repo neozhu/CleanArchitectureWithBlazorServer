@@ -130,7 +130,7 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
-    private MudForm _form = default!;
+    private MudForm? _form = default!;
     private MudForm _passwordform = default!;
     public string Title { get; set; } = "Profile";
     [CascadingParameter]
@@ -228,7 +228,7 @@
             if (model.PhoneNumber is not null)
                 state.User.SetPhoneNumber(model.PhoneNumber);
             await _profileService.Update(model);
-            Snackbar.Add($"{ToastText.UPDATESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
         }
 
     }

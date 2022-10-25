@@ -29,7 +29,7 @@
                   Hover="true"
                   MultiSelection="true"
                   @bind-SelectedItems="_selectItems"
-                  SortLabel="@PromptText.ORDERBY"
+                  SortLabel="@ConstantString.ORDERBY"
                   Loading="@_loading"
                   Filter="new Func<UserFormModel,bool>(_quickFilter)">
             <ToolBarContent>
@@ -41,7 +41,7 @@
                                    Disabled="@_loading"
                                    OnClick="@(()=>OnRefresh())"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   Style="margin-right: 4px; margin-bottom:4px">@ButtonText.REFRESH</MudButton>
+                                   Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
                         @if (_canCreate)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -49,7 +49,7 @@
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    OnClick="OnCreate"
-                                   IconColor="Color.Surface">@ButtonText.CREATE</MudButton>
+                                   IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
                         }
                         @if (_canDelete)
                         {
@@ -59,7 +59,7 @@
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    OnClick="OnDeleteChecked"
-                                   IconColor="Color.Surface">@ButtonText.DELETE</MudButton>
+                                   IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
                         }
                         @if (_canImport)
                         {
@@ -70,7 +70,7 @@
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    for="importdataInput"
                                    HtmlTag="label"
-                                   IconColor="Color.Surface">@ButtonText.IMPORT</MudButton>
+                                   IconColor="Color.Surface">@ConstantString.IMPORT</MudButton>
                         }
                         @if (_canExport)
                         {
@@ -78,29 +78,29 @@
                                    StartIcon="@Icons.Material.Filled.Download"
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ButtonText.EXPORT</MudButton>
+                                   IconColor="Color.Surface">@ConstantString.EXPORT</MudButton>
                         }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ButtonText.REFRESH</MudMenuItem>
+                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
                             @if (_canCreate)
                             {
-                                <MudMenuItem OnClick="OnCreate">@ButtonText.CREATE</MudMenuItem>
+                                <MudMenuItem OnClick="OnCreate">@ConstantString.CREATE</MudMenuItem>
                             }
                             @if (_canDelete)
                             {
-                                <MudMenuItem OnClick="OnDeleteChecked">@ButtonText.DELETE</MudMenuItem>
+                                <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
                             }
                             @if (_canImport)
                             {
                                 <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                                 <MudMenuItem for="importdataInput"
-                                         HtmlTag="label">@ButtonText.IMPORT</MudMenuItem>
+                                         HtmlTag="label">@ConstantString.IMPORT</MudMenuItem>
                             }
                             @if (_canExport)
                             {
-                                <MudMenuItem OnClick="OnExport">@ButtonText.EXPORT</MudMenuItem>
+                                <MudMenuItem OnClick="OnExport">@ConstantString.EXPORT</MudMenuItem>
                             }
                         </MudMenu>
                     </MudHidden>
@@ -121,7 +121,7 @@
                 </MudHidden>
             </ColGroup>
             <HeaderContent>
-                <MudTh Style="width:80px">@PromptText.ACTIONS</MudTh>
+                <MudTh Style="width:80px">@ConstantString.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.TenantName)">@L["Tenant Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.Provider)">@L["Provider"]</MudTableSortLabel></MudTh>
@@ -131,17 +131,17 @@
                 <MudTh>@L["Lock Status"]</MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="@PromptText.ACTIONS">
+                <MudTd DataLabel="@ConstantString.ACTIONS">
                     @if (_canEdit || _canManageRoles || _canRestPassword || _canActive)
                     {
-                        <MudMenu Label="@PromptText.ACTIONS" Variant="Variant.Filled" DisableElevation="true"
+                        <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true"
                              Size="Size.Small"
                              Dense="true"
                              EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
                             @if (_canEdit)
                             {
-                                <MudMenuItem OnClick=@(()=>OnEdit(context))>@ButtonText.EDIT</MudMenuItem>
+                                <MudMenuItem OnClick=@(()=>OnEdit(context))>@ConstantString.EDIT</MudMenuItem>
                             }
                             @if (_canActive)
                             {
@@ -167,7 +167,7 @@
                         <MudButton Variant="Variant.Filled" DisableElevation="true"
                                StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
-                            @ButtonText.NOALLOWED
+                            @ConstantString.NOALLOWED
                         </MudButton>
                     }
                 </MudTd>
@@ -324,7 +324,7 @@
     {
         var model = new UserFormModel() { Provider = "Local", AssignRoles = new string[] { RoleConstants.BasicRole } };
         var parameters = new DialogParameters { ["model"] = model };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var options = new DialogOptions {CloseButton=true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
@@ -356,7 +356,7 @@
                 }
                 model.Id = applicationUser.Id;
                 _userList.Add(model);
-                Snackbar.Add($"{ToastText.CREATESUCCESS}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
             }
             else
             {
@@ -371,7 +371,7 @@
         var roles = await _userManager.GetRolesAsync(user);
         item.AssignRoles = roles.ToArray();
         var parameters = new DialogParameters { ["model"] = item };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
@@ -420,7 +420,7 @@
                         state.User.SetTenantName(user.TenantName);
                     }
                 }
-                Snackbar.Add($"{ToastText.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
             }
             else
             {
@@ -439,14 +439,14 @@
         {
             if (_selectItems.Count == 1)
             {
-                Snackbar.Add($"{ToastText.DELETEFAIL}", MudBlazor.Severity.Error);
+                Snackbar.Add($"{ConstantString.DELETEFAIL}", MudBlazor.Severity.Error);
                 return;
             }
             
             _selectItems.Remove(_selectItems.First(x=>x.Id == currentUserId));
         }
     
-        string deleteContent = PromptText.DELETECONFIRMATION;
+        string deleteContent = ConstantString.DELETECONFIRMATION;
         var parameters = new DialogParameters { { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, _selectItems.Count) } };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
@@ -474,7 +474,7 @@
         item.IsActive = !item.IsActive;
         if (state.Succeeded)
         {
-            Snackbar.Add($"{ToastText.UPDATESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
         }
         else
         {

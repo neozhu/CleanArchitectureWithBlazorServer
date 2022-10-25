@@ -57,22 +57,22 @@
                 @if (_loading)
                 {
                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2"> @PromptText.LOADING</MudText>
+                    <MudText Class="ms-2"> @ConstantString.LOADING</MudText>
                 }
                 else
                 {
-                    <MudText>@ButtonText.SIGNIN</MudText>
+                    <MudText>@L["Sign In"]</MudText>
                 }
 
             </MudButton>
             <div class="d-flex justify-space-around flex-grow-1 my-4 gap-4">
                 <MudButton Class="flex-grow-1" OnClick="@(()=>SignInExternal("Microsoft"))" Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.Microsoft" ButtonType="ButtonType.Button"
                            title="Sign in with Microsoft">
-                    @ButtonText.Microsoft
+                    @ConstantString.Microsoft
                 </MudButton>
                 <MudButton Class="flex-grow-1" OnClick="@(()=>SignInExternal("Google"))" Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.Google" ButtonType="ButtonType.Button"
                            title="Sign in with Google">
-                    @ButtonText.Google
+                    @ConstantString.Google
                 </MudButton>
             </div>
         </MudForm>
@@ -142,7 +142,7 @@
                     var user = await _userManager.FindByNameAsync(_model.UserName);
                     if (user is null)
                     {
-                        Snackbar.Add(L["No user found, or no authorization, please contact the administrator"], MudBlazor.Severity.Error);
+                        Snackbar.Add(L["No user found, or no authorization, please contact the administrator."], MudBlazor.Severity.Error);
                     }
                     else
                     {

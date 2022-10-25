@@ -20,7 +20,7 @@
                   @bind-RowsPerPage="_defaultPageSize"
                   Height="calc(100vh - 265px)"
                   Loading="@_loading"
-                  SortLabel="@PromptText.ORDERBY"
+                  SortLabel="@ConstantString.ORDERBY"
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
@@ -29,7 +29,7 @@
                                Size="Size.Small"
                                OnClick="@(()=>OnRefresh())"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                               Style="margin-right: 5px;">@ButtonText.REFRESH</MudButton>
+                               Style="margin-right: 5px;">@ConstantString.REFRESH</MudButton>
                 </div>
                 <MudSpacer />
                 <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
@@ -41,7 +41,7 @@
                 </MudHidden>
             </ColGroup>
             <HeaderContent>
-                <MudTh Style="width:190px">@ButtonText.ACTIONS</MudTh>
+                <MudTh Style="width:190px">@ConstantString.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortLabel="UserId" T="AuditTrailDto">@L["User Id"]</MudTableSortLabel></MudTh>
                 <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="AuditType" T="AuditTrailDto">@L["Audit Type"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="TableName" T="AuditTrailDto">@L["Table Name"]</MudTableSortLabel></MudTh>
@@ -49,7 +49,7 @@
                 <MudTh><MudTableSortLabel SortLabel="DateTime" T="AuditTrailDto">@L["Date Time"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="@ButtonText.ACTIONS">
+                <MudTd DataLabel="@ConstantString.ACTIONS">
                     <MudButton Variant="Variant.Filled" DisableElevation="true"
                                OnClick="@(() => OnShowDetail(context))"
                                StartIcon="@(context.ShowDetails == true?Icons.Material.Filled.Close:Icons.Material.Filled.Add)" IconColor="Color.Secondary" Size="Size.Small"
@@ -98,10 +98,10 @@
                 }
             </ChildRowContent>
             <NoRecordsContent>
-                <MudText>@PromptText.NOMACHING</MudText>
+                <MudText>@ConstantString.NOMACHING</MudText>
             </NoRecordsContent>
             <LoadingContent>
-                <MudText>@PromptText.LOADING</MudText>
+                <MudText>@ConstantString.LOADING</MudText>
             </LoadingContent>
             <PagerContent>
                 <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
