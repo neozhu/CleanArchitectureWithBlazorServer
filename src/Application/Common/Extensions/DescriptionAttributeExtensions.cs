@@ -16,27 +16,24 @@ public static class DescriptionAttributeExtensions
         var name = e.ToString();
         var memberInfo = e.GetType().GetMember(name)[0];
         var descriptionAttributes = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), inherit: false);
-
         if (!descriptionAttributes.Any())
             return name;
-
         return ((DescriptionAttribute)descriptionAttributes.First()).Description;
     }
     public static string GetMemberDescription<T>(this T t, string memberName) where T : class
     {
         var memberInfo = t.GetType().GetMember(memberName)[0];
-        var descriptionAttribute = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), inherit: false)[0] as DescriptionAttribute;
-        if (descriptionAttribute is not null)
-            return descriptionAttribute.Description;
+        var descriptionAttributes = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), inherit: false);
+        if (descriptionAttributes.Any())
+            return (descriptionAttributes.First() as DescriptionAttribute)!.Description;
         else
             return memberName;
     }
     public static string GetClassDescription<T>(this T t) where T : class
     {
-        var descriptionAttribute = t.GetType().GetCustomAttributes(typeof(DescriptionAttribute), inherit: false)[0]
-            as DescriptionAttribute;
-        if (descriptionAttribute is not null)
-            return descriptionAttribute.Description;
+        var descriptionAttributes = t.GetType().GetCustomAttributes(typeof(DescriptionAttribute), inherit: false);
+        if (descriptionAttributes.Any())
+            return (descriptionAttributes.First() as DescriptionAttribute)!.Description;
         else
             return nameof(t);
 
