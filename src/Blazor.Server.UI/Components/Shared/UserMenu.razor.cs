@@ -20,12 +20,12 @@ public partial class UserMenu
     {
         var parameters = new DialogParameters
             {
-                { nameof(LogoutConfirmation.ContentText), $"{PromptText.LOGOUTCONFIRMATION}"},
+                { nameof(LogoutConfirmation.ContentText), $"{ConstantString.LOGOUTCONFIRMATION}"},
                 { nameof(LogoutConfirmation.Color), Color.Error}
             };
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-        var dialog = DialogService.Show<LogoutConfirmation>(PromptText.LOGOUTCONFIRMATIONTITLE, parameters, options);
+        var dialog = DialogService.Show<LogoutConfirmation>(ConstantString.LOGOUTCONFIRMATIONTITLE, parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {

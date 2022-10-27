@@ -159,4 +159,10 @@
   <data name="User name is required!" xml:space="preserve">
     <value>用户名必填</value>
   </data>
+  <data name="Please check your username and password. If you are still unable to log in, contact your administrator." xml:space="preserve">
+    <value>请检查您的用户名和密码。 如果您仍然无法登录，请联系您的管理员。</value>
+  </data>
+  <data name="No user found, or no authorization, please contact the administrator." xml:space="preserve">
+    <value>没有找到用户，或者没有授权，请联系管理员。</value>
+  </data>
 </root>

@@ -159,4 +159,10 @@
   <data name="User name is required!" xml:space="preserve">
     <value>Der Benutzername ist erforderlich!</value>
   </data>
+  <data name="Please check your username and password. If you are still unable to log in, contact your administrator." xml:space="preserve">
+    <value>Bitte überprüfen Sie Ihren Benutzernamen und Ihr Passwort. Wenn Sie sich immer noch nicht anmelden können, wenden Sie sich an Ihren Administrator.</value>
+  </data>
+  <data name="No user found, or no authorization, please contact the administrator." xml:space="preserve">
+    <value>Kein Benutzer gefunden oder keine Berechtigung, bitte wenden Sie sich an den Administrator.</value>
+  </data>
 </root>
