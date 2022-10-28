@@ -28,7 +28,7 @@ public class DocumentDeletedEventHandler : INotificationHandler<DeletedEvent<Doc
         _logger.LogInformation("Delete file: {fileName}", notification.Entity.URL);
         if (!string.IsNullOrEmpty(notification.Entity.URL))
         {
-            var folder = UploadType.Document.ToDescriptionString();
+            var folder = UploadType.Document.GetDescription();
             var folderName = Path.Combine("Files", folder);
             var deletefile = Path.Combine(Directory.GetCurrentDirectory(), folderName, notification.Entity.URL);
             if (File.Exists(deletefile))
