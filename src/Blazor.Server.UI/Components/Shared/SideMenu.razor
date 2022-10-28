@@ -81,7 +81,7 @@
                                                 {
                                                     <MudSpacer />
                                                     <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
-                                                        @(L[menuItem.PageStatus.ToDescriptionString()])
+                                                        @(L[menuItem.PageStatus.GetDescription()])
                                                     </MudChip>
                                                 }
                                             </div>
@@ -99,7 +99,7 @@
                                     {
                                         <MudSpacer />
                                         <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
-                                            @(L[sectionItem.PageStatus.ToDescriptionString()])
+                                            @(L[sectionItem.PageStatus.GetDescription()])
                                         </MudChip>
                                     }
                                 </div>
