@@ -35,7 +35,7 @@ public class UserFormModelValidator : AbstractValidator<UserFormModel>
              .NotEmpty();
         RuleFor(v => v.SuperiorId)
              .MaximumLength(256)
-             .NotEmpty();
+             .NotEmpty().When(x=>x.UserName!= "administrator");
         RuleFor(v => v.Provider)
              .MaximumLength(256)
              .NotEmpty();
