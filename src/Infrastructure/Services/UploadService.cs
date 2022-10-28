@@ -13,7 +13,7 @@ public class UploadService : IUploadService
         var streamData = new MemoryStream(request.Data);
         if (streamData.Length > 0)
         {
-            var folder = request.UploadType.ToDescriptionString();
+            var folder = request.UploadType.GetDescription();
             var folderName = Path.Combine("Files", folder);
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
             bool exists = Directory.Exists(pathToSave);
