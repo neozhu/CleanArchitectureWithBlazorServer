@@ -16,8 +16,9 @@ public static class DescriptionAttributeExtensions
     }
     public static string GetMemberDescription<T>(this T t, string memberName) where T : class
     {
+        if (t is null) t = (T)Activator.CreateInstance(typeof(T))!;
         var memberInfo = t.GetType().GetMember(memberName)[0];
-     var descriptionAttributes = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), inherit: false);
+        var descriptionAttributes = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), inherit: false);
         if (descriptionAttributes.Any())
         {
             return (descriptionAttributes.First() as DescriptionAttribute)!.Description;
@@ -26,6 +27,7 @@ public static class DescriptionAttributeExtensions
     }
     public static string GetClassDescription<T>(this T t) where T : class
     {
+        if (t is null) t = (T)Activator.CreateInstance(typeof(T))!;
         var descriptionAttributes = t.GetType().GetCustomAttributes(typeof(DescriptionAttribute), inherit: false);
         if (descriptionAttributes.Any())
         {
