@@ -402,7 +402,7 @@
                     await _profileService.Update(new UserProfile()
                         {
                             UserId = user.Id,
-                            Avatar = user.ProfilePictureDataUrl,
+                            ProfilePictureDataUrl = user.ProfilePictureDataUrl,
                             Email = user.Email,
                             PhoneNumber = user.PhoneNumber,
                             DisplayName = user.DisplayName,

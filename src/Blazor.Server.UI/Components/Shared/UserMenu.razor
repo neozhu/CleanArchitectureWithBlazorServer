@@ -11,7 +11,7 @@
             <MudCard Elevation="0" Square="true" Class="ma-0">
                 <MudCardHeader>
                     <CardHeaderAvatar>
-                        @if (string.IsNullOrEmpty(UserProfile.Avatar))
+                        @if (string.IsNullOrEmpty(UserProfile.ProfilePictureDataUrl))
                         {
                             <MudAvatar Size="Size.Medium" Color="Color.Primary" Class="ma-2">
                                 @UserProfile.UserName?.ToUpper().FirstOrDefault()
@@ -19,7 +19,7 @@
                         }
                         else
                         {
-                            <MudAvatar Image="@UserProfile.Avatar" />
+                            <MudAvatar Image="@UserProfile.ProfilePictureDataUrl" />
                         }
                     </CardHeaderAvatar>
                     <CardHeaderContent>

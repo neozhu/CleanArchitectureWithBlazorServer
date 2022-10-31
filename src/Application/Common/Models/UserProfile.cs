@@ -3,7 +3,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Models;
 public class UserProfile
 {
     public string? Provider { get; set; }
-    public string? Avatar { get; set; }
+    public string? ProfilePictureDataUrl { get; set; }
     public string? DisplayName { get; set; }
     public string? UserName { get; set; }
     public string? Email { get; set; }

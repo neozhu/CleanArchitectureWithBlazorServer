@@ -12,7 +12,7 @@ public class ProfileService
             IsActive = principal.GetStatus(),
             TenantId = principal.GetTenantId(),
             TenantName = principal.GetTenantName(),
-            Avatar = principal.GetProfilePictureDataUrl(),
+            ProfilePictureDataUrl = principal.GetProfilePictureDataUrl(),
             DisplayName = principal.GetDisplayName(),
             Email = principal.GetEmail(),
             PhoneNumber = principal.GetPhoneNumber(),
