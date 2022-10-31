@@ -14,7 +14,7 @@ public class ProfileService
             TenantName = principal.GetTenantName(),
             SuperiorId = principal.GetSuperiorId(),
             Superior = principal.GetSuperiorName(),
-            Avatar = principal.GetProfilePictureDataUrl(),
+            ProfilePictureDataUrl = principal.GetProfilePictureDataUrl(),
             DisplayName = principal.GetDisplayName(),
             Email = principal.GetEmail(),
             PhoneNumber = principal.GetPhoneNumber(),

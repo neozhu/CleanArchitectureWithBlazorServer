@@ -19,7 +19,7 @@
                         <MudItem sm="12" xs="12">
                             <div class="d-flex justify-center">
 
-                                @if (string.IsNullOrEmpty(model.Avatar))
+                                @if (string.IsNullOrEmpty(model.ProfilePictureDataUrl))
                                 {
                                     <MudElement Class="d-flex flex-column  align-center">
                                         <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.DisplayName</MudAvatar>
@@ -33,7 +33,7 @@
                                 else
                                 {
                                     <MudElement Class="d-flex flex-column  align-center">
-                                        <MudAvatar Image="@model.Avatar" Style="height:128px; width:128px; font-size:2rem;" />
+                                        <MudAvatar Image="@model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;" />
                                         <div class="d-flex">
                                             <MudChip Size="MudBlazor.Size.Small">@model.Role</MudChip>
                                         </div>
@@ -238,12 +238,12 @@
                 var fi = new FileInfo(filename);
                 var ext = fi.Extension;
                 var result = await _uploadService.UploadAsync(new UploadRequest(Guid.NewGuid().ToString() + ext, UploadType.ProfilePicture, outStream.ToArray()));
-                model.Avatar = result;
+                model.ProfilePictureDataUrl = result;
                 var user = await _userManager.FindByIdAsync(model.UserId);
-                user.ProfilePictureDataUrl = model.Avatar;
+                user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await _userManager.UpdateAsync(user);
                 var state = await _authState;
-                state.User.SetProfilePictureUrl(model.Avatar);
+                state.User.SetProfilePictureUrl(model.ProfilePictureDataUrl);
                 await _profileService.Update(model);
                 //Do your validations here
                 Snackbar.Add(L["The avatar has been updated."], MudBlazor.Severity.Info);
@@ -259,12 +259,12 @@
             var user = await _userManager.FindByIdAsync(model.UserId);
             user.PhoneNumber = model.PhoneNumber;
             user.DisplayName = model.DisplayName;
-            user.ProfilePictureDataUrl = model.Avatar;
+            user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
             await _userManager.UpdateAsync(user);
             if (model.DisplayName is not null)
                 state.User.SetDisplayName(model.DisplayName);
-            if (model.Avatar is not null)
-                state.User.SetProfilePictureUrl(model.Avatar);
+            if (model.ProfilePictureDataUrl is not null)
+                state.User.SetProfilePictureUrl(model.ProfilePictureDataUrl);
             if (model.PhoneNumber is not null)
                 state.User.SetPhoneNumber(model.PhoneNumber);
             await _profileService.Update(model);
