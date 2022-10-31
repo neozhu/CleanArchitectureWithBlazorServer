@@ -10,7 +10,7 @@
 
 @inject IJSRuntime JS
 @inject IStringLocalizer<Documents> L
-@implements IAsyncDisposable
+@implements IDisposable
 
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 
@@ -255,23 +255,11 @@
             Snackbar.Add(string.Format(L["{0} job started."],e), MudBlazor.Severity.Info);
         });
     }
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //    if (firstRender)
-    //    {
-    //        _jsModule = new(await JS.InvokeAsync<IJSObjectReference>("import", "./Pages/Documents/Documents.razor.js"));
-    //        await _jsModule.Value.InvokeAsync<IJSObjectReference>("loadscript");
-    //    }
-    //}
-    public async ValueTask DisposeAsync()
+
+    public void Dispose()
     {
         _client.JobCompleted -= _client_JobCompleted;
         _client.JobStarted -= _client_JobStarted;
-        //if (_jsModule.IsValueCreated)
-        //{
-        //    await _jsModule.Value.InvokeAsync<IJSObjectReference>("destroyscript");
-        //    await _jsModule.Value.DisposeAsync();
-        //}
     }
     private async Task<TableData<DocumentDto>> ServerReload(TableState state)
     {
