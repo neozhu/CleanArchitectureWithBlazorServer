@@ -1,5 +1,6 @@
 @page "/system/picklist"
 @using Blazor.Server.UI.Components.Dialogs
+@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Import
@@ -75,23 +76,44 @@
                     }
                     @if (_canImport)
                     {
-                        <InputFile id="importdataInput" OnChange="OnImportData" hidden  accept=".xlsx" />
-                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                               StartIcon="@Icons.Material.Filled.Upload"
-                               Size="Size.Small"
-                               Style="margin-right: 4px; margin-bottom:4px"
-                               for="importdataInput"
-                               HtmlTag="label"
-                               IconColor="Color.Surface">@ConstantString.IMPORT</MudButton>
+                        <MudButton Disabled="@_uploading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Upload"
+                                   Size="Size.Small"
+                                   Style="margin-right:1px; margin-bottom:4px"
+                                   for="importdataInput"
+                                   HtmlTag="label"
+                                   IconColor="Color.Surface">
+                                @if (_uploading)
+                                {
+                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                    <MudText Class="ms-2"> @ConstantString.UPLOADING</MudText>
+                                }
+                                else
+                                {
+                                    <MudText>@ConstantString.IMPORT</MudText>
+                                }
+
+                            </MudButton>
+                            <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                     }
                     @if (_canExport)
                     {
-                        <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                               StartIcon="@Icons.Material.Filled.Download"
-                               Size="Size.Small"
-                               Style="margin-right: 4px; margin-bottom:4px"
-                               OnClick="OnExport"
-                               IconColor="Color.Surface">@ConstantString.EXPORT</MudButton>
+                        <MudButton Disabled="@_downloading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Download"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   OnClick="OnExport"
+                                   IconColor="Color.Surface">
+                                @if (_downloading)
+                                {
+                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                    <MudText Class="ms-2"> @ConstantString.DOWNLOADING</MudText>
+                                }
+                                else
+                                {
+                                    <MudText>@ConstantString.EXPORT</MudText>
+                                }
+                            </MudButton>
                     }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
@@ -191,6 +213,8 @@
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     [Inject]
+    private IBlazorDownloadFileService _blazorDownloadFileService { get; set; } = null!;
+    [Inject]
     private ISender _mediator { get; set; } = default!;
     private bool _canCreate;
     private bool _canSearch;
@@ -200,6 +224,8 @@
     private bool _canExport;
     private bool _readonly => !_canCreate || !_canEdit;
     private bool _loading;
+    private bool _uploading;
+    private bool _downloading;
     protected override async Task OnInitializedAsync()
     {
         var state = await _authState;
@@ -344,6 +370,7 @@
 
     private async Task OnExport()
     {
+        _downloading = true;
         var request = new ExportKeyValuesQuery()
             {
                 Keyword = _searchString,
@@ -351,11 +378,14 @@
                 SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
             };
         var result = await _mediator.Send(request);
-        using var streamRef = new DotNetStreamReference(new MemoryStream(result));
-        await JS.InvokeVoidAsync("downloadFileFromStream", $"{L["Picklist"]}.xlsx", streamRef);
+        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Picklist"]}.xlsx", result, contentType: "application/octet-stream");
+        Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
+        _downloading = false;
+        
     }
     private async Task OnImportData(InputFileChangeEventArgs e)
     {
+        _uploading = true;
         var stream = new MemoryStream();
         await e.File.OpenReadStream().CopyToAsync(stream);
         var command = new ImportKeyValuesCommand(e.File.Name, stream.ToArray());
@@ -371,6 +401,7 @@
                 Snackbar.Add($"{msg}", MudBlazor.Severity.Error);
             }
         }
+        _uploading = false;
     }
 
 }
