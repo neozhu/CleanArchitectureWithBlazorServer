@@ -2,13 +2,25 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 
-public class AddEditProductCommand : ProductDto, IRequest<Result<int>>, ICacheInvalidator
+public class AddEditProductCommand : IMapFrom<ProductDto>, IRequest<Result<int>>, ICacheInvalidator
 {
+    public void Mapping(Profile profile)
+    {
+        profile.CreateMap<ProductDto, AddEditProductCommand>(MemberList.None);
+    }
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public string? Unit { get; set; }
+    public string? Brand { get; set; }
+    public decimal Price { get; set; }
+    public IList<string>? Pictures { get; set; }
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource();
 }

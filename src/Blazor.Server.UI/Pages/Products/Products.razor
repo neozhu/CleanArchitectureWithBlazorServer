@@ -1,5 +1,6 @@
 @page "/pages/products"
 
+@using AutoMapper
 @using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
@@ -214,6 +215,8 @@
     private int _defaultPageSize = 15;
     [Inject]
     private ISender _mediator { get; set; } = default!;
+    [Inject]
+    private IMapper _mapper { get; set; } = default!;
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
 
@@ -247,7 +250,7 @@
             _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
             _query.PageNumber = state.Page + 1;
             _query.PageSize = state.PageSize;
-            var result =  await _mediator.Send(_query).ConfigureAwait(false);
+            var result = await _mediator.Send(_query).ConfigureAwait(false);
             return new TableData<ProductDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -300,16 +303,7 @@
     }
     private async Task OnEdit(ProductDto dto)
     {
-        var command = new AddEditProductCommand()
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                Brand = dto.Brand,
-                Description = dto.Description,
-                Pictures = dto.Pictures,
-                Unit = dto.Unit,
-                Price = dto.Price
-            };
+        var command = _mapper.Map<AddEditProductCommand>(dto);
         var parameters = new DialogParameters
                 {
                     { nameof(_ProductFormDialog.model),command },
@@ -324,6 +318,7 @@
             await _table.ReloadServerData();
             Snackbar.Add($"{ConstantString.SAVESUCCESS}", MudBlazor.Severity.Info);
         }
+
     }
 
     private async Task OnDelete(ProductDto dto)
