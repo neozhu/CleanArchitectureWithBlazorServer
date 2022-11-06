@@ -6,8 +6,14 @@ using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
 
-public class AddEditKeyValueCommand : KeyValueDto, IRequest<Result<int>>, ICacheInvalidator
+public class AddEditKeyValueCommand : IMapFrom<KeyValueDto>, IRequest<Result<int>>, ICacheInvalidator
 {
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public string? Value { get; set; }
+    public string? Text { get; set; }
+    public string? Description { get; set; }
+    public TrackingState TrackingState { get; set; } = TrackingState.Unchanged;
     public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => KeyValueCacheKey.SharedExpiryTokenSource();
 }

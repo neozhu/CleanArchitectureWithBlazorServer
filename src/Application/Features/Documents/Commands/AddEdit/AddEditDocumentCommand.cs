@@ -6,8 +6,16 @@ using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit;
 
-public class AddEditDocumentCommand : DocumentDto, IRequest<Result<int>>, ICacheInvalidator
+public class AddEditDocumentCommand : IMapFrom<DocumentDto>, IRequest<Result<int>>, ICacheInvalidator
 {
+    public int Id { get; set; }
+    public string? Title { get; set; }
+    public string? Description { get; set; }
+    public bool IsPublic { get; set; }
+    public string? URL { get; set; }
+    public DocumentType DocumentType { get; set; } = DocumentType.Document;
+    public string? TenantId { get; set; }
+    public string? TenantName { get; set; }
     public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource();
     public UploadRequest? UploadRequest { get; set; }
   
