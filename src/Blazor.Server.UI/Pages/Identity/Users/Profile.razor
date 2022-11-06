@@ -212,7 +212,7 @@
     }
     private async Task Submit()
     {
-        await _form.Validate();
+        await _form!.Validate();
         if (_form.IsValid)
         {
             var state = await _authState;
