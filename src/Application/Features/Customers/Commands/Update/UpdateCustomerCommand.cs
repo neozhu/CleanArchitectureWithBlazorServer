@@ -3,19 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
-using System.ComponentModel;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Update;
 
-    public class UpdateCustomerCommand: IRequest<Result>, ICacheInvalidator,IMapFrom<CustomerDto>
-{
-    [Description("Id")]
-    public int Id { get; set; }
+    public class UpdateCustomerCommand: IMapFrom<CustomerDto>,IRequest<Result>, ICacheInvalidator
+    {
+            [Description("Id")]
+    public int Id {get;set;} 
     [Description("Name")]
-    public string? Name { get; set; }
+    public string Name {get;set;} = String.Empty; 
     [Description("Description")]
-    public string? Description { get; set; }
-    public string CacheKey => CustomerCacheKey.GetAllCacheKey;
+    public string? Description {get;set;} 
+
+        public string CacheKey => CustomerCacheKey.GetAllCacheKey;
         public CancellationTokenSource? SharedExpiryTokenSource => CustomerCacheKey.SharedExpiryTokenSource();
     }
 
@@ -40,7 +40,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Updat
            var item =await _context.Customers.FindAsync( new object[] { request.Id }, cancellationToken);
            if (item != null)
            {
-                item = _mapper.Map(request, item);
+                var dto = _mapper.Map<CustomerDto>(request);
+                item = _mapper.Map(dto, item);
 				// raise a update domain event
 				item.AddDomainEvent(new UpdatedEvent<Customer>(item));
                 await _context.SaveChangesAsync(cancellationToken);

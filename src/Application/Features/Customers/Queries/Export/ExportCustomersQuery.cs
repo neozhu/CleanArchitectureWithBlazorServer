@@ -36,11 +36,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export
 
         public async Task<byte[]> Handle(ExportCustomersQuery request, CancellationToken cancellationToken)
         {
-            #pragma warning disable CS8602
-            #pragma warning disable CS8602
-            #pragma warning disable CS8604
-            // TODO:  Implement ExportCustomersQueryHandler method 
-            var data = await _context.Customers//.Where(x=>x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
+            // TODO: Implement ExportCustomersQueryHandler method 
+            var data = await _context.Customers//.Where(x=>x.Name!.Contains(request.Keyword) || x.Description!.Contains(request.Keyword))
                        .OrderBy($"{request.OrderBy} {request.SortDirection}")
                        .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);

@@ -4,18 +4,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
-using System.ComponentModel;
+
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEdit;
 
-public class AddEditCustomerCommand : IRequest<Result<int>>, ICacheInvalidator, IMapFrom<CustomerDto>
+public class AddEditCustomerCommand : IMapFrom<CustomerDto>, IRequest<Result<int>>, ICacheInvalidator
 {
     [Description("Id")]
     public int Id { get; set; }
     [Description("Name")]
-    public string? Name { get; set; }
+    public string Name { get; set; } = String.Empty;
     [Description("Description")]
     public string? Description { get; set; }
+
     public string CacheKey => CustomerCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => CustomerCacheKey.SharedExpiryTokenSource();
 }
@@ -38,10 +39,11 @@ public class AddEditCustomerCommandHandler : IRequestHandler<AddEditCustomerComm
     public async Task<Result<int>> Handle(AddEditCustomerCommand request, CancellationToken cancellationToken)
     {
         // TODO: Implement AddEditCustomerCommandHandler method 
+        var dto = _mapper.Map<CustomerDto>(request);
         if (request.Id > 0)
         {
             var item = await _context.Customers.FindAsync(new object[] { request.Id }, cancellationToken) ?? throw new NotFoundException($"Customer {request.Id} Not Found.");
-            item = _mapper.Map(request, item);
+            item = _mapper.Map(dto, item);
             // raise a update domain event
             item.AddDomainEvent(new UpdatedEvent<Customer>(item));
             await _context.SaveChangesAsync(cancellationToken);
@@ -49,7 +51,7 @@ public class AddEditCustomerCommandHandler : IRequestHandler<AddEditCustomerComm
         }
         else
         {
-            var item = _mapper.Map<Customer>(request);
+            var item = _mapper.Map<Customer>(dto);
             // raise a create domain event
             item.AddDomainEvent(new CreatedEvent<Customer>(item));
             _context.Customers.Add(item);

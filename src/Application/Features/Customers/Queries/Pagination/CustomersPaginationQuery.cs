@@ -32,10 +32,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagina
 
         public async Task<PaginatedData<CustomerDto>> Handle(CustomersWithPaginationQuery request, CancellationToken cancellationToken)
         {
-#pragma warning disable CS8602
-#pragma warning disable CS8604
             // TODO: Implement CustomersWithPaginationQueryHandler method 
-           var data = await _context.Customers
+           var data = await _context.Customers//.Where(x=>x.Name!.Contains(request.Keyword) || x.Description!.Contains(request.Keyword))
                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
