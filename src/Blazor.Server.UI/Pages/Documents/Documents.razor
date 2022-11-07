@@ -207,6 +207,9 @@
     private ISender _mediator { get; set; } = default!;
     [Inject]
     private HubClient _client { get; set; } = default!;
+    [Inject]
+    private IMapper _mapper { get; set; } = default!;
+
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     private string _tenantId = string.Empty;
@@ -320,19 +323,7 @@
     }
     private async Task OnEdit(DocumentDto dto)
     {
-        var command = new AddEditDocumentCommand()
-            {
-                Id = dto.Id,
-                Title = dto.Title,
-                URL = dto.URL,
-                Content=dto.Content,
-                Status=dto.Status,
-                Description = dto.Description,
-                DocumentType = dto.DocumentType,
-                IsPublic = dto.IsPublic,
-                TenantId = dto.TenantId,
-                TenantName = dto.TenantName
-            };
+        var command = _mapper.Map<AddEditDocumentCommand>(dto);
         var parameters = new DialogParameters
                 {
                  { nameof(_DocumentFormDialog.model),command },
