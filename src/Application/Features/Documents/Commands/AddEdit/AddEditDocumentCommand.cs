@@ -6,8 +6,16 @@ using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit;
 
-public class AddEditDocumentCommand : DocumentDto, IRequest<Result<int>>, ICacheInvalidator
+public class AddEditDocumentCommand : IMapFrom<DocumentDto>, IRequest<Result<int>>, ICacheInvalidator
 {
+    public int Id { get; set; }
+    public string? Title { get; set; }
+    public string? Description { get; set; }
+    public bool IsPublic { get; set; }
+    public string? URL { get; set; }
+    public DocumentType DocumentType { get; set; } = DocumentType.Document;
+    public string? TenantId { get; set; }
+    public string? TenantName { get; set; }
     public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource();
     public UploadRequest? UploadRequest { get; set; }
   
@@ -31,7 +39,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
     }
     public async Task<Result<int>> Handle(AddEditDocumentCommand request, CancellationToken cancellationToken)
     {
-
+        var dto = _mapper.Map<DocumentDto>(request);
         if (request.Id > 0)
         {
             var document = await _context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);
@@ -50,7 +58,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
         }
         else
         {
-            var document = _mapper.Map<Document>(request);
+            var document = _mapper.Map<Document>(dto);
             if (request.UploadRequest != null)
             {
                 document.URL = await _uploadService.UploadAsync(request.UploadRequest); ;

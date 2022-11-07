@@ -11,15 +11,15 @@ public class ImportKeyValuesCommand : IRequest<Result>, ICacheInvalidator
     public string FileName { get; set; }
     public byte[] Data { get; set; }
     public CancellationTokenSource? SharedExpiryTokenSource => KeyValueCacheKey.SharedExpiryTokenSource();
-    public ImportKeyValuesCommand(string fileName,byte[] data)
+    public ImportKeyValuesCommand(string fileName, byte[] data)
     {
         FileName = fileName;
-            Data = data;
+        Data = data;
     }
 }
 public record CreateKeyValueTemplateCommand : IRequest<byte[]>
 {
-   
+
 }
 public class ImportKeyValuesCommandHandler :
     IRequestHandler<CreateKeyValueTemplateCommand, byte[]>,
@@ -62,7 +62,7 @@ public class ImportKeyValuesCommandHandler :
             var errorsOccurred = false;
             foreach (var item in importItems)
             {
-                var validationResult = await _addValidator.ValidateAsync(_mapper.Map<AddEditKeyValueCommand>(item), cancellationToken);
+                var validationResult = await _addValidator.ValidateAsync(new AddEditKeyValueCommand() { Name = item.Name, Value = item.Name, Description = item.Description, Text = item.Text }, cancellationToken);
                 if (validationResult.IsValid)
                 {
                     var exist = await _context.KeyValues.AnyAsync(x => x.Name == item.Name && x.Value == item.Value, cancellationToken);

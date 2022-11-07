@@ -1,6 +1,7 @@
 @page "/system/tenants"
 
 
+
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination
@@ -151,6 +152,8 @@
     private bool _loading;
     [Inject]
     private ISender _mediator { get; set; } = default!;
+    [Inject]
+    private IMapper _mapper { get; set; } = default!;
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
 
@@ -222,12 +225,7 @@
     }
     private async Task OnEdit(TenantDto dto)
     {
-        var command = new AddEditTenantCommand()
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                Description = dto.Description
-            };
+        var command = _mapper.Map<AddEditTenantCommand>(dto);
         var parameters = new DialogParameters
                 {
             { nameof(_TenantFormDialog.model),command },

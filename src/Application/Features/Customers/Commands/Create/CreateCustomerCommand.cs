@@ -3,12 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
+using System.ComponentModel;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Create;
 
-    public class CreateCustomerCommand: CustomerDto,IRequest<Result<int>>, ICacheInvalidator
-    {
-      public string CacheKey => CustomerCacheKey.GetAllCacheKey;
+    public class CreateCustomerCommand: IRequest<Result<int>>, ICacheInvalidator, IMapFrom<CustomerDto>
+{
+    [Description("Id")]
+    public int Id { get; set; }
+    [Description("Name")]
+    public string? Name { get; set; }
+    [Description("Description")]
+    public string? Description { get; set; }
+    public string CacheKey => CustomerCacheKey.GetAllCacheKey;
       public CancellationTokenSource? SharedExpiryTokenSource => CustomerCacheKey.SharedExpiryTokenSource();
     }
     
