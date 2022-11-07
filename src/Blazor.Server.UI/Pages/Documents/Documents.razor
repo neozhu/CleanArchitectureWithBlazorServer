@@ -1,5 +1,6 @@
 @page "/pages/documents"
 
+@using AutoMapper;
 @using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
@@ -177,6 +178,8 @@
     IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     [Inject]
     private ISender _mediator { get; set; } = default!;
+    [Inject]
+    private IMapper _mapper { get; set; } = default!;
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     private string _tenantId = string.Empty;
@@ -266,17 +269,7 @@
     }
     private async Task OnEdit(DocumentDto dto)
     {
-        var command = new AddEditDocumentCommand()
-            {
-                Id = dto.Id,
-                Title = dto.Title,
-                URL = dto.URL,
-                Description = dto.Description,
-                DocumentType = dto.DocumentType,
-                IsPublic = dto.IsPublic,
-                TenantId = dto.TenantId,
-                TenantName = dto.TenantName
-            };
+        var command = _mapper.Map<AddEditDocumentCommand>(dto);
         var parameters = new DialogParameters
                 {
                  { nameof(_DocumentFormDialog.model),command },

@@ -1,5 +1,6 @@
 ﻿@page "/pages/Customers"
 
+@using AutoMapper;
 @using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Customers.Commands.Import
@@ -213,6 +214,8 @@
     private bool _downloading;
     [Inject]
     private ISender _mediator { get; set; } = default!;
+    [Inject]
+    private IMapper _mapper { get; set; } = default!;
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
 
@@ -272,35 +275,29 @@
 
     private async Task OnCreate()
     {
- 
-            var command = new AddEditCustomerCommand();
-            var parameters = new DialogParameters
+
+        var command = new AddEditCustomerCommand();
+        var parameters = new DialogParameters
             {
                    { nameof(_CustomerFormDialog.model),command },
             };
-            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-            var dialog = DialogService.Show<_CustomerFormDialog>
-            (string.Format(ConstantString.CREATEAITEM, L["Customer"]), parameters, options);
-            var state = await dialog.Result;
-            if (!state.Cancelled)
-            {
-                var result = await _mediator.Send(command);
-                await _table.ReloadServerData();
-                Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
-            }
-  
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var dialog = DialogService.Show<_CustomerFormDialog>
+        (string.Format(ConstantString.CREATEAITEM, L["Customer"]), parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            var result = await _mediator.Send(command);
+            await _table.ReloadServerData();
+            Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
+        }
+
     }
 
     private async Task OnEdit(CustomerDto dto)
     {
         // TODO: define assignment that should be edit fields, for example:
-        var command = new AddEditCustomerCommand()
-            {
-                Id = dto.Id,
-                Name = dto.Name,
-                Description = dto.Description,
-
-            };
+        var command = _mapper.Map<AddEditCustomerCommand>(dto);
         var parameters = new DialogParameters
             {
                 { nameof(_CustomerFormDialog.model),command },
