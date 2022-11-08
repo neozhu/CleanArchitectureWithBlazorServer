@@ -90,7 +90,7 @@ public class Testing
     {
         using var scope = _scopeFactory.CreateScope();
 
-        var mediator = scope.ServiceProvider.GetService<ISender>();
+        var mediator = scope.ServiceProvider.GetService<IMediator>();
 
         return await mediator.Send(request);
     }
