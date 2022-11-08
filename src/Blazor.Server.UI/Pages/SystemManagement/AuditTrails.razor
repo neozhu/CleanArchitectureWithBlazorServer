@@ -119,7 +119,7 @@
     private bool _loading;
     private int _defaultPageSize = 15;
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private IMediator _mediator { get; set; } = default!;
 
     private async Task<TableData<AuditTrailDto>> ServerReload(TableState state)
     {

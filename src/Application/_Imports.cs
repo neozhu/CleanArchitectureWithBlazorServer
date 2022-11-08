@@ -5,6 +5,7 @@ global using AutoMapper.QueryableExtensions;
 global using FluentValidation;
 global using Microsoft.EntityFrameworkCore;
 global using System.Data;
+global using System.ComponentModel;
 global using System.Linq.Dynamic.Core;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Primitives;

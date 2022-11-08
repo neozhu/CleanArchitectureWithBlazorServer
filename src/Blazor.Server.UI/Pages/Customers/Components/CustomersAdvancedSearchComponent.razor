@@ -6,10 +6,11 @@
                    Class="mud-elevation-25 pa-2 mb-3" Text="@ConstantString.ADVANCEDSEARCH">
     <MudGrid>
         <MudItem xs="12" sm="6" md="4">
+            @*TODO: define advanced search query fields, for example:*@
             @*<MudTextField @bind-Value="TRequest.Name" 
                           Placeholder="@L["Search for name"]"
                           Clearable="true"
-                          TextChanged="OnSearchStringChanged">
+                          TextChanged="TextChanged">
             </MudTextField>*@
         </MudItem>
      </MudGrid>
@@ -17,13 +18,13 @@
 
 @code {
     [EditorRequired][Parameter] public CustomersWithPaginationQuery TRequest { get; set; } = null!;
-    [EditorRequired][Parameter] public EventCallback<string> OnFilterChanged { get; set; }
-    private bool _advancedSearchExpanded { get; set; }
-    private async Task OnSearchStringChanged(string str)
+    [EditorRequired][Parameter] public EventCallback<string> OnConditionChanged { get; set; }
+    private bool _advancedSearchExpanded;
+    private async Task TextChanged(string str)
     {
         if (_advancedSearchExpanded)
         {
-          await OnFilterChanged.InvokeAsync(str);
+          await OnConditionChanged.InvokeAsync(str);
         }
     }
 }

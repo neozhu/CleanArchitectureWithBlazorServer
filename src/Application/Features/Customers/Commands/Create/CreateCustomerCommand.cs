@@ -3,19 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
-using System.ComponentModel;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Create;
 
-    public class CreateCustomerCommand: IRequest<Result<int>>, ICacheInvalidator, IMapFrom<CustomerDto>
-{
-    [Description("Id")]
-    public int Id { get; set; }
+    public class CreateCustomerCommand: IMapFrom<CustomerDto>,IRequest<Result<int>>, ICacheInvalidator
+    {
+          [Description("Id")]
+    public int Id {get;set;} 
     [Description("Name")]
-    public string? Name { get; set; }
+    public string Name {get;set;} = String.Empty; 
     [Description("Description")]
-    public string? Description { get; set; }
-    public string CacheKey => CustomerCacheKey.GetAllCacheKey;
+    public string? Description {get;set;} 
+
+      public string CacheKey => CustomerCacheKey.GetAllCacheKey;
       public CancellationTokenSource? SharedExpiryTokenSource => CustomerCacheKey.SharedExpiryTokenSource();
     }
     
@@ -37,7 +37,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Creat
         public async Task<Result<int>> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
            // TODO: Implement CreateCustomerCommandHandler method 
-           var item = _mapper.Map<Customer>(request);
+           var dto = _mapper.Map<CustomerDto>(request);
+           var item = _mapper.Map<Customer>(dto);
            // raise a create domain event
 	       item.AddDomainEvent(new CreatedEvent<Customer>(item));
            _context.Customers.Add(item);
