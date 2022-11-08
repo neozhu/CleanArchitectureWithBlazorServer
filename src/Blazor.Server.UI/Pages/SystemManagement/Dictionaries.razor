@@ -22,21 +22,23 @@
     <ChildContent>
 
         <MudTable @ref="_table"
+                  T="KeyValueDto"
                   Items="@_keyValueList"
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
-                  RowsPerPage="25"
+                  @bind-RowsPerPage="_defaultPageSize"
                   Height="calc(100vh - 265px)"
                   Hover="true"
                   MultiSelection="true"
                   SelectedItems="_selectedItems"
-                  SelectedItem="_selectedItem"
+                  @bind-SelectedItem="_selectedItem"
                   CommitEditTooltip="@L["Commit Edit"]"
                   RowEditPreview="BackupItem"
                   RowEditCancel="ResetItemToOriginalValues"
                   CanCancelEdit="@_canCancelEdit"
                   RowEditCommit="ItemHasBeenCommitted"
+             
                   OnCommitEditClick="@(() => Snackbar.Add(ConstantString.UPDATESUCCESS, MudBlazor.Severity.Info))"
                   IsEditRowSwitchingBlocked="false"
                   ReadOnly="@_readonly"
@@ -191,7 +193,7 @@
                 
             </RowEditingTemplate>
             <PagerContent>
-                <MudTablePager />
+                <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
         </MudTable>
     </ChildContent>
@@ -201,7 +203,7 @@
 </ErrorBoundary>
 
 @code {
-    private MudTable<KeyValueDto> _table=default!;
+    private MudTable<KeyValueDto>? _table=default!;
     public string Title { get; set; } = "Picklist";
     private IList<KeyValueDto> _keyValueList = new List<KeyValueDto>();
     private HashSet<KeyValueDto> _selectedItems = new HashSet<KeyValueDto>();
@@ -209,9 +211,12 @@
     private KeyValueDto _elementBeforeEdit { get; set; } = new();
     private bool _canCancelEdit=true;
     private string _searchString = string.Empty;
+    private int _defaultPageSize = 15;
     private bool _editing;
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
+    [Inject]
+    private IMapper _mapper{ get; set; }=default!;
     [Inject]
     private IBlazorDownloadFileService _blazorDownloadFileService { get; set; } = null!;
     [Inject]
@@ -251,7 +256,7 @@
     {
         if (string.IsNullOrEmpty(value))
             return Task.FromResult(_keyValueList.Where(x=>!string.IsNullOrEmpty(x.Name)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
-        return Task.FromResult(_keyValueList.Where(x =>!string.IsNullOrEmpty(x.Name) && x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
+        return Task.FromResult(_keyValueList.Where(x => x.Name!.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
     }
     private async Task LoadData()
     {
@@ -324,6 +329,7 @@
                     TrackingState = ((KeyValueDto)element).TrackingState,
                 };
             StateHasChanged();
+
         });
     }
     private void ResetItemToOriginalValues(object element)
@@ -353,14 +359,7 @@
     {
         InvokeAsync(async () =>
         {
-            var command = new AddEditKeyValueCommand()
-                {
-                    Id = ((KeyValueDto)element).Id,
-                    Name = ((KeyValueDto)element).Name,
-                    Text = ((KeyValueDto)element).Text,
-                    Value = ((KeyValueDto)element).Value,
-                    Description = ((KeyValueDto)element).Description,
-                };
+            var command = _mapper.Map<AddEditKeyValueCommand>(element);
             var result = await _mediator.Send(command);
             ((KeyValueDto)element).Id = result.Data;
             _editing = false;
