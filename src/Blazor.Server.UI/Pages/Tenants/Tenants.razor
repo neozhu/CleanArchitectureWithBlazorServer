@@ -151,7 +151,7 @@
     private string _searchString = string.Empty;
     private bool _loading;
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private IMediator _mediator { get; set; } = default!;
     [Inject]
     private IMapper _mapper { get; set; } = default!;
     [CascadingParameter]
