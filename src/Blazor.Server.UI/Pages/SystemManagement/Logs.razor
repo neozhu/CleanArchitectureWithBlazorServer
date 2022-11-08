@@ -151,7 +151,7 @@
     public List<LogTimeLineDto> _data { get; set; } = new();
     private bool _loading;
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private IMediator _mediator { get; set; } = default!;
 
     protected override void OnInitialized()
     {

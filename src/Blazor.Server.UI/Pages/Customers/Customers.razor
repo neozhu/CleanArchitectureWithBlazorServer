@@ -210,7 +210,7 @@
     private bool _uploading;
     private bool _downloading;
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private IMediator _mediator { get; set; } = default!;
     [Inject]
     private IMapper _mapper { get; set; } = default!;
     [CascadingParameter]
@@ -228,6 +228,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        
         Title = L["Customers"];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Create)).Succeeded;
