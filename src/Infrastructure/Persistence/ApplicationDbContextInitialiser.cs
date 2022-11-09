@@ -36,6 +36,7 @@ public class ApplicationDbContextInitialiser
         try
         {
             await TrySeedAsync();
+            _context.ChangeTracker.Clear();
         }
         catch (Exception ex)
         {
