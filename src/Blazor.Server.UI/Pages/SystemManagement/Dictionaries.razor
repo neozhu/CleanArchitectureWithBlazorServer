@@ -38,9 +38,9 @@
                   RowEditCancel="ResetItemToOriginalValues"
                   CanCancelEdit="@_canCancelEdit"
                   RowEditCommit="ItemHasBeenCommitted"
-             
                   OnCommitEditClick="@(() => Snackbar.Add(ConstantString.UPDATESUCCESS, MudBlazor.Severity.Info))"
                   IsEditRowSwitchingBlocked="false"
+                  EditTrigger="TableEditTrigger.EditButton"
                   ReadOnly="@_readonly"
                   Loading="@_loading"
                   SortLabel="@ConstantString.ORDERBY"
