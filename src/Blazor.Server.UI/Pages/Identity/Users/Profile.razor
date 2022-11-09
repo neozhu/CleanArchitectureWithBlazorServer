@@ -239,8 +239,8 @@
                 var ext = fi.Extension;
                 var result = await _uploadService.UploadAsync(new UploadRequest(Guid.NewGuid().ToString() + ext, UploadType.ProfilePicture, outStream.ToArray()));
                 model.ProfilePictureDataUrl = result;
-                var user = await _userManager.FindByIdAsync(model.UserId);
-                user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
+                var user = await _userManager.FindByIdAsync(model.UserId!);
+                user!.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await _userManager.UpdateAsync(user);
                 var state = await _authState;
                 state.User.SetProfilePictureUrl(model.ProfilePictureDataUrl);
@@ -256,8 +256,8 @@
         if (_form.IsValid)
         {
             var state = await _authState;
-            var user = await _userManager.FindByIdAsync(model.UserId);
-            user.PhoneNumber = model.PhoneNumber;
+            var user = await _userManager.FindByIdAsync(model.UserId!);
+            user!.PhoneNumber = model.PhoneNumber;
             user.DisplayName = model.DisplayName;
             user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
             await _userManager.UpdateAsync(user);

@@ -349,7 +349,7 @@
                     IsActive = model.IsActive,
                 };
             var password = model.Password;
-            var state = await _userManager.CreateAsync(applicationUser, password);
+            var state = await _userManager.CreateAsync(applicationUser, password!);
 
             if (state.Succeeded)
             {
