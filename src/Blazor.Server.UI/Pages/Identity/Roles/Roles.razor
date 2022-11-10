@@ -370,7 +370,7 @@
     private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
     {
         var roleId = models.First().RoleId;
-        var role = await _roleManager.FindByIdAsync(roleId);
+        var role = await _roleManager.FindByIdAsync(roleId!);
         foreach (var model in models)
         {
 
@@ -378,7 +378,7 @@
             {
                 if (model.ClaimType is not null && model.ClaimValue is not null)
                 {
-                    await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
+                    await _roleManager.AddClaimAsync(role!, new Claim(model.ClaimType, model.ClaimValue));
                 }
             }
             else
@@ -386,7 +386,7 @@
                 var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
                 if (removed is not null)
                 {
-                    await _roleManager.RemoveClaimAsync(role, removed);
+                    await _roleManager.RemoveClaimAsync(role!, removed);
                 }
 
             }

@@ -108,12 +108,12 @@ public class ApplicationDbContextInitialiser
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))
         {
             await _userManager.CreateAsync(administrator, RoleConstants.DefaultPassword);
-            await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
+            await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name! });
         }
         if (_userManager.Users.All(u => u.UserName != demo.UserName))
         {
             await _userManager.CreateAsync(demo, RoleConstants.DefaultPassword);
-            await _userManager.AddToRolesAsync(demo, new[] { userRole.Name });
+            await _userManager.AddToRolesAsync(demo, new[] { userRole.Name! });
         }
 
         // Default data

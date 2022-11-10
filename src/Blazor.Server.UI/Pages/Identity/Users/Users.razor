@@ -2,6 +2,7 @@
 @implements IDisposable
 @page "/identity/users"
 @using Blazor.Server.UI.Components.Dialogs
+@using CleanArchitecture.Blazor.Application.Common.Exceptions;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
@@ -367,8 +368,8 @@
 
     private async Task OnEdit(UserFormModel item)
     {
-        var user = await _userManager.FindByIdAsync(item.Id);
-        var roles = await _userManager.GetRolesAsync(user);
+        var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user {item.Id} Not Found.");
+        var roles = await _userManager.GetRolesAsync(user!);
         item.AssignRoles = roles.ToArray();
         var parameters = new DialogParameters { ["model"] = item };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
@@ -494,9 +495,9 @@
         if (!result.Cancelled)
         {
 
-            var user = await _userManager.FindByIdAsync(item.Id);
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var state = await _userManager.ResetPasswordAsync(user, token, model.Password);
+            var user = await _userManager.FindByIdAsync(item.Id!);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user!);
+            var state = await _userManager.ResetPasswordAsync(user!, token, model!.Password!);
             if (state.Succeeded)
             {
                 Snackbar.Add($"{L["Reset password successfully"]}", MudBlazor.Severity.Info);

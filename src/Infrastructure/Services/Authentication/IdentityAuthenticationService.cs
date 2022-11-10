@@ -132,8 +132,8 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         await _semaphore.WaitAsync();
         try
         {
-            var user = await _userManager.FindByNameAsync(request.UserName);
-            var valid = user.IsActive && await _userManager.CheckPasswordAsync(user, request.Password);
+            var user = await _userManager.FindByNameAsync(request.UserName!) ?? throw new NotFoundException($"Application user {request.UserName} Not Found.");
+            var valid = user.IsActive && await _userManager.CheckPasswordAsync(user, request.Password!);
             if (valid)
             {
 
