@@ -142,7 +142,7 @@
             var result = await dialog.Result;
             if (!result.Cancelled)
             {
-                var state = await _userManager.ResetPasswordAsync(_user, _inputToken, model.Password);
+                var state = await _userManager.ResetPasswordAsync(_user, _inputToken, model.Password!);
                 if (state.Succeeded)
                 {
                     _user.IsActive = true;

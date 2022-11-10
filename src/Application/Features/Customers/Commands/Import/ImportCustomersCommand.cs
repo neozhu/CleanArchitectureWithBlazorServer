@@ -51,7 +51,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, CustomerDto, object?>>
             {
                 // TODO: Define the fields that should be read from Excel, for example:
-                { _localizer[_dto.GetMemberDescription("Name")], (row, item) => item.Name = row[_localizer[_dto.GetMemberDescription("Name")]].ToString() }, 
+                { _localizer[_dto.GetMemberDescription("Name")], (row, item) => item.Name = row[_localizer[_dto.GetMemberDescription("Name")]].ToString()! }, 
 { _localizer[_dto.GetMemberDescription("Description")], (row, item) => item.Description = row[_localizer[_dto.GetMemberDescription("Description")]].ToString() }, 
 
             }, _localizer["Customers"]);

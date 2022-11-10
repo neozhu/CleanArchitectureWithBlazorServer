@@ -136,13 +136,13 @@
 </MudForm>
 
 @code {
-    public class keyvalue
+    public class CheckItem
     {
         public string key { get; set; } = string.Empty;
         public bool value { get; set; }
     }
     MudForm? form = default!;
-    private List<keyvalue> _roles { get; set; } = new();
+    private List<CheckItem> _roles { get; set; } = new();
 
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     [Inject] private ITenantsService _tenantsService { get; set; } = default!;
@@ -163,11 +163,11 @@
         {
             if (model.AssignRoles != null && model.AssignRoles.Contains(role))
             {
-                _roles.Add(new() { key = role, value = true });
+                _roles.Add(new() { key = role!, value = true });
             }
             else
             {
-                _roles.Add(new() { key = role, value = false });
+                _roles.Add(new() { key = role!, value = false });
             }
         }
 
