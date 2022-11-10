@@ -114,13 +114,13 @@ public class IdentityService : IIdentityService
         var result = await _userManager.Users
              .Where(x => x.UserRoles.Where(y => y.Role.Name == roleName).Any())
              .Include(x => x.UserRoles)
-             .ToDictionaryAsync(x => x.UserName, y => y.DisplayName);
+             .ToDictionaryAsync(x => x.UserName!, y => y.DisplayName);
         return result;
     }
 
     public async Task<Result<TokenResponse>> LoginAsync(TokenRequest request)
     {
-        var user = await _userManager.FindByNameAsync(request.UserName);
+        var user = await _userManager.FindByNameAsync(request.UserName!);
         if (user == null)
         {
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["User Not Found."] });
@@ -133,7 +133,7 @@ public class IdentityService : IIdentityService
         {
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["E-Mail not confirmed."] });
         }
-        var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
+        var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password!);
         if (!passwordValid)
         {
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["Invalid Credentials."] });
@@ -197,7 +197,7 @@ public class IdentityService : IIdentityService
         {
             roleClaims.Add(new Claim(ClaimTypes.Role, role));
             var thisRole = await _roleManager.FindByNameAsync(role);
-            var allPermissionsForThisRoles = await _roleManager.GetClaimsAsync(thisRole);
+            var allPermissionsForThisRoles = await _roleManager.GetClaimsAsync(thisRole!);
             permissionClaims.AddRange(allPermissionsForThisRoles);
         }
 
@@ -208,7 +208,7 @@ public class IdentityService : IIdentityService
                 new(ApplicationClaimTypes.TenantName, user.TenantName?? string.Empty),
                 new(ClaimTypes.NameIdentifier, user.Id),
                 new(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl?? string.Empty),
-                new(ClaimTypes.Email, user.Email),
+                new(ClaimTypes.Email, user.Email!),
                 new(ClaimTypes.GivenName, user.DisplayName?? string.Empty),
                 new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
             }

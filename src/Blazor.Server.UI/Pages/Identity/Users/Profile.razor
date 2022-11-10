@@ -277,8 +277,8 @@
         await _passwordform!.Validate();
         if (_passwordform.IsValid)
         {
-            var user = await _userManager.FindByIdAsync(model.UserId);
-            var result = await _userManager.ChangePasswordAsync(user, _changepassword.CurrentPassword, _changepassword.NewPassword);
+            var user = await _userManager.FindByIdAsync(model.UserId!);
+            var result = await _userManager.ChangePasswordAsync(user!, _changepassword.CurrentPassword, _changepassword.NewPassword);
             if (result.Succeeded)
             {
                 Snackbar.Add($"{L["Changed password successfully."]}", MudBlazor.Severity.Info);

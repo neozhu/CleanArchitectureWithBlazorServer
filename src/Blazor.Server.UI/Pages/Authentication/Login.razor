@@ -135,7 +135,7 @@
                 await _form.Validate();
                 if (_form.IsValid)
                 {
-                    var user = await _userManager.FindByNameAsync(_model.UserName);
+                    var user = await _userManager.FindByNameAsync(_model.UserName!);
                     if (user is null)
                     {
                         Snackbar.Add(L["No user found, or no authorization, please contact the administrator."], MudBlazor.Severity.Error);
@@ -182,7 +182,7 @@
         if (!result.Cancelled)
         {
             var token = await _userManager.GeneratePasswordResetTokenAsync(item);
-            var state = await _userManager.ResetPasswordAsync(item, token, model.Password);
+            var state = await _userManager.ResetPasswordAsync(item, token, model.Password!);
             if (state.Succeeded)
             {
                 item.IsActive = true;
