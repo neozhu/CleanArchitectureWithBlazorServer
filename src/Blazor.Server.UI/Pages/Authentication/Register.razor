@@ -130,7 +130,7 @@
                         UserName = _model.UserName,
                         Email = _model.Email
                     };
-                    var result = await _userManager.CreateAsync(user, _model.Password);
+                    var result = await _userManager.CreateAsync(user, _model.Password!);
                     if (result.Succeeded)
                     {
                         var assignResult= await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
