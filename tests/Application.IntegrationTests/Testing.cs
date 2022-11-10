@@ -24,12 +24,12 @@ public class Testing
 {
     private static IConfigurationRoot _configuration;
     private static IServiceScopeFactory _scopeFactory;
-    private static Checkpoint _checkpoint;
+    private static Respawner _checkpoint;
     private static string _currentUserId;
     private static string _currentTenantId;
 
     [OneTimeSetUp]
-    public void RunBeforeAnyTests()
+    public async void RunBeforeAnyTests()
     {
         var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -69,10 +69,10 @@ public class Testing
 
         _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
 
-        _checkpoint = new Checkpoint
+        _checkpoint =await Respawner.CreateAsync(_configuration.GetConnectionString("DefaultConnection"), new RespawnerOptions
         {
-            TablesToIgnore = new Respawn.Graph.Table[] { "__EFMigrationsHistory" }
-        };
+            TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
+        });
 
         EnsureDatabase();
     }
@@ -141,7 +141,7 @@ public class Testing
 
     public static async Task ResetState()
     {
-        await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        await _checkpoint.ResetAsync(_configuration.GetConnectionString("DefaultConnection"));
         _currentUserId = null;
         _currentTenantId = null;
     }

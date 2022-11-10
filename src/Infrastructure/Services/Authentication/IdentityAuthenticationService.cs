@@ -113,7 +113,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         var roles = await _userManager.GetRolesAsync(user);
         foreach (var roleName in roles)
         {
-            var role = await _roleManager.FindByNameAsync(roleName);
+            var role = await _roleManager.FindByNameAsync(roleName) ?? throw new NotFoundException($"Application role {roleName} Not Found.");
             var claims = await _roleManager.GetClaimsAsync(role);
             foreach (var claim in claims)
             {
@@ -132,8 +132,8 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         await _semaphore.WaitAsync();
         try
         {
-            var user = await _userManager.FindByNameAsync(request.UserName);
-            var valid = user.IsActive && await _userManager.CheckPasswordAsync(user, request.Password);
+            var user = await _userManager.FindByNameAsync(request.UserName!) ?? throw new NotFoundException($"Application user {request.UserName} Not Found.");
+            var valid = user.IsActive && await _userManager.CheckPasswordAsync(user, request.Password!);
             if (valid)
             {
 
@@ -145,7 +145,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                     var base64 = Convert.ToBase64String(memoryStream.ToArray());
                     await _protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
                 }
-                await _currentUserService.SetUser(user.Id, user.UserName);
+                await _currentUserService.SetUser(user.Id, user.UserName!);
                 if (user.TenantId is not null && user.TenantName is not null)
                 {
                     await _tenantProvider.SetTenant(user.TenantId, user.TenantName);
@@ -198,7 +198,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 var base64 = Convert.ToBase64String(memoryStream.ToArray());
                 await _protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
             }
-            await _currentUserService.SetUser(user.Id, user.UserName);
+            await _currentUserService.SetUser(user.Id, user.UserName!);
             if (user.TenantId is not null && user.TenantName is not null)
             {
                 await _tenantProvider.SetTenant(user.TenantId, user.TenantName);
