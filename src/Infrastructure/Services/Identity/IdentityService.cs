@@ -162,7 +162,7 @@ public class IdentityService : IIdentityService
         }
         var userPrincipal = GetPrincipalFromExpiredToken(request.Token);
         var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
-        var user = await _userManager.FindByEmailAsync(userEmail);
+        var user = await _userManager.FindByEmailAsync(userEmail!);
         if (user == null)
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["User Not Found."] });
         if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
