@@ -86,7 +86,7 @@
                 return;
             }
             _resetpasswordToken = await _userManager.GeneratePasswordResetTokenAsync(_user);
-            var response = await sendResetPasswordToken(_emailaddress, _user.UserName, _resetpasswordToken);
+            var response = await sendResetPasswordToken(_emailaddress, _user.UserName!, _resetpasswordToken);
             if (response.Successful)
             {
                 _step = 2;

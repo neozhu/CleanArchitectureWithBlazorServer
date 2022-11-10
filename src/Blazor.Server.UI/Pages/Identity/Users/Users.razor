@@ -482,7 +482,7 @@
 
     private async Task OnSetActive(UserFormModel item)
     {
-        var user = await _userManager.FindByIdAsync(item.Id);
+        var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user {item.Id} Not Found.");
         user.IsActive = !item.IsActive;
         var state = await _userManager.UpdateAsync(user);
         item.IsActive = !item.IsActive;

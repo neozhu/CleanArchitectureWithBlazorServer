@@ -113,7 +113,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
         var roles = await _userManager.GetRolesAsync(user);
         foreach (var roleName in roles)
         {
-            var role = await _roleManager.FindByNameAsync(roleName);
+            var role = await _roleManager.FindByNameAsync(roleName) ?? throw new NotFoundException($"Application role {roleName} Not Found."); ;
             var claims = await _roleManager.GetClaimsAsync(role);
             foreach (var claim in claims)
             {
@@ -123,13 +123,16 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 new Claim(ClaimTypes.Role, roleName) });
 
         }
-        var superior = await _userManager.FindByIdAsync(user.SuperiorId);
-        if (superior is not null)
+        if (user.SuperiorId is not null)
         {
-            result.AddClaims(new[] {
+            var superior = await _userManager.FindByIdAsync(user.SuperiorId);
+            if (superior is not null)
+            {
+                result.AddClaims(new[] {
                 new Claim(ApplicationClaimTypes.SuperiorId, superior.Id),
-                new Claim(ApplicationClaimTypes.SuperiorName, superior.UserName)
+                new Claim(ApplicationClaimTypes.SuperiorName, superior.UserName !)
             });
+            }
         }
         return result;
     }
@@ -153,7 +156,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                     var base64 = Convert.ToBase64String(memoryStream.ToArray());
                     await _protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
                 }
-                await _currentUserService.SetUser(user.Id, user.UserName);
+                await _currentUserService.SetUser(user.Id, user.UserName!);
                 if (user.TenantId is not null && user.TenantName is not null)
                 {
                     await _tenantProvider.SetTenant(user.TenantId, user.TenantName);
@@ -176,7 +179,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
             var user = await _userManager.FindByNameAsync(userName);
             if (user is null)
             {
-                var admin = await _userManager.FindByNameAsync("administrator");
+                var admin = await _userManager.FindByNameAsync("administrator") ?? throw new NotFoundException($"Application user administrator Not Found.");
                 user = new ApplicationUser
                 {
                     EmailConfirmed = true,
@@ -210,7 +213,7 @@ public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthe
                 var base64 = Convert.ToBase64String(memoryStream.ToArray());
                 await _protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
             }
-            await _currentUserService.SetUser(user.Id, user.UserName);
+            await _currentUserService.SetUser(user.Id, user.UserName!);
             if (user.TenantId is not null && user.TenantName is not null)
             {
                 await _tenantProvider.SetTenant(user.TenantId, user.TenantName);

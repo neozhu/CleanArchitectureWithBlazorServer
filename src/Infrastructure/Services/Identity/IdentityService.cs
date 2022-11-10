@@ -161,7 +161,7 @@ public class IdentityService : IIdentityService
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["Invalid Client Token."] });
         }
         var userPrincipal = GetPrincipalFromExpiredToken(request.Token);
-        var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
+        var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email)!;
         var user = await _userManager.FindByEmailAsync(userEmail);
         if (user == null)
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["User Not Found."] });
