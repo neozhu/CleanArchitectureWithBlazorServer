@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using Respawn;
+using Respawn.Graph;
 using System;
 using System.IO;
 using System.Linq;
