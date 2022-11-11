@@ -120,10 +120,8 @@
         try
         {
             _loading = true;
-            if (_form is not null)
-            {
-                await _form.Validate();
-                if (_form.IsValid)
+              await _form!.Validate();
+                if (_form!.IsValid)
                 {
                     var user = new ApplicationUser()
                     {
@@ -154,7 +152,7 @@
                         Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
                     }
                 }
-            }
+            
         }
         finally
         {
