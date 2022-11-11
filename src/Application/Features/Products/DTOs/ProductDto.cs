@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
@@ -16,5 +17,7 @@ public class ProductDto:IMapFrom<Product>
     public string? Brand { get; set; }
     public decimal Price { get; set; }
     public IList<string>? Pictures { get; set; }
+
+   
 }
 
