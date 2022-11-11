@@ -15,7 +15,7 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddBlazorUIServices(this IServiceCollection services)
     {
-        services.AddMudBlazorDialog();
+        services.AddRazorPages();
         services.AddServerSideBlazor(
             options =>
             {
@@ -36,6 +36,7 @@ public static class ConfigureServices
                 options.StreamBufferCapacity = 10;
             })
             .AddCircuitOptions(option => { option.DetailedErrors = true; });
+        services.AddMudBlazorDialog();
         services.AddHotKeys();
         services.AddBlazoredLocalStorage();
         services.AddMudServices(config =>

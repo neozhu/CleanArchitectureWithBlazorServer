@@ -1,6 +1,7 @@
 @inherits OwningComponentBase
 @page "/identity/roles"
 @using Blazor.Server.UI.Components.Dialogs
+@using CleanArchitecture.Blazor.Application.Common.Exceptions;
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel
@@ -120,7 +121,7 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Name)">@L["Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Name!)">@L["Name"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ConstantString.ACTIONS">
@@ -294,7 +295,7 @@
     }
     private async Task OnSetPermissions(ApplicationRole item)
     {
-        _currentRoleName = item.Name;
+        _currentRoleName = item.Name!;
         _permissions = await GetAllPermissions(item);
         _showPermissionsDrawer = true;
 
@@ -347,8 +348,8 @@
     }
     private async Task OnAssignChangedHandler(PermissionModel model)
     {
-        var roleId = model.RoleId;
-        var role = await _roleManager.FindByIdAsync(roleId);
+        var roleId = model.RoleId!;
+        var role = await _roleManager.FindByIdAsync(roleId) ?? throw new NotFoundException($"Application role {roleId} Not Found."); ;
         model.Assigned = !model.Assigned;
         if (model.Assigned && model.ClaimType is not null && model.ClaimValue is not null)
         {
