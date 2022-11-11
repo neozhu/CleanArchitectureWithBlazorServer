@@ -6,17 +6,16 @@
             <MudGrid>
                 <MudItem xs="12">
                     <MudTextField Label="@L["Name"]" @bind-Value="model.Name"
-                                 Required="true"
-                                 For="@(() => model.Name)"
-                                 RequiredError="@L["Role name is required!"]"
-                                 Validation="@(modelValidator.ValidateValue)"
-                    >
+                                  Required="true"
+                                  For="@(() => model.Name)"
+                                  RequiredError="@L["Role name is required!"]"
+                                  Validation="@(modelValidator.ValidateValue)">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
                     <MudTextField Label="@L["Description"]"
-                           For="@(() => model.Description)"
-                           @bind-Value="model.Description"></MudTextField>
+                                  For="@(() => model.Description)"
+                    @bind-Value="model.Description"></MudTextField>
                 </MudItem>
             </MudGrid>
         </MudForm>
@@ -30,20 +29,21 @@
 @code {
     MudForm? _form = default!;
     RoleFormModelValidator modelValidator = new RoleFormModelValidator();
-    [EditorRequired] [Parameter] 
+    [EditorRequired]
+    [Parameter]
     public RoleFormModel model { get; set; } = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
 
-    async Task Submit() {
-        if (_form is not null)
+    async Task Submit()
+    {
+
+        await _form!.Validate();
+        if (_form!.IsValid)
         {
-            await _form.Validate();
-            if (_form.IsValid)
-            {
-                MudDialog.Close(DialogResult.Ok(true));
-            }
+            MudDialog.Close(DialogResult.Ok(true));
         }
+
     }
     void Cancel() => MudDialog.Cancel();
 

@@ -144,20 +144,12 @@
     }
     async Task Submit()
     {
-        if (_form is not null)
-        {
-            await _form.Validate();
-            if (model.Pictures is null || !model.Pictures.Any())
-            {
-                fileinputInvalid = true;
-                Snackbar.Add(L["Please choose to upload pictures of this product"], MudBlazor.Severity.Error);
-                return;
-            }
-            if (_form.IsValid)
+            await _form!.Validate();
+            if (_form!.IsValid)
             {
                 MudDialog.Close(DialogResult.Ok(true));
             }
-        }
+
 
     }
     void Cancel() => MudDialog.Cancel();
