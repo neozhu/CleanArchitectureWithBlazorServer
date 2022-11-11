@@ -5,6 +5,7 @@
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 
@@ -18,6 +19,8 @@ public class AddEditProductCommand : IMapFrom<ProductDto>, IRequest<Result<int>>
     public string? Brand { get; set; }
     public decimal Price { get; set; }
     public IList<string>? Pictures { get; set; }
+
+    public IReadOnlyList<IBrowserFile>? UploadPictures { get; set; }
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource();
 }

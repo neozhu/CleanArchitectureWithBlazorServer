@@ -19,7 +19,7 @@
                     <MudTextField Label="@L["Description"]"
                                   Lines="3"
                                   For="@(() => model.Description)"
-                                  @bind-Value="model.Description"></MudTextField>
+                    @bind-Value="model.Description"></MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <PicklistAutocomplete Picklist="Picklist.Brand"
@@ -27,7 +27,7 @@
                                           For="@(() => model.Brand)"
                                           ResetValueOnEmptyText="true"
                                           ShowProgressIndicator="true"
-                                          @bind-Value="model.Brand">
+                    @bind-Value="model.Brand">
                         <ProgressIndicatorTemplate>
                             <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
                         </ProgressIndicatorTemplate>
@@ -39,7 +39,7 @@
                                      Format="N2"
                                      For="@(() => model.Price)"
                                      Min="0.00m"
-                                     @bind-Value="model.Price"></MudNumericField>
+                    @bind-Value="model.Price"></MudNumericField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <PicklistAutocomplete Picklist="Picklist.Unit"
@@ -47,7 +47,7 @@
                                           For="@(() => model.Unit)"
                                           ResetValueOnEmptyText="true"
                                           ShowProgressIndicator="true"
-                                          @bind-Value="model.Unit">
+                    @bind-Value="model.Unit">
                         <ProgressIndicatorTemplate>
                             <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
                         </ProgressIndicatorTemplate>
@@ -55,18 +55,18 @@
                 </MudItem>
                 <MudItem>
                     <div class="d-flex flex-row gap-4 mb-2">
-                        <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
-                        <MudText Typo="Typo.caption">@L["Product Pictures"]*</MudText>
-                        <MudFab HtmlTag="label" Size="MudBlazor.Size.Small" Disabled="_uploading"
-                                Color="MudBlazor.Color.Info"
-                                Icon="@Icons.Filled.Image"
-                                Label="@(L[!_uploading?"Upload picture":"Processing"])"
-                                for="fileInput">
-                        </MudFab>
-                        @if (fileinputInvalid)
-                        {
-                            <MudText Color="MudBlazor.Color.Error" Typo="Typo.body2">@L["Please upload product pictures."]</MudText>
-                        }
+                        <MudFileUpload T="IReadOnlyList<IBrowserFile>" Multiple
+                                       SuppressOnChangeWhenInvalid="true"
+                                       Files="model.UploadPictures" OnFilesChanged="UploadFiles" For="@(() => model.UploadPictures)">
+                            <ButtonTemplate>
+                                <MudButton HtmlTag="label" Disabled="_uploading"
+                                           Variant="Variant.Filled"
+                                           Color="MudBlazor.Color.Primary"
+                                           for="@context">
+                                    @(L[!_uploading ? "Upload picture" : "Processing"])
+                                </MudButton>
+                            </ButtonTemplate>
+                        </MudFileUpload>
                     </div>
                     <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
                     <div class="d-fex">
@@ -104,6 +104,7 @@
         {
             _uploading = true;
             var list = new List<string>();
+            model.UploadPictures = e.GetMultipleFiles();
             foreach (var file in e.GetMultipleFiles())
             {
                 try
