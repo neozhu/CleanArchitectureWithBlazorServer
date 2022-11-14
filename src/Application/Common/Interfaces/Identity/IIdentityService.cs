@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
+using CleanArchitecture.Blazor.Application.Common.Security;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
@@ -16,4 +17,5 @@ public interface IIdentityService : IService
     Task<Result> DeleteUserAsync(string userId);
     Task<IDictionary<string, string?>> FetchUsers(string roleName);
     Task UpdateLiveStatus(string userId, bool isLive);
+    Task<UserDto> GetUserDto(string userId,CancellationToken cancellation=default);
 }

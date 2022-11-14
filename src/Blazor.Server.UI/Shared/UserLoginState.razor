@@ -1,5 +1,7 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Common.Security;
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
+@using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 @inherits OwningComponentBase
 @implements IAsyncDisposable
 @code{
@@ -9,16 +11,22 @@
     private NavigationManager _navigationManager { get; set; } = default!;
     [Inject]
     private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
+    [Inject]
+    private ProfileService _profileService { get; set; } = default!;
 
     private IIdentityService _identityService { get; set; }=default!;
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
     }
-
+    private void _profileService_OnChange()
+    {
+        InvokeAsync(() => StateHasChanged());
+    }
     public async ValueTask DisposeAsync()
     {
         await _client.StopAsync();
+        _profileService.OnChange -= _profileService_OnChange;
         _client.Login -= _client_Login;
         _client.Logout -= _client_Logout;
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
@@ -32,10 +40,13 @@
         _identityService = ScopedServices.GetRequiredService<IIdentityService>();
         _client.Logout += _client_Logout;
         _client.Login += _client_Login;
+        _profileService.OnChange += _profileService_OnChange;
         var state = await _authState;
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
             await _client.StartAsync();
+            var userDto = await _identityService.GetUserDto(state.User.GetUserId());
+            await setProfile(userDto);
         }
         _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
     }
@@ -47,8 +58,30 @@
             if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
                 await _client.StartAsync();
+                var userDto =await _identityService.GetUserDto(state.User.GetUserId());
+                await setProfile(userDto);
             }
         });
+    }
+    private async Task setProfile(UserDto userDto)
+    {
+      await  _profileService.Update(new UserProfile()
+            {
+                UserId = userDto.Id,
+                ProfilePictureDataUrl = userDto.ProfilePictureDataUrl,
+                Email = userDto.Email,
+                PhoneNumber = userDto.PhoneNumber,
+                DisplayName = userDto.DisplayName,
+                Provider = userDto.Provider,
+                UserName = userDto.UserName,
+                IsActive = userDto.IsActive,
+                TenantId = userDto.TenantId,
+                TenantName = userDto.TenantName,
+                SuperiorId = userDto.SuperiorId,
+                Superior = userDto.SuperiorName,
+                Role = userDto.Role,
+                AssignRoles=userDto.AssignRoles
+            });
     }
     private void _client_Login(object? sender, string e)
     {
