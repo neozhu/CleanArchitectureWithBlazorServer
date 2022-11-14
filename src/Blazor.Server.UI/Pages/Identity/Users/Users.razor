@@ -191,7 +191,7 @@
                         </div>
                     </div>
                 </MudTd>
-                <MudTd DataLabel="@L["Superior Name"]">@context.Superior</MudTd>
+                <MudTd DataLabel="@L["Superior Name"]">@context.SuperiorName</MudTd>
                 <MudTd DataLabel="@L["Provider"]">@context.Provider</MudTd>
                 <MudTd DataLabel="@L["Email"]">@context.Email</MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Phone Number"]">@context.PhoneNumber</MudTd>
@@ -318,7 +318,7 @@
                     TenantName = x.TenantName,
                     LockoutEnd = x.LockoutEnd,
                     SuperiorId=x.SuperiorId,
-                    Superior = (x.Superior!=null?x.Superior.UserName:null),
+                    SuperiorName = (x.Superior!=null?x.Superior.UserName:null),
                     Role =  x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
                     AssignRoles = x.UserRoles.Select(x=>x.Role.Name!).ToArray(),
                 }).ToListAsync();
@@ -330,8 +330,11 @@
     }
     private async Task OnCreate()
     {
-        var model = new UserDto() { Provider = "Local", AssignRoles = new string[] { RoleConstants.BasicRole } };
-        var parameters = new DialogParameters { ["model"] = model };
+         var model = new UserDto() { Provider = "Local", AssignRoles = new string[] { RoleConstants.BasicRole } };
+        var parameters = new DialogParameters {
+            { nameof(_UserFormDialog.model),model },
+            { nameof(_UserFormDialog.superiorList),this._userList } };
+
         var options = new DialogOptions {CloseButton=true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
         var result = await dialog.Result;
@@ -376,13 +379,16 @@
 
     private async Task OnEdit(UserDto item)
     {
-        var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user {item.Id} Not Found.");
-        var parameters = new DialogParameters { ["model"] = item };
+        
+        var parameters = new DialogParameters {
+            { nameof(_UserFormDialog.model),item },
+            { nameof(_UserFormDialog.superiorList),this._userList } };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
+            var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user {item.Id} Not Found.");
             var state = await _authState;
             user.Email = item.Email;
             user.PhoneNumber = item.PhoneNumber;

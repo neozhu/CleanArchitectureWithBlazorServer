@@ -62,7 +62,7 @@
                        Clearable="true"
                        RequiredError="@L["Superior is required."]"
                        Label="@L["Select Superior"]"
-                       Text="@model.Superior"
+                       Text="@model.SuperiorName"
                        ValueChanged="SuperiorIdChanged"
                        Value="@model.SuperiorId"
                         >
@@ -149,6 +149,8 @@
     [Inject] private ITenantsService _tenantsService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     UserDtoValidator modelValidator = new();
+    [Parameter]
+    public List<UserDto> superiorList { get; set; } = new();
     [EditorRequired][Parameter] public UserDto model { get; set; } = default!;
     [EditorRequired][Parameter] public EventCallback<UserDto> OnFormSubmit { get; set; }
     bool PasswordVisibility;
@@ -195,7 +197,7 @@
     private void SuperiorIdChanged(string id)
     {
         model.SuperiorId = id;
-        model.Superior = this.superiorList.Where(x => x.Id == id).FirstOrDefault()?.UserName;
+        model.SuperiorName = superiorList.Where(x => x.Id == id).FirstOrDefault()?.UserName;
     }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {

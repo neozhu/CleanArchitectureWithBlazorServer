@@ -17,6 +17,8 @@
     MudDialogInstance MudDialog { get; set; } = default!;
     [Parameter]
     public UserDto model { get; set; } = default!;
+    [Parameter] 
+    public List<UserDto> superiorList { get; set; } = new();
     protected async Task Submit() {
         await  _userForm!.Submit();
     }
