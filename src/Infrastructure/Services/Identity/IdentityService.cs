@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
+using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
@@ -268,6 +269,38 @@ public class IdentityService : IIdentityService
                 user.IsLive = isLive;
                 await _userManager.UpdateAsync(user);
             }
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+    public async Task<UserDto> GetUserDto(string userId, CancellationToken cancellation = default)
+    {
+        await _semaphore.WaitAsync();
+        try
+        {
+            var userDto = await _userManager.Users.Include(x => x.UserRoles).Select(x => new UserDto()
+            {
+                Checked = false,
+                ProfilePictureDataUrl = x.ProfilePictureDataUrl,
+                DisplayName = x.DisplayName,
+                Email = x.Email,
+                IsActive = x.IsActive,
+                IsLive = x.IsLive,
+                PhoneNumber = x.PhoneNumber,
+                Provider = x.Provider,
+                Id = x.Id,
+                UserName = x.UserName!,
+                TenantId = x.TenantId,
+                TenantName = x.TenantName,
+                LockoutEnd = x.LockoutEnd,
+                SuperiorId = x.SuperiorId,
+                SuperiorName = (x.Superior != null ? x.Superior.UserName : null),
+                Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
+                AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
+            }).FirstOrDefaultAsync(x => x.Id == userId);
+         return userDto!;
         }
         finally
         {

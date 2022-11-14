@@ -89,7 +89,6 @@
 </MudDialog>
 
 @code {
-    private bool fileinputInvalid = false;
     MudForm? _form = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
@@ -135,7 +134,7 @@
             }
             Snackbar.Add(L["Upload pictures successfully"], MudBlazor.Severity.Info);
             model.Pictures = list;
-            fileinputInvalid = false;
+     
         }
         finally
         {
