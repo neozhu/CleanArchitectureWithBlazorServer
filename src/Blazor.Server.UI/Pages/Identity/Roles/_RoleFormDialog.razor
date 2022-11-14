@@ -1,3 +1,4 @@
+@using CleanArchitecture.Blazor.Application.Common.Security;
 @inherits MudComponentBase
 @inject IStringLocalizer<Roles> L
 <MudDialog>
@@ -28,10 +29,10 @@
 
 @code {
     MudForm? _form = default!;
-    RoleFormModelValidator modelValidator = new RoleFormModelValidator();
+    RoleDtoValidator modelValidator = new RoleDtoValidator();
     [EditorRequired]
     [Parameter]
-    public RoleFormModel model { get; set; } = default!;
+    public RoleDto model { get; set; } = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
 

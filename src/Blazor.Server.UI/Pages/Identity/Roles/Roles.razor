@@ -3,6 +3,7 @@
 @using Blazor.Server.UI.Components.Dialogs
 @using CleanArchitecture.Blazor.Application.Common.Exceptions;
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
+@using CleanArchitecture.Blazor.Application.Common.Security;
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel
 @using System.Reflection
@@ -115,7 +116,7 @@
             <ColGroup>
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
                     <col style="width:50px;" />
-                    <col style="width:100px;" />
+                    <col style="width:120px;" />
                     <col  />
                 </MudHidden>
             </ColGroup>
@@ -240,7 +241,7 @@
     }
     private async Task OnCreate()
     {
-        var model = new RoleFormModel();
+        var model = new RoleDto();
         var parameters = new DialogParameters { ["model"] = model };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_RoleFormDialog>(L["Create a new role"], parameters, options);
@@ -267,10 +268,10 @@
     }
     private async Task OnEdit(ApplicationRole item)
     {
-        var model = new RoleFormModel()
+        var model = new RoleDto()
             {
                 Id = item.Id,
-                Name = item.Name,
+                Name = item.Name!,
                 Description = item.Description
             };
         var parameters = new DialogParameters { ["model"] = model };

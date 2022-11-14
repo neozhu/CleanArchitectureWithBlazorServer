@@ -6,6 +6,7 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
+@using CleanArchitecture.Blazor.Application.Common.Security;
 @using CleanArchitecture.Blazor.Infrastructure.Services
 @using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 @using Duende.IdentityServer.Events
@@ -32,7 +33,7 @@
                   @bind-SelectedItems="_selectItems"
                   SortLabel="@ConstantString.ORDERBY"
                   Loading="@_loading"
-                  Filter="new Func<UserFormModel,bool>(_quickFilter)">
+                  Filter="new Func<UserDto,bool>(_quickFilter)">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Users"]</MudText>
@@ -214,9 +215,9 @@
 @code {
     [Inject]
     private IUsersStateContainer _usersStateContainer { get; set; } = default!;
-    private List<UserFormModel> _userList = new();
+    private List<UserDto> _userList = new();
     private int _defaultPageSize = 15;
-    private HashSet<UserFormModel> _selectItems = new();
+    private HashSet<UserDto> _selectItems = new();
     private string _searchString = string.Empty;
     private string Title { get; set; } = "Users";
 
@@ -277,7 +278,7 @@
         });
     }
 
-    private Func<UserFormModel, bool> _quickFilter => x =>
+    private Func<UserDto, bool> _quickFilter => x =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
@@ -301,8 +302,9 @@
         try
         {
             _loading = true;
-            _userList = await _userManager.Users.Include(x=>x.Superior).Select(x => new UserFormModel()
+            _userList = await _userManager.Users.Include(x=>x.UserRoles).Select(x => new UserDto()
                 {
+                    Checked=false,
                     ProfilePictureDataUrl = x.ProfilePictureDataUrl,
                     DisplayName = x.DisplayName,
                     Email = x.Email,
@@ -311,13 +313,14 @@
                     PhoneNumber = x.PhoneNumber,
                     Provider = x.Provider,
                     Id = x.Id,
-                    UserName = x.UserName,
+                    UserName = x.UserName!,
                     TenantId = x.TenantId,
                     TenantName = x.TenantName,
                     LockoutEnd = x.LockoutEnd,
                     SuperiorId=x.SuperiorId,
                     Superior = (x.Superior!=null?x.Superior.UserName:null),
-                    Role = string.Join(", ", x.UserRoles.Select(x => x.Role.Name))
+                    Role =  x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
+                    AssignRoles = x.UserRoles.Select(x=>x.Role.Name!).ToArray(),
                 }).ToListAsync();
         }
         finally
@@ -327,11 +330,9 @@
     }
     private async Task OnCreate()
     {
-        var model = new UserFormModel() { Provider = "Local", AssignRoles = new string[] { RoleConstants.BasicRole } };
-        var parameters = new DialogParameters {
-            { nameof(_UserFormDialog.model),model },
-            { nameof(_UserFormDialog.superiorList),this._userList } };
-        var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var model = new UserDto() { Provider = "Local", AssignRoles = new string[] { RoleConstants.BasicRole } };
+        var parameters = new DialogParameters { ["model"] = model };
+        var options = new DialogOptions {CloseButton=true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
@@ -373,15 +374,10 @@
         }
     }
 
-    private async Task OnEdit(UserFormModel item)
+    private async Task OnEdit(UserDto item)
     {
         var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user {item.Id} Not Found.");
-        var roles = await _userManager.GetRolesAsync(user!);
-        item.AssignRoles = roles.ToArray();
-        var parameters = new DialogParameters {
-            { nameof(_UserFormDialog.model),item },
-            { nameof(_UserFormDialog.superiorList),this._userList } };
-
+        var parameters = new DialogParameters { ["model"] = item };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
@@ -401,14 +397,19 @@
             var identityResult = await _userManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
-                var removeRoleResult = await _userManager.RemoveFromRolesAsync(user, roles);
-                if (removeRoleResult.Succeeded)
+                var roles = await _userManager.GetRolesAsync(user!);
+                if (roles.Count > 0)
                 {
-                    if (item.AssignRoles is not null && item.AssignRoles.Length > 0)
+                    var removeRoleResult = await _userManager.RemoveFromRolesAsync(user, roles);
+                    if (removeRoleResult.Succeeded)
                     {
-                        await _userManager.AddToRolesAsync(user, item.AssignRoles);
+                        if (item.AssignRoles is not null && item.AssignRoles.Length > 0)
+                        {
+                            await _userManager.AddToRolesAsync(user, item.AssignRoles);
+                        }
                     }
                 }
+                
                 if (state.User.GetUserId() == item.Id)
                 {
                     await _profileService.Update(new UserProfile()
@@ -480,7 +481,7 @@
             
     }
 
-    private async Task OnSetActive(UserFormModel item)
+    private async Task OnSetActive(UserDto item)
     {
         var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user {item.Id} Not Found.");
         user.IsActive = !item.IsActive;
@@ -496,7 +497,7 @@
         }
     }
 
-    private async Task OnResetPassword(UserFormModel item)
+    private async Task OnResetPassword(UserDto item)
     {
 
         var model = new ResetPasswordFormModel()
