@@ -295,8 +295,6 @@ public class IdentityService : IIdentityService
                 TenantId = x.TenantId,
                 TenantName = x.TenantName,
                 LockoutEnd = x.LockoutEnd,
-                SuperiorId = x.SuperiorId,
-                SuperiorName = (x.Superior != null ? x.Superior.UserName : null),
                 Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
                 AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
             }).FirstOrDefaultAsync(x => x.Id == userId);
