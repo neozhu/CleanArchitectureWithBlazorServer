@@ -1,30 +1,12 @@
+using CleanArchitecture.Blazor.Application.Common.Security;
 using FluentValidation;
 
 namespace Blazor.Server.UI.Pages.Identity.Users;
 
-public class UserFormModel
+
+public class UserDtoValidator : AbstractValidator<UserDto>
 {
-    public string? Id { get; set; }
-    public string? UserName { get; set; }
-    public string? DisplayName { get; set; }
-    public string? Provider { get; set; }
-    public string? ProfilePictureDataUrl { get; set; }
-    public string? Email { get; set; }
-    public string? Password { get; set; }
-    public string? ConfirmPassword { get; set; }
-    public string? PhoneNumber { get; set; }
-    public string[]? AssignRoles { get; set; }
-    public bool IsActive { get; set; }
-    public bool Checked { get; set; }
-    public string? TenantId { get; set; }
-    public string? TenantName { get; set; }
-    public bool IsLive { get; set; }
-    public string? Role { get; set; }
-    public DateTimeOffset? LockoutEnd { get; set; }
-}
-public class UserFormModelValidator : AbstractValidator<UserFormModel>
-{
-    public UserFormModelValidator()
+    public UserDtoValidator()
     {
         RuleFor(v => v.TenantId)
              .MaximumLength(256)
@@ -53,7 +35,7 @@ public class UserFormModelValidator : AbstractValidator<UserFormModel>
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
     {
-        var result = await ValidateAsync(ValidationContext<UserFormModel>.CreateWithOptions((UserFormModel)model, x => x.IncludeProperties(propertyName)));
+        var result = await ValidateAsync(ValidationContext<UserDto>.CreateWithOptions((UserDto)model, x => x.IncludeProperties(propertyName)));
         if (result.IsValid)
             return Array.Empty<string>();
         return result.Errors.Select(e => e.ErrorMessage);

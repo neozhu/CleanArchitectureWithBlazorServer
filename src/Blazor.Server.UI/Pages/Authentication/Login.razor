@@ -15,7 +15,7 @@
 <PageTitle>@Title</PageTitle>
 <AuthorizeView>
     <NotAuthorized Context="Auth">
-        <MudForm Model="@_model" @ref="@_form"  @bind-IsValid="@_success" ValidationDelay="0" Validation="@(_loginValidator.ValidateValue)">
+        <MudForm Model="@_model" @ref="@_form" @bind-IsValid="@_success" ValidationDelay="0" Validation="@(_loginValidator.ValidateValue)">
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
 
             <MudText>@L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink></MudText>
@@ -42,7 +42,7 @@
                           OnAdornmentClick="TogglePasswordVisibility" />
 
             <div Class="d-flex justify-space-between align-center">
-                <MudCheckBox For="@(() => _model.RememberMe)" @bind-Checked="_model.RememberMe"   Label="@L["Remember me?"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+                <MudCheckBox For="@(() => _model.RememberMe)" @bind-Checked="_model.RememberMe" Label="@L["Remember me?"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
                 <MudLink Href="/pages/authentication/forgot-password">@L["Forgot password?"]</MudLink>
             </div>
 
@@ -134,39 +134,37 @@
         try
         {
             _loading = true;
-            if (_form is not null)
+            await _form!.Validate();
+            if (_form!.IsValid)
             {
-                await _form.Validate();
-                if (_form.IsValid)
+                var user = await _userManager.FindByNameAsync(_model.UserName!);
+                if (user is null)
                 {
-                    var user = await _userManager.FindByNameAsync(_model.UserName!);
-                    if (user is null)
+                    Snackbar.Add(L["No user found, or no authorization, please contact the administrator."], MudBlazor.Severity.Error);
+                }
+                else
+                {
+                    if (user.IsActive == false)
                     {
-                        Snackbar.Add(L["No user found, or no authorization, please contact the administrator."], MudBlazor.Severity.Error);
+                        await OnResetPassword(user);
                     }
                     else
                     {
-                        if (user.IsActive == false)
+                        var result = await _authenticationService.Login(_model);
+                        if (!result)
                         {
-                            await OnResetPassword(user);
+                            _logger.LogWarning("{@UserName} login fail.", _model.UserName);
+                            Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
                         }
                         else
                         {
-                            var result = await _authenticationService.Login(_model);
-                            if (!result)
-                            {
-                                _logger.LogWarning("{@UserName} login fail.", _model.UserName);
-                                Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
-                            }
-                            else
-                            {
-                                _logger.LogInformation("{@UserName} login successfully.", _model.UserName);
-                            }
+                            _logger.LogInformation("{@UserName} login successfully.", _model.UserName);
                         }
                     }
-
                 }
+
             }
+
         }
         finally
         {

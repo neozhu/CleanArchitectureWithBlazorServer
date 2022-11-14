@@ -1,3 +1,4 @@
+@using CleanArchitecture.Blazor.Application.Common.Security;
 @inherits MudComponentBase
 @inject IStringLocalizer<Users> L
 <MudDialog>
@@ -11,17 +12,17 @@
 </MudDialog>
 
 @code {
-    private _UserForm _userForm=default!;
+    private _UserForm? _userForm=default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
     [Parameter]
-    public UserFormModel model { get; set; } = default!;
+    public UserDto model { get; set; } = default!;
     protected async Task Submit() {
-        await  _userForm.Submit();
+        await  _userForm!.Submit();
     }
     void Cancel() => MudDialog.Cancel();
 
-    protected  Task OnFormSubmitHandler(UserFormModel model)
+    protected  Task OnFormSubmitHandler(UserDto model)
     {
         MudDialog.Close(DialogResult.Ok(model));
         return Task.CompletedTask;
