@@ -1,18 +1,14 @@
+using CleanArchitecture.Blazor.Application.Common.Security;
 using FluentValidation;
 
 namespace Blazor.Server.UI.Pages.Identity.Roles;
 
-public class RoleFormModel
-{
-    public string? Id { get; set; }
-    public string? Name { get; set; }
-    public string? Description { get; set; }
-}
 
 
-public class RoleFormModelValidator : AbstractValidator<RoleFormModel>
+
+public class RoleDtoValidator : AbstractValidator<RoleDto>
 {
-    public RoleFormModelValidator()
+    public RoleDtoValidator()
     {
         RuleFor(v => v.Name)
              .MaximumLength(256)
@@ -20,7 +16,7 @@ public class RoleFormModelValidator : AbstractValidator<RoleFormModel>
     }
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
     {
-        var result = await ValidateAsync(ValidationContext<RoleFormModel>.CreateWithOptions((RoleFormModel)model, x => x.IncludeProperties(propertyName)));
+        var result = await ValidateAsync(ValidationContext<RoleDto>.CreateWithOptions((RoleDto)model, x => x.IncludeProperties(propertyName)));
         if (result.IsValid)
             return Array.Empty<string>();
         return result.Errors.Select(e => e.ErrorMessage);

@@ -131,7 +131,7 @@
 </ErrorBoundary>
 @code {
     private MudForm? _form = default!;
-    private MudForm _passwordform = default!;
+    private MudForm? _passwordform = default!;
     public string Title { get; set; } = "Profile";
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
@@ -234,8 +234,8 @@
     }
     private async Task ChangePassword()
     {
-        await _passwordform.Validate();
-        if (_passwordform.IsValid)
+        await _passwordform!.Validate();
+        if (_passwordform!.IsValid)
         {
             var user = await _userManager.FindByIdAsync(model.UserId!);
             var result = await _userManager.ChangePasswordAsync(user!, _changepassword.CurrentPassword, _changepassword.NewPassword);
