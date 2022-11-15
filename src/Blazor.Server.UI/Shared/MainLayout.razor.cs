@@ -20,17 +20,11 @@ public partial class MainLayout: IDisposable
     private bool _themingDrawerOpen;
     [Inject] private IDialogService _dialogService { get; set; } = default!;
     [Inject] private HotKeys _hotKeys { get; set; } = default!;
-     [CascadingParameter]
-    protected Task<AuthenticationState> _authState { get; set; } = default!;
-    [Inject]
-    private ProfileService _profileService { get; set; } = default!;
-    [Inject]
-    private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
+
     public void Dispose()
     {
-        _profileService.OnChange -= _profileService_OnChange;
+       
         _layoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
-        _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         _hotKeysContext?.Dispose();
         GC.SuppressFinalize(this);
     }
@@ -55,37 +49,19 @@ public partial class MainLayout: IDisposable
     protected override async Task OnInitializedAsync()
     {
         _layoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
-        _profileService.OnChange += _profileService_OnChange;
+   
         _layoutService.SetBaseTheme(Theme.ApplicationTheme());
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
-        _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
-        var state = await _authState;
-        if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
-        {
-              await _profileService.Set(state.User);
-        }
+  
        await base.OnInitializedAsync();
 
     }
 
-    private void _profileService_OnChange()
-    {
-        InvokeAsync(() => StateHasChanged());
-    }
+
 
     private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e) => StateHasChanged();
-    private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
-    {
-        InvokeAsync(async () =>
-        {
-            var state = await authenticationState;
-            if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
-            {
-               await _profileService.Set(state.User);
-            }
-        });
-    }
+   
 
 
     protected void SideMenuDrawerOpenChangedHandler(bool state)

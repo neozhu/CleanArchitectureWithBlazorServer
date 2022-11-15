@@ -27,18 +27,15 @@
                      RightToLeft="@_layoutService.IsRTL"
                      RightToLeftToggle ="_layoutService.ToggleRightToLeft"
                      OnSettingClick="@(() => _themingDrawerOpen = true)"
-                     UserProfile="@_profileService.Profile" />
-
+                     />
             <SideMenu SideMenuDrawerOpen="_sideMenuDrawerOpen"
                       SideMenuDrawerOpenChanged="SideMenuDrawerOpenChangedHandler"
-                      UserProfile="@_profileService.Profile" />
-
+                       />
             <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
                         ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
                         UserPreferences="UserPreferences"
                         UserPreferencesChanged="_layoutService.UpdateUserPreferences" />
             <ThemesButton OnClick="@(() => _themingDrawerOpen = true)" />
-
             <MudMainContent>
                 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mb-4 mt-4">
                     @Body
