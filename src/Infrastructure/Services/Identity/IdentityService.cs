@@ -40,9 +40,9 @@ public class IdentityService : IIdentityService
         _localizer = localizer;
     }
 
-    public async Task<string?> GetUserNameAsync(string userId)
+    public async Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default)
     {
-        await _semaphore.WaitAsync();
+        await _semaphore.WaitAsync(cancellation);
         try
         {
             var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
@@ -54,7 +54,7 @@ public class IdentityService : IIdentityService
         }
     }
 
-    public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password)
+    public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password, CancellationToken cancellation = default)
     {
         var user = new ApplicationUser
         {
@@ -67,31 +67,47 @@ public class IdentityService : IIdentityService
         return (result.ToApplicationResult(), user.Id);
     }
 
-    public async Task<bool> IsInRoleAsync(string userId, string role)
+    public async Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default)
     {
-        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
-        if (user is not null)
-            return await _userManager.IsInRoleAsync(user, role);
-        else
-            return false;
-    }
-
-    public async Task<bool> AuthorizeAsync(string userId, string policyName)
-    {
-        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
-        if (user is not null)
+        await _semaphore.WaitAsync(cancellation);
+        try
         {
-            var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
-            var result = await _authorizationService.AuthorizeAsync(principal, policyName);
-            return result.Succeeded;
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            if (user is not null)
+                return await _userManager.IsInRoleAsync(user, role);
+            else
+                return false;
         }
-        else
+        finally
         {
-            return false;
+            _semaphore.Release();
         }
     }
 
-    public async Task<Result> DeleteUserAsync(string userId)
+    public async Task<bool> AuthorizeAsync(string userId, string policyName, CancellationToken cancellation = default)
+    {
+        await _semaphore.WaitAsync(cancellation);
+        try
+        {
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            if (user is not null)
+            {
+                var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+                var result = await _authorizationService.AuthorizeAsync(principal, policyName);
+                return result.Succeeded;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
+    public async Task<Result> DeleteUserAsync(string userId, CancellationToken cancellation = default)
     {
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
@@ -103,14 +119,14 @@ public class IdentityService : IIdentityService
         return await Result.SuccessAsync();
     }
 
-    public async Task<Result> DeleteUserAsync(ApplicationUser user)
+    public async Task<Result> DeleteUserAsync(ApplicationUser user, CancellationToken cancellation = default)
     {
         var result = await _userManager.DeleteAsync(user);
 
         return result.ToApplicationResult();
     }
 
-    public async Task<IDictionary<string, string?>> FetchUsers(string roleName)
+    public async Task<IDictionary<string, string?>> FetchUsers(string roleName, CancellationToken cancellation = default)
     {
         var result = await _userManager.Users
              .Where(x => x.UserRoles.Where(y => y.Role.Name == roleName).Any())
@@ -119,7 +135,7 @@ public class IdentityService : IIdentityService
         return result;
     }
 
-    public async Task<Result<TokenResponse>> LoginAsync(TokenRequest request)
+    public async Task<Result<TokenResponse>> LoginAsync(TokenRequest request, CancellationToken cancellation = default)
     {
         var user = await _userManager.FindByNameAsync(request.UserName!);
         if (user == null)
@@ -155,7 +171,7 @@ public class IdentityService : IIdentityService
         return await Result<TokenResponse>.SuccessAsync(response);
     }
 
-    public async Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request)
+    public async Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellation = default)
     {
         if (request is null)
         {
@@ -258,9 +274,9 @@ public class IdentityService : IIdentityService
         return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
     }
 
-    public async Task UpdateLiveStatus(string userId, bool isLive)
+    public async Task UpdateLiveStatus(string userId, bool isLive, CancellationToken cancellation = default)
     {
-        await _semaphore.WaitAsync();
+        await _semaphore.WaitAsync(cancellation);
         try
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -277,7 +293,7 @@ public class IdentityService : IIdentityService
     }
     public async Task<UserDto> GetUserDto(string userId, CancellationToken cancellation = default)
     {
-        await _semaphore.WaitAsync();
+        await _semaphore.WaitAsync(cancellation);
         try
         {
             var userDto = await _userManager.Users.Include(x => x.UserRoles).Select(x => new UserDto()
@@ -298,7 +314,7 @@ public class IdentityService : IIdentityService
                 Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
                 AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
             }).FirstOrDefaultAsync(x => x.Id == userId);
-         return userDto!;
+            return userDto!;
         }
         finally
         {

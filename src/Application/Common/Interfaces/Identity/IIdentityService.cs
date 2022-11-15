@@ -8,14 +8,14 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 public interface IIdentityService : IService
 {
-    Task<Result<TokenResponse>> LoginAsync(TokenRequest request);
-    Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request);
-    Task<string?> GetUserNameAsync(string userId);
-    Task<bool> IsInRoleAsync(string userId, string role);
-    Task<bool> AuthorizeAsync(string userId, string policyName);
-    Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
-    Task<Result> DeleteUserAsync(string userId);
-    Task<IDictionary<string, string?>> FetchUsers(string roleName);
-    Task UpdateLiveStatus(string userId, bool isLive);
+    Task<Result<TokenResponse>> LoginAsync(TokenRequest request, CancellationToken cancellation = default);
+    Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellation = default);
+    Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default);
+    Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default);
+    Task<bool> AuthorizeAsync(string userId, string policyName, CancellationToken cancellation = default);
+    Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password, CancellationToken cancellation = default);
+    Task<Result> DeleteUserAsync(string userId, CancellationToken cancellation = default);
+    Task<IDictionary<string, string?>> FetchUsers(string roleName, CancellationToken cancellation = default);
+    Task UpdateLiveStatus(string userId, bool isLive, CancellationToken cancellation = default);
     Task<UserDto> GetUserDto(string userId,CancellationToken cancellation=default);
 }

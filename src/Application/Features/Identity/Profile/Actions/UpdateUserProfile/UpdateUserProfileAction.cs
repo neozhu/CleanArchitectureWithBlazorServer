@@ -11,11 +11,19 @@ public partial class UserProfileState
 {
     public class UpdateUserProfileAction : IAction
     {
-        public UpdateUserProfileAction(UserDto userDto)
+        public UpdateUserProfileAction(UserProfile userProfile)
+        {
+            UserProfile = userProfile;
+        }
+
+        public UserProfile UserProfile { get; private set; }
+    }
+    public class UpdateUserDtoAction : IAction
+    {
+        public UpdateUserDtoAction(UserDto userDto)
         {
             UserDto = userDto;
         }
-
-        public UserDto UserDto { get; set; }
+        public UserDto UserDto { get; private set; }
     }
 }

@@ -409,7 +409,7 @@
                 if (state.User.GetUserId() == item.Id)
                 {
                     //update user profile
-                    await _mediator.Send(new UserProfileState.UpdateUserProfileAction(item));
+                    await _mediator.Send(new UserProfileState.UpdateUserDtoAction(item));
                     if (user.TenantId is not null && user.TenantName is not null && state.User.GetTenantId() != user.TenantId)
                     {
                         await _tenantProvider.SetTenant(user.TenantId,user.TenantName);
