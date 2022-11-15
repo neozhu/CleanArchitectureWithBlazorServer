@@ -6,13 +6,15 @@ using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using CleanArchitecture.Blazor.Application.Constants;
+using BlazorState;
+using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
 
 namespace Blazor.Server.UI.Components.Shared;
 
-public partial class UserMenu
+public partial class UserMenu:  BlazorStateComponent
 {
-
-    [EditorRequired] [Parameter] public UserProfile UserProfile { get; set; } = default!;
+    UserProfileState UserProfileState => GetState<UserProfileState>();
+    private UserProfile UserProfile => UserProfileState.UserProfile;
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     [Inject] private IdentityAuthenticationService _authenticationService { get; set; } = default!;
     [Inject] private IJSRuntime JS { get; set; } = default!;

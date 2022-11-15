@@ -4,9 +4,9 @@
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CleanArchitecture.Blazor.Application.Common.Security;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
-public class UserDto 
+public class UserDto
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string UserName { get; set; } = string.Empty;
@@ -27,7 +27,4 @@ public class UserDto
     public bool Checked { get; set; }
     public string? Role { get; set; }
     public DateTimeOffset? LockoutEnd { get; set; }
-
-
-
 }

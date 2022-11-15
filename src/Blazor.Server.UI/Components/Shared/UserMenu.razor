@@ -1,4 +1,6 @@
+@using BlazorState
 @inject IStringLocalizer<SharedResource> L
+@inherits BlazorStateComponent
 <MudTooltip Arrow="true" Text="@L["User Profile"]">
 <MudMenu AnchorOrigin="Origin.BottomRight"
          Icon="@Icons.Filled.PermIdentity"

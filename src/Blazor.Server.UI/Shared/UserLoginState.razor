@@ -1,6 +1,11 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Features.Identity.Dto
+@using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
-@inherits OwningComponentBase
+@using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
+@using BlazorState
+
+ 
 @implements IAsyncDisposable
 @code{
     [CascadingParameter]
@@ -9,12 +14,10 @@
     private NavigationManager _navigationManager { get; set; } = default!;
     [Inject]
     private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
-
+    [Inject]
     private IIdentityService _identityService { get; set; }=default!;
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-    }
+    [Inject]
+    private IMediator _mediator { get; set; } = default!;
 
     public async ValueTask DisposeAsync()
     {
@@ -22,20 +25,18 @@
         _client.Login -= _client_Login;
         _client.Logout -= _client_Logout;
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
-        Dispose(true);
         GC.SuppressFinalize(this);
     }
     [Inject]
     private HubClient _client { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
-        _identityService = ScopedServices.GetRequiredService<IIdentityService>();
-        _client.Logout += _client_Logout;
-        _client.Login += _client_Login;
         var state = await _authState;
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
             await _client.StartAsync();
+            var userDto = await _identityService.GetUserDto(state.User.GetUserId());
+            await setProfile(userDto);
         }
         _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
     }
@@ -47,8 +48,14 @@
             if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
                 await _client.StartAsync();
+                var userDto =await _identityService.GetUserDto(state.User.GetUserId());
+                await setProfile(userDto);
             }
         });
+    }
+    private async Task setProfile(UserDto userDto)
+    {
+        await _mediator.Send(new UserProfileState.UpdateUserDtoAction(userDto));
     }
     private void _client_Login(object? sender, string e)
     {

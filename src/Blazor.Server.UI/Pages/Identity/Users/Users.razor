@@ -5,13 +5,14 @@
 @using CleanArchitecture.Blazor.Application.Common.Exceptions;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+@using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
-@using CleanArchitecture.Blazor.Application.Common.Security;
 @using CleanArchitecture.Blazor.Infrastructure.Services
 @using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 @using Duende.IdentityServer.Events
 @using Microsoft.AspNetCore.Components.Server.Circuits
-@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity;
+@using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 @inject IStringLocalizer<Users> L
 @attribute [Authorize(Policy = Permissions.Users.View)]
 <PageTitle>@Title</PageTitle>
@@ -222,10 +223,11 @@
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
-    [Inject]
-    private ProfileService _profileService { get; set; } = default!;
+
     [Inject]
     private ITenantProvider _tenantProvider{ get; set; }= default!;
+    [Inject]
+    private IMediator _mediator { get; set; } = default!;
 
     private bool _canCreate;
     private bool _canSearch;
@@ -406,20 +408,8 @@
                 
                 if (state.User.GetUserId() == item.Id)
                 {
-                    await _profileService.Update(new UserProfile()
-                        {
-                            UserId = user.Id,
-                            ProfilePictureDataUrl = user.ProfilePictureDataUrl,
-                            Email = user.Email,
-                            PhoneNumber = user.PhoneNumber,
-                            DisplayName = user.DisplayName,
-                            Provider = user.Provider,
-                            UserName = user.UserName,
-                            IsActive = user.IsActive,
-                            TenantId = user.TenantId,
-                            TenantName = user.TenantName,
-                            Role = item.AssignRoles?.FirstOrDefault()
-                        });
+                    //update user profile
+                    await _mediator.Send(new UserProfileState.UpdateUserDtoAction(item));
                     if (user.TenantId is not null && user.TenantName is not null && state.User.GetTenantId() != user.TenantId)
                     {
                         await _tenantProvider.SetTenant(user.TenantId,user.TenantName);
