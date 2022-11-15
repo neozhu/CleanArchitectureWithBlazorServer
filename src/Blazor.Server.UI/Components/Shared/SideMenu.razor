@@ -1,6 +1,7 @@
 @using Blazor.Server.UI.Models.SideMenu
+@using BlazorState
 @inject IStringLocalizer<SideMenu> L
-
+@inherits BlazorStateComponent
 <MudDrawer Breakpoint="Breakpoint.Md"
            Class="side-menu"
            Elevation="0"

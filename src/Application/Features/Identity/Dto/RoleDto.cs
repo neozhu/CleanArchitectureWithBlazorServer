@@ -4,11 +4,11 @@
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CleanArchitecture.Blazor.Application.Common.Security;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
-public class RoleDto 
+public class RoleDto
 {
-    public string Id { get; set; }=Guid.NewGuid().ToString();
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     public string Name { get; set; } = string.Empty;
     public string? NormalizedName { get; set; }
     public string? Description { get; set; }

@@ -1,8 +1,11 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-@using CleanArchitecture.Blazor.Application.Common.Security;
+@using CleanArchitecture.Blazor.Application.Features.Identity.Dto
+@using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
-@using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
-@inherits OwningComponentBase
+@using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
+@using BlazorState
+
+ 
 @implements IAsyncDisposable
 @code{
     [CascadingParameter]
@@ -12,35 +15,22 @@
     [Inject]
     private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
     [Inject]
-    private ProfileService _profileService { get; set; } = default!;
-
     private IIdentityService _identityService { get; set; }=default!;
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-    }
-    private void _profileService_OnChange()
-    {
-        InvokeAsync(() => StateHasChanged());
-    }
+    [Inject]
+    private IMediator _mediator { get; set; } = default!;
+
     public async ValueTask DisposeAsync()
     {
         await _client.StopAsync();
-        _profileService.OnChange -= _profileService_OnChange;
         _client.Login -= _client_Login;
         _client.Logout -= _client_Logout;
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
-        Dispose(true);
         GC.SuppressFinalize(this);
     }
     [Inject]
     private HubClient _client { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
-        _identityService = ScopedServices.GetRequiredService<IIdentityService>();
-        _client.Logout += _client_Logout;
-        _client.Login += _client_Login;
-        _profileService.OnChange += _profileService_OnChange;
         var state = await _authState;
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
@@ -67,23 +57,7 @@
     }
     private async Task setProfile(UserDto userDto)
     {
-      await  _profileService.Update(new UserProfile()
-            {
-                UserId = userDto.Id,
-                ProfilePictureDataUrl = userDto.ProfilePictureDataUrl,
-                Email = userDto.Email!,
-                PhoneNumber = userDto.PhoneNumber,
-                DisplayName = userDto.DisplayName,
-                Provider = userDto.Provider,
-                UserName = userDto.UserName,
-                IsActive = userDto.IsActive,
-                TenantId = userDto.TenantId,
-                TenantName = userDto.TenantName,
-                SuperiorId = userDto.SuperiorId,
-                Superior = userDto.SuperiorName,
-                Role = userDto.Role,
-                AssignRoles=userDto.AssignRoles
-            });
+        await _mediator.Send(new UserProfileState.UpdateUserProfileAction(userDto));
     }
     private void _client_Login(object? sender, string e)
     {

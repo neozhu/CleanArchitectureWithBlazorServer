@@ -2,6 +2,7 @@ using CleanArchitecture.Blazor.Infrastructure.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using FluentValidation;
+using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
 namespace Blazor.Server.UI.Pages.Identity.Users;
 
