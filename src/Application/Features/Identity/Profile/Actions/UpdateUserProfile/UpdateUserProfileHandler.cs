@@ -31,8 +31,6 @@ public partial class UserProfileState
                 IsActive = dto.IsActive,
                 TenantId = dto.TenantId,
                 TenantName = dto.TenantName,
-                SuperiorId = dto.SuperiorId,
-                SuperiorName = dto.SuperiorName,
                 AssignRoles = dto.AssignRoles,
                 Role= dto.Role
             };
