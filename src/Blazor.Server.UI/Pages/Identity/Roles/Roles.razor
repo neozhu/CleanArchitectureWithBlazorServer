@@ -31,7 +31,7 @@
                   @bind-SelectedItems="_selectItems"
                   SortLabel="@ConstantString.ORDERBY"
                   Loading="@_loading"
-                  Filter="new Func<ApplicationRole,bool>(_quickFilter)">
+                  Filter="new Func<RoleDto,bool>(_quickFilter)">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Roles"]</MudText>
@@ -123,7 +123,7 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationRole, object>(x=>x.Name!)">@L["Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<RoleDto, object>(x=>x.Name!)">@L["Name"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ConstantString.ACTIONS">
@@ -174,9 +174,9 @@
 @code {
 
     private string _currentRoleName = string.Empty;
-    private List<ApplicationRole> _roleList = new();
+    private List<RoleDto> _roleList = new();
     private int _defaultPageSize = 15;
-    private HashSet<ApplicationRole> _selectItems = new();
+    private HashSet<RoleDto> _selectItems = new();
     private string _searchString = string.Empty;
     public string? Title { get; private set; }
     [CascadingParameter]
@@ -210,7 +210,7 @@
         await LoadData();
 
     }
-    private Func<ApplicationRole, bool> _quickFilter => x =>
+    private Func<RoleDto, bool> _quickFilter => x =>
        {
            if (string.IsNullOrWhiteSpace(_searchString))
                return true;
@@ -233,7 +233,7 @@
         try
         {
             _loading = true;
-            _roleList = await _roleManager.Roles.ToListAsync();
+            _roleList = await _roleManager.Roles.Select(x=>new RoleDto {Id=x.Id,Name=x.Name!,Description=x.Description }).ToListAsync();
         }
         finally
         {
@@ -258,7 +258,8 @@
             var state = await _roleManager.CreateAsync(applicationRole);
             if (state.Succeeded)
             {
-                _roleList.Add(applicationRole);
+                model.Id = applicationRole.Id;
+                _roleList.Add(model);
                 Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
             }
             else
@@ -267,24 +268,16 @@
             }
         }
     }
-    private async Task OnEdit(ApplicationRole item)
+    private async Task OnEdit(RoleDto item)
     {
-        var model = new RoleDto()
-            {
-                Id = item.Id,
-                Name = item.Name!,
-                Description = item.Description
-            };
-        var parameters = new DialogParameters { ["model"] = model };
+        var parameters = new DialogParameters { ["model"] = item };
         var options = new DialogOptions {CloseButton=true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_RoleFormDialog>(L["Edit the role"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-
-            item.Name = model.Name;
-            item.Description = model.Description;
-            var state = await _roleManager.UpdateAsync(item);
+            var role=new ApplicationRole(){ Id = item.Id,Name=item.Name,Description=item.Description};
+            var state = await _roleManager.UpdateAsync(role);
             if (state.Succeeded)
             {
                 Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
@@ -295,7 +288,7 @@
             }
         }
     }
-    private async Task OnSetPermissions(ApplicationRole item)
+    private async Task OnSetPermissions(RoleDto item)
     {
         _currentRoleName = item.Name!;
         _permissions = await GetAllPermissions(item);
@@ -303,8 +296,9 @@
 
     }
 
-    private async Task<List<PermissionModel>> GetAllPermissions(ApplicationRole role)
+    private async Task<List<PermissionModel>> GetAllPermissions(RoleDto dto)
     {
+        var role = await _roleManager.FindByIdAsync(dto.Id);
         _assignedClaims = await _roleManager.GetClaimsAsync(role);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
@@ -410,9 +404,11 @@
         {
             foreach (var item in _selectItems)
             {
-                await _roleManager.DeleteAsync(item);
+                var deleterole = await _roleManager.FindByIdAsync(item.Id);
+                await _roleManager.DeleteAsync(deleterole!);
                 _roleList.Remove(item);
             }
+            Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
         }
     }
     private Task OnExport()
