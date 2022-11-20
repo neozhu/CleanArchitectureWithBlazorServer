@@ -10,7 +10,7 @@ public static class AuthenticationServiceCollectionExtensions
                  .AddScoped<IdentityAuthenticationService>()
                  .AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<IdentityAuthenticationService>())
                  .AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationClaimsIdentityFactory>()
-                 .AddTransient<IIdentityService, IdentityService>()
+                 .AddScoped<IIdentityService, IdentityService>()
                  .AddAuthorization(options =>
                  {
                      options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
