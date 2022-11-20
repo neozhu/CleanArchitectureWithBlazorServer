@@ -298,7 +298,7 @@
 
     private async Task<List<PermissionModel>> GetAllPermissions(RoleDto dto)
     {
-        var role = await _roleManager.FindByIdAsync(dto.Id);
+        var role = await _roleManager.FindByIdAsync(dto.Id)??throw new NotFoundException($"not found role: {dto.Id}");
         _assignedClaims = await _roleManager.GetClaimsAsync(role);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
