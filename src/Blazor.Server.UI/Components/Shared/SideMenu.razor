@@ -19,23 +19,26 @@
 
     @if (SideMenuDrawerOpen)
     {
-        <div class="mx-6">
+        <div class="mx-3">
             <MudButton Class="d-flex justify-start my-3 user-button"
                    FullWidth="true">
                 <ChildContent>
-                    <div class="align-center d-flex">
-                        <MudAvatar Image="@UserProfile.ProfilePictureDataUrl" />
-                    </div>
-                    <div class="d-flex flex-column px-4">
-                        <MudText Class="d-flex justify-start"
-                             Typo="Typo.body2">
-                            @UserProfile.DisplayName
-                        </MudText>
-                        <MudText Class="d-flex justify-start"
-                             Typo="Typo.caption">
-                            @UserProfile.Role
-                        </MudText>
-                    </div>
+                    <MudStack Row="true">
+                        @if (string.IsNullOrEmpty(UserProfile.ProfilePictureDataUrl))
+                        {
+                            <MudAvatar Color="Color.Primary">
+                                @UserProfile.UserName.ToUpper().FirstOrDefault()
+                            </MudAvatar>
+                        }
+                        else
+                        {
+                            <MudAvatar Image="@UserProfile.ProfilePictureDataUrl" />
+                        }
+                        <MudStack Justify="Justify.SpaceBetween" Spacing="0">
+                            <MudText Typo="Typo.body1">@UserProfile.DisplayName</MudText>
+                            <MudText Typo="Typo.body2">@UserProfile.Role</MudText>
+                        </MudStack>
+                    </MudStack>
                 </ChildContent>
             </MudButton>
         </div>

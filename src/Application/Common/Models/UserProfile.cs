@@ -7,8 +7,8 @@ public class UserProfile
     public string? SuperiorId { get; set; }
     public string? ProfilePictureDataUrl { get; set; }
     public string? DisplayName { get; set; }
-    public string? UserName { get; set; }
-    public string? Email { get; set; }
+    public string UserName { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
     public string? PhoneNumber { get; set; }
     public string? Role { get; set; }
     public string[]? AssignRoles { get; set; }
