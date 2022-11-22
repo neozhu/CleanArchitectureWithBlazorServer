@@ -34,9 +34,10 @@
         var state = await _authState;
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
-            await _client.StartAsync();
             var userDto = await _identityService.GetUserDto(state.User.GetUserId());
             await setProfile(userDto);
+            await _client.StartAsync();
+            
         }
         _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
     }
@@ -47,9 +48,10 @@
             var state = await authenticationState;
             if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
-                await _client.StartAsync();
-                var userDto =await _identityService.GetUserDto(state.User.GetUserId());
+                var userDto = await _identityService.GetUserDto(state.User.GetUserId());
                 await setProfile(userDto);
+                await _client.StartAsync();
+                
             }
         });
     }
