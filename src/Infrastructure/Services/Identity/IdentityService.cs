@@ -4,7 +4,9 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
+using LazyCache;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,13 +24,15 @@ public class IdentityService : IIdentityService
     private readonly IOptions<AppConfigurationSettings> _appConfig;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
+    private readonly IAppCache _cache;
     private readonly IStringLocalizer<IdentityService> _localizer;
-
+    private readonly TimeSpan refreshInterval = TimeSpan.FromSeconds(60);
     public IdentityService(
         IServiceProvider serviceProvider,
         IOptions<AppConfigurationSettings> appConfig,
         IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
         IAuthorizationService authorizationService,
+        IAppCache cache,
         IStringLocalizer<IdentityService> localizer)
     {
         _serviceProvider = serviceProvider;
@@ -37,6 +41,7 @@ public class IdentityService : IIdentityService
         _appConfig = appConfig;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         _authorizationService = authorizationService;
+        _cache = cache;
         _localizer = localizer;
     }
 
@@ -280,7 +285,35 @@ public class IdentityService : IIdentityService
         await _semaphore.WaitAsync();
         try
         {
-            var userDto = await _userManager.Users.Include(x => x.UserRoles).Select(x => new UserDto()
+            var key = $"GetUserDto:{userId}";
+            var options = new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.ImmediateEviction);
+            // as soon as it expires, re-add it to the cache
+            options.RegisterPostEvictionCallback(async (keyEvicted, value, reason, state) =>
+            {
+                // dont re-add if running out of memory or it was forcibly removed
+                if (reason == EvictionReason.Expired || reason == EvictionReason.TokenExpired)
+                {
+                   await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Include(x => x.UserRoles).Select(x => new UserDto()
+                    {
+                        Checked = false,
+                        ProfilePictureDataUrl = x.ProfilePictureDataUrl,
+                        DisplayName = x.DisplayName,
+                        Email = x.Email,
+                        IsActive = x.IsActive,
+                        IsLive = x.IsLive,
+                        PhoneNumber = x.PhoneNumber,
+                        Provider = x.Provider,
+                        Id = x.Id,
+                        UserName = x.UserName!,
+                        TenantId = x.TenantId,
+                        TenantName = x.TenantName,
+                        LockoutEnd = x.LockoutEnd,
+                        Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
+                        AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
+                    }).FirstOrDefaultAsync(x => x.Id == userId), options); //calls itself to get another set of options!
+                }
+            });
+            var userDto = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Include(x => x.UserRoles).Select(x => new UserDto()
             {
                 Checked = false,
                 ProfilePictureDataUrl = x.ProfilePictureDataUrl,
@@ -299,8 +332,9 @@ public class IdentityService : IIdentityService
                 SuperiorName = (x.Superior != null ? x.Superior.UserName : null),
                 Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
                 AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
-            }).FirstOrDefaultAsync(x => x.Id == userId);
-         return userDto!;
+            }).FirstOrDefaultAsync(x => x.Id == userId),options);
+            return userDto!;
+
         }
         finally
         {
