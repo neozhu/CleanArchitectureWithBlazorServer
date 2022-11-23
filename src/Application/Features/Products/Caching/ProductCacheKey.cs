@@ -6,6 +6,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Caching;
 
 public static class ProductCacheKey
 {
+    private static readonly TimeSpan refreshInterval = TimeSpan.FromHours(1);
     public const string GetAllCacheKey = "all-Products";
     public static string GetPaginationCacheKey(string parameters)
     {
@@ -13,13 +14,13 @@ public static class ProductCacheKey
     }
     static ProductCacheKey()
     {
-        _tokensource = new CancellationTokenSource(new TimeSpan(1,0,0));
+        _tokensource = new CancellationTokenSource(refreshInterval);
     }
     private static CancellationTokenSource _tokensource;
     public static CancellationTokenSource SharedExpiryTokenSource() {
         if (_tokensource.IsCancellationRequested)
         {
-            _tokensource = new CancellationTokenSource(new TimeSpan(3, 0, 0));
+            _tokensource = new CancellationTokenSource(refreshInterval);
         }
         return _tokensource;
     }
