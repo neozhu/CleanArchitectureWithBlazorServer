@@ -50,7 +50,9 @@ public class IdentityService : IIdentityService
         await _semaphore.WaitAsync(cancellation);
         try
         {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            var key = $"GetUserNameAsync:{userId}";
+            var options = new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
+            var user = await _cache.GetOrAddAsync(key,async() => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId),options);
             return user?.UserName;
         }
         finally
