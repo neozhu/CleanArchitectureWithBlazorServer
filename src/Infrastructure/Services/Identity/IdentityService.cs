@@ -302,33 +302,7 @@ public class IdentityService : IIdentityService
         try
         {
             var key = $"GetUserDto:{userId}";
-            var options = new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.ImmediateEviction);
-            // as soon as it expires, re-add it to the cache
-            options.RegisterPostEvictionCallback(async (keyEvicted, value, reason, state) =>
-            {
-                // dont re-add if running out of memory or it was forcibly removed
-                if (reason == EvictionReason.Expired || reason == EvictionReason.TokenExpired)
-                {
-                   await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Include(x => x.UserRoles).Select(x => new UserDto()
-                    {
-                        Checked = false,
-                        ProfilePictureDataUrl = x.ProfilePictureDataUrl,
-                        DisplayName = x.DisplayName,
-                        Email = x.Email,
-                        IsActive = x.IsActive,
-                        IsLive = x.IsLive,
-                        PhoneNumber = x.PhoneNumber,
-                        Provider = x.Provider,
-                        Id = x.Id,
-                        UserName = x.UserName!,
-                        TenantId = x.TenantId,
-                        TenantName = x.TenantName,
-                        LockoutEnd = x.LockoutEnd,
-                        Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
-                        AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
-                    }).FirstOrDefaultAsync(x => x.Id == userId), options); //calls itself to get another set of options!
-                }
-            });
+            var options = new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
             var userDto = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Include(x => x.UserRoles).Select(x => new UserDto()
             {
                 Checked = false,
