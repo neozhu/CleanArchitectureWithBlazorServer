@@ -1,9 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Infrastructure.Constants.LocalStorage;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class CurrentUserService : ICurrentUserService

@@ -5,7 +5,6 @@
 @using CleanArchitecture.Blazor.Application.Common.Exceptions;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
-@using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @using CleanArchitecture.Blazor.Application.Common.Security;
 @using CleanArchitecture.Blazor.Infrastructure.Services
 @using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
@@ -422,7 +421,7 @@
                         {
                             UserId = user.Id,
                             ProfilePictureDataUrl = user.ProfilePictureDataUrl,
-                            Email = user.Email,
+                            Email = user.Email!,
                             PhoneNumber = user.PhoneNumber,
                             DisplayName = user.DisplayName,
                             Provider = user.Provider,
