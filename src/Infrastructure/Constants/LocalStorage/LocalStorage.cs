@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Infrastructure.Constants.LocalStorage;
+namespace CleanArchitecture.Blazor.Infrastructure.Constants;
 public static class LocalStorage
 {
     public const string USERID = "UserId";

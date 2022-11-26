@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using System.Text;
-using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
-using CleanArchitecture.Blazor.Infrastructure.Constants.LocalStorage;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using Microsoft.AspNetCore.Components;
 
