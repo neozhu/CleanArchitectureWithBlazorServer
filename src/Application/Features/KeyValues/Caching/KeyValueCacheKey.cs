@@ -5,6 +5,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 
 public static class KeyValueCacheKey
 {
+    private static readonly TimeSpan refreshInterval = TimeSpan.FromHours(1);
     public const string GetAllCacheKey = "all-keyvalues";
     public const string PicklistCacheKey = "all-picklistcachekey";
     public static string GetCacheKey(string name)
@@ -13,7 +14,7 @@ public static class KeyValueCacheKey
     }
     static KeyValueCacheKey()
     {
-        _tokensource = new CancellationTokenSource(new TimeSpan(3, 0, 0));
+        _tokensource = new CancellationTokenSource(refreshInterval);
 
     }
     private static CancellationTokenSource _tokensource;
@@ -21,7 +22,7 @@ public static class KeyValueCacheKey
     {
         if (_tokensource.IsCancellationRequested)
         {
-            _tokensource = new CancellationTokenSource(new TimeSpan(3, 0, 0));
+            _tokensource = new CancellationTokenSource(refreshInterval);
         }
         return _tokensource;
     }

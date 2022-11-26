@@ -1,5 +1,4 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
-using CleanArchitecture.Blazor.Infrastructure.Constants.LocalStorage;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;

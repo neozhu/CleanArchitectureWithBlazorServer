@@ -5,20 +5,21 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 public static class CustomerCacheKey
 {
+    private static readonly TimeSpan refreshInterval = TimeSpan.FromHours(1);
     public const string GetAllCacheKey = "all-Customers";
     public static string GetPaginationCacheKey(string parameters) {
         return $"CustomersWithPaginationQuery,{parameters}";
     }
     static CustomerCacheKey()
     {
-        _tokensource = new CancellationTokenSource(new TimeSpan(3,0,0));
+        _tokensource = new CancellationTokenSource(refreshInterval);
     }
     private static CancellationTokenSource _tokensource;
     public static CancellationTokenSource SharedExpiryTokenSource()
     {
         if (_tokensource.IsCancellationRequested)
         {
-            _tokensource = new CancellationTokenSource(new TimeSpan(3, 0, 0));
+            _tokensource = new CancellationTokenSource(refreshInterval);
         }
         return _tokensource;
     }

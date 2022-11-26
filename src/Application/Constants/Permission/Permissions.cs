@@ -4,7 +4,7 @@
 using System.ComponentModel;
 using System.Reflection;
 
-namespace CleanArchitecture.Blazor.Application.Constants.Permission;
+namespace CleanArchitecture.Blazor.Application.Constants;
 
 public static class Permissions
 {

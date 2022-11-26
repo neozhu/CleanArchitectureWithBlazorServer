@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 public class ApplicationDbContextInitialiser

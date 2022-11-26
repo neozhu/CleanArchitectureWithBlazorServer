@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BlazorState;
-using static CleanArchitecture.Blazor.Application.Constants.Permission.Permissions;
+using static CleanArchitecture.Blazor.Application.Constants.Permissions;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Profile;
 
