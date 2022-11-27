@@ -52,7 +52,7 @@ public class IdentityService : IIdentityService
         {
             var key = $"GetUserNameAsync:{userId}";
             var options = new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
-            var user = await _cache.GetOrAddAsync(key,async() => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId),options);
+            var user = await _cache.GetOrAddAsync(key,async() => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation),options);
             return user?.UserName;
         }
         finally
@@ -79,7 +79,7 @@ public class IdentityService : IIdentityService
         await _semaphore.WaitAsync(cancellation);
         try
         {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation);
             if (user is not null)
                 return await _userManager.IsInRoleAsync(user, role);
             else
@@ -96,7 +96,7 @@ public class IdentityService : IIdentityService
         await _semaphore.WaitAsync(cancellation);
         try
         {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation);
             if (user is not null)
             {
                 var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
@@ -116,11 +116,11 @@ public class IdentityService : IIdentityService
 
     public async Task<Result> DeleteUserAsync(string userId, CancellationToken cancellation = default)
     {
-        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation);
 
         if (user != null)
         {
-            return await DeleteUserAsync(user);
+            return await DeleteUserAsync(user, cancellation);
         }
 
         return await Result.SuccessAsync();
@@ -138,7 +138,7 @@ public class IdentityService : IIdentityService
         var result = await _userManager.Users
              .Where(x => x.UserRoles.Where(y => y.Role.Name == roleName).Any())
              .Include(x => x.UserRoles)
-             .ToDictionaryAsync(x => x.UserName!, y => y.DisplayName);
+             .ToDictionaryAsync(x => x.UserName!, y => y.DisplayName, cancellation);
         return result;
     }
 
@@ -305,7 +305,7 @@ public class IdentityService : IIdentityService
         {
             var key = $"GetUserDto:{userId}";
             var options = new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
-            var userDto = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Include(x => x.UserRoles).Select(x => new UserDto()
+            var userDto = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x=>x.Role).Select(x => new UserDto()
             {
                 Checked = false,
                 ProfilePictureDataUrl = x.ProfilePictureDataUrl,
