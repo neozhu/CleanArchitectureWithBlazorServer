@@ -241,7 +241,7 @@
     }
     private async Task OnCreate()
     {
-        var model = new RoleDto();
+        var model = new RoleDto() { Name=""  };
         var parameters = new DialogParameters { ["model"] = model };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_RoleFormDialog>(L["Create a new role"], parameters, options);
