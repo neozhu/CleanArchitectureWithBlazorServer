@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Security;
 public class UserDto 
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
-    public string UserName { get; set; } = string.Empty;
+    public required  string UserName { get; set; }  
     public string? DisplayName { get; set; }
     public string? Provider { get; set; } = "Local";
     public string? TenantId { get; set; }
@@ -19,7 +19,7 @@ public class UserDto
     public bool IsLive { get; set; }
     public string? RefreshToken { get; set; }
     public DateTime RefreshTokenExpiryTime { get; set; }
-    public string? Email { get; set; }
+    public required string Email { get; set; }
     public string? Password { get; set; }
     public string? ConfirmPassword { get; set; }
     public string? PhoneNumber { get; set; }
