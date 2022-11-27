@@ -45,9 +45,9 @@ public class IdentityService : IIdentityService
         _localizer = localizer;
     }
 
-    public async Task<string?> GetUserNameAsync(string userId)
+    public async Task<string?> GetUserNameAsync(string userId,CancellationToken cancellation=default)
     {
-        await _semaphore.WaitAsync();
+        await _semaphore.WaitAsync(cancellation);
         try
         {
             var key = $"GetUserNameAsync:{userId}";
@@ -265,9 +265,9 @@ public class IdentityService : IIdentityService
         return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
     }
 
-    public async Task UpdateLiveStatus(string userId, bool isLive)
+    public async Task UpdateLiveStatus(string userId, bool isLive,CancellationToken cancellation=default)
     {
-        await _semaphore.WaitAsync();
+        await _semaphore.WaitAsync(cancellation);
         try
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -284,12 +284,14 @@ public class IdentityService : IIdentityService
     }
     public async Task<UserDto> GetUserDto(string userId, CancellationToken cancellation = default)
     {
-        await _semaphore.WaitAsync();
+        await _semaphore.WaitAsync(cancellation);
         try
         {
             var key = $"GetUserDto:{userId}";
             var options = new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
-            var userDto = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Include(x => x.UserRoles).Select(x => new UserDto()
+            //var x = await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x=>x.Role).FirstOrDefaultAsync(cancellation);
+            var x = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x=>x.Id==userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefaultAsync(cancellation),options);
+            var userDto = new UserDto()
             {
                 Checked = false,
                 ProfilePictureDataUrl = x.ProfilePictureDataUrl,
@@ -308,7 +310,7 @@ public class IdentityService : IIdentityService
                 SuperiorName = (x.Superior != null ? x.Superior.UserName : null),
                 Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
                 AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
-            }).FirstOrDefaultAsync(x => x.Id == userId),options);
+            };
             return userDto!;
 
         }

@@ -194,22 +194,18 @@
         }
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        Title = L["Profile"];
-       await LoadOrgData();
-    }
+   
     private async void ActivePanelIndexChanged(int index)
     {
         if(index==2){
-            await Task.Delay(400);
+            await LoadOrgData();
             await JS.InvokeVoidAsync("createOrgChart", this._orgData);
         }
     }
     private async Task LoadOrgData()
     {
         var currerntuserName = (await _authState).User.GetUserName();
-        var list = await _userManager.Users.Include(x => x.UserRoles).Include(x => x.Superior).ToListAsync();
+        var list = await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x=>x.Role).Include(x => x.Superior).ToListAsync();
         foreach (var item in list)
         {
             var roles = await _userManager.GetRolesAsync(item);
