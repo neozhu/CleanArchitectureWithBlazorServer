@@ -3,7 +3,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Models;
 public class UserProfile
 {
     public string? Provider { get; set; }
-    public string? Superior { get; set; }
+    public string? SuperiorName { get; set; }
     public string? SuperiorId { get; set; }
     public string? ProfilePictureDataUrl { get; set; }
     public string? DisplayName { get; set; }

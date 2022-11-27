@@ -1,6 +1,6 @@
 @page "/user/profile"
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-@using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Features.Identity.Profile
 @using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
@@ -54,7 +54,7 @@
                             <MudTextField For="@(() => model.TenantName)" @bind-Value="model.TenantName" Label="@L["Tenant Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudTextField For="@(() => model.Superior)" @bind-Value="model.Superior" Label="@L["Superior Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
+                            <MudTextField For="@(() => model.SuperiorName)" @bind-Value="model.SuperiorName" Label="@L["Superior Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                         </MudItem>
                         <MudItem sm="6" xs="12">
                             <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
@@ -193,64 +193,15 @@
             PasswordInput = InputType.Text;
         }
     }
-    public void Dispose()
-    {
-        _profileService.OnChange -= _profileService_OnChange;
-    }
-    protected override async Task OnInitializedAsync()
-    {
-        Title = L["Profile"];
-        _profileService.OnChange += _profileService_OnChange;
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        model = _profileService.Profile;
 
     protected override async Task OnInitializedAsync()
     {
         Title = L["Profile"];
-        await LoadOrgData();
-
+       await LoadOrgData();
     }
     private async void ActivePanelIndexChanged(int index)
     {
         if(index==2){
-            await Task.Delay(400);
-            await JS.InvokeVoidAsync("createOrgChart", this._orgData);
-        }
-    }
-    private async Task LoadOrgData()
-    {
-        var currerntuserName = (await _authState).User.GetUserName();
-        var list = await _userManager.Users.Include(x => x.UserRoles).Include(x => x.Superior).ToListAsync();
-        foreach (var item in list)
-        {
-            var roles = await _userManager.GetRolesAsync(item);
-            var count = await _userManager.Users.Where(x => x.SuperiorId == item.Id).CountAsync();
-            var orgitem = new OrgItem();
-            orgitem.id = item.Id;
-            orgitem.name = item.DisplayName ?? item.UserName;
-            orgitem.area = item.TenantName;
-            orgitem.profileUrl = item.ProfilePictureDataUrl;
-            orgitem.imageUrl = item.ProfilePictureDataUrl;
-            if (currerntuserName == item.UserName)
-                orgitem.isLoggedUser = true;
-            orgitem.size = "";
-            orgitem.tags = item.PhoneNumber ?? item.Email;
-            if (roles != null && roles.Count > 0)
-                orgitem.positionName = string.Join(',', roles);
-            orgitem.parentId = item.SuperiorId;
-
-            orgitem._directSubordinates = count;
-            this._orgData.Add(orgitem);
-        }
-
-
-    }
-
- 
-    private void _profileService_OnChange()
-    {
-        if (index == 2)
-        {
             await Task.Delay(400);
             await JS.InvokeVoidAsync("createOrgChart", this._orgData);
         }
