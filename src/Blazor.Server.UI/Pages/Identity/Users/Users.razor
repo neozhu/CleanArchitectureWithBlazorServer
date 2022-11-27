@@ -301,7 +301,7 @@
         try
         {
             _loading = true;
-            _userList = await _userManager.Users.Include(x=>x.UserRoles).Select(x => new UserDto()
+            _userList = await _userManager.Users.Include(x=>x.UserRoles).ThenInclude(x=>x.Role).Select(x => new UserDto()
                 {
                     Checked=false,
                     ProfilePictureDataUrl = x.ProfilePictureDataUrl,
