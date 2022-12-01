@@ -80,10 +80,11 @@
 
 @code {
     public string Title = "Sign In";
-    private SignInManager<ApplicationUser> _signInManager { get; set; } = default!;
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
-    [Inject] private IdentityAuthenticationService _authenticationService { get; set; } = default!;
     [Inject] private ILogger<Login> _logger { get; set; } = default!;
+    [Inject] private  IDataProtectionProvider _dataProtectionProvider { get; set; } = default!;
+    [Inject]
+    protected NavigationManager NavigationManager { get; set; } = null!;
     private LoginFormModel _model = new()
         {
             UserName = "administrator",
@@ -103,7 +104,6 @@
     protected override Task OnInitializedAsync()
     {
         Title = L["Sign In"];
-        _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         return base.OnInitializedAsync();
     }
@@ -146,7 +146,7 @@
                     }
                     else
                     {
-                        var result = await _authenticationService.Login(_model);
+                        var result = await _userManager.CheckPasswordAsync(user, _model.Password!);
                         if (!result)
                         {
                             _logger.LogWarning("{@UserName} login fail.", _model.UserName);
@@ -154,7 +154,13 @@
                         }
                         else
                         {
-                            _logger.LogInformation("{@UserName} login successfully.", _model.UserName);
+                            var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "Login");
+                            var data = $"{user.Id}|{token}";
+                            var protector = _dataProtectionProvider.CreateProtector("Login");
+                            var protectedData = protector.Protect(data);
+
+                            NavigationManager.NavigateTo("/auth/login?token=" + protectedData, true);
+                            //_logger.LogInformation("{@UserName} login successfully.", _model.UserName);
                         }
                     }
                 }
@@ -202,15 +208,15 @@
     [JSInvokable]
     public async Task ConfirmExternal(string provider, string userName, string name, string accesstoken)
     {
-        var result = await _authenticationService.ExternalLogin(provider, userName, name, accesstoken);
-        if (!result)
-        {
-            _logger.LogWarning("{@UserName} login fail.", userName);
-            Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
-        }
-        else
-        {
-            _logger.LogInformation("{@UserName} login successfully.", userName);
-        }
+        //var result = await _authenticationService.ExternalLogin(provider, userName, name, accesstoken);
+        //if (!result)
+        //{
+        //    _logger.LogWarning("{@UserName} login fail.", userName);
+        //    Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
+        //}
+        //else
+        //{
+        //    _logger.LogInformation("{@UserName} login successfully.", userName);
+        //}
     }
 }
