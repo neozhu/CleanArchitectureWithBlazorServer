@@ -1,6 +1,13 @@
 
+using CleanArchitecture.Blazor.Application.Common.Exceptions;
+using CleanArchitecture.Blazor.Infrastructure.Constants;
+using System.Security.Claims;
+using System.Text;
+using System.Threading;
 using CleanArchitecture.Blazor.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +51,48 @@ public class AuthController : Controller
         }
 
         return Unauthorized();
+    }
+    [HttpGet("/auth/externallogin")]
+    public async Task<IActionResult> ExternalLogin(string provider, string userName, string name, string accessToken)
+    {
+        var user = await _userManager.FindByNameAsync(userName);
+        if (user is null)
+        {
+            var admin = await _userManager.FindByNameAsync("administrator") ?? throw new NotFoundException($"Application user administrator Not Found.");
+            user = new ApplicationUser
+            {
+                EmailConfirmed = true,
+                IsActive = true,
+                IsLive = true,
+                UserName = userName,
+                Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
+                Provider = provider,
+                DisplayName = name,
+                SuperiorId = admin.Id,
+                TenantId = admin.TenantId,
+                TenantName = admin.TenantName
+            };
+            var createResult = await _userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+            {
+                return Unauthorized();
+            }
+            var assignResult = await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
+            if (!createResult.Succeeded)
+            {
+                return Unauthorized();
+            }
+            await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
+        }
+
+        if (!user.IsActive)
+        {
+            return Unauthorized();
+        }
+        var isPersistent = true;
+        await _signInManager.SignInAsync(user, isPersistent);
+        return Redirect("/");
+
     }
     [HttpGet("/auth/logout")]
     public async Task<IActionResult> Logout()
