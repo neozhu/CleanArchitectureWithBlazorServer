@@ -1,5 +1,4 @@
 using CleanArchitecture.Blazor.Application.Services.PaddleOCR;
-using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;

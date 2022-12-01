@@ -35,18 +35,6 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
                 new Claim(ApplicationClaimTypes.TenantName, user.TenantName)
             });
         }
-        if (!string.IsNullOrEmpty(user.ProfilePictureDataUrl))
-        {
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
-                new Claim(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl)
-            });
-        }
-        if (!string.IsNullOrEmpty(user.DisplayName))
-        {
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
-                new Claim(ClaimTypes.GivenName, user.DisplayName)
-            });
-        }
         var appuser = await _userManager.FindByIdAsync(user.Id);
         var roles = await _userManager.GetRolesAsync(appuser);
         foreach (var roleName in roles)

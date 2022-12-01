@@ -30,25 +30,25 @@ public class AuthController : Controller
         var data = dataProtector.Unprotect(token);
         var parts = data.Split('|');
         var identityUser = await _userManager.FindByIdAsync(parts[0]);
-
         if (identityUser == null)
         {
             return Unauthorized();
         }
-
-        var isTokenValid = await _userManager.VerifyUserTokenAsync(identityUser, TokenOptions.DefaultProvider,"Login", parts[1]);
-
+        var isTokenValid = await _userManager.VerifyUserTokenAsync(identityUser, TokenOptions.DefaultProvider, "Login", parts[1]);
         if (isTokenValid)
         {
             var isPersistent = true;
-
             await _userManager.ResetAccessFailedCountAsync(identityUser);
-
             await _signInManager.SignInAsync(identityUser, isPersistent);
-
             return Redirect("/");
         }
 
         return Unauthorized();
+    }
+    [HttpGet("/auth/logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return Redirect("/");
     }
 }

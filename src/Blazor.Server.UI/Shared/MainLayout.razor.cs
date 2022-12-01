@@ -3,7 +3,6 @@ using MudBlazor;
 using Blazor.Server.UI.Components.Shared;
 using Toolbelt.Blazor.HotKeys;
 using Microsoft.AspNetCore.Components.Authorization;
-using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 using Blazor.Server.UI.Services;
 
 namespace Blazor.Server.UI.Shared;
