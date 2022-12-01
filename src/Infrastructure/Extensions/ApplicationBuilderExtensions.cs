@@ -38,6 +38,8 @@ public static class ApplicationBuilderExtensions
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapRazorPages();
+            endpoints.MapControllers();
             endpoints.MapHub<SignalRHub>(SignalR.HubUrl);
         });
 
