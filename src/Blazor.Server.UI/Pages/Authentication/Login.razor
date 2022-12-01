@@ -205,8 +205,10 @@
         await JS.InvokeVoidAsync("externalLogin", provider, DotNetObjectReference.Create(this));
     }
     [JSInvokable]
-    public async Task ConfirmExternal(string provider, string userName, string name, string accesstoken)
+    public Task ConfirmExternal(string provider, string userName, string name, string accesstoken)
     {
+        NavigationManager.NavigateTo($"/auth/externallogin?provider={provider}&userName={userName}&name={name}&accessToken={accesstoken}", true);
+        return Task.CompletedTask;
         //var result = await _authenticationService.ExternalLogin(provider, userName, name, accesstoken);
         //if (!result)
         //{
