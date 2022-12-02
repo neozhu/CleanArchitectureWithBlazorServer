@@ -35,6 +35,8 @@
         {
             var userDto = await _identityService.GetUserDto(state.User.GetUserId());
             await setProfile(userDto);
+            _client.Login += _client_Login;
+            _client.Logout += _client_Logout;
             await _client.StartAsync();
             
         }
