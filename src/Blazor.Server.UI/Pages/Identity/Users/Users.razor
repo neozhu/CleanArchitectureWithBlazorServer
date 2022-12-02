@@ -7,7 +7,6 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
 @using CleanArchitecture.Blazor.Infrastructure.Services
-@using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 @using Duende.IdentityServer.Events
 @using Microsoft.AspNetCore.Components.Server.Circuits
 @using Microsoft.AspNetCore.Identity;
@@ -411,7 +410,6 @@
                     await _mediator.Send(new UserProfileState.UpdateUserDtoAction(item));
                     if (user.TenantId is not null && user.TenantName is not null && state.User.GetTenantId() != user.TenantId)
                     {
-                        await _tenantProvider.SetTenant(user.TenantId,user.TenantName);
                         state.User.SetTenantId(user.TenantId);
                         state.User.SetTenantName(user.TenantName);
                     }

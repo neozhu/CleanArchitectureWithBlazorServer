@@ -49,11 +49,11 @@ else {
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.MapHealthChecks("/health");
-app.UseHttpsRedirection();
-app.UseExceptionHandler("/Error");
-app.UseInfrastructure(builder.Configuration);
 app.MapBlazorHub();
+app.MapHealthChecks("/health");
+app.UseExceptionHandler("/Error");
 app.MapFallbackToPage("/_Host");
+app.UseInfrastructure(builder.Configuration);
+
 
 await app.RunAsync();

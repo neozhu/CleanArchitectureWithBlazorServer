@@ -1,56 +1,39 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.Http;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 public sealed class TenantProvider : ITenantProvider
 {
-    private readonly ProtectedLocalStorage _protectedLocalStorage;
-    private readonly IDictionary<Guid, Action> _callbacks = new Dictionary<Guid, Action>();
-    public TenantProvider(ProtectedLocalStorage protectedLocalStorage)
-    {
-        _protectedLocalStorage = protectedLocalStorage;
-    }
-    public async Task SetTenant(string tenantId,string tenantName)
-    {
-        await _protectedLocalStorage.SetAsync(LocalStorage.TENANTID, tenantId);
-        await _protectedLocalStorage.SetAsync(LocalStorage.TENANTNAME, tenantName);
-        foreach (var callback in _callbacks.Values)
-        {
-            callback();
-        }
-    }
-    public async Task Clear()
-    {
-        await _protectedLocalStorage.DeleteAsync(LocalStorage.TENANTID);
-        await _protectedLocalStorage.DeleteAsync(LocalStorage.TENANTNAME);
-        foreach (var callback in _callbacks.Values)
-        {
-            callback();
-        }
-    }
-    public async Task<string> GetTenantId()
-    {
-        try
-        {
-            var tenant = string.Empty;
-            var storedPrincipal = await _protectedLocalStorage.GetAsync<string>(LocalStorage.TENANTID);
-            if (storedPrincipal.Success && storedPrincipal.Value is not null)
-            {
-                tenant = storedPrincipal.Value;
-            }
 
-            return tenant;
-        }
-        catch
-        {
-            return String.Empty;
-        }
+    private readonly IDictionary<Guid, Action> _callbacks = new Dictionary<Guid, Action>();
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public TenantProvider(IHttpContextAccessor httpContextAccessor)
+    {
+        _httpContextAccessor = httpContextAccessor;
     }
+
+
+    public string TenantId => _httpContextAccessor.HttpContext?.User.GetTenantId() ?? string.Empty;
+    public string TenantName => _httpContextAccessor.HttpContext?.User.GetTenantName() ?? string.Empty;
     public void Unregister(Guid id)
     {
         if (_callbacks.ContainsKey(id))
         {
             _callbacks.Remove(id);
+        }
+    }
+    public void Clear()
+    {
+        _callbacks.Clear();
+    }
+    public void Update()
+    {
+        foreach (var callback in _callbacks.Values)
+        {
+            callback();
         }
     }
 

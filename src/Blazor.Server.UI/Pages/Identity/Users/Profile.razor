@@ -1,7 +1,6 @@
 @page "/user/profile"
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 @using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
-@using CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
 @using SixLabors.ImageSharp.Processing
@@ -23,7 +22,7 @@
                                 @if (string.IsNullOrEmpty(model.ProfilePictureDataUrl))
                                 {
                                     <MudElement Class="d-flex flex-column  align-center">
-                                        <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.DisplayName</MudAvatar>
+                                        <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.UserName.ToUpper().First()</MudAvatar>
                                         <div class="d-flex">
                                             <MudChip Size="MudBlazor.Size.Small">@model.Role</MudChip>
 

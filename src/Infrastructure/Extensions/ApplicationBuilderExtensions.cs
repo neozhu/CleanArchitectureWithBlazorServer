@@ -15,7 +15,7 @@ public static class ApplicationBuilderExtensions
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-        
+        app.UseExceptionHandler("/Error");
         if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
         {
             Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
@@ -38,10 +38,10 @@ public static class ApplicationBuilderExtensions
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapRazorPages();
+            endpoints.MapControllers();
             endpoints.MapHub<SignalRHub>(SignalR.HubUrl);
         });
-
-
 
         return app;
     }

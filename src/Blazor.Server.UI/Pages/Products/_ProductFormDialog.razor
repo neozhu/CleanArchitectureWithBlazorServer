@@ -57,7 +57,7 @@
                     <div class="d-flex flex-row gap-4 mb-2">
                         <MudFileUpload T="IReadOnlyList<IBrowserFile>" Multiple
                                        SuppressOnChangeWhenInvalid="true"
-                                       Files="model.UploadPictures" OnFilesChanged="UploadFiles" For="@(() => model.UploadPictures)">
+                                       @bind-Files="model.UploadPictures" OnFilesChanged="UploadFiles" For="@(() => model.UploadPictures)">
                             <ButtonTemplate>
                                 <MudButton HtmlTag="label" Disabled="_uploading"
                                            Variant="Variant.Filled"
@@ -103,7 +103,7 @@
         {
             _uploading = true;
             var list = new List<string>();
-            model.UploadPictures = e.GetMultipleFiles();
+            
             foreach (var file in e.GetMultipleFiles())
             {
                 try

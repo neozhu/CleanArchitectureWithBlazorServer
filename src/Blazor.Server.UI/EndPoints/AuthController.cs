@@ -1,0 +1,102 @@
+
+using CleanArchitecture.Blazor.Application.Common.Exceptions;
+using CleanArchitecture.Blazor.Infrastructure.Constants;
+using System.Security.Claims;
+using System.Text;
+using System.Threading;
+using CleanArchitecture.Blazor.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Blazor.Server.UI.EndPoints;
+public class AuthController : Controller
+{
+    private readonly IDataProtectionProvider _dataProtectionProvider;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+
+    public AuthController(
+        IDataProtectionProvider dataProtectionProvider,
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager
+    )
+    {
+        _dataProtectionProvider = dataProtectionProvider;
+        _userManager = userManager;
+        _signInManager = signInManager;
+    }
+    [HttpGet("/auth/login")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Login(string token)
+    {
+        var dataProtector = _dataProtectionProvider.CreateProtector("Login");
+        var data = dataProtector.Unprotect(token);
+        var parts = data.Split('|');
+        var identityUser = await _userManager.FindByIdAsync(parts[0]);
+        if (identityUser == null)
+        {
+            return Unauthorized();
+        }
+        var isTokenValid = await _userManager.VerifyUserTokenAsync(identityUser, TokenOptions.DefaultProvider, "Login", parts[1]);
+        if (isTokenValid)
+        {
+            var isPersistent = true;
+            await _userManager.ResetAccessFailedCountAsync(identityUser);
+            await _signInManager.SignInAsync(identityUser, isPersistent);
+            return Redirect("/");
+        }
+
+        return Unauthorized();
+    }
+    [HttpGet("/auth/externallogin")]
+    public async Task<IActionResult> ExternalLogin(string provider, string userName, string name, string accessToken)
+    {
+        var user = await _userManager.FindByNameAsync(userName);
+        if (user is null)
+        {
+            var admin = await _userManager.FindByNameAsync("administrator") ?? throw new NotFoundException($"Application user administrator Not Found.");
+            user = new ApplicationUser
+            {
+                EmailConfirmed = true,
+                IsActive = true,
+                IsLive = true,
+                UserName = userName,
+                Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
+                Provider = provider,
+                DisplayName = name,
+                TenantId = admin.TenantId,
+                TenantName = admin.TenantName
+            };
+            var createResult = await _userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+            {
+                return Unauthorized();
+            }
+            var assignResult = await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
+            if (!createResult.Succeeded)
+            {
+                return Unauthorized();
+            }
+            await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
+        }
+
+        if (!user.IsActive)
+        {
+            return Unauthorized();
+        }
+        var isPersistent = true;
+        await _signInManager.SignInAsync(user, isPersistent);
+        return Redirect("/");
+
+    }
+    [HttpGet("/auth/logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return Redirect("/");
+    }
+}

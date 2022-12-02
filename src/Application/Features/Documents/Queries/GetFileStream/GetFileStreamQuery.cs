@@ -42,7 +42,7 @@ public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (st
     }
     public async Task<(string,byte[])> Handle(GetFileStreamQuery request, CancellationToken cancellationToken)
     {
-        var userid = await _currentUserService.UserId();
+        var userid = _currentUserService.UserId;
         var item=await _context.Documents.FindAsync(request.Id);
         if (item is null) throw new Exception($"not found document entry by Id:{request.Id}.");
         if (!string.IsNullOrEmpty(item.URL))

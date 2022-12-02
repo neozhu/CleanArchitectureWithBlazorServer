@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Blazor.Server.UI.Components.Dialogs;
 using CleanArchitecture.Blazor.Application.Common.Models;
-using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using CleanArchitecture.Blazor.Application.Constants;
 using BlazorState;
 using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
+using System.Security.Cryptography;
 
 namespace Blazor.Server.UI.Components.Shared;
 
@@ -16,8 +16,8 @@ public partial class UserMenu:  BlazorStateComponent
     UserProfileState UserProfileState => GetState<UserProfileState>();
     private UserProfile UserProfile => UserProfileState.UserProfile;
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
-    [Inject] private IdentityAuthenticationService _authenticationService { get; set; } = default!;
-    [Inject] private IJSRuntime JS { get; set; } = default!;
+    [Inject]
+    protected NavigationManager NavigationManager { get; set; } = null!;
     private async Task OnLogout()
     {
         var parameters = new DialogParameters
@@ -31,8 +31,7 @@ public partial class UserMenu:  BlazorStateComponent
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            await _authenticationService.Logout();
-            await JS.InvokeVoidAsync("externalLogout");
+            NavigationManager.NavigateTo("/auth/logout", true);
         }
     } 
 }
