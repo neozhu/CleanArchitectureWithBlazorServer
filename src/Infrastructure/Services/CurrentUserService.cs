@@ -1,64 +1,24 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.Http;
+
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class CurrentUserService : ICurrentUserService
 {
-    private readonly ProtectedLocalStorage _protectedLocalStorage;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
     public CurrentUserService(
-        ProtectedLocalStorage protectedLocalStorage
+        IHttpContextAccessor httpContextAccessor
        )
     {
-        _protectedLocalStorage = protectedLocalStorage;
+        _httpContextAccessor = httpContextAccessor;
     }
-
-    public async Task<string> UserId()
-    {
-        try
-        {
-            var userId = string.Empty;
-            var storedPrincipal = await _protectedLocalStorage.GetAsync<string>(LocalStorage.USERID);
-            if (storedPrincipal.Success && storedPrincipal.Value is not null)
-            {
-                userId = storedPrincipal.Value;
-            }
-
-            return userId;
-        }
-        catch
-        {
-            return String.Empty;
-        }
-    }
-    public async Task<string> UserName()
-    {
-        try
-        {
-            var userName = string.Empty;
-            var storedPrincipal = await _protectedLocalStorage.GetAsync<string>(LocalStorage.USERNAME);
-            if (storedPrincipal.Success && storedPrincipal.Value is not null)
-            {
-                userName = storedPrincipal.Value;
-            }
-
-            return userName;
-        }
-        catch
-        {
-            return String.Empty;
-        }
-    }
-
-    public async Task SetUser(string userId,string userName)
-    {
-        await _protectedLocalStorage.SetAsync(LocalStorage.USERID, userId);
-        await _protectedLocalStorage.SetAsync(LocalStorage.USERNAME, userName);
-    }
-    public async Task Clear()
-    {
-        await _protectedLocalStorage.DeleteAsync(LocalStorage.USERID);
-        await _protectedLocalStorage.DeleteAsync(LocalStorage.USERNAME);
-    }
+    public string UserId => _httpContextAccessor.HttpContext?.User.GetUserId()??string.Empty;
+    public string UserName => _httpContextAccessor.HttpContext?.User.GetUserName() ?? string.Empty;
+    public string TenantId => _httpContextAccessor.HttpContext?.User.GetTenantId() ?? string.Empty;
+    public string TenantName => _httpContextAccessor.HttpContext?.User.GetTenantName() ?? string.Empty;
 }

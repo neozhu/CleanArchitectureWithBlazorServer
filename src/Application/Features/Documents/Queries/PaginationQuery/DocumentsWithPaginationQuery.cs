@@ -39,7 +39,7 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
     }
     public async Task<PaginatedData<DocumentDto>> Handle(DocumentsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var userid = await _currentUserService.UserId();
+        var userid = _currentUserService.UserId;
         var data = await _context.Documents
             .Specify(new DocumentsQuery(userid,request.TenantId,request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
