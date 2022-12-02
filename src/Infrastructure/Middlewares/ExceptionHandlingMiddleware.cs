@@ -30,7 +30,7 @@ internal class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (Exception exception)
         {
-            var userId =await _currentUserService.UserId();
+            var userId = _currentUserService.UserId;
             var responseModel = await Result.FailureAsync(new string[] { exception.Message });
             var response = context.Response;
             response.ContentType = "application/json";

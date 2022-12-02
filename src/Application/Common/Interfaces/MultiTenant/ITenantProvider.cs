@@ -2,9 +2,10 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 
 public interface ITenantProvider
 {
-    Task<string> GetTenantId();
+    string TenantId { get; }
+    string TenantName { get; }
+    void Update();
     Guid Register(Action callback);
-    Task SetTenant(string tenantId,string tenantName);
-    Task Clear();
+    void Clear();
     void Unregister(Guid id);
 }

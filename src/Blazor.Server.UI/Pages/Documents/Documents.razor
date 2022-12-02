@@ -233,7 +233,7 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
-        _tenantId = await _tenantProvider.GetTenantId();
+        _tenantId =  _tenantProvider.TenantId;
         _tenantProvider.Register(async () =>
         {
             await _table.ReloadServerData();

@@ -48,8 +48,8 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     private async Task updateEntities(DbContext? context)
     {
         if (context is null) return;
-        var userId = await _currentUserService.UserId();
-        var tenantId = await _tenantProvider.GetTenantId();
+        var userId = _currentUserService.UserId;
+        var tenantId =  _tenantProvider.TenantId;
         foreach (var entry in context.ChangeTracker.Entries<AuditableEntity>())
         {
             switch (entry.State)
@@ -93,8 +93,8 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     private async Task<List<AuditTrail>> TryInsertTemporaryAuditTrail(DbContext? context,  CancellationToken cancellationToken = default)
     {
         if (context is null) return new List<AuditTrail>();
-        var userId = await _currentUserService.UserId();
-        var tenantId = await _tenantProvider.GetTenantId();
+        var userId = _currentUserService.UserId;
+        var tenantId = _tenantProvider.TenantId;
         context.ChangeTracker.DetectChanges();
         var temporaryAuditEntries = new List<AuditTrail>();
         foreach (var entry in context.ChangeTracker.Entries<IAuditTrial>())

@@ -17,12 +17,6 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
         var principal = await base.CreateAsync(user);
-        if (!string.IsNullOrEmpty(user.Provider))
-        {
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
-                new Claim(ApplicationClaimTypes.Provider, user.Provider)
-            });
-        }
         if (!string.IsNullOrEmpty(user.TenantId))
         {
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
@@ -35,20 +29,7 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
                 new Claim(ApplicationClaimTypes.TenantName, user.TenantName)
             });
         }
-        var appuser = await _userManager.FindByIdAsync(user.Id);
-        var roles = await _userManager.GetRolesAsync(appuser);
-        foreach (var roleName in roles)
-        {
-            var role = await _roleManager.FindByNameAsync(roleName);
-            var claims = await _roleManager.GetClaimsAsync(role);
-            foreach (var claim in claims)
-            {
-                ((ClaimsIdentity)principal.Identity)?.AddClaim(claim);
-            }
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
-                new Claim(ClaimTypes.Role, roleName) });
-
-        }
+        
         return principal;
     }
 }

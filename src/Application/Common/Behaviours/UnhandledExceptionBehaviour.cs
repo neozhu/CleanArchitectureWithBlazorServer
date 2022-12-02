@@ -25,7 +25,7 @@ public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavio
         catch (Exception ex)
         {
             var requestName = typeof(TRequest).Name;
-            var userName = await _currentUserService.UserName();
+            var userName = _currentUserService.UserName;
             _logger.LogError(ex, "{Name}: {Exception} with {@Request} by {@UserName}", requestName, ex.Message, request,userName);
             throw;
         }

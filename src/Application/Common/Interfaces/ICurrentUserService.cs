@@ -5,8 +5,8 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 
 public interface ICurrentUserService
 {
-    Task SetUser(string userId, string userName);
-    Task Clear();
-    Task<string> UserId();
-    Task<string> UserName();
+    string UserId { get; }
+    string UserName { get; }
+    string TenantId { get; }
+    string TenantName { get; }
 }
