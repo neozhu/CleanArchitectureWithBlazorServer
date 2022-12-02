@@ -68,7 +68,6 @@ public class AuthController : Controller
                 Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
                 Provider = provider,
                 DisplayName = name,
-                SuperiorId = admin.Id,
                 TenantId = admin.TenantId,
                 TenantName = admin.TenantName
             };

@@ -1,4 +1,3 @@
-using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class ServicesCollectionExtensions
