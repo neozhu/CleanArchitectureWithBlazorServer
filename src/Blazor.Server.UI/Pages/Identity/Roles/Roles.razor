@@ -435,8 +435,9 @@
                     Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
                     return;
                 }
+                _roleList.Remove(item);
             }
-            Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
         }
     }
     private Task OnExport()
