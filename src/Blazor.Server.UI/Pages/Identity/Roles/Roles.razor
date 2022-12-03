@@ -119,7 +119,7 @@
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
                     <col style="width:50px;" />
                     <col style="width:120px;" />
-                    <col  />
+                    <col />
                 </MudHidden>
             </ColGroup>
             <HeaderContent>
@@ -161,11 +161,11 @@
                 </MudTd>
             </RowTemplate>
             <PagerContent>
-                 <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
+                <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
         </MudTable>
 
-        <_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
+        <_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
     </ChildContent>
     <ErrorContent>
         <CustomError Exception="context"></CustomError>
@@ -173,7 +173,7 @@
 </ErrorBoundary>
 
 @code {
-
+    private bool processing = false;
     private string _currentRoleName = string.Empty;
     private List<RoleDto> _roleList = new();
     private int _defaultPageSize = 15;
@@ -238,8 +238,8 @@
         try
         {
             _loading = true;
-            var key="get-all-applicationroles";
-            _roleList =await _cache.GetOrAddAsync(key,async()=> await _roleManager.Roles.Select(x=>new RoleDto {Id=x.Id,Name=x.Name!,Description=x.Description }).ToListAsync(),_options);
+            var key = "get-all-applicationroles";
+            _roleList = await _cache.GetOrAddAsync(key, async () => await _roleManager.Roles.Select(x => new RoleDto() { Id = x.Id, Name = x.Name, Description = x.Description, NormalizedName = x.NormalizedName }).ToListAsync(), _options);
         }
         finally
         {
@@ -248,7 +248,7 @@
     }
     private async Task OnCreate()
     {
-        var model = new RoleDto() { Name=""  };
+        var model = new RoleDto() { Name = "" };
         var parameters = new DialogParameters { ["model"] = model };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_RoleFormDialog>(L["Create a new role"], parameters, options);
@@ -264,7 +264,7 @@
             var state = await _roleManager.CreateAsync(applicationRole);
             if (state.Succeeded)
             {
-                model.Id = applicationRole.Id;
+                model.Id=applicationRole.Id;
                 _roleList.Add(model);
                 Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
             }
@@ -277,12 +277,14 @@
     private async Task OnEdit(RoleDto item)
     {
         var parameters = new DialogParameters { ["model"] = item };
-        var options = new DialogOptions {CloseButton=true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_RoleFormDialog>(L["Edit the role"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var role=new ApplicationRole(){ Id = item.Id,Name=item.Name,Description=item.Description};
+            var role = await _roleManager.FindByIdAsync(item.Id);
+            role.Description = item.Description;
+            role.Name = item.Name;
             var state = await _roleManager.UpdateAsync(role);
             if (state.Succeeded)
             {
@@ -304,10 +306,10 @@
 
     private async Task<List<PermissionModel>> GetAllPermissions(RoleDto dto)
     {
-    
-        var role = await _roleManager.FindByIdAsync(dto.Id)??throw new NotFoundException($"not found role: {dto.Id}");
-        var key=$"get-claims-by-{role.Id}";
-        _assignedClaims =await _cache.GetOrAddAsync(key,async()=> await _roleManager.GetClaimsAsync(role),_options);
+        var key = $"get-role-by-{dto.Id}";
+        var role = await _cache.GetOrAddAsync(key, async () => await _roleManager.FindByIdAsync(dto.Id), _options);
+        key = $"get-claims-by-{role!.Id}";
+        _assignedClaims = await _cache.GetOrAddAsync(key, async () => await _roleManager.GetClaimsAsync(role), _options);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
         foreach (var module in modules)
@@ -352,51 +354,65 @@
     }
     private async Task OnAssignChangedHandler(PermissionModel model)
     {
-        var roleId = model.RoleId!;
-        var role = await _roleManager.FindByIdAsync(roleId) ?? throw new NotFoundException($"Application role {roleId} Not Found."); ;
-        model.Assigned = !model.Assigned;
-        if (model.Assigned && model.ClaimType is not null && model.ClaimValue is not null)
+        try
         {
-            await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
-            Snackbar.Add($"{L["Assigned successfully"]}", MudBlazor.Severity.Info);
-        }
-        else
-        {
-            var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
-            if (removed is not null)
+            processing = true;
+            var roleId = model.RoleId!;
+            var role = await _roleManager.FindByIdAsync(roleId) ?? throw new NotFoundException($"Application role {roleId} Not Found."); ;
+            model.Assigned = !model.Assigned;
+            if (model.Assigned && model.ClaimType is not null && model.ClaimValue is not null)
             {
-                await _roleManager.RemoveClaimAsync(role, removed);
-            }
-            Snackbar.Add($"{L["Unassigned successfully"]}", MudBlazor.Severity.Info);
-        }
-
-
-    }
-    private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
-    {
-        var roleId = models.First().RoleId;
-        var role = await _roleManager.FindByIdAsync(roleId!);
-        foreach (var model in models)
-        {
-
-            if (model.Assigned)
-            {
-                if (model.ClaimType is not null && model.ClaimValue is not null)
-                {
-                    await _roleManager.AddClaimAsync(role!, new Claim(model.ClaimType, model.ClaimValue));
-                }
+                await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
+                Snackbar.Add($"{L["Assigned successfully"]}", MudBlazor.Severity.Info);
             }
             else
             {
                 var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
                 if (removed is not null)
                 {
-                    await _roleManager.RemoveClaimAsync(role!, removed);
+                    await _roleManager.RemoveClaimAsync(role, removed);
                 }
-
+                Snackbar.Add($"{L["Unassigned successfully"]}", MudBlazor.Severity.Info);
             }
         }
-        Snackbar.Add($"{L["Assign changed successfully"]}", MudBlazor.Severity.Info);
+        finally
+        {
+            processing = false;
+        }
+
+    }
+    private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
+    {
+        try
+        {
+            processing = true;
+            var roleId = models.First().RoleId;
+            var role = await _roleManager.FindByIdAsync(roleId!);
+            foreach (var model in models)
+            {
+                if (model.Assigned)
+                {
+                    if (model.ClaimType is not null && model.ClaimValue is not null)
+                    {
+                        await _roleManager.AddClaimAsync(role!, new Claim(model.ClaimType, model.ClaimValue));
+                    }
+                }
+                else
+                {
+                    var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
+                    if (removed is not null)
+                    {
+                        await _roleManager.RemoveClaimAsync(role!, removed);
+                    }
+                }
+            }
+            Snackbar.Add($"{L["Assign changed successfully"]}", MudBlazor.Severity.Info);
+           await Task.Delay(300);
+        }
+        finally
+        {
+            processing = false;
+        }
     }
     private async Task OnDeleteChecked()
     {
@@ -413,8 +429,16 @@
             foreach (var item in _selectItems)
             {
                 var deleterole = await _roleManager.FindByIdAsync(item.Id);
-                await _roleManager.DeleteAsync(deleterole!);
-                _roleList.Remove(item);
+                var deleteresult = await _roleManager.DeleteAsync(deleterole!);
+                if (deleteresult.Succeeded)
+                {
+                    _roleList.Remove(item);
+                    Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+                }
+                else
+                {
+                    Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                }
             }
             Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
         }
