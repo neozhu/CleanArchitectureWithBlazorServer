@@ -8,6 +8,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
 @using CleanArchitecture.Blazor.Infrastructure.Services
 @using Duende.IdentityServer.Events
+@using LazyCache;
 @using Microsoft.AspNetCore.Components.Server.Circuits
 @using Microsoft.AspNetCore.Identity;
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
@@ -226,6 +227,8 @@
     private ITenantProvider _tenantProvider{ get; set; }= default!;
     [Inject]
     private IMediator _mediator { get; set; } = default!;
+    [Inject]
+    private IAppCache _cache { get; set; } = null!;
 
     private bool _canCreate;
     private bool _canSearch;
@@ -237,6 +240,8 @@
     private bool _canImport;
     private bool _canExport;
     private bool _loading;
+    private TimeSpan refreshInterval => TimeSpan.FromSeconds(30);
+    private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
 
     protected override async Task OnInitializedAsync()
     {
@@ -300,7 +305,8 @@
         try
         {
             _loading = true;
-            _userList = await _userManager.Users.Include(x=>x.UserRoles).ThenInclude(x=>x.Role).Select(x => new UserDto()
+            var key = "get-all-applicationusers";
+            _userList =await _cache.GetOrAddAsync(key,async()=> await _userManager.Users.Include(x=>x.UserRoles).ThenInclude(x=>x.Role).Select(x => new UserDto()
                 {
                     Checked=false,
                     ProfilePictureDataUrl = x.ProfilePictureDataUrl,
@@ -317,7 +323,7 @@
                     LockoutEnd = x.LockoutEnd,
                     Role =  x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
                     AssignRoles = x.UserRoles.Select(x=>x.Role.Name!).ToArray(),
-                }).ToListAsync();
+                }).ToListAsync() , _options);
         }
         finally
         {

@@ -8,7 +8,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
 public class UserDto
 {
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string Id { get; set; } =string.Empty;
     public required  string UserName { get; set; }  
     public string? DisplayName { get; set; }
     public string? Provider { get; set; } = "Local";
