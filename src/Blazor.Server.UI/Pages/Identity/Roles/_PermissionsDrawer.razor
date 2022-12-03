@@ -24,8 +24,8 @@
                     </MudStack>
                 </CardHeaderContent>
                 <CardHeaderActions>
-                    <MudTooltip Text="@L["Assign All"]">
-                        <MudIconButton Icon="@Icons.Filled.AutoFixHigh" Color="Color.Default" OnClick="@(()=>OnAssignAll(group))" />
+                    <MudTooltip Text="@L["Assign or Unassign all"]">
+                        <MudIconButton Disabled="@Waiting" Icon="@Icons.Filled.AutoFixHigh" Color="Color.Default" OnClick="@(()=>OnAssignAll(group))" />
                     </MudTooltip>
                 </CardHeaderActions>
             </MudCardHeader>
@@ -56,6 +56,7 @@
     [EditorRequired] [Parameter] public EventCallback<PermissionModel> OnAssignChanged { get; set; }
     [EditorRequired] [Parameter] public EventCallback<List<PermissionModel>> OnAssignAllChanged { get; set; }
     [EditorRequired] [Parameter] public EventCallback<bool> OnOpenChanged { get; set; }
+    [Parameter] public bool Waiting {get;set;}
     private async Task OnAssignAll(string? groupName)
     {
         var list = new List<PermissionModel>();
@@ -63,10 +64,11 @@
         {
             if (Permissions[i].Group == groupName)
             {
-                Permissions[i].Assigned = true;
+                Permissions[i].Assigned = !Permissions[i].Assigned;
                 list.Add(Permissions[i]);
             }
         }
-        await  OnAssignAllChanged.InvokeAsync(list);
+        await OnAssignAllChanged.InvokeAsync(list);
+        
     }
 }
