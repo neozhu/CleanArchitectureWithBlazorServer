@@ -476,6 +476,8 @@
             
             foreach (var item in _selectItems)
                 _userList.Remove(item);
+
+            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
         }
             
     }
