@@ -334,8 +334,8 @@
     {
         var model = new UserDto() { Provider = "Local", Email="",UserName="", AssignRoles = new string[] { RoleConstants.BasicRole } };
         var parameters = new DialogParameters {
-            { nameof(_UserFormDialog.model),model },
-            { nameof(_UserFormDialog.superiorList),this._userList } };
+            { nameof(_UserFormDialog.model),model }
+            };
 
         var options = new DialogOptions {CloseButton=true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
