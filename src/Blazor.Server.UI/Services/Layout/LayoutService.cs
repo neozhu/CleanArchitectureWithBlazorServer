@@ -12,7 +12,7 @@ public class LayoutService
     public string PrimaryColor { get; set; } = "#2d4275";
     public string SecondaryColor { get; set; } = "#ff4081ff";
     public double BorderRadius { get; set; } = 4;
-
+    public double DefaultFontSize { get; set; } = 0.8125;
     public MudTheme CurrentTheme { get; private set; } = new();
 
 
@@ -36,11 +36,13 @@ public class LayoutService
             PrimaryColor = _userPreferences.PrimaryColor;
             SecondaryColor = _userPreferences.SecondaryColor;
             BorderRadius = _userPreferences.BorderRadius;
+            DefaultFontSize = _userPreferences.DefaultFontSize;
             CurrentTheme.Palette.Primary = PrimaryColor;
             CurrentTheme.PaletteDark.Primary = PrimaryColor;
             CurrentTheme.Palette.Secondary = SecondaryColor;
             CurrentTheme.PaletteDark.Secondary = SecondaryColor;
             CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
+            CurrentTheme.Typography.Default.FontSize = DefaultFontSize + "rem";
         }
         else
         {
@@ -124,11 +126,13 @@ public class LayoutService
         PrimaryColor = _userPreferences.PrimaryColor;
         SecondaryColor = _userPreferences.SecondaryColor;
         BorderRadius = _userPreferences.BorderRadius;
+        DefaultFontSize = _userPreferences.DefaultFontSize;
         CurrentTheme.Palette.Primary = PrimaryColor;
         CurrentTheme.PaletteDark.Primary = PrimaryColor;
         CurrentTheme.Palette.Secondary = SecondaryColor;
         CurrentTheme.PaletteDark.Secondary = SecondaryColor;
         CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
+        CurrentTheme.Typography.Default.FontSize = DefaultFontSize+"rem";
         await _userPreferencesService.SaveUserPreferences(_userPreferences);
         OnMajorUpdateOccured();
     }
