@@ -43,9 +43,6 @@
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.0-rc1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Persistence\Migrations\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
 </Project>
