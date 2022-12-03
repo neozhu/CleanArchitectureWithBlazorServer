@@ -41,7 +41,7 @@ public partial class ThemesMenu
     }
     private async Task ChangedSelection(ChangeEventArgs args)
     {
-        UserPreferences.BorderRadius = int.Parse(args?.Value?.ToString() ?? "0");
+        UserPreferences.BorderRadius = double.Parse(args?.Value?.ToString() ?? "0");
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
     private async Task ToggleDarkLightMode(bool isDarkMode)
@@ -49,4 +49,10 @@ public partial class ThemesMenu
         UserPreferences.IsDarkMode = isDarkMode;
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
+    private async Task ChangedFontSize(ChangeEventArgs args)
+    {
+        UserPreferences.DefaultFontSize = double.Parse(args?.Value?.ToString() ?? "0");
+        await UserPreferencesChanged.InvokeAsync(UserPreferences);
+    }
+    
 }

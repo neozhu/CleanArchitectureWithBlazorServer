@@ -18,5 +18,6 @@ public class UserPreferences
     public string PrimaryColor { get; set; } = "#2d4275";
     public string SecondaryColor { get; set; } = "#ff4081ff";
     public double BorderRadius { get; set; } = 4;
+    public double DefaultFontSize { get; set; } = 0.8125;
 }
 

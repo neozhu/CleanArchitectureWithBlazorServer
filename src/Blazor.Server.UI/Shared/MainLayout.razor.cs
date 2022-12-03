@@ -15,7 +15,7 @@ public partial class MainLayout: IDisposable
     private UserPreferences UserPreferences = new();
     [Inject] 
     private LayoutService _layoutService { get; set; } = null!;
-    private MudThemeProvider? _mudThemeProvider;
+    private MudThemeProvider? _mudThemeProvider { get; set; }=null!;
     private bool _themingDrawerOpen;
     [Inject] private IDialogService _dialogService { get; set; } = default!;
     [Inject] private HotKeys _hotKeys { get; set; } = default!;
@@ -39,16 +39,12 @@ public partial class MainLayout: IDisposable
     }
     private async Task ApplyUserPreferences()
     {
-        if (_mudThemeProvider is not null)
-        {
-            var defaultDarkMode = await _mudThemeProvider.GetSystemPreference();
+            var defaultDarkMode = await _mudThemeProvider!.GetSystemPreference();
             UserPreferences = await _layoutService.ApplyUserPreferences(defaultDarkMode);
-        }
     }
     protected override async Task OnInitializedAsync()
     {
         _layoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
-   
         _layoutService.SetBaseTheme(Theme.ApplicationTheme());
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");

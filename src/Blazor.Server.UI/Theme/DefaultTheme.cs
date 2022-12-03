@@ -25,37 +25,6 @@ public class Theme
                 GrayLight = "#9CA3AF",
                 GrayLighter = "#adbdccff"
             },
-            //Palette= new()
-            //{
-            //    AppbarText = "#424242",
-            //    AppbarBackground = "rgba(0,0,0,0)",
-            //    BackgroundGrey = "#F9FAFC",
-            //    TextSecondary = "#425466",
-            //    Dark = "#110E2D",
-            //    DarkLighten = "#1A1643",
-            //    GrayDefault = "#4B5563",
-            //    GrayLight = "#9CA3AF",
-            //    GrayLighter = "#adbdccff"
-            //},
-            //PaletteDark = new()
-            //{
-            //    AppbarText = "#92929f",
-            //    AppbarBackground = "rgba(0,0,0,0)",
-            //    BackgroundGrey = "#1a1a27",
-            //    Surface = "#1e1e2d",
-            //    Background = "#151521",
-            //    Dark = "#111019",
-            //    DarkLighten = "#1A1643",
-            //    TextPrimary = "#ffffff",
-            //    TextSecondary = "#92929f",
-            //    TextDisabled = "#ffffff33",
-            //    ActionDefault = "#92929f",
-            //    DrawerIcon = "#92929f",
-            //    DrawerText = "#92929f",
-            //    DrawerBackground = "#151521",
-            //    OverlayLight = "#1e1e2d80",
-            //    Divider = "#5c5c6a"
-            //},
             PaletteDark = new Palette
             {
                 Primary = "#7e6fff",

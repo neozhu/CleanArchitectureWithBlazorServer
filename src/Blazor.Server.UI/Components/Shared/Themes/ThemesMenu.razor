@@ -80,6 +80,20 @@
             </MudItem>
 
         </MudGrid>
+        <MudText Typo="Typo.body2">
+            <b>Default Font Size</b>
+        </MudText>
+        <MudGrid Class="my-3"
+                 Spacing="3">
+
+            <MudItem xs="12">
+                <MudSlider Value="@UserPreferences.DefaultFontSize" Min="0.75" Max="1.125" Immediate="false" Step="0.0625" Color="Color.Primary"
+                           @oninput="@((e) => ChangedFontSize(e))">
+                    @($"{UserPreferences.DefaultFontSize.ToString()} rem")
+                </MudSlider>
+            </MudItem>
+
+        </MudGrid>
     </div>
 </MudDrawer>
 
