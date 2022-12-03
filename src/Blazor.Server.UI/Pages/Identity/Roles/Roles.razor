@@ -264,6 +264,7 @@
             var state = await _roleManager.CreateAsync(applicationRole);
             if (state.Succeeded)
             {
+                model.Id = applicationRole.Id;
                 _roleList.Add(model);
                 Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
             }
