@@ -26,7 +26,8 @@ public class IdentityService : IIdentityService
     private readonly IAuthorizationService _authorizationService;
     private readonly IAppCache _cache;
     private readonly IStringLocalizer<IdentityService> _localizer;
-    private readonly TimeSpan refreshInterval = TimeSpan.FromSeconds(60);
+    private TimeSpan refreshInterval => TimeSpan.FromSeconds(60);
+    private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
     public IdentityService(
         IServiceProvider serviceProvider,
         IOptions<AppConfigurationSettings> appConfig,
@@ -51,8 +52,7 @@ public class IdentityService : IIdentityService
         try
         {
             var key = $"GetUserNameAsync:{userId}";
-            var options = new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
-            var user = await _cache.GetOrAddAsync(key,async() => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId),options);
+            var user = await _cache.GetOrAddAsync(key,async() => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId),_options);
             return user?.UserName;
         }
         finally
@@ -288,9 +288,7 @@ public class IdentityService : IIdentityService
         try
         {
             var key = $"GetUserDto:{userId}";
-            var options = new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
-            //var x = await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x=>x.Role).FirstOrDefaultAsync(cancellation);
-            var x = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x=>x.Id==userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefaultAsync(cancellation),options);
+            var x = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x=>x.Id==userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefaultAsync(cancellation), _options);
             var userDto = new UserDto()
             {
                 Checked = false,

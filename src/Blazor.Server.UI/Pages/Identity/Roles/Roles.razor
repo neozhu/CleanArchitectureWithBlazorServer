@@ -5,6 +5,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
 @using CleanArchitecture.Blazor.Infrastructure.Constants
 @using CleanArchitecture.Blazor.Application.Common.Security
+@using LazyCache;
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel
 @using System.Reflection
@@ -184,6 +185,10 @@
 
     private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
 
+    private TimeSpan refreshInterval => TimeSpan.FromSeconds(30);
+    private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
+    [Inject]
+    private IAppCache _cache { get; set; } = null!;
     private List<PermissionModel> _permissions = new();
     private IList<Claim> _assignedClaims = default!;
     private bool _canCreate;
@@ -233,7 +238,8 @@
         try
         {
             _loading = true;
-            _roleList = await _roleManager.Roles.ToListAsync();
+            var key = "get-all-applicationroles";
+            _roleList =await _cache.GetOrAddAsync(key,async()=> await _roleManager.Roles.ToListAsync(),_options);
         }
         finally
         {
@@ -305,7 +311,8 @@
 
     private async Task<List<PermissionModel>> GetAllPermissions(ApplicationRole role)
     {
-        _assignedClaims = await _roleManager.GetClaimsAsync(role);
+        var key = $"get-claims-by-{role.Id}";
+        _assignedClaims =await _cache.GetOrAddAsync(key,async()=> await _roleManager.GetClaimsAsync(role),_options);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
         foreach (var module in modules)
