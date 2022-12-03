@@ -1,14 +1,17 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching;
+using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
+using CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
 using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery;
 
-public class LogsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<LogDto>>
+public class LogsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<LogDto>>, ICacheable
 {
-
-
+    public string CacheKey => LogsCacheKey.GetPaginationCacheKey($"{this}");
+    public MemoryCacheEntryOptions? Options => LogsCacheKey.MemoryCacheEntryOptions;
 }
 public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, PaginatedData<LogDto>>
 {

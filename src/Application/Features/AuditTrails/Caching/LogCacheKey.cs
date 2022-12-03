@@ -1,20 +1,17 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
+namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching;
 
-public static class LogsCacheKey
+public static class AuditTrailsCacheKey
 {
-    private static readonly TimeSpan refreshInterval = TimeSpan.FromMinutes(30);
-    public const string GetAllCacheKey = "all-logs";
-    public static string GetChartDataCacheKey(string parameters) {
-        return $"GetChartDataCacheKey,{parameters}";
-    }
+    private static readonly TimeSpan refreshInterval = TimeSpan.FromMilliseconds(30);
+    public const string GetAllCacheKey = "all-audittrails";
     public static string GetPaginationCacheKey(string parameters)
     {
-        return $"LogsTrailsWithPaginationQuery,{parameters}";
+        return $"AuditTrailsWithPaginationQuery,{parameters}";
     }
-    static LogsCacheKey()
+    static AuditTrailsCacheKey()
     {
         _tokensource = new CancellationTokenSource(refreshInterval);
     }
