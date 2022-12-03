@@ -18,11 +18,12 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where T
 
     }
 
-    public async Task Process(TRequest request, CancellationToken cancellationToken)
+    public Task Process(TRequest request, CancellationToken cancellationToken)
     {
         var requestName = nameof(TRequest);
         var userName = _currentUserService.UserName;
         _logger.LogTrace("Request: {Name} with {@Request} by {@UserName}",
             requestName,  request, userName);
+        return Task.CompletedTask;
     }
 }
