@@ -436,6 +436,10 @@
                     return;
                 }
             }
+            foreach (var item in _selectItems)
+            {
+                _roleList.Remove(item);
+            }
             Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
         }
     }
