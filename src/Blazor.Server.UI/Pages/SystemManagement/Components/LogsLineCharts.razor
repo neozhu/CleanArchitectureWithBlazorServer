@@ -4,12 +4,13 @@
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
 @inject IStringLocalizer<Logs> L
 @inherits ComponentBase
+@implements IDisposable
 <div class="d-flex flex-grow-1 mb-2">
-    <MudPaper Class="pa-5 flex-grow-1" Elevation="3" Style="@backgroundColor" >
+    <MudPaper Class="pa-5 flex-grow-1" Elevation="3" Style="@backgroundColor">
         <ApexChart @ref="chart" Options="options" TItem="LogTimeLineDto" Height="180"
-                  Debug 
-                     Title="@L["Collect logs by day"]">
-             
+                   Debug
+                   Title="@L["Collect logs by day"]">
+
             <ApexPointSeries TItem="LogTimeLineDto"
                              Items="Data"
                              Name="Count"
@@ -23,34 +24,36 @@
 
 @code {
     private ApexChart<LogTimeLineDto>? chart { get; set; }
-    private ApexChartOptions<LogTimeLineDto> options { get; set; }=   new();
-    [EditorRequired][Parameter] public List<LogTimeLineDto> Data { get; set; } =new();
+    private ApexChartOptions<LogTimeLineDto> options { get; set; } = new();
+    [EditorRequired][Parameter] public List<LogTimeLineDto> Data { get; set; } = new();
     [Inject]
     private LayoutService _layoutService { get; set; } = null!;
     public string backgroundColor = "background:#fff";
+    public void Dispose()
+    {
+        _layoutService.MajorUpdateOccured -= MajorUpdateOccured;
+        GC.SuppressFinalize(this);
+    }
     protected override void OnInitialized()
     {
-
         var isdarkmode = _layoutService.IsDarkMode;
         var colors = isdarkmode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
         backgroundColor = isdarkmode ? "background:rgb(66, 66, 66)" : "background:#fff";
-
         options.Theme = new ApexCharts.Theme()
-        {
-                Mode = (isdarkmode? Mode.Dark:Mode.Light ),
-        };
-
+            {
+                Mode = (isdarkmode ? Mode.Dark : Mode.Light),
+            };
         options.Fill = new Fill
             {
                 Type = new List<FillType> { FillType.Gradient },
                 Gradient = new FillGradient
                 {
-                    Type= GradientType.Vertical,
+                    Type = GradientType.Vertical,
                     ShadeIntensity = 1,
                     OpacityFrom = 1,
                     OpacityTo = 0.7,
                     GradientToColors = colors,
-                    Stops = new List<double>() {0,100 }
+                    Stops = new List<double>() { 0, 100 }
                 },
 
             };
@@ -90,18 +93,19 @@
                 }
             };
 
-        _layoutService.MajorUpdateOccured += async (s, e) =>
-                {
-                    var isdarkmode = _layoutService.IsDarkMode;
-                    var colors = isdarkmode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
-                    backgroundColor = isdarkmode ? "background:rgb(66, 66, 66)" : "background:#fff";
-                    options.Theme.Mode = (isdarkmode ? Mode.Dark : Mode.Light);
-                    options.Fill.Gradient.GradientToColors = colors;
-                    await chart!.UpdateOptionsAsync(true, true, false);
-                    await chart!.RenderAsync();
-                    StateHasChanged();
-                };
+        _layoutService.MajorUpdateOccured += MajorUpdateOccured;
 
+    }
+    private async void MajorUpdateOccured(object? s, EventArgs args)
+    {
+        var isdarkmode = _layoutService.IsDarkMode;
+        var colors = isdarkmode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
+        backgroundColor = isdarkmode ? "background:rgb(66, 66, 66)" : "background:#fff";
+        options.Theme.Mode = (isdarkmode ? Mode.Dark : Mode.Light);
+        options.Fill.Gradient.GradientToColors = colors;
+        await chart!.UpdateOptionsAsync(true, true, false);
+        await chart!.RenderAsync();
+        StateHasChanged();
     }
     public async Task RenderChart()
     {
