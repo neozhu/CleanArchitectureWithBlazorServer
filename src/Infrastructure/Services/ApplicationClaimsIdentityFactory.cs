@@ -5,14 +5,10 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 #nullable disable
 public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
 {
-    private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly UserManager<ApplicationUser> _userManager;
     public ApplicationClaimsIdentityFactory(UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
         IOptions<IdentityOptions> optionsAccessor) : base(userManager, roleManager, optionsAccessor)
     {
-        _userManager = userManager;
-        _roleManager = roleManager;
     }
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
