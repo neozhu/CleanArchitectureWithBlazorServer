@@ -407,7 +407,7 @@
                 }
             }
             Snackbar.Add($"{L["Assign changed successfully"]}", MudBlazor.Severity.Info);
-           await Task.Delay(300);
+            await Task.Delay(300);
         }
         finally
         {
@@ -430,14 +430,10 @@
             {
                 var deleterole = await _roleManager.FindByIdAsync(item.Id);
                 var deleteresult = await _roleManager.DeleteAsync(deleterole!);
-                if (deleteresult.Succeeded)
-                {
-                    _roleList.Remove(item);
-                    Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
-                }
-                else
+                if (!deleteresult.Succeeded)
                 {
                     Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                    return;
                 }
             }
             Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);

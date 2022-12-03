@@ -332,8 +332,11 @@
     }
     private async Task OnCreate()
     {
-        var model = new UserDto() { Provider = "Local",UserName="",Email="", AssignRoles = new string[] { RoleConstants.BasicRole } };
-        var parameters = new DialogParameters { ["model"] = model };
+        var model = new UserDto() { Provider = "Local", Email="",UserName="", AssignRoles = new string[] { RoleConstants.BasicRole } };
+        var parameters = new DialogParameters {
+            { nameof(_UserFormDialog.model),model },
+            { nameof(_UserFormDialog.superiorList),this._userList } };
+
         var options = new DialogOptions {CloseButton=true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
         var result = await dialog.Result;
@@ -409,7 +412,7 @@
                         }
                     }
                 }
-                
+
                 if (state.User.GetUserId() == item.Id)
                 {
                     //update user profile
@@ -442,27 +445,34 @@
                 Snackbar.Add($"{ConstantString.DELETEFAIL}", MudBlazor.Severity.Error);
                 return;
             }
-            
+
             _selectItems.Remove(_selectItems.First(x=>x.Id == currentUserId));
         }
-    
+
         string deleteContent = ConstantString.DELETECONFIRMATION;
         var parameters = new DialogParameters { { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, _selectItems.Count) } };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
         var result = await dialog.Result;
-        
+
         if (!result.Cancelled)
         {
             var deleteId = _selectItems.Select(x => x.Id).ToArray();
             var deleteUsers = await _userManager.Users.Where(x => deleteId.Contains(x.Id) ).ToListAsync();
-            
-            foreach (var deleteUser in deleteUsers)
-                await _userManager.DeleteAsync(deleteUser);
-            
-            foreach (var item in _selectItems)
-                _userList.Remove(item);
 
+            foreach (var deleteUser in deleteUsers)
+            {
+                var deleteresult= await _userManager.DeleteAsync(deleteUser);
+                if (!deleteresult.Succeeded)
+                {
+                    Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                    return;
+                }
+            }
+            foreach (var item in _selectItems)
+            {
+                _userList.Remove(item);
+            }
             Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
         }
             
