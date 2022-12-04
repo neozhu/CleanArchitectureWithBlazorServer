@@ -1,5 +1,6 @@
 @page "/system/logs"
 @using Blazor.Server.UI.Pages.SystemManagement.Components
+@using CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Delete;
 @using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
 @using CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery
@@ -33,6 +34,27 @@
                                OnClick="@(()=>OnRefresh())"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                Style="margin-right: 5px;">@ConstantString.REFRESH</MudButton>
+                    @if (_canPurge)
+                    {
+                        <MudButton DisableElevation Variant="Variant.Outlined"
+                               Size="Size.Small"
+                               Disabled="@(_loading || _clearing)"
+                               OnClick="@(()=>OnPurge())"
+                               StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary"
+                               Style="margin-right: 5px;">
+                            @if (_clearing)
+                            {
+                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                <MudText Class="ms-2">waiting</MudText>
+                            }
+                            else
+                            {
+                                <MudText> @ConstantString.CLEAR </MudText>
+                            }
+                           
+                        </MudButton>
+                    }
+
                 </div>
                 <MudSpacer />
                 <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
@@ -149,13 +171,18 @@
     private MudTable<LogDto> _table = default!;
 
     public List<LogTimeLineDto> _data { get; set; } = new();
+    [CascadingParameter]
+    private Task<AuthenticationState> _authState { get; set; } = default!;
     private bool _loading;
+    private bool _clearing;
     [Inject]
     private IMediator _mediator { get; set; } = default!;
-
-    protected override void OnInitialized()
+    private bool _canPurge;
+    protected override async void OnInitialized()
     {
         Title = L["Logs"];
+        var state = await _authState;
+        _canPurge = (await AuthService.AuthorizeAsync(state.User, Permissions.Logs.Purge)).Succeeded;
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -164,7 +191,7 @@
             _data = await _mediator.Send(new LogsTimeLineChatDataQuery());
             StateHasChanged();
             await chartcomponent!.RenderChart();
-          
+
         }
     }
 
@@ -203,5 +230,32 @@
     {
         dto.ShowDetails = !dto.ShowDetails;
         return Task.CompletedTask;
+    }
+    private async Task OnPurge()
+    {
+        var parameters = new DialogParameters
+                        {
+                    { nameof(ConfirmationDialog.ContentText), $"{L["Are you sure you want to erase all the logs?"]}" }
+                        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<ConfirmationDialog>
+        ($"{L["Erase logs"]}", parameters, options);
+        var state = await dialog.Result;
+        if (!state.Cancelled)
+        {
+            _clearing = true;
+            try
+            {
+                var command = new ClearLogsCommand();
+                var result = await _mediator.Send(command);
+                await _table.ReloadServerData();
+                Snackbar.Add(L["Logs are erased"], MudBlazor.Severity.Info);
+            }
+            finally
+            {
+                _clearing = false;
+            }
+
+        }
     }
 }

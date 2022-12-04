@@ -75,17 +75,23 @@ public class HubClient : IAsyncDisposable
     }
     public async Task StopAsync()
     {
-
-        if (_started && _hubConnection is not null)
+        try
         {
-            // disconnect the client
-            await _hubConnection.StopAsync();
+            if (_started && _hubConnection is not null)
+            {
+                // disconnect the client
+                await _hubConnection.StopAsync();
+                await _hubConnection.DisposeAsync();
+            }
+        }
+        finally
+        {
             // There is a bug in the mono/SignalR client that does not
             // close connections even after stop/dispose
             // see https://github.com/mono/mono/issues/18628
             // this means the demo won't show "xxx left the chat" since 
             // the connections are left open
-            await _hubConnection.DisposeAsync();
+          
             _hubConnection = null;
             _started = false;
         }
@@ -100,7 +106,25 @@ public class HubClient : IAsyncDisposable
     }
     public async ValueTask DisposeAsync()
     {
-        await StopAsync();
+        try
+        {
+            if (_hubConnection is not null)
+            {
+                await _hubConnection.StopAsync();
+                await _hubConnection.DisposeAsync();
+            }
+        }
+        finally
+        {
+            // There is a bug in the mono/SignalR client that does not
+            // close connections even after stop/dispose
+            // see https://github.com/mono/mono/issues/18628
+            // this means the demo won't show "xxx left the chat" since 
+            // the connections are left open
+
+            _hubConnection = null;
+            _started = false;
+        }
     }
 
     public event EventHandler<string>? Login;
