@@ -42,7 +42,7 @@ public class ClearLogsCommandHandler :
     {
         _context.Loggers.RemoveRange(_context.Loggers);
         await _context.SaveChangesAsync(cancellationToken);
-        _logger.LogInformation("Logs are erased");
+        _logger.LogInformation("Logs was erased");
         return await Result.SuccessAsync();
     }
 
