@@ -442,14 +442,8 @@
                 var deleteresult = await _roleManager.DeleteAsync(role);
                 if (!deleteresult.Succeeded)
                 {
-                    var deleteresult = await _roleManager.DeleteAsync(deleterole!);
-                    if (!deleteresult.Succeeded)
-                    {
-                        Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
-                        return;
-                    }
+                    Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
                 }
-
             }
             foreach (var item in _selectItems)
             {
