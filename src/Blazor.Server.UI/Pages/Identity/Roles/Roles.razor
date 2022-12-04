@@ -297,6 +297,11 @@
                     Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
                 }
             }
+            else
+            {
+                Snackbar.Add($"{item.Name} was removed.", MudBlazor.Severity.Warning);
+                _roleList.Remove(item);
+            }
           
         }
     }
@@ -430,10 +435,12 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            foreach (var item in _selectItems)
+            var deleteId = _selectItems.Select(x => x.Id).ToArray();
+            var deleteRoles = await _roleManager.Roles.Where(x => deleteId.Contains(x.Id)).ToListAsync();
+            foreach (var role in deleteRoles)
             {
-                var deleterole = await _roleManager.FindByIdAsync(item.Id);
-                if (deleterole is not null)
+                var deleteresult = await _roleManager.DeleteAsync(role);
+                if (!deleteresult.Succeeded)
                 {
                     var deleteresult = await _roleManager.DeleteAsync(deleterole!);
                     if (!deleteresult.Succeeded)
@@ -442,6 +449,10 @@
                         return;
                     }
                 }
+
+            }
+            foreach (var item in _selectItems)
+            {
                 _roleList.Remove(item);
             }
             Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);

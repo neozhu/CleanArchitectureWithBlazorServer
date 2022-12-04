@@ -387,6 +387,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
+            var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
             var state = await _authState;
             user.Email = item.Email;
             user.PhoneNumber = item.PhoneNumber;
@@ -480,7 +481,7 @@
 
     private async Task OnSetActive(UserDto item)
     {
-        var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user {item.Id} Not Found."); ;
+        var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
         user.IsActive = !item.IsActive;
         var state = await _userManager.UpdateAsync(user);
         item.IsActive = !item.IsActive;
