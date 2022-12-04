@@ -283,16 +283,24 @@
         if (!result.Cancelled)
         {
             var role = await _roleManager.FindByIdAsync(item.Id);
-            role.Description = item.Description;
-            role.Name = item.Name;
-            var state = await _roleManager.UpdateAsync(role);
-            if (state.Succeeded)
+            if (role is not null)
             {
-                Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                role.Description = item.Description;
+                role.Name = item.Name;
+                var state = await _roleManager.UpdateAsync(role);
+                if (state.Succeeded)
+                {
+                    Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                }
+                else
+                {
+                    Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                }
             }
             else
             {
-                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                Snackbar.Add($"{item.Name} was removed.", MudBlazor.Severity.Warning);
+                _roleList.Remove(item);
             }
         }
     }
@@ -426,15 +434,17 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            foreach (var item in _selectItems)
+            var deleteId = _selectItems.Select(x => x.Id).ToArray();
+            var deleteRoles = await _roleManager.Roles.Where(x => deleteId.Contains(x.Id)).ToListAsync();
+            foreach (var role in deleteRoles)
             {
-                var deleterole = await _roleManager.FindByIdAsync(item.Id);
-                var deleteresult = await _roleManager.DeleteAsync(deleterole!);
+                var deleteresult = await _roleManager.DeleteAsync(role);
                 if (!deleteresult.Succeeded)
                 {
                     Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
                     return;
                 }
+
             }
             foreach (var item in _selectItems)
             {
