@@ -48,10 +48,7 @@ public static class DependencyInjection
         services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
         services.AddScoped<ApplicationDbContextInitialiser>();
 
-        services
-            .AddIdentity<ApplicationUser,ApplicationRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+        
 
 
         services.AddLocalizationServices();

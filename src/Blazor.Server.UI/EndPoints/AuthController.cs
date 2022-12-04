@@ -31,7 +31,7 @@ public class AuthController : Controller
     }
     [HttpGet("/auth/login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(string token)
+    public async Task<IActionResult> Login(string token,string returnUrl)
     {
         var dataProtector = _dataProtectionProvider.CreateProtector("Login");
         var data = dataProtector.Unprotect(token);
@@ -47,7 +47,7 @@ public class AuthController : Controller
             var isPersistent = true;
             await _userManager.ResetAccessFailedCountAsync(identityUser);
             await _signInManager.SignInAsync(identityUser, isPersistent);
-            return Redirect("/");
+            return Redirect($"/{returnUrl}");
         }
 
         return Unauthorized();
