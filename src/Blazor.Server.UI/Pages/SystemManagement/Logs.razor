@@ -38,12 +38,23 @@
                     {
                         <MudButton DisableElevation Variant="Variant.Outlined"
                                Size="Size.Small"
-                               Disabled="@_loading"
+                               Disabled="@(_loading || _clearing)"
                                OnClick="@(()=>OnPurge())"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary"
-                               Style="margin-right: 5px;">@ConstantString.CLEAR</MudButton>
+                               Style="margin-right: 5px;">
+                            @if (_clearing)
+                            {
+                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                <MudText Class="ms-2">waiting</MudText>
+                            }
+                            else
+                            {
+                                <MudText> @ConstantString.CLEAR </MudText>
+                            }
+                           
+                        </MudButton>
                     }
-                    
+
                 </div>
                 <MudSpacer />
                 <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
@@ -163,6 +174,7 @@
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     private bool _loading;
+    private bool _clearing;
     [Inject]
     private IMediator _mediator { get; set; } = default!;
     private bool _canPurge;
@@ -231,11 +243,19 @@
         var state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var command = new ClearLogsCommand();
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
-            Snackbar.Add(L["Logs are erased"], MudBlazor.Severity.Info);
-          
+            _clearing = true;
+            try
+            {
+                var command = new ClearLogsCommand();
+                var result = await _mediator.Send(command);
+                await _table.ReloadServerData();
+                Snackbar.Add(L["Logs are erased"], MudBlazor.Severity.Info);
+            }
+            finally
+            {
+                _clearing = false;
+            }
+
         }
     }
 }
