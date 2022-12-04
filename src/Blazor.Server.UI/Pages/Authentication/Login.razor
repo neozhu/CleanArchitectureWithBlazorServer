@@ -157,12 +157,13 @@
                         }
                         else
                         {
+                            var returnUrl = NavigationManager.Uri.Replace(NavigationManager.BaseUri, "");
                             var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "Login");
                             var data = $"{user.Id}|{token}";
                             var protector = _dataProtectionProvider.CreateProtector("Login");
                             var protectedData = protector.Protect(data);
 
-                            NavigationManager.NavigateTo("/auth/login?token=" + protectedData, true);
+                            NavigationManager.NavigateTo($"/auth/login?token={protectedData}&returnUrl={returnUrl}", true);
                             //_logger.LogInformation("{@UserName} login successfully.", _model.UserName);
                         }
                     }
