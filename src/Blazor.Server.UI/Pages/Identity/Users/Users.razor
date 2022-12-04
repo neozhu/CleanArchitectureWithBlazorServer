@@ -380,7 +380,6 @@
 
     private async Task OnEdit(UserDto item)
     {
-        var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user {item.Id} Not Found.");
         var parameters = new DialogParameters { ["model"] = item };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
