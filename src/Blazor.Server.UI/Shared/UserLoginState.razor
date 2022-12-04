@@ -18,13 +18,14 @@
     [Inject]
     private IMediator _mediator { get; set; } = default!;
 
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-        await _client.StopAsync();
+        //await _client.StopAsync();
         _client.Login -= _client_Login;
         _client.Logout -= _client_Logout;
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         GC.SuppressFinalize(this);
+        return ValueTask.CompletedTask;
     }
     [Inject]
     private HubClient _client { get; set; } = default!;
@@ -66,7 +67,7 @@
         {
             var username = await _identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
-            await _identityService.UpdateLiveStatus(e, true);
+            //await _identityService.UpdateLiveStatus(e, true);
         });
     }
 
@@ -76,7 +77,7 @@
         {
             var username = await _identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
-            await _identityService.UpdateLiveStatus(e, false);
+            //await _identityService.UpdateLiveStatus(e, false);
         });
     }
 }

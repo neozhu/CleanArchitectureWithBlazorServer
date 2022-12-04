@@ -270,8 +270,8 @@ public class IdentityService : IIdentityService
         await _semaphore.WaitAsync(cancellation);
         try
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user is not null && user.IsLive != isLive)
+            var user = await _userManager.Users.FirstOrDefaultAsync(x=>x.Id==userId && x.IsLive!= isLive);
+            if (user is not null)
             {
                 user.IsLive = isLive;
                 await _userManager.UpdateAsync(user);

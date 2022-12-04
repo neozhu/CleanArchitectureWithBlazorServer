@@ -34,7 +34,7 @@ public class SignalRHub : Hub<ISignalRHub>
         {
             _onlineUsers.TryAdd(id, String.Empty);
         }
-        await base.OnConnectedAsync();
+       // await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
@@ -45,7 +45,7 @@ public class SignalRHub : Hub<ISignalRHub>
         {
           await Disconnect(userId);
         }
-        await base.OnDisconnectedAsync(exception);
+        //await base.OnDisconnectedAsync(exception);
     }
 
 
@@ -83,5 +83,19 @@ public class SignalRHub : Hub<ISignalRHub>
     public async Task Disconnect(string userId)
     {
         await Clients.All.Disconnect(userId);
+    }
+    private bool _disposed = false;
+    // Protected implementation of Dispose pattern.
+    protected override void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+
+        // Call base class implementation.
+        base.Dispose(disposing);
     }
 }
