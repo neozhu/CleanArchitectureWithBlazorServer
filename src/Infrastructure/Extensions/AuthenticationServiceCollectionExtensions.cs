@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class AuthenticationServiceCollectionExtensions
 {
     public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddTransient<ITicketStore, InMemoryTicketStore>();
+        services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>,  ConfigureCookieAuthenticationOptions>();
         services.Configure<IdentityOptions>(options =>
         {
             // Default SignIn settings.
@@ -35,16 +38,9 @@ public static class AuthenticationServiceCollectionExtensions
                          }
                      }
                  })
-                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                 .AddCookie(options =>
-                 {
-
-                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                     options.SlidingExpiration = true;
-                     options.AccessDeniedPath = "/";
-                 });
-
-                 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+                 .AddAuthentication();
+    
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                  services.Configure<CookiePolicyOptions>(options =>
                  {
                      // This lambda determines whether user consent for non-essential cookies is needed for a given request.
