@@ -283,17 +283,26 @@
         if (!result.Cancelled)
         {
             var role = await _roleManager.FindByIdAsync(item.Id);
-            role.Description = item.Description;
-            role.Name = item.Name;
-            var state = await _roleManager.UpdateAsync(role);
-            if (state.Succeeded)
+            if (role is not null)
             {
-                Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                role.Description = item.Description;
+                role.Name = item.Name;
+                var state = await _roleManager.UpdateAsync(role);
+                if (state.Succeeded)
+                {
+                    Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                }
+                else
+                {
+                    Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                }
             }
             else
             {
-                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                Snackbar.Add($"{item.Name} was removed.", MudBlazor.Severity.Warning);
+                _roleList.Remove(item);
             }
+          
         }
     }
     private async Task OnSetPermissions(RoleDto item)
@@ -407,7 +416,7 @@
                 }
             }
             Snackbar.Add($"{L["Assign changed successfully"]}", MudBlazor.Severity.Info);
-           await Task.Delay(300);
+            await Task.Delay(300);
         }
         finally
         {
@@ -426,21 +435,27 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
+            var deleteId = _selectItems.Select(x => x.Id).ToArray();
+            var deleteRoles = await _roleManager.Roles.Where(x => deleteId.Contains(x.Id)).ToListAsync();
+            foreach (var role in deleteRoles)
+            {
+                var deleteresult = await _roleManager.DeleteAsync(role);
+                if (!deleteresult.Succeeded)
+                {
+                    var deleteresult = await _roleManager.DeleteAsync(deleterole!);
+                    if (!deleteresult.Succeeded)
+                    {
+                        Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                        return;
+                    }
+                }
+
+            }
             foreach (var item in _selectItems)
             {
-                var deleterole = await _roleManager.FindByIdAsync(item.Id);
-                var deleteresult = await _roleManager.DeleteAsync(deleterole!);
-                if (deleteresult.Succeeded)
-                {
-                    _roleList.Remove(item);
-                    Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
-                }
-                else
-                {
-                    Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
-                }
+                _roleList.Remove(item);
             }
-            Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
         }
     }
     private Task OnExport()

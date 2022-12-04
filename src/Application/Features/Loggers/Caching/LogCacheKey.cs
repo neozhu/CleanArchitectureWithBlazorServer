@@ -5,7 +5,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
 
 public static class LogsCacheKey
 {
-    private static readonly TimeSpan refreshInterval = TimeSpan.FromMinutes(30);
+    private static readonly TimeSpan refreshInterval = TimeSpan.FromSeconds(30);
     public const string GetAllCacheKey = "all-logs";
     public static string GetChartDataCacheKey(string parameters) {
         return $"GetChartDataCacheKey,{parameters}";

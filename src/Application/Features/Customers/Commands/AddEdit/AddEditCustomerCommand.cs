@@ -40,7 +40,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEd
             var dto = _mapper.Map<CustomerDto>(request);
             if (request.Id > 0)
             {
-                var item = await _context.Customers.FindAsync(new object[] { request.Id }, cancellationToken) ?? throw new NotFoundException($"Customer {request.Id} Not Found.");
+                var item = await _context.Customers.FindAsync(new object[] { request.Id }, cancellationToken) ?? throw new NotFoundException($"The customer [{request.Id}] was not found.");
                 item = _mapper.Map(dto, item);
 				// raise a update domain event
 				item.AddDomainEvent(new UpdatedEvent<Customer>(item));

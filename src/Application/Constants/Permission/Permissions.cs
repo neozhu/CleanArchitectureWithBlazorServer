@@ -77,18 +77,6 @@ public static class Permissions
         public const string Import = "Permissions.Documents.Import";
         public const string Download = "Permissions.Documents.Download";
     }
-    [DisplayName("DocumentTypes")]
-    [Description("DocumentTypes Permissions")]
-    public static class DocumentTypes
-    {
-        public const string View = "Permissions.DocumentTypes.View";
-        public const string Create = "Permissions.DocumentTypes.Create";
-        public const string Edit = "Permissions.DocumentTypes.Edit";
-        public const string Delete = "Permissions.DocumentTypes.Delete";
-        public const string Search = "Permissions.DocumentTypes.Search";
-        public const string Export = "Permissions.Documents.Export";
-        public const string Import = "Permissions.Categories.Import";
-    }
     [DisplayName("Dictionaries")]
     [Description("Dictionaries Permissions")]
     public static class Dictionaries
