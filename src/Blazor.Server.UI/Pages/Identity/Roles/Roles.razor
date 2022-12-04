@@ -283,17 +283,21 @@
         if (!result.Cancelled)
         {
             var role = await _roleManager.FindByIdAsync(item.Id);
-            role.Description = item.Description;
-            role.Name = item.Name;
-            var state = await _roleManager.UpdateAsync(role);
-            if (state.Succeeded)
+            if (role is not null)
             {
-                Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                role.Description = item.Description;
+                role.Name = item.Name;
+                var state = await _roleManager.UpdateAsync(role);
+                if (state.Succeeded)
+                {
+                    Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                }
+                else
+                {
+                    Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                }
             }
-            else
-            {
-                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
-            }
+          
         }
     }
     private async Task OnSetPermissions(RoleDto item)
@@ -429,11 +433,14 @@
             foreach (var item in _selectItems)
             {
                 var deleterole = await _roleManager.FindByIdAsync(item.Id);
-                var deleteresult = await _roleManager.DeleteAsync(deleterole!);
-                if (!deleteresult.Succeeded)
+                if (deleterole is not null)
                 {
-                    Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
-                    return;
+                    var deleteresult = await _roleManager.DeleteAsync(deleterole!);
+                    if (!deleteresult.Succeeded)
+                    {
+                        Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                        return;
+                    }
                 }
                 _roleList.Remove(item);
             }
