@@ -54,7 +54,6 @@ public class InMemoryTicketStore : ITicketStore
     {
         var key = ticket.Principal.Claims
           .First(c => c.Type == ClaimTypes.Name).Value;
-
         await RenewAsync(key, ticket);
         return key;
     }
