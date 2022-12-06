@@ -16,7 +16,7 @@ public partial class UserProfileState : State<UserProfileState>
     {
         UserProfile = new UserProfile()
         {
-
+            DisplayName= _currentUserService.DisplayName,
             UserName = _currentUserService.UserName,
             Email = _currentUserService.Email,
             TenantId = _currentUserService.TenantId,
@@ -24,6 +24,7 @@ public partial class UserProfileState : State<UserProfileState>
             UserId = _currentUserService.UserId,
             AssignRoles = _currentUserService.AssignRoles,
             ProfilePictureDataUrl = _currentUserService.ProfilePictureDataUrl,
+            Role= _currentUserService.AssignRoles.FirstOrDefault(),
         };
     }
 }
