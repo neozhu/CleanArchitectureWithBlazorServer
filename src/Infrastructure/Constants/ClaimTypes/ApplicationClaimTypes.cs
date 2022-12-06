@@ -10,5 +10,6 @@ public static class ApplicationClaimTypes
     public const string Status = "Status";
     public const string TenantName = "TenantName";
     public const string Permission = "Permission";
+    public const string AssignRoles = "AssignRoles";
     public const string ProfilePictureDataUrl = "ProfilePictureDataUrl";
 }

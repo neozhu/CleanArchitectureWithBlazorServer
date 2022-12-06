@@ -416,12 +416,7 @@
                 if (state.User.GetUserId() == item.Id)
                 {
                     //update user profile
-                    await _mediator.Send(new UserProfileState.UpdateUserDtoAction(item));
-                    if (user.TenantId is not null && user.TenantName is not null && state.User.GetTenantId() != user.TenantId)
-                    {
-                        state.User.SetTenantId(user.TenantId);
-                        state.User.SetTenantName(user.TenantName);
-                    }
+                    await _mediator.Send(new UserProfileState.UpdateUserProfileAction(item));
                 }
                 Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
             }
