@@ -15,7 +15,8 @@ public partial class UserProfileState : State<UserProfileState>
     {
         UserProfile = new UserProfile()
         {
-
+            SuperiorId = _currentUserService.SuperiorId,
+            SuperiorName = _currentUserService.SuperiorName,
             UserName = _currentUserService.UserName,
             Email = _currentUserService.Email,
             TenantId = _currentUserService.TenantId,
