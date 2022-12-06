@@ -416,7 +416,7 @@
                 if (state.User.GetUserId() == item.Id)
                 {
                     //update user profile
-                    await _mediator.Send(new UserProfileState.UpdateUserProfileAction(item));
+                    await _mediator.Send(new UserProfileState.UpdateUserDtoAction(item));
                 }
                 Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
             }
