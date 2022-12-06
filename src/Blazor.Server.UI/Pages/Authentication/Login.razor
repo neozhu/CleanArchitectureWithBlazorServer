@@ -139,6 +139,7 @@
                 var user = await _userManager.FindByNameAsync(_model.UserName!);
                 if (user is null)
                 {
+                    _logger.LogWarning("{@UserName} user does not exist.", _model.UserName);
                     Snackbar.Add(L["No user found, or no authorization, please contact the administrator."], MudBlazor.Severity.Error);
                 }
                 else
@@ -157,12 +158,13 @@
                         }
                         else
                         {
+                            var returnUrl = NavigationManager.Uri.Replace(NavigationManager.BaseUri, "");
                             var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "Login");
                             var data = $"{user.Id}|{token}";
                             var protector = _dataProtectionProvider.CreateProtector("Login");
                             var protectedData = protector.Protect(data);
 
-                            NavigationManager.NavigateTo("/auth/login?token=" + protectedData, true);
+                            NavigationManager.NavigateTo($"/auth/login?token={protectedData}&returnUrl={returnUrl}", true);
                             //_logger.LogInformation("{@UserName} login successfully.", _model.UserName);
                         }
                     }

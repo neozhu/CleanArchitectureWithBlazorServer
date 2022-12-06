@@ -10,6 +10,10 @@ public static class AuthenticationServiceCollectionExtensions
 {
     public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)
     {
+        services
+            .AddIdentity<ApplicationUser, ApplicationRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
         services.AddTransient<ITicketStore, InMemoryTicketStore>();
         services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>,  ConfigureCookieAuthenticationOptions>();
         services.Configure<IdentityOptions>(options =>

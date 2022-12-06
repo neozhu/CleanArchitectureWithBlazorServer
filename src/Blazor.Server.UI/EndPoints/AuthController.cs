@@ -11,27 +11,32 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
+using Blazor.Server.UI.Pages.Authentication;
 
 namespace Blazor.Server.UI.EndPoints;
 public class AuthController : Controller
 {
+    private readonly ILogger<AuthController> _logger;
     private readonly IDataProtectionProvider _dataProtectionProvider;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
 
     public AuthController(
+        ILogger<AuthController> logger,
         IDataProtectionProvider dataProtectionProvider,
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager
     )
     {
+        _logger = logger;
         _dataProtectionProvider = dataProtectionProvider;
         _userManager = userManager;
         _signInManager = signInManager;
     }
     [HttpGet("/auth/login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(string token)
+    public async Task<IActionResult> Login(string token,string returnUrl)
     {
         var dataProtector = _dataProtectionProvider.CreateProtector("Login");
         var data = dataProtector.Unprotect(token);
@@ -47,7 +52,10 @@ public class AuthController : Controller
             var isPersistent = true;
             await _userManager.ResetAccessFailedCountAsync(identityUser);
             await _signInManager.SignInAsync(identityUser, isPersistent);
-            return Redirect("/");
+            identityUser.IsLive= true;
+            await _userManager.UpdateAsync(identityUser);
+            _logger.LogInformation("{@UserName} login successful.", identityUser.UserName);
+            return Redirect($"/{returnUrl}");
         }
 
         return Unauthorized();
@@ -96,6 +104,11 @@ public class AuthController : Controller
     [HttpGet("/auth/logout")]
     public async Task<IActionResult> Logout()
     {
+        var userId = _signInManager.Context.User.GetUserId();
+        var identityUser = await _userManager.FindByIdAsync(userId);
+        identityUser.IsLive = true;
+        await _userManager.UpdateAsync(identityUser);
+        _logger.LogInformation("{@UserName} logout successful.", identityUser.UserName);
         await _signInManager.SignOutAsync();
         return Redirect("/");
     }
