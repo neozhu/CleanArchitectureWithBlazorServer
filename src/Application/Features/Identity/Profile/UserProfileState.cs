@@ -15,6 +15,7 @@ public partial class UserProfileState : State<UserProfileState>
     {
         UserProfile = new UserProfile()
         {
+            DisplayName= _currentUserService.DisplayName,
             SuperiorId = _currentUserService.SuperiorId,
             SuperiorName = _currentUserService.SuperiorName,
             UserName = _currentUserService.UserName,
@@ -24,6 +25,7 @@ public partial class UserProfileState : State<UserProfileState>
             UserId = _currentUserService.UserId,
             AssignRoles = _currentUserService.AssignRoles,
             ProfilePictureDataUrl = _currentUserService.ProfilePictureDataUrl,
+            Role= _currentUserService.AssignRoles.FirstOrDefault(),
         };
     }
 }

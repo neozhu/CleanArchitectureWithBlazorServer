@@ -7,6 +7,7 @@ public interface ICurrentUserService
 {
     string UserId { get; }
     string UserName { get; }
+    string DisplayName { get; }
     string Email { get; }
     string TenantId { get; }
     string TenantName { get; }

@@ -36,6 +36,12 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
                 new Claim(ApplicationClaimTypes.SuperiorId, user.SuperiorId)
             });
         }
+        if (!string.IsNullOrEmpty(user.DisplayName))
+        {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+                new Claim(ClaimTypes.GivenName, user.DisplayName)
+            });
+        }
         if (!string.IsNullOrEmpty(user.ProfilePictureDataUrl))
         {
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
