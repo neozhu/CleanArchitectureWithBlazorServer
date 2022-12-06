@@ -1,14 +1,19 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using Microsoft.AspNetCore.Identity;
+
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 #nullable disable
 public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
 {
+    private readonly UserManager<ApplicationUser> _userManager;
+
     public ApplicationClaimsIdentityFactory(UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
         IOptions<IdentityOptions> optionsAccessor) : base(userManager, roleManager, optionsAccessor)
     {
+        _userManager = userManager;
     }
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
@@ -29,6 +34,21 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
         {
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
                 new Claim(ApplicationClaimTypes.SuperiorId, user.SuperiorId)
+            });
+        }
+        if (!string.IsNullOrEmpty(user.ProfilePictureDataUrl))
+        {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+                new Claim(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl)
+            });
+        }
+        var appuser = await _userManager.FindByIdAsync(user.Id);
+        var roles = await _userManager.GetRolesAsync(appuser);
+        if (roles != null && roles.Count > 0)
+        {
+            var rolesStr = string.Join(",", roles);
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+                new Claim(ApplicationClaimTypes.AssignRoles, rolesStr)
             });
         }
         return principal;

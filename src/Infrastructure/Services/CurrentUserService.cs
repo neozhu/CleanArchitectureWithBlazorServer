@@ -18,7 +18,21 @@ public class CurrentUserService : ICurrentUserService
         _httpContextAccessor = httpContextAccessor;
     }
     public string UserId => _httpContextAccessor.HttpContext?.User.GetUserId()??string.Empty;
+    public string Email => _httpContextAccessor.HttpContext?.User.GetEmail() ?? string.Empty;
     public string UserName => _httpContextAccessor.HttpContext?.User.GetUserName() ?? string.Empty;
     public string TenantId => _httpContextAccessor.HttpContext?.User.GetTenantId() ?? string.Empty;
     public string TenantName => _httpContextAccessor.HttpContext?.User.GetTenantName() ?? string.Empty;
+    public string ProfilePictureDataUrl => _httpContextAccessor.HttpContext?.User.GetProfilePictureDataUrl() ?? string.Empty;
+    public string[] AssignRoles
+    {
+        get
+        {
+            var str = _httpContextAccessor.HttpContext?.User.GetAssignRoles() ?? string.Empty;
+            if (string.IsNullOrEmpty(str))
+            {
+                return new string[] { };
+            }
+            return str.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        }
+    }
 }

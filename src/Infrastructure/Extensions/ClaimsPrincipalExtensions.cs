@@ -29,87 +29,9 @@ public static class ClaimsPrincipalExtensions
         => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.TenantId) ?? "";
     public static bool GetStatus(this ClaimsPrincipal claimsPrincipal)
        => Convert.ToBoolean(claimsPrincipal.FindFirstValue(ApplicationClaimTypes.Status));
+    public static string GetAssignRoles(this ClaimsPrincipal claimsPrincipal)
+        => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.AssignRoles)??"";
     public static string[] GetRoles(this ClaimsPrincipal claimsPrincipal)
         => claimsPrincipal.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToArray();
-
-    public static void SetDisplayName (this ClaimsPrincipal claimsPrincipal, string displayName)
-    {
-        var identity = claimsPrincipal.Identity as ClaimsIdentity;
-        if(identity is not null)
-        {
-            var claim = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName);
-            if (claim is not null)
-            {
-                identity.RemoveClaim(claim);
-            }
-            identity.AddClaim(new Claim( ClaimTypes.GivenName, displayName ));
-        }
-        
-    }
-    public static void SetProfilePictureUrl(this ClaimsPrincipal claimsPrincipal, string url)
-    {
-        var identity = claimsPrincipal.Identity as ClaimsIdentity;
-        if (identity is not null)
-        {
-            var claim = identity.Claims.FirstOrDefault(x => x.Type == ApplicationClaimTypes.ProfilePictureDataUrl);
-            if (claim is not null)
-            {
-                identity.RemoveClaim(claim);
-            }
-            identity.AddClaim(new Claim(ApplicationClaimTypes.ProfilePictureDataUrl, url));
-        }
-    }
-    public static void SetPhoneNumber(this ClaimsPrincipal claimsPrincipal, string phoneNumber)
-    {
-        var identity = claimsPrincipal.Identity as ClaimsIdentity;
-        if (identity is not null)
-        {
-            var claim = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.MobilePhone);
-            if (claim is not null)
-            {
-                identity.RemoveClaim(claim);
-            }
-            identity.AddClaim(new Claim(ClaimTypes.MobilePhone, phoneNumber));
-        }
-    }
-    public static void SetProvider(this ClaimsPrincipal claimsPrincipal, string provider)
-    {
-        var identity = claimsPrincipal.Identity as ClaimsIdentity;
-        if (identity is not null)
-        {
-            var claim = identity.Claims.FirstOrDefault(x => x.Type == ApplicationClaimTypes.Provider);
-            if (claim is not null)
-            {
-                identity.RemoveClaim(claim);
-            }
-            identity.AddClaim(new Claim(ApplicationClaimTypes.Provider, provider));
-        }
-    }
-    public static void SetTenantId(this ClaimsPrincipal claimsPrincipal, string tenantId)
-    {
-        var identity = claimsPrincipal.Identity as ClaimsIdentity;
-        if (identity is not null)
-        {
-            var claim = identity.Claims.FirstOrDefault(x => x.Type == ApplicationClaimTypes.TenantId);
-            if (claim is not null)
-            {
-                identity.RemoveClaim(claim);
-            }
-            identity.AddClaim(new Claim(ApplicationClaimTypes.TenantId, tenantId));
-        }
-    }
-    public static void SetTenantName(this ClaimsPrincipal claimsPrincipal, string tenantName)
-    {
-        var identity = claimsPrincipal.Identity as ClaimsIdentity;
-        if (identity is not null)
-        {
-            var claim = identity.Claims.FirstOrDefault(x => x.Type == ApplicationClaimTypes.TenantName);
-            if (claim is not null)
-            {
-                identity.RemoveClaim(claim);
-            }
-            identity.AddClaim(new Claim(ApplicationClaimTypes.TenantName, tenantName));
-        }
-    }
 }
 
