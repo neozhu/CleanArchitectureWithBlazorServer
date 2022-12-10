@@ -344,7 +344,7 @@
     }
     private async Task OnCreate()
     {
-        var model = new UserDto() { Provider = "Local", Email="",UserName="", AssignRoles = new string[] { RoleConstants.BasicRole } };
+        var model = new UserDto() { Provider = "Local", Email="",UserName="", AssignRoles = new string[] { RoleNameConstants.Basic } };
         var parameters = new DialogParameters {
             { nameof(_UserFormDialog.model),model }
             };
@@ -377,7 +377,7 @@
                 }
                 else
                 {
-                    await _userManager.AddToRoleAsync(applicationUser, RoleConstants.BasicRole);
+                    await _userManager.AddToRoleAsync(applicationUser, RoleNameConstants.Basic);
                 }
                 model.Id = applicationUser.Id;
                 _userList.Add(model);
