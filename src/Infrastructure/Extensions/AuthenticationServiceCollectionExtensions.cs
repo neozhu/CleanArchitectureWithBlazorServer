@@ -60,7 +60,7 @@ public static class AuthenticationServiceCollectionExtensions
                      options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                      options.SlidingExpiration = true;
                      options.AccessDeniedPath = "/";
-                 }); ;
+                 });
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.Configure<CookiePolicyOptions>(options =>
