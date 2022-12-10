@@ -85,7 +85,7 @@ public class AuthController : Controller
             {
                 return Unauthorized();
             }
-            var assignResult = await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
+            var assignResult = await _userManager.AddToRoleAsync(user, RoleNameConstants.Basic);
             if (!createResult.Succeeded)
             {
                 return Unauthorized();

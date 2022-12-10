@@ -3,10 +3,10 @@
 
 namespace CleanArchitecture.Blazor.Infrastructure.Constants;
 
-public static class RoleConstants
+public static class UserNameConstants
 {
-    public const string AdministratorRole = "Admin";
-    public const string BasicRole = "Basic";
-    public const string UsersRole = "Users";
+    public const string Administrator = "Administrator";
+    public const string Demo = "Demo";
+    public const string Users = "Users";
     public const string DefaultPassword = "Password123!";
 }
