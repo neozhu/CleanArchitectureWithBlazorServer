@@ -371,7 +371,7 @@
             if (model.Assigned && model.ClaimType is not null && model.ClaimValue is not null)
             {
                 await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
-                Snackbar.Add($"{L["Assigned successfully"]}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{L["Authorization successful"]}", MudBlazor.Severity.Info);
             }
             else
             {
@@ -380,8 +380,10 @@
                 {
                     await _roleManager.RemoveClaimAsync(role, removed);
                 }
-                Snackbar.Add($"{L["Unassigned successfully"]}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{L["Authorization canceled successfully"]}", MudBlazor.Severity.Info);
             }
+            var key = $"get-claims-by-{role.Id}";
+            _cache.Remove(key);
         }
         finally
         {
@@ -395,14 +397,14 @@
         {
             processing = true;
             var roleId = models.First().RoleId;
-            var role = await _roleManager.FindByIdAsync(roleId!);
+            var role = await _roleManager.FindByIdAsync(roleId!)??throw new NotFoundException($"not found application role: {roleId}");
             foreach (var model in models)
             {
                 if (model.Assigned)
                 {
                     if (model.ClaimType is not null && model.ClaimValue is not null)
                     {
-                        await _roleManager.AddClaimAsync(role!, new Claim(model.ClaimType, model.ClaimValue));
+                        await _roleManager.AddClaimAsync(role, new Claim(model.ClaimType, model.ClaimValue));
                     }
                 }
                 else
@@ -410,12 +412,14 @@
                     var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
                     if (removed is not null)
                     {
-                        await _roleManager.RemoveClaimAsync(role!, removed);
+                        await _roleManager.RemoveClaimAsync(role, removed);
                     }
                 }
             }
-            Snackbar.Add($"{L["Assign changed successfully"]}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{L["Authorization has been changed"]}", MudBlazor.Severity.Info);
             await Task.Delay(300);
+            var key = $"get-claims-by-{role.Id}";
+            _cache.Remove(key);
         }
         finally
         {

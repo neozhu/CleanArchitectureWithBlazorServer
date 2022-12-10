@@ -105,6 +105,7 @@ public static class Permissions
         public const string ManageRoles = "Permissions.Users.ManageRoles";
         public const string RestPassword = "Permissions.Users.RestPassword";
         public const string Active = "Permissions.Users.Active";
+        public const string ManagePermissions = "Permissions.Users.Permissions";
     }
 
     [DisplayName("Roles")]

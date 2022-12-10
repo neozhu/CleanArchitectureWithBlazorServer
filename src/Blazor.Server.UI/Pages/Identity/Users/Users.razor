@@ -3,6 +3,8 @@
 @page "/identity/users"
 @using Blazor.Server.UI.Components.Dialogs
 @using CleanArchitecture.Blazor.Application.Common.Exceptions
+@using Blazor.Server.UI.Pages.Identity.Roles;
+@using CleanArchitecture.Blazor.Application.Common.Exceptions;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Common.Security
@@ -14,6 +16,9 @@
 @using Microsoft.AspNetCore.Components.Server.Circuits
 @using Microsoft.AspNetCore.Identity;
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+@using System.ComponentModel;
+@using System.Reflection;
+@using System.Security.Claims;
 @inject IStringLocalizer<Users> L
 @attribute [Authorize(Policy = Permissions.Users.View)]
 <PageTitle>@Title</PageTitle>
@@ -137,7 +142,7 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ConstantString.ACTIONS">
-                    @if (_canEdit || _canManageRoles || _canRestPassword || _canActive)
+                    @if (_canEdit || _canManageRoles || _canRestPassword || _canActive || _canManagePermissions)
                     {
                         <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true"
                              Size="Size.Small"
@@ -147,6 +152,10 @@
                             @if (_canEdit)
                             {
                                 <MudMenuItem OnClick=@(()=>OnEdit(context))>@ConstantString.EDIT</MudMenuItem>
+                            }
+                            @if (_canManagePermissions)
+                            {
+                                <MudMenuItem OnClick="@(()=>OnSetPermissions(context))">@L["Set Permissions"]</MudMenuItem>
                             }
                             @if (_canActive)
                             {
@@ -207,7 +216,7 @@
             </PagerContent>
         </MudTable>
 
-
+        <_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@_processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
     </ChildContent>
     <ErrorContent>
         <CustomError Exception="context"></CustomError>
@@ -222,7 +231,8 @@
     private HashSet<UserDto> _selectItems = new();
     private string _searchString = string.Empty;
     private string Title { get; set; } = "Users";
-
+    private List<PermissionModel> _permissions = new();
+    private IList<Claim> _assignedClaims = default!;
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
@@ -233,7 +243,8 @@
     private IMediator _mediator { get; set; } = default!;
     [Inject]
     private IAppCache _cache { get; set; } = null!;
-
+    private bool _processing;
+    private bool _showPermissionsDrawer;
     private bool _canCreate;
     private bool _canSearch;
     private bool _canEdit;
@@ -241,6 +252,7 @@
     private bool _canActive;
     private bool _canManageRoles;
     private bool _canRestPassword;
+    private bool _canManagePermissions;
     private bool _canImport;
     private bool _canExport;
     private bool _loading;
@@ -260,6 +272,7 @@
         _canActive = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Active)).Succeeded;
         _canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
         _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
+        _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         await LoadData();
@@ -481,12 +494,12 @@
             }
             Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
         }
-            
+
     }
 
     private async Task OnSetActive(UserDto item)
     {
-        var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
+        var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
         user.IsActive = !item.IsActive;
         var state = await _userManager.UpdateAsync(user);
         item.IsActive = !item.IsActive;
@@ -525,7 +538,130 @@
             }
         }
     }
+    private async Task OnSetPermissions(UserDto item)
+    {
 
+        _permissions = await GetAllPermissions(item);
+        _showPermissionsDrawer = true;
+
+    }
+    private Task OnOpenChangedHandler(bool state)
+    {
+        _showPermissionsDrawer = state;
+        return Task.CompletedTask;
+    }
+    private async Task<List<PermissionModel>> GetAllPermissions(UserDto dto)
+    {
+        var key = $"get-user-by-{dto.Id}";
+        var user = await _cache.GetOrAddAsync(key, async () => await _userManager.FindByIdAsync(dto.Id), _options);
+        key = $"get-claims-by-{user!.Id}";
+        _assignedClaims = await _cache.GetOrAddAsync(key, async () => await _userManager.GetClaimsAsync(user), _options);
+        var allPermissions = new List<PermissionModel>();
+        var modules = typeof(Permissions).GetNestedTypes();
+        foreach (var module in modules)
+        {
+            var moduleName = string.Empty;
+            var moduleDescription = string.Empty;
+            if (module.GetCustomAttributes(typeof(DisplayNameAttribute), true)
+                .FirstOrDefault() is DisplayNameAttribute displayNameAttribute)
+                moduleName = displayNameAttribute.DisplayName;
+
+            if (module.GetCustomAttributes(typeof(DescriptionAttribute), true)
+                .FirstOrDefault() is DescriptionAttribute descriptionAttribute)
+                moduleDescription = descriptionAttribute.Description;
+
+            var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            foreach (var fi in fields)
+            {
+                var propertyValue = fi.GetValue(null);
+
+                if (propertyValue is not null)
+                {
+                    var claimValue = propertyValue.ToString();
+                    allPermissions.Add(
+                        new PermissionModel
+                            {
+                                UserId = user.Id,
+                                ClaimValue = claimValue,
+                                ClaimType = ApplicationClaimTypes.Permission,
+                                Group = moduleName,
+                                Description = moduleDescription,
+                                Assigned = _assignedClaims.Any(x => x.Value == claimValue)
+                            });
+                }
+            }
+        }
+        return allPermissions;
+    }
+    private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
+    {
+        try
+        {
+            _processing = true;
+            var userId = models.First().UserId;
+            var user = await _userManager.FindByIdAsync(userId!)?? throw new NotFoundException($"not found application user: {userId}");
+            foreach (var model in models)
+            {
+                if (model.Assigned)
+                {
+                    if (model.ClaimType is not null && model.ClaimValue is not null)
+                    {
+                        await _userManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
+                    }
+                }
+                else
+                {
+                    var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
+                    if (removed is not null)
+                    {
+                        await _userManager.RemoveClaimAsync(user, removed);
+                    }
+                }
+            }
+
+            Snackbar.Add($"{L["Authorization has been changed"]}", MudBlazor.Severity.Info);
+            await Task.Delay(300);
+            var key = $"get-claims-by-{user.Id}";
+            _cache.Remove(key);
+        }
+        finally
+        {
+            _processing = false;
+        }
+    }
+
+    private async Task OnAssignChangedHandler(PermissionModel model)
+    {
+        try
+        {
+            _processing = true;
+            var userId = model.UserId!;
+            var user = await _userManager.FindByIdAsync(userId) ?? throw new NotFoundException($"Application user Not Found {userId}."); ;
+            model.Assigned = !model.Assigned;
+            if (model.Assigned && model.ClaimType is not null && model.ClaimValue is not null)
+            {
+                await _userManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
+                Snackbar.Add($"{L["Authorization successful"]}", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
+                if (removed is not null)
+                {
+                    await _userManager.RemoveClaimAsync(user, removed);
+                }
+                Snackbar.Add($"{L["Authorization canceled successfully"]}", MudBlazor.Severity.Info);
+            }
+            var key = $"get-claims-by-{user.Id}";
+            _cache.Remove(key);
+
+        }
+        finally
+        {
+            _processing = false;
+        }
+
+    }
     private Task OnExport()
     {
         return Task.CompletedTask;
