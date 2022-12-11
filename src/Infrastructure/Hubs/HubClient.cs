@@ -1,67 +1,66 @@
 using CleanArchitecture.Blazor.Infrastructure.Constants;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
 public class HubClient : IAsyncDisposable
 {
-    private HubConnection? _hubConnection;
-    private string _hubUrl=String.Empty;
+    private HubConnection _hubConnection;
+    private string _hubUrl = String.Empty;
     private string _userId = String.Empty;
     private readonly NavigationManager _navigationManager;
-    private readonly AuthenticationStateProvider _authenticationStateProvider;
+    private readonly ICurrentUserService _currentUserService;
     private bool _started = false;
-
+    private bool _isDisposed;
     public HubClient(NavigationManager navigationManager,
-        AuthenticationStateProvider authenticationStateProvider)
+        ICurrentUserService currentUserService
+)
     {
-        this._navigationManager =navigationManager;
-        _authenticationStateProvider = authenticationStateProvider;
-    }
-    public async Task StartAsync()
-    {
+        _navigationManager = navigationManager;
+        _currentUserService = currentUserService;
+        _userId = _currentUserService.UserId;
         _hubUrl = _navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
-        var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        _userId = state.User.GetUserId();
-        if (!_started)
+        _hubConnection = new HubConnectionBuilder()
+              .WithUrl(_hubUrl, options => options.Transports = HttpTransportType.WebSockets)
+              .Build();
+        _hubConnection.ServerTimeout = TimeSpan.FromSeconds(30);
+        _hubConnection.On<string>(SignalR.OnConnect, (userId) =>
         {
-            // create the connection using the .NET SignalR client
-            _hubConnection = new HubConnectionBuilder()
-                .WithUrl(_hubUrl)
-                .Build();
-            // add handler for receiving messages
-            _hubConnection.On<string>(SignalR.OnConnect, (userId) =>
-            {
-                Login?.Invoke(this, userId);
-            });
- 
-            _hubConnection.On<string>(SignalR.OnDisconnect, (userId) =>
-            {
-                Logout?.Invoke(this, userId);
-            });
-            _hubConnection.On<string>(SignalR.SendNotification, (message) =>
-            { 
-                NotificationReceived?.Invoke(this, message);
-            });
-            _hubConnection.On<string, string>(SignalR.SendMessage, (userId, message) =>
-            {
-                HandleReceiveMessage(userId, message);
-            });
-            _hubConnection.On<string>(SignalR.JobCompleted, (message) =>
-            {
-                JobCompleted?.Invoke(this,message);
-            });
-            _hubConnection.On<string>(SignalR.JobStart, (message) =>
-            {
-                JobStarted?.Invoke(this, message);
-            });
-            // start the connection
-            await _hubConnection.StartAsync();
-            // register user on hub to let other clients know they've joined
-            await _hubConnection.SendAsync(SignalR.OnConnect, _userId);
-            _started = true;
-        }
+            Login?.Invoke(this, userId);
+        });
+
+        _hubConnection.On<string>(SignalR.OnDisconnect, (userId) =>
+        {
+            Logout?.Invoke(this, userId);
+        });
+        _hubConnection.On<string>(SignalR.SendNotification, (message) =>
+        {
+            NotificationReceived?.Invoke(this, message);
+        });
+        _hubConnection.On<string, string>(SignalR.SendMessage, (userId, message) =>
+        {
+            HandleReceiveMessage(userId, message);
+        });
+        _hubConnection.On<string>(SignalR.JobCompleted, (message) =>
+        {
+            JobCompleted?.Invoke(this, message);
+        });
+        _hubConnection.On<string>(SignalR.JobStart, (message) =>
+        {
+            JobStarted?.Invoke(this, message);
+        });
+    }
+    public async Task StartAsync(CancellationToken cancellation = default)
+    {
+        if (_hubConnection.State != HubConnectionState.Disconnected)
+            throw new ApplicationException("Connection is in progress or has already been established");
+        if (_started) return;
+        _started = true;
+        await _hubConnection.StartAsync(cancellation).ConfigureAwait(false);
+        await _hubConnection.SendAsync(SignalR.OnConnect, _userId);
+
     }
 
 
@@ -72,48 +71,34 @@ public class HubClient : IAsyncDisposable
     }
     public async Task StopAsync()
     {
-        if (_started == false) return;
-        try
+
+        if (_started && _hubConnection is not null)
         {
-            if (_started)
-            {
-                // disconnect the client
-                await _hubConnection.StopAsync();
-            }
-        }
-        finally
-        {
-            _started = false;
-        }
-    }
-    public async Task SendAsync(string message)
-    {
-        await _hubConnection!.SendAsync(SignalR.SendMessage, _userId, message);
-    }
-    public async Task NotifyAsync(string message)
-    {
-        await _hubConnection!.SendAsync(SignalR.SendNotification,  message);
-    }
-    public async ValueTask DisposeAsync()
-    {
-        if (_hubConnection is null) return;
-        try
-        {
-            if (_started)
-            {
-                await _hubConnection.StopAsync();
-            }
-        }
-        finally
-        {
+            // disconnect the client
+            await _hubConnection.StopAsync();
             // There is a bug in the mono/SignalR client that does not
             // close connections even after stop/dispose
             // see https://github.com/mono/mono/issues/18628
             // this means the demo won't show "xxx left the chat" since 
             // the connections are left open
             await _hubConnection.DisposeAsync();
+            _hubConnection = null;
             _started = false;
         }
+    }
+    public async Task SendAsync(string message)
+    {
+        await _hubConnection.SendAsync(SignalR.SendMessage, _userId, message);
+    }
+    public async Task NotifyAsync(string message)
+    {
+        await _hubConnection.SendAsync(SignalR.SendNotification, message);
+    }
+    public async ValueTask DisposeAsync()
+    {
+        if (_isDisposed) return;
+        _isDisposed = true;
+        await StopAsync();
     }
 
 
