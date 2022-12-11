@@ -41,7 +41,7 @@ public class HubClient : IAsyncDisposable
                 Logout?.Invoke(this, userId);
             });
             _hubConnection.On<string>(SignalR.SendNotification, (message) =>
-            {
+            { 
                 NotificationReceived?.Invoke(this, message);
             });
             _hubConnection.On<string, string>(SignalR.SendMessage, (userId, message) =>
@@ -58,13 +58,10 @@ public class HubClient : IAsyncDisposable
             });
             // start the connection
             await _hubConnection.StartAsync();
-
-
             // register user on hub to let other clients know they've joined
             await _hubConnection.SendAsync(SignalR.OnConnect, _userId);
             _started = true;
         }
-     
     }
 
 
@@ -75,24 +72,17 @@ public class HubClient : IAsyncDisposable
     }
     public async Task StopAsync()
     {
+        if (_started == false) return;
         try
         {
-            if (_started && _hubConnection is not null)
+            if (_started)
             {
                 // disconnect the client
                 await _hubConnection.StopAsync();
-                await _hubConnection.DisposeAsync();
             }
         }
         finally
         {
-            // There is a bug in the mono/SignalR client that does not
-            // close connections even after stop/dispose
-            // see https://github.com/mono/mono/issues/18628
-            // this means the demo won't show "xxx left the chat" since 
-            // the connections are left open
-          
-            _hubConnection = null;
             _started = false;
         }
     }
@@ -106,12 +96,12 @@ public class HubClient : IAsyncDisposable
     }
     public async ValueTask DisposeAsync()
     {
+        if (_hubConnection is null) return;
         try
         {
-            if (_hubConnection is not null)
+            if (_started)
             {
                 await _hubConnection.StopAsync();
-                await _hubConnection.DisposeAsync();
             }
         }
         finally
@@ -121,11 +111,12 @@ public class HubClient : IAsyncDisposable
             // see https://github.com/mono/mono/issues/18628
             // this means the demo won't show "xxx left the chat" since 
             // the connections are left open
-
-            _hubConnection = null;
+            await _hubConnection.DisposeAsync();
             _started = false;
         }
     }
+
+
 
     public event EventHandler<string>? Login;
     public event EventHandler<string>? JobStarted;
