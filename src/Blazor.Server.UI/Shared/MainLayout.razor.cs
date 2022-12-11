@@ -4,17 +4,24 @@ using Blazor.Server.UI.Components.Shared;
 using Toolbelt.Blazor.HotKeys;
 using Microsoft.AspNetCore.Components.Authorization;
 using Blazor.Server.UI.Services;
+using BlazorState.Services;
+using BlazorState;
+using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
 
 namespace Blazor.Server.UI.Shared;
 
-public partial class MainLayout: IDisposable
+public partial class MainLayout: LayoutComponentBase,IDisposable, IBlazorStateComponent
 {
     private bool _commandPaletteOpen;
     private HotKeysContext? _hotKeysContext;
     private bool _sideMenuDrawerOpen = true;
     private UserPreferences UserPreferences = new();
+    public string Id { get; }
     [Inject] 
     private LayoutService _layoutService { get; set; } = null!;
+    [Inject] public IMediator Mediator { get; set; }
+    [Inject] public IStore Store { get; set; }
+    public void ReRender() => StateHasChanged();
     private MudThemeProvider? _mudThemeProvider { get; set; }=null!;
     private bool _themingDrawerOpen;
     [Inject] private IDialogService _dialogService { get; set; } = default!;
@@ -48,7 +55,7 @@ public partial class MainLayout: IDisposable
         _layoutService.SetBaseTheme(Theme.ApplicationTheme());
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
-  
+       var pf= Store.GetState<UserProfileState>();
        await base.OnInitializedAsync();
 
     }

@@ -5,7 +5,7 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 <MudThemeProvider @ref="@_mudThemeProvider"  Theme="@_layoutService.CurrentTheme" IsDarkMode="@_layoutService.IsDarkMode" IsDarkModeChanged="@_layoutService.SetDarkMode" />
-<UserLoginState />
+
 <MudLayout>
     <AuthorizeView>
         <NotAuthorized>
@@ -20,6 +20,7 @@
             </MudContainer>
         </NotAuthorized>
         <Authorized>
+            <UserLoginState />
             <NavMenu SideMenuDrawerOpen="_sideMenuDrawerOpen"
                      OpenCommandPalette="OpenCommandPalette"
                      IsDarkMode="@_layoutService.IsDarkMode"

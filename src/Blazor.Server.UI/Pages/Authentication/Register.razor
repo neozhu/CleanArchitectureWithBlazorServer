@@ -130,7 +130,7 @@
                     var result = await _userManager.CreateAsync(user, _model.Password!);
                     if (result.Succeeded)
                     {
-                        var assignResult= await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
+                        var assignResult= await _userManager.AddToRoleAsync(user, RoleNameConstants.Basic);
                         if (assignResult.Succeeded )
                         {
                             var response= await sendWelcome(user.Email!, user.UserName!);

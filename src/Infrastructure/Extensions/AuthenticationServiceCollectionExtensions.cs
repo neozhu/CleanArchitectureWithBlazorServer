@@ -15,20 +15,32 @@ public static class AuthenticationServiceCollectionExtensions
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
         services.AddTransient<ITicketStore, InMemoryTicketStore>();
-        services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>,  ConfigureCookieAuthenticationOptions>();
+        services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>, ConfigureCookieAuthenticationOptions>();
         services.Configure<IdentityOptions>(options =>
         {
+            // Password settings
+            options.Password.RequireDigit = true;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireLowercase = false;
+
+            // Lockout settings
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+            options.Lockout.MaxFailedAccessAttempts = 10;
+            options.Lockout.AllowedForNewUsers = true;
+
             // Default SignIn settings.
             options.SignIn.RequireConfirmedEmail = false;
             options.SignIn.RequireConfirmedPhoneNumber = false;
-            // Default Lockout settings.
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            options.Lockout.MaxFailedAccessAttempts = 10;
-            options.Lockout.AllowedForNewUsers = true;
+
+            // User settings
+            options.User.RequireUniqueEmail = true;
+
         });
         services
                  .AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationClaimsIdentityFactory>()
-                 .AddScoped<IIdentityService, IdentityService>()
+                 .AddTransient<IIdentityService, IdentityService>()
                  .AddAuthorization(options =>
                  {
                      options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
@@ -42,16 +54,31 @@ public static class AuthenticationServiceCollectionExtensions
                          }
                      }
                  })
-                 .AddAuthentication();
-    
+                 .AddAuthentication()
+                 .AddCookie(options =>
+                 {
+                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                     options.SlidingExpiration = true;
+                     options.AccessDeniedPath = "/";
+                 });
+
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-                 services.Configure<CookiePolicyOptions>(options =>
+        services.Configure<CookiePolicyOptions>(options =>
                  {
                      // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                      options.CheckConsentNeeded = context => true;
                      options.MinimumSameSitePolicy = SameSiteMode.None;
-                 });
 
+                 });
+        services.ConfigureApplicationCookie(options =>
+         {
+             options.Cookie.HttpOnly = true;
+             options.Events.OnRedirectToLogin = context =>
+             {
+                 context.Response.StatusCode = 401;
+                 return Task.CompletedTask;
+             };
+         });
         return services;
     }
 

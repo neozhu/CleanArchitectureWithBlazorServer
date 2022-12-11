@@ -64,9 +64,9 @@ public class Testing
 
         // Register testing version
         services.AddScoped(provider =>
-            Mock.Of<ICurrentUserService>(s =>  s.UserId().Result == _currentUserId));
+            Mock.Of<ICurrentUserService>(s =>  s.UserId == _currentUserId));
         services.AddScoped(provider =>
-            Mock.Of<ITenantProvider>(s => s.GetTenantId().Result == _currentTenantId));
+            Mock.Of<ITenantProvider>(s => s.TenantId == _currentTenantId));
 
         _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
 

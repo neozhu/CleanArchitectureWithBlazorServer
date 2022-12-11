@@ -18,14 +18,12 @@
     [Inject]
     private IMediator _mediator { get; set; } = default!;
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        //await _client.StopAsync();
+        await _client.StopAsync();
         _client.Login -= _client_Login;
         _client.Logout -= _client_Logout;
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
-        GC.SuppressFinalize(this);
-        return ValueTask.CompletedTask;
     }
     [Inject]
     private HubClient _client { get; set; } = default!;
