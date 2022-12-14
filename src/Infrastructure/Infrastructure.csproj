@@ -40,7 +40,7 @@
     <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="1.2.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageReference Include="Hangfire.InMemory" Version="0.3.5" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.0-rc1" />
+  
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />

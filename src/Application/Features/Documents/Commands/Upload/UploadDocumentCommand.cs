@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.Upload;
 
-public class UploadDocumentCommand : IRequest<Result<int>>, ICacheInvalidator
+public class UploadDocumentCommand : ICacheInvalidatorRequest<Result<int>>
 {
 
     public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource();
