@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll;
 
-public class GetAllProductsQuery : IRequest<IEnumerable<ProductDto>>, ICacheable
+public class GetAllProductsQuery : ICacheableRequest<IEnumerable<ProductDto>>
 {
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;

@@ -8,7 +8,7 @@ using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery;
 
-public class LogsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<LogDto>>, ICacheable
+public class LogsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<LogDto>>
 {
     public string CacheKey => LogsCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => LogsCacheKey.MemoryCacheEntryOptions;

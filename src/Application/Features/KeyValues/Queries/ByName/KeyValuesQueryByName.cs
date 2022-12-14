@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName;
 
-public class KeyValuesQueryByName : IRequest<IEnumerable<KeyValueDto>>, ICacheable
+public class KeyValuesQueryByName : ICacheableRequest<IEnumerable<KeyValueDto>>
 {
     public string Name { get; set; }
 

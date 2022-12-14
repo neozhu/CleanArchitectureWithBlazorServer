@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit;
 
-public class AddEditTenantCommand : IMapFrom<TenantDto>, IRequest<Result<string>>, ICacheInvalidator
+public class AddEditTenantCommand : IMapFrom<TenantDto>, ICacheInvalidatorRequest<Result<string>>
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string? Name { get; set; }

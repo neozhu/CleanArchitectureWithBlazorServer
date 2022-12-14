@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination;
 
-    public class TenantsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<TenantDto>>, ICacheable
+    public class TenantsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<TenantDto>>
     {
         public string CacheKey => TenantCacheKey.GetPaginationCacheKey($"{this}");
         public MemoryCacheEntryOptions? Options => TenantCacheKey.MemoryCacheEntryOptions;

@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 
-public class DocumentsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<DocumentDto>>, ICacheable
+public class DocumentsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<DocumentDto>>
 {
    
     public string TenantId { get; set; }

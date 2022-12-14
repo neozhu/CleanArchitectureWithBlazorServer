@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.PaginationQuery;
 
-public class KeyValuesWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<KeyValueDto>>, ICacheable
+public class KeyValuesWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<KeyValueDto>>
 {
     public string CacheKey => $"{nameof(KeyValuesWithPaginationQuery)},{this}";
 
