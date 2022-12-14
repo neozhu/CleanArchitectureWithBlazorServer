@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Queries.GetAll;
 
-    public class GetAllTenantsQuery : IRequest<IEnumerable<TenantDto>>, ICacheable
+    public class GetAllTenantsQuery : ICacheableRequest<IEnumerable<TenantDto>>
     {
        public string CacheKey => TenantCacheKey.GetAllCacheKey;
        public MemoryCacheEntryOptions? Options => TenantCacheKey.MemoryCacheEntryOptions;

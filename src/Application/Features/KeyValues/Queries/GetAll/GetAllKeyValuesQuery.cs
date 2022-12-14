@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.GetAll;
 
-public class GetAllKeyValuesQuery : IRequest<IEnumerable<KeyValueDto>>, ICacheable
+public class GetAllKeyValuesQuery : ICacheableRequest<IEnumerable<KeyValueDto>>
 {
 
     public string CacheKey => KeyValueCacheKey.GetAllCacheKey;

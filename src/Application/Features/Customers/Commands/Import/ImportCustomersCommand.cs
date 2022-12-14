@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Import;
 
-    public class ImportCustomersCommand: IRequest<Result>, ICacheInvalidator
+    public class ImportCustomersCommand: ICacheInvalidatorRequest<Result>
     {
         public string FileName { get; set; }
         public byte[] Data { get; set; }

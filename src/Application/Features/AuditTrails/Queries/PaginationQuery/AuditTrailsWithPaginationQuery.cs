@@ -3,11 +3,10 @@
 
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching;
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery;
 
-public class AuditTrailsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<AuditTrailDto>>, ICacheable
+public class AuditTrailsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<AuditTrailDto>>
 {
     public string CacheKey => AuditTrailsCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => AuditTrailsCacheKey.MemoryCacheEntryOptions;

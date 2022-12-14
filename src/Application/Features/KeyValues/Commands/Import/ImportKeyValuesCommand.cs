@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Import;
 
-public class ImportKeyValuesCommand : IRequest<Result>, ICacheInvalidator
+public class ImportKeyValuesCommand : ICacheInvalidatorRequest<Result>
 {
     public string FileName { get; set; }
     public byte[] Data { get; set; }

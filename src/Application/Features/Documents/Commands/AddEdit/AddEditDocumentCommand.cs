@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit;
 
-public class AddEditDocumentCommand : IMapFrom<DocumentDto>, IRequest<Result<int>>, ICacheInvalidator
+public class AddEditDocumentCommand :IMapFrom<DocumentDto>, ICacheInvalidatorRequest<Result<int>>
 {
     public int Id { get; set; }
     public string? Title { get; set; }

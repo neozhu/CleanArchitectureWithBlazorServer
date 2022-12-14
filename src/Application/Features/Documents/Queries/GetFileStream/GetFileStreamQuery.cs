@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 
-public class GetFileStreamQuery : IRequest<(string,byte[])>, ICacheable
+public class GetFileStreamQuery : ICacheableRequest<(string,byte[])>
 {
    
     public int Id { get; set; }

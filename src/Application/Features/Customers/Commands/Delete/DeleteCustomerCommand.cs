@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delete;
 
-    public class DeleteCustomerCommand: IRequest<Result>, ICacheInvalidator
+    public class DeleteCustomerCommand: ICacheInvalidatorRequest<Result>
     {
       public int[] Id {  get; }
       public string CacheKey => CustomerCacheKey.GetAllCacheKey;
