@@ -5,7 +5,7 @@ using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete;
 
-public class DeleteKeyValueCommand : IRequest<Result>, ICacheInvalidator
+public class DeleteKeyValueCommand : ICacheInvalidatorRequest<Result>
 {
     public int[] Id { get; }
     public string CacheKey => KeyValueCacheKey.GetAllCacheKey;

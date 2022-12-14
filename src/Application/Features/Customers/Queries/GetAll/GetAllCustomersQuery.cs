@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.GetAll;
 
-    public class GetAllCustomersQuery : IRequest<IEnumerable<CustomerDto>>, ICacheable
+    public class GetAllCustomersQuery : ICacheableRequest<IEnumerable<CustomerDto>>
     {
        public string CacheKey => CustomerCacheKey.GetAllCacheKey;
        public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;

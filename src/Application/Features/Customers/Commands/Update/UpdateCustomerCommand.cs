@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Update;
 
-    public class UpdateCustomerCommand: IMapFrom<CustomerDto>,IRequest<Result>, ICacheInvalidator
+    public class UpdateCustomerCommand: ICacheInvalidatorRequest<Result>
     {
             [Description("Id")]
     public int Id {get;set;} 

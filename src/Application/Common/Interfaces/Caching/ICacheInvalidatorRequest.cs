@@ -3,8 +3,8 @@
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 
-public interface ICacheable
+public interface ICacheInvalidatorRequest<TResponse> : IRequest<TResponse>
 {
-    string CacheKey { get=>String.Empty; }
-    MemoryCacheEntryOptions? Options { get; }
+    string CacheKey { get => String.Empty; } 
+    CancellationTokenSource? SharedExpiryTokenSource { get; }
 }

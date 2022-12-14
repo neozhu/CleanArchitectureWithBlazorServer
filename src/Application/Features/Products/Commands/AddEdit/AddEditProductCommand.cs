@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 
-public class AddEditProductCommand : IMapFrom<ProductDto>, IRequest<Result<int>>, ICacheInvalidator
+public class AddEditProductCommand : IMapFrom<ProductDto>, ICacheInvalidatorRequest<Result<int>>
 {
 
     public int Id { get; set; }

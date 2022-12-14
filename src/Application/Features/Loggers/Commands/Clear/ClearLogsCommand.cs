@@ -9,7 +9,7 @@ using static CleanArchitecture.Blazor.Application.Constants.Permissions;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Delete;
 
-public class ClearLogsCommand : IRequest<Result>, ICacheInvalidator
+public class ClearLogsCommand : ICacheInvalidatorRequest<Result>
 {
 
     public string CacheKey => LogsCacheKey.GetAllCacheKey;

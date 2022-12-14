@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Import;
 
-public class ImportProductsCommand : IRequest<Result>, ICacheInvalidator
+public class ImportProductsCommand : ICacheInvalidatorRequest<Result>
 {
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource();

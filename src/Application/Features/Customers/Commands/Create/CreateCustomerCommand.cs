@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Create;
 
-    public class CreateCustomerCommand: IMapFrom<CustomerDto>,IRequest<Result<int>>, ICacheInvalidator
+    public class CreateCustomerCommand: IMapFrom<CustomerDto>, ICacheInvalidatorRequest<Result<int>>
     {
           [Description("Id")]
     public int Id {get;set;} 

@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Commands.Delete;
 
-public class DeleteTenantCommand : IRequest<Result>, ICacheInvalidator
+public class DeleteTenantCommand : ICacheInvalidatorRequest<Result>
 {
     public string[] Id { get; }
     public string CacheKey => TenantCacheKey.GetAllCacheKey;

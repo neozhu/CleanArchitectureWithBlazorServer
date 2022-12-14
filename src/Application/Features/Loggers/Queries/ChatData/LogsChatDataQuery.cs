@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData;
 
-public class LogsTimeLineChatDataQuery : IRequest<List<LogTimeLineDto>>, ICacheable
+public class LogsTimeLineChatDataQuery : ICacheableRequest<List<LogTimeLineDto>>
 {
     public DateTime LastDateTime { get; set; } = DateTime.Now.AddDays(-60);
     public string CacheKey => LogsCacheKey.GetChartDataCacheKey(LastDateTime.ToString());

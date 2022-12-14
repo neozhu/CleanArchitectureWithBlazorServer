@@ -5,7 +5,7 @@ using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete;
 
-public class DeleteDocumentCommand : IRequest<Result>, ICacheInvalidator
+public class DeleteDocumentCommand : ICacheInvalidatorRequest<Result>
 {
     public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource();
     public int[] Id { get; set; }

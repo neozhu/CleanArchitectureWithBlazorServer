@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Features.Products.Queries.Specificati
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 
-public class ProductsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<ProductDto>>, ICacheable
+public class ProductsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<ProductDto>>
 {
     public string? Name { get; set; }
     public string? Brand { get; set; }

@@ -5,15 +5,15 @@ using LazyCache;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
 
-public class CachingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse> ,ICacheable
+public class MemoryCacheBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : ICacheableRequest<TResponse>
 {
     private readonly IAppCache _cache;
-    private readonly ILogger<CachingBehaviour<TRequest, TResponse>> _logger;
+    private readonly ILogger<MemoryCacheBehaviour<TRequest, TResponse>> _logger;
 
-    public CachingBehaviour(
+    public MemoryCacheBehaviour(
         IAppCache cache,
-        ILogger<CachingBehaviour<TRequest, TResponse>> logger
+        ILogger<MemoryCacheBehaviour<TRequest, TResponse>> logger
         )
     {
         _cache = cache;
