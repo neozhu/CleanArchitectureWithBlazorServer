@@ -16,11 +16,11 @@ public partial class MainLayout: LayoutComponentBase,IDisposable, IBlazorStateCo
     private HotKeysContext? _hotKeysContext;
     private bool _sideMenuDrawerOpen = true;
     private UserPreferences UserPreferences = new();
-    public string Id { get; }
+    public string Id =>Guid.NewGuid().ToString();
     [Inject] 
     private LayoutService _layoutService { get; set; } = null!;
-    [Inject] public IMediator Mediator { get; set; }
-    [Inject] public IStore Store { get; set; }
+    [Inject] public IMediator Mediator { get; set; } = null!;
+    [Inject] public IStore Store { get; set; } = null!;
     public void ReRender() => StateHasChanged();
     private MudThemeProvider? _mudThemeProvider { get; set; }=null!;
     private bool _themingDrawerOpen;
