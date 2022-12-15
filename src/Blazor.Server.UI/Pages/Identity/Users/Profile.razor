@@ -5,11 +5,11 @@
 @using SixLabors.ImageSharp.Formats
 @using SixLabors.ImageSharp.Processing
 @using BlazorState
-@inherits BlazorStateComponent
+@inherits OwningComponentBase
+@implements IBlazorStateComponent
 @inject IStringLocalizer<Profile> L
 @inject IJSRuntime JS
 <PageTitle>@Title</PageTitle>
-
 <ErrorBoundary>
     <ChildContent>
         <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" Elevation="6" ActivePanelIndexChanged="ActivePanelIndexChanged"
@@ -156,19 +156,22 @@
     private MudForm? _form = null!;
     private MudForm? _passwordform = null!;
     public string Title { get; set; } = "Profile";
+
     private bool submitting;
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     [Inject] private IUploadService _uploadService { get; set; } = default!;
-    UserProfileState UserProfileState => GetState<UserProfileState>();
+    UserProfileState UserProfileState => Store.GetState<UserProfileState>();
     private UserProfile model => UserProfileState.UserProfile;
     private UserProfileEditValidator _userValidator = new();
-    [Inject]
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     [Inject]
     private IIdentityService _identityService { get; set; } = default!;
-    [Inject]
-    private IMediator _mediator { get; set; } = default!;
+    public string Id  => Guid.NewGuid().ToString();
+    [Inject] public IMediator Mediator { get; set; } = null!;
+    [Inject] public IStore Store { get; set; } = null!;
+    public void ReRender() => StateHasChanged();
+
     private ChangePasswordModel _changepassword { get; set; } = new();
     private ChangePasswordModelValidator _passwordValidator = new();
     private List<OrgItem> _orgData = new();
@@ -192,8 +195,6 @@
             PasswordInput = InputType.Text;
         }
     }
-
-   
     private async void ActivePanelIndexChanged(int index)
     {
         if(index==2){
@@ -227,6 +228,12 @@
             this._orgData.Add(orgitem);
         }
 
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        return base.OnInitializedAsync();
 
     }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
