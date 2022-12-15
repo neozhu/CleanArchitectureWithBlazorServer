@@ -57,7 +57,7 @@
     }
     private async Task setProfile(UserDto userDto)
     {
-        await _mediator.Send(new UserProfileState.UpdateUserProfileAction(userDto)).ConfigureAwait(false);
+        await _mediator.Send(new UserProfileState.UpdateUserDtoAction(userDto)).ConfigureAwait(false);
     }
     private void _client_Login(object? sender, string e)
     {

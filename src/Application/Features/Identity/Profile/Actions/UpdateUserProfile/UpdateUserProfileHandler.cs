@@ -18,6 +18,20 @@ public partial class UserProfileState
 
         public override Task<Unit> Handle(UpdateUserProfileAction updateAction, CancellationToken aCancellationToken)
         {
+
+            UserProfileState.UserProfile = updateAction.UserProfile;
+            return Unit.Task;
+        }
+
+    }
+    public class UpdateUserDtoHandler : ActionHandler<UpdateUserDtoAction>
+    {
+        public UpdateUserDtoHandler(IStore aStore) : base(aStore) { }
+
+        UserProfileState UserProfileState => Store.GetState<UserProfileState>();
+
+        public override Task<Unit> Handle(UpdateUserDtoAction updateAction, CancellationToken aCancellationToken)
+        {
             var dto = updateAction.UserDto;
             UserProfileState.UserProfile = new UserProfile()
             {
