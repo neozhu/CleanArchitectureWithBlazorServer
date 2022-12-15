@@ -15,7 +15,6 @@ public partial class UserProfileState
         {
             UserDto = userDto;
         }
-
         public UserDto UserDto { get; set; }
     }
 }
