@@ -32,11 +32,11 @@
         var state = await _authState;
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
-            var userDto = await _identityService.GetUserDto(state.User.GetUserId());
-            await setProfile(userDto);
+            var userDto = await _identityService.GetUserDto(state.User.GetUserId()).ConfigureAwait(false);
+            await setProfile(userDto).ConfigureAwait(false);
             _client.Login += _client_Login;
             _client.Logout += _client_Logout;
-            await _client.StartAsync();
+            await _client.StartAsync().ConfigureAwait(false);
             
         }
         _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
@@ -48,24 +48,25 @@
             var state = await authenticationState;
             if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
-                var userDto = await _identityService.GetUserDto(state.User.GetUserId());
+                var userDto = await _identityService.GetUserDto(state.User.GetUserId()).ConfigureAwait(false);
                 await setProfile(userDto);
-                await _client.StartAsync();
+                await _client.StartAsync().ConfigureAwait(false);
                 
             }
         });
     }
     private async Task setProfile(UserDto userDto)
     {
-        await _mediator.Send(new UserProfileState.UpdateUserProfileAction(userDto));
+        await _mediator.Send(new UserProfileState.UpdateUserProfileAction(userDto)).ConfigureAwait(false);
     }
     private void _client_Login(object? sender, string e)
     {
         InvokeAsync(async () =>
         {
-            var username = await _identityService.GetUserNameAsync(e);
+            await _identityService.UpdateLiveStatus(e, true).ConfigureAwait(false);
+            var username = await _identityService.GetUserNameAsync(e).ConfigureAwait(false);
             Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
-            //await _identityService.UpdateLiveStatus(e, true);
+            
         });
     }
 
@@ -73,9 +74,10 @@
     {
         InvokeAsync(async () =>
         {
-            var username = await _identityService.GetUserNameAsync(e);
+            await _identityService.UpdateLiveStatus(e, false).ConfigureAwait(false);
+            var username = await _identityService.GetUserNameAsync(e).ConfigureAwait(false);
             Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
-            //await _identityService.UpdateLiveStatus(e, false);
+            
         });
     }
 }
