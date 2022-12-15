@@ -32,8 +32,8 @@
         var state = await _authState;
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
-            var userDto = await _identityService.GetUserDto(state.User.GetUserId()).ConfigureAwait(false);
-            await setProfile(userDto).ConfigureAwait(false);
+            var userDto = await _identityService.GetUserDto(state.User.GetUserId());
+            await setProfile(userDto);
             _client.Login += _client_Login;
             _client.Logout += _client_Logout;
             await _client.StartAsync().ConfigureAwait(false);
@@ -48,9 +48,9 @@
             var state = await authenticationState;
             if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
-                var userDto = await _identityService.GetUserDto(state.User.GetUserId()).ConfigureAwait(false);
+                var userDto = await _identityService.GetUserDto(state.User.GetUserId());
                 await setProfile(userDto);
-                await _client.StartAsync().ConfigureAwait(false);
+                await _client.StartAsync();
                 
             }
         });
@@ -63,8 +63,8 @@
     {
         InvokeAsync(async () =>
         {
-            await _identityService.UpdateLiveStatus(e, true).ConfigureAwait(false);
-            var username = await _identityService.GetUserNameAsync(e).ConfigureAwait(false);
+            await _identityService.UpdateLiveStatus(e, true);
+            var username = await _identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
             
         });
@@ -74,8 +74,8 @@
     {
         InvokeAsync(async () =>
         {
-            await _identityService.UpdateLiveStatus(e, false).ConfigureAwait(false);
-            var username = await _identityService.GetUserNameAsync(e).ConfigureAwait(false);
+            await _identityService.UpdateLiveStatus(e, false);
+            var username = await _identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
             
         });

@@ -58,7 +58,7 @@ public class HubClient : IAsyncDisposable
             throw new ApplicationException("Connection is in progress or has already been established");
         if (_started) return;
         _started = true;
-        await _hubConnection.StartAsync(cancellation).ConfigureAwait(false);
+        await _hubConnection.StartAsync(cancellation);
         await _hubConnection.SendAsync(SignalR.OnConnect, _userId);
 
     }
@@ -82,7 +82,6 @@ public class HubClient : IAsyncDisposable
             // this means the demo won't show "xxx left the chat" since 
             // the connections are left open
             await _hubConnection.DisposeAsync();
-            _hubConnection = null;
             _started = false;
         }
     }
