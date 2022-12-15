@@ -69,7 +69,7 @@ public class IdentityService : IIdentityService
     {
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation)?? throw new NotFoundException(_localizer["User Not Found."]);
         var result =  await _userManager.IsInRoleAsync(user, role);
-        return result.Succeeded;
+        return result;
     }
 
     public async Task<bool> AuthorizeAsync(string userId, string policyName, CancellationToken cancellation = default)
