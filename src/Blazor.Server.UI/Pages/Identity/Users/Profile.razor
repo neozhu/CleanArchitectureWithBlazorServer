@@ -169,40 +169,7 @@
 
 
 
-    private async void ActivePanelIndexChanged(int index)
-    {
-        if(index==2){
-            await LoadOrgData();
-            await JS.InvokeVoidAsync("createOrgChart", this._orgData);
-        }
-    }
-    private async Task LoadOrgData()
-    {
-        var currerntuserName = (await _authState).User.GetUserName();
-        var list = await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x=>x.Role).Include(x => x.Superior).ToListAsync();
-        foreach (var item in list)
-        {
-            var roles = await _userManager.GetRolesAsync(item);
-            var count = await _userManager.Users.Where(x => x.SuperiorId == item.Id).CountAsync();
-            var orgitem = new OrgItem();
-            orgitem.id = item.Id;
-            orgitem.name = item.DisplayName ?? item.UserName;
-            orgitem.area = item.TenantName;
-            orgitem.profileUrl = item.ProfilePictureDataUrl;
-            orgitem.imageUrl = item.ProfilePictureDataUrl;
-            if (currerntuserName == item.UserName)
-                orgitem.isLoggedUser = true;
-            orgitem.size = "";
-            orgitem.tags = item.PhoneNumber ?? item.Email;
-            if (roles != null && roles.Count > 0)
-                orgitem.positionName = string.Join(',', roles);
-            orgitem.parentId = item.SuperiorId;
-
-            orgitem._directSubordinates = count;
-            this._orgData.Add(orgitem);
-        }
-
-    }
+     
 
     protected override Task OnInitializedAsync()
     {
