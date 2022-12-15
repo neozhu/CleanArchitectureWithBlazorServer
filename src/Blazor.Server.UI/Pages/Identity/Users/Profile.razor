@@ -259,7 +259,7 @@
                 await _userManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated."], MudBlazor.Severity.Info);
                 var userDto =await _identityService.GetUserDto(user.Id);
-                await _mediator.Send(new UserProfileState.UpdateUserProfileAction(userDto));
+                await Mediator.Send(new UserProfileState.UpdateUserProfileAction(userDto));
             }
         }
     }
@@ -278,7 +278,7 @@
                 await _userManager.UpdateAsync(user);
                 Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
                 var userDto = await _identityService.GetUserDto(user.Id);
-                await _mediator.Send(new UserProfileState.UpdateUserProfileAction(userDto));
+                await Mediator.Send(new UserProfileState.UpdateUserProfileAction(userDto));
             }
         }
         finally
