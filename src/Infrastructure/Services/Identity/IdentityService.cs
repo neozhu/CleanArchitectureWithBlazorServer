@@ -7,6 +7,7 @@ using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using LazyCache;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,8 +18,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 public class IdentityService : IIdentityService
 {
-    private readonly SemaphoreSlim _semaphore = new(1, 1);
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly IOptions<AppConfigurationSettings> _appConfig;
@@ -29,36 +29,27 @@ public class IdentityService : IIdentityService
     private TimeSpan refreshInterval => TimeSpan.FromSeconds(60);
     private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
     public IdentityService(
-        IServiceProvider serviceProvider,
+        IServiceScopeFactory scopeFactory,
         IOptions<AppConfigurationSettings> appConfig,
-        IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-        IAuthorizationService authorizationService,
         IAppCache cache,
         IStringLocalizer<IdentityService> localizer)
     {
-        _serviceProvider = serviceProvider;
-        _userManager = _serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        _roleManager = _serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        _scopeFactory = scopeFactory;
+        var scope = _scopeFactory.CreateScope();
+        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        _userClaimsPrincipalFactory = scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
+        _authorizationService = scope.ServiceProvider.GetRequiredService<IAuthorizationService>();
         _appConfig = appConfig;
-        _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
-        _authorizationService = authorizationService;
         _cache = cache;
         _localizer = localizer;
     }
 
     public async Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default)
     {
-        await _semaphore.WaitAsync(cancellation);
-        try
-        {
-            var key = $"GetUserNameAsync:{userId}";
+           var key = $"GetUserNameAsync:{userId}";
             var user = await _cache.GetOrAddAsync(key,async() => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation),_options);
             return user?.UserName;
-        }
-        finally
-        {
-            _semaphore.Release();
-        }
     }
 
     public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password, CancellationToken cancellation = default)
@@ -76,60 +67,24 @@ public class IdentityService : IIdentityService
 
     public async Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default)
     {
-        await _semaphore.WaitAsync(cancellation);
-        try
-        {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation);
-            if (user is not null)
-                return await _userManager.IsInRoleAsync(user, role);
-            else
-                return false;
-        }
-        finally
-        {
-            _semaphore.Release();
-        }
+        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation)?? throw new NotFoundException(_localizer["User Not Found."]);
+        var result =  await _userManager.IsInRoleAsync(user, role);
+        return result;
     }
 
     public async Task<bool> AuthorizeAsync(string userId, string policyName, CancellationToken cancellation = default)
     {
-        await _semaphore.WaitAsync(cancellation);
-        try
-        {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation);
-            if (user is not null)
-            {
-                var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
-                var result = await _authorizationService.AuthorizeAsync(principal, policyName);
-                return result.Succeeded;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        finally
-        {
-            _semaphore.Release();
-        }
+        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation) ?? throw new NotFoundException(_localizer["User Not Found."]);
+        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+        var result = await _authorizationService.AuthorizeAsync(principal, policyName);
+        return result.Succeeded;
+
     }
 
     public async Task<Result> DeleteUserAsync(string userId, CancellationToken cancellation = default)
     {
-        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation);
-
-        if (user != null)
-        {
-            return await DeleteUserAsync(user, cancellation);
-        }
-
-        return await Result.SuccessAsync();
-    }
-
-    public async Task<Result> DeleteUserAsync(ApplicationUser user, CancellationToken cancellation = default)
-    {
+        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation) ?? throw new NotFoundException(_localizer["User Not Found."]);
         var result = await _userManager.DeleteAsync(user);
-
         return result.ToApplicationResult();
     }
 
@@ -162,7 +117,6 @@ public class IdentityService : IIdentityService
         {
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["Invalid Credentials."] });
         }
-
         user.RefreshToken = GenerateRefreshToken();
         var TokenExpiryTime = DateTime.Now.AddDays(7);
 
@@ -172,8 +126,8 @@ public class IdentityService : IIdentityService
         }
         user.RefreshTokenExpiryTime = TokenExpiryTime;
         await _userManager.UpdateAsync(user);
-
-        var token = await GenerateJwtAsync(user);
+        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+        var token = await GenerateJwtAsync(user, principal.Claims);
         var response = new TokenResponse { Token = token, RefreshTokenExpiryTime = TokenExpiryTime, RefreshToken = user.RefreshToken, ProfilePictureDataUrl = user.ProfilePictureDataUrl };
         return await Result<TokenResponse>.SuccessAsync(response);
     }
@@ -191,7 +145,8 @@ public class IdentityService : IIdentityService
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["User Not Found."] });
         if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["Invalid Client Token."] });
-        var token = GenerateEncryptedToken(GetSigningCredentials(), await GetClaimsAsync(user));
+        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+        var token = GenerateEncryptedToken(GetSigningCredentials(), principal.Claims);
         user.RefreshToken = GenerateRefreshToken();
         await _userManager.UpdateAsync(user);
 
@@ -206,41 +161,10 @@ public class IdentityService : IIdentityService
         rng.GetBytes(randomNumber);
         return Convert.ToBase64String(randomNumber);
     }
-    private async Task<string> GenerateJwtAsync(ApplicationUser user)
+    private Task<string> GenerateJwtAsync(ApplicationUser user, IEnumerable<Claim> claims)
     {
-        var token = GenerateEncryptedToken(GetSigningCredentials(), await GetClaimsAsync(user));
-        return token;
-    }
-    private async Task<IEnumerable<Claim>> GetClaimsAsync(ApplicationUser user)
-    {
-        var userClaims = await _userManager.GetClaimsAsync(user);
-        var roles = await _userManager.GetRolesAsync(user);
-        var roleClaims = new List<Claim>();
-        var permissionClaims = new List<Claim>();
-        foreach (var role in roles)
-        {
-            roleClaims.Add(new Claim(ClaimTypes.Role, role));
-            var thisRole = await _roleManager.FindByNameAsync(role);
-            var allPermissionsForThisRoles = await _roleManager.GetClaimsAsync(thisRole!);
-            permissionClaims.AddRange(allPermissionsForThisRoles);
-        }
-
-        var claims = new List<Claim>
-            {
-                new(ApplicationClaimTypes.Provider, user.Provider?? string.Empty),
-                new(ApplicationClaimTypes.TenantId, user.TenantId?? string.Empty),
-                new(ApplicationClaimTypes.TenantName, user.TenantName?? string.Empty),
-                new(ClaimTypes.NameIdentifier, user.Id),
-                new(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl?? string.Empty),
-                new(ClaimTypes.Email, user.Email!),
-                new(ClaimTypes.GivenName, user.DisplayName?? string.Empty),
-                new(ClaimTypes.MobilePhone, user.PhoneNumber ?? string.Empty)
-            }
-        .Union(userClaims)
-        .Union(roleClaims)
-        .Union(permissionClaims);
-
-        return claims;
+        var token = GenerateEncryptedToken(GetSigningCredentials(), claims);
+        return Task.FromResult(token);
     }
     private string GenerateEncryptedToken(SigningCredentials signingCredentials, IEnumerable<Claim> claims)
     {
@@ -271,7 +195,6 @@ public class IdentityService : IIdentityService
         {
             throw new SecurityTokenException(_localizer["Invalid token"]);
         }
-
         return principal;
     }
 
@@ -283,50 +206,35 @@ public class IdentityService : IIdentityService
 
     public async Task UpdateLiveStatus(string userId, bool isLive, CancellationToken cancellation = default)
     {
-        await _semaphore.WaitAsync(cancellation);
-        try
+        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId && x.IsLive != isLive);
+        if (user is not null)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x=>x.Id==userId && x.IsLive!= isLive);
-            if (user is not null)
-            {
-                user.IsLive = isLive;
-                await _userManager.UpdateAsync(user);
-            }
-        }
-        finally
-        {
-            _semaphore.Release();
+            user.IsLive = isLive;
+            await _userManager.UpdateAsync(user);
         }
     }
     public async Task<UserDto> GetUserDto(string userId, CancellationToken cancellation = default)
     {
-        await _semaphore.WaitAsync(cancellation);
-        try
+        var key = $"GetUserDto:{userId}";
+        var x = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefaultAsync(cancellation), _options);
+        var userDto = new UserDto()
         {
-            var key = $"GetUserDto:{userId}";
-            var userDto = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x=>x.Role).Select(x => new UserDto()
-            {
-                Checked = false,
-                ProfilePictureDataUrl = x.ProfilePictureDataUrl,
-                DisplayName = x.DisplayName,
-                Email = x.Email,
-                IsActive = x.IsActive,
-                IsLive = x.IsLive,
-                PhoneNumber = x.PhoneNumber,
-                Provider = x.Provider,
-                Id = x.Id,
-                UserName = x.UserName!,
-                TenantId = x.TenantId,
-                TenantName = x.TenantName,
-                LockoutEnd = x.LockoutEnd,
-                Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
-                AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
-            }).FirstOrDefaultAsync(x => x.Id == userId),_options);
-            return userDto!;
-        }
-        finally
-        {
-            _semaphore.Release();
-        }
+            Checked = false,
+            ProfilePictureDataUrl = x.ProfilePictureDataUrl,
+            DisplayName = x.DisplayName,
+            Email = x.Email!,
+            IsActive = x.IsActive,
+            IsLive = x.IsLive,
+            PhoneNumber = x.PhoneNumber,
+            Provider = x.Provider,
+            Id = x.Id,
+            UserName = x.UserName!,
+            TenantId = x.TenantId,
+            TenantName = x.TenantName,
+            LockoutEnd = x.LockoutEnd,
+            Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
+            AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
+        };
+        return userDto!;
     }
 }

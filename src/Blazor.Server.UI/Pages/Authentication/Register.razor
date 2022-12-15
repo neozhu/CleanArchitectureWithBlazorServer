@@ -9,7 +9,8 @@
 @using FluentValidation;
 @inject IStringLocalizer<Register> L
 @attribute [AllowAnonymous]
-
+@inherits OwningComponentBase
+<PageTitle>@Title</PageTitle>
 <AuthorizeView>
     <NotAuthorized Context="Auth">
         <MudForm Model="@_model" @ref="@_form" Validation="@(_registerValidator.ValidateValue)">
@@ -86,8 +87,9 @@
 
 
 @code {
+    public string Title = "Sign Up";
     [Inject] private NavigationManager _navigation { get; set; } = default!;
-    [Inject] private UserManager<ApplicationUser> _userManager { get; set; } = default!;
+    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     MudForm? _form;
     bool _loading;
     RegisterFormModel _model = new();
@@ -113,6 +115,11 @@
             _passwordInputIcon = Icons.Material.Filled.Visibility;
             _passwordInput = InputType.Text;
         }
+    }
+    protected override Task OnInitializedAsync()
+    {
+        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        return base.OnInitializedAsync();
     }
     private async Task Submit()
     {
