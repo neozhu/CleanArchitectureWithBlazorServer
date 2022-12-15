@@ -5,6 +5,10 @@ namespace CleanArchitecture.Blazor.Application.Features.ThemeProfiles;
 
 public partial class ThemeProfilesState : State<ThemeProfilesState>
 {
+    public ThemeProfilesState()
+    {
+        Preferences = new();
+    }
     public UserPreferences Preferences { get; private set; }
     public override void Initialize() { }
 
