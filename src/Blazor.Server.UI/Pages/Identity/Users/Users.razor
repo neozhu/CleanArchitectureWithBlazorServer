@@ -301,7 +301,7 @@
             return true;
         if (x.DisplayName is not null && x.DisplayName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if ($"{x.Email} {x.PhoneNumber} {x.Provider} {x.SuperiorName} {x.TenantName}".Contains(_searchString))
+        if ($"{x.Email} {x.PhoneNumber} {x.Provider} {x.TenantName}".Contains(_searchString))
             return true;
         return false;
     };
@@ -579,7 +579,7 @@
                     allPermissions.Add(
                         new PermissionModel
                             {
-                                UserId = user.Id,
+                                UserId = dto.Id,
                                 ClaimValue = claimValue,
                                 ClaimType = ApplicationClaimTypes.Permission,
                                 Group = moduleName,
