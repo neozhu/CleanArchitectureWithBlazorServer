@@ -46,40 +46,40 @@
                         @if (_canCreate)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Add"
-                                   Size="Size.Small"
-                                   OnClick="OnCreate"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                       StartIcon="@Icons.Material.Filled.Add"
+                                       Size="Size.Small"
+                                       OnClick="OnCreate"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
                         }
                         @if (_canDelete)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                   StartIcon="@Icons.Material.Filled.Delete"
-                                   Disabled="@(!(_selectItems.Count>0))"
-                                   OnClick="OnDeleteChecked"
-                                   Size="Size.Small"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                       StartIcon="@Icons.Material.Filled.Delete"
+                                       Disabled="@(!(_selectItems.Count>0))"
+                                       OnClick="OnDeleteChecked"
+                                       Size="Size.Small"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
                         }
                         @if (_canImport)
                         {
                             <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Upload"
-                                   Size="Size.Small"
-                                   for="importdataInput"
-                                   HtmlTag="label"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ConstantString.IMPORT</MudButton>
+                                       StartIcon="@Icons.Material.Filled.Upload"
+                                       Size="Size.Small"
+                                       for="importdataInput"
+                                       HtmlTag="label"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       IconColor="Color.Surface">@ConstantString.IMPORT</MudButton>
                         }
                         @if (_canExport)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Download"
-                                   Size="Size.Small"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ConstantString.EXPORT</MudButton>
+                                       StartIcon="@Icons.Material.Filled.Download"
+                                       Size="Size.Small"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       IconColor="Color.Surface">@ConstantString.EXPORT</MudButton>
                         }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
@@ -97,7 +97,7 @@
                             {
                                 <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                                 <MudMenuItem for="importdataInput"
-                                         HtmlTag="label">@ConstantString.IMPORT</MudMenuItem>
+                                             HtmlTag="label">@ConstantString.IMPORT</MudMenuItem>
                             }
                             @if (_canExport)
                             {
@@ -110,8 +110,8 @@
                 @if (_canSearch)
                 {
                     <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth="false"
-                              Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
-                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3">
+                                  Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3">
                     </MudTextField>
                 }
             </ToolBarContent>
@@ -131,9 +131,9 @@
                     @if (_canEdit || _canManagePermissions)
                     {
                         <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
-                             OffsetX="true">
+                                 Dense="true"
+                                 EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
+                                 OffsetX="true">
                             @if (_canEdit)
                             {
                                 <MudMenuItem OnClick="@(()=>OnEdit(context))">@ConstantString.EDIT</MudMenuItem>
@@ -147,8 +147,8 @@
                     else
                     {
                         <MudButton Variant="Variant.Filled" DisableElevation="true"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
+                                   StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                                   Color="Color.Surface">
                             @ConstantString.NOALLOWED
                         </MudButton>
                     }
@@ -185,7 +185,7 @@
 
     private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
 
-    private TimeSpan refreshInterval => TimeSpan.FromSeconds(30);
+    private TimeSpan refreshInterval => TimeSpan.FromSeconds(60);
     private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
     [Inject]
     private IAppCache _cache { get; set; } = null!;
@@ -267,6 +267,8 @@
                 model.Id=applicationRole.Id;
                 _roleList.Add(model);
                 Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
+                var key = "get-all-applicationroles";
+                _cache.Remove(key);
             }
             else
             {
@@ -296,13 +298,14 @@
                 {
                     Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
                 }
+                var key = "get-all-applicationroles";
+                _cache.Remove(key);
             }
             else
             {
                 Snackbar.Add($"{item.Name} was removed.", MudBlazor.Severity.Warning);
                 _roleList.Remove(item);
             }
-          
         }
     }
     private async Task OnSetPermissions(RoleDto item)
@@ -315,10 +318,15 @@
 
     private async Task<List<PermissionModel>> GetAllPermissions(RoleDto dto)
     {
-        var key = $"get-role-by-{dto.Id}";
-        var role = await _cache.GetOrAddAsync(key, async () => await _roleManager.FindByIdAsync(dto.Id), _options);
-        key = $"get-claims-by-{role!.Id}";
-        _assignedClaims = await _cache.GetOrAddAsync(key, async () => await _roleManager.GetClaimsAsync(role), _options);
+        Func<string, Task<IList<Claim>>> getcalims = async (roleId) =>
+        {
+            var role = await _roleManager.FindByIdAsync(dto.Id) ?? throw new NotFoundException($"not found application role: {roleId}");
+            var claims = await _roleManager.GetClaimsAsync(role);
+            return claims;
+        };
+
+        var key = $"get-claims-by-{dto.Id}";
+        _assignedClaims = await _cache.GetOrAddAsync(key, async () => await getcalims(dto.Id), _options);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
         foreach (var module in modules)
@@ -344,7 +352,7 @@
                     allPermissions.Add(
                         new PermissionModel
                             {
-                                RoleId = role.Id,
+                                RoleId = dto.Id,
                                 ClaimValue = claimValue,
                                 ClaimType = ApplicationClaimTypes.Permission,
                                 Group = moduleName,
@@ -398,7 +406,7 @@
         {
             processing = true;
             var roleId = models.First().RoleId;
-            var role = await _roleManager.FindByIdAsync(roleId!)??throw new NotFoundException($"not found application role: {roleId}");
+            var role = await _roleManager.FindByIdAsync(roleId!) ?? throw new NotFoundException($"not found application role: {roleId}");
             foreach (var model in models)
             {
                 if (model.Assigned)
