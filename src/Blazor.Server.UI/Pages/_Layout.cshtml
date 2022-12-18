@@ -24,12 +24,43 @@
         .mud-button-year {
             font-size: 0.8125rem;
         }
+
+        #blazor-error-ui {
+            background: lightyellow;
+            background-color: var(--mud-palette-error);
+            color: var(--mud-palette-error-text);
+            bottom: 0;
+            box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+            display: none;
+            left: 0;
+            padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+            padding: 0.6rem 1.75rem 0.7rem 1.25rem;
+            position: fixed;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        #reconnect-modal {
+            background: lightyellow;
+            background-color: var(--mud-palette-warning-hover);
+            color: var(--mud-palette-warning-darken);
+            top: 0;
+            box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+            display: none;
+            left: 0;
+            padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+            padding: 0.6rem 1.75rem 0.7rem 1.25rem;
+            margin:0px;
+            position: fixed;
+            width: 100%;
+            z-index: 9999;
+        }
     </style>
-    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+    <component type="typeof(HeadOutlet)" render-mode="Server" />
 </head>
 <body>
+    <div id="reconnect-modal" style="display: none;">Connection lost -- please wait, attempting to reconnect</div>
     @RenderBody()
-
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
             An error has occurred. This application may no longer respond until reloaded.
@@ -40,6 +71,7 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+
     <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
     <script src="~/js/msal/authConfig.js"></script>
 
@@ -47,9 +79,10 @@
     <script src="~/js/gapi/auth2config.js"></script>
     <script src="_content/Blazor-ApexCharts/js/apex-charts.min.js"></script>
     <script src="_content/Blazor-ApexCharts/js/blazor-apex-charts.js"></script>
-    <script src="_framework/blazor.server.js"></script>
+    <script src="_framework/blazor.server.js" autostart="false"></script>
+    <script src="~/js/boot.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/3.1.0/openseadragon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/openseadragon.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
@@ -87,7 +120,7 @@
 
                 }
             });
-            client.requestAccessToken();  
+            client.requestAccessToken();
         }
         async function externalLogout() {
             let client_token = localStorage.getItem('microsoft_client_token');
@@ -141,7 +174,7 @@
         async function createOrgChart(orgdata) {
             setTimeout(function () {
                 console.log(orgdata)
-                const activeid = orgdata.find(x => x.isLoggedUser==true);
+                const activeid = orgdata.find(x => x.isLoggedUser == true);
                 chart = new d3.OrgChart()
                     .container('.chart-container')
                     .data(orgdata)
@@ -156,8 +189,8 @@
                     .siblingsMargin((d) => 25)
                     .buttonContent(({ node, state }) => {
                         return `<div style="px;color:#716E7B;border-radius:5px;padding:4px;font-size:10px;margin:auto auto;background-color:white;border: 1px solid #E4E2E9"> <span style="font-size:9px">${node.children
-                                ? `<i class="fas fa-angle-up"></i>`
-                                : `<i class="fas fa-angle-down"></i>`
+                            ? `<i class="fas fa-angle-up"></i>`
+                            : `<i class="fas fa-angle-down"></i>`
                             }</span> ${node.data._directSubordinates}  </div>`;
                     })
                     .linkUpdate(function (d, i, arr) {
@@ -176,25 +209,25 @@
                     .nodeContent(function (d, i, arr, state) {
                         const color = '#FFFFFF';
                         return `
-                    <div style="font-family: 'Inter', sans-serif;background-color:${color}; position:absolute;margin-top:-1px; margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:10px;border: 1px solid #E4E2E9">
-                       <div style="background-color:${color};position:absolute;margin-top:-25px;margin-left:${15}px;border-radius:100px;width:50px;height:50px;" ></div>
-                       <img src=" ${d.data.imageUrl
+                            <div style="font-family: 'Inter', sans-serif;background-color:${color}; position:absolute;margin-top:-1px; margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:10px;border: 1px solid #E4E2E9">
+                               <div style="background-color:${color};position:absolute;margin-top:-25px;margin-left:${15}px;border-radius:100px;width:50px;height:50px;" ></div>
+                               <img src=" ${d.data.imageUrl
                             }" style="position:absolute;margin-top:-20px;margin-left:${20}px;border-radius:100px;width:40px;height:40px;" />
 
-                      <div style="color:#08011E;position:absolute;right:20px;top:17px;font-size:10px;"><i class="fas fa-ellipsis-h"></i></div>
+                              <div style="color:#08011E;position:absolute;right:20px;top:17px;font-size:10px;"><i class="fas fa-ellipsis-h"></i></div>
 
-                      <div style="font-size:15px;color:#08011E;margin-left:20px;margin-top:32px"> ${d.data.name
+                              <div style="font-size:15px;color:#08011E;margin-left:20px;margin-top:32px"> ${d.data.name
                             } </div>
-                      <div style="color:#716E7B;margin-left:20px;margin-top:3px;font-size:10px;"> ${d.data.positionName
+                              <div style="color:#716E7B;margin-left:20px;margin-top:3px;font-size:10px;"> ${d.data.positionName
                             } </div>
 
 
-                   </div>
-          `;
+                           </div>
+                  `;
                     })
                     .render();
 
-                if (activeid!=null){
+                if (activeid != null) {
                     console.log(activeid)
                     chart.setHighlighted(activeid.id).render();
                 }
@@ -204,4 +237,3 @@
 
 </body>
 </html>
-  
