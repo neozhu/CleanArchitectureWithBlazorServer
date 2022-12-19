@@ -61,6 +61,7 @@ public class AuthController : Controller
         return Unauthorized();
     }
     [HttpGet("/auth/externallogin")]
+    [AllowAnonymous]
     public async Task<IActionResult> ExternalLogin(string provider, string userName, string name, string accessToken)
     {
         var user = await _userManager.FindByNameAsync(userName);
