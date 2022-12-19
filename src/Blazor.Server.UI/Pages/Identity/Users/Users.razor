@@ -3,7 +3,6 @@
 @page "/identity/users"
 @using Blazor.Server.UI.Components.Dialogs
 @using Blazor.Server.UI.Pages.Identity.Roles;
-@using CleanArchitecture.Blazor.Application.Common.Exceptions;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
@@ -251,11 +250,12 @@
     private bool _canImport;
     private bool _canExport;
     private bool _loading;
-    private TimeSpan refreshInterval => TimeSpan.FromSeconds(30);
+    private TimeSpan refreshInterval => TimeSpan.FromSeconds(60);
     private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
 
     protected override async Task OnInitializedAsync()
     {
+
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
 
         Title = L["Users"];
@@ -301,7 +301,7 @@
             return true;
         if (x.DisplayName is not null && x.DisplayName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if ($"{x.Email} {x.PhoneNumber} {x.Provider}".Contains(_searchString))
+        if ($"{x.Email} {x.PhoneNumber} {x.Provider} {x.TenantName}".Contains(_searchString))
             return true;
         return false;
     };
@@ -382,6 +382,8 @@
                 model.Id = applicationUser.Id;
                 _userList.Add(model);
                 Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
+                var key = "get-all-applicationusers";
+                _cache.Remove(key);
             }
             else
             {
@@ -431,6 +433,8 @@
                     await _mediator.Send(new UserProfileState.UpdateUserDtoAction(item));
                 }
                 Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                var key = "get-all-applicationusers";
+                _cache.Remove(key);
             }
             else
             {
@@ -481,6 +485,8 @@
                 _userList.Remove(item);
             }
             Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            var key = "get-all-applicationusers";
+            _cache.Remove(key);
         }
 
     }
@@ -540,10 +546,14 @@
     }
     private async Task<List<PermissionModel>> GetAllPermissions(UserDto dto)
     {
-        var key = $"get-user-by-{dto.Id}";
-        var user = await _cache.GetOrAddAsync(key, async () => await _userManager.FindByIdAsync(dto.Id), _options);
-        key = $"get-claims-by-{user!.Id}";
-        _assignedClaims = await _cache.GetOrAddAsync(key, async () => await _userManager.GetClaimsAsync(user), _options);
+        Func<string, Task<IList<Claim>>> getcalims = async (userId) =>
+        {
+            var user = await _userManager.FindByIdAsync(dto.Id) ?? throw new NotFoundException($"not found application user: {userId}");
+            var claims = await _userManager.GetClaimsAsync(user);
+            return claims;
+        };
+        var key = $"get-claims-by-{dto.Id}";
+        _assignedClaims = await _cache.GetOrAddAsync(key, async () => await getcalims(dto.Id), _options);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
         foreach (var module in modules)
@@ -569,7 +579,7 @@
                     allPermissions.Add(
                         new PermissionModel
                             {
-                                UserId = user.Id,
+                                UserId = dto.Id,
                                 ClaimValue = claimValue,
                                 ClaimType = ApplicationClaimTypes.Permission,
                                 Group = moduleName,

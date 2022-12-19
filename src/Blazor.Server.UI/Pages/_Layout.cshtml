@@ -24,12 +24,43 @@
         .mud-button-year {
             font-size: 0.8125rem;
         }
+
+        #blazor-error-ui {
+            background: lightyellow;
+            background-color: var(--mud-palette-error);
+            color: var(--mud-palette-error-text);
+            bottom: 0;
+            box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+            display: none;
+            left: 0;
+            padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+            padding: 0.6rem 1.75rem 0.7rem 1.25rem;
+            position: fixed;
+            width: 100%;
+            z-index: 9999;
+        }
+
+        #reconnect-modal {
+            background: lightyellow;
+            background-color: var(--mud-palette-warning-hover);
+            color: var(--mud-palette-warning-darken);
+            top: 0;
+            box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+            display: none;
+            left: 0;
+            padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+            padding: 0.6rem 1.75rem 0.7rem 1.25rem;
+            margin:0px;
+            position: fixed;
+            width: 100%;
+            z-index: 9999;
+        }
     </style>
-    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+    <component type="typeof(HeadOutlet)" render-mode="Server" />
 </head>
 <body>
+    <div id="reconnect-modal" style="display: none;">Connection lost -- please wait, attempting to reconnect</div>
     @RenderBody()
-
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
             An error has occurred. This application may no longer respond until reloaded.
@@ -40,6 +71,7 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+
     <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
     <script src="~/js/msal/authConfig.js"></script>
 
@@ -47,10 +79,10 @@
     <script src="~/js/gapi/auth2config.js"></script>
     <script src="_content/Blazor-ApexCharts/js/apex-charts.min.js"></script>
     <script src="_content/Blazor-ApexCharts/js/blazor-apex-charts.js"></script>
-    <script src="_framework/blazor.server.js"></script>
+    <script src="_framework/blazor.server.js" autostart="false"></script>
+    <script src="~/js/boot.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
    
-
     <script type="text/javascript">
 
         async function externalLogin(provider, dotNetHelper) {
@@ -84,7 +116,7 @@
 
                 }
             });
-            client.requestAccessToken();  
+            client.requestAccessToken();
         }
         async function externalLogout() {
             let client_token = localStorage.getItem('microsoft_client_token');
@@ -108,4 +140,3 @@
 
 </body>
 </html>
-  
