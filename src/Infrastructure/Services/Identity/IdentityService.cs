@@ -194,7 +194,7 @@ public class IdentityService : IIdentityService
         if (user is not null)
         {
             user.IsLive = isLive;
-            await _userManager.UpdateAsync(user);
+            var result= await _userManager.UpdateAsync(user);
         }
     }
     public async Task<UserDto> GetUserDto(string userId, CancellationToken cancellation = default)
