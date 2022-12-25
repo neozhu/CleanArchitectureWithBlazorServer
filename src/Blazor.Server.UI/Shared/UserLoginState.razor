@@ -63,7 +63,7 @@
     {
         InvokeAsync(async () =>
         {
-            await _identityService.UpdateLiveStatus(e, true).ConfigureAwait(false);
+            
             var username = await _identityService.GetUserNameAsync(e).ConfigureAwait(false);
             Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
             
@@ -74,7 +74,7 @@
     {
         InvokeAsync(async () =>
         {
-            await _identityService.UpdateLiveStatus(e, false).ConfigureAwait(false);
+    
             var username = await _identityService.GetUserNameAsync(e).ConfigureAwait(false);
             Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
             
