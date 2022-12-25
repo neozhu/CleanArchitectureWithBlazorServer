@@ -1,3 +1,4 @@
+using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
@@ -17,7 +18,10 @@ public class CircuitHandlerService : CircuitHandler
         CancellationToken cancellationToken)
     {
         var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        _usersStateContainer.Update(circuit.Id, state.User.Identity?.Name);
+        if (state is not null && state.User.IsAuthenticated() && state.User.Identity is not null)
+        {
+            _usersStateContainer.Update(circuit.Id, state.User.Identity.Name);
+        }
     }
 
     public override Task OnConnectionDownAsync(Circuit circuit,
