@@ -21,8 +21,7 @@ public class AddEditProductCommandValidator : AbstractValidator<AddEditProductCo
                .GreaterThanOrEqualTo(0);
         RuleFor(v => v.Description)
                    .MaximumLength(1024);
-        RuleFor(v => v.Pictures)
-            .NotEmpty();
+        RuleFor(v => v.Pictures).NotEmpty().When(x => x.Id <= 0).WithMessage("Please upload product pictures.");
         RuleFor(v => v.UploadPictures).NotEmpty().When(x => x.Id <= 0).WithMessage("Please upload product pictures.");
     }
 

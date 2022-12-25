@@ -188,7 +188,7 @@
                 </MudTd>
                 <MudTd DataLabel="@L["User Name"]">
                     <div class="d-flex align-content-center flex-wrap">
-                        <MudBadge Color="@(context.IsLive? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
+                        <MudBadge Color="@(isOnline(context.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
                             <MudAvatar Image="@context.ProfilePictureDataUrl" Alt="@context.UserName">@context?.UserName?.First()</MudAvatar>
                         </MudBadge>
                         <div class="d-flex flex-column">
@@ -279,7 +279,10 @@
     {
         _usersStateContainer.OnChange -= HandleCircuitsChanged;
     }
-
+    private bool isOnline(string username)
+    {
+       return _usersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
+    }
     private void HandleCircuitsChanged()
     {
         InvokeAsync(() =>
