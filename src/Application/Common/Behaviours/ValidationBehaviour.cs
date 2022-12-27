@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using ValidationException = CleanArchitecture.Blazor.Application.Common.Exceptions.ValidationException;
+
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
 
 public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
@@ -13,13 +15,18 @@ where TRequest : IRequest<TResponse>
         _validators = validators;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public  Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        if (_validators.Any())
+        var context = new ValidationContext<TRequest>(request);
+        var failrules = _validators
+            .Select(validator => validator.Validate(context))
+            .SelectMany(result => result.Errors)
+            .Where(failrules => failrules != null)
+            .ToList();
+        if (failrules.Count != 0)
         {
-            foreach (var validator in _validators)
-                await validator.ValidateAndThrowAsync(request, cancellationToken);
+            throw new ValidationException(failrules);
         }
-        return await next();
+        return next();
     }
 }
