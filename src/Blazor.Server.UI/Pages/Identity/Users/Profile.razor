@@ -89,43 +89,37 @@
                 <MudForm Model="@_changepassword" @ref="@_passwordform" Validation="@(_passwordValidator.ValidateValue)" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
                     <MudGrid Justify="Justify.Center" Style="max-width:300px">
                         <MudItem sm="12" xs="12">
-                            <MudTextField Immediate="true"
+                            <MudPasswordField Immediate="true"
                                           Label="@L["Current Password"]"
                                           For="@(()=>_changepassword.CurrentPassword)"
                             @bind-Value="_changepassword.CurrentPassword"
                                           Variant="Variant.Text"
-                                          InputType="@PasswordInput"
-                                          Adornment="Adornment.End"
-                                          AdornmentIcon="@PasswordInputIcon"
+                                          PasswordMode="true"
                                           Required="true"
                                           RequiredError="@L["current password is required!"]"
-                                          OnAdornmentClick="TogglePasswordVisibility" />
+                                           />
                         </MudItem>
                         <MudItem xs="12">
-                            <MudTextField Immediate="true"
+                            <MudPasswordField Immediate="true"
                                           Label="@L["New Password"]"
                                           For="@(()=>_changepassword.NewPassword)"
                             @bind-Value="_changepassword.NewPassword"
                                           Variant="Variant.Text"
-                                          InputType="@PasswordInput"
-                                          Adornment="Adornment.End"
-                                          AdornmentIcon="@PasswordInputIcon"
+                                              PasswordMode="true"
                                           Required="true"
                                           RequiredError="@L["password is required!"]"
-                                          OnAdornmentClick="TogglePasswordVisibility" />
+                                           />
                         </MudItem>
                         <MudItem xs="12">
-                            <MudTextField Immediate="true"
+                            <MudPasswordField Immediate="true"
                                           Label="@L["Confirm New Password"]"
                                           For="@(()=>_changepassword.ConfirmPassword)"
                             @bind-Value="_changepassword.ConfirmPassword"
                                           Variant="Variant.Text"
-                                          InputType="@PasswordInput"
-                                          Adornment="Adornment.End"
-                                          AdornmentIcon="@PasswordInputIcon"
+                                              PasswordMode="true"
                                           Required="true"
                                           RequiredError="@L["password is required!"]"
-                                          OnAdornmentClick="TogglePasswordVisibility" />
+                                           />
                         </MudItem>
                         <MudItem sm="12" xs="12" Class="d-flex justify-end">
                             <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="MudBlazor.Color.Primary" Class="ml-auto" OnClick="@(async () => await ChangePassword())">
@@ -174,25 +168,8 @@
     private ChangePasswordModelValidator _passwordValidator = new ();
 
 
-    bool PasswordVisibility;
-    InputType PasswordInput = InputType.Password;
 
-    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-    void TogglePasswordVisibility()
-    {
-        @if (PasswordVisibility)
-        {
-            PasswordVisibility = false;
-            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-            PasswordInput = InputType.Password;
-        }
-        else
-        {
-            PasswordVisibility = true;
-            PasswordInputIcon = Icons.Material.Filled.Visibility;
-            PasswordInput = InputType.Text;
-        }
-    }
+     
 
     protected override Task OnInitializedAsync()
     {

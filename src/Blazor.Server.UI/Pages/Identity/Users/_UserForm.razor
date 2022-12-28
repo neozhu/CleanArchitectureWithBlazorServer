@@ -54,44 +54,42 @@
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
-        <MudItem xs="12" sm="6">
+      <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.PhoneNumber)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         @if (string.IsNullOrEmpty(model.Id))
         {
             <MudItem xs="12" sm="6">
-                <MudTextField Immediate="true"
-                          Label="@L["Password"]"
-                          @bind-Value="model.Password"
-                          For="@(() => model.Password)"
-                          Variant="Variant.Text"
-                          InputType="@PasswordInput"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@PasswordInputIcon"
-                          Required="true"
-                          RequiredError="@L["password is required!"]"
-                          OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
+                <MudPasswordField Immediate="true"
+                              Label="@L["Password"]"
+                              @bind-Value="model.Password"
+                              For="@(() => model.Password)"
+                              Variant="Variant.Text"
+                              PasswordMode="true"
+                              Required="true"
+                              RequiredError="@L["password is required!"]"
+                              Class="mt-4" />
             </MudItem>
             <MudItem xs="12" sm="6">
-                <MudTextField Immediate="true"
-                          Label="@L["Confirm Password"]"
-                          @bind-Value="model.ConfirmPassword"
-                          For="@(() => model.ConfirmPassword)"
-                          Variant="Variant.Text"
-                          InputType="@PasswordInput"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@PasswordInputIcon"
-                          Required="true"
-                          RequiredError="@L["confrm password is required!"]"
-                          OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
+                <MudPasswordField Immediate="true"
+                              Label="@L["Confirm Password"]"
+                              @bind-Value="model.ConfirmPassword"
+                              For="@(() => model.ConfirmPassword)"
+                              Variant="Variant.Text"
+                              PasswordMode="true"
+                              Required="true"
+                              RequiredError="@L["confrm password is required!"]"
+                              Class="mt-4" />
             </MudItem>
         }
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+       
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => model.PhoneNumber)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+
 
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
@@ -132,9 +130,6 @@
     UserDtoValidator modelValidator = new();
     [EditorRequired][Parameter] public UserDto model { get; set; } = default!;
     [EditorRequired][Parameter] public EventCallback<UserDto> OnFormSubmit { get; set; }
-    bool PasswordVisibility;
-    InputType PasswordInput = InputType.Password;
-    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
 
     protected override async Task OnInitializedAsync()
     {
@@ -153,21 +148,7 @@
         }
 
     }
-    void TogglePasswordVisibility()
-    {
-        @if (PasswordVisibility)
-        {
-            PasswordVisibility = false;
-            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-            PasswordInput = InputType.Password;
-        }
-        else
-        {
-            PasswordVisibility = true;
-            PasswordInputIcon = Icons.Material.Filled.Visibility;
-            PasswordInput = InputType.Text;
-        }
-    }
+
     private void TenantIdChanged(string id)
     {
         model.TenantId = id;

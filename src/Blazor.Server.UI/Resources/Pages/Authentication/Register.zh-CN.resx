@@ -153,4 +153,7 @@
   <data name="Sign Up" xml:space="preserve">
     <value>注册</value>
   </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
 </root>
