@@ -25,15 +25,13 @@
                           RequiredError="@L["user name is required!"]"
                           Class="my-6"></MudTextField>
 
-            <MudTextField @bind-Value="_model.Password" For="@(() => _model.Password)"
+            <MudPasswordField @bind-Value="_model.Password" For="@(() => _model.Password)"
                           Label="@L["Password"]"
+                          PasswordMode="true"
                           Variant="Variant.Outlined"
-                          InputType="@PasswordInput"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@PasswordInputIcon"
                           Required="true"
                           RequiredError="@L["password is required!"]"
-                          OnAdornmentClick="TogglePasswordVisibility" />
+                         />
 
             <div Class="d-flex justify-space-between align-center">
                 <MudCheckBox For="@(() => _model.RememberMe)" @bind-Checked="_model.RememberMe" Label="@L["Remember me?"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
@@ -96,33 +94,13 @@
     bool _loading;
     bool _touched;
     [Inject] private LoginFormModellFluentValidator _loginValidator { get; set; } = default!;
-    bool PasswordVisibility;
-    InputType PasswordInput = InputType.Password;
-    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
 
     protected override Task OnInitializedAsync()
     {
         Title = L["Sign In"];
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         return base.OnInitializedAsync();
-    }
-
-
-
-    void TogglePasswordVisibility()
-    {
-        @if (PasswordVisibility)
-        {
-            PasswordVisibility = false;
-            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-            PasswordInput = InputType.Password;
-        }
-        else
-        {
-            PasswordVisibility = true;
-            PasswordInputIcon = Icons.Material.Filled.Visibility;
-            PasswordInput = InputType.Text;
-        }
     }
     private async Task OnSubmit()
     {
@@ -211,15 +189,5 @@
     {
         NavigationManager.NavigateTo($"/auth/externallogin?provider={provider}&userName={userName}&name={name}&accessToken={accesstoken}", true);
         return Task.CompletedTask;
-        //var result = await _authenticationService.ExternalLogin(provider, userName, name, accesstoken);
-        //if (!result)
-        //{
-        //    _logger.LogWarning("{@UserName} login fail.", userName);
-        //    Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
-        //}
-        //else
-        //{
-        //    _logger.LogInformation("{@UserName} login successfully.", userName);
-        //}
     }
 }

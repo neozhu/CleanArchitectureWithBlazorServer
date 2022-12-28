@@ -1,0 +1,93 @@
+﻿@namespace MudExtensions
+@inherits MudBaseButton
+@using MudExtensions.Enums
+
+@if (ButtonVariant == ButtonVariant.Button)
+{
+    <MudButton Disabled="@(Disabled ? true : Loading ? true : false)"
+           Size="@Size" Class="@Class" Style="@Style" UserAttributes="@UserAttributes" Variant="@Variant" Color="@Color" OnClick="@ButtonClick"
+           Href="@Href" Target="@Target" ButtonType="@ButtonType" DisableElevation="@DisableElevation" DisableRipple="@DisableRipple"
+           StartIcon="@StartIcon" EndIcon="@EndIcon" Command="@Command" CommandParameter="@CommandParameter" FullWidth="@FullWidth" HtmlTag="@HtmlTag"
+           IconClass="@IconClass" IconColor="@IconColor" Tag="@Tag">
+        @if (Loading)
+        {
+            if (LoadingAdornment == Adornment.Start)
+            {
+                <MudProgressCircular Class="me-2" Size="Size.Small" Color="@LoadingCircularColor" Indeterminate="true" />
+            }
+
+            if (LoadingContent != null)
+            {
+                @LoadingContent
+            }
+            else
+            {
+                @ChildContent
+            }
+
+            if (LoadingAdornment == Adornment.End)
+            {
+                <MudProgressCircular Class="ms-2" Size="Size.Small" Color="@LoadingCircularColor" Indeterminate="true" />
+            }
+        }
+        else
+        {
+            @ChildContent
+        }
+        </MudButton>
+}
+else if (ButtonVariant == ButtonVariant.IconButton)
+{
+    <MudIconButton Disabled="@(Disabled ? true : Loading ? true : false)"
+               Size="@Size" Class="@Class" Style="@Style" UserAttributes="@UserAttributes" Variant="@Variant" Color="@Color" OnClick="@ButtonClick"
+               Href="@Href" Target="@Target" ButtonType="@ButtonType" DisableElevation="@DisableElevation" DisableRipple="@DisableRipple"
+               Icon="@(Loading ? null : Icon)" Command="@Command" CommandParameter="@CommandParameter" HtmlTag="@HtmlTag" Title="@Title">
+        @if (Loading)
+        {
+            <div class="d-flex align-center">
+                @if (LoadingAdornment == Adornment.Start)
+                {
+                    <MudProgressCircular Class="@(LoadingContent != null ? "me-2" : null)" Size="Size.Small" Color="@LoadingCircularColor" Indeterminate="true" />
+                }
+                @if (LoadingContent != null)
+                {
+                    @LoadingContent
+                }
+                @if (LoadingAdornment == Adornment.End)
+                {
+                    <MudProgressCircular Class="@(LoadingContent != null ? "ms-2" : null)" Size="Size.Small" Color="@LoadingCircularColor" Indeterminate="true" />
+                }
+            </div>
+
+        }
+        </MudIconButton>
+}
+else if (ButtonVariant == ButtonVariant.Fab)
+{
+    @if (Loading == false)
+    {
+        <MudFab Disabled="@(Disabled ? true : Loading ? true : false)"
+        Size="@Size" Class="@Class" Style="@Style" UserAttributes="@UserAttributes" Color="@Color" OnClick="@ButtonClick"
+        Href="@Href" Target="@Target" ButtonType="@ButtonType" DisableElevation="@DisableElevation" DisableRipple="@DisableRipple"
+        Icon="@Icon" StartIcon="@StartIcon" EndIcon="@EndIcon" IconColor="@IconColor" IconSize="@IconSize" Label="@Label"
+        Command="@Command" CommandParameter="@CommandParameter" HtmlTag="@HtmlTag" Title="@Title" />
+    }
+    else
+    {
+        if (LoadingAdornment == Adornment.Start)
+        {
+            <MudProgressCircular Size="Size.Small" Color="@LoadingCircularColor" Indeterminate="true" />
+        }
+
+        if (LoadingContent != null)
+        {
+            @LoadingContent
+        }
+
+
+        if (LoadingAdornment == Adornment.End)
+        {
+            <MudProgressCircular Size="Size.Small" Color="@LoadingCircularColor" Indeterminate="true" />
+        }
+    }
+}

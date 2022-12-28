@@ -36,28 +36,24 @@
                           RequiredError="@L["e-mail is required!"]"
                           Variant="Variant.Outlined"></MudTextField>
 
-            <MudTextField Immediate="true"
+            <MudPasswordField Immediate="true"
                           Label="@L["Password"]"
                           @bind-Value="_model.Password"
                           For="@(() => _model.Password)"
+                          PasswordMode="true"
                           Variant="Variant.Outlined"
-                          InputType="@_passwordInput"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@_passwordInputIcon"
                           Required="true"
                           RequiredError="@L["password is required!"]"
-                          OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
-            <MudTextField Immediate="true"
+                          Class="mt-4" />
+            <MudPasswordField Immediate="true"
                           Label="@L["Confirm Password"]"
                           @bind-Value="_model.ConfirmPassword"
                           For="@(() => _model.ConfirmPassword)"
                           Variant="Variant.Outlined"
-                          InputType="@_passwordInput"
-                          Adornment="Adornment.End"
-                          AdornmentIcon="@_passwordInputIcon"
+                              PasswordMode="true"
                           Required="true"
                           RequiredError="@L["password is required!"]"
-                          OnAdornmentClick="TogglePasswordVisibility" Class="mt-4" />
+                         Class="mt-4" />
 
             <MudCheckBox For="@(() => _model.AgreeToTerms)" @bind-Checked="@_model.AgreeToTerms" Label="@L["I agree to the terms and privacy"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
 
@@ -97,25 +93,6 @@
     [Inject]
     private IFluentEmail _fluentEmail { get; set; } = null!;
 
-    bool _passwordVisibility;
-    InputType _passwordInput = InputType.Password;
-    string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
-
-    void TogglePasswordVisibility()
-    {
-        @if (_passwordVisibility)
-        {
-            _passwordVisibility = false;
-            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
-            _passwordInput = InputType.Password;
-        }
-        else
-        {
-            _passwordVisibility = true;
-            _passwordInputIcon = Icons.Material.Filled.Visibility;
-            _passwordInput = InputType.Text;
-        }
-    }
     protected override Task OnInitializedAsync()
     {
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
