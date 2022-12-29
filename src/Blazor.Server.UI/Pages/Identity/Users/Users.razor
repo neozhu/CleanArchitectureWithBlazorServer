@@ -130,13 +130,13 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh Style="width:80px">@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.TenantName)">@L["Tenant Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.TenantName)">@L["Tenant Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
                 <MudTh>@L["Superior Name"]</MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.Provider)">@L["Provider"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.Email)">@L["Email"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.PhoneNumber)">@L["Phone Number"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object?>(x=>x.IsActive)">@L["Is Active"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.Provider)">@L["Provider"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.Email)">@L["Email"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.PhoneNumber)">@L["Phone Number"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.IsActive)">@L["Is Active"]</MudTableSortLabel></MudTh>
                 <MudTh>@L["Lock Status"]</MudTh>
             </HeaderContent>
             <RowTemplate>
