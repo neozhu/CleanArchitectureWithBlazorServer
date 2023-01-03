@@ -201,6 +201,7 @@ public class IdentityService : IIdentityService
     {
         var key = $"GetUserDto:{userId}";
         var x = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefaultAsync(cancellation), _options);
+        if (x == null) return new UserDto() { Email="",UserName="" };
         var userDto = new UserDto()
         {
             Checked = false,
