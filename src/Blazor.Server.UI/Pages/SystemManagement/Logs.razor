@@ -241,7 +241,7 @@
         var dialog = DialogService.Show<ConfirmationDialog>
         ($"{L["Erase logs"]}", parameters, options);
         var state = await dialog.Result;
-        if (!state.Cancelled)
+        if (!state.Canceled)
         {
             _clearing = true;
             try

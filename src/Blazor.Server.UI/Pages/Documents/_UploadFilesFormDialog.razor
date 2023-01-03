@@ -35,8 +35,8 @@
     <DialogActions>
         <InputFile id="fileInput" OnChange="(async (e) =>await LoadFiles(e))" hidden multiple AllowedExtensions=".jpg;.png;"
                    CustomExtensionMessage="@L["Only .jpg and .png files are allowed."]" />
-        <MudButton Color="MudBlazor.Color.Secondary" StartIcon="@Icons.Filled.Clear" Disabled="@(!uploadedFiles.Any())" OnClick="Clear">@L["Clear"]</MudButton>
-        <MudButton Color="MudBlazor.Color.Info" StartIcon="@Icons.Filled.AttachFile" HtmlTag="label" for="fileInput">@L["Choose files"]</MudButton>
+        <MudButton Color="MudBlazor.Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!uploadedFiles.Any())" OnClick="Clear">@L["Clear"]</MudButton>
+        <MudButton Color="MudBlazor.Color.Info" StartIcon="@Icons.Material.Filled.AttachFile" HtmlTag="label" for="fileInput">@L["Choose files"]</MudButton>
         <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit" Disabled="@(_processing || _uploading || !uploadedFiles.Any())">
             @if (_processing)
             {

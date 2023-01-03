@@ -27,13 +27,14 @@ public class SignalRHub : Hub<ISignalRHub>
     {
 
     }
-    public override async Task OnConnectedAsync()
+    public override Task OnConnectedAsync()
     {
         var id = Context.ConnectionId;
         if (!_onlineUsers.ContainsKey(id))
         {
             _onlineUsers.TryAdd(id, String.Empty);
         }
+        return Task.CompletedTask;
        // await base.OnConnectedAsync();
     }
 

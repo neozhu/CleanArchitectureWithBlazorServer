@@ -61,7 +61,7 @@
             
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-                        <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
+                        <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
                             <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
                             @if (_canCreate)
                             {
@@ -97,7 +97,7 @@
                     {
                         <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                              Dense="true"
-                             EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
+                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
                             @if (_canEdit)
                             {
@@ -216,7 +216,7 @@
         var dialog = DialogService.Show<_TenantFormDialog>
         (L["Create a new Tenant"], parameters, options);
         var state = await dialog.Result;
-        if (!state.Cancelled)
+        if (!state.Canceled)
         {
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
@@ -234,7 +234,7 @@
         var dialog = DialogService.Show<_TenantFormDialog>
         (L["Edit the Tenant"], parameters, options);
         var state = await dialog.Result;
-        if (!state.Cancelled)
+        if (!state.Canceled)
         {
             var result = await _mediator.Send(command);
             await _table.ReloadServerData();
@@ -253,7 +253,7 @@
         var dialog = DialogService.Show<DeleteConfirmation>
         (string.Format(ConstantString.EDITTHEITEM,L["Tenant"]), parameters, options);
         var state = await dialog.Result;
-        if (!state.Cancelled)
+        if (!state.Canceled)
         {
             var command = new DeleteTenantCommand(new string[] { dto.Id });
             var result = await _mediator.Send(command);
@@ -273,7 +273,7 @@
         var dialog = DialogService.Show<DeleteConfirmation>
         (string.Format(ConstantString.EDITTHEITEM,L["Tenant"]), parameters, options);
         var state = await dialog.Result;
-        if (!state.Cancelled)
+        if (!state.Canceled)
         {
             var command = new DeleteTenantCommand(_selectedItems.Select(x => x.Id).ToArray());
             var result = await _mediator.Send(command);
