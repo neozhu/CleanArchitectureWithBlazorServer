@@ -82,7 +82,6 @@ public class HubClient : IAsyncDisposable
             // this means the demo won't show "xxx left the chat" since 
             // the connections are left open
             await _hubConnection.DisposeAsync();
-            _hubConnection = null;
             _started = false;
         }
     }
