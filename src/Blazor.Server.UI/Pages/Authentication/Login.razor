@@ -164,7 +164,7 @@
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall };
         var dialog = DialogService.Show<_ResetPasswordDialog>(L["Set new password"], parameters, options);
         var result = await dialog.Result;
-        if (!result.Cancelled)
+        if (!result.Canceled)
         {
             var token = await _userManager.GeneratePasswordResetTokenAsync(item);
             var state = await _userManager.ResetPasswordAsync(item, token, model.Password!);
