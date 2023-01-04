@@ -39,6 +39,11 @@ public static class LocalizationConstants
             },
             new LanguageCode
             {
+                Code = "ca-ES",
+                DisplayName = "Catalan"
+            },
+            new LanguageCode
+            {
                 Code = "es-ES",
                 DisplayName = "Spanish"
             },
