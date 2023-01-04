@@ -12,6 +12,7 @@ public static class LocalizationConstants
         new("fr-FR", "French"),
         new("de-DE", "German"),
         new("ja-JP", "Japanese"),
+        new("ca-ES", "Catalan"),
         new("es-ES", "Spanish"),
         new("ru-RU", "Russian"),
         new("zh-CN", "Simplified Chinese")
