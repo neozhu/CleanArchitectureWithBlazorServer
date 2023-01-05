@@ -3,6 +3,7 @@
 
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
+using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Import;
 
@@ -49,7 +50,7 @@ public class ImportKeyValuesCommandHandler :
     {
         var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, KeyValue, object?>>
             {
-                { _localizer["Name"], (row,item) => item.Name = row[_localizer["Name"]]?.ToString() },
+                { _localizer["Name"], (row,item) => item.Name = (Picklist)Enum.Parse(typeof(Picklist),row[_localizer["Name"]].ToString()) },
                 { _localizer["Value"], (row,item) => item.Value =  row[_localizer["Value"]]?.ToString() },
                 { _localizer["Text"], (row,item) => item.Text =  row[_localizer["Text"]]?.ToString() },
                 { _localizer["Description"], (row,item) => item.Description =  row[_localizer["Description"]]?.ToString() }
@@ -62,7 +63,7 @@ public class ImportKeyValuesCommandHandler :
             var errorsOccurred = false;
             foreach (var item in importItems)
             {
-                var validationResult = await _addValidator.ValidateAsync(new AddEditKeyValueCommand() { Name = item.Name, Value = item.Name, Description = item.Description, Text = item.Text }, cancellationToken);
+                var validationResult = await _addValidator.ValidateAsync(new AddEditKeyValueCommand() { Name = item.Name, Value = item.Value, Description = item.Description, Text = item.Text }, cancellationToken);
                 if (validationResult.IsValid)
                 {
                     var exist = await _context.KeyValues.AnyAsync(x => x.Name == item.Name && x.Value == item.Value, cancellationToken);
@@ -75,7 +76,7 @@ public class ImportKeyValuesCommandHandler :
                 else
                 {
                     errorsOccurred = true;
-                    errors.AddRange(validationResult.Errors.Select(e => $"{(!string.IsNullOrWhiteSpace(item.Name) ? $"{item.Name} - " : string.Empty)}{e.ErrorMessage}"));
+                    errors.AddRange(validationResult.Errors.Select(e => $"{(!string.IsNullOrWhiteSpace(item.Name.ToString()) ? $"{item.Name} - " : string.Empty)}{e.ErrorMessage}"));
                 }
             }
 

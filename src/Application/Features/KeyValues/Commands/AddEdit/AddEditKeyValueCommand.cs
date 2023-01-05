@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEd
 public class AddEditKeyValueCommand : IMapFrom<KeyValueDto>, ICacheInvalidatorRequest<Result<int>>
 {
     public int Id { get; set; }
-    public string? Name { get; set; }
+    public Picklist Name { get; set; }
     public string? Value { get; set; }
     public string? Text { get; set; }
     public string? Description { get; set; }

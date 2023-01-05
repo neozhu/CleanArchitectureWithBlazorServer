@@ -49,9 +49,9 @@ public class PicklistAutocomplete : MudAutocomplete<string>
         // if text is null or empty, show complete list
         if (string.IsNullOrEmpty(value))
         {
-            return Task.FromResult(_picklistService.DataSource.Where(x => x.Name == Picklist.ToString()).Select(x => x.Value ?? String.Empty));
+            return Task.FromResult(_picklistService.DataSource.Where(x => x.Name == Picklist).Select(x => x.Value ?? String.Empty));
         }
-        return Task.FromResult(_picklistService.DataSource.Where(x => x.Name == Picklist.ToString() &&
+        return Task.FromResult(_picklistService.DataSource.Where(x => x.Name == Picklist &&
         ( x.Value!=null &&  x.Value.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
           x.Text!=null && x.Text.Contains(value, StringComparison.InvariantCultureIgnoreCase)
         )
@@ -61,10 +61,5 @@ public class PicklistAutocomplete : MudAutocomplete<string>
     
 }
 
-public enum Picklist
-{
-    Status,
-    Unit,
-    Brand
-}
+
 

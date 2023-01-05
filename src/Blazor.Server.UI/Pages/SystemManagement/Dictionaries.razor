@@ -162,24 +162,15 @@
                 <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object?>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="@L["Name"]">@context?.Name</MudTd>
+                <MudTd DataLabel="@L["Name"]">@context?.Name.GetDescription()</MudTd>
                 <MudTd DataLabel="@L["Value"]">@context?.Value</MudTd>
                 <MudTd DataLabel="@L["Text"]">@context?.Text</MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Description"]">@context?.Description</MudTd>
             </RowTemplate>
             <RowEditingTemplate>
                 <MudTd DataLabel="Name">
-                   <MudAutocomplete @bind-Value="@context.Name" 
-                   Clearable="true" 
-                   CoerceText="true" 
-                   CoerceValue="true" 
-                   SearchFunc="searchName" 
-                   Required 
-                   ShowProgressIndicator="true" >
-                        <ProgressIndicatorTemplate>
-                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
-                        </ProgressIndicatorTemplate>
-                   </MudAutocomplete>
+                   <MudEnumSelect @bind-Value="@context.Name" TEnum="Picklist" Required="true" >                       
+                   </MudEnumSelect>
                 </MudTd>
                 <MudTd DataLabel="Value">
                     <MudTextField @bind-Value="@context.Value" Required />
@@ -246,18 +237,13 @@
 
     private bool FilterFunc(KeyValueDto dto, string searchString)
     {
-        if (string.IsNullOrWhiteSpace(searchString) || dto.Name is null || dto.Description is null)
+        if (string.IsNullOrWhiteSpace(searchString))
             return true;
-        if ($"{dto.Name} {dto.Value} {dto.Text} {dto.Description}".Contains(searchString))
+        if ($"{dto.Name.ToString()} {dto.Value} {dto.Text} {dto.Description}".Contains(searchString))
             return true;
         return false;
     }
-    private Task<IEnumerable<string?>> searchName(string? value)
-    {
-        if (string.IsNullOrEmpty(value))
-            return Task.FromResult(_keyValueList.Where(x=>!string.IsNullOrEmpty(x.Name)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
-        return Task.FromResult(_keyValueList.Where(x => x.Name!.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x=>x.Name).OrderBy(x=>x).Distinct());
-    }
+ 
     private async Task LoadData()
     {
         if(_loading) return;
@@ -305,7 +291,7 @@
         _table!.SetEditingItem(null);
         var newitem = new KeyValueDto()
             {
-                Name = _selectedItem?.Name,
+                Name = _selectedItem.Name,
                 Description = _selectedItem?.Description,
                 TrackingState = TrackingState.Added
             };

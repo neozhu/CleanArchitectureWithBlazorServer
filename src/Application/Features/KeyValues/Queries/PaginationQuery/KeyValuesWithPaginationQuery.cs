@@ -28,10 +28,12 @@ public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuer
         _context = context;
         _mapper = mapper;
     }
+#pragma warning disable CS8602
+#pragma warning disable CS8604
     public async Task<PaginatedData<KeyValueDto>> Handle(KeyValuesWithPaginationQuery request, CancellationToken cancellationToken)
     {
     
-        var data = await _context.KeyValues.Where(x=>x.Name!.Contains(request.Keyword)|| x.Value!.Contains(request.Keyword)|| x.Text!.Contains(request.Keyword) || x.Description!.Contains(request.Keyword))
+        var data = await _context.KeyValues.Where(x=>x.Value.Contains(request.Keyword)|| x.Text.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
             .PaginatedDataAsync(request.PageNumber, request.PageSize);
