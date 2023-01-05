@@ -7,9 +7,7 @@ public class AddEditKeyValueCommandValidator : AbstractValidator<AddEditKeyValue
 {
     public AddEditKeyValueCommandValidator()
     {
-        RuleFor(v => v.Name)
-            .MaximumLength(256)
-            .NotEmpty();
+        RuleFor(v => v.Name).NotNull();
         RuleFor(v => v.Text)
             .MaximumLength(256)
             .NotEmpty();

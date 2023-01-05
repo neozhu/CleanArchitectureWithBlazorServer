@@ -119,20 +119,20 @@ public class ApplicationDbContextInitialiser
         // Seed, if necessary
         if (!_context.KeyValues.Any())
         {
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "initialization", Text = "initialization", Description = "Status of workflow" });
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "processing", Text = "processing", Description = "Status of workflow" });
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "pending", Text = "pending", Description = "Status of workflow" });
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Status", Value = "finished", Text = "finished", Description = "Status of workflow" });
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Brand", Value = "Apple", Text = "Apple", Description = "Brand of production" });
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Brand", Value = "MI", Text = "MI", Description = "Brand of production" });
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Brand", Value = "Logitech", Text = "Logitech", Description = "Brand of production" });
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Brand", Value = "Linksys", Text = "Linksys", Description = "Brand of production" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name =  Picklist.Status, Value = "initialization", Text = "initialization", Description = "Status of workflow" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Status, Value = "processing", Text = "processing", Description = "Status of workflow" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Status, Value = "pending", Text = "pending", Description = "Status of workflow" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Status, Value = "finished", Text = "finished", Description = "Status of workflow" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Brand, Value = "Apple", Text = "Apple", Description = "Brand of production" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Brand, Value = "MI", Text = "MI", Description = "Brand of production" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Brand, Value = "Logitech", Text = "Logitech", Description = "Brand of production" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Brand, Value = "Linksys", Text = "Linksys", Description = "Brand of production" });
 
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Unit", Value = "EA", Text = "EA", Description = "Unit of product" });
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Unit", Value = "KM", Text = "KM", Description = "Unit of product" });
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Unit", Value = "PC", Text = "PC", Description = "Unit of product" });
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Unit", Value = "KG", Text = "KG", Description = "Unit of product" });
-            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = "Unit", Value = "ST", Text = "ST", Description = "Unit of product" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Unit, Value = "EA", Text = "EA", Description = "Unit of product" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Unit, Value = "KM", Text = "KM", Description = "Unit of product" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Unit, Value = "PC", Text = "PC", Description = "Unit of product" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Unit, Value = "KG", Text = "KG", Description = "Unit of product" });
+            _context.KeyValues.Add(new Domain.Entities.KeyValue() { Name = Picklist.Unit, Value = "ST", Text = "ST", Description = "Unit of product" });
             await _context.SaveChangesAsync();
 
         }

@@ -37,7 +37,7 @@ public class ExportKeyValuesQueryHandler :
     public async Task<byte[]> Handle(ExportKeyValuesQuery request, CancellationToken cancellationToken)
     {
         
-        var data = await _context.KeyValues.Where(x => x.Name.Contains(request.Keyword) || x.Value.Contains(request.Keyword) || x.Text.Contains(request.Keyword))
+        var data = await _context.KeyValues.Where(x =>x.Description.Contains(request.Keyword) || x.Value.Contains(request.Keyword) || x.Text.Contains(request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

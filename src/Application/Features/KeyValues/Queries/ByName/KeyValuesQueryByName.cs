@@ -8,12 +8,12 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
 
 public class KeyValuesQueryByName : ICacheableRequest<IEnumerable<KeyValueDto>>
 {
-    public string Name { get; set; }
+    public Picklist Name { get; set; }
 
-    public string CacheKey => KeyValueCacheKey.GetCacheKey(Name);
+    public string CacheKey => KeyValueCacheKey.GetCacheKey(Name.ToString());
 
     public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
-    public KeyValuesQueryByName(string name)
+    public KeyValuesQueryByName(Picklist name)
     {
         Name = name;
     }
