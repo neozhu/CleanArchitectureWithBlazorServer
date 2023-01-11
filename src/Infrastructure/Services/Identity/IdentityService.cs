@@ -51,6 +51,12 @@ public class IdentityService : IIdentityService
         var user = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId), _options);
         return user?.UserName;
     }
+    public string GetUserName(string userId)
+    {
+        var key = $"GetUserName-byId:{userId}";
+        var user = _cache.GetOrAdd(key, () => _userManager.Users.SingleOrDefault(u => u.Id == userId), _options);
+        return user?.UserName??string.Empty;
+    }
     public async Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default)
     {
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation) ?? throw new NotFoundException(_localizer["User Not Found."]);
@@ -223,5 +229,32 @@ public class IdentityService : IIdentityService
             AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
         };
         return userDto!;
+    }
+    public async Task<List<UserDto>?> GetUsers(string tenantId, CancellationToken cancellation = default)
+    {
+        var key = $"GetUsers-tenantId:{tenantId}";
+        var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.TenantId == tenantId).Include(x => x.UserRoles).ThenInclude(x => x.Role)
+           .Select(x => new UserDto()
+           {
+            Checked = false,
+            ProfilePictureDataUrl = x.ProfilePictureDataUrl,
+            DisplayName = x.DisplayName,
+            Email = x.Email!,
+            IsActive = x.IsActive,
+            IsLive = x.IsLive,
+            PhoneNumber = x.PhoneNumber,
+            Provider = x.Provider,
+            Id = x.Id,
+            UserName = x.UserName!,
+            TenantId = x.TenantId,
+            TenantName = x.TenantName,
+            LockoutEnd = x.LockoutEnd,
+            SuperiorId = x.SuperiorId,
+            SuperiorName = (x.Superior != null ? x.Superior.UserName : null),
+            Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
+            AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
+           }).ToListAsync(), _options);
+        
+        return result;
     }
 }

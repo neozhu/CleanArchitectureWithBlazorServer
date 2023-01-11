@@ -1,3 +1,4 @@
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 @using Microsoft.AspNetCore.Identity
@@ -56,20 +57,14 @@
             <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudSelect For="@(() => model.SuperiorId)"
-                       T="string"
-                       Required="false"
-                       Clearable="true"
-                       RequiredError="@L["Superior is required."]"
-                       Label="@L["Select Superior"]"
-                       Text="@model.SuperiorName"
-                       ValueChanged="SuperiorIdChanged"
-                       Value="@model.SuperiorId">
-                @foreach (var item in superiorList.Where(x => x.Id != model.Id))
-                {
-                    <MudSelectItem T="string" Value="@item.Id">@item.UserName</MudSelectItem>
-                }
-            </MudSelect>
+            <PickSuperiorIdAutocomplete For="@(() => model.SuperiorId)"
+                                        TenantId="@model.TenantId"
+                                        OwnerName="@model.UserName"
+                                        Clearable="true"
+                                        Label="@L["Select Superior"]"
+                                        ValueChanged="SuperiorIdChanged"
+                                        Value="@model.SuperiorId"> </PickSuperiorIdAutocomplete>
+           
         </MudItem>
         @if (string.IsNullOrEmpty(model.Id))
         {
@@ -141,11 +136,11 @@
     private List<CheckItem> _roles { get; set; } = new();
 
     [Inject] private IUploadService _uploadService { get; set; } = default!;
+    [Inject] private IIdentityService _identityService { get; set; } = default!;
     [Inject] private ITenantsService _tenantsService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     UserDtoValidator modelValidator = new();
-    [Parameter]
-    public List<UserDto> superiorList { get; set; } = new();
+
     [EditorRequired][Parameter] public UserDto model { get; set; } = default!;
     [EditorRequired][Parameter] public EventCallback<UserDto> OnFormSubmit { get; set; }
 
@@ -172,10 +167,11 @@
         model.TenantId = id;
         model.TenantName = _tenantsService.DataSource.FirstOrDefault(x => x.Id == id)?.Name;
     }
-    private void SuperiorIdChanged(string id)
+    private async Task SuperiorIdChanged(string id)
     {
         model.SuperiorId = id;
-        model.SuperiorName = superiorList.Where(x => x.Id == id).FirstOrDefault()?.UserName;
+        var userName =await _identityService.GetUserNameAsync(id);
+        model.SuperiorName = userName;
     }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
