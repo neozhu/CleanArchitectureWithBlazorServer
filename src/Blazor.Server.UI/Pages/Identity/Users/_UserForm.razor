@@ -1,3 +1,4 @@
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 @using Microsoft.AspNetCore.Identity
@@ -125,6 +126,7 @@
     private List<CheckItem> _roles { get; set; } = new();
 
     [Inject] private IUploadService _uploadService { get; set; } = default!;
+    [Inject] private IIdentityService _identityService { get; set; } = default!;
     [Inject] private ITenantsService _tenantsService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     UserDtoValidator modelValidator = new();

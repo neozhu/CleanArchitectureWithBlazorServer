@@ -397,7 +397,10 @@
 
     private async Task OnEdit(UserDto item)
     {
-        var parameters = new DialogParameters { ["model"] = item };
+
+        var parameters = new DialogParameters {
+                   { nameof(_UserFormDialog.model),item }
+            };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
