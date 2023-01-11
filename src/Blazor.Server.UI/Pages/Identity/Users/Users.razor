@@ -29,7 +29,7 @@
 <ErrorBoundary>
     <ChildContent>
 
-        <MudTable Items="_userList"
+        <MudTable @ref="_table"
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 265px)"
@@ -39,7 +39,7 @@
                   @bind-SelectedItems="_selectItems"
                   SortLabel="@ConstantString.ORDERBY"
                   Loading="@_loading"
-                  Filter="new Func<UserDto,bool>(_quickFilter)">
+                  ServerData="@(new Func<TableState, Task<TableData<UserDto>>>(ServerReload))" >
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Users"]</MudText>
@@ -225,7 +225,6 @@
 @code {
     [Inject]
     private IUsersStateContainer _usersStateContainer { get; set; } = default!;
-    private List<UserDto> _userList = new();
     private int _defaultPageSize = 15;
     private HashSet<UserDto> _selectItems = new();
     private string _searchString = string.Empty;
@@ -235,13 +234,15 @@
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
-
+    private TimeSpan refreshInterval => TimeSpan.FromSeconds(60);
+    private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
+    [Inject]
+    private IAppCache _cache { get; set; } = null!;
     [Inject]
     private ITenantProvider _tenantProvider{ get; set; }= default!;
     [Inject]
     private IMediator _mediator { get; set; } = default!;
-    [Inject]
-    private IAppCache _cache { get; set; } = null!;
+    private MudTable<UserDto> _table = null!;
     private bool _processing;
     private bool _showPermissionsDrawer;
     private bool _canCreate;
@@ -255,8 +256,9 @@
     private bool _canImport;
     private bool _canExport;
     private bool _loading;
-    private TimeSpan refreshInterval => TimeSpan.FromSeconds(60);
-    private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
+
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -275,7 +277,6 @@
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-        await LoadData();
         _usersStateContainer.OnChange += HandleCircuitsChanged;
 
 
@@ -286,7 +287,7 @@
     }
     private bool isOnline(string username)
     {
-       return _usersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
+        return _usersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
     }
     private void HandleCircuitsChanged()
     {
@@ -301,56 +302,45 @@
         });
     }
 
-    private Func<UserDto, bool> _quickFilter => x =>
+    private async Task<TableData<UserDto>> ServerReload(TableState state)
     {
-        if (string.IsNullOrWhiteSpace(_searchString))
-            return true;
-        if (x.UserName is not null && x.UserName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        if (x.DisplayName is not null && x.DisplayName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        if ($"{x.Email} {x.PhoneNumber} {x.Provider} {x.SuperiorName} {x.TenantName}".Contains(_searchString))
-            return true;
-        return false;
-    };
-    private async Task OnRefresh()
-    {
-
-        await LoadData();
-
-    }
-    private async Task LoadData()
-    {
-        if (_loading) return;
         try
         {
             _loading = true;
-            var key = "get-all-applicationusers";
-            _userList =await _cache.GetOrAddAsync(key,async()=> await _userManager.Users.Include(x=>x.UserRoles).ThenInclude(x=>x.Role).Select(x => new UserDto()
-                {
-                    Checked=false,
-                    ProfilePictureDataUrl = x.ProfilePictureDataUrl,
-                    DisplayName = x.DisplayName,
-                    Email = x.Email!,
-                    IsActive = x.IsActive,
-                    IsLive = x.IsLive,
-                    PhoneNumber = x.PhoneNumber,
-                    Provider = x.Provider,
-                    Id = x.Id,
-                    UserName = x.UserName!,
-                    TenantId = x.TenantId,
-                    TenantName = x.TenantName,
-                    LockoutEnd = x.LockoutEnd,
-                    SuperiorId=x.SuperiorId,
-                    SuperiorName = (x.Superior!=null?x.Superior.UserName:null),
-                    Role =  x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
-                    AssignRoles = x.UserRoles.Select(x=>x.Role.Name!).ToArray(),
-                }).ToListAsync() , _options);
+            var items = await _userManager.Users
+                 .Include(x => x.UserRoles).ThenInclude(x => x.Role).Where(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString))
+                 .Skip(state.Page * state.PageSize).Take(state.PageSize).Select(x => new UserDto()
+                     {
+                         Checked = false,
+                         ProfilePictureDataUrl = x.ProfilePictureDataUrl,
+                         DisplayName = x.DisplayName,
+                         Email = x.Email!,
+                         IsActive = x.IsActive,
+                         IsLive = x.IsLive,
+                         PhoneNumber = x.PhoneNumber,
+                         Provider = x.Provider,
+                         Id = x.Id,
+                         UserName = x.UserName!,
+                         TenantId = x.TenantId,
+                         TenantName = x.TenantName,
+                         LockoutEnd = x.LockoutEnd,
+                         SuperiorId = x.SuperiorId,
+                         SuperiorName = (x.Superior != null ? x.Superior.UserName : null),
+                         Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
+                         AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
+                     }).ToListAsync();
+            var total = await _userManager.Users.CountAsync(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString));
+            return new TableData<UserDto>() { TotalItems = total, Items = items };
         }
         finally
         {
             _loading = false;
         }
+    }
+
+    private async Task OnRefresh()
+    {
+        await  _table.ReloadServerData();
     }
     private async Task OnCreate()
     {
@@ -358,7 +348,6 @@
         var parameters = new DialogParameters {
             { nameof(_UserFormDialog.model),model }
            };
-
         var options = new DialogOptions {CloseButton=true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
         var result = await dialog.Result;
@@ -390,11 +379,8 @@
                 {
                     await _userManager.AddToRoleAsync(applicationUser, RoleNameConstants.Basic);
                 }
-                model.Id = applicationUser.Id;
-                _userList.Add(model);
                 Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
-                var key = "get-all-applicationusers";
-                _cache.Remove(key);
+                await OnRefresh();
             }
             else
             {
@@ -448,8 +434,7 @@
                     await _mediator.Send(new UserProfileState.UpdateUserDtoAction(item));
                 }
                 Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
-                var key = "get-all-applicationusers";
-                _cache.Remove(key);
+                await OnRefresh();
             }
             else
             {
@@ -495,13 +480,8 @@
                     return;
                 }
             }
-            foreach (var item in _selectItems)
-            {
-                _userList.Remove(item);
-            }
             Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
-            var key = "get-all-applicationusers";
-            _cache.Remove(key);
+            await OnRefresh();
         }
 
     }
