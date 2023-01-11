@@ -22,7 +22,7 @@
 <ErrorBoundary>
     <ChildContent>
 
-        <MudTable Items="@_roleList"
+        <MudTable @ref="_table"
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 265px)"
@@ -32,7 +32,7 @@
                   @bind-SelectedItems="_selectItems"
                   SortLabel="@ConstantString.ORDERBY"
                   Loading="@_loading"
-                  Filter="new Func<RoleDto,bool>(_quickFilter)">
+                  ServerData="@(new Func<TableState, Task<TableData<RoleDto>>>(ServerReload))" >
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Roles"]</MudText>
@@ -175,7 +175,6 @@
 @code {
     private bool processing = false;
     private string _currentRoleName = string.Empty;
-    private List<RoleDto> _roleList = new();
     private int _defaultPageSize = 15;
     private HashSet<RoleDto> _selectItems = new();
     private string _searchString = string.Empty;
@@ -191,6 +190,7 @@
     private IAppCache _cache { get; set; } = null!;
     private List<PermissionModel> _permissions = new();
     private IList<Claim> _assignedClaims = default!;
+    private MudTable<RoleDto> _table = null!;
     private bool _canCreate;
     private bool _canSearch;
     private bool _canEdit;
@@ -212,40 +212,27 @@
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.ManagePermissions)).Succeeded;
         _canImport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-        await LoadData();
-
     }
-    private Func<RoleDto, bool> _quickFilter => x =>
-       {
-           if (string.IsNullOrWhiteSpace(_searchString))
-               return true;
-
-           if (x.Name is not null && x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-               return true;
-
-           if (x.Description is not null && x.Description.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-               return true;
-
-           return false;
-       };
-    private async Task OnRefresh()
+    private async Task<TableData<RoleDto>> ServerReload(TableState state)
     {
-        await LoadData();
-    }
-    private async Task LoadData()
-    {
-        if (_loading) return;
         try
         {
             _loading = true;
-            var key = "get-all-applicationroles";
-            _roleList = await _cache.GetOrAddAsync(key, async () => await _roleManager.Roles.Select(x => new RoleDto() { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName }).ToListAsync(), _options);
+            var items = await _roleManager.Roles.Where(x => x.Name.Contains(_searchString) || x.Description.Contains(_searchString))
+                 .Skip(state.Page * state.PageSize).Take(state.PageSize).Select(x => new RoleDto() { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName }).ToListAsync();
+            var total = await _roleManager.Roles.CountAsync(x => x.Name.Contains(_searchString) || x.Description.Contains(_searchString));
+            return new TableData<RoleDto>() { TotalItems = total, Items = items };
         }
         finally
         {
             _loading = false;
         }
     }
+    private async Task OnRefresh()
+    {
+        await _table.ReloadServerData();
+    }
+
     private async Task OnCreate()
     {
         var model = new RoleDto() { Name = "" };
@@ -264,11 +251,8 @@
             var state = await _roleManager.CreateAsync(applicationRole);
             if (state.Succeeded)
             {
-                model.Id=applicationRole.Id;
-                _roleList.Add(model);
                 Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
-                var key = "get-all-applicationroles";
-                _cache.Remove(key);
+                await OnRefresh();
             }
             else
             {
@@ -293,18 +277,13 @@
                 if (state.Succeeded)
                 {
                     Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                    await OnRefresh();
                 }
                 else
                 {
                     Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
                 }
-                var key = "get-all-applicationroles";
-                _cache.Remove(key);
-            }
-            else
-            {
-                Snackbar.Add($"{item.Name} was removed.", MudBlazor.Severity.Warning);
-                _roleList.Remove(item);
+           
             }
         }
     }
@@ -457,11 +436,8 @@
                     Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
                 }
             }
-            foreach (var item in _selectItems)
-            {
-                _roleList.Remove(item);
-            }
             Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            await OnRefresh();
         }
     }
     private Task OnExport()
