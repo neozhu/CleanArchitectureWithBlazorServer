@@ -41,8 +41,7 @@
                        Text="@model.TenantName"
                        Required="true"
                        RequiredError="@L["Tenant is required."]"
-                       ValueChanged="TenantIdChanged"
-                       Value="@model.TenantId">
+                       @bind-Value="@model.TenantId">
                 @foreach (var item in _tenantsService.DataSource)
                 {
                     <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
@@ -62,8 +61,7 @@
                                         OwnerName="@model.UserName"
                                         Clearable="true"
                                         Label="@L["Select Superior"]"
-                                        ValueChanged="SuperiorIdChanged"
-                                        Value="@model.SuperiorId"> </PickSuperiorIdAutocomplete>
+                                        @bind-Value="@model.SuperiorId"> </PickSuperiorIdAutocomplete>
            
         </MudItem>
         @if (string.IsNullOrEmpty(model.Id))
@@ -136,7 +134,6 @@
     private List<CheckItem> _roles { get; set; } = new();
 
     [Inject] private IUploadService _uploadService { get; set; } = default!;
-    [Inject] private IIdentityService _identityService { get; set; } = default!;
     [Inject] private ITenantsService _tenantsService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     UserDtoValidator modelValidator = new();
@@ -162,17 +159,6 @@
 
     }
 
-    private void TenantIdChanged(string id)
-    {
-        model.TenantId = id;
-        model.TenantName = _tenantsService.DataSource.FirstOrDefault(x => x.Id == id)?.Name;
-    }
-    private async Task SuperiorIdChanged(string id)
-    {
-        model.SuperiorId = id;
-        var userName =await _identityService.GetUserNameAsync(id);
-        model.SuperiorName = userName;
-    }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
         var filestream = e.File.OpenReadStream();
