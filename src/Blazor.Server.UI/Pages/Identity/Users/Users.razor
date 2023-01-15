@@ -529,9 +529,10 @@
     }
     private async Task OnSetPermissions(UserDto item)
     {
-
-        _permissions = await GetAllPermissions(item);
         _showPermissionsDrawer = true;
+        _permissions = new();
+        _permissions = await GetAllPermissions(item);
+       
 
     }
     private Task OnOpenChangedHandler(bool state)
