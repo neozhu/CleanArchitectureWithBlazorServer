@@ -283,15 +283,17 @@
                 {
                     Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
                 }
-           
+
             }
         }
     }
     private async Task OnSetPermissions(RoleDto item)
     {
+        _showPermissionsDrawer = true;
+        _permissions = new();
         _currentRoleName = item.Name!;
         _permissions = await GetAllPermissions(item);
-        _showPermissionsDrawer = true;
+
 
     }
 
@@ -303,7 +305,6 @@
             var claims = await _roleManager.GetClaimsAsync(role);
             return claims;
         };
-
         var key = $"get-claims-by-{dto.Id}";
         _assignedClaims = await _cache.GetOrAddAsync(key, async () => await getcalims(dto.Id), _options);
         var allPermissions = new List<PermissionModel>();
