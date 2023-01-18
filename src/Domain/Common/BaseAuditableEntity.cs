@@ -33,7 +33,7 @@ public abstract class BaseEntity: IEntity
     }
 }
 
-public abstract class AuditableEntity : BaseEntity
+public abstract class BaseAuditableEntity : BaseEntity
 {
     public DateTime? Created { get; set; }
 
@@ -49,7 +49,7 @@ public interface ISoftDelete
     DateTime? Deleted { get; set; }
     string? DeletedBy { get; set; }
 }
-public abstract class AuditableSoftDeleteEntity : AuditableEntity, ISoftDelete
+public abstract class AuditableSoftDeleteEntity : BaseAuditableEntity, ISoftDelete
 {
     public DateTime? Deleted { get; set; }
     public string? DeletedBy { get; set; }

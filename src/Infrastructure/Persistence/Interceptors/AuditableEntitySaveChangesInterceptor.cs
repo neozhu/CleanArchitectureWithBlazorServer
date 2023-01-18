@@ -49,7 +49,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     {
         var userId = _currentUserService.UserId;
         var tenantId = _tenantProvider.TenantId;
-        foreach (var entry in context!.ChangeTracker.Entries<AuditableEntity>())
+        foreach (var entry in context!.ChangeTracker.Entries<BaseAuditableEntity>())
         {
             switch (entry.State)
             {
