@@ -16,11 +16,11 @@ internal class KeyValuesWithPaginationQueryTests: TestBase
     [SetUp]
     public async Task initData()
     {
-        await AddAsync<KeyValue>(new KeyValue() { Name = "Test", Text = "Text1", Value = "Value1" ,Description= "Test Description" });
-        await AddAsync<KeyValue>(new KeyValue() { Name = "Test", Text = "Text2", Value = "Value2", Description = "Test Description" });
-        await AddAsync<KeyValue>(new KeyValue() { Name = "Test", Text = "Text3", Value = "Value3", Description = "Test Description" });
-        await AddAsync<KeyValue>(new KeyValue() { Name = "Test", Text = "Text4", Value = "Value4", Description = "Test Description" });
-        await AddAsync<KeyValue>(new KeyValue() { Name = "Test", Text = "Text5", Value = "Value5", Description = "Test Description" });
+        await AddAsync<KeyValue>(new KeyValue() { Name = Domain.Picklist.Brand, Text = "Text1", Value = "Value1" ,Description= "Test Description" });
+        await AddAsync<KeyValue>(new KeyValue() { Name = Domain.Picklist.Brand, Text = "Text2", Value = "Value2", Description = "Test Description" });
+        await AddAsync<KeyValue>(new KeyValue() { Name = Domain.Picklist.Brand, Text = "Text3", Value = "Value3", Description = "Test Description" });
+        await AddAsync<KeyValue>(new KeyValue() { Name = Domain.Picklist.Brand, Text = "Text4", Value = "Value4", Description = "Test Description" });
+        await AddAsync<KeyValue>(new KeyValue() { Name = Domain.Picklist.Brand, Text = "Text5", Value = "Value5", Description = "Test Description" });
 
     }
     [Test]
