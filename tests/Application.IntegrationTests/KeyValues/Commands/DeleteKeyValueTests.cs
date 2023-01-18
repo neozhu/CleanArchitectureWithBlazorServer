@@ -27,7 +27,7 @@ namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
         {
             var addcommand = new AddEditKeyValueCommand()
             {
-                Name = "Word",
+                Name =  Blazor.Domain.Picklist.Brand,
                 Text= "Word",
                 Value = "Word",
                 Description = "For Test"

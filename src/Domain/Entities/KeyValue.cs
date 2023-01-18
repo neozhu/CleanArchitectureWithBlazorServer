@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Domain.Entities;
 
-public class KeyValue : AuditableEntity, IAuditTrial
+public class KeyValue : BaseAuditableEntity, IAuditTrial
 {
     public int Id { get; set; }
     public Picklist Name { get; set; } = Picklist.Brand;
