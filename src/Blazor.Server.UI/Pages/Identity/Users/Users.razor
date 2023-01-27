@@ -67,18 +67,6 @@
                                    OnClick="OnDeleteChecked"
                                    IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
                         }
-                        @if (_canImport)
-                        {
-                            <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
-                            <MudLoadingButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                          StartIcon="@Icons.Material.Filled.Upload"
-                                          @bind-Loading="_uploading"
-                                          Size="Size.Small"
-                                          Style="margin-right: 4px; margin-bottom:4px"
-                                          for="importdataInput"
-                                          HtmlTag="label"
-                                          IconColor="Color.Surface">@ConstantString.IMPORT</MudLoadingButton>
-                        }
                         @if (_canExport)
                         {
                             <MudLoadingButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -87,6 +75,28 @@
                                           @bind-Loading="_downloading" LoadingAdornment="Adornment.Start" OnClick="OnExport"
                                           Style="margin-right: 4px; margin-bottom:4px"
                                           IconColor="Color.Surface">@ConstantString.EXPORT</MudLoadingButton>
+                        }
+                        @if (_canImport)
+                        {
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="display:inline-block; margin-right: 4px; margin-bottom:4px;margin-top:0px">
+                                <ButtonTemplate>
+                                    <MudButton HtmlTag="label" Size="Size.Small"
+                                           Variant="Variant.Outlined"
+                                           Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Upload"
+                                           for="@context">
+                                        @if (_uploading)
+                                        {
+                                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                            <MudText Class="ms-2"> @ConstantString.UPLOADING</MudText>
+                                        }
+                                        else
+                                        {
+                                            <MudText>@ConstantString.IMPORT</MudText>
+                                        }
+                                    </MudButton>
+                                </ButtonTemplate>
+                            </MudFileUpload>
                         }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
@@ -679,11 +689,11 @@
         _downloading = false;
     }
 
-    private async Task OnImportData(InputFileChangeEventArgs e)
+    private async Task OnImportData(IBrowserFile file)
     {
         _uploading = true;
         var stream = new MemoryStream();
-        await e.File.OpenReadStream().CopyToAsync(stream);
+        await file.OpenReadStream().CopyToAsync(stream);
         var result = await _excelService.ImportAsync(stream.ToArray(), mappers: new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
             {
                 { L["User Name"], (row, item) => item.UserName = row[L["User Name"]]?.ToString() },
