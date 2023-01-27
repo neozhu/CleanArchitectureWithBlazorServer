@@ -20,7 +20,7 @@
 
 <ErrorBoundary>
     <ChildContent>
-       <MudTable ServerData="@(new Func<TableState, Task<TableData<CustomerDto>>>(ServerReload))"
+        <MudTable ServerData="@(new Func<TableState, Task<TableData<CustomerDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
@@ -62,28 +62,6 @@
                                    OnClick="OnDeleteChecked"
                                    IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
                         }
-                        @if (_canImport)
-                        {
-                            <MudButton Disabled="@_uploading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Upload"
-                                   Size="Size.Small"
-                                   Style="margin-right:1px; margin-bottom:4px"
-                                   for="importdataInput"
-                                   HtmlTag="label"
-                                   IconColor="Color.Surface">
-                                @if (_uploading)
-                                {
-                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                    <MudText Class="ms-2"> @ConstantString.UPLOADING</MudText>
-                                }
-                                else
-                                {
-                                    <MudText>@ConstantString.IMPORT</MudText>
-                                }
-
-                            </MudButton>
-                            <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
-                        }
                         @if (_canExport)
                         {
                             <MudButton Disabled="@_downloading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -103,6 +81,29 @@
                                 }
                             </MudButton>
                         }
+                        @if (_canImport)
+                        {
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="display:inline-block; margin-right: 4px; margin-bottom:4px;margin-top:0px">
+                                <ButtonTemplate>
+                                    <MudButton HtmlTag="label" Size="Size.Small"
+                                           Variant="Variant.Outlined"
+                                           Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Upload"
+                                           for="@context">
+                                        @if (_uploading)
+                                        {
+                                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                            <MudText Class="ms-2"> @ConstantString.UPLOADING</MudText>
+                                        }
+                                        else
+                                        {
+                                            <MudText>@ConstantString.IMPORT</MudText>
+                                        }
+                                    </MudButton>
+                                </ButtonTemplate>
+                            </MudFileUpload>
+                        }
+                        
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
@@ -114,16 +115,6 @@
                             @if (_canDelete)
                             {
                                 <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
-                            }
-                            @if (_canImport)
-                            {
-                                <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
-                                <MudMenuItem for="importdataInput"
-                                         HtmlTag="label">@ConstantString.IMPORT</MudMenuItem>
-                            }
-                            @if (_canExport)
-                            {
-                                <MudMenuItem OnClick="OnExport">@ConstantString.EXPORT</MudMenuItem>
                             }
                         </MudMenu>
                     </MudHidden>
@@ -142,7 +133,7 @@
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
                 @*TODO: Define the fields that should be displayed in data table*@
-                <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh> 
+                <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh>
 
             </HeaderContent>
             <RowTemplate>
@@ -173,7 +164,7 @@
                     }
                 </MudTd>
                 @*TODO: Define the fields that should be displayed in data table*@
-                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Name")]"> 
+                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Name")]">
                     <div class="d-flex flex-column">
                         <MudText>@context.Name</MudText>
                         <MudText Typo="Typo.body2">@context.Description</MudText>
@@ -228,12 +219,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         Title = L["Customers"];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Search)).Succeeded;
-        _canEdit   = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Edit)).Succeeded;
+        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Edit)).Succeeded;
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Export)).Succeeded;
@@ -280,7 +271,7 @@
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_CustomerFormDialog>
-        (string.Format(ConstantString.CREATEAITEM,L["Customer"]), parameters, options);
+        (string.Format(ConstantString.CREATEAITEM, L["Customer"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -299,7 +290,7 @@
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_CustomerFormDialog>
-        (string.Format(ConstantString.EDITTHEITEM,L["Customer"]), parameters, options);
+        (string.Format(ConstantString.EDITTHEITEM, L["Customer"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -316,7 +307,7 @@
                         { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Name) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EDITTHEITEM,L["Customer"]), parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -335,7 +326,7 @@
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>
-        (string.Format(ConstantString.DELETETHEITEM,L["Customer"]), parameters, options);
+        (ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -357,16 +348,16 @@
                 SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
             };
         var result = await _mediator.Send(request);
-        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result, contentType:"application/octet-stream");
+        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result, contentType: "application/octet-stream");
         Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
         _downloading = false;
     }
-    private async Task OnImportData(InputFileChangeEventArgs e)
+    private async Task OnImportData(IBrowserFile file)
     {
         _uploading = true;
         var stream = new MemoryStream();
-        await e.File.OpenReadStream().CopyToAsync(stream);
-        var command = new ImportCustomersCommand(e.File.Name, stream.ToArray());
+        await file.OpenReadStream().CopyToAsync(stream);
+        var command = new ImportCustomersCommand(file.Name, stream.ToArray());
 
         var result = await _mediator.Send(command);
         if (result.Succeeded)
