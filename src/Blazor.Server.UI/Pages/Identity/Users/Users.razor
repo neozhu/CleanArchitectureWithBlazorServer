@@ -3,6 +3,7 @@
 @page "/identity/users"
 @using Blazor.Server.UI.Components.Dialogs
 @using Blazor.Server.UI.Pages.Identity.Roles;
+@using BlazorDownloadFile;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
@@ -66,24 +67,36 @@
                                    OnClick="OnDeleteChecked"
                                    IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
                         }
-                        @if (_canImport)
-                        {
-                            <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Upload"
-                                   Size="Size.Small"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   for="importdataInput"
-                                   HtmlTag="label"
-                                   IconColor="Color.Surface">@ConstantString.IMPORT</MudButton>
-                        }
                         @if (_canExport)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Download"
-                                   Size="Size.Small"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ConstantString.EXPORT</MudButton>
+                            <MudLoadingButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                          StartIcon="@Icons.Material.Filled.Download"
+                                          Size="Size.Small"
+                                          @bind-Loading="_downloading" LoadingAdornment="Adornment.Start" OnClick="OnExport"
+                                          Style="margin-right: 4px; margin-bottom:4px"
+                                          IconColor="Color.Surface">@ConstantString.EXPORT</MudLoadingButton>
+                        }
+                        @if (_canImport)
+                        {
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="display:inline-block; margin-right: 4px; margin-bottom:4px;margin-top:0px">
+                                <ButtonTemplate>
+                                    <MudButton HtmlTag="label" Size="Size.Small"
+                                           Variant="Variant.Outlined"
+                                           Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Upload"
+                                           for="@context">
+                                        @if (_uploading)
+                                        {
+                                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                            <MudText Class="ms-2"> @ConstantString.UPLOADING</MudText>
+                                        }
+                                        else
+                                        {
+                                            <MudText>@ConstantString.IMPORT</MudText>
+                                        }
+                                    </MudButton>
+                                </ButtonTemplate>
+                            </MudFileUpload>
                         }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
@@ -97,16 +110,7 @@
                             {
                                 <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
                             }
-                            @if (_canImport)
-                            {
-                                <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
-                                <MudMenuItem for="importdataInput"
-                                         HtmlTag="label">@ConstantString.IMPORT</MudMenuItem>
-                            }
-                            @if (_canExport)
-                            {
-                                <MudMenuItem OnClick="OnExport">@ConstantString.EXPORT</MudMenuItem>
-                            }
+                            
                         </MudMenu>
                     </MudHidden>
                 </div>
@@ -127,12 +131,12 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh Style="width:80px">@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.TenantName)">@L["Tenant Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.UserName)">@L["User Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.Provider)">@L["Provider"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.Email)">@L["Email"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.PhoneNumber)">@L["Phone Number"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<UserDto, object?>(x=>x.IsActive)">@L["Is Active"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="TenantId" T="UserDto">@L["Tenant Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="UserName" T="UserDto">@L["User Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Provider" T="UserDto">@L["Provider"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Email" T="UserDto">@L["Email"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="PhoneNumber" T="UserDto">@L["Phone Number"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="IsActive" T="UserDto">@L["Is Active"]</MudTableSortLabel></MudTh>
                 <MudTh>@L["Lock Status"]</MudTh>
             </HeaderContent>
             <RowTemplate>
@@ -236,6 +240,12 @@
     [Inject]
     private ITenantProvider _tenantProvider{ get; set; }= default!;
     [Inject]
+    private ITenantsService _tenantsService { get; set; } = null!;
+    [Inject]
+    private IBlazorDownloadFileService _blazorDownloadFileService { get; set; } = null!;
+    [Inject]
+    private IExcelService _excelService { get; set; } = null!;
+    [Inject]
     private IMediator _mediator { get; set; } = default!;
     private MudTable<UserDto> _table = null!;
     private bool _processing;
@@ -251,7 +261,8 @@
     private bool _canImport;
     private bool _canExport;
     private bool _loading;
-
+    private bool _downloading;
+    private bool _uploading;
 
 
 
@@ -270,8 +281,8 @@
         _canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
         _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
-        _canImport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
-        _canExport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        _canImport =  (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
+        _canExport =  (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _usersStateContainer.OnChange += HandleCircuitsChanged;
 
 
@@ -304,6 +315,7 @@
             _loading = true;
             var items = await _userManager.Users
                  .Include(x => x.UserRoles).ThenInclude(x => x.Role).Where(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString))
+                 .OrderBy($"{state.SortLabel ?? "UserName"} {(state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString():state.SortDirection.ToString())}")
                  .Skip(state.Page * state.PageSize).Take(state.PageSize).Select(x => new UserDto()
                      {
                          Checked = false,
@@ -523,7 +535,7 @@
         _showPermissionsDrawer = true;
         _permissions = new();
         _permissions = await GetAllPermissions(item);
-       
+
 
     }
     private Task OnOpenChangedHandler(bool state)
@@ -647,13 +659,79 @@
         }
 
     }
-    private Task OnExport()
+    private async Task OnExport()
     {
-        return Task.CompletedTask;
+        _downloading = true;
+        var items = await _userManager.Users
+                 .Where(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString) )
+                 .Select(x => new UserDto()
+                     {
+                         Id = x.Id,
+                         UserName = x.UserName!,
+                         DisplayName = x.DisplayName,
+                         Email = x.Email!,
+                         PhoneNumber = x.PhoneNumber,
+                         TenantName = x.TenantName,
+                     }).ToListAsync();
+        var result = await _excelService.ExportAsync(items,
+                new Dictionary<string, Func<UserDto, object?>>()
+                            {
+                      {L["Id"],item => item.Id},
+                      {L["User Name"],item => item.UserName},
+                      {L["Display Name"],item => item.DisplayName},
+                      {L["Email"],item => item.Email},
+                      {L["Phone Number"],item => item.PhoneNumber},
+                      {L["Tenant Name"],item => item.TenantName},
+                            }
+                , L["Users"]);
+        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
+        Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
+        _downloading = false;
     }
 
-    private Task OnImportData(InputFileChangeEventArgs e)
+    private async Task OnImportData(IBrowserFile file)
     {
-        return Task.CompletedTask;
+        _uploading = true;
+        var stream = new MemoryStream();
+        await file.OpenReadStream().CopyToAsync(stream);
+        var result = await _excelService.ImportAsync(stream.ToArray(), mappers: new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
+            {
+                { L["User Name"], (row, item) => item.UserName = row[L["User Name"]]?.ToString() },
+                { L["Display Name"], (row, item) => item.DisplayName = row[L["Display Name"]]?.ToString() },
+                { L["Email"], (row, item) => item.Email = row[L["Email"]]?.ToString() },
+                { L["Phone Number"], (row, item) => item.PhoneNumber = row[L["Phone Number"]]?.ToString() },
+                { L["Tenant Name"], (row, item) => item.TenantName = row[L["Tenant Name"]]?.ToString() },
+            }, L["Users"]);
+        if (result.Succeeded)
+        {
+            foreach (var user in result.Data)
+            {
+                if (!_userManager.Users.Any(x =>  x.UserName == user.UserName || x.Email == user.Email))
+                {
+                    var tenantId = _tenantsService.DataSource.Any(x => x.Name == user.TenantName) ? _tenantsService.DataSource.First(x => x.Name == user.TenantName).Id : _tenantsService.DataSource.First().Id;
+                    user.TenantId = tenantId;
+                    var iresult = await _userManager.CreateAsync(user);
+                    if (iresult.Succeeded)
+                    {
+                        await _userManager.AddToRolesAsync(user, new string[] { RoleNameConstants.Basic });
+                    }
+                    else
+                    {
+                        Snackbar.Add($"{string.Join(',',iresult.Errors.Select(x=>x.Description))}", MudBlazor.Severity.Error);
+                    }
+                }
+            }
+
+            await _table.ReloadServerData();
+            Snackbar.Add($"{ConstantString.IMPORTSUCCESS}", MudBlazor.Severity.Info);
+        }
+        else
+        {
+            foreach (var msg in result.Errors)
+            {
+                Snackbar.Add($"{msg}", MudBlazor.Severity.Error);
+            }
+        }
+        _uploading = false;
     }
 }
