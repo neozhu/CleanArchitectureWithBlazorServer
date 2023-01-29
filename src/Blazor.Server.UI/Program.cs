@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
-using CleanArchitecture.Blazor.Infrastructure.Identity;
+using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
