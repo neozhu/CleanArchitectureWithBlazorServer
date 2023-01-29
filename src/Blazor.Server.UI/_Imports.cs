@@ -12,6 +12,7 @@ global using Microsoft.Extensions.Caching.Memory;
 global using CleanArchitecture.Blazor.Domain;
 global using CleanArchitecture.Blazor.Domain.Entities;
 global using CleanArchitecture.Blazor.Domain.Events;
+global using CleanArchitecture.Blazor.Domain.Identity;
 global using CleanArchitecture.Blazor.Application.Common.Mappings;
 global using CleanArchitecture.Blazor.Application.Common.Models;
 global using CleanArchitecture.Blazor.Application.Common.Extensions;

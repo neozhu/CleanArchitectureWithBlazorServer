@@ -1,4 +1,3 @@
-using CleanArchitecture.Blazor.Infrastructure.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 using FluentValidation;
 

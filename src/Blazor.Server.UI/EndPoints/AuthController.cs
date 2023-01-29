@@ -4,7 +4,6 @@ using CleanArchitecture.Blazor.Infrastructure.Constants;
 using System.Security.Claims;
 using System.Text;
 using System.Threading;
-using CleanArchitecture.Blazor.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;

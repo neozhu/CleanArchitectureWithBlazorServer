@@ -4,7 +4,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Identity;
+namespace CleanArchitecture.Blazor.Domain.Identity;
 
 public class ApplicationUser : IdentityUser
 {
