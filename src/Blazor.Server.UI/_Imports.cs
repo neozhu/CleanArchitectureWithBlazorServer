@@ -20,6 +20,7 @@ global using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 global using CleanArchitecture.Blazor.Application.Configurations;
 global using CleanArchitecture.Blazor.Domain.Entities.Audit;
 global using CleanArchitecture.Blazor.Domain.Entities.Log;
+global using CleanArchitecture.Blazor.Domain.Identity;
 global using CleanArchitecture.Blazor.Application.Common.Specification;
 global using CleanArchitecture.Blazor.Application.Common.Exceptions;
 global using Microsoft.AspNetCore.Components;
