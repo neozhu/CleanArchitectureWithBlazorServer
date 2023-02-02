@@ -44,7 +44,8 @@ public static class DependencyInjection
         services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.SectionName));
         services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.SectionName));
         services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
-        services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
+        services.AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
+        services.AddTransient<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
         services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
         services.AddScoped<ApplicationDbContextInitialiser>();
 

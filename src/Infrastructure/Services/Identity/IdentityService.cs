@@ -21,7 +21,7 @@ public class IdentityService : IIdentityService
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly IOptions<AppConfigurationSettings> _appConfig;
+    private readonly AppConfigurationSettings _appConfig;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
     private readonly IAppCache _cache;
@@ -30,7 +30,7 @@ public class IdentityService : IIdentityService
     private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
     public IdentityService(
         IServiceScopeFactory scopeFactory,
-        IOptions<AppConfigurationSettings> appConfig,
+        AppConfigurationSettings appConfig,
         IAppCache cache,
         IStringLocalizer<IdentityService> localizer)
     {
@@ -171,7 +171,7 @@ public class IdentityService : IIdentityService
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfig.Value.Secret)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfig.Secret)),
             ValidateIssuer = false,
             ValidateAudience = false,
             RoleClaimType = ClaimTypes.Role,
@@ -190,7 +190,7 @@ public class IdentityService : IIdentityService
 
     private SigningCredentials GetSigningCredentials()
     {
-        var secret = Encoding.UTF8.GetBytes(_appConfig.Value.Secret);
+        var secret = Encoding.UTF8.GetBytes(_appConfig.Secret);
         return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
     }
 
