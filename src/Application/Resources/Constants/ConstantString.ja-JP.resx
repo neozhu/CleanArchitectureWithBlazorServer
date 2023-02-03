@@ -273,4 +273,7 @@
   <data name="Sign In" xml:space="preserve">
     <value>ログイン</value>
   </data>
+  <data name="Export to PDF" xml:space="preserve">
+    <value>PDFにエクスポート</value>
+  </data>
 </root>

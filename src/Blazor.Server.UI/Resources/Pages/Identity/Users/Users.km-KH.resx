@@ -207,4 +207,10 @@
   <data name="Display Name" xml:space="preserve">
     <value>이름 표시하기</value>
   </data>
+  <data name="Set Permissions" xml:space="preserve">
+    <value>권한 설정</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>암호를 재설정</value>
+  </data>
 </root>

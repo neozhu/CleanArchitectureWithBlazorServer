@@ -207,4 +207,10 @@
   <data name="Display Name" xml:space="preserve">
     <value>Anzeigename</value>
   </data>
+  <data name="Set Permissions" xml:space="preserve">
+    <value>Berechtigungen festlegen</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>Passwort zurücksetzen</value>
+  </data>
 </root>

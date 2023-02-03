@@ -72,7 +72,7 @@
                             <MudLoadingButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                           StartIcon="@Icons.Material.Filled.Download"
                                           Size="Size.Small"
-                                          @bind-Loading="_downloading" LoadingAdornment="Adornment.Start" OnClick="OnExport"
+                                          @bind-Loading="_exporting" LoadingAdornment="Adornment.Start" OnClick="OnExport"
                                           Style="margin-right: 4px; margin-bottom:4px"
                                           IconColor="Color.Surface">@ConstantString.EXPORT</MudLoadingButton>
                         }
@@ -261,7 +261,7 @@
     private bool _canImport;
     private bool _canExport;
     private bool _loading;
-    private bool _downloading;
+    private bool _exporting;
     private bool _uploading;
 
 
@@ -661,7 +661,7 @@
     }
     private async Task OnExport()
     {
-        _downloading = true;
+        _exporting = true;
         var items = await _userManager.Users
                  .Where(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString) )
                  .Select(x => new UserDto()
@@ -686,7 +686,7 @@
                 , L["Users"]);
         var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
         Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
-        _downloading = false;
+        _exporting = false;
     }
 
     private async Task OnImportData(IBrowserFile file)

@@ -207,4 +207,10 @@
   <data name="Display Name" xml:space="preserve">
     <value>Nombre para mostrar</value>
   </data>
+  <data name="Set Permissions" xml:space="preserve">
+    <value>Establecer permisos</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>Restablecer la contraseña</value>
+  </data>
 </root>

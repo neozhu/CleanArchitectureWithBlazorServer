@@ -273,4 +273,7 @@
   <data name="Sign In" xml:space="preserve">
     <value>로그인</value>
   </data>
+  <data name="Export to PDF" xml:space="preserve">
+    <value>PDF로 내보내기</value>
+  </data>
 </root>

@@ -207,4 +207,10 @@
   <data name="Display Name" xml:space="preserve">
     <value>Показать имя</value>
   </data>
+  <data name="Set Permissions" xml:space="preserve">
+    <value>Установить разрешения</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>Сброс пароля</value>
+  </data>
 </root>
