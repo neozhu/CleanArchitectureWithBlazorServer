@@ -1,4 +1,6 @@
 global using MediatR;
+global using MediatR.Pipeline;
+global using LazyCache;
 global using Microsoft.Extensions.Localization;
 global using AutoMapper;
 global using AutoMapper.QueryableExtensions;

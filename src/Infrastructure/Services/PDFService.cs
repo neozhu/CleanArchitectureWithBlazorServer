@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 public class PDFService : IPDFService
 {
     private const int marginPTs = 56;
-    private const string fontFamilyName = "Calibri";
+    private const string fontFamilyName = Fonts.Calibri;
     private const float fontSize = 10F;
     private const int maxCharsPerCell = 80;
     private const int minCharsPerCell = 10;
@@ -27,7 +27,7 @@ public class PDFService : IPDFService
                         page.Size(landscape? PageSizes.A4.Landscape() : PageSizes.A4);
                         page.Margin(marginPTs, Unit.Point);
                         page.PageColor(QuestPDF.Helpers.Colors.White);
-                        page.DefaultTextStyle(x => x.FontSize(fontSize).FontFamily(fontFamilyName));
+                        page.DefaultTextStyle(x => x.FontSize(fontSize).FontFamily(fontFamilyName).Fallback(TextStyle.Default.FontFamily("Microsoft YaHei")));
                         
                         page.Header()
                             .Text(title)

@@ -207,4 +207,10 @@
   <data name="Display Name" xml:space="preserve">
     <value>表示名</value>
   </data>
+  <data name="Set Permissions" xml:space="preserve">
+    <value>権限を設定する</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>パスワードを再設定する</value>
+  </data>
 </root>
