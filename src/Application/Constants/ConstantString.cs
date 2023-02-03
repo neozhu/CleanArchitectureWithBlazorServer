@@ -15,6 +15,7 @@ public static class ConstantString
     public static string ADD => Localize("Add");
     public static string CREATE => Localize("Create");
     public static string EXPORT => Localize("Export to Excel");
+    public static string EXPORTPDF => Localize("Export to PDF");
     public static string IMPORT => Localize("Import from Excel");
     public static string ACTIONS => Localize("Actions");
     public static string SAVE => Localize("Save");
