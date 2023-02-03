@@ -213,4 +213,10 @@
   <data name="Display Name" xml:space="preserve">
     <value>显示名称</value>
   </data>
+  <data name="Set Permissions" xml:space="preserve">
+    <value>设置权限</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>重置密码</value>
+  </data>
 </root>

@@ -273,4 +273,7 @@
   <data name="Sign In" xml:space="preserve">
     <value>Войти</value>
   </data>
+  <data name="Export to PDF" xml:space="preserve">
+    <value>Экспорт в PDF</value>
+  </data>
 </root>

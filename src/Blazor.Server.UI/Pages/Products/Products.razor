@@ -66,38 +66,24 @@
                         }
                         @if (_canExport)
                         {
-                            <MudButton Disabled="@_downloading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Download"
+                            <MudLoadingButton @bind-Loading="_exporting" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                          Label="@ConstantString.EXPORT"
+                                   StartIcon="@Icons.Custom.FileFormats.FileExcel"
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    OnClick="OnExport"
                                    IconColor="Color.Surface">
-                                @if (_downloading)
-                                {
-                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                    <MudText Class="ms-2"> @ConstantString.DOWNLOADING</MudText>
-                                }
-                                else
-                                {
-                                    <MudText>@ConstantString.EXPORT</MudText>
-                                }
-                            </MudButton>
-                            <MudButton Disabled="@_downloading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Download"
+                                @ConstantString.EXPORT
+                            </MudLoadingButton>
+                            <MudLoadingButton @bind-Loading="_pdfexporting" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                          Label="@ConstantString.EXPORTPDF"
+                                   StartIcon="@Icons.Material.Filled.PictureAsPdf"
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    OnClick="OnExportPDF"
                                    IconColor="Color.Surface">
-                                @if (_downloading)
-                                {
-                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                    <MudText Class="ms-2">@ConstantString.DOWNLOADING</MudText>
-                                }
-                                else
-                                {
-                                    <MudText>@ConstantString.EXPORTPDF</MudText>
-                                }
-                            </MudButton>
+                                @ConstantString.EXPORTPDF
+                            </MudLoadingButton>
                         }
                         @if (_canImport)
                         {
@@ -222,7 +208,8 @@
     private string _searchString = string.Empty;
     private bool _loading;
     private bool _uploading;
-    private bool _downloading;
+    private bool _exporting;
+    private bool _pdfexporting;
     private int _defaultPageSize = 15;
     [Inject]
     private IMediator _mediator { get; set; } = default!;
@@ -371,7 +358,7 @@
     }
     private async Task OnExport()
     {
-        _downloading = true;
+        _exporting = true;
         var request = new ExportProductsQuery()
             {
                 Keyword = _searchString,
@@ -381,11 +368,11 @@
         var result = await _mediator.Send(request);
         var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Products"]}.xlsx", result, contentType: "application/octet-stream");
         Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
-        _downloading = false;
+        _exporting = false;
     }
     private async Task OnExportPDF()
     {
-        _downloading = true;
+        _pdfexporting = true;
         var request = new ExportProductsQuery()
             {
                 Keyword = _searchString,
@@ -396,7 +383,7 @@
         var result = await _mediator.Send(request);
         var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Products"]}.pdf", result, contentType: "application/octet-stream");
         Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
-        _downloading = false;
+        _pdfexporting = false;
     }
     private async Task OnImportData(IBrowserFile file)
     {
