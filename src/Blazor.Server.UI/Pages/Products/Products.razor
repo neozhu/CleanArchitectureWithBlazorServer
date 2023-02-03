@@ -82,6 +82,22 @@
                                     <MudText>@ConstantString.EXPORT</MudText>
                                 }
                             </MudButton>
+                            <MudButton Disabled="@_downloading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Download"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   OnClick="OnExportPDF"
+                                   IconColor="Color.Surface">
+                                @if (_downloading)
+                                {
+                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                    <MudText Class="ms-2">@ConstantString.DOWNLOADING</MudText>
+                                }
+                                else
+                                {
+                                    <MudText>@ConstantString.EXPORTPDF</MudText>
+                                }
+                            </MudButton>
                         }
                         @if (_canImport)
                         {
@@ -364,6 +380,21 @@
             };
         var result = await _mediator.Send(request);
         var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Products"]}.xlsx", result, contentType: "application/octet-stream");
+        Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
+        _downloading = false;
+    }
+    private async Task OnExportPDF()
+    {
+        _downloading = true;
+        var request = new ExportProductsQuery()
+            {
+                Keyword = _searchString,
+                OrderBy = string.IsNullOrEmpty(_table.TableContext.SortFieldLabel) ? "Id" : _table.TableContext.SortFieldLabel,
+                SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
+                exportType = ExportType.PDF
+            };
+        var result = await _mediator.Send(request);
+        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Products"]}.pdf", result, contentType: "application/octet-stream");
         Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
         _downloading = false;
     }
