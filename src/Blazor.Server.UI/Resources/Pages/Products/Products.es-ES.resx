@@ -162,7 +162,7 @@
   <data name="Are you sure you want to erase this image?" xml:space="preserve">
     <value>¿Estás seguro de que quieres borrar esta imagen?</value>
   </data>
-  <data name="Erase imatge" xml:space="preserve">
+  <data name="Erase image" xml:space="preserve">
     <value>Borrar imagen</value>
   </data>
 </root>

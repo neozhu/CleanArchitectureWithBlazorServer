@@ -126,8 +126,8 @@
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
-  <data name="Erase imatge" xml:space="preserve">
-    <value>Erase imatge</value>
+  <data name="Erase image" xml:space="preserve">
+    <value>Erase image</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>Price</value>
@@ -164,5 +164,8 @@
   </data>
   <data name="Unit" xml:space="preserve">
     <value>Unit</value>
+  </data>
+  <data name="Upload picture" xml:space="preserve">
+    <value>Upload picture</value>
   </data>
 </root>
