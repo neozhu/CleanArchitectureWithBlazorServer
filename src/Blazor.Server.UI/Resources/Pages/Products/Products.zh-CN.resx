@@ -159,4 +159,13 @@
   <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
     <value>建议上传的图片尺寸:640x320</value>
   </data>
+  <data name="Upload picture" xml:space="preserve">
+    <value>上传图片</value>
+  </data>
+  <data name="Are you sure you want to erase this image?" xml:space="preserve">
+    <value>你确定要删除图片吗?</value>
+  </data>
+  <data name="Erase image" xml:space="preserve">
+    <value>删除图片</value>
+  </data>
 </root>

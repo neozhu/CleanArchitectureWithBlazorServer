@@ -159,4 +159,10 @@
   <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
     <value>El tamany recomenat par a pujar imàtges és 640X320</value>
   </data>
+  <data name="Are you sure you want to erase this image?" xml:space="preserve">
+    <value>Esteu segur que voleu esborrar aquesta imatge?</value>
+  </data>
+  <data name="Erase image" xml:space="preserve">
+    <value>Borrar imatge</value>
+  </data>
 </root>
