@@ -1,17 +1,8 @@
-
-using CleanArchitecture.Blazor.Application.Common.Exceptions;
-using CleanArchitecture.Blazor.Infrastructure.Constants;
-using System.Security.Claims;
-using System.Text;
-using System.Threading;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using CleanArchitecture.Blazor.Infrastructure.Extensions;
-using Blazor.Server.UI.Pages.Authentication;
+
 
 namespace Blazor.Server.UI.EndPoints;
 public class AuthController : Controller

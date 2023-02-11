@@ -22,6 +22,8 @@ global using CleanArchitecture.Blazor.Domain.Entities.Audit;
 global using CleanArchitecture.Blazor.Domain.Entities.Log;
 global using CleanArchitecture.Blazor.Application.Common.Specification;
 global using CleanArchitecture.Blazor.Application.Common.Exceptions;
+global using CleanArchitecture.Blazor.Infrastructure.Extensions;
+global using CleanArchitecture.Blazor.Application.Constants;
 global using Microsoft.AspNetCore.Components;
 global using MudBlazor;
 global using static CleanArchitecture.Blazor.Application.Common.Helper.ConstantStringLocalizer;
