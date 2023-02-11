@@ -42,7 +42,7 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Analytics",
-                    Roles=new string[]{ RoleNameConstants.Administrator, RoleNameConstants.Users },
+                    Roles=new string[]{ RoleName.Administrator, RoleName.Users },
                     Icon = Icons.Material.Filled.Analytics,
                     Href = "/analytics",
                     PageStatus = PageStatus.ComingSoon
@@ -50,7 +50,7 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Banking",
-                    Roles=new string[]{ RoleNameConstants.Administrator,RoleNameConstants.Users },
+                    Roles=new string[]{ RoleName.Administrator,RoleName.Users },
                     Icon = Icons.Material.Filled.Money,
                     Href = "/banking",
                     PageStatus = PageStatus.ComingSoon
@@ -58,7 +58,7 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Booking",
-                    Roles=new string[]{ RoleNameConstants.Administrator,RoleNameConstants.Users },
+                    Roles=new string[]{ RoleName.Administrator,RoleName.Users },
                     Icon = Icons.Material.Filled.CalendarToday,
                     Href = "/booking",
                     PageStatus = PageStatus.ComingSoon
@@ -69,7 +69,7 @@ public class MenuService : IMenuService
         new MenuSectionModel
         {
             Title = "MANAGEMENT",
-            Roles=new string[]{ RoleNameConstants.Administrator },
+            Roles=new string[]{ RoleName.Administrator },
             SectionItems = new List<MenuSectionItemModel>
             {
                 new()

@@ -114,7 +114,7 @@
                     var result = await _userManager.CreateAsync(user, _model.Password!);
                     if (result.Succeeded)
                     {
-                        var assignResult= await _userManager.AddToRoleAsync(user, RoleNameConstants.Basic);
+                        var assignResult= await _userManager.AddToRoleAsync(user, RoleName.Basic);
                         if (assignResult.Succeeded && !string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.UserName))
                         {
                             var response= await sendWelcome(user.Email, user.UserName);

@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Infrastructure.Constants;
 
-public static class UserNameConstants
+public static class UserName
 {
     public const string Administrator = "Administrator";
     public const string Demo = "Demo";
