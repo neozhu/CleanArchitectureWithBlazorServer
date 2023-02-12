@@ -98,7 +98,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                     DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                     _timer.Stop();
                     var elapsedMilliseconds = _timer.ElapsedMilliseconds;
-                    _logger.LogInformation("{id}: {elapsedMilliseconds} recognize the result: {@result},{@content}",id, elapsedMilliseconds, ocr_result, doc.Content);
+                    _logger.LogInformation("Id: {id}, elapsed: {elapsedMilliseconds}, recognize the result: {@result},{@content}", id, elapsedMilliseconds, ocr_result, doc.Content);
 
                 }
 
