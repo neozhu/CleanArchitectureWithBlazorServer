@@ -25,20 +25,20 @@
                                 ResetValueOnEmptyText="true"
                                 @bind-Value="TRequest.Unit"></PicklistAutocomplete>
         </MudItem>
-        <MudItem xs="12" sm="6" md="4">
-            <MudNumericField @bind-Value="TRequest.MinPrice"
+   @*     <MudItem xs="12" sm="6" md="4">
+            <MudNumericField @bind-Value="TRequest.Price.Min"
                           Clearable="true"
                           Placeholder="@L["Search for minimum price"]"
                           TextChanged="TextChanged">
             </MudNumericField>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudNumericField @bind-Value="TRequest.MaxPrice"
+            <MudNumericField @bind-Value="TRequest.Price.Max"
                           Clearable="true"
                           Placeholder="@L["Search for maximum price"]"
                           TextChanged="TextChanged">
             </MudNumericField>
-        </MudItem>
+        </MudItem>*@
     </MudGrid>
 </MudExpansionPanel>
 

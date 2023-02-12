@@ -244,10 +244,10 @@
         {
             _loading = true;
             _query.Keyword = _searchString;
-            _query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
-            _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
-            _query.PageNumber = state.Page + 1;
-            _query.PageSize = state.PageSize;
+            _query.Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
+            _query.SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            _query.Page = state.Page + 1;
+            _query.PerPage = state.PageSize;
             var result = await _mediator.Send(_query).ConfigureAwait(false);
             return new TableData<ProductDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
