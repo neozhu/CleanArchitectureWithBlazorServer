@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
-using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
@@ -19,7 +18,11 @@ builder.Host.UseSerilog((context, configuration) =>
                 .MinimumLevel.Override("Serilog", LogEventLevel.Error)
                 .MinimumLevel.Override("BlazorState.Store", LogEventLevel.Error)
                 .MinimumLevel.Override("BlazorState.Subscriptions", LogEventLevel.Error)
-                .MinimumLevel.Override("BlazorState.Pipeline.State.CloneStateBehavior", LogEventLevel.Error)
+                .MinimumLevel.Override("Hangfire.BackgroundJobServer", LogEventLevel.Error)
+                .MinimumLevel.Override("Hangfire.Server.BackgroundServerProcess", LogEventLevel.Error)
+                .MinimumLevel.Override("Hangfire.Server.ServerHeartbeatProcess", LogEventLevel.Error)
+                .MinimumLevel.Override("Hangfire.Processing.BackgroundExecution", LogEventLevel.Error)
+                .MinimumLevel.Override("BlazorState.Pipeline.State.CloneStateBehavior",LogEventLevel.Error)
                 .MinimumLevel.Override("BlazorState.Pipeline.RenderSubscriptions.RenderSubscriptionsPostProcessor", LogEventLevel.Error)
           .Enrich.FromLogContext()
           .Enrich.WithClientIp()

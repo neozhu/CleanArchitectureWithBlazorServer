@@ -189,11 +189,17 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>Tenant Name</value>
   </data>
-  <data name="E-mail" xml:space="preserve">
-    <value>E-mail</value>
-  </data>
   <data name="Provider" xml:space="preserve">
     <value>Fournisseur</value>
+  </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>Nom supérieur</value>
+  </data>
+  <data name="Select Superior" xml:space="preserve">
+    <value>Sélectionnez Supérieur</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>E-mail</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Mot de passe</value>

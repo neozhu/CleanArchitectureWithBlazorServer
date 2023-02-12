@@ -189,11 +189,17 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>Имя арендатора</value>
   </data>
-  <data name="E-mail" xml:space="preserve">
-    <value>Эл. почта</value>
-  </data>
   <data name="Provider" xml:space="preserve">
     <value>Провайдер</value>
+  </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>Высшее имя</value>
+  </data>
+  <data name="Select Superior" xml:space="preserve">
+    <value>Выберите улучшенный</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>Эл. почта</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Пароль</value>

@@ -145,6 +145,12 @@
     <value>取消授权成功</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>参数名</value>
+    <value>角色名称</value>
+  </data>
+  <data name="Assigned Roles" xml:space="preserve">
+    <value>已授权角色</value>
+  </data>
+  <data name="Email / PhoneNumber" xml:space="preserve">
+    <value>电子邮件 / 电话</value>
   </data>
 </root>

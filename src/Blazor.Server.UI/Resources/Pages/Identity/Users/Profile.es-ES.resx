@@ -162,4 +162,10 @@
   <data name="User Name" xml:space="preserve">
     <value>Nombre de usuario</value>
   </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>Nombre superior</value>
+  </data>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>Nombre del inquilino</value>
+  </data>
 </root>

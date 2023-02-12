@@ -7,10 +7,14 @@
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
+@using CleanArchitecture.Blazor.Infrastructure.Hubs
 
 @inject IJSRuntime JS
 @inject IStringLocalizer<Documents> L
+@implements IDisposable
+
 @attribute [Authorize(Policy = Permissions.Documents.View)]
+
 <PageTitle>@Title</PageTitle>
 <style>
     .mud-table-toolbar {
@@ -44,12 +48,12 @@
                         @if (_canCreate)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Add"
+                                   StartIcon="@Icons.Material.Filled.Camera"
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="OnCreate"
                                    Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                   IconColor="Color.Surface">@L["Upload Pictures"]</MudButton>
                         }
                         @if (_canDelete)
                         {
@@ -69,7 +73,7 @@
                             <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
                             @if (_canCreate)
                             {
-                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@ConstantString.CREATE</MudMenuItem>
+                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@L["Upload Pictures"]</MudMenuItem>
                             }
                             @if (_canDelete)
                             {
@@ -87,16 +91,13 @@
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
                     <col style="width:48px;" />
                     <col style="width:118px;" />
-                    <col style="width:50%;" />
-                    <col style="width:100px;" />
-                    <col style="width:120px;" />
-                </MudHidden>
+                 </MudHidden>
             </ColGroup>
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Title" T="DocumentDto">@L["Title"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Title" T="DocumentDto">@L["Recognize result"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="DocumentType" T="DocumentDto">@L["Document Type"]</MudTableSortLabel></MudTh>
-                <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="IsPublic" T="DocumentDto">@L["Is Public"]</MudTableSortLabel></MudTh>
                 <MudTh>@L["Tenant Name"]</MudTh>
 
             </HeaderContent>
@@ -138,9 +139,35 @@
                         <MudText Typo="Typo.body2">@context.Description</MudText>
                     </div>
                 </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L["Document Type"]">@context.DocumentType</MudTd>
-                <MudTd DataLabel="@L["Is Public"]" Style="text-align:right">
-                    <MudCheckBox Checked="@context.IsPublic" Disabled="true"></MudCheckBox>
+                 <MudTd DataLabel="@L["Recognize result"]">
+                    <div class="d-flex flex-column">
+                        <div class="flex-grow-0">
+                        @switch (context.Status)
+                        {
+                            case JobStatus.Queueing:
+                                <MudChip  Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" Disabled="true">@context.Status</MudChip>
+                                break;
+                            case JobStatus.Doing:
+                                <MudChip  Icon="@Icons.Material.Outlined.DocumentScanner" Variant="Variant.Outlined" Size="Size.Small" Color="Color.Info"> @context.Status</MudChip>
+                                break;
+                            case JobStatus.Done:
+                                <MudChip  Icon="@Icons.Material.Filled.Done" Variant="Variant.Filled" Size="Size.Small" Color="Color.Success">@context.Status</MudChip>
+                                break;
+                            default:
+                                <MudChip Variant="Variant.Outlined" Size="Size.Small" Color="Color.Primary">@context.Status</MudChip>
+                                break;
+                        }
+                        </div>
+                        <div class="flex-grow-0">
+                        <MudHighlighter Typo="Typo.body2" Text="@context.Content" HighlightedText="@_searchString"></MudHighlighter>
+                        </div>
+                    </div>
+                </MudTd>
+                <MudTd HideSmall="true" DataLabel="@L["Document Type"]">
+                    <div class="d-flex flex-column">
+                        <MudCheckBox Size="Size.Small" Label="@L["Is Public"]" Checked="@context.IsPublic" Disabled="true"></MudCheckBox>
+                        <MudText Typo="Typo.body2">@context.DocumentType</MudText>
+                    </div>
                 </MudTd>
                 <MudTd DataLabel="@L["Tenant Name"]">
                     <div class="d-flex flex-column">
@@ -166,6 +193,7 @@
 </ErrorBoundary>
 @code {
     public string? Title { get; private set; }
+    //private Lazy<IJSObjectReference> _jsModule = new();
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
     private MudTable<DocumentDto> _table = default!;
     private int _defaultPageSize = 15;
@@ -179,7 +207,10 @@
     [Inject]
     private IMediator _mediator { get; set; } = default!;
     [Inject]
+    private HubClient _client { get; set; } = default!;
+    [Inject]
     private IMapper _mapper { get; set; } = default!;
+
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     private string _tenantId = string.Empty;
@@ -208,6 +239,31 @@
         {
             await _table.ReloadServerData();
         });
+
+        _client.JobCompleted += _client_JobCompleted;
+        _client.JobStarted += _client_JobStarted;
+    }
+    private void _client_JobCompleted(object? sender, string e)
+    {
+        InvokeAsync(async () =>
+        {
+            await _table.ReloadServerData();
+            Snackbar.Add(string.Format(L["{0} recognize completed."],e), MudBlazor.Severity.Success);
+        });
+    }
+    private void _client_JobStarted(object? sender, string e)
+    {
+        InvokeAsync(async () =>
+        {
+            await _table.ReloadServerData();
+            Snackbar.Add(string.Format(L["{0} job started."],e), MudBlazor.Severity.Info);
+        });
+    }
+
+    public void Dispose()
+    {
+        _client.JobCompleted -= _client_JobCompleted;
+        _client.JobStarted -= _client_JobStarted;
     }
     private async Task<TableData<DocumentDto>> ServerReload(TableState state)
     {
@@ -256,15 +312,14 @@
             {
         { nameof(_DocumentFormDialog.model),command },
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<_DocumentFormDialog>
-        (string.Format(ConstantString.CREATEAITEM, L["Document"]), parameters, options);
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<_UploadFilesFormDialog>
+        (L["Upload pictures"], parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add(ConstantString.UPLOADSUCCESS, MudBlazor.Severity.Info);
         }
     }
     private async Task OnEdit(DocumentDto dto)
@@ -275,8 +330,10 @@
                  { nameof(_DocumentFormDialog.model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<_DocumentFormDialog>
-        (string.Format(ConstantString.EDITTHEITEM, L["Document"]), parameters, options);
+        var dialog = DialogService.Show<_DocumentFormDialog>(string.Format(ConstantString.EDITTHEITEM, L["Document"]), parameters, options);
+
+        await Task.Delay(300);
+        await JS.InvokeVoidAsync("showOpenSeadragon", "openseadragon", dto.URL);
         var state = await dialog.Result;
         if (!state.Canceled)
         {

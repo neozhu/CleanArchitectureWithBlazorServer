@@ -150,6 +150,30 @@
   <data name="Upload successfully" xml:space="preserve">
     <value>تحميل بنجاح</value>
   </data>
+  <data name="{0} job started." xml:space="preserve">
+    <value>بدأت {0} المهمة.</value>
+  </data>
+  <data name="{0} recognize completed." xml:space="preserve">
+    <value>{0} التعرف على اكتمال.</value>
+  </data>
+  <data name="Choose files" xml:space="preserve">
+    <value>اختر الملفات</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>محتوى</value>
+  </data>
+  <data name="Only .jpg and .png files are allowed." xml:space="preserve">
+    <value>يسمح فقط بملفات .jpg والملفات .png.</value>
+  </data>
+  <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
+    <value>يرجى النقر فوق الزر [اختر ملفات] لتحميل صورتك.</value>
+  </data>
+  <data name="Recognize result" xml:space="preserve">
+    <value>التعرف على النتيجة</value>
+  </data>
+  <data name="Upload Pictures" xml:space="preserve">
+    <value>تحميل الصور</value>
+  </data>
   <data name="Download" xml:space="preserve">
     <value>تحميل</value>
   </data>

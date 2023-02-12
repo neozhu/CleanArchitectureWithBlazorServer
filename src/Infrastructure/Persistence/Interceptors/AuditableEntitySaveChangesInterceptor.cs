@@ -149,7 +149,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                     case EntityState.Modified when property.IsModified && ((property.OriginalValue is null && property.CurrentValue is not null) || (property.OriginalValue is not null && property.OriginalValue.Equals(property.CurrentValue) == false)):
                         auditEntry.AffectedColumns.Add(propertyName);
                         auditEntry.AuditType = AuditType.Update;
-                        auditEntry.OldValues[propertyName] = property!.OriginalValue;
+                        auditEntry.OldValues[propertyName] = property.OriginalValue;
                         if (property.CurrentValue is not null)
                         {
                             auditEntry.NewValues[propertyName] = property.CurrentValue;

@@ -58,7 +58,7 @@ public class HubClient : IAsyncDisposable
             throw new ApplicationException("Connection is in progress or has already been established");
         if (_started) return;
         _started = true;
-        await _hubConnection.StartAsync(cancellation).ConfigureAwait(false);
+        await _hubConnection.StartAsync(cancellation);
         await _hubConnection.SendAsync(SignalR.OnConnect, _userId);
 
     }

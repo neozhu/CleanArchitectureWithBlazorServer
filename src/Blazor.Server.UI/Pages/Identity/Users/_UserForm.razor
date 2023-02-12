@@ -51,11 +51,18 @@
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.Provider)" @bind-Value="model.Provider" Label="@L["Provider"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
+
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
+            <PickSuperiorIdAutocomplete For="@(() => model.SuperiorId)"
+                                        TenantId="@model.TenantId"
+                                        OwnerName="@model.UserName"
+                                        Clearable="true"
+                                        Label="@L["Select Superior"]"
+                                        @bind-Value="@model.SuperiorId"> </PickSuperiorIdAutocomplete>
+           
         </MudItem>
         @if (string.IsNullOrEmpty(model.Id))
         {
@@ -85,7 +92,9 @@
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
-       
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => model.PhoneNumber)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
@@ -128,6 +137,7 @@
     [Inject] private ITenantsService _tenantsService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     UserDtoValidator modelValidator = new();
+
     [EditorRequired][Parameter] public UserDto model { get; set; } = default!;
     [EditorRequired][Parameter] public EventCallback<UserDto> OnFormSubmit { get; set; }
 

@@ -35,6 +35,7 @@ public class SignalRHub : Hub<ISignalRHub>
             _onlineUsers.TryAdd(id, String.Empty);
         }
         return Task.CompletedTask;
+       // await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)

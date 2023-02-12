@@ -20,4 +20,6 @@ public partial class DocumentDto : IMapFrom<Document>
     public DocumentType DocumentType { get; set; } = DocumentType.Document;
     public string? TenantId { get; set; }
     public string? TenantName { get; set; }
+    public JobStatus Status { get; set; } = JobStatus.NotStart;
+    public string? Content { get; set; }
 }

@@ -21,7 +21,7 @@ public class IdentityService : IIdentityService
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly IOptions<AppConfigurationSettings> _appConfig;
+    private readonly AppConfigurationSettings _appConfig;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
     private readonly IAppCache _cache;
@@ -30,7 +30,7 @@ public class IdentityService : IIdentityService
     private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
     public IdentityService(
         IServiceScopeFactory scopeFactory,
-        IOptions<AppConfigurationSettings> appConfig,
+        AppConfigurationSettings appConfig,
         IAppCache cache,
         IStringLocalizer<IdentityService> localizer)
     {
@@ -47,9 +47,9 @@ public class IdentityService : IIdentityService
 
     public async Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default)
     {
-           var key = $"GetUserNameAsync:{userId}";
-            var user = await _cache.GetOrAddAsync(key,async() => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation),_options);
-            return user?.UserName;
+        var key = $"GetUserNameAsync:{userId}";
+        var user = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId), _options);
+        return user?.UserName;
     }
     public string GetUserName(string userId)
     {
@@ -59,9 +59,8 @@ public class IdentityService : IIdentityService
     }
     public async Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default)
     {
-        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation)?? throw new NotFoundException(_localizer["User Not Found."]);
-        var result =  await _userManager.IsInRoleAsync(user, role);
-        return result;
+        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation) ?? throw new NotFoundException(_localizer["User Not Found."]);
+        return await _userManager.IsInRoleAsync(user, role);
     }
 
     public async Task<bool> AuthorizeAsync(string userId, string policyName, CancellationToken cancellation = default)
@@ -79,7 +78,6 @@ public class IdentityService : IIdentityService
         var result = await _userManager.DeleteAsync(user);
         return result.ToApplicationResult();
     }
-
     public async Task<IDictionary<string, string?>> FetchUsers(string roleName, CancellationToken cancellation = default)
     {
         var result = await _userManager.Users
@@ -131,8 +129,8 @@ public class IdentityService : IIdentityService
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["Invalid Client Token."] });
         }
         var userPrincipal = GetPrincipalFromExpiredToken(request.Token);
-        var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
-        var user = await _userManager.FindByEmailAsync(userEmail!);
+        var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email)!;
+        var user = await _userManager.FindByEmailAsync(userEmail);
         if (user == null)
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["User Not Found."] });
         if (user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
@@ -173,7 +171,7 @@ public class IdentityService : IIdentityService
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfig.Value.Secret)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfig.Secret)),
             ValidateIssuer = false,
             ValidateAudience = false,
             RoleClaimType = ClaimTypes.Role,
@@ -192,7 +190,7 @@ public class IdentityService : IIdentityService
 
     private SigningCredentials GetSigningCredentials()
     {
-        var secret = Encoding.UTF8.GetBytes(_appConfig.Value.Secret);
+        var secret = Encoding.UTF8.GetBytes(_appConfig.Secret);
         return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
     }
 
@@ -202,13 +200,14 @@ public class IdentityService : IIdentityService
         if (user is not null)
         {
             user.IsLive = isLive;
-            await _userManager.UpdateAsync(user);
+            var result= await _userManager.UpdateAsync(user);
         }
     }
     public async Task<UserDto> GetUserDto(string userId, CancellationToken cancellation = default)
     {
         var key = $"GetUserDto:{userId}";
         var x = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefaultAsync(cancellation), _options);
+        if (x == null) return new UserDto() { Email="",UserName="" };
         var userDto = new UserDto()
         {
             Checked = false,
@@ -224,6 +223,8 @@ public class IdentityService : IIdentityService
             TenantId = x.TenantId,
             TenantName = x.TenantName,
             LockoutEnd = x.LockoutEnd,
+            SuperiorId = x.SuperiorId,
+            SuperiorName = (x.Superior != null ? x.Superior.UserName : null),
             Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
             AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
         };
@@ -248,6 +249,8 @@ public class IdentityService : IIdentityService
             TenantId = x.TenantId,
             TenantName = x.TenantName,
             LockoutEnd = x.LockoutEnd,
+            SuperiorId = x.SuperiorId,
+            SuperiorName = (x.Superior != null ? x.Superior.UserName : null),
             Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
             AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
            }).ToListAsync(), _options);

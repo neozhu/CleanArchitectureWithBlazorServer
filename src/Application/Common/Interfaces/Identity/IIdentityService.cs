@@ -8,8 +8,8 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 public interface IIdentityService : IService
 {
-    Task<Result<TokenResponse>> LoginAsync(TokenRequest request, CancellationToken cancellation = default);
-    Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellation = default);
+    Task<Result<TokenResponse>> LoginAsync(TokenRequest request);
+    Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request);
     Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default);
     
     Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default);

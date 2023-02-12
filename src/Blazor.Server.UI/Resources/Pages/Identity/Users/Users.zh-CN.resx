@@ -189,20 +189,26 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>租户名称</value>
   </data>
+  <data name="Provider" xml:space="preserve">
+    <value>来源</value>
+  </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>上级</value>
+  </data>
+  <data name="Select Superior" xml:space="preserve">
+    <value>选择上级</value>
+  </data>
   <data name="E-mail" xml:space="preserve">
     <value>电子邮件</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>登录密码</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>状态</value>
   </data>
   <data name="Confirm Password" xml:space="preserve">
     <value>确认密码</value>
-  </data>
-  <data name="Password" xml:space="preserve">
-    <value>登录密码</value>
-  </data>
-  <data name="Provider" xml:space="preserve">
-    <value>来源</value>
   </data>
   <data name="Display Name" xml:space="preserve">
     <value>显示名称</value>

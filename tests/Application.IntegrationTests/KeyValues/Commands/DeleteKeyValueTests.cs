@@ -6,6 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete;
 using CleanArchitecture.Blazor.Application.Common.Exceptions;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
 using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain;
 
 namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
 {
@@ -27,7 +28,7 @@ namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
         {
             var addcommand = new AddEditKeyValueCommand()
             {
-                Name =  Blazor.Domain.Picklist.Brand,
+                Name =  Picklist.Brand,
                 Text= "Word",
                 Value = "Word",
                 Description = "For Test"

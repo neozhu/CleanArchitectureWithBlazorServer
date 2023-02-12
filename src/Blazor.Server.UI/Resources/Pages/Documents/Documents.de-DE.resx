@@ -121,7 +121,7 @@
     <value>Anhang</value>
   </data>
   <data name="Document Type" xml:space="preserve">
-    <value>Dokument-Typ</value>
+    <value>Dokumenttyp</value>
   </data>
   <data name="Document type is required!" xml:space="preserve">
     <value>Dokumenttyp ist erforderlich!</value>
@@ -133,7 +133,7 @@
     <value>Ist öffentlich</value>
   </data>
   <data name="Select Document Type" xml:space="preserve">
-    <value>Dokumenttyp auswählen</value>
+    <value>Dokumententyp auswählen</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>Name des Mieters</value>
@@ -149,6 +149,30 @@
   </data>
   <data name="Upload successfully" xml:space="preserve">
     <value>Upload erfolgreich</value>
+  </data>
+  <data name="{0} job started." xml:space="preserve">
+    <value>{0} Auftrag gestartet.</value>
+  </data>
+  <data name="{0} recognize completed." xml:space="preserve">
+    <value>{0} erkennen abgeschlossen.</value>
+  </data>
+  <data name="Choose files" xml:space="preserve">
+    <value>Dateien auswählen</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Inhalt</value>
+  </data>
+  <data name="Only .jpg and .png files are allowed." xml:space="preserve">
+    <value>Nur .jpg und .png Dateien sind erlaubt.</value>
+  </data>
+  <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
+    <value>Bitte klicken Sie auf die Schaltfläche [Dateien auswählen], um Ihr Foto hochzuladen.</value>
+  </data>
+  <data name="Recognize result" xml:space="preserve">
+    <value>Erkennen Sie das Ergebnis</value>
+  </data>
+  <data name="Upload Pictures" xml:space="preserve">
+    <value>Bilder hochladen</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>

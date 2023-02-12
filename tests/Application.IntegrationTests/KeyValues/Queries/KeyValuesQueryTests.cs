@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName;
+using CleanArchitecture.Blazor.Domain;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -13,7 +14,7 @@ namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Queries
         [Test]
         public void ShouldNotNullKeyValuesQueryByName()
         {
-            var query = new KeyValuesQueryByName( Blazor.Domain.Picklist.Brand);
+            var query = new KeyValuesQueryByName(Picklist.Brand);
             var result = SendAsync(query);
             FluentActions.Invoking(() =>
                 SendAsync(query)).Should().NotBeNull();

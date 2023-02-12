@@ -3,7 +3,7 @@
 @inject IStringLocalizer<Users> L
 <MudDialog>
     <DialogContent>
-        <_UserForm @ref="@_userForm" model="model" OnFormSubmit="OnFormSubmitHandler"></_UserForm>
+        <_UserForm @ref="@_userForm" model="model"  OnFormSubmit="OnFormSubmitHandler"></_UserForm>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.CANCEL</MudButton>
@@ -17,6 +17,7 @@
     MudDialogInstance MudDialog { get; set; } = default!;
     [Parameter]
     public UserDto model { get; set; } = default!;
+
     protected async Task Submit() {
         await  _userForm!.Submit();
     }

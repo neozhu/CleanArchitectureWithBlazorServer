@@ -22,6 +22,10 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
     public virtual ICollection<ApplicationUserLogin> Logins { get; set; }
     public virtual ICollection<ApplicationUserToken> Tokens { get; set; }
+
+    public string? SuperiorId { get; set; } = null;
+    [ForeignKey("SuperiorId")]
+    public ApplicationUser? Superior { get; set; } = null;
     public ApplicationUser() : base()
     {
         UserClaims = new HashSet<ApplicationUserClaim>();

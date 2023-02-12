@@ -1,18 +1,8 @@
-
-using CleanArchitecture.Blazor.Application.Common.Exceptions;
-using CleanArchitecture.Blazor.Infrastructure.Constants;
-using System.Security.Claims;
-using System.Text;
-using System.Threading;
-using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using CleanArchitecture.Blazor.Infrastructure.Extensions;
-using Blazor.Server.UI.Pages.Authentication;
+
 
 namespace Blazor.Server.UI.EndPoints;
 public class AuthController : Controller
@@ -77,6 +67,7 @@ public class AuthController : Controller
                 Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
                 Provider = provider,
                 DisplayName = name,
+                SuperiorId = admin.Id,
                 TenantId = admin.TenantId,
                 TenantName = admin.TenantName
             };
@@ -85,7 +76,7 @@ public class AuthController : Controller
             {
                 return Unauthorized();
             }
-            var assignResult = await _userManager.AddToRoleAsync(user, RoleNameConstants.Basic);
+            var assignResult = await _userManager.AddToRoleAsync(user, RoleName.Basic);
             if (!createResult.Succeeded)
             {
                 return Unauthorized();

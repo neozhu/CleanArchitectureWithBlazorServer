@@ -11,16 +11,16 @@
     bool _isFlagsEnum;
     private static bool IsNullableEnum => Nullable.GetUnderlyingType(typeof(TEnum))?.IsEnum ?? false;
 
-    private static IList<TEnum> EnumValueList() => EnumOrUnderlyingType().GetEnumValues().Cast<TEnum>().ToList();
+    private static IList<TEnum> EnumValueList => EnumOrUnderlyingType.GetEnumValues().Cast<TEnum>().ToList();
 
-    private static Type EnumOrUnderlyingType() => IsNullableEnum ? Nullable.GetUnderlyingType(typeof(TEnum)) : typeof(TEnum);
+    private static Type EnumOrUnderlyingType => IsNullableEnum ? Nullable.GetUnderlyingType(typeof(TEnum)) : typeof(TEnum);
 
     protected override void OnInitialized()
     {
         Dense = true;
         TransformOrigin = Origin.TopLeft;
         AnchorOrigin = Origin.BottomLeft;
-        _isFlagsEnum = EnumOrUnderlyingType().GetCustomAttribute<FlagsAttribute>() != null;
+        _isFlagsEnum = EnumOrUnderlyingType.GetCustomAttribute<FlagsAttribute>() != null;
         MultiSelection = _isFlagsEnum;
         base.OnInitialized();
     }
@@ -36,7 +36,7 @@
         if (_isFlagsEnum)
         {
             var valueEnum = Value as Enum;
-            var toSelect = EnumValueList().Where(e => valueEnum?.HasFlag((e as Enum)!) == true).ToList();
+            var toSelect = EnumValueList.Where(e => valueEnum?.HasFlag((e as Enum)!) == true).ToList();
             SelectedValues = toSelect;
         }
         else if (Value != null)
@@ -52,7 +52,7 @@
         {
             ChildContent = __builder =>
             {
-                @foreach (TEnum item in EnumValueList())
+                @foreach (TEnum item in EnumValueList)
                 {
                     <MudSelectItem T="TEnum" Value="@item">@(GetDescriptionText(item))</MudSelectItem>
                 }
@@ -70,7 +70,7 @@
     {
         Enum value = Value as Enum;
 
-        Type underlyingType = Enum.GetUnderlyingType(EnumOrUnderlyingType());
+        Type underlyingType = Enum.GetUnderlyingType(EnumOrUnderlyingType);
 
         // note: AsInt mean: math integer vs enum (not the c# int type)
         dynamic valueAsInt = Convert.ChangeType(value, underlyingType);

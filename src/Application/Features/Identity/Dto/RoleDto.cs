@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 public class RoleDto
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
-    public required string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     public string? NormalizedName { get; set; }
     public string? Description { get; set; }
 

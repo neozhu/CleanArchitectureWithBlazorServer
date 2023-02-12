@@ -1,6 +1,6 @@
 @page "/user/profile"
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-@using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Features.Identity.Profile
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
 @using SixLabors.ImageSharp.Processing
@@ -8,10 +8,11 @@
 @inherits OwningComponentBase
 @implements IBlazorStateComponent
 @inject IStringLocalizer<Profile> L
+@inject IJSRuntime JS
 <PageTitle>@Title</PageTitle>
 <ErrorBoundary>
     <ChildContent>
-        <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" Elevation="6"
+        <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" Elevation="6" ActivePanelIndexChanged="ActivePanelIndexChanged"
                  ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
             <MudTabPanel Text="@L["Profile"]">
                 <MudForm Model="@model" @ref="@_form" Validation="@(_userValidator.ValidateValue)" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
@@ -52,10 +53,7 @@
                             <MudTextField For="@(() => model.TenantName)" @bind-Value="model.TenantName" Label="@L["Tenant Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                         </MudItem>
                         <MudItem xs="12" sm="6">
-                            <MudText Typo="Typo.caption">@L["Status"]</MudText>
-                            <div class="d-fex">
-                                <MudCheckBox For="@(() =>model.IsActive)" T="bool" @bind-Checked="model.IsActive" Label="@L["Is Active"]" ReadOnly="true"></MudCheckBox>
-                            </div>
+                            <MudTextField For="@(() => model.SuperiorName)" @bind-Value="model.SuperiorName" Label="@L["Superior Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                         </MudItem>
                         <MudItem sm="6" xs="12">
                             <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
@@ -137,7 +135,10 @@
                     </MudGrid>
                 </MudForm>
             </MudTabPanel>
-
+            <MudTabPanel Text="@L["Org Chart"]">
+                <div class="chart-container"
+                     style="height: calc(100vh - 265px);"></div>
+            </MudTabPanel>
         </MudTabs>
     </ChildContent>
     <ErrorContent>
@@ -145,8 +146,9 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
-    private MudForm? _form = default!;
-    private MudForm? _passwordform = default!;
+
+    private MudForm? _form = null!;
+    private MudForm? _passwordform = null!;
     public string Title { get; set; } = "Profile";
 
     private bool submitting;
@@ -165,16 +167,50 @@
     public void ReRender() => StateHasChanged();
 
     private ChangePasswordModel _changepassword { get; set; } = new();
-    private ChangePasswordModelValidator _passwordValidator = new ();
+    private ChangePasswordModelValidator _passwordValidator = new();
+    private List<OrgItem> _orgData = new();
 
 
+    private async void ActivePanelIndexChanged(int index)
+    {
+        if(index==2){
+            await LoadOrgData();
+            await JS.InvokeVoidAsync("createOrgChart", this._orgData);
+        }
+    }
+    private async Task LoadOrgData()
+    {
+        var currerntuserName = (await _authState).User.GetUserName();
+        var list = await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x=>x.Role).Include(x => x.Superior).ToListAsync();
+        foreach (var item in list)
+        {
+            var roles = await _userManager.GetRolesAsync(item);
+            var count = await _userManager.Users.Where(x => x.SuperiorId == item.Id).CountAsync();
+            var orgitem = new OrgItem();
+            orgitem.id = item.Id;
+            orgitem.name = item.DisplayName ?? item.UserName;
+            orgitem.area = item.TenantName;
+            orgitem.profileUrl = item.ProfilePictureDataUrl;
+            orgitem.imageUrl = item.ProfilePictureDataUrl;
+            if (currerntuserName == item.UserName)
+                orgitem.isLoggedUser = true;
+            orgitem.size = "";
+            orgitem.tags = item.PhoneNumber ?? item.Email;
+            if (roles != null && roles.Count > 0)
+                orgitem.positionName = string.Join(',', roles);
+            orgitem.parentId = item.SuperiorId;
 
-     
+            orgitem._directSubordinates = count;
+            this._orgData.Add(orgitem);
+        }
+
+    }
 
     protected override Task OnInitializedAsync()
     {
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         return base.OnInitializedAsync();
+
     }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {

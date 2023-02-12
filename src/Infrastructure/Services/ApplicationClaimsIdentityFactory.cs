@@ -30,6 +30,12 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
                 new Claim(ApplicationClaimTypes.TenantName, user.TenantName)
             });
         }
+        if (!string.IsNullOrEmpty(user.SuperiorId))
+        {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+                new Claim(ApplicationClaimTypes.SuperiorId, user.SuperiorId)
+            });
+        }
         if (!string.IsNullOrEmpty(user.DisplayName))
         {
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {

@@ -16,6 +16,8 @@ public class AddEditDocumentCommand :IMapFrom<DocumentDto>, ICacheInvalidatorReq
     public DocumentType DocumentType { get; set; } = DocumentType.Document;
     public string? TenantId { get; set; }
     public string? TenantName { get; set; }
+    public JobStatus Status { get; set; } = JobStatus.NotStart;
+    public string? Content { get; set; }
     public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource();
     public UploadRequest? UploadRequest { get; set; }
   

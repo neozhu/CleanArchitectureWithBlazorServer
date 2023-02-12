@@ -124,7 +124,7 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel T="RoleDto" SortLabel="Name">(x=>x.Name!)">@L["Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel T="RoleDto" SortLabel="Name">@L["Name"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ConstantString.ACTIONS">
@@ -436,7 +436,9 @@
                 if (!deleteresult.Succeeded)
                 {
                     Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                    return;
                 }
+
             }
             Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
             await OnRefresh();

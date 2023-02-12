@@ -189,11 +189,17 @@
   <data name="{0} session changed." xml:space="preserve">
     <value>{0} الجلسة تغيرت.</value>
   </data>
-  <data name="E-mail" xml:space="preserve">
-    <value>البريد الإلكتروني</value>
-  </data>
   <data name="Provider" xml:space="preserve">
     <value>مزود</value>
+  </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>الاسم المتفوق</value>
+  </data>
+  <data name="Select Superior" xml:space="preserve">
+    <value>حدد سوبريور</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>كلمة المرور</value>

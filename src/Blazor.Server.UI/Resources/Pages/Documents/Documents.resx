@@ -120,6 +120,12 @@
   <data name="Attachement" xml:space="preserve">
     <value>Attachement</value>
   </data>
+  <data name="Choose files" xml:space="preserve">
+    <value>Choose files</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Content</value>
+  </data>
   <data name="Document Type" xml:space="preserve">
     <value>Document Type</value>
   </data>
@@ -131,6 +137,15 @@
   </data>
   <data name="Is Public" xml:space="preserve">
     <value>Is Public</value>
+  </data>
+  <data name="Only .jpg and .png files are allowed." xml:space="preserve">
+    <value>Only .jpg and .png files are allowed.</value>
+  </data>
+  <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
+    <value>Please click [Choose Files] button to upload your photo.</value>
+  </data>
+  <data name="Recognize result" xml:space="preserve">
+    <value>Recognize result</value>
   </data>
   <data name="Select Document Type" xml:space="preserve">
     <value>Select Document Type</value>
@@ -147,8 +162,17 @@
   <data name="Upload" xml:space="preserve">
     <value>Upload</value>
   </data>
+  <data name="Upload Pictures" xml:space="preserve">
+    <value>Upload Pictures</value>
+  </data>
   <data name="Upload successfully" xml:space="preserve">
     <value>Upload successfully</value>
+  </data>
+  <data name="{0} job started." xml:space="preserve">
+    <value>{0} job started.</value>
+  </data>
+  <data name="{0} recognize completed." xml:space="preserve">
+    <value>{0} recognize completed.</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>

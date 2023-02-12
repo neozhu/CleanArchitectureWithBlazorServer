@@ -1,5 +1,6 @@
 using CleanArchitecture.Blazor.Infrastructure.Constants;
 using CleanArchitecture.Blazor.Infrastructure.Hubs;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +33,11 @@ public static class ApplicationBuilderExtensions
 
         app.UseRequestLocalization(localizationOptions);
         app.UseMiddlewares();
+        app.UseHangfireDashboard("/jobs", new DashboardOptions
+        {
+            Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
+            AsyncAuthorization = new[] { new HangfireDashboardAsyncAuthorizationFilter() }
+        });
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();

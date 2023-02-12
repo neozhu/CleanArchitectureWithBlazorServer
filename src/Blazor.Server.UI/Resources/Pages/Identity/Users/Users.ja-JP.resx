@@ -189,11 +189,17 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>テナント名</value>
   </data>
-  <data name="E-mail" xml:space="preserve">
-    <value>Eメール</value>
-  </data>
   <data name="Provider" xml:space="preserve">
     <value>プロバイダー</value>
+  </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>上司の名前</value>
+  </data>
+  <data name="Select Superior" xml:space="preserve">
+    <value>スーペリアを選択</value>
+  </data>
+  <data name="E-mail" xml:space="preserve">
+    <value>Eメール</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>パスワード</value>

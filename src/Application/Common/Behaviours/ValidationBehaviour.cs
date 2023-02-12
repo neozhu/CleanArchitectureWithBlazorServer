@@ -15,28 +15,18 @@ where TRequest : IRequest<TResponse>
         _validators = validators;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public  Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        if (!_validators.Any())
-        {
-            return await next();
-        }
-
         var context = new ValidationContext<TRequest>(request);
-
-        var validationResults = await Task.WhenAll(
-            _validators.Select(v => v.ValidateAsync(context, cancellationToken)));
-
-        var failures = validationResults
-            .SelectMany(r => r.Errors)
-            .Where(f => f != null)
-            .ToArray();
-
-        if (failures.Any())
+        var failrules = _validators
+            .Select(validator => validator.Validate(context))
+            .SelectMany(result => result.Errors)
+            .Where(failrules => failrules != null)
+            .ToList();
+        if (failrules.Count != 0)
         {
-            throw new ValidationException(failures);
+            throw new ValidationException(failrules);
         }
-
-        return await next();
+        return next();
     }
 }

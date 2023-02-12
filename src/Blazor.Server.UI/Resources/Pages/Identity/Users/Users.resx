@@ -189,20 +189,26 @@
   <data name="{0} session changed." xml:space="preserve">
     <value>{0} session changed.</value>
   </data>
-  <data name="Password" xml:space="preserve">
-    <value>Password</value>
-  </data>
-  <data name="Confirm Password" xml:space="preserve">
-    <value>Confirm Password</value>
-  </data>
-  <data name="Status" xml:space="preserve">
-    <value>Status</value>
+  <data name="Superior Name" xml:space="preserve">
+    <value>Superior Name</value>
   </data>
   <data name="Provider" xml:space="preserve">
     <value>Provider</value>
   </data>
+  <data name="Select Superior" xml:space="preserve">
+    <value>Select Superior</value>
+  </data>
   <data name="E-mail" xml:space="preserve">
     <value>E-mail</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>Confirm Password</value>
   </data>
   <data name="Display Name" xml:space="preserve">
     <value>Display Name</value>

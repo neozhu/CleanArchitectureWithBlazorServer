@@ -23,6 +23,7 @@ public class AddEditProductCommandValidator : AbstractValidator<AddEditProductCo
                    .MaximumLength(1024);
         RuleFor(v => v.Pictures).NotEmpty().When(x => x.Id <= 0).WithMessage("Please upload product pictures.");
         RuleFor(v => v.UploadPictures).NotEmpty().When(x => x.Id <= 0).WithMessage("Please upload product pictures.");
+        
     }
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>

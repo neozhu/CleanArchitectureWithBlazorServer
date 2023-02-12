@@ -1,5 +1,4 @@
-﻿
-using BlazorState;
+﻿using BlazorState;
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Profile;
 
 
@@ -17,6 +16,8 @@ public partial class UserProfileState : State<UserProfileState>
         UserProfile = new UserProfile()
         {
             DisplayName= _currentUserService.DisplayName,
+            SuperiorId = _currentUserService.SuperiorId,
+            SuperiorName = _currentUserService.SuperiorName,
             UserName = _currentUserService.UserName,
             Email = _currentUserService.Email,
             TenantId = _currentUserService.TenantId,

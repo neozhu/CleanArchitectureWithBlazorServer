@@ -11,6 +11,8 @@ public interface ICurrentUserService
     string Email { get; }
     string TenantId { get; }
     string TenantName { get; }
+    string SuperiorId { get; }
+    string SuperiorName { get; }
     string ProfilePictureDataUrl { get; }
     string[] AssignRoles { get; }
 }
