@@ -58,6 +58,7 @@ public class ExportProductsQueryHandler :
                     { _localizer["Description"], item => item.Description },
                     { _localizer["Price of unit"], item => item.Price },
                     { _localizer["Unit"], item => item.Unit },
+                    { _localizer["Pictures"], item =>string.Join("," ,item.Pictures??new string[]{ }) },
                 };
 
         byte[]? result;
