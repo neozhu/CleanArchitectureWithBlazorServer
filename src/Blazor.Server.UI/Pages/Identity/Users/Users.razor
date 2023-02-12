@@ -138,8 +138,8 @@
                 <MudTh><MudTableSortLabel SortLabel="UserName" T="UserDto">@L["User Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="SuperiorId" T="UserDto">@L["Superior Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="Provider" T="UserDto">@L["Provider"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Email" T="UserDto">@L["Email"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="PhoneNumber" T="UserDto">@L["Phone Number"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Email" T="UserDto">@L["Email / PhoneNumber"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="AssignRoles" T="UserDto">@L["Assigned Roles"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="IsActive" T="UserDto">@L["Is Active"]</MudTableSortLabel></MudTh>
                 <MudTh>@L["Lock Status"]</MudTh>
             </HeaderContent>
@@ -207,8 +207,13 @@
                 </MudTd>
                 <MudTd DataLabel="@L["Superior Name"]">@context.SuperiorName</MudTd>
                 <MudTd DataLabel="@L["Provider"]">@context.Provider</MudTd>
-                <MudTd DataLabel="@L["Email"]">@context.Email</MudTd>
-                <MudTd HideSmall="true" DataLabel="@L["Phone Number"]">@context.PhoneNumber</MudTd>
+                <MudTd DataLabel="@L["Email / PhoneNumber"]">
+                    <div class="d-flex flex-column">
+                        <MudText Typo="Typo.body2">@context.Email</MudText>
+                        <MudText Typo="Typo.body2">@context.PhoneNumber</MudText>
+                    </div>
+                </MudTd>
+                <MudTd HideSmall="true" DataLabel="@L["Assigned Roles"]">@string.Join("; ",context.AssignRoles)</MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Is Active"]">
                     <MudCheckBox Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
                 </MudTd>
