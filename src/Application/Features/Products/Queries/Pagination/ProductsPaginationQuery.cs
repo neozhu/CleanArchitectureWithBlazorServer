@@ -1,10 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using AutoFilterer.Attributes;
-using AutoFilterer.Enums;
-using AutoFilterer.Extensions;
-using AutoFilterer.Types;
+
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
@@ -16,8 +13,8 @@ public class ProductsWithPaginationQuery : PaginationFilterBase, ICacheableReque
     public string? Name { get; set; }
     public string? Brand { get; set; }
     public string? Unit { get; set; }
-    public Range<decimal>? Price { get; set; }
-    [CompareTo("Name", "Brand", "Description")] // <-- This filter will be applied to Title or Author.
+    public Range<decimal> Price { get; set; } = new();
+    [CompareTo("Name", "Brand", "Description")] // <-- This filter will be applied to Name or Brand or Description.
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
     public override string ToString()
@@ -48,7 +45,7 @@ public class ProductsWithPaginationQueryHandler :
 
     public async Task<PaginatedData<ProductDto>> Handle(ProductsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Products.ApplyFilter(request)
+        var data = await _context.Products.ApplyFilterWithoutPagination(request)
              .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
              .PaginatedDataAsync(request.Page, request.PerPage);
         return data;

@@ -24,4 +24,8 @@ global using CleanArchitecture.Blazor.Domain.Entities.Audit;
 global using CleanArchitecture.Blazor.Domain.Entities.Log;
 global using CleanArchitecture.Blazor.Application.Common.Specification;
 global using CleanArchitecture.Blazor.Application.Common.Exceptions;
+global using AutoFilterer.Attributes;
+global using AutoFilterer.Enums;
+global using AutoFilterer.Extensions;
+global using AutoFilterer.Types;
 global using static CleanArchitecture.Blazor.Application.Common.Helper.ConstantStringLocalizer;
