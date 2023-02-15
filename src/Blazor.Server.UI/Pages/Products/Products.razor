@@ -385,7 +385,7 @@
                 Keyword = _searchString,
                 Sort = string.IsNullOrEmpty(_table.TableContext.SortFieldLabel) ? "Id" : _table.TableContext.SortFieldLabel,
                 SortBy = (_table.TableContext.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending),
-                exportType = ExportType.PDF
+                ExportType = ExportType.PDF
             };
         var result = await _mediator.Send(request);
         var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Products"]}.pdf", result, contentType: "application/octet-stream");

@@ -19,7 +19,7 @@ public class PDFService : IPDFService
         , string title, bool landscape)
     {
         var stream = new MemoryStream();
-
+        //QuestPDF.Settings.DocumentLayoutExceptionThreshold = 1000;
         Document.Create(container =>
                 {
                     container.Page(page =>

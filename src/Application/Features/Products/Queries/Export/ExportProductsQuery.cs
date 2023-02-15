@@ -8,11 +8,7 @@ using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
 
-public enum ExportType
-{
-    Excel,
-    PDF
-}
+
 
 public class ExportProductsQuery : OrderableFilterBase, IRequest<byte[]>
 {
@@ -24,7 +20,7 @@ public class ExportProductsQuery : OrderableFilterBase, IRequest<byte[]>
     [CompareTo("Name", "Brand", "Description")] // <-- This filter will be applied to Name or Brand or Description.
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
-    public ExportType exportType { get; set; }
+    public ExportType ExportType { get; set; }
 }
 
 public class ExportProductsQueryHandler :
@@ -63,11 +59,11 @@ public class ExportProductsQueryHandler :
                     { _localizer["Description"], item => item.Description },
                     { _localizer["Price of unit"], item => item.Price },
                     { _localizer["Unit"], item => item.Unit },
-                    { _localizer["Pictures"], item => string.Join(",",item.Pictures??new string[]{ }) },
+                    //{ _localizer["Pictures"], item => string.Join(",",item.Pictures??new string[]{ }) },
                 };
 
         byte[]? result;
-        switch (request.exportType)
+        switch (request.ExportType)
         {
             case ExportType.PDF:
                 result = await _pdfService.ExportAsync(data, mappers, _localizer["Products"], true);
