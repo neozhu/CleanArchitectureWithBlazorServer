@@ -23,13 +23,10 @@ public class SearchProductSpecification : Specification<Product>
         {
             And(x => x.Brand == query.Brand);
         }
-        if(query.MinPrice is not null)
+        if(query.Price is not null)
         {
-            And(x => x.Price >= query.MinPrice);
+            And(x => x.Price >= query.Price.Min && x.Price <= query.Price.Max);
         }
-        if(query.MaxPrice is not null)
-        {
-            And(x => x.Price <= query.MaxPrice);
-        }
+       
     }
 }

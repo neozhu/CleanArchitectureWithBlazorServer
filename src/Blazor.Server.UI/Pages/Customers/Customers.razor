@@ -235,10 +235,10 @@
         {
             _loading = true;
             _query.Keyword = _searchString;
-            _query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
-            _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
-            _query.PageNumber = state.Page + 1;
-            _query.PageSize = state.PageSize;
+            _query.Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
+            _query.SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            _query.Page = state.Page + 1;
+            _query.PerPage = state.PageSize;
             var result = await _mediator.Send(_query).ConfigureAwait(false);
             return new TableData<CustomerDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
@@ -344,8 +344,8 @@
         var request = new ExportCustomersQuery()
             {
                 Keyword = _searchString,
-                OrderBy = string.IsNullOrEmpty(_table.TableContext.SortFieldLabel) ? "Id" : _table.TableContext.SortFieldLabel,
-                SortDirection = (_table.TableContext.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : _table.TableContext.SortDirection.ToString()),
+                Sort = string.IsNullOrEmpty(_table.TableContext.SortFieldLabel) ? "Id" : _table.TableContext.SortFieldLabel,
+                SortBy = (_table.TableContext.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending)
             };
         var result = await _mediator.Send(request);
         var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result, contentType: "application/octet-stream");

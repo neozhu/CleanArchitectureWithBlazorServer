@@ -3,40 +3,47 @@
 
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
+using System.Xml.Linq;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagination;
 
-    public class CustomersWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<CustomerDto>>
+public class CustomersWithPaginationQuery : PaginationFilterBase, ICacheableRequest<PaginatedData<CustomerDto>>
+{
+    [CompareTo("Name", "Description")] // <-- This filter will be applied to Name or Brand or Description.
+    [StringFilterOptions(StringFilterOption.Contains)]
+    public string? Keyword { get; set; }
+    public override string ToString()
     {
-        public string CacheKey => CustomerCacheKey.GetPaginationCacheKey($"{this}");
-        public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
+        return $"Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
     }
-    
-    public class CustomersWithPaginationQueryHandler :
-         IRequestHandler<CustomersWithPaginationQuery, PaginatedData<CustomerDto>>
+    public string CacheKey => CustomerCacheKey.GetPaginationCacheKey($"{this}");
+    public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
+}
+
+public class CustomersWithPaginationQueryHandler :
+     IRequestHandler<CustomersWithPaginationQuery, PaginatedData<CustomerDto>>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly IStringLocalizer<CustomersWithPaginationQueryHandler> _localizer;
+
+    public CustomersWithPaginationQueryHandler(
+        IApplicationDbContext context,
+        IMapper mapper,
+        IStringLocalizer<CustomersWithPaginationQueryHandler> localizer
+        )
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<CustomersWithPaginationQueryHandler> _localizer;
+        _context = context;
+        _mapper = mapper;
+        _localizer = localizer;
+    }
 
-        public CustomersWithPaginationQueryHandler(
-            IApplicationDbContext context,
-            IMapper mapper,
-            IStringLocalizer<CustomersWithPaginationQueryHandler> localizer
-            )
-        {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
-        }
-
-        public async Task<PaginatedData<CustomerDto>> Handle(CustomersWithPaginationQuery request, CancellationToken cancellationToken)
-        {
-            // TODO: Implement CustomersWithPaginationQueryHandler method 
-           var data = await _context.Customers//.Where(x=>x.Name!.Contains(request.Keyword) || x.Description!.Contains(request.Keyword))
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
-                .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.PageNumber, request.PageSize);
-            return data;
-        }
-   }
+    public async Task<PaginatedData<CustomerDto>> Handle(CustomersWithPaginationQuery request, CancellationToken cancellationToken)
+    {
+        // TODO: Implement CustomersWithPaginationQueryHandler method 
+        var data = await _context.Customers.ApplyFilterWithoutPagination(request)
+             .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
+             .PaginatedDataAsync(request.Page, request.PerPage);
+        return data;
+    }
+}
