@@ -3,6 +3,7 @@
 
 
 using System.Reflection.Metadata;
+using AutoFilterer.Extensions;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
@@ -13,11 +14,16 @@ public enum ExportType
     PDF
 }
 
-public class ExportProductsQuery : IRequest<byte[]>
+public class ExportProductsQuery : OrderableFilterBase, IRequest<byte[]>
 {
-    public string OrderBy { get; set; } = "Id";
-    public string SortDirection { get; set; } = "Desc";
-    public string Keyword { get; set; } = String.Empty;
+
+    public string? Name { get; set; }
+    public string? Brand { get; set; }
+    public string? Unit { get; set; }
+    public Range<decimal> Price { get; set; } = new();
+    [CompareTo("Name", "Brand", "Description")] // <-- This filter will be applied to Name or Brand or Description.
+    [StringFilterOptions(StringFilterOption.Contains)]
+    public string? Keyword { get; set; }
     public ExportType exportType { get; set; }
 }
 
@@ -46,8 +52,7 @@ public class ExportProductsQueryHandler :
     }
     public async Task<byte[]> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Products.Where(x => x.Name!.Contains(request.Keyword) || x.Description!.Contains(request.Keyword))
-                   .OrderBy($"{request.OrderBy} {request.SortDirection}")
+        var data = await _context.Products.ApplyOrder(request)
                    .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                    .ToListAsync(cancellationToken);
 
