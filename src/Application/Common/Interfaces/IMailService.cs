@@ -7,5 +7,5 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 
 public interface IMailService
 {
-    Task SendAsync(MailRequest request);
+    Task SendAsync(string to, string subject, string body);
 }
