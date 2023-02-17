@@ -1,4 +1,3 @@
-
 using Blazor.Server.UI.Models.SideMenu;
 using Blazor.Server.UI.Services;
 using Blazor.Server.UI.Services.Navigation;
@@ -6,10 +5,11 @@ using Blazor.Server.UI.Services.Navigation;
 
 namespace Blazor.Server.UI.Components.Shared;
 
-public partial class SideMenu : IDisposable
+public partial class SideMenu
 {
-  
-    private UserProfile UserProfile => new UserProfile();
+    [Inject]
+    private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
 
     [EditorRequired] [Parameter] 
     public bool SideMenuDrawerOpen { get; set; } 
@@ -26,8 +26,5 @@ public partial class SideMenu : IDisposable
 
     private string[] _roles => UserProfile.AssignRoles??new string[] { };
 
-    public void Dispose()
-    {
-        
-    }
+    
 }

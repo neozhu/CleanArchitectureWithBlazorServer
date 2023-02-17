@@ -29,4 +29,24 @@ public class UserDto
     public bool Checked { get; set; }
     public string? Role { get; set; }
     public DateTimeOffset? LockoutEnd { get; set; }
+
+    public UserProfile ToUserProfile => new()
+    {
+
+        UserId = Id,
+        ProfilePictureDataUrl = ProfilePictureDataUrl,
+        Email = Email,
+        PhoneNumber = PhoneNumber,
+        DisplayName = DisplayName,
+        Provider = Provider,
+        UserName = UserName,
+        IsActive = IsActive,
+        TenantId = TenantId,
+        TenantName = TenantName,
+        SuperiorId = SuperiorId,
+        SuperiorName = SuperiorName,
+        AssignRoles = AssignRoles,
+        Role = Role
+
+    };
 }

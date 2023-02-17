@@ -1,4 +1,5 @@
 global using MediatR;
+global using Fluxor;
 global using MediatR.Pipeline;
 global using LazyCache;
 global using Microsoft.Extensions.Localization;

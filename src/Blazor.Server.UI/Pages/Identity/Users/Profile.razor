@@ -154,7 +154,7 @@
     private Task<AuthenticationState> _authState { get; set; } = default!;
     [Inject] private IUploadService _uploadService { get; set; } = default!;
 
-    private UserProfile model =new UserProfile() ;
+    private UserProfile model = new  () { Email= "anonym@blazor.com", UserId=Guid.NewGuid().ToString(),UserName= "anonym" };
     private UserProfileEditValidator _userValidator = new();
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     [Inject]

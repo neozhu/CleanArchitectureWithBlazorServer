@@ -5,8 +5,10 @@ namespace Blazor.Server.UI.Components.Shared;
 
 public partial class UserMenu
 {
-   
-    private UserProfile UserProfile => new UserProfile();
+
+    [Inject]
+    private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     [Inject]
     protected NavigationManager NavigationManager { get; set; } = null!;
