@@ -34,7 +34,7 @@ internal class ExceptionHandlingMiddleware : IMiddleware
             var responseModel = await Result.FailureAsync(new string[] { exception.Message });
             var response = context.Response;
             response.ContentType = "application/json";
-            if (exception is not CustomException && exception.InnerException != null)
+            if (exception is not ServerException && exception.InnerException != null)
             {
                 while (exception.InnerException != null)
                 {
@@ -47,7 +47,7 @@ internal class ExceptionHandlingMiddleware : IMiddleware
             }
             switch (exception)
             {
-                case CustomException e:
+                case ServerException e:
                     response.StatusCode = (int)e.StatusCode;
                     if (e.ErrorMessages is not null)
                     {
