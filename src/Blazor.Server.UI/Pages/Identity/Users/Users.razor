@@ -8,7 +8,6 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Common.Security
-@using CleanArchitecture.Blazor.Application.Features.Identity.Profile
 @using CleanArchitecture.Blazor.Infrastructure.Constants
 @using CleanArchitecture.Blazor.Infrastructure.Services
 @using Duende.IdentityServer.Events
@@ -255,8 +254,7 @@
     private IBlazorDownloadFileService _blazorDownloadFileService { get; set; } = null!;
     [Inject]
     private IExcelService _excelService { get; set; } = null!;
-    [Inject]
-    private IMediator _mediator { get; set; } = default!;
+
     private MudTable<UserDto> _table = null!;
     private bool _processing;
     private bool _showPermissionsDrawer;
@@ -443,12 +441,6 @@
                             await _userManager.AddToRolesAsync(user, item.AssignRoles);
                         }
                     }
-                }
-
-                if (state.User.GetUserId() == item.Id)
-                {
-                    //update user profile
-                    await _mediator.Send(new UserProfileState.UpdateUserDtoAction(item));
                 }
                 Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
                 await OnRefresh();

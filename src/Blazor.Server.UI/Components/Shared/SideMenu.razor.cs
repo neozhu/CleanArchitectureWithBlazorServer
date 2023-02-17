@@ -1,20 +1,15 @@
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using Blazor.Server.UI.Models.SideMenu;
 using Blazor.Server.UI.Services;
 using Blazor.Server.UI.Services.Navigation;
-using CleanArchitecture.Blazor.Application.Common.Models;
-using Microsoft.AspNetCore.Components.Authorization;
-using CleanArchitecture.Blazor.Infrastructure.Extensions;
-using BlazorState;
-using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
+
 
 namespace Blazor.Server.UI.Components.Shared;
 
-public partial class SideMenu:BlazorStateComponent,IDisposable
+public partial class SideMenu
 {
-    UserProfileState UserProfileState => GetState<UserProfileState>();
-    private UserProfile UserProfile => UserProfileState.UserProfile;
+    [Inject]
+    private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
 
     [EditorRequired] [Parameter] 
     public bool SideMenuDrawerOpen { get; set; } 
@@ -31,9 +26,5 @@ public partial class SideMenu:BlazorStateComponent,IDisposable
 
     private string[] _roles => UserProfile.AssignRoles??new string[] { };
 
-
-
-
-
-
+    
 }

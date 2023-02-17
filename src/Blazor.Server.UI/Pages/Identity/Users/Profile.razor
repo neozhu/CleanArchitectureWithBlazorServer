@@ -1,12 +1,11 @@
 @page "/user/profile"
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-@using CleanArchitecture.Blazor.Application.Features.Identity.Profile
+@using Fluxor.UnsupportedClasses;
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats
 @using SixLabors.ImageSharp.Processing
-@using BlazorState
+
 @inherits OwningComponentBase
-@implements IBlazorStateComponent
 @inject IStringLocalizer<Profile> L
 @inject IJSRuntime JS
 <PageTitle>@Title</PageTitle>
@@ -146,7 +145,10 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
-
+    [Inject]
+    private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    [Inject]
+    private IDispatcher Dispatcher { get; set; } = null!;
     private MudForm? _form = null!;
     private MudForm? _passwordform = null!;
     public string Title { get; set; } = "Profile";
@@ -155,15 +157,14 @@
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     [Inject] private IUploadService _uploadService { get; set; } = default!;
-    UserProfileState UserProfileState => Store.GetState<UserProfileState>();
-    private UserProfile model => UserProfileState.UserProfile;
+
+    private UserProfile model => UserProfileState.Value.UserProfile;
     private UserProfileEditValidator _userValidator = new();
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
     [Inject]
     private IIdentityService _identityService { get; set; } = default!;
     public string Id  => Guid.NewGuid().ToString();
-    [Inject] public IMediator Mediator { get; set; } = null!;
-    [Inject] public IStore Store { get; set; } = null!;
+
     public void ReRender() => StateHasChanged();
 
     private ChangePasswordModel _changepassword { get; set; } = new();
@@ -234,7 +235,8 @@
                 user!.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await _userManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated."], MudBlazor.Severity.Info);
-                await Mediator.Send(new UserProfileState.UpdateUserProfileAction(model));
+                Dispatcher.Dispatch(new UserProfileUpdateAction() { UserProfile = model });
+
             }
         }
     }
@@ -252,7 +254,7 @@
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await _userManager.UpdateAsync(user);
                 Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
-                await Mediator.Send(new UserProfileState.UpdateUserProfileAction(model));
+                Dispatcher.Dispatch(new UserProfileUpdateAction() { UserProfile = model });
             }
         }
         finally
@@ -287,5 +289,7 @@
         }
 
     }
+
+    
 
 }

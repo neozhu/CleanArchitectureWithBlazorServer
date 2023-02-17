@@ -1,16 +1,10 @@
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using Blazor.Server.UI.Components.Shared;
 using Toolbelt.Blazor.HotKeys;
-using Microsoft.AspNetCore.Components.Authorization;
 using Blazor.Server.UI.Services;
-using BlazorState.Services;
-using BlazorState;
-using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
 
 namespace Blazor.Server.UI.Shared;
 
-public partial class MainLayout: LayoutComponentBase,IDisposable, IBlazorStateComponent
+public partial class MainLayout: LayoutComponentBase,IDisposable
 {
     private bool _commandPaletteOpen;
     private HotKeysContext? _hotKeysContext;
@@ -19,8 +13,6 @@ public partial class MainLayout: LayoutComponentBase,IDisposable, IBlazorStateCo
     public string Id => Guid.NewGuid().ToString();
     [Inject] 
     private LayoutService _layoutService { get; set; } = null!;
-    [Inject] public IMediator Mediator { get; set; } = null!;
-    [Inject] public IStore Store { get; set; } = null!;
     public void ReRender() => StateHasChanged();
     private MudThemeProvider? _mudThemeProvider { get; set; }=null!;
     private bool _themingDrawerOpen;
@@ -55,7 +47,6 @@ public partial class MainLayout: LayoutComponentBase,IDisposable, IBlazorStateCo
         _layoutService.SetBaseTheme(Theme.ApplicationTheme());
         _hotKeysContext = _hotKeys.CreateContext()
             .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
-       var pf= Store.GetState<UserProfileState>();
        await base.OnInitializedAsync();
 
     }
