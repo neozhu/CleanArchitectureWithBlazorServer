@@ -35,7 +35,7 @@
         var userName = state.User.GetUserName();
         switch (Exception)
         {
-            case CustomException e:
+            case ServerException e:
                 statusCode = e.StatusCode.ToString();
                 if (e.ErrorMessages is not null)
                 {

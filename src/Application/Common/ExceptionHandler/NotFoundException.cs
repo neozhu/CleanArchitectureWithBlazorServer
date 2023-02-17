@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Application.Common.Exceptions;
 
-public class NotFoundException : CustomException
+public class NotFoundException : ServerException
 {
 
 
