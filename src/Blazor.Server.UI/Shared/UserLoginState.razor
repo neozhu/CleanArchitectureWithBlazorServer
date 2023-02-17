@@ -1,9 +1,7 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
-@using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
-@using BlazorState
 
  
 @implements IAsyncDisposable
@@ -61,7 +59,7 @@
     }
     private async Task setProfile(UserDto userDto)
     {
-        await _mediator.Send(new UserProfileState.UpdateUserDtoAction(userDto)).ConfigureAwait(false);
+        //await _mediator.Send(new UserProfileState.UpdateUserDtoAction(userDto)).ConfigureAwait(false);
     }
     private void _client_Login(object? sender, string e)
     {

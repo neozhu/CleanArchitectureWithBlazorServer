@@ -8,7 +8,6 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Common.Security
-@using CleanArchitecture.Blazor.Application.Features.Identity.Profile
 @using CleanArchitecture.Blazor.Infrastructure.Constants
 @using CleanArchitecture.Blazor.Infrastructure.Services
 @using Duende.IdentityServer.Events
@@ -448,7 +447,7 @@
                 if (state.User.GetUserId() == item.Id)
                 {
                     //update user profile
-                    await _mediator.Send(new UserProfileState.UpdateUserDtoAction(item));
+                    //await _mediator.Send(new UserProfileState.UpdateUserDtoAction(item));
                 }
                 Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
                 await OnRefresh();

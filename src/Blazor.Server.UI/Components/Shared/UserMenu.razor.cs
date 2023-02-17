@@ -1,20 +1,12 @@
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using Blazor.Server.UI.Components.Dialogs;
-using CleanArchitecture.Blazor.Application.Common.Models;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
-using CleanArchitecture.Blazor.Application.Constants;
-using BlazorState;
-using CleanArchitecture.Blazor.Application.Features.Identity.Profile;
-using System.Security.Cryptography;
 
 namespace Blazor.Server.UI.Components.Shared;
 
-public partial class UserMenu:  BlazorStateComponent
+public partial class UserMenu
 {
-    UserProfileState UserProfileState => GetState<UserProfileState>();
-    private UserProfile UserProfile => UserProfileState.UserProfile;
+   
+    private UserProfile UserProfile => new UserProfile();
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     [Inject]
     protected NavigationManager NavigationManager { get; set; } = null!;
