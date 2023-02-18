@@ -5,5 +5,5 @@ namespace CleanArchitecture.Blazor.Application.Common.Exceptions;
 
 public class ForbiddenException : ServerException
 {
-    public ForbiddenException(string message) : base(message,null,System.Net.HttpStatusCode.Forbidden) { }
+    public ForbiddenException(string message) : base(message,System.Net.HttpStatusCode.Forbidden) { }
 }

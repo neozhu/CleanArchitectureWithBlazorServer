@@ -3,10 +3,12 @@
 
 using CleanArchitecture.Blazor.Application.Common.Behaviours;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Application.Services.MultiTenant;
 using CleanArchitecture.Blazor.Application.Services.Picklist;
 using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -20,12 +22,15 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddMediatR(config=> {
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            config.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
-            config.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
+            config.NotificationPublisher = new ParallelNoWaitPublisher();
+            config.AddOpenBehavior(typeof(RequestExceptionProcessorBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+            config.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
             config.AddOpenBehavior(typeof(MemoryCacheBehaviour<,>));
             config.AddOpenBehavior(typeof(CacheInvalidationBehaviour<,>));
             config.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
+            config.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
+            
         });
         services.AddFluxor(options => {
             options.ScanAssemblies(Assembly.GetExecutingAssembly());
