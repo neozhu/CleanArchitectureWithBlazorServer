@@ -2,22 +2,26 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using System.Diagnostics;
+
 namespace CleanArchitecture.Blazor.Application.Features.Products.EventHandlers;
 
     public class ProductCreatedEventHandler : INotificationHandler<CreatedEvent<Product>>
     {
         private readonly ILogger<ProductCreatedEventHandler> _logger;
-
-        public ProductCreatedEventHandler(
+    private readonly Stopwatch _timer;
+    public ProductCreatedEventHandler(
             ILogger<ProductCreatedEventHandler> logger
             )
         {
             _logger = logger;
+        _timer = new Stopwatch();
         }
-        public Task Handle(CreatedEvent<Product> notification, CancellationToken cancellationToken)
+        public async Task Handle(CreatedEvent<Product> notification, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().FullName);
-
-            return Task.CompletedTask;
+        _timer.Start();
+        await Task.Delay(5000);
+        _timer.Stop();
+            _logger.LogInformation("Domain Event: {DomainEvent},{ElapsedMilliseconds}ms", notification.GetType().FullName, _timer.ElapsedMilliseconds);
         }
     }

@@ -294,8 +294,15 @@
         if (!state.Canceled)
         {
             var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
+            if (result.Succeeded)
+            {
+                await _table.ReloadServerData();
+                Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+            }
         }
     }
     private async Task OnEdit(ProductDto dto)
@@ -312,8 +319,15 @@
         if (!state.Canceled)
         {
             var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.SAVESUCCESS}", MudBlazor.Severity.Info);
+            if (result.Succeeded)
+            {
+                await _table.ReloadServerData();
+                Snackbar.Add($"{ConstantString.SAVESUCCESS}", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+            }
         }
 
     }
@@ -331,8 +345,15 @@
         {
             var command = new DeleteProductCommand(new int[] { dto.Id });
             var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            if (result.Succeeded)
+            {
+                await _table.ReloadServerData();
+                Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+            }
         }
     }
 

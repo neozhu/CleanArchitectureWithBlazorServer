@@ -1,7 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using ValidationException = CleanArchitecture.Blazor.Application.Common.Exceptions.ValidationException;
+using Fluxor;
+using System;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
 
@@ -10,7 +11,8 @@ where TRequest : IRequest<TResponse>
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-    public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
+    public ValidationBehaviour(
+        IEnumerable<IValidator<TRequest>> validators)
     {
         _validators = validators;
     }
@@ -23,7 +25,7 @@ where TRequest : IRequest<TResponse>
             .SelectMany(result => result.Errors)
             .Where(failrules => failrules != null)
             .ToList();
-        if (failrules.Count != 0)
+        if (failrules.Any())
         {
             throw new ValidationException(failrules);
         }

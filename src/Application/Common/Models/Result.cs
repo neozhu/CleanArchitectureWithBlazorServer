@@ -19,6 +19,8 @@ public class Result : IResult
 
     public string[] Errors { get; set; }
 
+    public string ErrorMessage => string.Join(", ", Errors??new string[] { });
+
     public static Result Success()
     {
         return new Result(true, Array.Empty<string>());
