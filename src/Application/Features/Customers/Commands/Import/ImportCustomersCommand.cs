@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Import;
 
-    public class ImportCustomersCommand: ICacheInvalidatorRequest<Result>
+    public class ImportCustomersCommand: ICacheInvalidatorRequest<Result<int>>
     {
         public string FileName { get; set; }
         public byte[] Data { get; set; }
@@ -18,14 +18,14 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
            Data = data;
         }
     }
-    public record class CreateCustomersTemplateCommand : IRequest<byte[]>
+    public record class CreateCustomersTemplateCommand : IRequest<Result<byte[]>>
     {
  
     }
 
     public class ImportCustomersCommandHandler : 
-                 IRequestHandler<CreateCustomersTemplateCommand, byte[]>,
-                 IRequestHandler<ImportCustomersCommand, Result>
+                 IRequestHandler<CreateCustomersTemplateCommand, Result<byte[]>>,
+                 IRequestHandler<ImportCustomersCommand, Result<int>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -45,14 +45,14 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
             _excelService = excelService;
             _mapper = mapper;
         }
-        public async Task<Result> Handle(ImportCustomersCommand request, CancellationToken cancellationToken)
+        public async Task<Result<int>> Handle(ImportCustomersCommand request, CancellationToken cancellationToken)
         {
            // TODO: Implement ImportCustomersCommandHandler method
            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, CustomerDto, object?>>
             {
                 // TODO: Define the fields that should be read from Excel, for example:
-                { _localizer[_dto.GetMemberDescription("Name")], (row, item) => item.Name = row[_localizer[_dto.GetMemberDescription("Name")]].ToString()! }, 
-{ _localizer[_dto.GetMemberDescription("Description")], (row, item) => item.Description = row[_localizer[_dto.GetMemberDescription("Description")]].ToString() }, 
+                { _localizer[_dto.GetMemberDescription("Name")], (row, item) => item.Name = row[_localizer[_dto.GetMemberDescription("Name")]]?.ToString() }, 
+{ _localizer[_dto.GetMemberDescription("Description")], (row, item) => item.Description = row[_localizer[_dto.GetMemberDescription("Description")]]?.ToString() }, 
 
             }, _localizer["Customers"]);
             if (result.Succeeded && result.Data is not null)
@@ -64,19 +64,19 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
                     {
                         var item = _mapper.Map<Customer>(dto);
                         // add create domain events if this entity implement the IHasDomainEvent interface
-				        // item.AddDomainEvent(new CreatedEvent<Customer>(item));
+				        // item.AddDomainEvent(new CustomerCreatedEvent(item));
                         await _context.Customers.AddAsync(item, cancellationToken);
                     }
                  }
                  await _context.SaveChangesAsync(cancellationToken);
-                 return await Result.SuccessAsync();
+                 return await Result<int>.SuccessAsync(result.Data.Count());
            }
            else
            {
-               return await Result.FailureAsync(result.Errors);
+               return await Result<int>.FailureAsync(result.Errors);
            }
         }
-        public async Task<byte[]> Handle(CreateCustomersTemplateCommand request, CancellationToken cancellationToken)
+        public async Task<Result<byte[]>> Handle(CreateCustomersTemplateCommand request, CancellationToken cancellationToken)
         {
             // TODO: Implement ImportCustomersCommandHandler method 
             var fields = new string[] {
@@ -86,7 +86,7 @@ _localizer[_dto.GetMemberDescription("Description")],
 
                 };
             var result = await _excelService.CreateTemplateAsync(fields, _localizer["Customers"]);
-            return result;
+            return await Result<byte[]>.SuccessAsync(result);
         }
     }
 

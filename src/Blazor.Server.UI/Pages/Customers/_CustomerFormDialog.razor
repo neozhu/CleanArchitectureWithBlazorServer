@@ -33,13 +33,18 @@
 
     async Task Submit()
     {
-        if(_form is not null) {
-            await _form.Validate();
-            if (_form.IsValid)
-            {
+         await _form!.Validate();
+         if (_form!.IsValid)
+         {
                 MudDialog.Close(DialogResult.Ok(true));
+         }
+         else
+        {
+            foreach(var err in _form.Errors){
+                Snackbar.Add($"{err}", MudBlazor.Severity.Error);
             }
         }
+     
     }
     void Cancel() => MudDialog.Cancel();
 }

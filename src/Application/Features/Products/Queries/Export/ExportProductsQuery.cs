@@ -10,7 +10,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
 
 
 
-public class ExportProductsQuery : OrderableFilterBase, IRequest<byte[]>
+public class ExportProductsQuery : OrderableFilterBase, IRequest<Result<byte[]>>
 {
 
     public string? Name { get; set; }
@@ -24,7 +24,7 @@ public class ExportProductsQuery : OrderableFilterBase, IRequest<byte[]>
 }
 
 public class ExportProductsQueryHandler :
-     IRequestHandler<ExportProductsQuery, byte[]>
+     IRequestHandler<ExportProductsQuery, Result<byte[]>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -46,7 +46,7 @@ public class ExportProductsQueryHandler :
         _pdfService = pdfService;
         _localizer = localizer;
     }
-    public async Task<byte[]> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<byte[]>> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Products.ApplyOrder(request)
                    .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
@@ -63,7 +63,7 @@ public class ExportProductsQueryHandler :
 
                 };
 
-        byte[]? result;
+        byte[] result;
         switch (request.ExportType)
         {
             case ExportType.PDF:
@@ -74,6 +74,6 @@ public class ExportProductsQueryHandler :
                 break;
         }
 
-        return result;
+        return await Result<byte[]>.SuccessAsync(result);
     }
 }

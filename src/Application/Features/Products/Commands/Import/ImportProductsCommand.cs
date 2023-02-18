@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Import;
 
-public class ImportProductsCommand : ICacheInvalidatorRequest<Result>
+public class ImportProductsCommand : ICacheInvalidatorRequest<Result<int>>
 {
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource();
@@ -20,14 +20,14 @@ public class ImportProductsCommand : ICacheInvalidatorRequest<Result>
         Data = data;
     }
 }
-public record CreateProductsTemplateCommand : IRequest<byte[]>
+public record CreateProductsTemplateCommand : IRequest<Result<byte[]>>
 {
 
 }
 
 public class ImportProductsCommandHandler :
-             IRequestHandler<CreateProductsTemplateCommand, byte[]>,
-             IRequestHandler<ImportProductsCommand, Result>
+             IRequestHandler<CreateProductsTemplateCommand, Result<byte[]>>,
+             IRequestHandler<ImportProductsCommand, Result<int>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -46,7 +46,7 @@ public class ImportProductsCommandHandler :
         _excelService = excelService;
         _mapper = mapper;
     }
-    public async Task<Result> Handle(ImportProductsCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(ImportProductsCommand request, CancellationToken cancellationToken)
     {
 
         var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, ProductDto, object?>>
@@ -66,14 +66,14 @@ public class ImportProductsCommandHandler :
                 await _context.Products.AddAsync(item, cancellationToken);
             }
             await _context.SaveChangesAsync(cancellationToken);
-            return await Result.SuccessAsync();
+            return await Result<int>.SuccessAsync(result.Data.Count());
         }
         else
         {
-            return Result.Failure(result.Errors);
+            return await Result<int>.FailureAsync(result.Errors);
         }
     }
-    public async Task<byte[]> Handle(CreateProductsTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<Result<byte[]>> Handle(CreateProductsTemplateCommand request, CancellationToken cancellationToken)
     {
         var fields = new string[] {
                    _localizer["Brand Name"],
@@ -84,7 +84,7 @@ public class ImportProductsCommandHandler :
                    _localizer["Pictures"],
                 };
         var result = await _excelService.CreateTemplateAsync(fields, _localizer["Products"]);
-        return result;
+        return await Result<byte[]>.SuccessAsync(result);
     }
 }
 

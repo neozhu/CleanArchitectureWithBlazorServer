@@ -5,10 +5,16 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 public static class CustomerCacheKey
 {
-    private static readonly TimeSpan refreshInterval = TimeSpan.FromHours(1);
+    private static readonly TimeSpan refreshInterval = TimeSpan.FromHours(3);
     public const string GetAllCacheKey = "all-Customers";
     public static string GetPaginationCacheKey(string parameters) {
-        return $"CustomersWithPaginationQuery,{parameters}";
+        return $"CustomerCacheKey:CustomersWithPaginationQuery,{parameters}";
+    }
+    public static string GetByNameCacheKey(string parameters) {
+        return $"CustomerCacheKey:GetByNameCacheKey,{parameters}";
+    }
+    public static string GetByIdCacheKey(string parameters) {
+        return $"CustomerCacheKey:GetByIdCacheKey,{parameters}";
     }
     static CustomerCacheKey()
     {

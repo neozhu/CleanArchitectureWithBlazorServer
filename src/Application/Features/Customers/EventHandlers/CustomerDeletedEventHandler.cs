@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.EventHandlers;
 
-    public class CustomerDeletedEventHandler : INotificationHandler<DeletedEvent<Customer>>
+    public class CustomerDeletedEventHandler : INotificationHandler<CustomerDeletedEvent>
     {
         private readonly ILogger<CustomerDeletedEventHandler> _logger;
 
@@ -13,7 +13,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.EventHandlers;
         {
             _logger = logger;
         }
-        public Task Handle(DeletedEvent<Customer> notification, CancellationToken cancellationToken)
+        public Task Handle(CustomerDeletedEvent notification, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().FullName);
             return Task.CompletedTask;
