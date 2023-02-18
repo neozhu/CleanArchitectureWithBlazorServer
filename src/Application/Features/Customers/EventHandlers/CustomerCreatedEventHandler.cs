@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.EventHandlers;
 
-public class CustomerCreatedEventHandler : INotificationHandler<CreatedEvent<Customer>>
+public class CustomerCreatedEventHandler : INotificationHandler<CustomerCreatedEvent>
 {
         private readonly ILogger<CustomerCreatedEventHandler> _logger;
 
@@ -13,7 +13,7 @@ public class CustomerCreatedEventHandler : INotificationHandler<CreatedEvent<Cus
         {
             _logger = logger;
         }
-        public Task Handle(CreatedEvent<Customer> notification, CancellationToken cancellationToken)
+        public Task Handle(CustomerCreatedEvent notification, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().FullName);
             return Task.CompletedTask;

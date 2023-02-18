@@ -20,7 +20,7 @@
 
 <ErrorBoundary>
     <ChildContent>
-        <MudTable ServerData="@(new Func<TableState, Task<TableData<CustomerDto>>>(ServerReload))"
+       <MudTable ServerData="@(new Func<TableState, Task<TableData<CustomerDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
@@ -34,7 +34,7 @@
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
-                    <MudText Typo="Typo.h6">@L["Customers"]</MudText>
+                    <MudText Typo="Typo.h6">@Title</MudText>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton DisableElevation Variant="Variant.Outlined"
                                    Size="Size.Small"
@@ -103,7 +103,6 @@
                                 </ButtonTemplate>
                             </MudFileUpload>
                         }
-                        
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
@@ -116,6 +115,10 @@
                             {
                                 <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
                             }
+                            @if (_canExport)
+                            {
+                                <MudMenuItem OnClick="OnExport">@ConstantString.EXPORT</MudMenuItem>
+                            }
                         </MudMenu>
                     </MudHidden>
                 </div>
@@ -126,14 +129,14 @@
             <ColGroup>
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
                     <col style="width:50px;" />
-                    <col style="width:100px;" />
+                    <col style="width:120px;" />
                     <col />
                 </MudHidden>
             </ColGroup>
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
                 @*TODO: Define the fields that should be displayed in data table*@
-                <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh> 
 
             </HeaderContent>
             <RowTemplate>
@@ -164,7 +167,7 @@
                     }
                 </MudTd>
                 @*TODO: Define the fields that should be displayed in data table*@
-                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Name")]">
+                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Name")]"> 
                     <div class="d-flex flex-column">
                         <MudText>@context.Name</MudText>
                         <MudText Typo="Typo.body2">@context.Description</MudText>
@@ -219,12 +222,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         Title = L["Customers"];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Edit)).Succeeded;
+        _canEdit   = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Edit)).Succeeded;
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Export)).Succeeded;
@@ -271,13 +273,20 @@
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_CustomerFormDialog>
-        (string.Format(ConstantString.CREATEAITEM, L["Customer"]), parameters, options);
+        (L["Create a new item"], parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
             var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
+            if (result.Succeeded)
+            {
+                await _table.ReloadServerData();
+                Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+            }
         }
     }
 
@@ -290,22 +299,29 @@
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_CustomerFormDialog>
-        (string.Format(ConstantString.EDITTHEITEM, L["Customer"]), parameters, options);
+        (L["Edit the item"], parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
             var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.SAVESUCCESS}", MudBlazor.Severity.Info);
+            if (result.Succeeded)
+            {
+                await _table.ReloadServerData();
+                Snackbar.Add($"{ConstantString.SAVESUCCESS}", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+            }
         }
     }
 
     private async Task OnDelete(CustomerDto dto)
     {
-        var parameters = new DialogParameters
-                    {
-                        { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Name) }
-                    };
+        var parameters = new DialogParameters 
+           {
+             { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Name) }
+           };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
         var state = await dialog.Result;
@@ -313,8 +329,15 @@
         {
             var command = new DeleteCustomerCommand(new int[] { dto.Id });
             var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            if (result.Succeeded)
+            {
+                await _table.ReloadServerData();
+                Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+            }
         }
     }
 
@@ -325,16 +348,22 @@
                              { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMWITHSELECTED,_selectedItems.Count) }
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>
-        (ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
             var command = new DeleteCustomerCommand(_selectedItems.Select(x => x.Id).ToArray());
             var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
-            _selectedItems = new HashSet<CustomerDto>();
+            if (result.Succeeded)
+            {
+                await _table.ReloadServerData();
+                Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+                _selectedItems = new HashSet<CustomerDto>();
+            }
+            else
+            {
+                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+            }
         }
     }
 
@@ -348,7 +377,7 @@
                 SortBy = (_table.TableContext.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending)
             };
         var result = await _mediator.Send(request);
-        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result, contentType: "application/octet-stream");
+        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result, contentType:"application/octet-stream");
         Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
         _downloading = false;
     }
@@ -358,7 +387,6 @@
         var stream = new MemoryStream();
         await file.OpenReadStream().CopyToAsync(stream);
         var command = new ImportCustomersCommand(file.Name, stream.ToArray());
-
         var result = await _mediator.Send(command);
         if (result.Succeeded)
         {

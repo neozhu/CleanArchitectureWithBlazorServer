@@ -1,13 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
+using System.ComponentModel;
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
-
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Update;
 
-    public class UpdateCustomerCommand: ICacheInvalidatorRequest<Result>
+    public class UpdateCustomerCommand: IMapFrom<CustomerDto>,ICacheInvalidatorRequest<Result<int>>
     {
             [Description("Id")]
     public int Id {get;set;} 
@@ -20,7 +19,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Updat
         public CancellationTokenSource? SharedExpiryTokenSource => CustomerCacheKey.SharedExpiryTokenSource();
     }
 
-    public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Result>
+    public class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, Result<int>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -35,19 +34,16 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Updat
             _localizer = localizer;
             _mapper = mapper;
         }
-        public async Task<Result> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
+        public async Task<Result<int>> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
            // TODO: Implement UpdateCustomerCommandHandler method 
-           var item =await _context.Customers.FindAsync( new object[] { request.Id }, cancellationToken);
-           if (item != null)
-           {
-                var dto = _mapper.Map<CustomerDto>(request);
-                item = _mapper.Map(dto, item);
-				// raise a update domain event
-				item.AddDomainEvent(new UpdatedEvent<Customer>(item));
-                await _context.SaveChangesAsync(cancellationToken);
-           }
-           return await Result.SuccessAsync();
+           var item =await _context.Customers.FindAsync( new object[] { request.Id }, cancellationToken)?? throw new NotFoundException($"The Customer [{request.Id}] was not found.");;
+           var dto = _mapper.Map<CustomerDto>(request);
+           item = _mapper.Map(dto, item);
+		    // raise a update domain event
+		   item.AddDomainEvent(new CustomerUpdatedEvent(item));
+           await _context.SaveChangesAsync(cancellationToken);
+           return await Result<int>.SuccessAsync(item.Id);
         }
     }
 
