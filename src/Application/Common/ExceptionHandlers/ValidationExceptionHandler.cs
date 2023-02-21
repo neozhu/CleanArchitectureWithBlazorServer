@@ -17,7 +17,7 @@ public class ValidationExceptionHandler<TRequest, TResponse, TException> : IRequ
         _logger = logger;
     }
 
-    public async Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state, CancellationToken cancellationToken)
+    public Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state, CancellationToken cancellationToken)
     {
         var response = Activator.CreateInstance<TResponse>();
         if(response is Result result)
@@ -26,5 +26,6 @@ public class ValidationExceptionHandler<TRequest, TResponse, TException> : IRequ
             result.Errors = exception.Errors.Select(x => x.ErrorMessage).Distinct().ToArray();
             state.SetHandled(response);
         }
+        return Task.CompletedTask;
     }
 }

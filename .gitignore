@@ -351,3 +351,4 @@ MigrationBackup/
 
 
 **/Files/
+src/Blazor.Server.UI/appsettings.development.json
