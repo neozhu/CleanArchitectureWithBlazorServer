@@ -91,7 +91,7 @@
     RegisterFormModel _model = new();
     [Inject] private RegisterFormModelFluentValidator _registerValidator { get; set; } = default!;
     [Inject]
-    private IFluentEmail _fluentEmail { get; set; } = null!;
+    private IMailService _mailService { get; set; } = null!;
 
     protected override Task OnInitializedAsync()
     {
@@ -148,6 +148,6 @@
 
         var subject =string.Format(L["Welcome to {0}"],Settings.AppName);
         var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_welcome.txt");
-        return _fluentEmail.To(toemail).Subject(subject).UsingTemplateFromFile(template,new { AppName=Settings.AppName,Email=toemail,UserName =userName},true).SendAsync();
+        return _mailService.SendAsync(toemail, subject, "_welcome", new { AppName = Settings.AppName, Email = toemail, UserName = userName });
     }
 }

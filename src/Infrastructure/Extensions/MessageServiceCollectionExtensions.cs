@@ -11,7 +11,7 @@ public static class MessageServiceCollectionExtensions
         configuration.GetSection(nameof(SmtpClientOptions)).Bind(smtpClientOptions);
         services.Configure<SmtpClientOptions>(configuration.GetSection(nameof(SmtpClientOptions)));
         services.AddSingleton(smtpClientOptions);
-        services.AddScoped<IMailService, SMTPMailService>();
+        services.AddScoped<IMailService, MailService>();
         // configure your sender and template choices with dependency injection.
         services.AddFluentEmail(smtpClientOptions.User)
                 .AddRazorRenderer(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates"))

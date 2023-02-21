@@ -1,5 +1,6 @@
 using CleanArchitecture.Blazor.Application.Common.Exceptions;
 using FluentAssertions;
+using FluentValidation;
 using FluentValidation.Results;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ public class ValidationExceptionTests
                 new ValidationFailure("Age", "'Age' must be over 18"),
             };
 
-        var actual = new ValidationException(failures).ErrorMessages;
+        var actual = new ValidationException(failures);
 
         actual.Should().BeEquivalentTo(new List<string>() { "'Age' must be over 18" });
         
@@ -37,7 +38,7 @@ public class ValidationExceptionTests
                 new ValidationFailure("Password", "must contain lower case letter"),
             };
 
-        var actual = new ValidationException(failures).ErrorMessages;
+        var actual = new ValidationException(failures).Errors;
 
         actual.Should().NotBeEmpty();
 

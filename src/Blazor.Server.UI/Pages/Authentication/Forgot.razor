@@ -66,7 +66,7 @@
     private ApplicationUser? _user = null;
     private UserManager<ApplicationUser> _userManager { get; set; } = null!;
     [Inject]
-    private IFluentEmail _fluentEmail { get; set; } = null!;
+    private IMailService _mailService { get; set; } = null!;
     [Inject] private ILogger<Forgot> _logger { get; set; } = default!;
     [Inject] private NavigationManager _navigation { get; set; } = default!;
     protected override Task OnInitializedAsync()
@@ -94,7 +94,7 @@
                 Snackbar.Clear();
                 Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
                 Snackbar.Add(string.Format(L["The email has been sent, please check the email:{0} "],_emailaddress), MudBlazor.Severity.Success,config=> { config.ShowCloseIcon = false; config.HideTransitionDuration = 5000; });
-                 _logger.LogInformation("{@UserName}'s token: {@token} for resetting the password has been sent.", _user.UserName,_resetpasswordToken);
+                _logger.LogInformation("{@UserName}'s token: {@token} for resetting the password has been sent.", _user.UserName,_resetpasswordToken);
             }
             else
             {
@@ -121,8 +121,8 @@
     {
 
         var subject = L["Verify your recovery email"];
-        var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_recoverypassword.txt");
-        return _fluentEmail.To(toemail).Subject(subject).UsingTemplateFromFile(template,new { AppName=Settings.AppName,Email=toemail,Token =token },true).SendAsync();
+        //var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_recoverypassword.txt");
+        return _mailService.SendAsync(toemail, subject, "_recoverypassword", new { AppName = Settings.AppName, Email = toemail, Token = token });
     }
 
 

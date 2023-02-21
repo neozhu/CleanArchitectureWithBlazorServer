@@ -10,6 +10,8 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
       <UserSecretsId>8118d19e-a6db-4446-bdb6-fa62b17f843d</UserSecretsId>
   </PropertyGroup>
+
+   
   <ItemGroup>
         <PackageReference Include="Blazor-Analytics" Version="3.11.0" />
         <PackageReference Include="Blazor-ApexCharts" Version="0.9.16-beta" />
@@ -31,18 +33,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Resources\EmailTemplates\_recoverypassword.txt" />
-        <Content Include="Resources\EmailTemplates\_welcome.txt" />
+        <EmbeddedResource Include="Resources\EmailTemplates\*" />
     </ItemGroup>
-    <ItemGroup>
-        <Content Update="Resources\EmailTemplates\_recoverypassword.txt" Condition="'$(RuntimeIdentifier)'=='win-x64'">
-            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Update="Resources\EmailTemplates\_welcome.txt" Condition="'$(RuntimeIdentifier)'=='win-x64'">
-            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
+ 
   
 </Project>

@@ -20,7 +20,7 @@ internal class ImportProductsCommandTests: TestBase
     {
         var cmd = new CreateProductsTemplateCommand();
         var result = await SendAsync(cmd);
-        result.Should().NotBeEmpty();
+        result.Succeeded.Should().BeTrue();
     }
 
     [Test]
