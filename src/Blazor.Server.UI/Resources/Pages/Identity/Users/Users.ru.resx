@@ -219,4 +219,10 @@
   <data name="Reset Password" xml:space="preserve">
     <value>Сброс пароля</value>
   </data>
+  <data name="Assigned Roles" xml:space="preserve">
+    <value>Назначенные роли</value>
+  </data>
+  <data name="Email / PhoneNumber" xml:space="preserve">
+    <value>Электронная почта / номер телефона</value>
+  </data>
 </root>

@@ -39,7 +39,7 @@
                   @bind-SelectedItems="_selectItems"
                   SortLabel="@ConstantString.ORDERBY"
                   Loading="@_loading"
-                  ServerData="@(new Func<TableState, Task<TableData<UserDto>>>(ServerReload))" >
+                  ServerData="@(new Func<TableState, Task<TableData<UserDto>>>(ServerReload))">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Users"]</MudText>
@@ -112,7 +112,7 @@
                             {
                                 <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
                             }
-                            
+
                         </MudMenu>
                     </MudHidden>
                 </div>
@@ -126,13 +126,19 @@
                 }
             </ToolBarContent>
             <ColGroup>
-                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                <col style="width:50px;" />
-                <col style="width:120px;" />
+                <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <col style="min-width:50px;" />
+                    <col style="min-width:120px;" />
+                    <col style="min-width:160px;" />
+                    <col style="min-width:140px;" />
+                    <col style="min-width:120px;" />
+                    <col style="min-width:120px;" />
+                    <col style="min-width:160px;" />
+                    <col style="min-width:180px;" />
                 </MudHidden>
             </ColGroup>
             <HeaderContent>
-                <MudTh Style="width:80px">@ConstantString.ACTIONS</MudTh>
+                <MudTh Style="min-width:120px">@ConstantString.ACTIONS</MudTh>
                 <MudTh><MudTableSortLabel SortLabel="TenantId" T="UserDto">@L["Tenant Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="UserName" T="UserDto">@L["User Name"]</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortLabel="SuperiorId" T="UserDto">@L["Superior Name"]</MudTableSortLabel></MudTh>
@@ -189,8 +195,8 @@
                 </MudTd>
                 <MudTd DataLabel="@L["Tenant Name"]">
                     <div class="d-flex flex-column">
-                    <MudText>@context.TenantName</MudText>
-                    <MudText Typo="Typo.body2">@context.TenantId</MudText>
+                        <MudText>@context.TenantName</MudText>
+                        <MudText Typo="Typo.body2">@context.TenantId</MudText>
                     </div>
                 </MudTd>
                 <MudTd DataLabel="@L["User Name"]">
@@ -212,14 +218,19 @@
                         <MudText Typo="Typo.body2">@context.PhoneNumber</MudText>
                     </div>
                 </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L["Assigned Roles"]">@string.Join("; ",context.AssignRoles)</MudTd>
+                <MudTd HideSmall="true" DataLabel="@L["Assigned Roles"]">
+                    @foreach (var str in context.AssignRoles)
+                    {
+                        <MudChip Variant="Variant.Text">@str</MudChip>
+                    }
+                </MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Is Active"]">
                     <MudCheckBox Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
                 </MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Lock Status"]">@context.LockoutEnd</MudTd>
             </RowTemplate>
             <PagerContent>
-                 <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
+                <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
         </MudTable>
 
@@ -247,7 +258,7 @@
     [Inject]
     private IAppCache _cache { get; set; } = null!;
     [Inject]
-    private ITenantProvider _tenantProvider{ get; set; }= default!;
+    private ITenantProvider _tenantProvider { get; set; } = default!;
     [Inject]
     private ITenantsService _tenantsService { get; set; } = null!;
     [Inject]
@@ -289,8 +300,8 @@
         _canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
         _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
-        _canImport =  (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
-        _canExport =  (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
+        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _usersStateContainer.OnChange += HandleCircuitsChanged;
 
 
@@ -323,7 +334,7 @@
             _loading = true;
             var items = await _userManager.Users
                  .Include(x => x.UserRoles).ThenInclude(x => x.Role).Where(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString))
-                 .OrderBy($"{state.SortLabel ?? "UserName"} {(state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString():state.SortDirection.ToString())}")
+                 .OrderBy($"{state.SortLabel ?? "UserName"} {(state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString())}")
                  .Skip(state.Page * state.PageSize).Take(state.PageSize).Select(x => new UserDto()
                      {
                          Checked = false,
@@ -355,15 +366,15 @@
 
     private async Task OnRefresh()
     {
-        await  _table.ReloadServerData();
+        await _table.ReloadServerData();
     }
     private async Task OnCreate()
     {
-        var model = new UserDto() { Provider = "Local", Email="",UserName="", AssignRoles = new string[] { RoleName.Basic } };
+        var model = new UserDto() { Provider = "Local", Email = "", UserName = "", AssignRoles = new string[] { RoleName.Basic } };
         var parameters = new DialogParameters {
             { nameof(_UserFormDialog.model),model }
            };
-        var options = new DialogOptions {CloseButton=true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
@@ -466,7 +477,7 @@
                 return;
             }
 
-            _selectItems.Remove(_selectItems.First(x=>x.Id == currentUserId));
+            _selectItems.Remove(_selectItems.First(x => x.Id == currentUserId));
         }
 
         string deleteContent = ConstantString.DELETECONFIRMATION;
@@ -478,11 +489,11 @@
         if (!result.Canceled)
         {
             var deleteId = _selectItems.Select(x => x.Id).ToArray();
-            var deleteUsers = await _userManager.Users.Where(x => deleteId.Contains(x.Id) ).ToListAsync();
+            var deleteUsers = await _userManager.Users.Where(x => deleteId.Contains(x.Id)).ToListAsync();
 
             foreach (var deleteUser in deleteUsers)
             {
-                var deleteresult= await _userManager.DeleteAsync(deleteUser);
+                var deleteresult = await _userManager.DeleteAsync(deleteUser);
                 if (!deleteresult.Succeeded)
                 {
                     Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
@@ -602,7 +613,7 @@
         {
             _processing = true;
             var userId = models.First().UserId;
-            var user = await _userManager.FindByIdAsync(userId!)?? throw new NotFoundException($"not found application user: {userId}");
+            var user = await _userManager.FindByIdAsync(userId!) ?? throw new NotFoundException($"not found application user: {userId}");
             foreach (var model in models)
             {
                 if (model.Assigned)
@@ -669,7 +680,7 @@
     {
         _exporting = true;
         var items = await _userManager.Users
-                 .Where(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString) )
+                 .Where(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString))
                  .Select(x => new UserDto()
                      {
                          Id = x.Id,
@@ -681,14 +692,14 @@
                      }).ToListAsync();
         var result = await _excelService.ExportAsync(items,
                 new Dictionary<string, Func<UserDto, object?>>()
-                            {
+                                {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
                       {L["Email"],item => item.Email},
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Name"],item => item.TenantName},
-                            }
+                                }
                 , L["Users"]);
         var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
         Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
@@ -712,7 +723,7 @@
         {
             foreach (var user in result.Data)
             {
-                if (!_userManager.Users.Any(x =>  x.UserName == user.UserName || x.Email == user.Email))
+                if (!_userManager.Users.Any(x => x.UserName == user.UserName || x.Email == user.Email))
                 {
                     var tenantId = _tenantsService.DataSource.Any(x => x.Name == user.TenantName) ? _tenantsService.DataSource.First(x => x.Name == user.TenantName).Id : _tenantsService.DataSource.First().Id;
                     user.TenantId = tenantId;
@@ -723,7 +734,7 @@
                     }
                     else
                     {
-                        Snackbar.Add($"{string.Join(',',iresult.Errors.Select(x=>x.Description))}", MudBlazor.Severity.Error);
+                        Snackbar.Add($"{string.Join(',', iresult.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
                     }
                 }
             }

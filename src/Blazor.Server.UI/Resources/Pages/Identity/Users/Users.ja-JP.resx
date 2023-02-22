@@ -219,4 +219,10 @@
   <data name="Reset Password" xml:space="preserve">
     <value>パスワードを再設定する</value>
   </data>
+  <data name="Assigned Roles" xml:space="preserve">
+    <value>割り当てられた役割</value>
+  </data>
+  <data name="Email / PhoneNumber" xml:space="preserve">
+    <value>メール/電話番号</value>
+  </data>
 </root>

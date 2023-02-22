@@ -219,4 +219,10 @@
   <data name="Reset Password" xml:space="preserve">
     <value>重置密码</value>
   </data>
+  <data name="Assigned Roles" xml:space="preserve">
+    <value>分配角色</value>
+  </data>
+  <data name="Email / PhoneNumber" xml:space="preserve">
+    <value>电子邮件 / 电话</value>
+  </data>
 </root>
