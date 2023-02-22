@@ -219,4 +219,10 @@
   <data name="Reset Password" xml:space="preserve">
     <value>암호를 재설정</value>
   </data>
+  <data name="Assigned Roles" xml:space="preserve">
+    <value>할당된 역할</value>
+  </data>
+  <data name="Email / PhoneNumber" xml:space="preserve">
+    <value>이메일/전화번호</value>
+  </data>
 </root>

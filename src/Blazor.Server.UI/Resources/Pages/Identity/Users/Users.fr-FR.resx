@@ -219,4 +219,10 @@
   <data name="Reset Password" xml:space="preserve">
     <value>réinitialiser le mot de passe</value>
   </data>
+  <data name="Assigned Roles" xml:space="preserve">
+    <value>Rôles attribués</value>
+  </data>
+  <data name="Email / PhoneNumber" xml:space="preserve">
+    <value>E-mail / Numéro de téléphone</value>
+  </data>
 </root>
