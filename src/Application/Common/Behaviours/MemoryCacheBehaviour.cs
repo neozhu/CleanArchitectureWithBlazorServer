@@ -26,7 +26,7 @@ public class MemoryCacheBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
             request.CacheKey,
             async () =>
             await next(),
-            request.Options);
+            request.Options).ConfigureAwait(false); 
      
         return response;
     }

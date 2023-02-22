@@ -17,7 +17,7 @@
         <PackageReference Include="Blazor-ApexCharts" Version="0.9.16-beta" />
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
-        <PackageReference Include="CodeBeam.MudExtensions" Version="6.2.5" />
+        <PackageReference Include="CodeBeam.MudExtensions" Version="6.2.6" />
        <PackageReference Include="MudBlazor" Version="6.1.9" />
        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys" Version="13.0.0.1" />

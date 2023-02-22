@@ -17,7 +17,7 @@ where TRequest : IRequest<TResponse>
         _validators = validators;
     }
 
-    public  Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public  async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var context = new ValidationContext<TRequest>(request);
         var failrules = _validators
@@ -29,6 +29,6 @@ where TRequest : IRequest<TResponse>
         {
             throw new ValidationException(failrules);
         }
-        return next();
+        return await next().ConfigureAwait(false);
     }
 }
