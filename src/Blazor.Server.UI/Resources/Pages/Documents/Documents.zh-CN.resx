@@ -177,4 +177,7 @@
   <data name="Download" xml:space="preserve">
     <value>下载</value>
   </data>
+  <data name="Owner" xml:space="preserve">
+    <value>所有人</value>
+  </data>
 </root>

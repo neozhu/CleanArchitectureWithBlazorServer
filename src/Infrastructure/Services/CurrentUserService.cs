@@ -17,23 +17,23 @@ public class CurrentUserService : ICurrentUserService
     {
         _httpContextAccessor = httpContextAccessor;
     }
-    public string UserId => _httpContextAccessor.HttpContext?.User.GetUserId()??string.Empty;
-    public string Email => _httpContextAccessor.HttpContext?.User.GetEmail() ?? string.Empty;
-    public string UserName => _httpContextAccessor.HttpContext?.User.GetUserName() ?? string.Empty;
-    public string TenantId => _httpContextAccessor.HttpContext?.User.GetTenantId() ?? string.Empty;
-    public string TenantName => _httpContextAccessor.HttpContext?.User.GetTenantName() ?? string.Empty;
-    public string DisplayName => _httpContextAccessor.HttpContext?.User.GetDisplayName() ?? string.Empty;
-    public string SuperiorId => _httpContextAccessor.HttpContext?.User.GetSuperiorId() ?? string.Empty;
-    public string SuperiorName => _httpContextAccessor.HttpContext?.User.GetSuperiorName() ?? string.Empty;
-    public string ProfilePictureDataUrl => _httpContextAccessor.HttpContext?.User.GetProfilePictureDataUrl() ?? string.Empty;
-    public string[] AssignRoles
+    public string? UserId => _httpContextAccessor.HttpContext?.User.GetUserId();
+    public string? Email => _httpContextAccessor.HttpContext?.User.GetEmail();
+    public string? UserName => _httpContextAccessor.HttpContext?.User.GetUserName();
+    public string? TenantId => _httpContextAccessor.HttpContext?.User.GetTenantId();
+    public string? TenantName => _httpContextAccessor.HttpContext?.User.GetTenantName();
+    public string? DisplayName => _httpContextAccessor.HttpContext?.User.GetDisplayName();
+    public string? SuperiorId => _httpContextAccessor.HttpContext?.User.GetSuperiorId();
+    public string? SuperiorName => _httpContextAccessor.HttpContext?.User.GetSuperiorName();
+    public string? ProfilePictureDataUrl => _httpContextAccessor.HttpContext?.User.GetProfilePictureDataUrl();
+    public string[]? AssignRoles
     {
         get
         {
             var str = _httpContextAccessor.HttpContext?.User.GetAssignRoles() ?? string.Empty;
             if (string.IsNullOrEmpty(str))
             {
-                return new string[] { };
+                return null;
             }
             return str.Split(',', StringSplitOptions.RemoveEmptyEntries);
         }

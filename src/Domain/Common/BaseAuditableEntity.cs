@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel.DataAnnotations.Schema;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Domain.Common;
 
@@ -35,13 +36,13 @@ public abstract class BaseEntity: IEntity
 
 public abstract class BaseAuditableEntity : BaseEntity
 {
-    public DateTime? Created { get; set; }
+    public virtual DateTime? Created { get; set; }
 
-    public string? CreatedBy { get; set; }
+    public virtual string? CreatedBy { get; set; }
 
-    public DateTime? LastModified { get; set; }
+    public virtual DateTime? LastModified { get; set; }
 
-    public string? LastModifiedBy { get; set; }
+    public virtual string? LastModifiedBy { get; set; }
 }
 
 public interface ISoftDelete
@@ -54,4 +55,13 @@ public abstract class BaseAuditableSoftDeleteEntity : BaseAuditableEntity, ISoft
     public DateTime? Deleted { get; set; }
     public string? DeletedBy { get; set; }
 
+}
+
+
+public abstract class OwnerPropertyEntity: BaseAuditableEntity
+{
+    [ForeignKey("CreatedBy")]
+    public ApplicationUser? Owner { get; set; }
+    [ForeignKey("LastModifiedBy")]
+    public ApplicationUser? Editor { get; set; }
 }

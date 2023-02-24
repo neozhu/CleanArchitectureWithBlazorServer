@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Domain.Entities;
 
-public class Document : BaseAuditableEntity, IMayHaveTenant, IAuditTrial
+public class Document : OwnerPropertyEntity, IMayHaveTenant, IAuditTrial
 {
     public int Id { get; set; }
     public string? Title { get; set; }
