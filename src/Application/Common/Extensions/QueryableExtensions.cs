@@ -11,7 +11,7 @@ public static class QueryableExtensions
     {
         var queryableResultWithIncludes = spec.Includes
            .Aggregate(query,
-               (current, include) => current.Include(include));
+               (current, include) => include(current));
         var secondaryResult = spec.IncludeStrings
             .Aggregate(queryableResultWithIncludes,
                 (current, include) => current.Include(include));

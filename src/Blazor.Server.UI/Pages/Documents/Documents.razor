@@ -171,8 +171,8 @@
                 </MudTd>
                 <MudTd DataLabel="@L["Owner Name"]">
                     <div class="d-flex flex-column">
-                        <MudText>@context.Owner.DisplayName</MudText>
-                        <MudText Typo="Typo.body2">@context.Owner.Email</MudText>
+                        <MudText>@context.Owner?.DisplayName</MudText>
+                        <MudText Typo="Typo.body2">@context.Owner?.Email</MudText>
                     </div>
                 </MudTd>
                 <MudTd DataLabel="@L["Tenant Name"]">
