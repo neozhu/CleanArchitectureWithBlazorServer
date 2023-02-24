@@ -61,7 +61,7 @@ public abstract class BaseAuditableSoftDeleteEntity : BaseAuditableEntity, ISoft
 public abstract class OwnerPropertyEntity: BaseAuditableEntity
 {
     [ForeignKey("CreatedBy")]
-    public ApplicationUser? Owner { get; set; }
+    public virtual ApplicationUser? Owner { get; set; }
     [ForeignKey("LastModifiedBy")]
-    public ApplicationUser? Editor { get; set; }
+    public virtual ApplicationUser? Editor { get; set; }
 }
