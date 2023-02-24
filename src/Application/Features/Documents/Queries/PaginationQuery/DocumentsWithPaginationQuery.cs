@@ -52,6 +52,8 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
     {
         public DocumentsQuery(string userId,string tenantId,string? keyword)
         {
+            AddInclude(x => x.Owner);
+            AddInclude(x => x.Editor);
             this.Criteria = p => (p.CreatedBy == userId && p.IsPublic == false) || p.IsPublic == true;
             And(x => x.TenantId == tenantId);
             if (!string.IsNullOrEmpty(keyword))

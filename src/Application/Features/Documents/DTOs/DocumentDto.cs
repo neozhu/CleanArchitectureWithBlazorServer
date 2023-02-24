@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+
 namespace CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 
 public partial class DocumentDto : IMapFrom<Document>
@@ -22,4 +24,6 @@ public partial class DocumentDto : IMapFrom<Document>
     public string? TenantName { get; set; }
     public JobStatus Status { get; set; } = JobStatus.NotStart;
     public string? Content { get; set; }
+
+    public ApplicationUserDto Owner { get; set; }
 }

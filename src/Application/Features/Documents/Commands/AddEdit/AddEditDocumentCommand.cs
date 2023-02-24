@@ -65,7 +65,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
             {
                 document.URL = await _uploadService.UploadAsync(request.UploadRequest); ;
             }
-             document.AddDomainEvent(new CreatedEvent<Document>(document));
+            document.AddDomainEvent(new CreatedEvent<Document>(document));
             _context.Documents.Add(document);
             await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(document.Id);
