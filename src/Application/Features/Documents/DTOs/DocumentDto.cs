@@ -25,5 +25,5 @@ public partial class DocumentDto : IMapFrom<Document>
     public JobStatus Status { get; set; } = JobStatus.NotStart;
     public string? Content { get; set; }
 
-    public ApplicationUserDto Owner { get; set; }
+    public ApplicationUserDto? Owner { get; set; }
 }

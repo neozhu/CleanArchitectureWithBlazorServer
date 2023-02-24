@@ -3,16 +3,17 @@
 
 using System.Linq.Expressions;
 using CleanArchitecture.Blazor.Domain.Common;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace CleanArchitecture.Blazor.Application.Common.Specification;
 #nullable disable
 public abstract class Specification<T> : ISpecification<T> where T : class, IEntity
 {
     public Expression<Func<T, bool>> Criteria { get; set; }
-    public List<Expression<Func<T, object>>> Includes { get; } = new();
+    public List<Func<IQueryable<T>, IIncludableQueryable<T, object>>> Includes { get; } = new();
     public List<string> IncludeStrings { get; } = new();
 
-    protected virtual void AddInclude(Expression<Func<T, object>> includeExpression)
+    protected virtual void AddInclude(Func<IQueryable<T>, IIncludableQueryable<T, object>> includeExpression)
     {
         Includes.Add(includeExpression);
     }
