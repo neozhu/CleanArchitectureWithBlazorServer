@@ -32,7 +32,7 @@
                   @bind-SelectedItems="_selectItems"
                   SortLabel="@ConstantString.ORDERBY"
                   Loading="@_loading"
-                  ServerData="@(new Func<TableState, Task<TableData<RoleDto>>>(ServerReload))" >
+                  ServerData="@(new Func<TableState, Task<TableData<ApplicationRoleDto>>>(ServerReload))" >
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Roles"]</MudText>
@@ -124,7 +124,7 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel T="RoleDto" SortLabel="Name">@L["Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel T="ApplicationRoleDto" SortLabel="Name">@L["Name"]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ConstantString.ACTIONS">
@@ -176,7 +176,7 @@
     private bool processing = false;
     private string _currentRoleName = string.Empty;
     private int _defaultPageSize = 15;
-    private HashSet<RoleDto> _selectItems = new();
+    private HashSet<ApplicationRoleDto> _selectItems = new();
     private string _searchString = string.Empty;
     public string? Title { get; private set; }
     [CascadingParameter]
@@ -190,7 +190,7 @@
     private IAppCache _cache { get; set; } = null!;
     private List<PermissionModel> _permissions = new();
     private IList<Claim> _assignedClaims = default!;
-    private MudTable<RoleDto> _table = null!;
+    private MudTable<ApplicationRoleDto> _table = null!;
     private bool _canCreate;
     private bool _canSearch;
     private bool _canEdit;
@@ -213,16 +213,16 @@
         _canImport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
     }
-    private async Task<TableData<RoleDto>> ServerReload(TableState state)
+    private async Task<TableData<ApplicationRoleDto>> ServerReload(TableState state)
     {
         try
         {
             _loading = true;
             var items = await _roleManager.Roles.Where(x => x.Name.Contains(_searchString) || x.Description.Contains(_searchString))
                   .OrderBy($"{state.SortLabel ?? "Name"} {(state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString())}")
-                 .Skip(state.Page * state.PageSize).Take(state.PageSize).Select(x => new RoleDto() { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName }).ToListAsync();
+                 .Skip(state.Page * state.PageSize).Take(state.PageSize).Select(x => new ApplicationRoleDto() { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName }).ToListAsync();
             var total = await _roleManager.Roles.CountAsync(x => x.Name.Contains(_searchString) || x.Description.Contains(_searchString));
-            return new TableData<RoleDto>() { TotalItems = total, Items = items };
+            return new TableData<ApplicationRoleDto>() { TotalItems = total, Items = items };
         }
         finally
         {
@@ -236,7 +236,7 @@
 
     private async Task OnCreate()
     {
-        var model = new RoleDto() { Name = "" };
+        var model = new ApplicationRoleDto() { Name = "" };
         var parameters = new DialogParameters { ["model"] = model };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_RoleFormDialog>(L["Create a new role"], parameters, options);
@@ -261,7 +261,7 @@
             }
         }
     }
-    private async Task OnEdit(RoleDto item)
+    private async Task OnEdit(ApplicationRoleDto item)
     {
         var parameters = new DialogParameters { ["model"] = item };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
@@ -288,7 +288,7 @@
             }
         }
     }
-    private async Task OnSetPermissions(RoleDto item)
+    private async Task OnSetPermissions(ApplicationRoleDto item)
     {
         _showPermissionsDrawer = true;
         _permissions = new();
@@ -298,7 +298,7 @@
 
     }
 
-    private async Task<List<PermissionModel>> GetAllPermissions(RoleDto dto)
+    private async Task<List<PermissionModel>> GetAllPermissions(ApplicationRoleDto dto)
     {
         Func<string, Task<IList<Claim>>> getcalims = async (roleId) =>
         {

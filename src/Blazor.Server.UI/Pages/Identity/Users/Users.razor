@@ -39,7 +39,7 @@
                   @bind-SelectedItems="_selectItems"
                   SortLabel="@ConstantString.ORDERBY"
                   Loading="@_loading"
-                  ServerData="@(new Func<TableState, Task<TableData<UserDto>>>(ServerReload))">
+                  ServerData="@(new Func<TableState, Task<TableData<ApplicationUserDto>>>(ServerReload))">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Users"]</MudText>
@@ -139,13 +139,13 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh Style="min-width:120px">@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="TenantId" T="UserDto">@L["Tenant Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="UserName" T="UserDto">@L["User Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="SuperiorId" T="UserDto">@L["Superior Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Provider" T="UserDto">@L["Provider"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Email" T="UserDto">@L["Email / PhoneNumber"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="AssignRoles" T="UserDto">@L["Assigned Roles"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="IsActive" T="UserDto">@L["Is Active"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="TenantId" T="ApplicationUserDto">@L["Tenant Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="UserName" T="ApplicationUserDto">@L["User Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="SuperiorId" T="ApplicationUserDto">@L["Superior Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Provider" T="ApplicationUserDto">@L["Provider"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="Email" T="ApplicationUserDto">@L["Email / PhoneNumber"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="AssignedRoles" T="ApplicationUserDto">@L["Assigned Roles"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="IsActive" T="ApplicationUserDto">@L["Is Active"]</MudTableSortLabel></MudTh>
                 <MudTh>@L["Lock Status"]</MudTh>
             </HeaderContent>
             <RowTemplate>
@@ -218,7 +218,7 @@
                     </div>
                 </MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Assigned Roles"]">
-                    @foreach (var str in context.AssignRoles)
+                    @foreach (var str in context.AssignedRoles)
                     {
                         <MudChip Variant="Variant.Text">@str</MudChip>
                     }
@@ -244,7 +244,7 @@
     [Inject]
     private IUsersStateContainer _usersStateContainer { get; set; } = default!;
     private int _defaultPageSize = 15;
-    private HashSet<UserDto> _selectItems = new();
+    private HashSet<ApplicationUserDto> _selectItems = new();
     private string _searchString = string.Empty;
     private string Title { get; set; } = "Users";
     private List<PermissionModel> _permissions = new();
@@ -264,8 +264,9 @@
     private IBlazorDownloadFileService _blazorDownloadFileService { get; set; } = null!;
     [Inject]
     private IExcelService _excelService { get; set; } = null!;
-
-    private MudTable<UserDto> _table = null!;
+    [Inject]
+    private IMapper _mapper { get; set; } = null!;
+    private MudTable<ApplicationUserDto> _table = null!;
     private bool _processing;
     private bool _showPermissionsDrawer;
     private bool _canCreate;
@@ -326,7 +327,7 @@
         });
     }
 
-    private async Task<TableData<UserDto>> ServerReload(TableState state)
+    private async Task<TableData<ApplicationUserDto>> ServerReload(TableState state)
     {
         try
         {
@@ -334,28 +335,9 @@
             var items = await _userManager.Users
                  .Include(x => x.UserRoles).ThenInclude(x => x.Role).Where(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString))
                  .OrderBy($"{state.SortLabel ?? "UserName"} {(state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString())}")
-                 .Skip(state.Page * state.PageSize).Take(state.PageSize).Select(x => new UserDto()
-                     {
-                         Checked = false,
-                         ProfilePictureDataUrl = x.ProfilePictureDataUrl,
-                         DisplayName = x.DisplayName,
-                         Email = x.Email!,
-                         IsActive = x.IsActive,
-                         IsLive = x.IsLive,
-                         PhoneNumber = x.PhoneNumber,
-                         Provider = x.Provider,
-                         Id = x.Id,
-                         UserName = x.UserName!,
-                         TenantId = x.TenantId,
-                         TenantName = x.TenantName,
-                         LockoutEnd = x.LockoutEnd,
-                         SuperiorId = x.SuperiorId,
-                         SuperiorName = (x.Superior != null ? x.Superior.UserName : null),
-                         Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
-                         AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
-                     }).ToListAsync();
+                 .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
             var total = await _userManager.Users.CountAsync(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString));
-            return new TableData<UserDto>() { TotalItems = total, Items = items };
+            return new TableData<ApplicationUserDto>() { TotalItems = total, Items = items };
         }
         finally
         {
@@ -369,7 +351,7 @@
     }
     private async Task OnCreate()
     {
-        var model = new UserDto() { Provider = "Local", Email = "", UserName = "", AssignRoles = new string[] { RoleName.Basic } };
+        var model = new ApplicationUserDto() { Provider = "Local", Email = "", UserName = "", AssignedRoles = new string[] { RoleName.Basic } };
         var parameters = new DialogParameters {
             { nameof(_UserFormDialog.model),model }
            };
@@ -396,9 +378,9 @@
 
             if (state.Succeeded)
             {
-                if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
+                if (model.AssignedRoles is not null && model.AssignedRoles.Length > 0)
                 {
-                    await _userManager.AddToRolesAsync(applicationUser, model.AssignRoles);
+                    await _userManager.AddToRolesAsync(applicationUser, model.AssignedRoles);
                 }
                 else
                 {
@@ -414,7 +396,7 @@
         }
     }
 
-    private async Task OnEdit(UserDto item)
+    private async Task OnEdit(ApplicationUserDto item)
     {
 
         var parameters = new DialogParameters {
@@ -446,9 +428,9 @@
                     var removeRoleResult = await _userManager.RemoveFromRolesAsync(user, roles);
                     if (removeRoleResult.Succeeded)
                     {
-                        if (item.AssignRoles is not null && item.AssignRoles.Length > 0)
+                        if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
                         {
-                            await _userManager.AddToRolesAsync(user, item.AssignRoles);
+                            await _userManager.AddToRolesAsync(user, item.AssignedRoles);
                         }
                     }
                 }
@@ -505,7 +487,7 @@
 
     }
 
-    private async Task OnSetActive(UserDto item)
+    private async Task OnSetActive(ApplicationUserDto item)
     {
         var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
         user.IsActive = !item.IsActive;
@@ -521,7 +503,7 @@
         }
     }
 
-    private async Task OnResetPassword(UserDto item)
+    private async Task OnResetPassword(ApplicationUserDto item)
     {
 
         var model = new ResetPasswordFormModel()
@@ -546,7 +528,7 @@
             }
         }
     }
-    private async Task OnSetPermissions(UserDto item)
+    private async Task OnSetPermissions(ApplicationUserDto item)
     {
         _showPermissionsDrawer = true;
         _permissions = new();
@@ -559,7 +541,7 @@
         _showPermissionsDrawer = state;
         return Task.CompletedTask;
     }
-    private async Task<List<PermissionModel>> GetAllPermissions(UserDto dto)
+    private async Task<List<PermissionModel>> GetAllPermissions(ApplicationUserDto dto)
     {
         Func<string, Task<IList<Claim>>> getcalims = async (userId) =>
         {
@@ -680,7 +662,7 @@
         _exporting = true;
         var items = await _userManager.Users
                  .Where(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString))
-                 .Select(x => new UserDto()
+                 .Select(x => new ApplicationUserDto()
                      {
                          Id = x.Id,
                          UserName = x.UserName!,
@@ -690,7 +672,7 @@
                          TenantName = x.TenantName,
                      }).ToListAsync();
         var result = await _excelService.ExportAsync(items,
-                new Dictionary<string, Func<UserDto, object?>>()
+                new Dictionary<string, Func<ApplicationUserDto, object?>>()
                                 {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},

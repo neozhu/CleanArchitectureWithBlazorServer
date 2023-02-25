@@ -12,7 +12,7 @@ public class PickUserAutocomplete : MudAutocomplete<string>
     [Inject]
     private IIdentityService  _identityService { get; set; } = default!;
 
-    private List<UserDto>? _userList;
+    private List<ApplicationUserDto>? _userList;
   
 
     public override  Task SetParametersAsync(ParameterView parameters)

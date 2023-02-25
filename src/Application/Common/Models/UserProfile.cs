@@ -10,8 +10,8 @@ public class UserProfile
     public required string UserName { get; set; }  
     public required string Email { get; set; }  
     public string? PhoneNumber { get; set; }
-    public string? Role { get; set; }
-    public string[]? AssignRoles { get; set; }
+    public string? DefaultRole { get; set; }
+    public string[]? AssignedRoles { get; set; }
     public required string UserId { get; set; }=Guid.NewGuid().ToString();
     public bool IsActive { get; set; }
     public string? TenantId { get; set; }

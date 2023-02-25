@@ -9,7 +9,7 @@
                     <MudTextField Label="@L["Name"]" @bind-Value="model.Name"
                                   Required="true"
                                   For="@(() => model.Name)"
-                                  RequiredError="@L["Role name is required!"]"
+                                  RequiredError="@L["DefaultRole name is required!"]"
                                   Validation="@(modelValidator.ValidateValue)">
                     </MudTextField>
                 </MudItem>
@@ -32,7 +32,7 @@
     RoleDtoValidator modelValidator = new RoleDtoValidator();
     [EditorRequired]
     [Parameter]
-    public RoleDto model { get; set; } = default!;
+    public ApplicationRoleDto model { get; set; } = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
 

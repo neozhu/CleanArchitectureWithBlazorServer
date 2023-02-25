@@ -107,13 +107,13 @@
             </div>
         </MudItem>
         <MudItem xs="12" sm="12">
-            <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
+            <MudText  Typo="Typo.caption">@L["Assign Roles"]</MudText>
             <MudGrid Class="mt-1">
                 @for (int i = 0; i < _roles.Count; i++)
                 {
                     var x = i;
                     <MudItem xs="6" sm="6" Class="py-0 my=0">
-                        <MudCheckBox For="@(() =>model.Checked)" T="bool" Checked="@_roles[x].value" Label="@_roles[x].key" CheckedChanged="@(s=>_roles[x].value=s)"></MudCheckBox>
+                        <MudCheckBox   T="bool" Checked="@_roles[x].value" Label="@_roles[x].key" CheckedChanged="@(s=>_roles[x].value=s)"></MudCheckBox>
                     </MudItem>
                 }
             </MudGrid>
@@ -136,10 +136,10 @@
     [Inject] private IUploadService _uploadService { get; set; } = default!;
     [Inject] private ITenantsService _tenantsService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
-    UserDtoValidator modelValidator = new();
+    ApplicationUserDtoValidator modelValidator = new();
 
-    [EditorRequired][Parameter] public UserDto model { get; set; } = default!;
-    [EditorRequired][Parameter] public EventCallback<UserDto> OnFormSubmit { get; set; }
+    [EditorRequired][Parameter] public ApplicationUserDto model { get; set; } = default!;
+    [EditorRequired][Parameter] public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -147,7 +147,7 @@
         await _tenantsService.Initialize();
         foreach (var role in array)
         {
-            if (model.AssignRoles != null && model.AssignRoles.Contains(role))
+            if (model.AssignedRoles != null && model.AssignedRoles.Contains(role))
             {
                 _roles.Add(new() { key = role!, value = true });
             }
@@ -189,7 +189,7 @@
             await form.Validate();
             if (form.IsValid)
             {
-                model.AssignRoles = _roles.Where(x => x.value).Select(x => x.key).ToArray();
+                model.AssignedRoles = _roles.Where(x => x.value).Select(x => x.key).ToArray();
                 await OnFormSubmit.InvokeAsync(model);
             }
         }

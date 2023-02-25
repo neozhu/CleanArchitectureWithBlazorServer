@@ -24,7 +24,7 @@ public partial class SideMenu
     [Inject] 
     private LayoutService LayoutService { get; set; } = default!;
 
-    private string[] _roles => UserProfile.AssignRoles??new string[] { };
+    private string[] _roles => UserProfile.AssignedRoles??new string[] { };
 
     
 }

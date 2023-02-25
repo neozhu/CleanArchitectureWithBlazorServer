@@ -16,14 +16,14 @@
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
     [Parameter]
-    public UserDto model { get; set; } = default!;
+    public ApplicationUserDto model { get; set; } = default!;
 
     protected async Task Submit() {
         await  _userForm!.Submit();
     }
     void Cancel() => MudDialog.Cancel();
 
-    protected  Task OnFormSubmitHandler(UserDto model)
+    protected  Task OnFormSubmitHandler(ApplicationUserDto model)
     {
         MudDialog.Close(DialogResult.Ok(model));
         return Task.CompletedTask;

@@ -24,8 +24,13 @@
                                     <MudElement Class="d-flex flex-column  align-center">
                                         <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@model.UserName.ToUpper().First()</MudAvatar>
                                         <div class="d-flex">
-                                            <MudChip Size="MudBlazor.Size.Small">@model.Role</MudChip>
-
+                                            @if (model.AssignedRoles is not null)
+                                            {
+                                                @foreach (var role in model.AssignedRoles)
+                                                {
+                                                    <MudChip Size="MudBlazor.Size.Small">@role</MudChip>
+                                                }
+                                            }
                                         </div>
 
                                     </MudElement>
@@ -35,7 +40,13 @@
                                     <MudElement Class="d-flex flex-column  align-center">
                                         <MudAvatar Image="@model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;" />
                                         <div class="d-flex">
-                                            <MudChip Size="MudBlazor.Size.Small">@model.Role</MudChip>
+                                            @if (model.AssignedRoles is not null)
+                                            {
+                                                @foreach (var role in model.AssignedRoles)
+                                                {
+                                                                <MudChip Size="MudBlazor.Size.Small">@role</MudChip>
+                                                }
+                                            }
                                         </div>
                                     </MudElement>
                                 }

@@ -17,7 +17,7 @@
     [Inject]
     private ITenantsService _tenantsService { get; set; } = null!;
     [Inject]
-    public IDispatcher Dispatcher { get; set; }
+    public IDispatcher Dispatcher { get; set; } = null!;
 
     public async ValueTask DisposeAsync()
     {
@@ -34,7 +34,7 @@
         await _tenantsService.Initialize().ConfigureAwait(false);
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
-            var userDto = await _identityService.GetUserDto(state.User.GetUserId());
+            var userDto = await _identityService.GetApplicationUserDto(state.User.GetUserId());
             await setProfile(userDto);
             _client.Login += _client_Login;
             _client.Logout += _client_Logout;
@@ -50,16 +50,16 @@
             var state = await authenticationState;
             if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
-                var userDto = await _identityService.GetUserDto(state.User.GetUserId());
+                var userDto = await _identityService.GetApplicationUserDto(state.User.GetUserId());
                 await setProfile(userDto);
                 await _client.StartAsync();
 
             }
         });
     }
-    private  Task setProfile(UserDto userDto)
+    private  Task setProfile(ApplicationUserDto userDto)
     {
-        Dispatcher.Dispatch(new UserProfileUpdateAction() { UserProfile=userDto.ToUserProfile});
+        Dispatcher.Dispatch(new UserProfileUpdateAction() { UserProfile=userDto.ToUserProfile()});
         return Task.CompletedTask;
     }
     private void _client_Login(object? sender, string e)
