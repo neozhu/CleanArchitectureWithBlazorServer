@@ -54,7 +54,7 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
         {
             var rolesStr = string.Join(",", roles);
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
-                new Claim(ApplicationClaimTypes.AssignRoles, rolesStr)
+                new Claim(ApplicationClaimTypes.AssignedRoles, rolesStr)
             });
         }
         return principal;

@@ -30,7 +30,7 @@ public static class ClaimsPrincipalExtensions
     public static bool GetStatus(this ClaimsPrincipal claimsPrincipal)
        => Convert.ToBoolean(claimsPrincipal.FindFirstValue(ApplicationClaimTypes.Status));
     public static string GetAssignRoles(this ClaimsPrincipal claimsPrincipal)
-        => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.AssignRoles)??"";
+        => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.AssignedRoles)??"";
     public static string[] GetRoles(this ClaimsPrincipal claimsPrincipal)
         => claimsPrincipal.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToArray();
 }

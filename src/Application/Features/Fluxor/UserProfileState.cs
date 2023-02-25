@@ -12,13 +12,13 @@ public class UserProfileState
     public UserProfile UserProfile { get; }
     public UserProfileState()
     {
-        UserProfile = new() { Email= "anonym@blazor.com", UserId=Guid.NewGuid().ToString(),UserName= "anonym" };
+        UserProfile = new() { Email= "anonymous@dotnet6.cn", UserId=Guid.NewGuid().ToString(),UserName= "anonymous" };
     }
     public UserProfileState(UserProfile userProfile)
     {
         UserProfile = userProfile;
     }
-    public UserProfileState(UserDto dto)
+    public UserProfileState(ApplicationUserDto dto)
     {
         UserProfile = new UserProfile()
         {
@@ -29,13 +29,12 @@ public class UserProfileState
             DisplayName = dto.DisplayName,
             Provider = dto.Provider,
             UserName = dto.UserName,
-            IsActive = dto.IsActive,
             TenantId = dto.TenantId,
             TenantName = dto.TenantName,
             SuperiorId = dto.SuperiorId,
             SuperiorName = dto.SuperiorName,
-            AssignRoles = dto.AssignRoles,
-            Role = dto.Role
+            AssignedRoles = dto.AssignedRoles,
+            DefaultRole = dto.DefaultRole
         };
     }
 }

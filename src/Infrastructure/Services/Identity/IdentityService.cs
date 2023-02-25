@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
@@ -25,6 +27,7 @@ public class IdentityService : IIdentityService
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
     private readonly IAppCache _cache;
+    private readonly IMapper _mapper;
     private readonly IStringLocalizer<IdentityService> _localizer;
     private TimeSpan refreshInterval => TimeSpan.FromSeconds(60);
     private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
@@ -32,6 +35,7 @@ public class IdentityService : IIdentityService
         IServiceScopeFactory scopeFactory,
         AppConfigurationSettings appConfig,
         IAppCache cache,
+         IMapper mapper,
         IStringLocalizer<IdentityService> localizer)
     {
         _scopeFactory = scopeFactory;
@@ -42,6 +46,7 @@ public class IdentityService : IIdentityService
         _authorizationService = scope.ServiceProvider.GetRequiredService<IAuthorizationService>();
         _appConfig = appConfig;
         _cache = cache;
+        _mapper = mapper;
         _localizer = localizer;
     }
 
@@ -203,58 +208,17 @@ public class IdentityService : IIdentityService
             var result= await _userManager.UpdateAsync(user);
         }
     }
-    public async Task<UserDto> GetUserDto(string userId, CancellationToken cancellation = default)
+    public async Task<ApplicationUserDto> GetApplicationUserDto(string userId, CancellationToken cancellation = default)
     {
-        var key = $"GetUserDto:{userId}";
-        var x = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefaultAsync(cancellation), _options);
-        if (x == null) return new UserDto() { Email="",UserName="" };
-        var userDto = new UserDto()
-        {
-            Checked = false,
-            ProfilePictureDataUrl = x.ProfilePictureDataUrl,
-            DisplayName = x.DisplayName,
-            Email = x.Email!,
-            IsActive = x.IsActive,
-            IsLive = x.IsLive,
-            PhoneNumber = x.PhoneNumber,
-            Provider = x.Provider,
-            Id = x.Id,
-            UserName = x.UserName!,
-            TenantId = x.TenantId,
-            TenantName = x.TenantName,
-            LockoutEnd = x.LockoutEnd,
-            SuperiorId = x.SuperiorId,
-            SuperiorName = (x.Superior != null ? x.Superior.UserName : null),
-            Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
-            AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
-        };
-        return userDto!;
+        var key = $"GetApplicationUserDto:{userId}";
+        var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).FirstAsync(cancellation), _options);
+        return result;
     }
-    public async Task<List<UserDto>?> GetUsers(string tenantId, CancellationToken cancellation = default)
+    public async Task<List<ApplicationUserDto>?> GetUsers(string tenantId, CancellationToken cancellation = default)
     {
-        var key = $"GetUsers-tenantId:{tenantId}";
+        var key = $"GetApplicationUserDtoListWithTenantId:{tenantId}";
         var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.TenantId == tenantId).Include(x => x.UserRoles).ThenInclude(x => x.Role)
-           .Select(x => new UserDto()
-           {
-            Checked = false,
-            ProfilePictureDataUrl = x.ProfilePictureDataUrl,
-            DisplayName = x.DisplayName,
-            Email = x.Email!,
-            IsActive = x.IsActive,
-            IsLive = x.IsLive,
-            PhoneNumber = x.PhoneNumber,
-            Provider = x.Provider,
-            Id = x.Id,
-            UserName = x.UserName!,
-            TenantId = x.TenantId,
-            TenantName = x.TenantName,
-            LockoutEnd = x.LockoutEnd,
-            SuperiorId = x.SuperiorId,
-            SuperiorName = (x.Superior != null ? x.Superior.UserName : null),
-            Role = x.UserRoles.Select(x => x.Role.Name).FirstOrDefault(),
-            AssignRoles = x.UserRoles.Select(x => x.Role.Name!).ToArray(),
-           }).ToListAsync(), _options);
-        
+                      .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync(), _options);
         return result;
     }
 }

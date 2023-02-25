@@ -5,10 +5,10 @@ using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
 namespace Blazor.Server.UI.Pages.Identity.Users;
 
-public class UserDtoValidator : AbstractValidator<UserDto>
+public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>
 {
 
-    public UserDtoValidator()
+    public ApplicationUserDtoValidator()
     {
         RuleFor(v => v.TenantId)
              .MaximumLength(256)
@@ -26,7 +26,6 @@ public class UserDtoValidator : AbstractValidator<UserDto>
              .MaximumLength(256)
              .NotEmpty()
              .EmailAddress();
-
         RuleFor(p => p.Password).NotEmpty().WithMessage("Your password cannot be empty")
                  .MinimumLength(6).WithMessage("Your password length must be at least 6.")
                  .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
@@ -40,7 +39,7 @@ public class UserDtoValidator : AbstractValidator<UserDto>
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
     {
-        var result = await ValidateAsync(ValidationContext<UserDto>.CreateWithOptions((UserDto)model, x => x.IncludeProperties(propertyName)));
+        var result = await ValidateAsync(ValidationContext<ApplicationUserDto>.CreateWithOptions((ApplicationUserDto)model, x => x.IncludeProperties(propertyName)));
         if (result.IsValid)
             return Array.Empty<string>();
         return result.Errors.Select(e => e.ErrorMessage);
