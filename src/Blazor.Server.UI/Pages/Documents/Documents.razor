@@ -12,9 +12,8 @@
 @inject IJSRuntime JS
 @inject IStringLocalizer<Documents> L
 @implements IDisposable
-
+@inherits FluxorComponent
 @attribute [Authorize(Policy = Permissions.Documents.View)]
-
 <PageTitle>@Title</PageTitle>
 <style>
     .mud-table-toolbar {
@@ -170,10 +169,15 @@
                     </div>
                 </MudTd>
                 <MudTd DataLabel="@L["Owner Name"]">
+                    @if (UserProfile.UserId == context.Owner.Id)
+                    {
+                        <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Me </MudChip>
+                    }else{
                     <div class="d-flex flex-column">
                         <MudText>@context.Owner?.DisplayName</MudText>
                         <MudText Typo="Typo.body2">@context.Owner?.Email</MudText>
                     </div>
+                    }
                 </MudTd>
                 <MudTd DataLabel="@L["Tenant Name"]">
                     <div class="d-flex flex-column">
@@ -198,8 +202,10 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
+    [Inject]
+    private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     public string? Title { get; private set; }
-    //private Lazy<IJSObjectReference> _jsModule = new();
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
     private MudTable<DocumentDto> _table = default!;
     private int _defaultPageSize = 15;
