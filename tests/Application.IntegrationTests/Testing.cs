@@ -30,7 +30,7 @@ public class Testing
     private static string _currentTenantId;
 
     [OneTimeSetUp]
-    public async void RunBeforeAnyTests()
+    public async Task RunBeforeAnyTests()
     {
         var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())

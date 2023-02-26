@@ -144,9 +144,8 @@
                     @if (_canEdit || _canDelete)
                     {
                         <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" 
-                             AnchorOrigin="Origin.CenterLeft">
+                             Dense="true" AnchorOrigin="Origin.CenterLeft"
+                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info">
                             @if (_canEdit)
                             {
                                 <MudMenuItem OnClick="@(()=>OnEdit(context))">@ConstantString.EDIT</MudMenuItem>
@@ -377,8 +376,15 @@
                 SortBy = (_table.TableContext.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending)
             };
         var result = await _mediator.Send(request);
-        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result.Data, contentType:"application/octet-stream");
-        Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
+        if (result.Succeeded)
+        {
+            var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result.Data, contentType:"application/octet-stream");
+            Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+        }
         _downloading = false;
     }
     private async Task OnImportData(IBrowserFile file)
