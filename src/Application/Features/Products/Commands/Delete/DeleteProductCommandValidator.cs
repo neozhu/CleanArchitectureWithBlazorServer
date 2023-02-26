@@ -8,7 +8,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
         public DeleteProductCommandValidator()
         {
  
-           RuleFor(v => v.Id).NotNull().ForEach(v=>v.LessThan(0));
+           RuleFor(v => v.Id).NotNull().ForEach(v=>v.NotEqual(0));
       
         }
     }

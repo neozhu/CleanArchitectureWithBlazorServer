@@ -29,4 +29,14 @@ internal class GetAllProductsQueryTests : TestBase
         var result = await SendAsync(query);
         Assert.AreEqual(4, result.Count());
     }
+    [Test]
+    public async Task ShouldQueryById()
+    {
+        var query = new GetAllProductsQuery();
+        var result = await SendAsync(query);
+        var id= result.Last().Id;
+        var productquery = new GetProductQuery() { Id = id };
+        var product = await SendAsync(productquery);
+        Assert.AreEqual(id, product.Id);
+    }
 }
