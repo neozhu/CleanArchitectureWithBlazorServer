@@ -61,9 +61,8 @@ public static class ConfigureServices
             config.SnackbarConfiguration.ShowTransitionDuration = 500;
             config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
         });
-  
 
-
+        services.AddMudExtensions();
         services.AddScoped<LayoutService>();
         services.AddBlazorDownloadFile();
         services.AddScoped<IUserPreferencesService, UserPreferencesService>();
