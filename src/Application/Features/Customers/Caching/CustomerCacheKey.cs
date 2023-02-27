@@ -29,6 +29,7 @@ public static class CustomerCacheKey
         }
         return _tokensource;
     }
+    public static void Refresh() => SharedExpiryTokenSource().Cancel();
     public static MemoryCacheEntryOptions MemoryCacheEntryOptions => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
 }
 

@@ -2,6 +2,7 @@
 
 @using AutoMapper
 @using BlazorDownloadFile
+@using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
@@ -275,6 +276,7 @@
     }
     private async Task OnRefresh()
     {
+        ProductCacheKey.Refresh();
         _selectedItems = new();
         _searchString = string.Empty;
         await _table.ReloadServerData();
