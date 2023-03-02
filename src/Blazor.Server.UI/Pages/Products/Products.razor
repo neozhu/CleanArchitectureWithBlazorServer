@@ -44,63 +44,57 @@
                                    OnClick="@(()=>OnRefresh())"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                    Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
-                        @if (_canCreate)
-                        {
+                        @if (_canCreate) {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.Add"
-                                       Size="Size.Small"
-                                       Disabled="@_loading"
-                                       OnClick="OnCreate"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                   StartIcon="@Icons.Material.Filled.Add"
+                                   Size="Size.Small"
+                                   Disabled="@_loading"
+                                   OnClick="OnCreate"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
                         }
-                        @if (_canDelete)
-                        {
+                        @if (_canDelete) {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                       StartIcon="@Icons.Material.Filled.Delete"
-                                       Disabled="@(!(_selectedItems.Count>0))"
-                                       Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       OnClick="OnDeleteChecked"
-                                       IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                   StartIcon="@Icons.Material.Filled.Delete"
+                                   Disabled="@(!(_selectedItems.Count>0))"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   OnClick="OnDeleteChecked"
+                                   IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
                         }
-                        @if (_canExport)
-                        {
+                        @if (_canExport) {
                             <MudLoadingButton @bind-Loading="_exporting" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                              Label="@ConstantString.EXPORT"
-                                              StartIcon="@Icons.Custom.FileFormats.FileExcel"
-                                              Size="Size.Small"
-                                              Style="margin-right: 4px; margin-bottom:4px"
-                                              OnClick="OnExport"
-                                              IconColor="Color.Surface">
-                                @ConstantString.EXPORT
+                                          Label="@ConstantString.EXPORT"
+                                          StartIcon="@Icons.Custom.FileFormats.FileExcel"
+                                          Size="Size.Small"
+                                          Style="margin-right: 4px; margin-bottom:4px"
+                                          OnClick="OnExport"
+                                          IconColor="Color.Surface">
+                            @ConstantString.EXPORT
                             </MudLoadingButton>
                             <MudLoadingButton @bind-Loading="_pdfexporting" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                              Label="@ConstantString.EXPORTPDF"
-                                              StartIcon="@Icons.Material.Filled.PictureAsPdf"
-                                              Size="Size.Small"
-                                              Style="margin-right: 4px; margin-bottom:4px"
-                                              OnClick="OnExportPDF"
-                                              IconColor="Color.Surface">
-                                @ConstantString.EXPORTPDF
+                                          Label="@ConstantString.EXPORTPDF"
+                                          StartIcon="@Icons.Material.Filled.PictureAsPdf"
+                                          Size="Size.Small"
+                                          Style="margin-right: 4px; margin-bottom:4px"
+                                          OnClick="OnExportPDF"
+                                          IconColor="Color.Surface">
+                            @ConstantString.EXPORTPDF
                             </MudLoadingButton>
                         }
-                        @if (_canImport)
-                        {
+                        @if (_canImport) {
                             <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="display:inline-block; margin-right: 4px; margin-bottom:4px;margin-top:0px">
                                 <ButtonTemplate>
                                     <MudButton HtmlTag="label" Size="Size.Small"
-                                               Variant="Variant.Outlined"
-                                               Color="Color.Primary"
-                                               StartIcon="@Icons.Material.Filled.Upload"
+                                           Variant="Variant.Outlined"
+                                           Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Upload"
                                                for="@context">
-                                        @if (_uploading)
-                                        {
+                                        @if (_uploading) {
                                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                                             <MudText Class="ms-2"> @ConstantString.UPLOADING</MudText>
                                         }
-                                        else
-                                        {
+                                        else {
                                             <MudText>@ConstantString.IMPORT</MudText>
                                         }
                                     </MudButton>
@@ -111,16 +105,13 @@
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
                             <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
-                            @if (_canCreate)
-                            {
+                            @if (_canCreate) {
                                 <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@ConstantString.CREATE</MudMenuItem>
                             }
-                            @if (_canDelete)
-                            {
+                            @if (_canDelete) {
                                 <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
                             }
-                            @if (_canExport)
-                            {
+                            @if (_canExport) {
                                 <MudMenuItem OnClick="OnExport">@ConstantString.EXPORT</MudMenuItem>
                             }
                         </MudMenu>
@@ -150,26 +141,22 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ConstantString.ACTIONS">
-                    @if (_canEdit || _canDelete)
-                    {
+                    @if (_canEdit || _canDelete) {
                         <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
-                                 Dense="true"
+                             Dense="true"
                              EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
-                            @if (_canEdit)
-                            {
+                            @if (_canEdit) {
                                 <MudMenuItem OnClick="@(()=>OnEdit(context))">@ConstantString.EDIT</MudMenuItem>
                             }
-                            @if (_canDelete)
-                            {
+                            @if (_canDelete) {
                                 <MudMenuItem OnClick="@(()=>OnDelete(context))">@ConstantString.DELETE</MudMenuItem>
                             }
                         </MudMenu>
                     }
-                    else
-                    {
+                    else {
                         <MudButton Variant="Variant.Filled" DisableElevation="true"
-                                   StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                                   Color="Color.Surface">
+                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                               Color="Color.Surface">
                             @ConstantString.NOALLOWED
                         </MudButton>
                     }
@@ -226,8 +213,7 @@
     private bool _canDelete;
     private bool _canImport;
     private bool _canExport;
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() {
         Title = L["Products"];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Create)).Succeeded;
@@ -237,10 +223,8 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Export)).Succeeded;
     }
-    private async Task<TableData<ProductDto>> ServerReload(TableState state)
-    {
-        try
-        {
+    private async Task<TableData<ProductDto>> ServerReload(TableState state) {
+        try {
             _loading = true;
             _query.Keyword = _searchString;
             _query.Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
@@ -250,8 +234,7 @@
             var result = await _mediator.Send(_query).ConfigureAwait(false);
             return new TableData<ProductDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
-        finally
-        {
+        finally {
             _loading = false;
         }
 
@@ -261,134 +244,92 @@
     //      await _table.ReloadServerData();
 
     //}
-    private void ConditionChanged(string s)
-    {
-        InvokeAsync(async () =>
-        {
+    private void ConditionChanged(string s) {
+        InvokeAsync(async () => {
             await _table.ReloadServerData();
         });
     }
-    private async Task OnSearch(string text)
-    {
+    private async Task OnSearch(string text) {
         _selectedItems = new();
         _searchString = text;
         await _table.ReloadServerData();
     }
-    private async Task OnRefresh()
-    {
+    private async Task OnRefresh() {
         ProductCacheKey.Refresh();
         _selectedItems = new();
         _searchString = string.Empty;
         await _table.ReloadServerData();
     }
-    private async Task OnCreate()
-    {
+    private async Task OnCreate() {
         var command = new AddEditProductCommand();
         var parameters = new DialogParameters
-            {
+                {
                   { nameof(_ProductFormDialog.model),command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
         (string.Format(ConstantString.CREATEAITEM, L["Product"]), parameters, options);
         var state = await dialog.Result;
-        if (!state.Canceled)
-        {
-            var result = await _mediator.Send(command);
-            if (result.Succeeded)
-            {
-                await _table.ReloadServerData();
-                Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
-            }
-            else
-            {
-                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
-            }
+        if (!state.Canceled) {
+            await _table.ReloadServerData();
         }
     }
-    private async Task OnEdit(ProductDto dto)
-    {
+    private async Task OnEdit(ProductDto dto) {
         var command = _mapper.Map<AddEditProductCommand>(dto);
         var parameters = new DialogParameters
-                {
+                    {
                     { nameof(_ProductFormDialog.model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
         (string.Format(ConstantString.EDITTHEITEM, L["Product"]), parameters, options);
         var state = await dialog.Result;
-        if (!state.Canceled)
-        {
-            var result = await _mediator.Send(command);
-            if (result.Succeeded)
-            {
-                await _table.ReloadServerData();
-                Snackbar.Add($"{ConstantString.SAVESUCCESS}", MudBlazor.Severity.Info);
-            }
-            else
-            {
-                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
-            }
+        if (!state.Canceled) {
+            await _table.ReloadServerData();
         }
 
     }
 
-    private async Task OnDelete(ProductDto dto)
-    {
+    private async Task OnDelete(ProductDto dto) {
         var parameters = new DialogParameters
-                    {
+                        {
                         { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Name) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EDITTHEITEM, L["Product"]), parameters, options);
         var state = await dialog.Result;
-        if (!state.Canceled)
-        {
+        if (!state.Canceled) {
             var command = new DeleteProductCommand(new int[] { dto.Id });
             var result = await _mediator.Send(command);
-            if (result.Succeeded)
-            {
+            if (result.Succeeded) {
                 await _table.ReloadServerData();
                 Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
             }
-            else
-            {
+            else {
                 Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
             }
         }
     }
 
-    private async Task OnDeleteChecked()
-    {
+    private async Task OnDeleteChecked() {
+        var command = new DeleteProductCommand(_selectedItems.Select(x => x.Id).ToArray());
         var parameters = new DialogParameters
-                        {
-                    { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMWITHSELECTED,_selectedItems.Count) }
+                            {
+                            { nameof(DeleteConfirmation.Command),  command },
+                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMWITHSELECTED,_selectedItems.Count) }
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>
         (string.Format(ConstantString.DELETETHEITEM, L["Product"]), parameters, options);
         var state = await dialog.Result;
-        if (!state.Canceled)
-        {
-            var command = new DeleteProductCommand(_selectedItems.Select(x => x.Id).ToArray());
-            var result = await _mediator.Send(command);
-            if (result.Succeeded)
-            {
-                await _table.ReloadServerData();
-                Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
-                _selectedItems = new HashSet<ProductDto>();
-            }
-            else
-            {
-                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
-            }
+        if (!state.Canceled) {
+            await _table.ReloadServerData();
+            _selectedItems = new HashSet<ProductDto>();
         }
     }
-    private async Task OnExport()
-    {
+    private async Task OnExport() {
         _exporting = true;
-        var request = new ExportProductsQuery()
-            {
+        var request = new ExportProductsQuery() {
                 Brand = _query.Brand,
                 Name = _query.Name,
                 Price = _query.Price,
@@ -398,22 +339,18 @@
                 SortBy = (_table.TableContext.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending)
             };
         var result = await _mediator.Send(request);
-        if (result.Succeeded)
-        {
+        if (result.Succeeded) {
             var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Products"]}.xlsx", result.Data, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
         }
-        else
-        {
+        else {
             Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
         }
         _exporting = false;
     }
-    private async Task OnExportPDF()
-    {
+    private async Task OnExportPDF() {
         _pdfexporting = true;
-        var request = new ExportProductsQuery()
-            {
+        var request = new ExportProductsQuery() {
                 Brand = _query.Brand,
                 Name = _query.Name,
                 Price = _query.Price,
@@ -424,34 +361,28 @@
                 ExportType = ExportType.PDF
             };
         var result = await _mediator.Send(request);
-        if (result.Succeeded)
-        {
+        if (result.Succeeded) {
             var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Products"]}.pdf", result.Data, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
         }
-        else
-        {
+        else {
             Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
         }
         _pdfexporting = false;
     }
-    private async Task OnImportData(IBrowserFile file)
-    {
+    private async Task OnImportData(IBrowserFile file) {
         _uploading = true;
         var stream = new MemoryStream();
         await file.OpenReadStream().CopyToAsync(stream);
         var command = new ImportProductsCommand(file.Name, stream.ToArray());
 
         var result = await _mediator.Send(command);
-        if (result.Succeeded)
-        {
+        if (result.Succeeded) {
             await _table.ReloadServerData();
             Snackbar.Add($"{ConstantString.IMPORTSUCCESS}", MudBlazor.Severity.Info);
         }
-        else
-        {
-            foreach (var msg in result.Errors)
-            {
+        else {
+            foreach (var msg in result.Errors) {
                 Snackbar.Add($"{msg}", MudBlazor.Severity.Error);
             }
         }
