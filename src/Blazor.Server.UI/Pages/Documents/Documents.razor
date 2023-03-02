@@ -3,6 +3,7 @@
 @using AutoMapper;
 @using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+@using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
@@ -307,6 +308,7 @@
     }
     private async Task OnSearch(string text)
     {
+        DocumentCacheKey.Refresh();
         _selectedItems = new();
         _searchString = text;
         await _table.ReloadServerData();

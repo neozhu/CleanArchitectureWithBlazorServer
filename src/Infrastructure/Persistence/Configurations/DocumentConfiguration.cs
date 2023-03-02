@@ -11,6 +11,7 @@ public class DocumentConfiguration : IEntityTypeConfiguration<Document>
     {
         builder.Property(t => t.DocumentType).HasConversion<string>();
         builder.Ignore(e => e.DomainEvents);
-
+        builder.Navigation(e => e.Owner).AutoInclude();
+        builder.Navigation(e => e.Editor).AutoInclude();
     }
 }
