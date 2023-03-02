@@ -24,12 +24,13 @@ public static class DependencyInjection
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             config.NotificationPublisher = new ParallelNoWaitPublisher();
             config.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
+            config.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
             config.AddOpenBehavior(typeof(RequestExceptionProcessorBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
-            config.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
             config.AddOpenBehavior(typeof(MemoryCacheBehaviour<,>));
+            config.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
             config.AddOpenBehavior(typeof(CacheInvalidationBehaviour<,>));
-            config.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
+         
             
         });
         services.AddFluxor(options => {

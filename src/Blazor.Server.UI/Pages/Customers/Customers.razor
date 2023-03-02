@@ -21,7 +21,7 @@
 
 <ErrorBoundary>
     <ChildContent>
-       <MudTable ServerData="@(new Func<TableState, Task<TableData<CustomerDto>>>(ServerReload))"
+        <MudTable ServerData="@(new Func<TableState, Task<TableData<CustomerDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
@@ -71,7 +71,7 @@
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    OnClick="OnExport"
                                    IconColor="Color.Surface">
-                                @if (_downloading)
+                            @if (_downloading)
                                 {
                                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                                     <MudText Class="ms-2"> @ConstantString.DOWNLOADING</MudText>
@@ -90,7 +90,7 @@
                                            Variant="Variant.Outlined"
                                            Color="Color.Primary"
                                            StartIcon="@Icons.Material.Filled.Upload"
-                                           for="@context">
+                                               for="@context">
                                         @if (_uploading)
                                         {
                                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -137,7 +137,7 @@
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
                 @*TODO: Define the fields that should be displayed in data table*@
-                <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh> 
+                <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh>
 
             </HeaderContent>
             <RowTemplate>
@@ -167,7 +167,7 @@
                     }
                 </MudTd>
                 @*TODO: Define the fields that should be displayed in data table*@
-                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Name")]"> 
+                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Name")]">
                     <div class="d-flex flex-column">
                         <MudText>@context.Name</MudText>
                         <MudText Typo="Typo.body2">@context.Description</MudText>
@@ -226,7 +226,7 @@
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Search)).Succeeded;
-        _canEdit   = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Edit)).Succeeded;
+        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Edit)).Succeeded;
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Export)).Succeeded;
@@ -302,7 +302,7 @@
     private async Task OnDelete(CustomerDto dto)
     {
         var command = new DeleteCustomerCommand(new int[] { dto.Id });
-        var parameters = new DialogParameters 
+        var parameters = new DialogParameters
            {
              { nameof(DeleteConfirmation.Command),  command },
              { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Name) }
@@ -312,7 +312,7 @@
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-             await _table.ReloadServerData();
+            await _table.ReloadServerData();
         }
     }
 
@@ -345,7 +345,7 @@
         var result = await _mediator.Send(request);
         if (result.Succeeded)
         {
-            var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result.Data, contentType:"application/octet-stream");
+            var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result.Data, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
         }
         else

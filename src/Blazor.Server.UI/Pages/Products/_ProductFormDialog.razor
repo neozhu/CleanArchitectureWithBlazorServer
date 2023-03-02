@@ -181,7 +181,6 @@
 
             if (!_form!.IsValid)
                 return;
-
             var result = await _mediator.Send(model);
 
             if (result.Succeeded)
