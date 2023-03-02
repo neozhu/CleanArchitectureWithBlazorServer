@@ -248,11 +248,6 @@
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
         _tenantId =  _tenantProvider.TenantId;
-        _tenantProvider.Register(async () =>
-        {
-            await _table.ReloadServerData();
-        });
-
         _client.JobCompleted += _client_JobCompleted;
         _client.JobStarted += _client_JobStarted;
     }
@@ -359,40 +354,36 @@
 
     private async Task OnDelete(DocumentDto dto)
     {
+        var command = new DeleteDocumentCommand(new int[] { dto.Id });
         var parameters = new DialogParameters
-                    {
-                { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Title) }
+                            {
+                            { nameof(DeleteConfirmation.Command),  command },
+                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Title) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EDITTHEITEM, L["Document"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var command = new DeleteDocumentCommand(new int[] { dto.Id });
-            var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
         }
     }
 
     private async Task OnDeleteChecked()
     {
+        var command = new DeleteDocumentCommand(_selectedItems.Select(x => x.Id).ToArray());
         var parameters = new DialogParameters
-                        {
-                    { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMWITHSELECTED,_selectedItems.Count) }
-                        };
+                            {
+                            { nameof(DeleteConfirmation.Command),  command },
+                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMWITHSELECTED,_selectedItems.Count) }
+                    };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>
         (string.Format(ConstantString.DELETETHEITEM, L["Document"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var command = new DeleteDocumentCommand(_selectedItems.Select(x => x.Id).ToArray());
-            var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
-            _selectedItems = new HashSet<DocumentDto>
-            ();
         }
     }
     private async Task OnDownload(DocumentDto dto)
