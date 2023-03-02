@@ -35,12 +35,12 @@ public class AuditTrailConfiguration : IEntityTypeConfiguration<AuditTrail>
             );
         builder.Property(u => u.NewValues)
             .HasConversion(
-                d => JsonSerializer.Serialize(d, (JsonSerializerOptions)null),
+                d => JsonSerializer.Serialize(d, DefaultJsonSerializerOptions.Options),
                 s => JsonSerializer.Deserialize<Dictionary<string, object>>(s, DefaultJsonSerializerOptions.Options)
             );
         builder.Property(u => u.PrimaryKey)
             .HasConversion(
-                d => JsonSerializer.Serialize(d, (JsonSerializerOptions)null),
+                d => JsonSerializer.Serialize(d, DefaultJsonSerializerOptions.Options),
                 s => JsonSerializer.Deserialize<Dictionary<string, object>>(s, DefaultJsonSerializerOptions.Options)
             );
 
