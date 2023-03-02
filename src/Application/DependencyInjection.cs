@@ -23,12 +23,12 @@ public static class DependencyInjection
         services.AddMediatR(config=> {
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             config.NotificationPublisher = new ParallelNoWaitPublisher();
+            config.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
             config.AddOpenBehavior(typeof(RequestExceptionProcessorBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
             config.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
             config.AddOpenBehavior(typeof(MemoryCacheBehaviour<,>));
             config.AddOpenBehavior(typeof(CacheInvalidationBehaviour<,>));
-            config.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
             config.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
             
         });

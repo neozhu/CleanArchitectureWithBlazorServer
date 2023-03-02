@@ -19,7 +19,7 @@
                     <MudTextField Label="@L["Description"]"
                                   Lines="3"
                                   For="@(() => model.Description)"
-                    @bind-Value="model.Description"></MudTextField>
+                                  @bind-Value="model.Description"></MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <PicklistAutocomplete Picklist="Picklist.Brand"
@@ -27,7 +27,7 @@
                                           For="@(() => model.Brand)"
                                           ResetValueOnEmptyText="true"
                                           ShowProgressIndicator="true"
-                    @bind-Value="model.Brand">
+                                          @bind-Value="model.Brand">
                         <ProgressIndicatorTemplate>
                             <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
                         </ProgressIndicatorTemplate>
@@ -39,7 +39,7 @@
                                      Format="N2"
                                      For="@(() => model.Price)"
                                      Min="0.00m"
-                    @bind-Value="model.Price"></MudNumericField>
+                                     @bind-Value="model.Price"></MudNumericField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <PicklistAutocomplete Picklist="Picklist.Unit"
@@ -47,7 +47,7 @@
                                           For="@(() => model.Unit)"
                                           ResetValueOnEmptyText="true"
                                           ShowProgressIndicator="true"
-                    @bind-Value="model.Unit">
+                                          @bind-Value="model.Unit">
                         <ProgressIndicatorTemplate>
                             <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
                         </ProgressIndicatorTemplate>
@@ -59,25 +59,23 @@
                                        SuppressOnChangeWhenInvalid="true"
                                        @bind-Files="model.UploadPictures" OnFilesChanged="UploadFiles" For="@(() => model.UploadPictures)">
                             <ButtonTemplate>
-                                <MudButton HtmlTag="label" Disabled="_uploading"
+                                <MudLoadingButton Loading="@_uploading"  HtmlTag="label" Disabled="_uploading"
                                            Variant="Variant.Filled"
                                            Color="MudBlazor.Color.Primary"
                                            for="@context">
-                                    @(L[!_uploading ? "Upload picture" : "Processing"])
-                                </MudButton>
+                                    @(L["Upload picture"])
+                                </MudLoadingButton>
                             </ButtonTemplate>
                         </MudFileUpload>
                     </div>
                     <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
                     <div class="d-fex">
-                        @if (model.Pictures is not null)
-                        {
-                            foreach (var img in model.Pictures)
-                            {
+                        @if (model.Pictures is not null) {
+                            foreach (var img in model.Pictures) {
                                 <div style="float:left; position: relative; width: 160px; height: 80px; margin: 10px;">
                                     <MudImage ObjectFit="ObjectFit.Cover" Height="80" Width="160" Src="@img" Alt="@img" Elevation="25" Class="mr-2 rounded-lg" />
                                     <div style="position: absolute;top: 0px;right: 0px; z-index: 9999;">
-                                        <MudIconButton OnClick="@(()=>DeleteImage(@img))"   Icon="@Icons.Material.Filled.Delete" aria-label="delete" Color="MudBlazor.Color.Error" Size="MudBlazor.Size.Small"></MudIconButton>
+                                        <MudIconButton OnClick="@(()=>DeleteImage(@img))" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Color="MudBlazor.Color.Error" Size="MudBlazor.Size.Small"></MudIconButton>
                                     </div>
                                 </div>
                             }
@@ -89,58 +87,51 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.CANCEL</MudButton>
-        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">@ConstantString.OK</MudButton>
+        <MudLoadingButton Loading="@_saving" Color="MudBlazor.Color.Primary" OnClick="Submit">@ConstantString.SAVE</MudLoadingButton>
     </DialogActions>
 </MudDialog>
 
 @code {
     MudForm? _form = default!;
+    private bool _saving = false;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
     [Inject] private IUploadService _uploadService { get; set; } = default!;
+    [Inject]
+    private IMediator _mediator { get; set; } = default!;
     AddEditProductCommandValidator _modelValidator = new();
     [EditorRequired][Parameter] public AddEditProductCommand model { get; set; } = default!;
     const long MAXALLOWEDSIZE = 3145728;
     bool _uploading;
 
-    private async Task DeleteImage(string picture)
-    {
-        if (model.Pictures != null)
-        {
+    private async Task DeleteImage(string picture) {
+        if (model.Pictures != null) {
             var parameters = new DialogParameters
-                        {
+                            {
                     { nameof(ConfirmationDialog.ContentText), $"{L["Are you sure you want to erase this image?"]}" }
                         };
             var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
             var dialog = DialogService.Show<ConfirmationDialog>($"{L["Erase imatge"]}", parameters, options);
             var state = await dialog.Result;
 
-            if (!state.Canceled)
-            {
+            if (!state.Canceled) {
                 model.Pictures.Remove(picture);
             }
         }
     }
 
-    private async Task UploadFiles(InputFileChangeEventArgs e)
-    {
-        try
-        {
+    private async Task UploadFiles(InputFileChangeEventArgs e) {
+        try {
             _uploading = true;
             var list = new List<string>();
-
-            foreach (var file in e.GetMultipleFiles())
-            {
-                try
-                {
+            foreach (var file in e.GetMultipleFiles()) {
+                try {
                     var filestream = file.OpenReadStream(MAXALLOWEDSIZE);
                     var imgstream = new MemoryStream();
                     await filestream.CopyToAsync(imgstream);
                     imgstream.Position = 0;
-                    using (var outStream = new MemoryStream())
-                    {
-                        using (var image = Image.Load(imgstream, out IImageFormat format))
-                        {
+                    using (var outStream = new MemoryStream()) {
+                        using (var image = Image.Load(imgstream, out IImageFormat format)) {
                             image.Mutate(
                                i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(640, 320) }));
                             image.Save(outStream, format);
@@ -152,8 +143,7 @@
                         }
                     }
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     Snackbar.Add($"{ex.Message}", MudBlazor.Severity.Error);
                 }
             }
@@ -165,20 +155,34 @@
                 ((List<String>)model.Pictures).AddRange(list);
 
         }
-        finally
-        {
+        finally {
             _uploading = false;
         }
     }
-    async Task Submit()
-    {
+    async Task Submit() {
+        try
+        {
+            if (_saving) return;
+            _saving = true;
             await _form!.Validate();
             if (_form!.IsValid)
             {
-                MudDialog.Close(DialogResult.Ok(true));
+                var result = await _mediator.Send(model);
+                if (result.Succeeded)
+                {
+                    MudDialog.Close(DialogResult.Ok(true));
+                    Snackbar.Add($"{ConstantString.SAVESUCCESS}", MudBlazor.Severity.Info);
+                }
+                else
+                {
+                    Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+                }
             }
+        }
+        finally {
+            _saving = false;
 
-
+        }
     }
     void Cancel() => MudDialog.Cancel();
 }

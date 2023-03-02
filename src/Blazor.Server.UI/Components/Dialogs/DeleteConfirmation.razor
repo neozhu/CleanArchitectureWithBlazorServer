@@ -21,10 +21,21 @@
 
     [Parameter]
     public string? ContentText { get; set; }
-
-    void Submit()
+    [Parameter]
+    public IRequest<Result<int>> Command { get; set; } = default!;
+    [Inject]
+    private IMediator _mediator { get; set; } = default!;
+    async Task Submit()
     {
-        MudDialog.Close(DialogResult.Ok(true));
+        var result = await _mediator.Send(Command);
+        if (result.Succeeded) {
+            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        else {
+            Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+        }
+        
     }
     void Cancel() => MudDialog.Cancel();
 }
