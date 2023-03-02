@@ -1,9 +1,10 @@
 ﻿@page "/pages/Customers"
 
 @using BlazorDownloadFile
+@using CleanArchitecture.Blazor.Application.Features.Customers.Caching
+@using CleanArchitecture.Blazor.Application.Features.Customers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Customers.Commands.Import
-@using CleanArchitecture.Blazor.Application.Features.Customers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEdit
@@ -258,6 +259,7 @@
 
     private async Task OnRefresh()
     {
+        CustomerCacheKey.Refresh();
         _selectedItems = new();
         _searchString = string.Empty;
         await _table.ReloadServerData();
@@ -276,16 +278,7 @@
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var result = await _mediator.Send(command);
-            if (result.Succeeded)
-            {
-                await _table.ReloadServerData();
-                Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
-            }
-            else
-            {
-                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
-            }
+            await _table.ReloadServerData();
         }
     }
 
@@ -302,23 +295,16 @@
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var result = await _mediator.Send(command);
-            if (result.Succeeded)
-            {
-                await _table.ReloadServerData();
-                Snackbar.Add($"{ConstantString.SAVESUCCESS}", MudBlazor.Severity.Info);
-            }
-            else
-            {
-                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
-            }
+            await _table.ReloadServerData();
         }
     }
 
     private async Task OnDelete(CustomerDto dto)
     {
+        var command = new DeleteCustomerCommand(new int[] { dto.Id });
         var parameters = new DialogParameters 
            {
+             { nameof(DeleteConfirmation.Command),  command },
              { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Name) }
            };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
@@ -326,24 +312,16 @@
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var command = new DeleteCustomerCommand(new int[] { dto.Id });
-            var result = await _mediator.Send(command);
-            if (result.Succeeded)
-            {
-                await _table.ReloadServerData();
-                Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
-            }
-            else
-            {
-                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
-            }
+             await _table.ReloadServerData();
         }
     }
 
     private async Task OnDeleteChecked()
     {
+        var command = new DeleteCustomerCommand(_selectedItems.Select(x => x.Id).ToArray());
         var parameters = new DialogParameters
                         {
+                             { nameof(DeleteConfirmation.Command),  command },
                              { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMWITHSELECTED,_selectedItems.Count) }
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
@@ -351,18 +329,7 @@
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var command = new DeleteCustomerCommand(_selectedItems.Select(x => x.Id).ToArray());
-            var result = await _mediator.Send(command);
-            if (result.Succeeded)
-            {
-                await _table.ReloadServerData();
-                Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
-                _selectedItems = new HashSet<CustomerDto>();
-            }
-            else
-            {
-                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
-            }
+            await _table.ReloadServerData();
         }
     }
 

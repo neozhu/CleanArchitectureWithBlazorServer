@@ -6,40 +6,40 @@ using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.GetById;
 
-public class GetCustomerByIdQuery : FilterBase, ICacheableRequest<CustomerDto>
-{
-    [OperatorComparison(OperatorType.Equal)]
-    public int? Id { get; set; }
-    public string CacheKey => CustomerCacheKey.GetByIdCacheKey($"{Id}");
-    public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
-}
-
-public class GetCustomerByIdQueryHandler :
-     IRequestHandler<GetCustomerByIdQuery, CustomerDto>
-{
-    private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-    private readonly IStringLocalizer<GetCustomerByIdQueryHandler> _localizer;
-
-    public GetCustomerByIdQueryHandler(
-        IApplicationDbContext context,
-        IMapper mapper,
-        IStringLocalizer<GetCustomerByIdQueryHandler> localizer
-        )
+    public class GetCustomerByIdQuery :FilterBase, ICacheableRequest<CustomerDto>
     {
-        _context = context;
-        _mapper = mapper;
-        _localizer = localizer;
+       [OperatorComparison(OperatorType.Equal)]
+       public required int Id { get; set; }
+       public string CacheKey => CustomerCacheKey.GetByIdCacheKey($"{Id}");
+       public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
     }
-
-    public async Task<CustomerDto> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
+    
+    public class GetCustomerByIdQueryHandler :
+         IRequestHandler<GetCustomerByIdQuery, CustomerDto>
     {
-        // TODO: Implement GetCustomerByIdQueryHandler method 
-        var data = await _context.Customers.Where(x => x.Id == request.Id)
-                     .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
-                     .FirstOrDefaultAsync(cancellationToken);
-        return data;
+        private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IStringLocalizer<GetCustomerByIdQueryHandler> _localizer;
+
+        public GetCustomerByIdQueryHandler(
+            IApplicationDbContext context,
+            IMapper mapper,
+            IStringLocalizer<GetCustomerByIdQueryHandler> localizer
+            )
+        {
+            _context = context;
+            _mapper = mapper;
+            _localizer = localizer;
+        }
+
+        public async Task<CustomerDto> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
+        {
+            // TODO: Implement GetCustomerByIdQueryHandler method 
+            var data = await _context.Customers.ApplyFilter(request)
+                         .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
+                         .FirstAsync(cancellationToken) ?? throw new NotFoundException($"Customer with id: [{request.Id}] not found.");;
+            return data;
+        }
     }
-}
 
 
