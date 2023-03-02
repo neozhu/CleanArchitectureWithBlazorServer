@@ -7,8 +7,9 @@ using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delete;
 
-    public class DeleteCustomerCommand: ICacheInvalidatorRequest<Result<int>>
+    public class DeleteCustomerCommand: FilterBase, ICacheInvalidatorRequest<Result<int>>
     {
+      [ArraySearchFilter()]
       public int[] Id {  get; }
       public string CacheKey => CustomerCacheKey.GetAllCacheKey;
       public CancellationTokenSource? SharedExpiryTokenSource => CustomerCacheKey.SharedExpiryTokenSource();
@@ -38,7 +39,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delet
         public async Task<Result<int>> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
             // TODO: Implement DeleteCheckedCustomersCommandHandler method 
-            var items = await _context.Customers.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            var items = await _context.Customers.ApplyFilter(request).ToListAsync(cancellationToken);
             foreach (var item in items)
             {
 			    // raise a delete domain event

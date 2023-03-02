@@ -20,31 +20,44 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.CANCEL</MudButton>
-        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">@ConstantString.OK</MudButton>
+        <MudButton Loading="@_saving" Color="MudBlazor.Color.Primary" OnClick="Submit">@ConstantString.SAVE</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
     MudForm? _form;
+    private bool _saving = false;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
     AddEditCustomerCommandValidator _modelValidator = new ();
     [EditorRequired] [Parameter] public AddEditCustomerCommand model { get; set; } = null!;
-
+    [Inject] private IMediator _mediator { get; set; } = default!;
     async Task Submit()
     {
-         await _form!.Validate();
-         if (_form!.IsValid)
-         {
-                MudDialog.Close(DialogResult.Ok(true));
-         }
-         else
+        try
         {
-            foreach(var err in _form.Errors){
-                Snackbar.Add($"{err}", MudBlazor.Severity.Error);
+            _saving = true;
+            await _form!.Validate().ConfigureAwait(false);
+
+            if (!_form!.IsValid)
+                return;
+
+            var result = await _mediator.Send(model);
+
+            if (result.Succeeded)
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+                Snackbar.Add(ConstantString.SAVESUCCESS, MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
             }
         }
-     
+        finally
+        {
+            _saving = false;
+        }
     }
     void Cancel() => MudDialog.Cancel();
 }

@@ -19,8 +19,10 @@
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
 
+    [EditorRequired]
     [Parameter]
     public string? ContentText { get; set; }
+    [EditorRequired]
     [Parameter]
     public IRequest<Result<int>> Command { get; set; } = default!;
     [Inject]

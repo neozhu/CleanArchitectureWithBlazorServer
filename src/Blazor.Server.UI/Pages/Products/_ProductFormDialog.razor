@@ -59,10 +59,10 @@
                                        SuppressOnChangeWhenInvalid="true"
                                        @bind-Files="model.UploadPictures" OnFilesChanged="UploadFiles" For="@(() => model.UploadPictures)">
                             <ButtonTemplate>
-                                <MudLoadingButton Loading="@_uploading"  HtmlTag="label" Disabled="_uploading"
-                                           Variant="Variant.Filled"
-                                           Color="MudBlazor.Color.Primary"
-                                           for="@context">
+                                <MudLoadingButton Loading="@_uploading" HtmlTag="label" Disabled="_uploading"
+                                                  Variant="Variant.Filled"
+                                                  Color="MudBlazor.Color.Primary"
+                                                  for="@context">
                                     @(L["Upload picture"])
                                 </MudLoadingButton>
                             </ButtonTemplate>
@@ -70,8 +70,10 @@
                     </div>
                     <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
                     <div class="d-fex">
-                        @if (model.Pictures is not null) {
-                            foreach (var img in model.Pictures) {
+                        @if (model.Pictures is not null)
+                        {
+                            foreach (var img in model.Pictures)
+                            {
                                 <div style="float:left; position: relative; width: 160px; height: 80px; margin: 10px;">
                                     <MudImage ObjectFit="ObjectFit.Cover" Height="80" Width="160" Src="@img" Alt="@img" Elevation="25" Class="mr-2 rounded-lg" />
                                     <div style="position: absolute;top: 0px;right: 0px; z-index: 9999;">
@@ -104,8 +106,10 @@
     const long MAXALLOWEDSIZE = 3145728;
     bool _uploading;
 
-    private async Task DeleteImage(string picture) {
-        if (model.Pictures != null) {
+    private async Task DeleteImage(string picture)
+    {
+        if (model.Pictures != null)
+        {
             var parameters = new DialogParameters
                             {
                     { nameof(ConfirmationDialog.ContentText), $"{L["Are you sure you want to erase this image?"]}" }
@@ -114,24 +118,31 @@
             var dialog = DialogService.Show<ConfirmationDialog>($"{L["Erase imatge"]}", parameters, options);
             var state = await dialog.Result;
 
-            if (!state.Canceled) {
+            if (!state.Canceled)
+            {
                 model.Pictures.Remove(picture);
             }
         }
     }
 
-    private async Task UploadFiles(InputFileChangeEventArgs e) {
-        try {
+    private async Task UploadFiles(InputFileChangeEventArgs e)
+    {
+        try
+        {
             _uploading = true;
             var list = new List<string>();
-            foreach (var file in e.GetMultipleFiles()) {
-                try {
+            foreach (var file in e.GetMultipleFiles())
+            {
+                try
+                {
                     var filestream = file.OpenReadStream(MAXALLOWEDSIZE);
                     var imgstream = new MemoryStream();
                     await filestream.CopyToAsync(imgstream);
                     imgstream.Position = 0;
-                    using (var outStream = new MemoryStream()) {
-                        using (var image = Image.Load(imgstream, out IImageFormat format)) {
+                    using (var outStream = new MemoryStream())
+                    {
+                        using (var image = Image.Load(imgstream, out IImageFormat format))
+                        {
                             image.Mutate(
                                i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(640, 320) }));
                             image.Save(outStream, format);
@@ -143,7 +154,8 @@
                         }
                     }
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     Snackbar.Add($"{ex.Message}", MudBlazor.Severity.Error);
                 }
             }
@@ -155,33 +167,36 @@
                 ((List<String>)model.Pictures).AddRange(list);
 
         }
-        finally {
+        finally
+        {
             _uploading = false;
         }
     }
-    async Task Submit() {
+    async Task Submit()
+    {
         try
         {
-            if (_saving) return;
             _saving = true;
-            await _form!.Validate();
-            if (_form!.IsValid)
+            await _form!.Validate().ConfigureAwait(false);
+
+            if (!_form!.IsValid)
+                return;
+
+            var result = await _mediator.Send(model);
+
+            if (result.Succeeded)
             {
-                var result = await _mediator.Send(model);
-                if (result.Succeeded)
-                {
-                    MudDialog.Close(DialogResult.Ok(true));
-                    Snackbar.Add($"{ConstantString.SAVESUCCESS}", MudBlazor.Severity.Info);
-                }
-                else
-                {
-                    Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
-                }
+                MudDialog.Close(DialogResult.Ok(true));
+                Snackbar.Add(ConstantString.SAVESUCCESS, MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
             }
         }
-        finally {
+        finally
+        {
             _saving = false;
-
         }
     }
     void Cancel() => MudDialog.Cancel();

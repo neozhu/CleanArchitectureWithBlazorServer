@@ -291,23 +291,17 @@
     }
 
     private async Task OnDelete(ProductDto dto) {
+        var command = new DeleteProductCommand(new int[] { dto.Id });
         var parameters = new DialogParameters
                         {
-                        { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Name) }
+                            { nameof(DeleteConfirmation.Command),  command },
+                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Name) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EDITTHEITEM, L["Product"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled) {
-            var command = new DeleteProductCommand(new int[] { dto.Id });
-            var result = await _mediator.Send(command);
-            if (result.Succeeded) {
-                await _table.ReloadServerData();
-                Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
-            }
-            else {
-                Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
-            }
+           await _table.ReloadServerData();
         }
     }
 
