@@ -336,7 +336,8 @@
         var command = _mapper.Map<AddEditDocumentCommand>(dto);
         var parameters = new DialogParameters
                 {
-                 { nameof(_DocumentFormDialog.model),command },
+                    { nameof(DeleteConfirmation.Command),  command },
+                    { nameof(_DocumentFormDialog.model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_DocumentFormDialog>(string.Format(ConstantString.EDITTHEITEM, L["Document"]), parameters, options);
@@ -346,9 +347,7 @@
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.SAVESUCCESS}", MudBlazor.Severity.Info);
+         await _table.ReloadServerData();
         }
     }
 

@@ -86,7 +86,7 @@
                                            Variant="Variant.Outlined"
                                            Color="Color.Primary"
                                            StartIcon="@Icons.Material.Filled.Upload"
-                                           for="@context">
+                                               for="@context">
                                         @if (_uploading)
                                         {
                                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -225,20 +225,20 @@
                 </MudTd>
                 <MudTd HideSmall="true" DataLabel="@L["Is Active"]">
                     <MudCheckBox Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
-                </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L["Lock Status"]">@context.LockoutEnd</MudTd>
-            </RowTemplate>
-            <PagerContent>
-                <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
-            </PagerContent>
-        </MudTable>
+                    </MudTd>
+                    <MudTd HideSmall="true" DataLabel="@L["Lock Status"]">@context.LockoutEnd</MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
+                </PagerContent>
+                </MudTable>
 
-        <_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@_processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
-    </ChildContent>
-    <ErrorContent>
-        <CustomError Exception="context"></CustomError>
-    </ErrorContent>
-</ErrorBoundary>
+                <_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@_processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
+            </ChildContent>
+            <ErrorContent>
+                <CustomError Exception="context"></CustomError>
+            </ErrorContent>
+            </ErrorBoundary>
 
             @code {
     [Inject]
@@ -332,12 +332,13 @@
         try
         {
             _loading = true;
-            var items = await _userManager.Users.Where(x => x.UserName.Contains(_searchString) || 
-            x.Email.Contains(_searchString) || 
-            x.DisplayName.Contains(_searchString) || 
-            x.PhoneNumber.Contains(_searchString) || 
-            x.TenantName.Contains(_searchString) || 
-            x.UserRoles.Any(x=>x.Role.Name.Contains(_searchString)))
+            var items = await _userManager.Users.Where(x => x.UserName.Contains(_searchString) ||
+            x.Email.Contains(_searchString) ||
+            x.DisplayName.Contains(_searchString) ||
+            x.PhoneNumber.Contains(_searchString) ||
+            x.TenantName.Contains(_searchString) ||
+            x.Provider.Contains(_searchString) ||
+            x.UserRoles.Any(x => x.Role.Name.Contains(_searchString)))
                  .Include(x => x.UserRoles).ThenInclude(x => x.Role)
                  .OrderBy($"{state.SortLabel ?? "UserName"} {(state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString())}")
                  .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
@@ -670,27 +671,34 @@
     private async Task OnExport()
     {
         _exporting = true;
-        var items = await _userManager.Users
-                 .Where(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString))
-                 .Select(x => new ApplicationUserDto()
-                     {
-                         Id = x.Id,
-                         UserName = x.UserName!,
-                         DisplayName = x.DisplayName,
-                         Email = x.Email!,
-                         PhoneNumber = x.PhoneNumber,
-                         TenantName = x.TenantName,
-                     }).ToListAsync();
+        var items = await _userManager.Users.Where(x => x.UserName.Contains(_searchString) ||
+    x.Email.Contains(_searchString) ||
+    x.DisplayName.Contains(_searchString) ||
+    x.PhoneNumber.Contains(_searchString) ||
+    x.TenantName.Contains(_searchString) ||
+    x.Provider.Contains(_searchString) ||
+    x.UserRoles.Any(x => x.Role.Name.Contains(_searchString)))
+             .Select(x => new ApplicationUserDto()
+                 {
+                     Id = x.Id,
+                     UserName = x.UserName!,
+                     DisplayName = x.DisplayName,
+                     Email = x.Email!,
+                     PhoneNumber = x.PhoneNumber,
+                     TenantId = x.TenantId,
+                     TenantName = x.TenantName,
+                 }).ToListAsync();
         var result = await _excelService.ExportAsync(items,
                 new Dictionary<string, Func<ApplicationUserDto, object?>>()
-                                {
+                                    {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
                       {L["Email"],item => item.Email},
                       {L["Phone Number"],item => item.PhoneNumber},
+                      {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                                }
+                                    }
                 , L["Users"]);
         var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
         Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
