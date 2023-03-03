@@ -167,11 +167,11 @@
         imgstream.Position = 0;
         using (var outStream = new MemoryStream())
         {
-            using (var image = Image.Load(imgstream, out IImageFormat format))
+            using (var image = Image.Load(imgstream))
             {
                 image.Mutate(
                    i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(128, 128) }));
-                image.Save(outStream, format);
+                image.Save(outStream, SixLabors.ImageSharp.Formats.Png.PngFormat.Instance);
                 var filename = e.File.Name;
                 var fi = new FileInfo(filename);
                 var ext = fi.Extension;

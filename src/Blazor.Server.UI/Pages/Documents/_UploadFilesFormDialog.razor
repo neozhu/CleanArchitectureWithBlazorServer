@@ -147,7 +147,7 @@
                         imgstream.Position = 0;
                         using (var outStream = new MemoryStream())
                         {
-                            using (var image = Image.Load(imgstream, out IImageFormat format))
+                            using (var image = Image.Load(imgstream))
                             {
                                 var scale = 0m;
                                 if (image.Width > 1600)
@@ -164,7 +164,7 @@
                                 }
                                 image.Mutate(
                                    i => i.AutoOrient().Resize(Convert.ToInt32((image.Width * scale)), 0));
-                                image.Save(outStream, format);
+                                image.Save(outStream, SixLabors.ImageSharp.Formats.Png.PngFormat.Instance);
                             }
                             var request = new UploadRequest(uploaded.FileName, UploadType.Document, outStream.ToArray());
                             list.Add(request);

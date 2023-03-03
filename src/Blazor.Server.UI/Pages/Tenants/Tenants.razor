@@ -2,6 +2,7 @@
 
 
 
+@using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination
@@ -97,8 +98,7 @@
                     {
                         <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                              Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
-                             OffsetX="true">
+                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" >
                             @if (_canEdit)
                             {
                                 <MudMenuItem OnClick="@(()=>OnEdit(context))">@ConstantString.EDIT</MudMenuItem>
@@ -179,10 +179,10 @@
         {
             _loading = true;
             _query.Keyword = _searchString;
-            _query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
-            _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
-            _query.PageNumber = state.Page + 1;
-            _query.PageSize = state.PageSize;
+            _query.Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
+            _query.SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            _query.Page = state.Page + 1;
+            _query.PerPage = state.PageSize;
             var result = await _mediator.Send(_query);
             return new TableData<TenantDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
@@ -201,6 +201,7 @@
     }
     private async Task OnRefresh()
     {
+        TenantCacheKey.Refresh();
         _selectedItems = new();
         _searchString = string.Empty;
         await _table.ReloadServerData();
@@ -218,9 +219,7 @@
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
         }
     }
     private async Task OnEdit(TenantDto dto)
@@ -236,51 +235,44 @@
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
         }
     }
 
     private async Task OnDelete(TenantDto dto)
     {
         var deleteContent = ConstantString.DELETECONFIRMATIONWITHID;
+        var command = new DeleteTenantCommand(new string[] { dto.Id });
         var parameters = new DialogParameters
                     {
-                { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.Id) }
+                        { nameof(DeleteConfirmation.Command),  command },
+                        { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.Id) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>
-        (string.Format(ConstantString.EDITTHEITEM,L["Tenant"]), parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete the Tenant"], parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var command = new DeleteTenantCommand(new string[] { dto.Id });
-            var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
         }
     }
 
     private async Task OnDeleteChecked()
     {
+        var command = new DeleteTenantCommand(_selectedItems.Select(x => x.Id).ToArray());
         var deleteContent = ConstantString.DELETECONFIRMATION;
         var parameters = new DialogParameters
                         {
-                    { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,_selectedItems.Count) }
+                            { nameof(DeleteConfirmation.Command),  command },
+                            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,_selectedItems.Count) }
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>
-        (string.Format(ConstantString.EDITTHEITEM,L["Tenant"]), parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete Selected Tenants"], parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var command = new DeleteTenantCommand(_selectedItems.Select(x => x.Id).ToArray());
-            var result = await _mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
-            _selectedItems = new HashSet<TenantDto>
-            ();
+            _selectedItems = new HashSet<TenantDto>();
         }
     }
     

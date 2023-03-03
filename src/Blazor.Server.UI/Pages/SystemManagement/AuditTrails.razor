@@ -1,4 +1,5 @@
 @page "/system/audittrails"
+@using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching;
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery
 
@@ -36,8 +37,8 @@
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
-                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                <col style="width:180px;" />
+                <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <col style="width:180px;" />
                 </MudHidden>
             </ColGroup>
             <HeaderContent>
@@ -58,7 +59,10 @@
                     </MudButton>
                 </MudTd>
                 <MudTd DataLabel="@L["User Id"]">
-                    @context.UserId
+                    <div class="d-flex flex-column">
+                        <MudText Typo="Typo.body2">@context.Owner?.UserName</MudText>
+                        <MudText Typo="Typo.body2">@context.UserId</MudText>
+                    </div>
                 </MudTd>
                 <MudTd Style="text-align:center" DataLabel="@L["Audit Type"]">
                     @context.AuditType
@@ -71,7 +75,7 @@
                 </MudTd>
                 <MudTd DataLabel="@L["Date Time"]">
                     @context.DateTime
-                </MudTd> 
+                </MudTd>
             </RowTemplate>
             <ChildRowContent>
                 @if (context.ShowDetails)
@@ -86,11 +90,16 @@
                                 </MudCardHeader>
                                 <MudCardContent Class="pt-0">
                                     <MudText>Old Values</MudText>
-                                    <MudText Typo="Typo.body2">@context.OldValues</MudText>
+                                    <code class="docs-code docs-code-primary">
+                                        @context.OldValues
+                                    </code>
                                    
-                                   <MudText>New Value</MudText>
-                                    <MudText Typo="Typo.body2">@context.NewValues</MudText>
-                                  
+
+                                    <MudText>New Value</MudText>
+                                    <code class="docs-code docs-code-primary">
+                                        @context.NewValues
+                                    </code>
+
                                 </MudCardContent>
                             </MudCard>
                         </td>
@@ -109,7 +118,7 @@
         </MudTable>
     </ChildContent>
     <ErrorContent>
-        <CustomError Exception="context" ></CustomError>
+        <CustomError Exception="context"></CustomError>
     </ErrorContent>
 </ErrorBoundary>
 @code {
@@ -129,17 +138,17 @@
             var request = new AuditTrailsWithPaginationQuery()
                 {
                     Keyword = _searchString,
-                    OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
-                    SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
-                    PageNumber = state.Page + 1,
-                    PageSize = state.PageSize
+                    Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
+                    SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending),
+                    Page = state.Page + 1,
+                    PerPage = state.PageSize
                 };
             var result = await _mediator.Send(request).ConfigureAwait(false);
             return new TableData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
         {
-             _loading = false;
+            _loading = false;
         }
     }
     private async Task OnSearch(string text)
@@ -149,6 +158,7 @@
     }
     private async Task OnRefresh()
     {
+        AuditTrailsCacheKey.Refresh();
         _searchString = string.Empty;
         await _table.ReloadServerData();
     }

@@ -32,7 +32,7 @@
                   @bind-SelectedItems="_selectItems"
                   SortLabel="@ConstantString.ORDERBY"
                   Loading="@_loading"
-                  ServerData="@(new Func<TableState, Task<TableData<ApplicationRoleDto>>>(ServerReload))" >
+                  ServerData="@(new Func<TableState, Task<TableData<ApplicationRoleDto>>>(ServerReload))">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Roles"]</MudText>
@@ -46,40 +46,40 @@
                         @if (_canCreate)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.Add"
-                                       Size="Size.Small"
-                                       OnClick="OnCreate"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                   StartIcon="@Icons.Material.Filled.Add"
+                                   Size="Size.Small"
+                                   OnClick="OnCreate"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
                         }
                         @if (_canDelete)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                       StartIcon="@Icons.Material.Filled.Delete"
-                                       Disabled="@(!(_selectItems.Count>0))"
-                                       OnClick="OnDeleteChecked"
-                                       Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                   StartIcon="@Icons.Material.Filled.Delete"
+                                   Disabled="@(!(_selectItems.Count>0))"
+                                   OnClick="OnDeleteChecked"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
                         }
                         @if (_canImport)
                         {
                             <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.Upload"
-                                       Size="Size.Small"
-                                       for="importdataInput"
-                                       HtmlTag="label"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       IconColor="Color.Surface">@ConstantString.IMPORT</MudButton>
+                                   StartIcon="@Icons.Material.Filled.Upload"
+                                   Size="Size.Small"
+                                                   for="importdataInput"
+                                   HtmlTag="label"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   IconColor="Color.Surface">@ConstantString.IMPORT</MudButton>
                         }
                         @if (_canExport)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.Download"
-                                       Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       IconColor="Color.Surface">@ConstantString.EXPORT</MudButton>
+                                   StartIcon="@Icons.Material.Filled.Download"
+                                   Size="Size.Small"
+                                   Style="margin-right: 4px; margin-bottom:4px"
+                                   IconColor="Color.Surface">@ConstantString.EXPORT</MudButton>
                         }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
@@ -109,9 +109,9 @@
                 <MudSpacer />
                 @if (_canSearch)
                 {
-                    <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth="false"
-                                  Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
-                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3">
+                    <MudTextField T="string" Value="_searchString" FullWidth="false" ValueChanged="@(s=>OnSearch(s))"
+                              Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3">
                     </MudTextField>
                 }
             </ToolBarContent>
@@ -131,9 +131,8 @@
                     @if (_canEdit || _canManagePermissions)
                     {
                         <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
-                                 Dense="true"
-                                 EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
-                                 OffsetX="true">
+                             Dense="true"
+                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info">
                             @if (_canEdit)
                             {
                                 <MudMenuItem OnClick="@(()=>OnEdit(context))">@ConstantString.EDIT</MudMenuItem>
@@ -147,8 +146,8 @@
                     else
                     {
                         <MudButton Variant="Variant.Filled" DisableElevation="true"
-                                   StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                                   Color="Color.Surface">
+                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                               Color="Color.Surface">
                             @ConstantString.NOALLOWED
                         </MudButton>
                     }
@@ -220,7 +219,7 @@
             _loading = true;
             var items = await _roleManager.Roles.Where(x => x.Name.Contains(_searchString) || x.Description.Contains(_searchString))
                   .OrderBy($"{state.SortLabel ?? "Name"} {(state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString())}")
-                 .Skip(state.Page * state.PageSize).Take(state.PageSize).Select(x => new ApplicationRoleDto() { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName }).ToListAsync();
+                  .Skip(state.Page * state.PageSize).Take(state.PageSize).Select(x => new ApplicationRoleDto() { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName }).ToListAsync();
             var total = await _roleManager.Roles.CountAsync(x => x.Name.Contains(_searchString) || x.Description.Contains(_searchString));
             return new TableData<ApplicationRoleDto>() { TotalItems = total, Items = items };
         }
@@ -228,6 +227,12 @@
         {
             _loading = false;
         }
+    }
+    private async Task OnSearch(string text)
+    {
+        if (_loading) return;
+        _searchString = text;
+        await _table.ReloadServerData();
     }
     private async Task OnRefresh()
     {

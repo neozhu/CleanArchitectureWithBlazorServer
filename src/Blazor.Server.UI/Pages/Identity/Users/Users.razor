@@ -119,7 +119,7 @@
                 <MudSpacer />
                 @if (_canSearch)
                 {
-                    <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth="false"
+                    <MudTextField T="string" Value="_searchString" FullWidth="false" ValueChanged="@(s=>OnSearch(s))"
                               Placeholder="@(L["Search for user name"])" Adornment="Adornment.End"
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3">
                     </MudTextField>
@@ -240,7 +240,7 @@
     </ErrorContent>
 </ErrorBoundary>
 
-@code {
+            @code {
     [Inject]
     private IUsersStateContainer _usersStateContainer { get; set; } = default!;
     private int _defaultPageSize = 15;
@@ -332,8 +332,13 @@
         try
         {
             _loading = true;
-            var items = await _userManager.Users
-                 .Include(x => x.UserRoles).ThenInclude(x => x.Role).Where(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString))
+            var items = await _userManager.Users.Where(x => x.UserName.Contains(_searchString) || 
+            x.Email.Contains(_searchString) || 
+            x.DisplayName.Contains(_searchString) || 
+            x.PhoneNumber.Contains(_searchString) || 
+            x.TenantName.Contains(_searchString) || 
+            x.UserRoles.Any(x=>x.Role.Name.Contains(_searchString)))
+                 .Include(x => x.UserRoles).ThenInclude(x => x.Role)
                  .OrderBy($"{state.SortLabel ?? "UserName"} {(state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString())}")
                  .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
             var total = await _userManager.Users.CountAsync(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString));
@@ -344,7 +349,12 @@
             _loading = false;
         }
     }
-
+    private async Task OnSearch(string text)
+    {
+        if (_loading) return;
+        _searchString = text;
+        await _table.ReloadServerData();
+    }
     private async Task OnRefresh()
     {
         await _table.ReloadServerData();
