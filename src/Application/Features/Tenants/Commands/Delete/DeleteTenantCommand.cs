@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Commands.Delete;
 
-public class DeleteTenantCommand : ICacheInvalidatorRequest<Result>
+public class DeleteTenantCommand : ICacheInvalidatorRequest<Result<int>>
 {
     public string[] Id { get; }
     public string CacheKey => TenantCacheKey.GetAllCacheKey;
@@ -19,7 +19,7 @@ public class DeleteTenantCommand : ICacheInvalidatorRequest<Result>
 }
 
 public class DeleteTenantCommandHandler :
-             IRequestHandler<DeleteTenantCommand, Result>
+             IRequestHandler<DeleteTenantCommand, Result<int>>
 
 {
     private readonly IApplicationDbContext _context;
@@ -35,7 +35,7 @@ public class DeleteTenantCommandHandler :
         _localizer = localizer;
         _mapper = mapper;
     }
-    public async Task<Result> Handle(DeleteTenantCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(DeleteTenantCommand request, CancellationToken cancellationToken)
     {
         var items = await _context.Tenants.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
@@ -43,8 +43,8 @@ public class DeleteTenantCommandHandler :
             item.AddDomainEvent(new UpdatedEvent<Tenant>(item));
             _context.Tenants.Remove(item);
         }
-        await _context.SaveChangesAsync(cancellationToken);
-        return await Result.SuccessAsync();
+        var result=  await _context.SaveChangesAsync(cancellationToken);
+        return await Result<int>.SuccessAsync(result);
     }
 
 }

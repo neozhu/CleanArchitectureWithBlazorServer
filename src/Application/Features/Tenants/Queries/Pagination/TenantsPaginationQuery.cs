@@ -3,39 +3,47 @@
 
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
+using DocumentFormat.OpenXml.Wordprocessing;
+using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination;
 
-    public class TenantsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<TenantDto>>
+public class TenantsWithPaginationQuery : PaginationFilterBase, ICacheableRequest<PaginatedData<TenantDto>>
+{
+    [CompareTo("Id","Name", "Description")] // <-- This filter will be applied to Name or Brand or Description.
+    [StringFilterOptions(StringFilterOption.Contains)]
+    public string? Keyword { get; set; }
+    public override string ToString()
     {
-        public string CacheKey => TenantCacheKey.GetPaginationCacheKey($"{this}");
-        public MemoryCacheEntryOptions? Options => TenantCacheKey.MemoryCacheEntryOptions;
+        return $"Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
     }
-    
-    public class TenantsWithPaginationQueryHandler :
-         IRequestHandler<TenantsWithPaginationQuery, PaginatedData<TenantDto>>
-    {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<TenantsWithPaginationQueryHandler> _localizer;
+    public string CacheKey => TenantCacheKey.GetPaginationCacheKey($"{this}");
+    public MemoryCacheEntryOptions? Options => TenantCacheKey.MemoryCacheEntryOptions;
+}
 
-        public TenantsWithPaginationQueryHandler(
-            IApplicationDbContext context,
-            IMapper mapper,
-            IStringLocalizer<TenantsWithPaginationQueryHandler> localizer
-            )
-        {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
-        }
- 
+public class TenantsWithPaginationQueryHandler :
+     IRequestHandler<TenantsWithPaginationQuery, PaginatedData<TenantDto>>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly IStringLocalizer<TenantsWithPaginationQueryHandler> _localizer;
+
+    public TenantsWithPaginationQueryHandler(
+        IApplicationDbContext context,
+        IMapper mapper,
+        IStringLocalizer<TenantsWithPaginationQueryHandler> localizer
+        )
+    {
+        _context = context;
+        _mapper = mapper;
+        _localizer = localizer;
+    }
+
     public async Task<PaginatedData<TenantDto>> Handle(TenantsWithPaginationQuery request, CancellationToken cancellationToken)
-        {
-           var data = await _context.Tenants.Where(x=>x.Name!.Contains(request.Keyword))
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
-                .ProjectTo<TenantDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.PageNumber, request.PageSize);
-            return data;
-        }
-   }
+    {
+        var data = await _context.Tenants.ApplyFilterWithoutPagination(request)
+             .ProjectTo<TenantDto>(_mapper.ConfigurationProvider)
+             .PaginatedDataAsync(request.Page, request.PerPage);
+        return data;
+    }
+}

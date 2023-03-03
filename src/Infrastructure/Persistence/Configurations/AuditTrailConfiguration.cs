@@ -16,7 +16,10 @@ public class AuditTrailConfiguration : IEntityTypeConfiguration<AuditTrail>
 {
     public void Configure(EntityTypeBuilder<AuditTrail> builder)
     {
-        
+        builder.HasOne(x => x.Owner)
+               .WithMany()
+               .HasForeignKey(x => x.UserId);
+        builder.Navigation(e => e.Owner).AutoInclude();
         builder.Property(t => t.AuditType)
            .HasConversion<string>();
         builder.Property(e => e.AffectedColumns)

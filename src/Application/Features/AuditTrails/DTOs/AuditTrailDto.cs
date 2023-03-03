@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
+using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 
@@ -21,6 +22,7 @@ public class AuditTrailDto : IMapFrom<AuditTrail>
            .ForMember(x => x.AffectedColumns, s => s.MapFrom(y => JsonSerializer.Serialize(y.AffectedColumns, DefaultJsonSerializerOptions.Options)));
 
     }
+
     public int Id { get; set; }
     public string? UserId { get; set; }
     public string? AuditType { get; set; }
@@ -31,4 +33,5 @@ public class AuditTrailDto : IMapFrom<AuditTrail>
     public string? AffectedColumns { get; set; }
     public string PrimaryKey { get; set; } = default!;
     public bool ShowDetails { get; set; }
+    public ApplicationUserDto? Owner { get; set; }
 }

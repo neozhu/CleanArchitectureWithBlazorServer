@@ -1,6 +1,7 @@
 @page "/system/picklist"
 @using Blazor.Server.UI.Components.Dialogs
 @using BlazorDownloadFile
+@using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Import
@@ -145,7 +146,7 @@
                 @if (_canSearch)
                 {
                     <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth="false"
-                              Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
+                              Placeholder="@(L["Search for picklist"])" Adornment="Adornment.End"
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3">
                     </MudTextField>
                 }
@@ -239,11 +240,11 @@
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
-        if ($"{dto.Name.ToString()} {dto.Value} {dto.Text} {dto.Description}".Contains(searchString))
+        if ($"{dto.Name.GetDescription()} {dto.Value} {dto.Text} {dto.Description}".Contains(searchString))
             return true;
         return false;
     }
- 
+
     private async Task LoadData()
     {
         if(_loading) return;
@@ -262,8 +263,10 @@
 
 
     }
+
     private async Task OnRefresh()
     {
+        KeyValueCacheKey.Refresh();
         _searchString = string.Empty;
         await LoadData();
     }

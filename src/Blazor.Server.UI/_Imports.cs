@@ -33,3 +33,4 @@ global using MudBlazor;
 global using static CleanArchitecture.Blazor.Application.Common.Helper.ConstantStringLocalizer;
 global using FluentValidationSeverity = FluentValidation.Severity;
 global using Severity = MudBlazor.Severity;
+global using Color = MudBlazor.Color;

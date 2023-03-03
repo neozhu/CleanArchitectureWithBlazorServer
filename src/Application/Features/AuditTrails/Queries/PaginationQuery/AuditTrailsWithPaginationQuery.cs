@@ -6,8 +6,15 @@ using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery;
 
-public class AuditTrailsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<AuditTrailDto>>
+public class AuditTrailsWithPaginationQuery : PaginationFilterBase, ICacheableRequest<PaginatedData<AuditTrailDto>>
 {
+    [CompareTo("TableName", "UserId")] // <-- This filter will be applied to Name or Brand or Description.
+    [StringFilterOptions(StringFilterOption.Contains)]
+    public string? Keyword { get; set; }
+    public override string ToString()
+    {
+        return $"Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+    }
     public string CacheKey => AuditTrailsCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => AuditTrailsCacheKey.MemoryCacheEntryOptions;
 }
@@ -30,11 +37,9 @@ public class AuditTrailsQueryHandler : IRequestHandler<AuditTrailsWithPagination
 
     public async Task<PaginatedData<AuditTrailDto>> Handle(AuditTrailsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.AuditTrails
-            .Where(x=>x.TableName!.Contains(request.Keyword))
-            .OrderBy($"{request.OrderBy} {request.SortDirection}")
-                .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.PageNumber, request.PageSize);
+        var data = await _context.AuditTrails.ApplyFilterWithoutPagination(request)
+             .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
+             .PaginatedDataAsync(request.Page, request.PerPage);
 
         return data;
     }
