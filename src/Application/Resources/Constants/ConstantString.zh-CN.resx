@@ -244,7 +244,7 @@
     <value>是</value>
   </data>
   <data name="Sign in with {0}" xml:space="preserve">
-    <value>{0}</value>
+    <value>用{0}登录</value>
   </data>
   <data name="Advanced Search" xml:space="preserve">
     <value>高级查询</value>
@@ -275,5 +275,8 @@
   </data>
   <data name="Export to PDF" xml:space="preserve">
     <value>导出PDF</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>提交</value>
   </data>
 </root>

@@ -276,4 +276,7 @@
   <data name="Export to PDF" xml:space="preserve">
     <value>PDF로 내보내기</value>
   </data>
+  <data name="Submit" xml:space="preserve">
+    <value>제출하다</value>
+  </data>
 </root>

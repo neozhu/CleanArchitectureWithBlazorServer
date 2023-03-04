@@ -323,7 +323,7 @@
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UploadFilesFormDialog>
-        (L["Upload pictures"], parameters, options);
+        (L["Upload Pictures"], parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {

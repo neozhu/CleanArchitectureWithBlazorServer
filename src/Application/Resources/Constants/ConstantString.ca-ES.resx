@@ -276,4 +276,7 @@
   <data name="Export to PDF" xml:space="preserve">
     <value>Export to PDF</value>
   </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Presentar</value>
+  </data>
 </root>
