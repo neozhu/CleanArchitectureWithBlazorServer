@@ -11,6 +11,7 @@ public static class ConstantString
     //for button text
     public static string REFRESH => Localize("Refresh");
     public static string EDIT => Localize("Edit");
+    public static string SUBMIT => Localize("Submit");
     public static string DELETE => Localize("Delete");
     public static string ADD => Localize("Add");
     public static string CREATE => Localize("Create");
