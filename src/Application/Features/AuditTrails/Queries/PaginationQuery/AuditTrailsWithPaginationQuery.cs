@@ -11,6 +11,8 @@ public class AuditTrailsWithPaginationQuery : PaginationFilterBase, ICacheableRe
     [CompareTo("TableName", "UserId")] // <-- This filter will be applied to Name or Brand or Description.
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
+    [OperatorComparison(OperatorType.Equal)]
+    public AuditType? AuditType { get; set; }
     public override string ToString()
     {
         return $"Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";

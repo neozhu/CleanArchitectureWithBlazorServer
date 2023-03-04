@@ -33,8 +33,12 @@
                                Style="margin-right: 5px;">@ConstantString.REFRESH</MudButton>
                 </div>
                 <MudSpacer />
-                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                    <MudEnumSelect TEnum="AuditType?" Placeholder="Search for audit type" Value="@_searchAuditType" Clearable="true" ValueChanged="@(s=>OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
+                    <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.End" Style="width:260px" FullWidth="true"
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" ></MudTextField>
+                </MudStack>
+             
             </ToolBarContent>
             <ColGroup>
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
@@ -124,6 +128,7 @@
 @code {
     public string Title { get; private set; } = "Audit Trails";
     private string _searchString = string.Empty;
+    private AuditType? _searchAuditType = null;
     private MudTable<AuditTrailDto> _table = default!;
     private bool _loading;
     private int _defaultPageSize = 15;
@@ -138,6 +143,7 @@
             var request = new AuditTrailsWithPaginationQuery()
                 {
                     Keyword = _searchString,
+                    AuditType = _searchAuditType,
                     Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
                     SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending),
                     Page = state.Page + 1,
@@ -154,6 +160,11 @@
     private async Task OnSearch(string text)
     {
         _searchString = text;
+        await _table.ReloadServerData();
+    }
+    private async Task OnSearch(AuditType? val)
+    {
+        _searchAuditType = val;
         await _table.ReloadServerData();
     }
     private async Task OnRefresh()
