@@ -9,6 +9,7 @@
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.GetAll
+@using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.PaginationQuery;
 
 @attribute [Authorize(Policy = Permissions.Dictionaries.View)]
 @inject IStringLocalizer<Dictionaries> L
@@ -23,11 +24,9 @@
     <ChildContent>
 
         <MudTable @ref="_table"
-                  T="KeyValueDto"
-                  Items="@_keyValueList"
                   FixedHeader="true"
                   FixedFooter="true"
-                  Virtualize="true"
+                  Virtualize="false"
                   @bind-RowsPerPage="_defaultPageSize"
                   Height="calc(100vh - 265px)"
                   Hover="true"
@@ -46,7 +45,7 @@
                   Loading="@_loading"
                   SortLabel="@ConstantString.ORDERBY"
                   Breakpoint="Breakpoint.Xs"
-                  Filter="new Func<KeyValueDto,bool>(_quickFilter)">
+                  ServerData="@(new Func<TableState, Task<TableData<KeyValueDto>>>(ServerReload))">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Picklist"]</MudText>
@@ -145,10 +144,11 @@
                 <MudSpacer />
                 @if (_canSearch)
                 {
-                    <MudTextField @bind-Value="_searchString" FullWidth="false"
-                              Placeholder="@(L["Search for picklist"])" Adornment="Adornment.End"
-                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0 mb-3">
-                    </MudTextField>
+                    <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                        <MudEnumSelect TEnum="Picklist?" Placeholder="Search for picklist" Value="@_searchPicklist" Clearable="true" ValueChanged="@(s=>OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
+                        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.End" Style="width:260px" FullWidth="true"
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
+                    </MudStack>
                 }
             </ToolBarContent>
             <ColGroup>
@@ -195,7 +195,7 @@
 </ErrorBoundary>
 
 @code {
-    private MudTable<KeyValueDto>? _table=default!;
+    private MudTable<KeyValueDto> _table=default!;
     public string Title { get; set; } = "Picklist";
     private IList<KeyValueDto> _keyValueList = new List<KeyValueDto>();
     private HashSet<KeyValueDto> _selectedItems = new HashSet<KeyValueDto>();
@@ -203,6 +203,7 @@
     private KeyValueDto _elementBeforeEdit { get; set; } = new();
     private bool _canCancelEdit=true;
     private string _searchString = string.Empty;
+    private Picklist? _searchPicklist = null;
     private int _defaultPageSize = 15;
     private bool _editing;
     [CascadingParameter]
@@ -213,6 +214,7 @@
     private IBlazorDownloadFileService _blazorDownloadFileService { get; set; } = null!;
     [Inject]
     private IMediator _mediator { get; set; } = default!;
+    private KeyValuesWithPaginationQuery request = new();
     private bool _canCreate;
     private bool _canSearch;
     private bool _canEdit;
@@ -232,43 +234,46 @@
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Dictionaries.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Dictionaries.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Dictionaries.Export)).Succeeded;
-        await LoadData();
-    }
-    private bool _quickFilter(KeyValueDto dto) => FilterFunc(dto, _searchString);
 
-    private bool FilterFunc(KeyValueDto dto, string searchString)
-    {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
-        if ($"{dto.Name.GetDescription()} {dto.Value} {dto.Text} {dto.Description}".Contains(searchString))
-            return true;
-        return false;
     }
-
-    private async Task LoadData()
+    private async Task<TableData<KeyValueDto>> ServerReload(TableState state)
     {
-        if(_loading) return;
-        try{
+        try
+        {
             _loading = true;
-            _editing = false;
-            var cmd = new GetAllKeyValuesQuery();
-            _keyValueList = (await _mediator.Send(cmd).ConfigureAwait(false)).ToList();
-            _selectedItems=new HashSet<KeyValueDto>();
-            _selectedItem = new();
+            var request = new KeyValuesWithPaginationQuery()
+                {
+                    Keyword = _searchString,
+                    Picklist = _searchPicklist,
+                    Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
+                    SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending),
+                    Page = state.Page + 1,
+                    PerPage = state.PageSize
+                };
+            var result = await _mediator.Send(request).ConfigureAwait(false);
+            return new TableData<KeyValueDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
         {
             _loading = false;
         }
-
-
+    }
+    private async Task OnSearch(string text)
+    {
+        _searchString = text;
+        await _table.ReloadServerData();
+    }
+    private async Task OnSearch(Picklist? val)
+    {
+        _searchPicklist = val;
+        await _table.ReloadServerData();
     }
 
     private async Task OnRefresh()
     {
         KeyValueCacheKey.Refresh();
         _searchString = string.Empty;
-        await LoadData();
+        await _table.ReloadServerData();
     }
     private async Task OnDeleteChecked()
     {
@@ -284,24 +289,30 @@
         {
             var command = new DeleteKeyValueCommand(_selectedItems.Select(x => x.Id).ToArray());
             var result = await _mediator.Send(command);
-            await LoadData();
+            await _table.ReloadServerData();
             Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
         }
     }
     private async Task OnCreate()
     {
-        _editing = true;
-        _table!.SetEditingItem(null);
-        var newitem = new KeyValueDto()
+        var command = new AddEditKeyValueCommand()
             {
                 Name = _selectedItem.Name,
                 Description = _selectedItem?.Description,
-                TrackingState = TrackingState.Added
             };
-        _keyValueList.Insert(0, newitem);
-        await Task.Delay(50);
-        _table!.SetSelectedItem(newitem);
-        _table!.SetEditingItem(newitem);
+        var parameters = new DialogParameters
+            {
+              { nameof(_CreatePicklistDialog.model),command },
+            };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<_CreatePicklistDialog>
+        (L["Create a new picklist"], parameters, options);
+        var state = await dialog.Result;
+        if (!state.Canceled)
+        {
+            await _table.ReloadServerData();
+        }
+     
     }
     private void BackupItem(object element)
     {
