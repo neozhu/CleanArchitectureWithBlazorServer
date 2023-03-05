@@ -41,7 +41,8 @@
                        Text="@model.TenantName"
                        Required="true"
                        RequiredError="@L["Tenant is required."]"
-                       @bind-Value="@model.TenantId">
+                       Value="@model.TenantId"
+                       ValueChanged="TenantSelectChanged">
                 @foreach (var item in _tenantsService.DataSource)
                 {
                     <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
@@ -157,6 +158,13 @@
             }
         }
 
+    }
+    private  Task TenantSelectChanged(string id)
+    {
+        var tenant = _tenantsService.DataSource.Find(x=>x.Id==id);
+        model.TenantId = tenant?.Id;
+        model.TenantName = tenant?.Name;
+        return Task.CompletedTask;
     }
 
     private async Task UploadPhoto(InputFileChangeEventArgs e)
