@@ -6,10 +6,9 @@ using Blazor.Server.UI.Services.Navigation;
 using Blazor.Server.UI.Services.Notifications;
 using BlazorDownloadFile;
 using Blazored.LocalStorage;
-using CleanArchitecture.Blazor.Infrastructure.Persistence;
-using MudBlazor;
 using MudBlazor.Services;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
+using MudExtensions.Services;
 
 namespace Blazor.Server.UI;
 
@@ -39,7 +38,7 @@ public static class ConfigureServices
             })
             .AddCircuitOptions(option => { option.DetailedErrors = true; });
         services.AddMudBlazorDialog();
-        services.AddHotKeys();
+        services.AddHotKeys2();
         services.AddBlazoredLocalStorage(config =>
         {
             config.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;

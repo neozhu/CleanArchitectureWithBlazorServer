@@ -1,6 +1,6 @@
 using Blazor.Server.UI.Components.Shared;
-using Toolbelt.Blazor.HotKeys;
 using Blazor.Server.UI.Services;
+using Toolbelt.Blazor.HotKeys2;
 
 namespace Blazor.Server.UI.Shared;
 
@@ -45,8 +45,7 @@ public partial class MainLayout: LayoutComponentBase,IDisposable
     {
         _layoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         _layoutService.SetBaseTheme(Theme.ApplicationTheme());
-        _hotKeysContext = _hotKeys.CreateContext()
-            .Add(ModKeys.Meta, Keys.K, OpenCommandPalette, "Open command palette.");
+        _hotKeysContext = _hotKeys.CreateContext().Add(ModKey.Ctrl,Key.K, async()=>await OpenCommandPalette(), "Open command palette.");
        await base.OnInitializedAsync();
 
     }
