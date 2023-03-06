@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
-using Toolbelt.Blazor.HotKeys;
+using Toolbelt.Blazor.HotKeys2;
 
 namespace Blazor.Server.UI.Components.Shared;
 
@@ -26,7 +24,7 @@ public partial class CommandPalette : IDisposable
         _pagesFiltered = _pages;
 
         _hotKeysContext = HotKeys.CreateContext()
-            .Add(ModKeys.None, Keys.ESC, () => MudDialog.Close(), "Close command palette.");
+            .Add(Key.Escape, () => MudDialog.Close(), "Close command palette.");
     }
 
     private void SearchPages(string value)
