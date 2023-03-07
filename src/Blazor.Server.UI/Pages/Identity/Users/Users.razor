@@ -473,9 +473,9 @@
         }
 
         string deleteContent = ConstantString.DELETECONFIRMATION;
-        var parameters = new DialogParameters { { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, _selectItems.Count) } };
+        var parameters = new DialogParameters { { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, _selectItems.Count) } };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        var dialog = DialogService.Show<ConfirmationDialog>(L["Delete"], parameters, options);
         var result = await dialog.Result;
 
         if (!result.Canceled)
