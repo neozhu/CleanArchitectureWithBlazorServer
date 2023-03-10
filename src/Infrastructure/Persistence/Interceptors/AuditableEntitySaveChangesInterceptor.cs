@@ -33,23 +33,23 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
 
-        await updateEntities(eventData.Context);
-        _temporaryAuditTrailList = await TryInsertTemporaryAuditTrail(eventData.Context, cancellationToken);
-        _deletingDomainEvents = await TryGetDeletingDomainEvents(eventData.Context, cancellationToken);
+        updateEntities(eventData.Context!);
+        _temporaryAuditTrailList = TryInsertTemporaryAuditTrail(eventData.Context!, cancellationToken);
+        _deletingDomainEvents = TryGetDeletingDomainEvents(eventData.Context!, cancellationToken);
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
     public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
     {
         var resultvalueTask = await base.SavedChangesAsync(eventData, result, cancellationToken);
-        await TryUpdateTemporaryPropertiesForAuditTrail(eventData.Context, cancellationToken);
-        await _mediator.DispatchDomainEvents(eventData.Context!, _deletingDomainEvents);
+        await TryUpdateTemporaryPropertiesForAuditTrail(eventData.Context!, cancellationToken).ConfigureAwait(false);
+        await _mediator.DispatchDomainEvents(eventData.Context!, _deletingDomainEvents).ConfigureAwait(false);
         return resultvalueTask;
     }
-    private Task updateEntities(DbContext? context)
+    private void updateEntities(DbContext context)
     {
         var userId = _currentUserService.UserId;
         var tenantId = _tenantProvider.TenantId;
-        foreach (var entry in context!.ChangeTracker.Entries<BaseAuditableEntity>())
+        foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
         {
             switch (entry.State)
             {
@@ -87,15 +87,14 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                     break;
             }
         }
-        return Task.CompletedTask;
     }
 
-    private Task<List<AuditTrail>> TryInsertTemporaryAuditTrail(DbContext? context, CancellationToken cancellationToken = default)
+    private List<AuditTrail> TryInsertTemporaryAuditTrail(DbContext context, CancellationToken cancellationToken = default)
     {
 
         var userId = _currentUserService.UserId;
         var tenantId = _tenantProvider.TenantId;
-        context!.ChangeTracker.DetectChanges();
+        context.ChangeTracker.DetectChanges();
         var temporaryAuditEntries = new List<AuditTrail>();
         foreach (var entry in context.ChangeTracker.Entries<IAuditTrial>())
         {
@@ -160,10 +159,10 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
             }
             temporaryAuditEntries.Add(auditEntry);
         }
-        return Task.FromResult(temporaryAuditEntries);
+        return temporaryAuditEntries;
     }
 
-    private async Task TryUpdateTemporaryPropertiesForAuditTrail(DbContext? context, CancellationToken cancellationToken = default)
+    private async Task TryUpdateTemporaryPropertiesForAuditTrail(DbContext context, CancellationToken cancellationToken = default)
     {
         if (_temporaryAuditTrailList.Any())
         {
@@ -180,15 +179,14 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                         auditEntry.NewValues[prop.Metadata.Name] = prop.CurrentValue;
                     }
                 }
-                context!.Add(auditEntry);
+                context.Add(auditEntry);
             }
-            await context!.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 
-    private Task<List<DomainEvent>> TryGetDeletingDomainEvents(DbContext? context, CancellationToken cancellationToken = default)
+    private List<DomainEvent> TryGetDeletingDomainEvents(DbContext context, CancellationToken cancellationToken = default)
     {
-        if (context is null) return Task.FromResult(new List<DomainEvent>());
         var entities = context.ChangeTracker
             .Entries<BaseEntity>()
             .Where(e => e.Entity.DomainEvents.Any() && e.State == EntityState.Deleted)
@@ -199,7 +197,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
             .ToList();
 
         entities.ToList().ForEach(e => e.ClearDomainEvents());
-        return Task.FromResult(domainEvents);
+        return domainEvents;
     }
 
 
