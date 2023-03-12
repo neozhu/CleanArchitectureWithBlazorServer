@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 public class PDFService : IPDFService
 {
     private const int marginPTs = 56;
-    private const string fontFamilyName = Fonts.Calibri;
+    private const string fontFamilyName = Fonts.Arial;
     private const float fontSize = 10F;
     private const int maxCharsPerCell = 80;
     private const int minCharsPerCell = 10;

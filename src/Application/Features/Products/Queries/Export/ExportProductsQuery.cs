@@ -52,7 +52,14 @@ public class ExportProductsQueryHandler :
                    .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                    .ToListAsync(cancellationToken);
 
-        var mappers = new Dictionary<string, Func<ProductDto, object?>>()
+        
+
+        byte[] result;
+        Dictionary<string, Func<ProductDto, object?>> mappers;
+        switch (request.ExportType)
+        {
+            case ExportType.PDF:
+                 mappers = new Dictionary<string, Func<ProductDto, object?>>()
                 {
                     { _localizer["Brand Name"], item => item.Brand },
                     { _localizer["Product Name"], item => item.Name },
@@ -62,14 +69,19 @@ public class ExportProductsQueryHandler :
                     //{ _localizer["Pictures"], item => string.Join(",",item.Pictures??new string[]{ }) },
 
                 };
-
-        byte[] result;
-        switch (request.ExportType)
-        {
-            case ExportType.PDF:
                 result = await _pdfService.ExportAsync(data, mappers, _localizer["Products"], true);
                 break;
             default:
+                mappers = new Dictionary<string, Func<ProductDto, object?>>()
+                {
+                    { _localizer["Brand Name"], item => item.Brand },
+                    { _localizer["Product Name"], item => item.Name },
+                    { _localizer["Description"], item => item.Description },
+                    { _localizer["Price of unit"], item => item.Price },
+                    { _localizer["Unit"], item => item.Unit },
+                    { _localizer["Pictures"], item => string.Join(",",item.Pictures??new string[]{ }) },
+
+                };
                 result = await _excelService.ExportAsync(data, mappers, _localizer["Products"]);
                 break;
         }
