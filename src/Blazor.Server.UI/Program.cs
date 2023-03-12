@@ -33,7 +33,14 @@ builder.Services.AddInfrastructureServices(builder.Configuration)
                 .AddApplicationServices();
 
 var app = builder.Build();
-app.MapBlazorHub();
+app.UseWebSockets();
+app.MapBlazorHub(options =>
+{
+    options.WebSockets.CloseTimeout = TimeSpan.FromSeconds(160);
+    options.TransportMaxBufferSize = 32*1024;
+    options.TransportSendTimeout = TimeSpan.FromSeconds(320);
+    options.ApplicationMaxBufferSize = 32*1024;
+});
 app.MapHealthChecks("/health");
 app.UseExceptionHandler("/Error");
 app.MapFallbackToPage("/_Host");

@@ -28,10 +28,10 @@ public static class ConfigureServices
             }
             ).AddHubOptions(options =>
             {
-                options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
+                options.ClientTimeoutInterval = TimeSpan.FromSeconds(180);
                 options.EnableDetailedErrors = false;
-                options.HandshakeTimeout = TimeSpan.FromSeconds(15);
-                options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+                options.HandshakeTimeout = TimeSpan.FromSeconds(120);
+                options.KeepAliveInterval = TimeSpan.FromMinutes(6);
                 options.MaximumParallelInvocationsPerClient = 1;
                 options.MaximumReceiveMessageSize = 32 * 1024;
                 options.StreamBufferCapacity = 10;
