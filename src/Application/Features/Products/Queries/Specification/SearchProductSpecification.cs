@@ -1,6 +1,8 @@
+using System.Linq.Expressions;
+using System.Reflection;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 
-namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
+namespace CleanArchitecture.Blazor.Application.Features.Products.Queries;
 
 public class SearchProductSpecification : Specification<Product>
 {
@@ -28,5 +30,28 @@ public class SearchProductSpecification : Specification<Product>
             And(x => x.Price >= query.Price.Min && x.Price <= query.Price.Max);
         }
        
+    }
+}
+
+public enum ProductListView
+{
+    [Description("All")]
+    All,
+    [Description("My Products")]
+    My,
+    [Description("Created Toady")]
+    CreatedToday,
+}
+public class SearchProductsWithListView : FilteringOptionsBaseAttribute
+{
+    public override Expression BuildExpression(Expression expressionBody, PropertyInfo targetProperty, PropertyInfo filterProperty, object value)
+    {
+        var listview = (ProductListView)value;
+        return listview switch {
+            ProductListView.All => expressionBody,
+            ProductListView.My=> expressionBody,
+            ProductListView.CreatedToday => expressionBody,
+            _=> expressionBody
+        };
     }
 }
