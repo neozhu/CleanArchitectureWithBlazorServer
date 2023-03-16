@@ -4,22 +4,29 @@
 
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
+using CleanArchitecture.Blazor.Application.Features.Products.Queries;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
+
+
 
 public class ProductsWithPaginationQuery : PaginationFilterBase, ICacheableRequest<PaginatedData<ProductDto>>
 {
     public string? Name { get; set; }
     public string? Brand { get; set; }
+   
     public string? Unit { get; set; }
     public Range<decimal> Price { get; set; } = new();
     [CompareTo("Name", "Brand", "Description")] // <-- This filter will be applied to Name or Brand or Description.
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
+    [SearchProductsWithListView]
+    public ProductListView ListView { get; set; } = ProductListView.All;
     public override string ToString()
     {
-        return $"Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{Price?.Min},MaxPrice:{Price?.Max},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+        return $"ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{Price?.Min},MaxPrice:{Price?.Max},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
     }
     public string CacheKey => ProductCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;

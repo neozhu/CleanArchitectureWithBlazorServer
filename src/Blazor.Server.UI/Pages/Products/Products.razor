@@ -6,6 +6,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Products.Queries
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
@@ -41,11 +42,8 @@
                             <MudIcon Icon="@Icons.Material.Filled.QrCodeScanner" Size="Size.Large" />
                             <div class="d-flex flex-column">
                                 <MudText Typo="Typo.caption">@L["Products"]</MudText>
-                                <MudSelect T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_listview" Dense="true" Label="List View">
-                                    <MudSelectItem Value="@("All")" />
-                                    <MudSelectItem Value="@("My Products")" />
-                                    <MudSelectItem Value="@("Created Today")" />
-                                </MudSelect>
+                                <MudEnumSelect Style="min-width:120px" TEnum="ProductListView"  @bind-Value="_query.ListView" Dense="true" Label="List View">
+                                </MudEnumSelect>
                             </div>
                         </div>
                         <div class="flex-grow-1" />
