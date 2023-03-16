@@ -28,7 +28,7 @@
                   FixedFooter="true"
                   Virtualize="true"
                   @bind-RowsPerPage="_defaultPageSize"
-                  Height="calc(100vh - 330px)"
+                  Height="calc(100vh - 370px)"
                   Loading="@_loading"
                   SortLabel="@ConstantString.ORDERBY"
                   MultiSelection="true"
@@ -36,7 +36,6 @@
                   @bind-SelectedItem="_selectItem"
                   Hover="true" @ref="_table">
             <ToolBarContent>
-                <div class="d-flex flex-column flex-grow-1">
                     <div class="d-flex align-center flex-grow-1">
                         <div class="d-flex gap-4">
                             <MudIcon Icon="@Icons.Material.Filled.QrCodeScanner" Size="Size.Large" />
@@ -150,8 +149,6 @@
                     
                         </div>
                     </div>
-                </div>
-              
             </ToolBarContent>
             <ColGroup>
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">

@@ -3,13 +3,13 @@
 
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 
 public class DocumentsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<DocumentDto>>
 {
-   
+
+    public DocumentListView ListView { get; set; } = DocumentListView.All;
     public string TenantId { get; set; }
     public DocumentsWithPaginationQuery(string tenantId)
     {
@@ -48,6 +48,7 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
 
         return data;
     }
+    
     internal class DocumentsQuery : Specification<Document>
     {
         public DocumentsQuery(string userId,string tenantId,string? keyword)
@@ -62,4 +63,15 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
             }
         }
     }
+
+    
+}
+public enum DocumentListView
+{
+    [Description("All")]
+    All,
+    [Description("My Document")]
+    My,
+    [Description("Created Toady")]
+    CreatedToday,
 }
