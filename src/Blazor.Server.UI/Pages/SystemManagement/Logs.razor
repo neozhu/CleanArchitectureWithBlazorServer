@@ -10,7 +10,7 @@
 <PageTitle>@L[Title]</PageTitle>
 <style>
     .mud-table-toolbar {
-        height: 84px !important;
+        height: 120px !important;
     }
 </style>
 <ErrorBoundary>
@@ -20,45 +20,59 @@
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
-                  Height="calc(100vh - 265px)"
+                  Height="calc(100vh - 360px)"
                   Style="min-height:700px"
                   Loading="@_loading"
                   SortLabel="@ConstantString.ORDERBY"
                   Hover="true" @ref="_table">
             <ToolBarContent>
-                <div class="justify-start pt-3">
-                    <MudText Typo="Typo.h6">@L["Logs"]</MudText>
-                    <MudButton DisableElevation Variant="Variant.Outlined"
-                               Size="Size.Small"
-                               Disabled="@_loading"
-                               OnClick="@(()=>OnRefresh())"
-                               StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                               Style="margin-right: 5px;">@ConstantString.REFRESH</MudButton>
-                    @if (_canPurge)
-                    {
-                        <MudButton DisableElevation Variant="Variant.Outlined"
-                               Size="Size.Small"
-                               Disabled="@(_loading || _clearing)"
-                               OnClick="@(()=>OnPurge())"
-                               StartIcon="@Icons.Material.Filled.ClearAll" IconColor="Color.Surface" Color="Color.Secondary"
-                               Style="margin-right: 5px;">
-                            @if (_clearing)
-                            {
-                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                <MudText Class="ms-2">waiting</MudText>
-                            }
-                            else
-                            {
-                                <MudText> @ConstantString.CLEAR </MudText>
-                            }
-                           
-                        </MudButton>
-                    }
+                <div class="d-flex align-start flex-grow-1">
+                    <div class="d-flex gap-4">
+                        <MudIcon Icon="@Icons.Material.Filled.BarChart" Size="Size.Large" />
+                        <div class="d-flex flex-column">
+                            <MudText Typo="Typo.caption">@L["Logs"]</MudText>
 
+                        </div>
+                    </div>
+                    <div class="flex-grow-1" />
+
+                    <div class="d-flex flex-column justify-end">
+                        <div class="d-flex">
+                            <MudButton DisableElevation Variant="Variant.Outlined"
+                                       Size="Size.Small"
+                                       Disabled="@_loading"
+                                       OnClick="@(()=>OnRefresh())"
+                                       StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                                       Style="margin-right: 5px;">@ConstantString.REFRESH</MudButton>
+                            @if (_canPurge)
+                            {
+                                <MudButton DisableElevation Variant="Variant.Outlined"
+                                       Size="Size.Small"
+                                       Disabled="@(_loading || _clearing)"
+                                       OnClick="@(()=>OnPurge())"
+                                       StartIcon="@Icons.Material.Filled.ClearAll" IconColor="Color.Surface" Color="Color.Secondary"
+                                       Style="margin-right: 5px;">
+                                @if (_clearing)
+                                    {
+                                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                        <MudText Class="ms-2">waiting</MudText>
+                                    }
+                                    else
+                                    {
+                                        <MudText> @ConstantString.CLEAR </MudText>
+                                    }
+
+                                </MudButton>
+                            }
+                        </div>
+
+                        <MudTextField T="string" Style="min-width:300px" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+
+
+                    </div>
                 </div>
-                <MudSpacer />
-                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+
             </ToolBarContent>
             <ColGroup>
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
