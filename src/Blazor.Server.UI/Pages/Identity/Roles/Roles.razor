@@ -16,7 +16,7 @@
 <PageTitle>@Title</PageTitle>
 <style>
     .mud-table-toolbar {
-        height: 84px !important;
+        height: 120px !important;
     }
 </style>
 <ErrorBoundary>
@@ -25,7 +25,7 @@
         <MudTable @ref="_table"
                   FixedHeader="true"
                   FixedFooter="true"
-                  Height="calc(100vh - 265px)"
+                  Height="calc(100vh - 300px)"
                   Hover="true"
                   MultiSelection="true"
                   @bind-RowsPerPage="_defaultPageSize"
@@ -34,86 +34,96 @@
                   Loading="@_loading"
                   ServerData="@(new Func<TableState, Task<TableData<ApplicationRoleDto>>>(ServerReload))">
             <ToolBarContent>
-                <div class="justify-start pt-3">
-                    <MudText Typo="Typo.h6">@L["Roles"]</MudText>
-                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudButton DisableElevation Variant="Variant.Outlined"
-                                   Size="Size.Small"
-                                   OnClick="OnRefresh"
-                                   Disabled="@_loading"
-                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
-                        @if (_canCreate)
+                <div class="d-flex align-start flex-grow-1">
+                    <div class="d-flex gap-4">
+                        <MudIcon Icon="@Icons.Material.Filled.Groups" Size="Size.Large" />
+                        <div class="d-flex flex-column">
+                            <MudText Typo="Typo.caption">@L["Roles"]</MudText>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1" />
+                    <div class="d-flex flex-column justify-end">
+                        <div class="d-flex">
+                            <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                                <MudButton DisableElevation Variant="Variant.Outlined"
+                                           Size="Size.Small"
+                                           OnClick="OnRefresh"
+                                           Disabled="@_loading"
+                                           StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
+                                @if (_canCreate)
+                                {
+                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Add"
+                                           Size="Size.Small"
+                                           OnClick="OnCreate"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                }
+                                @if (_canDelete)
+                                {
+                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                                           StartIcon="@Icons.Material.Filled.Delete"
+                                           Disabled="@(!(_selectItems.Count>0))"
+                                           OnClick="OnDeleteChecked"
+                                           Size="Size.Small"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                }
+                                @if (_canImport)
+                                {
+                                    <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
+                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Upload"
+                                           Size="Size.Small"
+                                                           for="importdataInput"
+                                           HtmlTag="label"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           IconColor="Color.Surface">@ConstantString.IMPORT</MudButton>
+                                }
+                                @if (_canExport)
+                                {
+                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Download"
+                                           Size="Size.Small"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           IconColor="Color.Surface">@ConstantString.EXPORT</MudButton>
+                                }
+                            </MudHidden>
+                            <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+                                <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
+                                    <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
+                                    @if (_canCreate)
+                                    {
+                                        <MudMenuItem OnClick="OnCreate">@ConstantString.CREATE</MudMenuItem>
+                                    }
+                                    @if (_canDelete)
+                                    {
+                                        <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
+                                    }
+                                    @if (_canImport)
+                                    {
+                                        <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
+                                        <MudMenuItem for="importdataInput"
+                                                     HtmlTag="label">@ConstantString.IMPORT</MudMenuItem>
+                                    }
+                                    @if (_canExport)
+                                    {
+                                        <MudMenuItem OnClick="OnExport">@ConstantString.EXPORT</MudMenuItem>
+                                    }
+                                </MudMenu>
+                            </MudHidden>
+                        </div>
+                        @if (_canSearch)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Add"
-                                   Size="Size.Small"
-                                   OnClick="OnCreate"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                            <MudTextField T="string" Value="_searchString" FullWidth="false" ValueChanged="@(s=>OnSearch(s))"
+                                      Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0 mb-3">
+                            </MudTextField>
                         }
-                        @if (_canDelete)
-                        {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                   StartIcon="@Icons.Material.Filled.Delete"
-                                   Disabled="@(!(_selectItems.Count>0))"
-                                   OnClick="OnDeleteChecked"
-                                   Size="Size.Small"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
-                        }
-                        @if (_canImport)
-                        {
-                            <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Upload"
-                                   Size="Size.Small"
-                                                   for="importdataInput"
-                                   HtmlTag="label"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ConstantString.IMPORT</MudButton>
-                        }
-                        @if (_canExport)
-                        {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Download"
-                                   Size="Size.Small"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ConstantString.EXPORT</MudButton>
-                        }
-                    </MudHidden>
-                    <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-                        <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
-                            @if (_canCreate)
-                            {
-                                <MudMenuItem OnClick="OnCreate">@ConstantString.CREATE</MudMenuItem>
-                            }
-                            @if (_canDelete)
-                            {
-                                <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
-                            }
-                            @if (_canImport)
-                            {
-                                <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
-                                <MudMenuItem for="importdataInput"
-                                             HtmlTag="label">@ConstantString.IMPORT</MudMenuItem>
-                            }
-                            @if (_canExport)
-                            {
-                                <MudMenuItem OnClick="OnExport">@ConstantString.EXPORT</MudMenuItem>
-                            }
-                        </MudMenu>
-                    </MudHidden>
+
+                    </div>
                 </div>
-                <MudSpacer />
-                @if (_canSearch)
-                {
-                    <MudTextField T="string" Value="_searchString" FullWidth="false" ValueChanged="@(s=>OnSearch(s))"
-                              Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
-                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0 mb-3">
-                    </MudTextField>
-                }
             </ToolBarContent>
             <ColGroup>
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">

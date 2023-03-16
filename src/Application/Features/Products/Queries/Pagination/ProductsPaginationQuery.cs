@@ -22,7 +22,7 @@ public class ProductsWithPaginationQuery : PaginationFilterBase, ICacheableReque
     [CompareTo("Name", "Brand", "Description")] // <-- This filter will be applied to Name or Brand or Description.
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
-    [SearchProductsWithListView]
+    [CompareTo(typeof(SearchProductsWithListView), "Name")]
     public ProductListView ListView { get; set; } = ProductListView.All;
     public override string ToString()
     {

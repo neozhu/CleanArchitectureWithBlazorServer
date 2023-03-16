@@ -36,19 +36,19 @@
                   @bind-SelectedItems="_selectedItems"
                   Hover="true" @ref="_table">
             <ToolBarContent>
-                 <div class="d-flex align-center flex-grow-1">
-                        <div class="d-flex gap-4">
-                            <MudIcon Icon="@Icons.Material.Filled.DocumentScanner" Size="Size.Large" />
-                            <div class="d-flex flex-column">
-                                <MudText Typo="Typo.caption">@L["Documents"]</MudText>
+                <div class="d-flex align-start flex-grow-1">
+                    <div class="d-flex gap-4">
+                        <MudIcon Icon="@Icons.Material.Filled.DocumentScanner" Size="Size.Large" />
+                        <div class="d-flex flex-column">
+                            <MudText Typo="Typo.caption">@L["Documents"]</MudText>
                             <MudEnumSelect Style="min-width:120px" TEnum="DocumentListView" @bind-Value="_query.ListView" Dense="true" Label="List View">
-                                </MudEnumSelect>
-                            </div>
+                            </MudEnumSelect>
                         </div>
-                        <div class="flex-grow-1" />
+                    </div>
+                    <div class="flex-grow-1" />
 
-                        <div class="d-flex flex-column justify-end">
-                            <div class="d-flex">
+                    <div class="d-flex flex-column justify-end">
+                        <div class="d-flex">
                             <MudHidden Breakpoint="Breakpoint.SmAndDown">
                                 <MudButton DisableElevation Variant="Variant.Outlined"
                                            Size="Size.Small"
@@ -93,18 +93,15 @@
 
                                 </MudMenu>
                             </MudHidden>
-                            </div>
-                            @if (_canSearch)
-                            {
-                              <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
-                            }
-                    
                         </div>
-                    </div>
+                        @if (_canSearch)
+                        {
+                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
+                        }
 
-     
-              
+                    </div>
+                </div>
             </ToolBarContent>
             <ColGroup>
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">
@@ -113,7 +110,7 @@
                     <col style="width:200px;" />
                     <col />
                     <col style="width:160px;" />
-                 </MudHidden>
+                </MudHidden>
             </ColGroup>
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
@@ -130,7 +127,7 @@
                     {
                         <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                              Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterRight"  >
+                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterRight">
                             @if (_canEdit)
                             {
                                 <MudMenuItem OnClick="@(()=>OnEdit(context))">@ConstantString.EDIT</MudMenuItem>
@@ -161,27 +158,27 @@
                         <MudText Typo="Typo.body2">@context.Description</MudText>
                     </div>
                 </MudTd>
-                 <MudTd DataLabel="@L["Recognize result"]">
+                <MudTd DataLabel="@L["Recognize result"]">
                     <div class="d-flex flex-column">
                         <div class="flex-grow-0">
-                        @switch (context.Status)
-                        {
-                            case JobStatus.Queueing:
-                                <MudChip  Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" Disabled="true">@context.Status</MudChip>
-                                break;
-                            case JobStatus.Doing:
-                                <MudChip  Icon="@Icons.Material.Outlined.DocumentScanner" Variant="Variant.Outlined" Size="Size.Small" Color="Color.Info"> @context.Status</MudChip>
-                                break;
-                            case JobStatus.Done:
-                                <MudChip  Icon="@Icons.Material.Filled.Done" Variant="Variant.Filled" Size="Size.Small" Color="Color.Success">@context.Status</MudChip>
-                                break;
-                            default:
-                                <MudChip Variant="Variant.Outlined" Size="Size.Small" Color="Color.Primary">@context.Status</MudChip>
-                                break;
-                        }
+                            @switch (context.Status)
+                            {
+                                case JobStatus.Queueing:
+                                    <MudChip Variant="Variant.Outlined" Size="Size.Small" Color="Color.Default" Disabled="true">@context.Status</MudChip>
+                                    break;
+                                case JobStatus.Doing:
+                                    <MudChip Icon="@Icons.Material.Outlined.DocumentScanner" Variant="Variant.Outlined" Size="Size.Small" Color="Color.Info"> @context.Status</MudChip>
+                                    break;
+                                case JobStatus.Done:
+                                    <MudChip Icon="@Icons.Material.Filled.Done" Variant="Variant.Filled" Size="Size.Small" Color="Color.Success">@context.Status</MudChip>
+                                    break;
+                                default:
+                                    <MudChip Variant="Variant.Outlined" Size="Size.Small" Color="Color.Primary">@context.Status</MudChip>
+                                    break;
+                            }
                         </div>
                         <div class="flex-grow-0">
-                        <MudHighlighter Typo="Typo.body2" Text="@context.Content" HighlightedText="@_searchString"></MudHighlighter>
+                            <MudHighlighter Typo="Typo.body2" Text="@context.Content" HighlightedText="@_searchString"></MudHighlighter>
                         </div>
                     </div>
                 </MudTd>
@@ -195,11 +192,13 @@
                     @if (UserProfile.UserId == context.Owner.Id)
                     {
                         <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Me </MudChip>
-                    }else{
-                    <div class="d-flex flex-column">
-                        <MudText>@context.Owner?.DisplayName</MudText>
-                        <MudText Typo="Typo.body2">@context.Owner?.Email</MudText>
-                    </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-column">
+                            <MudText>@context.Owner?.DisplayName</MudText>
+                            <MudText Typo="Typo.body2">@context.Owner?.Email</MudText>
+                        </div>
                     }
                 </MudTd>
                 <MudTd DataLabel="@L["Tenant Name"]">
@@ -269,7 +268,7 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
-        _tenantId =  _tenantProvider.TenantId;
+        _tenantId = _tenantProvider.TenantId;
         _client.JobCompleted += _client_JobCompleted;
         _client.JobStarted += _client_JobStarted;
     }
@@ -278,7 +277,7 @@
         InvokeAsync(async () =>
         {
             await _table.ReloadServerData();
-            Snackbar.Add(string.Format(L["{0} recognize completed."],e), MudBlazor.Severity.Success);
+            Snackbar.Add(string.Format(L["{0} recognize completed."], e), MudBlazor.Severity.Success);
         });
     }
     private void _client_JobStarted(object? sender, string e)
@@ -286,7 +285,7 @@
         InvokeAsync(async () =>
         {
             await _table.ReloadServerData();
-            Snackbar.Add(string.Format(L["{0} job started."],e), MudBlazor.Severity.Info);
+            Snackbar.Add(string.Format(L["{0} job started."], e), MudBlazor.Severity.Info);
         });
     }
 
@@ -369,7 +368,7 @@
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-         await _table.ReloadServerData();
+            await _table.ReloadServerData();
         }
     }
 
@@ -428,5 +427,4 @@
             _downloading = false;
         }
     }
-
-    }
+}
