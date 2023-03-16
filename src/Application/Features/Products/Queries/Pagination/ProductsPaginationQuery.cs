@@ -22,11 +22,12 @@ public class ProductsWithPaginationQuery : PaginationFilterBase, ICacheableReque
     [CompareTo("Name", "Brand", "Description")] // <-- This filter will be applied to Name or Brand or Description.
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
-    [CompareTo(typeof(SearchProductsWithListView), "Name")]
+    [CompareTo(typeof(SearchProductsWithListView<ProductsWithPaginationQuery>), "Name")]
     public ProductListView ListView { get; set; } = ProductListView.All;
+    public UserProfile? CurrentUser { get; set; }
     public override string ToString()
     {
-        return $"ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{Price?.Min},MaxPrice:{Price?.Max},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+        return $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{Price?.Min},MaxPrice:{Price?.Max},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
     }
     public string CacheKey => ProductCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
