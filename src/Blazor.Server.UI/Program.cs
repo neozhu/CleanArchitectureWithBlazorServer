@@ -38,7 +38,8 @@ app.MapHealthChecks("/health");
 app.UseExceptionHandler("/Error");
 app.MapFallbackToPage("/_Host");
 app.UseInfrastructure(builder.Configuration);
-app.MapBlazorHub();
+app.UseWebSockets();
+app.MapBlazorHub(options=>options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets);
 
 if (app.Environment.IsDevelopment())
 {

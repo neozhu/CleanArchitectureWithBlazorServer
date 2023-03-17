@@ -14,7 +14,7 @@
 <PageTitle>@Title</PageTitle>
 <style>
     .mud-table-toolbar {
-        height: 84px !important;
+        height: 120px !important;
     }
 </style>
 <ErrorBoundary>
@@ -22,7 +22,7 @@
         <MudTable ServerData="@(new Func<TableState, Task<TableData<TenantDto>>>(ServerReload))"
                   FixedHeader="true"
                   FixedFooter="true"
-                  Height="calc(100vh - 265px)"
+                  Height="calc(100vh - 300px)"
                   Loading="@_loading"
                   @bind-RowsPerPage="_defaultPageSize"
                   SortLabel="@ConstantString.ORDERBY"
@@ -30,55 +30,68 @@
                   @bind-SelectedItems="_selectedItems"
                   Hover="true" @ref="_table">
             <ToolBarContent>
-                <div class="justify-start pt-3">
-                    <MudText Typo="Typo.h6">@L["Tenants"]</MudText>
-                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudButton DisableElevation Variant="Variant.Outlined"
-                                   Size="Size.Small"
-                                   Disabled="@_loading"
-                                   OnClick="@(()=>OnRefresh())"
-                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
-                        @if (_canCreate)
+                <div class="d-flex align-start flex-grow-1">
+                    <div class="d-flex gap-4">
+                        <MudIcon Icon="@Icons.Material.Filled.Domain" Size="Size.Large" />
+                        <div class="d-flex flex-column">
+                            <MudText Typo="Typo.caption">@L["Tenants"]</MudText>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1" />
+                    <div class="d-flex flex-column justify-end">
+                        <div class="d-flex">
+                            <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                                <MudButton DisableElevation Variant="Variant.Outlined"
+                                           Size="Size.Small"
+                                           Disabled="@_loading"
+                                           OnClick="@(()=>OnRefresh())"
+                                           StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
+                                @if (_canCreate)
+                                {
+                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Add"
+                                           Disabled="@_loading"
+                                           Size="Size.Small"
+                                           OnClick="OnCreate"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                }
+                                @if (_canDelete)
+                                {
+                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                                           StartIcon="@Icons.Material.Filled.Delete"
+                                           Disabled="@(!(_selectedItems.Count>0))"
+                                           Size="Size.Small"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           OnClick="OnDeleteChecked"
+                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                }
+
+                            </MudHidden>
+                            <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+                                <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
+                                    <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
+                                    @if (_canCreate)
+                                    {
+                                        <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@ConstantString.CREATE</MudMenuItem>
+                                    }
+                                    @if (_canDelete)
+                                    {
+                                        <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
+                                    }
+
+                                </MudMenu>
+                            </MudHidden>
+                        </div>
+                        @if (_canSearch)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                   StartIcon="@Icons.Material.Filled.Add"
-                                   Disabled="@_loading"
-                                   Size="Size.Small"
-                                   OnClick="OnCreate"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
                         }
-                        @if (_canDelete)
-                        {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                   StartIcon="@Icons.Material.Filled.Delete"
-                                   Disabled="@(!(_selectedItems.Count>0))"
-                                   Size="Size.Small"
-                                   Style="margin-right: 4px; margin-bottom:4px"
-                                   OnClick="OnDeleteChecked"
-                                   IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
-                        }
-            
-                    </MudHidden>
-                    <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-                        <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
-                            @if (_canCreate)
-                            {
-                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@ConstantString.CREATE</MudMenuItem>
-                            }
-                            @if (_canDelete)
-                            {
-                                <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
-                            }
-                            
-                        </MudMenu>
-                    </MudHidden>
+
+                    </div>
                 </div>
-                <MudSpacer />
-                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
-                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">

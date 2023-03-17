@@ -22,11 +22,16 @@ public class ProductsWithPaginationQuery : PaginationFilterBase, ICacheableReque
     [CompareTo("Name", "Brand", "Description")] // <-- This filter will be applied to Name or Brand or Description.
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
-    [SearchProductsWithListView]
-    public ProductListView ListView { get; set; } = ProductListView.All;
+    [CompareTo(typeof(SearchProductsWithListView), "Name")]
+    public ProductListView ListView { get; set; } = ProductListView.All; //<-- When the user selects a different ListView,
+                                                                         // a custom query expression is executed on the backend.
+                                                                         // For example, if the user selects "My Products",
+                                                                         // the query will be x => x.CreatedBy == CurrentUser.UserId
+    public UserProfile? CurrentUser { get; set; } // <-- This CurrentUser property gets its value from the information of
+                                                  // the currently logged in user
     public override string ToString()
     {
-        return $"ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{Price?.Min},MaxPrice:{Price?.Max},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+        return $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{Price?.Min},MaxPrice:{Price?.Max},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
     }
     public string CacheKey => ProductCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;

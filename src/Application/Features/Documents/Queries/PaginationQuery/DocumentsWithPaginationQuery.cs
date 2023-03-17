@@ -3,45 +3,41 @@
 
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Document = CleanArchitecture.Blazor.Domain.Entities.Document;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 
 public class DocumentsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<DocumentDto>>
 {
-
     public DocumentListView ListView { get; set; } = DocumentListView.All;
-    public string TenantId { get; set; }
-    public DocumentsWithPaginationQuery(string tenantId)
+    public required UserProfile CurrentUser { get; set; }
+    public override string ToString()
     {
-        TenantId = tenantId;
+        return $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
-    public string CacheKey => $"{nameof(DocumentsWithPaginationQuery)},{this},{TenantId}";
+    public string CacheKey => DocumentCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;
 
 }
 public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuery, PaginatedData<DocumentDto>>
 {
-    private readonly ICurrentUserService _currentUserService;
  
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
 
     public DocumentsQueryHandler(
-        ICurrentUserService currentUserService,
-  
         IApplicationDbContext context,
         IMapper mapper
         )
     {
-        _currentUserService = currentUserService;
         _context = context;
         _mapper = mapper;
     }
     public async Task<PaginatedData<DocumentDto>> Handle(DocumentsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var userid = _currentUserService.UserId;
         var data = await _context.Documents
-            .Specify(new DocumentsQuery(userid,request.TenantId,request.Keyword))
+            .Specify(new DocumentsQuery(request))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<DocumentDto>(_mapper.ConfigurationProvider)
             .PaginatedDataAsync(request.PageNumber, request.PageSize);
@@ -51,15 +47,23 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
     
     internal class DocumentsQuery : Specification<Document>
     {
-        public DocumentsQuery(string userId,string tenantId,string? keyword)
+        public DocumentsQuery(DocumentsWithPaginationQuery request)
         {
             //AddInclude(x=>x.Include(x=>x.Owner).ThenInclude(x=>x.Superior));
             //AddInclude(x => x.Include(x=>x.Editor).ThenInclude(x=>x.Superior));
-            this.Criteria = p => (p.CreatedBy == userId && p.IsPublic == false) || p.IsPublic == true;
-            And(x => x.TenantId == tenantId);
-            if (!string.IsNullOrEmpty(keyword))
+            Criteria = request.ListView switch
             {
-                And(x => x.Title.Contains(keyword) || x.Description.Contains(keyword) || x.Content.Contains(keyword));
+                DocumentListView.All => p => (p.CreatedBy == request.CurrentUser.UserId && p.IsPublic == false) || (p.IsPublic == true && p.TenantId == request.CurrentUser.TenantId),
+                DocumentListView.My => p => (p.CreatedBy == request.CurrentUser.UserId && p.TenantId == request.CurrentUser.TenantId),
+                DocumentListView.CreatedToday => p => p.Created.Value.Date == DateTime.Now.Date,
+                _ => throw new NotImplementedException()
+            };
+
+
+
+            if (!string.IsNullOrEmpty(request.Keyword))
+            {
+                And(x => x.Title.Contains(request.Keyword) || x.Description.Contains(request.Keyword) || x.Content.Contains(request.Keyword));
             }
         }
     }

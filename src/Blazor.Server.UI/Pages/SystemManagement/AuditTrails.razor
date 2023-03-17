@@ -9,7 +9,7 @@
 <PageTitle>@L[Title]</PageTitle>
 <style>
     .mud-table-toolbar {
-        height: 84px !important;
+        height: 120px !important;
     }
 </style>
 <ErrorBoundary>
@@ -19,26 +19,39 @@
                   FixedFooter="true"
                   Virtualize="true"
                   @bind-RowsPerPage="_defaultPageSize"
-                  Height="calc(100vh - 265px)"
+                  Height="calc(100vh - 300px)"
                   Loading="@_loading"
                   SortLabel="@ConstantString.ORDERBY"
                   Hover="true" @ref="_table">
             <ToolBarContent>
-                <div class="justify-start pt-3">
-                    <MudText Typo="Typo.h6">@L[Title]</MudText>
-                    <MudButton DisableElevation Variant="Variant.Outlined"
-                               Size="Size.Small"
-                               OnClick="@(()=>OnRefresh())"
-                               StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                               Style="margin-right: 5px;">@ConstantString.REFRESH</MudButton>
+                <div class="d-flex align-start flex-grow-1">
+                    <div class="d-flex gap-4">
+                        <MudIcon Icon="@Icons.Material.Filled.ReceiptLong" Size="Size.Large" />
+                        <div class="d-flex flex-column">
+                            <MudText Typo="Typo.caption">@L[Title]</MudText>
+
+                        </div>
+                    </div>
+                    <div class="flex-grow-1" />
+
+                    <div class="d-flex flex-column justify-end">
+                        <div class="d-flex">
+                            <MudButton DisableElevation Variant="Variant.Outlined"
+                                       Size="Size.Small"
+                                       OnClick="@(()=>OnRefresh())"
+                                       StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                                       Style="margin-right: 5px;">@ConstantString.REFRESH</MudButton>
+                        </div>
+                 
+                            <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                                <MudEnumSelect TEnum="AuditType?" Placeholder="Search for audit type" Value="@_searchAuditType" Clearable="true" ValueChanged="@(s=>OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
+                                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.End" Style="width:260px" FullWidth="true"
+                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
+                            </MudStack>
+                        
+
+                    </div>
                 </div>
-                <MudSpacer />
-                <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                    <MudEnumSelect TEnum="AuditType?" Placeholder="Search for audit type" Value="@_searchAuditType" Clearable="true" ValueChanged="@(s=>OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
-                    <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.End" Style="width:260px" FullWidth="true"
-                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" ></MudTextField>
-                </MudStack>
-             
             </ToolBarContent>
             <ColGroup>
                 <MudHidden Breakpoint="Breakpoint.SmAndDown">

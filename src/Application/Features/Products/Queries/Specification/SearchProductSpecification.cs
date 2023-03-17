@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
@@ -46,11 +47,19 @@ public class SearchProductsWithListView : FilteringOptionsBaseAttribute
 {
     public override Expression BuildExpression(Expression expressionBody, PropertyInfo targetProperty, PropertyInfo filterProperty, object value)
     {
+        var today = DateTime.Now.Date;
+        var start = Convert.ToDateTime(today.ToString("yyyy-MM-dd",CultureInfo.CurrentCulture) + " 00:00:00", CultureInfo.CurrentCulture);
+        var end = Convert.ToDateTime(today.ToString("yyyy-MM-dd",CultureInfo.CurrentCulture) + " 23:59:59", CultureInfo.CurrentCulture);
+        //var currentUser = filterProperty.CurrentUser;
         var listview = (ProductListView)value;
         return listview switch {
             ProductListView.All => expressionBody,
-            ProductListView.My=> expressionBody,
-            ProductListView.CreatedToday => expressionBody,
+            //ProductListView.My=>  Expression.Equal(Expression.Property(expressionBody, "CreatedBy"),  Expression.Constant(currentUser?.UserId)),
+            ProductListView.CreatedToday => Expression.GreaterThanOrEqual(Expression.Property(expressionBody, "Created"), 
+                                                                          Expression.Constant(start, typeof(DateTime?)))
+                                            .Combine(Expression.LessThanOrEqual(Expression.Property(expressionBody, "Created"), 
+                                                     Expression.Constant(end, typeof(DateTime?))), 
+                                                     CombineType.And),
             _=> expressionBody
         };
     }
