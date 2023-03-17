@@ -22,9 +22,13 @@ public class ProductsWithPaginationQuery : PaginationFilterBase, ICacheableReque
     [CompareTo("Name", "Brand", "Description")] // <-- This filter will be applied to Name or Brand or Description.
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
-    [CompareTo(typeof(SearchProductsWithListView<ProductsWithPaginationQuery>), "Name")]
-    public ProductListView ListView { get; set; } = ProductListView.All;
-    public UserProfile? CurrentUser { get; set; }
+    [CompareTo(typeof(SearchProductsWithListView), "Name")]
+    public ProductListView ListView { get; set; } = ProductListView.All; //<-- When the user selects a different ListView,
+                                                                         // a custom query expression is executed on the backend.
+                                                                         // For example, if the user selects "My Products",
+                                                                         // the query will be x => x.CreatedBy == CurrentUser.UserId
+    public UserProfile? CurrentUser { get; set; } // <-- This CurrentUser property gets its value from the information of
+                                                  // the currently logged in user
     public override string ToString()
     {
         return $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{Price?.Min},MaxPrice:{Price?.Max},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";

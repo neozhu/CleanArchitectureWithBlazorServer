@@ -41,7 +41,7 @@
                         <MudIcon Icon="@Icons.Material.Filled.DocumentScanner" Size="Size.Large" />
                         <div class="d-flex flex-column">
                             <MudText Typo="Typo.caption">@L["Documents"]</MudText>
-                            <MudEnumSelect Style="min-width:120px" TEnum="DocumentListView" @bind-Value="_query.ListView" Dense="true" Label="List View">
+                            <MudEnumSelect Style="min-width:120px" TEnum="DocumentListView" ValueChanged="OnChangedListView" Value="_query.ListView" Dense="true" Label="List View">
                             </MudEnumSelect>
                         </div>
                     </div>
@@ -248,7 +248,7 @@
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     private string _tenantId = string.Empty;
-    private DocumentsWithPaginationQuery _query { get; set; } = new(string.Empty);
+    private DocumentsWithPaginationQuery _query { get; set; } =null!;
 
     private bool _canSearch;
     private bool _canCreate;
@@ -271,6 +271,7 @@
         _tenantId = _tenantProvider.TenantId;
         _client.JobCompleted += _client_JobCompleted;
         _client.JobStarted += _client_JobStarted;
+        _query = new DocumentsWithPaginationQuery() { CurrentUser = UserProfile };
     }
     private void _client_JobCompleted(object? sender, string e)
     {
@@ -300,7 +301,7 @@
         {
             _loading = true;
             _query.Keyword = _searchString;
-            _query.TenantId = _tenantId;
+            _query.CurrentUser = UserProfile;
             _query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
             _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
             _query.PageNumber = state.Page + 1;
@@ -321,6 +322,11 @@
         {
             await _table.ReloadServerData();
         });
+    }
+    private async Task OnChangedListView(DocumentListView listview)
+    {
+        _query.ListView = listview;
+        await _table.ReloadServerData();
     }
     private async Task OnSearch(string text)
     {

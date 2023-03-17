@@ -12,6 +12,10 @@ public static class DocumentCacheKey
     {
         _tokensource = new CancellationTokenSource(refreshInterval);
     }
+    public static string GetPaginationCacheKey(string parameters)
+    {
+        return $"DocumentsWithPaginationQuery,{parameters}";
+    }
     private static CancellationTokenSource _tokensource;
     public static CancellationTokenSource SharedExpiryTokenSource() {
         if (_tokensource.IsCancellationRequested)
