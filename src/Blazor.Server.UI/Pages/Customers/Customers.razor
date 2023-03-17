@@ -84,21 +84,23 @@
                         }
                         @if (_canImport)
                         {
-                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="display:inline-block; margin-right: 4px; margin-bottom:4px;margin-top:0px">
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px;">
                                 <ButtonTemplate>
-                                    <MudButton HtmlTag="label" Size="Size.Small"
+                                    <MudButton HtmlTag="label"
+                                           Size="Size.Small"
                                            Variant="Variant.Outlined"
                                            Color="Color.Primary"
+                                           Disabled="@_loading"
                                            StartIcon="@Icons.Material.Filled.Upload"
                                                for="@context">
                                         @if (_uploading)
                                         {
-                                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                            <MudText Class="ms-2"> @ConstantString.UPLOADING</MudText>
+                                            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                                            @ConstantString.UPLOADING
                                         }
                                         else
                                         {
-                                            <MudText>@ConstantString.IMPORT</MudText>
+                                            @ConstantString.IMPORT
                                         }
                                     </MudButton>
                                 </ButtonTemplate>

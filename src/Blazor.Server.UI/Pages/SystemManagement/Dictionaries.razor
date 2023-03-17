@@ -91,11 +91,11 @@
                                     <MudButton Disabled="@_uploading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                            StartIcon="@Icons.Material.Filled.Upload"
                                            Size="Size.Small"
-                                           Style="margin-right:1px; margin-bottom:4px"
-                                                           for="importdataInput"
+                                           Style="margin-right:4px; margin-bottom:4px"
+                                           for="importdataInput"
                                            HtmlTag="label"
                                            IconColor="Color.Surface">
-                                    @if (_uploading)
+                                        @if (_uploading)
                                         {
                                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                                             <MudText Class="ms-2"> @ConstantString.UPLOADING</MudText>
