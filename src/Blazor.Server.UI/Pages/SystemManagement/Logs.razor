@@ -31,7 +31,8 @@
                         <MudIcon Icon="@Icons.Material.Filled.BarChart" Size="Size.Large" />
                         <div class="d-flex flex-column">
                             <MudText Typo="Typo.caption">@L["Logs"]</MudText>
-
+                            <MudEnumSelect Style="min-width:220px" TEnum="LogListView" ValueChanged="OnChangedListView" Value="_query.ListView" Dense="true" Label="List View">
+                            </MudEnumSelect>
                         </div>
                     </div>
                     <div class="flex-grow-1" />
@@ -66,7 +67,7 @@
                             }
                         </div>
 
-                        <MudTextField T="string" Style="min-width:300px" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.End"
+                        <MudTextField T="string" Style="min-width:300px" ValueChanged="@(s=>OnSearch(s))" Value="@_query.Keyword" Placeholder="Search" Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 
 
@@ -192,6 +193,7 @@
     [Inject]
     private IMediator _mediator { get; set; } = default!;
     private bool _canPurge;
+    private LogsWithPaginationQuery _query = new();
     protected override async void OnInitialized()
     {
         Title = L["Logs"];
@@ -214,15 +216,11 @@
         try
         {
             _loading = true;
-            var request = new LogsWithPaginationQuery()
-                {
-                    Keyword = _searchString,
-                    OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
-                    SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
-                    PageNumber = state.Page + 1,
-                    PageSize = state.PageSize
-                };
-            var result = await _mediator.Send(request).ConfigureAwait(false);
+            _query.Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
+            _query.SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            _query.Page = state.Page + 1;
+            _query.PerPage = state.PageSize;
+            var result = await _mediator.Send(_query).ConfigureAwait(false);
             return new TableData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -230,14 +228,19 @@
             _loading = false;
         }
     }
+    private async Task OnChangedListView(LogListView listview)
+    {
+        _query.ListView = listview;
+        await _table.ReloadServerData();
+    }
     private async Task OnSearch(string text)
     {
-        _searchString = text;
+       _query.Keyword = text;
         await _table.ReloadServerData();
     }
     private async Task OnRefresh()
     {
-        _searchString = string.Empty;
+        _query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
     private Task OnShowDetail(LogDto dto)
