@@ -13,7 +13,13 @@ public class KeyValuesWithPaginationQuery : PaginationFilterBase, ICacheableRequ
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
     [OperatorComparison(OperatorType.Equal)]
+    [CompareTo("Name")]
     public Picklist? Picklist { get; set; }
+
+    public override string ToString()
+    {
+        return $"Picklist:{Picklist},Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+    }
     public string CacheKey => $"{nameof(KeyValuesWithPaginationQuery)},{this}";
 
     public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;

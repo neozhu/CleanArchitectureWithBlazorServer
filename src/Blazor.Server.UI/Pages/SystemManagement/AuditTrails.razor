@@ -29,7 +29,8 @@
                         <MudIcon Icon="@Icons.Material.Filled.ReceiptLong" Size="Size.Large" />
                         <div class="d-flex flex-column">
                             <MudText Typo="Typo.caption">@L[Title]</MudText>
-
+                            <MudEnumSelect Style="min-width:220px" TEnum="AuditTrailListView" ValueChanged="OnChangedListView" Value="_query.ListView" Dense="true" Label="List View">
+                            </MudEnumSelect>
                         </div>
                     </div>
                     <div class="flex-grow-1" />
@@ -42,13 +43,13 @@
                                        StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                        Style="margin-right: 5px;">@ConstantString.REFRESH</MudButton>
                         </div>
-                 
-                            <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                                <MudEnumSelect TEnum="AuditType?" Placeholder="Search for audit type" Value="@_searchAuditType" Clearable="true" ValueChanged="@(s=>OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
-                                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.End" Style="width:260px" FullWidth="true"
+
+                        <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                            <MudEnumSelect TEnum="AuditType?" Placeholder="Search for audit type" Value="@_query.AuditType" Clearable="true" ValueChanged="@(s=>OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
+                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_query.Keyword" Placeholder="Search" Adornment="Adornment.End" Style="width:260px" FullWidth="true"
                                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
-                            </MudStack>
-                        
+                        </MudStack>
+
 
                     </div>
                 </div>
@@ -110,7 +111,7 @@
                                     <code class="docs-code docs-code-primary">
                                         @context.OldValues
                                     </code>
-                                   
+
 
                                     <MudText>New Value</MudText>
                                     <code class="docs-code docs-code-primary">
@@ -140,29 +141,24 @@
 </ErrorBoundary>
 @code {
     public string Title { get; private set; } = "Audit Trails";
-    private string _searchString = string.Empty;
-    private AuditType? _searchAuditType = null;
     private MudTable<AuditTrailDto> _table = default!;
     private bool _loading;
     private int _defaultPageSize = 15;
     [Inject]
     private IMediator _mediator { get; set; } = default!;
-
+    private AuditTrailsWithPaginationQuery _query = new();
     private async Task<TableData<AuditTrailDto>> ServerReload(TableState state)
     {
         try
         {
             _loading = true;
-            var request = new AuditTrailsWithPaginationQuery()
-                {
-                    Keyword = _searchString,
-                    AuditType = _searchAuditType,
-                    Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
-                    SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending),
-                    Page = state.Page + 1,
-                    PerPage = state.PageSize
-                };
-            var result = await _mediator.Send(request).ConfigureAwait(false);
+      
+            _query.Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
+            _query.SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            _query.Page = state.Page + 1;
+            _query.PerPage = state.PageSize;
+
+            var result = await _mediator.Send(_query).ConfigureAwait(false);
             return new TableData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -170,20 +166,25 @@
             _loading = false;
         }
     }
+    private async Task OnChangedListView(AuditTrailListView listview)
+    {
+        _query.ListView = listview;
+        await _table.ReloadServerData();
+    }
     private async Task OnSearch(string text)
     {
-        _searchString = text;
+        _query.Keyword = text;
         await _table.ReloadServerData();
     }
     private async Task OnSearch(AuditType? val)
     {
-        _searchAuditType = val;
+        _query.AuditType = val;
         await _table.ReloadServerData();
     }
     private async Task OnRefresh()
     {
         AuditTrailsCacheKey.Refresh();
-        _searchString = string.Empty;
+        _query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
     private Task OnShowDetail(AuditTrailDto dto)
