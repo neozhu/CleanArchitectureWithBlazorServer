@@ -112,24 +112,41 @@
                                 }
                             </MudHidden>
                             <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-                                <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                                    <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
-                                    @if (_canCreate)
-                                    {
-                                        <MudMenuItem OnClick="OnCreate">@ConstantString.CREATE</MudMenuItem>
-                                    }
-                                    @if (_canDelete)
-                                    {
-                                        <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
-                                    }
-
-                                </MudMenu>
+                                @if (_canCreate)
+                                {
+                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Add"
+                                           Size="Size.Small"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           OnClick="OnCreate"
+                                           IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                }
+                                @if (_canDelete)
+                                {
+                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                                           StartIcon="@Icons.Material.Filled.Delete"
+                                           Disabled="@(!(_selectItems.Count>0))"
+                                           Size="Size.Small"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           OnClick="OnDeleteChecked"
+                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                }
                             </MudHidden>
                         </div>
                         @if (_canSearch)
                         {
-                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
+                            <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                                <MudSelect T="string" Placeholder="Search for role name" Value="@_searchrole" Clearable="true" ValueChanged="@(s=>OnSearchRole(s))" Style="width:150px">
+                                    @foreach (var str in _roles)
+                                    {
+                                        <MudSelectItem Value="@str">@str</MudSelectItem>
+                                    }
+                                </MudSelect>
+                                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
+                            </MudStack>
+
+
                         }
 
                     </div>
@@ -262,6 +279,7 @@
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
+    private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     private TimeSpan refreshInterval => TimeSpan.FromSeconds(60);
     private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
     [Inject]
@@ -292,14 +310,14 @@
     private bool _loading;
     private bool _exporting;
     private bool _uploading;
-
-
+    private List<string?> _roles = new();
+    private string? _searchrole;
 
     protected override async Task OnInitializedAsync()
     {
 
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-
+        _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
         Title = L["Users"];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
@@ -314,7 +332,7 @@
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _usersStateContainer.OnChange += HandleCircuitsChanged;
 
-
+        _roles = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
     }
     public void Dispose()
     {
@@ -342,17 +360,23 @@
         try
         {
             _loading = true;
-            var items = await _userManager.Users.Where(x => x.UserName.Contains(_searchString) ||
+            var items = await _userManager.Users.Where(x => (x.UserName.Contains(_searchString) ||
             x.Email.Contains(_searchString) ||
             x.DisplayName.Contains(_searchString) ||
             x.PhoneNumber.Contains(_searchString) ||
             x.TenantName.Contains(_searchString) ||
-            x.Provider.Contains(_searchString) ||
-            x.UserRoles.Any(x => x.Role.Name.Contains(_searchString)))
+            x.Provider.Contains(_searchString)) &&
+            (_searchrole == null || (_searchrole != null && x.UserRoles.Any(x => x.Role.Name == _searchrole))))
                  .Include(x => x.UserRoles).ThenInclude(x => x.Role)
                  .OrderBy($"{state.SortLabel ?? "UserName"} {(state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString())}")
                  .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
-            var total = await _userManager.Users.CountAsync(x => x.UserName.Contains(_searchString) || x.Email.Contains(_searchString) || x.DisplayName.Contains(_searchString) || x.PhoneNumber.Contains(_searchString));
+            var total = await _userManager.Users.CountAsync(x => (x.UserName.Contains(_searchString) ||
+            x.Email.Contains(_searchString) ||
+            x.DisplayName.Contains(_searchString) ||
+            x.PhoneNumber.Contains(_searchString) ||
+            x.TenantName.Contains(_searchString) ||
+            x.Provider.Contains(_searchString)) &&
+            (_searchrole == null || (_searchrole != null && x.UserRoles.Any(x => x.Role.Name == _searchrole))));
             return new TableData<ApplicationUserDto>() { TotalItems = total, Items = items };
         }
         finally
@@ -364,6 +388,12 @@
     {
         if (_loading) return;
         _searchString = text;
+        await _table.ReloadServerData();
+    }
+    private async Task OnSearchRole(string role)
+    {
+        if (_loading) return;
+        _searchrole = role;
         await _table.ReloadServerData();
     }
     private async Task OnRefresh()
@@ -530,7 +560,7 @@
         var model = new ResetPasswordFormModel()
             { Id = item.Id, DisplayName = item.DisplayName, UserName = item.UserName, ProfilePictureDataUrl = item.ProfilePictureDataUrl };
         var parameters = new DialogParameters { ["model"] = model };
-        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton=true, MaxWidth = MaxWidth.ExtraSmall };
+        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
         var dialog = DialogService.Show<_ResetPasswordDialog>(L["Set Password"], parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
@@ -681,13 +711,13 @@
     private async Task OnExport()
     {
         _exporting = true;
-        var items = await _userManager.Users.Where(x => x.UserName.Contains(_searchString) ||
-    x.Email.Contains(_searchString) ||
-    x.DisplayName.Contains(_searchString) ||
-    x.PhoneNumber.Contains(_searchString) ||
-    x.TenantName.Contains(_searchString) ||
-    x.Provider.Contains(_searchString) ||
-    x.UserRoles.Any(x => x.Role.Name.Contains(_searchString)))
+        var items = await _userManager.Users.Where(x => (x.UserName.Contains(_searchString) ||
+            x.Email.Contains(_searchString) ||
+            x.DisplayName.Contains(_searchString) ||
+            x.PhoneNumber.Contains(_searchString) ||
+            x.TenantName.Contains(_searchString) ||
+            x.Provider.Contains(_searchString)) &&
+            (_searchrole == null || (_searchrole != null && x.UserRoles.Any(x => x.Role.Name == _searchrole))))
              .Select(x => new ApplicationUserDto()
                  {
                      Id = x.Id,
@@ -700,7 +730,7 @@
                  }).ToListAsync();
         var result = await _excelService.ExportAsync(items,
                 new Dictionary<string, Func<ApplicationUserDto, object?>>()
-                                    {
+                                        {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
@@ -708,7 +738,7 @@
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                                    }
+                                        }
                 , L["Users"]);
         var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
         Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
