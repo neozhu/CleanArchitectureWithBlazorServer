@@ -11,9 +11,12 @@ public class CustomersWithPaginationQuery : PaginationFilterBase, ICacheableRequ
     [CompareTo("Name", "Description")] // <-- This filter will be applied to Name or Description.
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
+    [CompareTo(typeof(SearchCustomersWithListView), "Id")]
+    public CustomerListView ListView { get; set; } = CustomerListView.All; //<-- When the user selects a different ListView,
+                                                                               // a custom query expression is executed on the filter.
     public override string ToString()
     {
-        return $"Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+        return $"Listview:{ListView},Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
     }
     public string CacheKey => CustomerCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
@@ -58,4 +61,30 @@ public class CustomersPaginationSpecification : Specification<Customer>
         }
        
     }
+}
+public class SearchCustomersWithListView : FilteringOptionsBaseAttribute
+{
+    public override Expression BuildExpression(Expression expressionBody, PropertyInfo targetProperty, PropertyInfo filterProperty, object value)
+    {
+        var today = DateTime.Now.Date;
+        var start = Convert.ToDateTime(today.ToString("yyyy-MM-dd",CultureInfo.CurrentCulture) + " 00:00:00", CultureInfo.CurrentCulture);
+        var end = Convert.ToDateTime(today.ToString("yyyy-MM-dd",CultureInfo.CurrentCulture) + " 23:59:59", CultureInfo.CurrentCulture);
+        var listview = (CustomerListView)value;
+        return listview switch {
+            CustomerListView.All => expressionBody,
+            CustomerListView.CreatedToday => Expression.GreaterThanOrEqual(Expression.Property(expressionBody, "Created"), 
+                                                                          Expression.Constant(start, typeof(DateTime?)))
+                                            .Combine(Expression.LessThanOrEqual(Expression.Property(expressionBody, "Created"), 
+                                                     Expression.Constant(end, typeof(DateTime?))), 
+                                                     CombineType.And),
+            _=> expressionBody
+        };
+    }
+}
+public enum CustomerListView
+{
+    [Description("All")]
+    All,
+    [Description("Created Toady")]
+    CreatedToday,
 }

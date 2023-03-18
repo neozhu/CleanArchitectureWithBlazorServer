@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-using System.Reflection.Metadata;
-using AutoFilterer.Extensions;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
@@ -17,9 +15,11 @@ public class ExportProductsQuery : OrderableFilterBase, IRequest<Result<byte[]>>
     public string? Brand { get; set; }
     public string? Unit { get; set; }
     public Range<decimal> Price { get; set; } = new();
-    [CompareTo("Name", "Brand", "Description")] // <-- This filter will be applied to Name or Brand or Description.
+    [CompareTo("Name", "Brand", "Description")]
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
+    [CompareTo(typeof(SearchProductsWithListView), "Name")]
+    public ProductListView ListView { get; set; } = ProductListView.All;
     public ExportType ExportType { get; set; }
 }
 

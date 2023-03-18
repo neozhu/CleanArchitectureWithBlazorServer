@@ -3,6 +3,7 @@
 
 
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagination;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export;
 
@@ -11,6 +12,8 @@ public class ExportCustomersQuery : OrderableFilterBase, IRequest<Result<byte[]>
         [CompareTo("Name", "Description")] // <-- This filter will be applied to Name or Description.
         [StringFilterOptions(StringFilterOption.Contains)]
         public string? Keyword { get; set; }
+        [CompareTo(typeof(SearchCustomersWithListView), "Id")]
+        public CustomerListView ListView { get; set; } = CustomerListView.All;
 }
     
 public class ExportCustomersQueryHandler :
@@ -52,18 +55,4 @@ public class ExportCustomersQueryHandler :
                 , _localizer["Customers"]);
             return await Result<byte[]>.SuccessAsync(result);;
         }
-}
-
-
-public class CustomersExportSpecification : Specification<Customer>
-{
-    public CustomersExportSpecification(ExportCustomersQuery request)
-    {
-        Criteria = q => q.Name != null;
-        if (!string.IsNullOrEmpty(request.Keyword))
-        {
-            And(x => x.Name.Contains(request.Keyword));
-        }
-       
-    }
 }
