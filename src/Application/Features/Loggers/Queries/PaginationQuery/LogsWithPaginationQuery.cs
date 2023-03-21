@@ -11,15 +11,19 @@ namespace CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery;
 
 public class LogsWithPaginationQuery : PaginationFilterBase, ICacheableRequest<PaginatedData<LogDto>>
 {
-    [CompareTo("Message", "Exception", "UserName", "ClientIP")] 
+    [CompareTo("Message", "Exception", "UserName", "ClientIP")]
     [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
-
+    [IgnoreFilter]
+    public LogLevel? Level { get; set; }
+    [CompareTo("Level")]
+    [StringFilterOptions(StringFilterOption.Equals)]
+    public string? LevelString  => Level?.ToString();
     [CompareTo(typeof(SearchLogsWithListView), "Id")]
     public LogListView ListView { get; set; } = LogListView.All;
     public override string ToString()
     {
-        return $"Listview:{ListView},Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+        return $"Listview:{ListView},{LevelString},Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
     }
     public string CacheKey => LogsCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => LogsCacheKey.MemoryCacheEntryOptions;
@@ -60,10 +64,6 @@ public class SearchLogsWithListView : FilteringOptionsBaseAttribute
         return listview switch
         {
             LogListView.All => expressionBody,
-            LogListView.Information => Expression.Equal(Expression.Property(expressionBody, "Level"),Expression.Constant("Information")),
-            LogListView.Warning => Expression.Equal(Expression.Property(expressionBody, "Level"), Expression.Constant("Warning")),
-            LogListView.Fatal => Expression.Equal(Expression.Property(expressionBody, "Level"), Expression.Constant("Fatal")),
-            LogListView.Error => Expression.Equal(Expression.Property(expressionBody, "Level"), Expression.Constant("Error")),
             LogListView.Last30days => Expression.GreaterThanOrEqual(Expression.Property(expressionBody, "TimeStamp"),
                                                                           Expression.Constant(last30days, typeof(DateTime)))
                                             .Combine(Expression.LessThanOrEqual(Expression.Property(expressionBody, "TimeStamp"),
@@ -85,13 +85,5 @@ public enum LogListView
     [Description("Created Toady")]
     CreatedToday,
     [Description("View of the last 30 days")]
-    Last30days,
-    [Description("View of Information")]
-    Information,
-    [Description("View of Warning")]
-    Warning,
-    [Description("View of Error")]
-    Error,
-    [Description("View of Fatal")]
-    Fatal,
+    Last30days
 }
