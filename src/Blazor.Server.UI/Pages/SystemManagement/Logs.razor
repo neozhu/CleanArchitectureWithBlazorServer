@@ -66,10 +66,11 @@
                                 </MudButton>
                             }
                         </div>
-
-                        <MudTextField T="string" Style="min-width:300px" ValueChanged="@(s=>OnSearch(s))" Value="@_query.Keyword" Placeholder="Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-
+                        <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                            <MudEnumSelect TEnum="LogLevel?" Placeholder="Search for level" Value="@_query.Level" Clearable="true" ValueChanged="OnChangedLevel" Style="width:160px" FullWidth="true"> </MudEnumSelect>
+                            <MudTextField T="string" Style="min-width:300px" ValueChanged="@(s=>OnSearch(s))" Value="@_query.Keyword" Placeholder="Search" Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+                        </MudStack>
 
                     </div>
                 </div>
@@ -233,9 +234,14 @@
         _query.ListView = listview;
         await _table.ReloadServerData();
     }
+    private async Task OnChangedLevel(LogLevel? level)
+    {
+        _query.Level = level;
+        await _table.ReloadServerData();
+    }
     private async Task OnSearch(string text)
     {
-       _query.Keyword = text;
+        _query.Keyword = text;
         await _table.ReloadServerData();
     }
     private async Task OnRefresh()
