@@ -38,8 +38,18 @@ public static class DependencyInjection
             options.UseReduxDevTools();
                 });
         services.AddLazyCache();
-        services.AddScoped<IPicklistService, PicklistService>();
-        services.AddScoped<ITenantsService, TenantsService>();
+        services.AddScoped<PicklistService>();
+        services.AddScoped<IPicklistService>(sp => {
+            var service = sp.GetRequiredService<PicklistService>();
+            service.Initialize();
+            return service;
+            });
+        services.AddScoped<TenantService>();
+        services.AddScoped<ITenantService>(sp => {
+            var service = sp.GetRequiredService<TenantService>();
+            service.Initialize();
+            return service;
+        });
         services.AddScoped<RegisterFormModelFluentValidator>();
         return services;
     }

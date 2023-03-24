@@ -235,8 +235,6 @@
     private bool _downloading = false;
     private bool _loading;
     [Inject]
-    private ITenantProvider _tenantProvider { get; set; } = default!;
-    [Inject]
     IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     [Inject]
     private IMediator _mediator { get; set; } = default!;
@@ -268,10 +266,15 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
-        _tenantId = _tenantProvider.TenantId;
         _client.JobCompleted += _client_JobCompleted;
         _client.JobStarted += _client_JobStarted;
         _query = new DocumentsWithPaginationQuery() { CurrentUser = UserProfile };
+        UserProfileState.StateChanged += _userProfileState_StateChanged;
+    }
+    private async void _userProfileState_StateChanged(object? sender, EventArgs e)
+    {
+        await _table.ReloadServerData();
+        StateHasChanged();
     }
     private void _client_JobCompleted(object? sender, string e)
     {
@@ -294,6 +297,7 @@
     {
         _client.JobCompleted -= _client_JobCompleted;
         _client.JobStarted -= _client_JobStarted;
+        UserProfileState.StateChanged -= _userProfileState_StateChanged;
     }
     private async Task<TableData<DocumentDto>> ServerReload(TableState state)
     {

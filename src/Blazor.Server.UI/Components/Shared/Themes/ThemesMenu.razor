@@ -23,6 +23,7 @@
         <MudGrid Class="my-3"
                  Spacing="3">
             <MudItem xs="4">
+                 <MudTooltip Duration="1000" Text="@L["Switch to system"]">
                 <MudButton Class="mode-button"
                            FullWidth="true"
                            OnClick="@(() => ToggleDarkLightMode(DarkLightMode.System))"
@@ -32,8 +33,10 @@
                                  Icon="@Icons.Material.Filled.AutoMode" />
                     </ChildContent>
                 </MudButton>
+                </MudTooltip>
             </MudItem>
             <MudItem xs="4">
+                <MudTooltip Duration="1000" Text="@L["Switch to Light Theme"]">
                 <MudButton Class="mode-button"
                            FullWidth="true"
                            OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Light))"
@@ -43,8 +46,10 @@
                                  Icon="@Icons.Material.Filled.WbSunny" />
                     </ChildContent>
                 </MudButton>
+                </MudTooltip>
             </MudItem>
             <MudItem xs="4">
+                <MudTooltip Duration="1000" Text="@L["Switch to Dark Theme"]">
                 <MudButton Class="mode-button"
                            FullWidth="true"
                            OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Dark))"
@@ -54,6 +59,7 @@
                                  Style="color: #c9c9c9" />
                     </ChildContent>
                 </MudButton>
+                </MudTooltip>
             </MudItem>
         </MudGrid>
 
