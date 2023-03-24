@@ -4,56 +4,60 @@ using Toolbelt.Blazor.HotKeys2;
 
 namespace Blazor.Server.UI.Shared;
 
-public partial class MainLayout: LayoutComponentBase,IDisposable
+public partial class MainLayout : LayoutComponentBase, IDisposable
 {
     private bool _commandPaletteOpen;
     private HotKeysContext? _hotKeysContext;
     private bool _sideMenuDrawerOpen = true;
     private UserPreferences UserPreferences = new();
     public string Id => Guid.NewGuid().ToString();
-    [Inject] 
+    [Inject]
     private LayoutService _layoutService { get; set; } = null!;
     public void ReRender() => StateHasChanged();
-    private MudThemeProvider? _mudThemeProvider { get; set; }=null!;
+    private MudThemeProvider _mudThemeProvider;
     private bool _themingDrawerOpen;
     [Inject] private IDialogService _dialogService { get; set; } = default!;
     [Inject] private HotKeys _hotKeys { get; set; } = default!;
 
     public void Dispose()
     {
-       
+
         _layoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
         _hotKeysContext?.Dispose();
         GC.SuppressFinalize(this);
     }
-  
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
             await ApplyUserPreferences();
+            await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
             StateHasChanged();
         }
-       
     }
     private async Task ApplyUserPreferences()
     {
-            var defaultDarkMode = await _mudThemeProvider!.GetSystemPreference();
-            UserPreferences = await _layoutService.ApplyUserPreferences(defaultDarkMode);
+        var defaultDarkMode = await _mudThemeProvider.GetSystemPreference();
+        UserPreferences = await _layoutService.ApplyUserPreferences(defaultDarkMode);
     }
     protected override async Task OnInitializedAsync()
     {
         _layoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         _layoutService.SetBaseTheme(Theme.ApplicationTheme());
-        _hotKeysContext = _hotKeys.CreateContext().Add(ModKey.Ctrl,Key.K, async()=>await OpenCommandPalette(), "Open command palette.");
-       await base.OnInitializedAsync();
+        _hotKeysContext = _hotKeys.CreateContext().Add(ModKey.Ctrl, Key.K, async () => await OpenCommandPalette(), "Open command palette.");
+        await base.OnInitializedAsync();
 
     }
 
 
-
+    private async Task OnSystemPreferenceChanged(bool newValue)
+    {
+        await _layoutService.OnSystemPreferenceChanged(newValue);
+    }
     private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e) => StateHasChanged();
-   
+
 
 
     protected void SideMenuDrawerOpenChangedHandler(bool state)
@@ -87,5 +91,5 @@ public partial class MainLayout: LayoutComponentBase,IDisposable
         }
     }
 
-    
+
 }

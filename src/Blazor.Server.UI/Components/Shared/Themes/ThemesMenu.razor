@@ -1,5 +1,5 @@
 @inject IStringLocalizer<SharedResource> L
-
+@using Blazor.Server.UI.Services
 <MudDrawer Anchor="LayoutService.IsRTL?Anchor.Left:Anchor.Right"
            @bind-Open="ThemingDrawerOpen"
            Elevation="1"
@@ -22,10 +22,21 @@
         </MudText>
         <MudGrid Class="my-3"
                  Spacing="3">
-            <MudItem xs="6">
+            <MudItem xs="4">
                 <MudButton Class="mode-button"
                            FullWidth="true"
-                           OnClick="@(() => ToggleDarkLightMode(false))"
+                           OnClick="@(() => ToggleDarkLightMode(DarkLightMode.System))"
+                           Style="background: white;">
+                    <ChildContent>
+                        <MudIcon Color="Color.Primary"
+                                 Icon="@Icons.Material.Filled.AutoMode" />
+                    </ChildContent>
+                </MudButton>
+            </MudItem>
+            <MudItem xs="4">
+                <MudButton Class="mode-button"
+                           FullWidth="true"
+                           OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Light))"
                            Style="background: white;">
                     <ChildContent>
                         <MudIcon Color="Color.Primary"
@@ -33,10 +44,10 @@
                     </ChildContent>
                 </MudButton>
             </MudItem>
-            <MudItem xs="6">
+            <MudItem xs="4">
                 <MudButton Class="mode-button"
                            FullWidth="true"
-                           OnClick="@(() => ToggleDarkLightMode(true))"
+                           OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Dark))"
                            Style="background: #333333;">
                     <ChildContent>
                         <MudIcon Icon="@Icons.Material.Filled.DarkMode"
@@ -107,7 +118,7 @@
 
     .mode-button {
         border: 1px solid var(--mud-palette-table-lines);
-        height: 90px;
+        height: 64px;
     }
 
     .oval {

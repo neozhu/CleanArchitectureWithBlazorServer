@@ -49,6 +49,11 @@ public partial class ThemesMenu
         UserPreferences.IsDarkMode = isDarkMode;
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
+    public async Task ToggleDarkLightMode(DarkLightMode mode )
+    {
+        UserPreferences.DarkLightTheme = mode;
+        await UserPreferencesChanged.InvokeAsync(UserPreferences);
+    }
     private async Task ChangedFontSize(ChangeEventArgs args)
     {
         UserPreferences.DefaultFontSize = double.Parse(args?.Value?.ToString() ?? "0");
