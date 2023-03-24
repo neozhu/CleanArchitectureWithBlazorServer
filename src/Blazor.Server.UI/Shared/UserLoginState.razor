@@ -14,8 +14,7 @@
     private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
     [Inject]
     private IIdentityService _identityService { get; set; }=default!;
-    [Inject]
-    private ITenantsService _tenantsService { get; set; } = null!;
+
     [Inject]
     public IDispatcher Dispatcher { get; set; } = null!;
 
@@ -31,7 +30,6 @@
     protected override async Task OnInitializedAsync()
     {
         var state = await _authState;
-        await _tenantsService.Initialize().ConfigureAwait(false);
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
             var userDto = await _identityService.GetApplicationUserDto(state.User.GetUserId());

@@ -4,9 +4,10 @@ namespace Blazor.Server.UI.Services;
 
 public class LayoutService
 {
+    private bool _systemPreferences;
     private readonly IUserPreferencesService _userPreferencesService;
     private UserPreferences _userPreferences=new();
-
+    public DarkLightMode DarkModeToggle = DarkLightMode.System;
     public bool IsRTL { get; private set; } = false;
     public bool IsDarkMode { get; private set; } = false;
     public string PrimaryColor { get; set; } = "#2d4275";
@@ -31,7 +32,13 @@ public class LayoutService
         _userPreferences = await _userPreferencesService.LoadUserPreferences();
         if (_userPreferences != null)
         {
-            IsDarkMode = _userPreferences.IsDarkMode;
+            IsDarkMode =  _userPreferences.DarkLightTheme switch
+            {
+                DarkLightMode.Dark => true,
+                DarkLightMode.Light => false,
+                DarkLightMode.System => isDarkModeDefaultTheme,
+                _ => IsDarkMode
+            };
             IsRTL = _userPreferences.RightToLeft;
             PrimaryColor = _userPreferences.PrimaryColor;
             SecondaryColor = _userPreferences.SecondaryColor;
@@ -57,14 +64,38 @@ public class LayoutService
 
     private void OnMajorUpdateOccured() => MajorUpdateOccured?.Invoke(this, EventArgs.Empty);
 
+    public  Task OnSystemPreferenceChanged(bool newValue)
+    {
+        _systemPreferences = newValue;
+        if (DarkModeToggle == DarkLightMode.System)
+        {
+            IsDarkMode = newValue;
+            OnMajorUpdateOccured();
+        }
+        return Task.CompletedTask;
+    }
     public async Task ToggleDarkMode()
     {
-        IsDarkMode = !IsDarkMode;
-        _userPreferences.IsDarkMode = IsDarkMode;
+        switch (DarkModeToggle)
+        {
+            case DarkLightMode.System:
+                DarkModeToggle = DarkLightMode.Light;
+                IsDarkMode = false;
+                break;
+            case DarkLightMode.Light:
+                DarkModeToggle = DarkLightMode.Dark;
+                IsDarkMode = true;
+                break;
+            case DarkLightMode.Dark:
+                DarkModeToggle = DarkLightMode.System;
+                IsDarkMode = _systemPreferences;
+                break;
+        }
+
+        _userPreferences.DarkLightTheme = DarkModeToggle;
         await _userPreferencesService.SaveUserPreferences(_userPreferences);
         OnMajorUpdateOccured();
     }
-
     public async Task ToggleRightToLeft()
     {
         IsRTL = !IsRTL;
@@ -121,12 +152,19 @@ public class LayoutService
     public async Task UpdateUserPreferences(UserPreferences preferences)
     {
         _userPreferences = preferences;
-        IsDarkMode = _userPreferences.IsDarkMode;
+        IsDarkMode = _userPreferences.DarkLightTheme switch
+        {
+            DarkLightMode.Dark => true,
+            DarkLightMode.Light => false,
+            DarkLightMode.System => _systemPreferences=true,
+            _ => IsDarkMode
+        };
         IsRTL = _userPreferences.RightToLeft;
         PrimaryColor = _userPreferences.PrimaryColor;
         SecondaryColor = _userPreferences.SecondaryColor;
         BorderRadius = _userPreferences.BorderRadius;
         DefaultFontSize = _userPreferences.DefaultFontSize;
+        DarkModeToggle = _userPreferences.DarkLightTheme;
         CurrentTheme.Palette.Primary = PrimaryColor;
         CurrentTheme.PaletteDark.Primary = PrimaryColor;
         CurrentTheme.Palette.Secondary = SecondaryColor;

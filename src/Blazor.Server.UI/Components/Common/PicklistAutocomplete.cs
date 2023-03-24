@@ -27,15 +27,6 @@ public class PicklistAutocomplete : MudAutocomplete<string>
         _picklistService.OnChange -= _picklistService_OnChange;
         base.Dispose(disposing);
     }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await _picklistService.Initialize();
-        }
-       await base.OnAfterRenderAsync(firstRender);
-    }
     public override Task SetParametersAsync(ParameterView parameters)
     {
         SearchFunc = SearchKeyValues;
@@ -54,9 +45,7 @@ public class PicklistAutocomplete : MudAutocomplete<string>
         return Task.FromResult(_picklistService.DataSource.Where(x => x.Name == Picklist &&
         ( x.Value!=null &&  x.Value.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
           x.Text!=null && x.Text.Contains(value, StringComparison.InvariantCultureIgnoreCase)
-        )
-                                                 )
-                                         .Select(x=>x.Value??String.Empty));
+        )).Select(x=>x.Value??String.Empty));
     }
     
 }

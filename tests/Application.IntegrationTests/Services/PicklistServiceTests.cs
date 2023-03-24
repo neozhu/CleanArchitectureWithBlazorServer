@@ -24,7 +24,7 @@ public class PicklistServiceTests : TestBase
     public async Task ShouldLoadDataSource()
     {
         var picklist = CreatePicklistService();
-        await picklist.Initialize();
+        await picklist.InitializeAsync();
         var count = picklist.DataSource.Count();
         Assert.AreEqual(4, count);
 

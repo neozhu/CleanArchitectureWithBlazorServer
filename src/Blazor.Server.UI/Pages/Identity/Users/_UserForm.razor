@@ -135,7 +135,7 @@
     private List<CheckItem> _roles { get; set; } = new();
 
     [Inject] private IUploadService _uploadService { get; set; } = default!;
-    [Inject] private ITenantsService _tenantsService { get; set; } = default!;
+    [Inject] private ITenantService _tenantsService { get; set; } = default!;
     [Inject] private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
     ApplicationUserDtoValidator modelValidator = new();
 
@@ -145,7 +145,6 @@
     protected override async Task OnInitializedAsync()
     {
         var array = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
-        await _tenantsService.Initialize();
         foreach (var role in array)
         {
             if (model.AssignedRoles != null && model.AssignedRoles.Contains(role))

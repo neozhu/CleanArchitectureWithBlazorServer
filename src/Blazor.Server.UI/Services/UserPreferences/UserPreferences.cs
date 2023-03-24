@@ -19,5 +19,11 @@ public class UserPreferences
     public string SecondaryColor { get; set; } = "#ff4081ff";
     public double BorderRadius { get; set; } = 4;
     public double DefaultFontSize { get; set; } = 0.8125;
+    public DarkLightMode DarkLightTheme { get; set; }
 }
-
+public enum DarkLightMode
+{
+    System = 0,
+    Light = 1,
+    Dark = 2
+}

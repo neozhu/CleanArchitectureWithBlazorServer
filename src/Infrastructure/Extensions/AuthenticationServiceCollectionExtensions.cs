@@ -79,6 +79,13 @@ public static class AuthenticationServiceCollectionExtensions
                  return Task.CompletedTask;
              };
          });
+        services.AddScoped<UserDataProvider>();
+        services.AddScoped<IUserDataProvider>(sp =>
+        {
+            var service = sp.GetRequiredService<UserDataProvider>();
+            service.Initialize();
+            return service;
+        });
         return services;
     }
 

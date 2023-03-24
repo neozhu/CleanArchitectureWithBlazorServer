@@ -7,11 +7,11 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.EventHandlers;
 
 public class TenantChangedEventHandler : INotificationHandler<UpdatedEvent<Tenant>>
 {
-    private readonly ITenantsService  _tenantsService;
+    private readonly ITenantService  _tenantsService;
     private readonly ILogger<KeyValueChangedEventHandler> _logger;
 
     public TenantChangedEventHandler(
-        ITenantsService tenantsService,
+        ITenantService tenantsService,
         ILogger<KeyValueChangedEventHandler> logger
         )
     {

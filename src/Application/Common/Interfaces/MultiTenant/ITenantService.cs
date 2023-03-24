@@ -1,10 +1,11 @@
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
-public interface ITenantsService
+public interface ITenantService
 {
     List<TenantDto> DataSource { get; }
     event Action? OnChange;
-    Task Initialize();
+    Task InitializeAsync();
+    void Initialize();
     Task Refresh();
 }

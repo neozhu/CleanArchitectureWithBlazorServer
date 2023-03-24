@@ -5,6 +5,7 @@ public interface IPicklistService
 {
     List<KeyValueDto> DataSource { get; } 
     event Action? OnChange;
-    Task Initialize();
+    Task InitializeAsync();
+    void Initialize();
     Task Refresh();
 }
