@@ -68,7 +68,7 @@
         </MudText>
         <MudGrid Class="my-3"
                  Spacing="3">
-            @foreach (var color in _primaryColors)
+            @foreach (var color in getColorDefinition())
             {
                 <MudItem xs="4">
                     <MudButton Class="@(color == UserPreferences.PrimaryColor ? "color-button color-button-selected" : "color-button")"

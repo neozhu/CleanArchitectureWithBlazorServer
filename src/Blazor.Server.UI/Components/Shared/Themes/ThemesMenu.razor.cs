@@ -20,6 +20,26 @@ public partial class ThemesMenu
         Colors.Orange.Default,
         Colors.Red.Default
     };
+    private readonly List<string> _primaryDarkColors = new()
+    {
+        "#8292b4",
+        "#689F38",
+        "#0A81AB",
+        "#546E7A",
+        "#8E24AA",
+        "#9C5D11",
+        "#9C2727",
+    };
+    private List<string> getColorDefinition()
+    {
+        return UserPreferences.DarkLightTheme switch
+        {
+            DarkLightMode.Dark => _primaryDarkColors,
+            DarkLightMode.Light => _primaryColors,
+            DarkLightMode.System => UserPreferences.IsDarkMode ? _primaryDarkColors : _primaryColors,
+            _ => UserPreferences.IsDarkMode ? _primaryDarkColors : _primaryColors
+        };
+    }
 
     [EditorRequired] [Parameter] public bool ThemingDrawerOpen { get; set; }
     [EditorRequired] [Parameter] public EventCallback<bool> ThemingDrawerOpenChanged { get; set; }
