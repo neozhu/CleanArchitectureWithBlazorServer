@@ -2,13 +2,13 @@
 @using Blazor.Server.UI.Services
 @using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
-@inject IStringLocalizer<Logs> L
-@inherits ComponentBase
 @implements IDisposable
+@inject IStringLocalizer<Logs> L
+
 <div class="d-flex flex-grow-1 mb-2">
     <MudPaper Class="pa-5 flex-grow-1" Elevation="3" Style="@backgroundColor">
         <ApexChart @ref="chart" Options="options" TItem="LogTimeLineDto" Height="180"
-                   Debug
+                      Debug
                    Title="@L["Collect logs by day"]">
 
             <ApexPointSeries TItem="LogTimeLineDto"
@@ -19,30 +19,27 @@
                              YAggregate="@(e => e.Sum(e => e.total))"
                              SeriesType="SeriesType.Bar" />
         </ApexChart>
-    </MudPaper>
-</div>
+        </MudPaper>
+    </div>
 
-@code {
+    @code {
     private ApexChart<LogTimeLineDto>? chart { get; set; }
     private ApexChartOptions<LogTimeLineDto> options { get; set; } = new();
     [EditorRequired][Parameter] public List<LogTimeLineDto> Data { get; set; } = new();
     [Inject]
     private LayoutService _layoutService { get; set; } = null!;
     public string backgroundColor = "background:#fff";
-    public void Dispose()
-    {
-        _layoutService.MajorUpdateOccured -= MajorUpdateOccured;
-        GC.SuppressFinalize(this);
-    }
     protected override void OnInitialized()
     {
         var isdarkmode = _layoutService.IsDarkMode;
         var colors = isdarkmode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
         backgroundColor = isdarkmode ? "background:rgb(66, 66, 66)" : "background:#fff";
+
         options.Theme = new ApexCharts.Theme()
             {
                 Mode = (isdarkmode ? Mode.Dark : Mode.Light),
             };
+
         options.Fill = new Fill
             {
                 Type = new List<FillType> { FillType.Gradient },
@@ -66,7 +63,6 @@
                 }
             }
         );
-
         options.Xaxis = new XAxis
             {
                 Labels = new XAxisLabels
@@ -93,10 +89,9 @@
                 }
             };
 
-        _layoutService.MajorUpdateOccured += MajorUpdateOccured;
-
+        _layoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
     }
-    private async void MajorUpdateOccured(object? s, EventArgs args)
+    private async void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
     {
         var isdarkmode = _layoutService.IsDarkMode;
         var colors = isdarkmode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
@@ -111,6 +106,11 @@
     {
         await chart!.UpdateSeriesAsync(true);
         await chart!.RenderAsync();
+    }
+    public void Dispose()
+    {
+        _layoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
+        GC.SuppressFinalize(this);
     }
 
 }
