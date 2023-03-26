@@ -226,7 +226,7 @@
     }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
-        var filestream = e.File.OpenReadStream();
+        var filestream = e.File.OpenReadStream(GlobalVariable.maxAllowedSize);
         var imgstream = new MemoryStream();
         await filestream.CopyToAsync(imgstream);
         imgstream.Position = 0;

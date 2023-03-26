@@ -26,7 +26,7 @@ public class PickUserAutocomplete : MudAutocomplete<string>
         return base.SetParametersAsync(parameters);
       
     }
-    private async Task<IEnumerable<string>> searchKeyValues(string value, CancellationToken cancellation)
+    private Task<IEnumerable<string>> searchKeyValues(string value, CancellationToken cancellation)
     {
         // if text is null or empty, show complete list
         _userList = _dataProvider.DataSource.Where(x => x.TenantId == TenantId).ToList();
@@ -39,7 +39,7 @@ public class PickUserAutocomplete : MudAutocomplete<string>
         {
             result = _userList.Where(x => x.UserName.Contains(value, StringComparison.OrdinalIgnoreCase) || x.Email.Contains(value, StringComparison.OrdinalIgnoreCase)).Select(x => x.UserName).ToList();
         }
-        return result;
+        return Task.FromResult(result.AsEnumerable());
     }
 
     private string toString(string str)

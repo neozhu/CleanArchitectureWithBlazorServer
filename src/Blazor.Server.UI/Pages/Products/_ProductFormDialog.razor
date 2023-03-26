@@ -135,7 +135,7 @@
             {
                 try
                 {
-                    var filestream = file.OpenReadStream(MAXALLOWEDSIZE);
+                    var filestream = file.OpenReadStream(GlobalVariable.maxAllowedSize);
                     var imgstream = new MemoryStream();
                     await filestream.CopyToAsync(imgstream);
                     imgstream.Position = 0;

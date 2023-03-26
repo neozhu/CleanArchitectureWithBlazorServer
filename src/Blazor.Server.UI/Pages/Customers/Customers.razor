@@ -378,7 +378,7 @@
     {
         _uploading = true;
         var stream = new MemoryStream();
-        await file.OpenReadStream().CopyToAsync(stream);
+        await file.OpenReadStream(GlobalVariable.maxAllowedSize).CopyToAsync(stream);
         var command = new ImportCustomersCommand(file.Name, stream.ToArray());
         var result = await _mediator.Send(command);
         if (result.Succeeded)
