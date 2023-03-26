@@ -40,14 +40,13 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
     }
     private async Task ApplyUserPreferences()
     {
-   
+        _defaultDarkMode =await _mudThemeProvider.GetSystemPreference();
         UserPreferences = await _layoutService.ApplyUserPreferences(_defaultDarkMode);
     }
     protected override async Task OnInitializedAsync()
     {
         _layoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         _layoutService.SetBaseTheme(Theme.ApplicationTheme());
-        _layoutService.SetDarkMode(_defaultDarkMode);
         _hotKeysContext = _hotKeys.CreateContext().Add(ModKey.Ctrl, Key.K, async () => await OpenCommandPalette(), "Open command palette.");
         await base.OnInitializedAsync();
 

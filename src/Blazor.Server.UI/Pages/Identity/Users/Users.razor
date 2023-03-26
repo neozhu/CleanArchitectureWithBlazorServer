@@ -749,7 +749,7 @@
     {
         _uploading = true;
         var stream = new MemoryStream();
-        await file.OpenReadStream().CopyToAsync(stream);
+        await file.OpenReadStream(GlobalVariable.maxAllowedSize).CopyToAsync(stream);
         var result = await _excelService.ImportAsync(stream.ToArray(), mappers: new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
             {
                 { L["User Name"], (row, item) => item.UserName = row[L["User Name"]]?.ToString() },
