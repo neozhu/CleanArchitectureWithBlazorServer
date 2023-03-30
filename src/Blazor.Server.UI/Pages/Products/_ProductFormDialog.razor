@@ -75,7 +75,9 @@
                             foreach (var img in model.Pictures)
                             {
                                 <div style="float:left; position: relative; width: 160px; height: 80px; margin: 10px;">
-                                    <MudImage ObjectFit="ObjectFit.Cover" Height="80" Width="160" Src="@img" Alt="@img" Elevation="25" Class="mr-2 rounded-lg" />
+                                    <MudTooltip Delay="500" Text="@img.Name">
+                                    <MudImage ObjectFit="ObjectFit.Cover" Height="80" Width="160" Src="@img.Url" Alt="@img.Name" Elevation="25" Class="mr-2 rounded-lg" />
+                                    </MudTooltip>
                                     <div style="position: absolute;top: 0px;right: 0px; z-index: 9999;">
                                         <MudIconButton OnClick="@(()=>DeleteImage(@img))" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Color="MudBlazor.Color.Error" Size="MudBlazor.Size.Small"></MudIconButton>
                                     </div>
@@ -106,7 +108,7 @@
     const long MAXALLOWEDSIZE = 3145728;
     bool _uploading;
 
-    private async Task DeleteImage(string picture)
+    private async Task DeleteImage(ProductImage picture)
     {
         if (model.Pictures != null)
         {
@@ -130,7 +132,7 @@
         try
         {
             _uploading = true;
-            var list = new List<string>();
+            var list = new List<ProductImage>();
             foreach (var file in e.GetMultipleFiles())
             {
                 try
@@ -150,7 +152,7 @@
                             var fi = new FileInfo(filename);
                             var ext = fi.Extension;
                             var result = await _uploadService.UploadAsync(new UploadRequest(Guid.NewGuid().ToString() + ext, UploadType.Product, outStream.ToArray()));
-                            list.Add(result);
+                            list.Add(new ProductImage() { Name = filename, Size = outStream.Length, Url = result });
                         }
                     }
                 }
@@ -164,7 +166,7 @@
             if (model.Pictures is null)
                 model.Pictures = list;
             else
-                ((List<String>)model.Pictures).AddRange(list);
+                model.Pictures.AddRange(list);
 
         }
         finally

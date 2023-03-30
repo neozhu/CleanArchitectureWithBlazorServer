@@ -16,7 +16,7 @@ public class ProductDto:IMapFrom<Product>
     public string? Unit { get; set; }
     public string? Brand { get; set; }
     public decimal Price { get; set; }
-    public IList<string>? Pictures { get; set; }
+    public IList<ProductImage>? Pictures { get; set; }
 
    
 }
