@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
@@ -28,6 +29,7 @@ public class ExportProductsQueryHandler :
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
+    private readonly ISerializer _serializer;
     private readonly IExcelService _excelService;
     private readonly IPDFService _pdfService;
     private readonly IStringLocalizer<ExportProductsQueryHandler> _localizer;
@@ -35,6 +37,7 @@ public class ExportProductsQueryHandler :
     public ExportProductsQueryHandler(
         IApplicationDbContext context,
         IMapper mapper,
+        ISerializer serializer,
         IExcelService excelService,
         IPDFService pdfService,
         IStringLocalizer<ExportProductsQueryHandler> localizer
@@ -42,6 +45,7 @@ public class ExportProductsQueryHandler :
     {
         _context = context;
         _mapper = mapper;
+        _serializer = serializer;
         _excelService = excelService;
         _pdfService = pdfService;
         _localizer = localizer;
@@ -79,7 +83,7 @@ public class ExportProductsQueryHandler :
                     { _localizer["Description"], item => item.Description },
                     { _localizer["Price of unit"], item => item.Price },
                     { _localizer["Unit"], item => item.Unit },
-                    { _localizer["Pictures"], item => string.Join(",",item.Pictures??new string[]{ }) },
+                    { _localizer["Pictures"], item => _serializer.Serialize(item.Pictures) },
 
                 };
                 result = await _excelService.ExportAsync(data, mappers, _localizer["Products"]);

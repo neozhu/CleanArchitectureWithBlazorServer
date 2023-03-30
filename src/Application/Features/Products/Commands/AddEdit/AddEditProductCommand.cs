@@ -18,7 +18,7 @@ public class AddEditProductCommand : IMapFrom<ProductDto>, ICacheInvalidatorRequ
     public string? Unit { get; set; }
     public string? Brand { get; set; }
     public decimal Price { get; set; }
-    public IList<string>? Pictures { get; set; }
+    public List<ProductImage>? Pictures { get; set; }
 
     public IReadOnlyList<IBrowserFile>? UploadPictures { get; set; }
     public string CacheKey => ProductCacheKey.GetAllCacheKey;

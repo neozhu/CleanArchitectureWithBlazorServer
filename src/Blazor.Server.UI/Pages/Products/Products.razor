@@ -312,7 +312,7 @@
     }
     private async Task OnCreate()
     {
-        var command = new AddEditProductCommand();
+        var command = new AddEditProductCommand() { Pictures=new List<ProductImage>() };
         var parameters = new DialogParameters
                 {
                   { nameof(_ProductFormDialog.model),command },

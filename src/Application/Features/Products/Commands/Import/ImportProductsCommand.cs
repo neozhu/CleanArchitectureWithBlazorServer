@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
@@ -33,10 +34,12 @@ public class ImportProductsCommandHandler :
     private readonly IMapper _mapper;
     private readonly IStringLocalizer<ImportProductsCommandHandler> _localizer;
     private readonly IExcelService _excelService;
+    private readonly ISerializer _serializer;
 
     public ImportProductsCommandHandler(
         IApplicationDbContext context,
         IExcelService excelService,
+        ISerializer serializer,
         IStringLocalizer<ImportProductsCommandHandler> localizer,
         IMapper mapper
         )
@@ -44,6 +47,7 @@ public class ImportProductsCommandHandler :
         _context = context;
         _localizer = localizer;
         _excelService = excelService;
+        _serializer = serializer;
         _mapper = mapper;
     }
     public async Task<Result<int>> Handle(ImportProductsCommand request, CancellationToken cancellationToken)
@@ -56,7 +60,7 @@ public class ImportProductsCommandHandler :
               { _localizer["Description"], (row,item) => item.Description = row[_localizer["Description"]].ToString() },
               { _localizer["Unit"], (row,item) => item.Unit = row[_localizer["Unit"]].ToString() },
               { _localizer["Price of unit"], (row,item) => item.Price =row.FieldDecimalOrDefault(_localizer["Price of unit"]) },
-              { _localizer["Pictures"], (row,item) => item.Pictures =string.IsNullOrEmpty(_localizer["Pictures"].ToString())? null:row[_localizer["Pictures"]].ToString()!.Split(",").ToList() },
+              { _localizer["Pictures"], (row,item) => item.Pictures =string.IsNullOrEmpty(_localizer["Pictures"].ToString())? null:_serializer.Deserialize<List<ProductImage>>(row[_localizer["Pictures"]].ToString()) },
             }, _localizer["Products"]);
         if (result.Succeeded)
         {
