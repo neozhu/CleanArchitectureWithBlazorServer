@@ -148,7 +148,22 @@ public class IdentityService : IIdentityService
         var response = new TokenResponse { Token = token, RefreshToken = user.RefreshToken, RefreshTokenExpiryTime = user.RefreshTokenExpiryTime };
         return await Result<TokenResponse>.SuccessAsync(response);
     }
-
+    public Task<ClaimsPrincipal> ValidateToken(string token)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfig.Secret)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            RoleClaimType = ClaimTypes.Role,
+            ClockSkew = TimeSpan.Zero,
+            ValidateLifetime = false
+        };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+        return Task.FromResult(principal);
+    }
     private string GenerateRefreshToken()
     {
         var randomNumber = new byte[32];

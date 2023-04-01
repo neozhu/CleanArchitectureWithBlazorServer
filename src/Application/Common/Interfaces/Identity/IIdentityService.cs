@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Security.Claims;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
@@ -10,6 +11,7 @@ public interface IIdentityService : IService
 {
     Task<Result<TokenResponse>> LoginAsync(TokenRequest request, CancellationToken cancellation = default);
     Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellation = default);
+    Task<ClaimsPrincipal> ValidateToken(string token);
     Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default);
     
     Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default);

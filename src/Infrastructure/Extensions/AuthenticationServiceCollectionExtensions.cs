@@ -40,7 +40,7 @@ public static class AuthenticationServiceCollectionExtensions
         });
         services
                  .AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationClaimsIdentityFactory>()
-                 .AddTransient<IIdentityService, IdentityService>()
+                 .AddScoped<IIdentityService, IdentityService>()
                  .AddAuthorization(options =>
                  {
                      options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
