@@ -15,7 +15,6 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-       
         services.AddScoped<AuthenticationStateProvider, BlazorAuthStateProvider>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ITenantProvider, TenantProvider>();

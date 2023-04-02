@@ -6,27 +6,9 @@ using Microsoft.AspNetCore.Http;
 namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 public sealed class TenantProvider : ITenantProvider
 {
-
     private readonly IDictionary<Guid, Action> _callbacks = new Dictionary<Guid, Action>();
-    private readonly AuthenticationStateProvider _stateProvider;
-
-    //public TenantProvider(AuthenticationStateProvider stateProvider)
-    //{
-    //    _stateProvider = stateProvider;
-    //}
-
-
-    public async Task<string?> TenantId()
-    {
-        var state = await _stateProvider.GetAuthenticationStateAsync();
-        return state.User?.GetTenantId();
-    }
-
-    public async Task<string?> TenantName()
-    {
-        var state = await _stateProvider.GetAuthenticationStateAsync();
-        return state.User?.GetTenantName();
-    }
+    public string? TenantId { get; set; }
+    public string? TenantName { get; set; }
     public void Unregister(Guid id)
     {
         if (_callbacks.ContainsKey(id))

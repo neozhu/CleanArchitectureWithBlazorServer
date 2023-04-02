@@ -10,25 +10,8 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class CurrentUserService : ICurrentUserService
 {
+   
+    public string? UserId { get; set; }
 
-    private readonly AuthenticationStateProvider _stateProvider;
-
-    //public CurrentUserService(
-    //    AuthenticationStateProvider stateProvider
-       
-    //   )
-    //{
-    //    _stateProvider = stateProvider;
-    //}
-    public async Task<string?> UserId()
-    {
-        var state = await _stateProvider.GetAuthenticationStateAsync();
-        return state.User?.GetUserId();
-    }
-
-    public async Task<string?> UserName()
-    {
-        var state = await _stateProvider.GetAuthenticationStateAsync();
-        return state.User?.Identity?.Name;
-    }
+    public string? UserName { get; set; }
 }
