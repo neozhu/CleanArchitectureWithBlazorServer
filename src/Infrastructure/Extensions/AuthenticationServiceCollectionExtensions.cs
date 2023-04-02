@@ -1,21 +1,19 @@
 using System.Reflection;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
+using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class AuthenticationServiceCollectionExtensions
 {
     public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)
     {
+       
         services
             .AddIdentity<ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-        services.AddTransient<ITicketStore, InMemoryTicketStore>();
-        services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>, ConfigureCookieAuthenticationOptions>();
         services.Configure<IdentityOptions>(options =>
         {
             // Password settings
@@ -38,10 +36,9 @@ public static class AuthenticationServiceCollectionExtensions
             options.User.RequireUniqueEmail = true;
 
         });
-        services
-                 .AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationClaimsIdentityFactory>()
-                 .AddScoped<IIdentityService, IdentityService>()
-                 .AddAuthorization(options =>
+        services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationClaimsIdentityFactory>()
+                .AddScoped<IIdentityService, IdentityService>()
+                .AddAuthorization(options =>
                  {
                      options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
                      // Here I stored necessary permissions/roles in a constant
@@ -54,31 +51,9 @@ public static class AuthenticationServiceCollectionExtensions
                          }
                      }
                  })
-                 .AddAuthentication()
-                 .AddCookie(options =>
-                 {
-                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                     options.SlidingExpiration = true;
-                     options.AccessDeniedPath = "/";
-                 });
-
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.Configure<CookiePolicyOptions>(options =>
-                 {
-                     // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                     options.CheckConsentNeeded = context => true;
-                     options.MinimumSameSitePolicy = SameSiteMode.None;
-
-                 });
-        services.ConfigureApplicationCookie(options =>
-         {
-             options.Cookie.HttpOnly = true;
-             options.Events.OnRedirectToLogin = context =>
-             {
-                 context.Response.StatusCode = 401;
-                 return Task.CompletedTask;
-             };
-         });
+                 .AddAuthentication();
+   
+        services.AddScoped<TokenAuthProvider>();
         services.AddScoped<UserDataProvider>();
         services.AddScoped<IUserDataProvider>(sp =>
         {

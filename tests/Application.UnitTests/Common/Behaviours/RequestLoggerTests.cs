@@ -26,10 +26,10 @@ public class RequestLoggerTests
     [Test]
     public async Task ShouldCallGetUserNameAsyncOnceIfAuthenticated()
     {
-        _currentUserService.Setup(x => x.UserId).Returns("Administrator");
+        _currentUserService.Setup(x => x.UserId()).Returns(Task.FromResult("Administrator"));
         var requestLogger = new LoggingBehaviour<AddEditProductCommand>(_logger.Object, _currentUserService.Object);
         await requestLogger.Process(new AddEditProductCommand {  Brand= "Brand", Name= "Brand", Price=1.0m, Unit="EA" }, new CancellationToken());
-        _currentUserService.Verify(i => i.UserName, Times.Once);
+        _currentUserService.Verify(i => i.UserName(), Times.Once);
      
     }
 

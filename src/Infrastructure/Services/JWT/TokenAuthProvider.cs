@@ -1,23 +1,28 @@
 ﻿using System.Security.Cryptography;
+using CleanArchitecture.Blazor.Application.Constants;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
-public class TokenProvider
+public class TokenAuthProvider
 {
     private readonly string TokenKey = nameof(TokenKey);
     private readonly ProtectedLocalStorage _localStorage;
     private readonly NavigationManager _navigation;
     private readonly IIdentityService _identityService;
 
-    public TokenProvider(ProtectedLocalStorage localStorage, NavigationManager navigation, IIdentityService identityService)
+    public TokenAuthProvider(ProtectedLocalStorage localStorage, NavigationManager navigation, IIdentityService identityService)
     {
         _localStorage = localStorage;
         _navigation = navigation;
         _identityService = identityService;
 
     }
-
+    public async Task GenerateJwt(ApplicationUser applicationUser)
+    {
+        var token = await _identityService.GenerateJwtAsync(applicationUser);
+        await _localStorage.SetAsync(TokenKey, token);
+    }
     public async Task<ClaimsPrincipal> GetClaimsPrincipal()
     {
         try
@@ -34,13 +39,17 @@ public class TokenProvider
         }
         catch (CryptographicException)
         {
-            await RemoveAuthDataFromStorageAsync();
+            await RemoveAuthDataFromStorage();
+        }
+        catch (Exception)
+        {
+            return new ClaimsPrincipal(new ClaimsIdentity());
         }
         return new ClaimsPrincipal(new ClaimsIdentity());
     }
 
 
-    private async Task RemoveAuthDataFromStorageAsync()
+    public async Task RemoveAuthDataFromStorage()
     {
         await _localStorage.DeleteAsync(TokenKey);
         _navigation.NavigateTo("/", true);

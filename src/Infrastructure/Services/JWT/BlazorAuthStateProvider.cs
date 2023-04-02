@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public  class BlazorAuthStateProvider : AuthenticationStateProvider
 {
-    private readonly TokenProvider _tokenProvider;
+    private readonly TokenAuthProvider _tokenProvider;
 
-    public BlazorAuthStateProvider(TokenProvider  tokenProvider)
+    public BlazorAuthStateProvider(TokenAuthProvider  tokenProvider)
     {
         _tokenProvider = tokenProvider;
     }

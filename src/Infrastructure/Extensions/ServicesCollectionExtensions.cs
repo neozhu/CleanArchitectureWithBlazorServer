@@ -5,8 +5,8 @@ namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class ServicesCollectionExtensions
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
-        => services.AddSingleton<ICurrentUserService, CurrentUserService>()
-                    .AddSingleton<ExceptionHandlingMiddleware>()
+        => services
+                   .AddScoped<ExceptionHandlingMiddleware>()
                    .AddScoped<IDateTime, DateTimeService>()
                    .AddScoped<IExcelService, ExcelService>()
                    .AddScoped<IUploadService, UploadService>()

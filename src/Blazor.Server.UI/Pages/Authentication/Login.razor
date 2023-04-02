@@ -2,15 +2,17 @@
 @using System.Text.RegularExpressions
 @using Blazor.Server.UI.Pages.Identity.Users
 @using CleanArchitecture.Blazor.Application.Common.Security
+@using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.DataProtection
 @using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
-
+@inject TokenAuthProvider TokenProvider
 @inject IJSRuntime JS
 @inherits OwningComponentBase
 @implements IDisposable
 @inject IStringLocalizer<Login> L
+
 <PageTitle>@Title</PageTitle>
 <AuthorizeView>
     <NotAuthorized Context="Auth">
@@ -28,12 +30,11 @@
                           Class="my-6"></MudTextField>
 
             <MudPasswordField @bind-Value="_model.Password" For="@(() => _model.Password)"
-                          Label="@L["Password"]"
-                          PasswordMode="true"
-                          Variant="Variant.Outlined"
-                          Required="true"
-                          RequiredError="@L["password is required!"]"
-                         />
+                              Label="@L["Password"]"
+                              PasswordMode="true"
+                              Variant="Variant.Outlined"
+                              Required="true"
+                              RequiredError="@L["password is required!"]" />
 
             <div Class="d-flex justify-space-between align-center">
                 <MudCheckBox For="@(() => _model.RememberMe)" @bind-Checked="_model.RememberMe" Label="@L["Remember me?"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
@@ -80,8 +81,9 @@
 @code {
     public string Title = "Sign In";
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
+    private TokenAuthProvider  _tokenProvider { get; set; } = default!;
     [Inject] private ILogger<Login> _logger { get; set; } = default!;
-    [Inject] private  IDataProtectionProvider _dataProtectionProvider { get; set; } = default!;
+    [Inject] private IDataProtectionProvider _dataProtectionProvider { get; set; } = default!;
     [Inject]
     protected NavigationManager NavigationManager { get; set; } = null!;
     private LoginFormModel _model = new()
@@ -101,6 +103,7 @@
     {
         Title = L["Sign In"];
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        _tokenProvider = ScopedServices.GetRequiredService<TokenAuthProvider>();
         return base.OnInitializedAsync();
     }
     private async Task OnSubmit()
@@ -133,14 +136,10 @@
                         }
                         else
                         {
+                            await TokenProvider.GenerateJwt(user);
                             var returnUrl = NavigationManager.Uri.Replace(NavigationManager.BaseUri, "");
-                            var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "Login");
-                            var data = $"{user.Id}|{token}";
-                            var protector = _dataProtectionProvider.CreateProtector("Login");
-                            var protectedData = protector.Protect(data);
-
-                            NavigationManager.NavigateTo($"/auth/login?token={protectedData}&returnUrl={returnUrl}", true);
-                            //_logger.LogInformation("{@UserName} login successfully.", _model.UserName);
+                            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+                            _logger.LogInformation("{@UserName} login successfully.", _model.UserName);
                         }
                     }
                 }

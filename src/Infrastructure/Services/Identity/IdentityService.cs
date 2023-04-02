@@ -121,8 +121,8 @@ public class IdentityService : IIdentityService
         }
         user.RefreshTokenExpiryTime = TokenExpiryTime;
         await _userManager.UpdateAsync(user);
-        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
-        var token = await GenerateJwtAsync(user, principal.Claims);
+        
+        var token = await GenerateJwtAsync(user);
         var response = new TokenResponse { Token = token, RefreshTokenExpiryTime = TokenExpiryTime, RefreshToken = user.RefreshToken, ProfilePictureDataUrl = user.ProfilePictureDataUrl };
         return await Result<TokenResponse>.SuccessAsync(response);
     }
@@ -171,10 +171,11 @@ public class IdentityService : IIdentityService
         rng.GetBytes(randomNumber);
         return Convert.ToBase64String(randomNumber);
     }
-    private Task<string> GenerateJwtAsync(ApplicationUser user, IEnumerable<Claim> claims)
+    public async Task<string> GenerateJwtAsync(ApplicationUser user)
     {
-        var token = GenerateEncryptedToken(GetSigningCredentials(), claims);
-        return Task.FromResult(token);
+        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+        var token = GenerateEncryptedToken(GetSigningCredentials(), principal.Claims);
+        return token;
     }
     private string GenerateEncryptedToken(SigningCredentials signingCredentials, IEnumerable<Claim> claims)
     {

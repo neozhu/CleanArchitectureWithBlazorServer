@@ -2,14 +2,15 @@ using CleanArchitecture.Blazor.Infrastructure.Constants;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
-public class HubClient : IAsyncDisposable
+public class HubClient : Hub, IAsyncDisposable
 {
     private HubConnection _hubConnection;
     private string _hubUrl = String.Empty;
-    private string _userId = String.Empty;
+    private string? _userId=null;
     private readonly NavigationManager _navigationManager;
     private readonly ICurrentUserService _currentUserService;
     private bool _started = false;
@@ -20,7 +21,7 @@ public class HubClient : IAsyncDisposable
     {
         _navigationManager = navigationManager;
         _currentUserService = currentUserService;
-        _userId = _currentUserService.UserId;
+        _userId = Context?.User?.GetUserId();
         _hubUrl = _navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
         _hubConnection = new HubConnectionBuilder()
               .WithUrl(_hubUrl, options => options.Transports = HttpTransportType.WebSockets)

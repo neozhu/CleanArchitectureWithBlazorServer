@@ -33,8 +33,8 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
 
-        updateEntities(eventData.Context!);
-        _temporaryAuditTrailList = TryInsertTemporaryAuditTrail(eventData.Context!, cancellationToken);
+        await updateEntities(eventData.Context!).ConfigureAwait(false);
+        _temporaryAuditTrailList =await TryInsertTemporaryAuditTrail(eventData.Context!, cancellationToken);
         _deletingDomainEvents = TryGetDeletingDomainEvents(eventData.Context!, cancellationToken);
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
@@ -45,10 +45,10 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         await _mediator.DispatchDomainEvents(eventData.Context!, _deletingDomainEvents).ConfigureAwait(false);
         return resultvalueTask;
     }
-    private void updateEntities(DbContext context)
+    private async Task updateEntities(DbContext context)
     {
-        var userId = _currentUserService.UserId;
-        var tenantId = _tenantProvider.TenantId;
+        var userId =await _currentUserService.UserId();
+        var tenantId =await _tenantProvider.TenantId();
         foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
         {
             switch (entry.State)
@@ -89,11 +89,11 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         }
     }
 
-    private List<AuditTrail> TryInsertTemporaryAuditTrail(DbContext context, CancellationToken cancellationToken = default)
+    private async Task<List<AuditTrail>> TryInsertTemporaryAuditTrail(DbContext context, CancellationToken cancellationToken = default)
     {
 
-        var userId = _currentUserService.UserId;
-        var tenantId = _tenantProvider.TenantId;
+        var userId =await _currentUserService.UserId();
+        var tenantId =await _tenantProvider.TenantId();
         context.ChangeTracker.DetectChanges();
         var temporaryAuditEntries = new List<AuditTrail>();
         foreach (var entry in context.ChangeTracker.Entries<IAuditTrial>())

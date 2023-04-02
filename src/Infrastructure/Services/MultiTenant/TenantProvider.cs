@@ -8,16 +8,25 @@ public sealed class TenantProvider : ITenantProvider
 {
 
     private readonly IDictionary<Guid, Action> _callbacks = new Dictionary<Guid, Action>();
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly AuthenticationStateProvider _stateProvider;
 
-    public TenantProvider(IHttpContextAccessor httpContextAccessor)
+    //public TenantProvider(AuthenticationStateProvider stateProvider)
+    //{
+    //    _stateProvider = stateProvider;
+    //}
+
+
+    public async Task<string?> TenantId()
     {
-        _httpContextAccessor = httpContextAccessor;
+        var state = await _stateProvider.GetAuthenticationStateAsync();
+        return state.User?.GetTenantId();
     }
 
-
-    public string TenantId => _httpContextAccessor.HttpContext?.User.GetTenantId() ?? string.Empty;
-    public string TenantName => _httpContextAccessor.HttpContext?.User.GetTenantName() ?? string.Empty;
+    public async Task<string?> TenantName()
+    {
+        var state = await _stateProvider.GetAuthenticationStateAsync();
+        return state.User?.GetTenantName();
+    }
     public void Unregister(Guid id)
     {
         if (_callbacks.ContainsKey(id))

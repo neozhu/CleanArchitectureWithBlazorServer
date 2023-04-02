@@ -4,12 +4,14 @@
 using System.Security.Claims;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 public interface IIdentityService : IService
 {
     Task<Result<TokenResponse>> LoginAsync(TokenRequest request, CancellationToken cancellation = default);
+    Task<string> GenerateJwtAsync(ApplicationUser user);
     Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellation = default);
     Task<ClaimsPrincipal> ValidateToken(string token);
     Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default);
