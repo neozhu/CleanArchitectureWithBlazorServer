@@ -44,7 +44,7 @@ public static class AuthenticationServiceCollectionExtensions
                 .AddScoped<IIdentityService, IdentityService>()
                 .AddAuthorization(options =>
                  {
-                     options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
+                     options.AddPolicy("CanPurge", policy => policy.RequireUserName(UserName.Administrator));
                      // Here I stored necessary permissions/roles in a constant
                      foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
                      {
