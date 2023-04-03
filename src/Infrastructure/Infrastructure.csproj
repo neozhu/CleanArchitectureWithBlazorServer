@@ -9,6 +9,8 @@
     <ItemGroup>
         
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.0-rc2" />
+        
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="7.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="7.0.4" />

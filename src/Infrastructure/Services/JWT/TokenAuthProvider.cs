@@ -3,6 +3,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
+using Azure.Core;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public class TokenAuthProvider
@@ -13,6 +14,7 @@ public class TokenAuthProvider
     private readonly IIdentityService _identityService;
     private readonly ITenantProvider _tenantProvider;
     private readonly ICurrentUserService _currentUser;
+    public string? AccessToken { get; private set; }
 
     public TokenAuthProvider(ProtectedLocalStorage localStorage, NavigationManager navigation, IIdentityService identityService,
         ITenantProvider tenantProvider,
@@ -26,8 +28,8 @@ public class TokenAuthProvider
     }
     public async Task GenerateJwt(ApplicationUser applicationUser)
     {
-        var token = await _identityService.GenerateJwtAsync(applicationUser);
-        await _localStorage.SetAsync(TokenKey, token);
+        AccessToken = await _identityService.GenerateJwtAsync(applicationUser);
+        await _localStorage.SetAsync(TokenKey, AccessToken);
         _tenantProvider.TenantId = applicationUser.TenantId;
         _tenantProvider.TenantName = applicationUser.TenantName;
         _currentUser.UserId = applicationUser.Id;
@@ -40,6 +42,7 @@ public class TokenAuthProvider
             var token = await _localStorage.GetAsync<string>(TokenKey);
             if (token.Success && !string.IsNullOrEmpty(token.Value))
             {
+                AccessToken = token.Value;
                 var principal = await _identityService.GetClaimsPrincipal(token.Value);
                 if (principal?.Identity?.IsAuthenticated ?? false)
                 {

@@ -4,6 +4,8 @@
 using System.Collections.Concurrent;
 using CleanArchitecture.Blazor.Infrastructure.Constants;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 
@@ -13,46 +15,44 @@ public interface ISignalRHub
 {
     Task Start(string message);
     Task Completed(string message);
-    Task SendMessage(string message);
+    Task SendMessage(string from,string message);
     Task Disconnect(string userId);
     Task Connect(string userId);
     Task SendNotification(string message);
 }
-
 public class SignalRHub : Hub<ISignalRHub>
 {
     private static readonly ConcurrentDictionary<string, string> _onlineUsers = new();
+
 
     public SignalRHub()
     {
 
     }
-    public override Task OnConnectedAsync()
+    public override async Task OnConnectedAsync()
     {
         var id = Context.ConnectionId;
+        var userName = Context.User?.Identity?.Name ?? string.Empty;
         if (!_onlineUsers.ContainsKey(id))
         {
-            _onlineUsers.TryAdd(id, String.Empty);
+            _onlineUsers.TryAdd(id, userName);
         }
-        return Task.CompletedTask;
-       // await base.OnConnectedAsync();
+        await Clients.All.Connect(userName);
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var id = Context.ConnectionId;
         //try to remove key from dictionary
-        if (_onlineUsers.TryRemove(id, out string? userId))
+        if (_onlineUsers.TryRemove(id, out string? userName))
         {
-          await Disconnect(userId);
+            await Clients.All.Disconnect(userName);
         }
-        //await base.OnDisconnectedAsync(exception);
+
     }
-
-
-    public async Task SendMessage(string message)
+    public async Task SendMessage(string from,string message)
     {
-        await Clients.All.SendMessage(message);
+        await Clients.All.SendMessage(from,message);
     }
     public async Task SendNotification(string message)
     {
@@ -62,29 +62,6 @@ public class SignalRHub : Hub<ISignalRHub>
     {
         await Clients.All.Completed(message);
     }
-    public async Task Connect(string userId)
-    {
-        var id = Context.ConnectionId;
-        if (!_onlineUsers.ContainsKey(id))
-        {
-            // maintain a lookup of connectionId-to-username
-            if (_onlineUsers.TryAdd(id, userId))
-            {
-                // re-use existing message for now
-                await Clients.All.Connect(userId);
-            }
-        }
-        else
-        {
-            _onlineUsers.TryUpdate(id, userId, String.Empty);
-            await Clients.All.Connect(userId);
-        }
-      
-    }
-    public async Task Disconnect(string userId)
-    {
-        await Clients.All.Disconnect(userId);
-    }
     private bool _disposed = false;
     // Protected implementation of Dispose pattern.
     protected override void Dispose(bool disposing)
@@ -93,9 +70,7 @@ public class SignalRHub : Hub<ISignalRHub>
         {
             return;
         }
-
         _disposed = true;
-
         // Call base class implementation.
         base.Dispose(disposing);
     }

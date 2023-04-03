@@ -1,8 +1,12 @@
 using System.Reflection;
+using System.Text;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class AuthenticationServiceCollectionExtensions
@@ -51,7 +55,42 @@ public static class AuthenticationServiceCollectionExtensions
                          }
                      }
                  })
-                 .AddAuthentication();
+                 .AddAuthentication(options => {
+                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                 }).AddJwtBearer(options =>
+                 {
+                     options.SaveToken = true;
+                     options.RequireHttpsMetadata = false;
+                     options.TokenValidationParameters = new TokenValidationParameters()
+                     {
+                         ValidateIssuerSigningKey = true,
+                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppConfigurationSettings:Secret"])),
+                         ValidateIssuer = false,
+                         ValidateAudience = false,
+                         RoleClaimType = ClaimTypes.Role,
+                         ClockSkew = TimeSpan.Zero,
+                         ValidateLifetime = false
+                     };
+
+                     options.Events = new JwtBearerEvents
+                     {
+                         OnMessageReceived = context =>
+                         {
+                             var accessToken = context.Request.Headers.Authorization;
+
+                             // If the request is for our hub...
+                             var path = context.HttpContext.Request.Path;
+                             if (!string.IsNullOrEmpty(accessToken) &&
+                                 (path.StartsWithSegments("/signalRHub")))
+                             {
+                                 // Read the token out of the query string
+                                 context.Token = accessToken.ToString().Substring(7);
+                             }
+                             return Task.CompletedTask;
+                         }
+                     };
+                 }); 
    
         services.AddScoped<TokenAuthProvider>();
         services.AddScoped<UserDataProvider>();

@@ -60,23 +60,19 @@
         Dispatcher.Dispatch(new UserProfileUpdateAction() { UserProfile=userDto.ToUserProfile()});
         return Task.CompletedTask;
     }
-    private void _client_Login(object? sender, string e)
+    private void _client_Login(object? sender, string username)
     {
         InvokeAsync(async () =>
         {
-            //await _identityService.UpdateLiveStatus(e, true);
-            var username = await _identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
             
         });
     }
 
-    private void _client_Logout(object? sender, string e)
+    private void _client_Logout(object? sender, string username)
     {
         InvokeAsync(async () =>
         {
-            //await _identityService.UpdateLiveStatus(e, false);
-            var username = await _identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
             
         });
