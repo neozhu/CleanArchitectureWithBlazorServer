@@ -137,15 +137,12 @@
                         else
                         {
                             await TokenProvider.GenerateJwt(user);
-                            var returnUrl = NavigationManager.Uri.Replace(NavigationManager.BaseUri, "");
                             NavigationManager.NavigateTo(NavigationManager.Uri, true);
                             _logger.LogInformation("{@UserName} login successfully.", _model.UserName);
                         }
                     }
                 }
-
             }
-
         }
         finally
         {
@@ -185,9 +182,41 @@
         await JS.InvokeVoidAsync("externalLogin", provider, DotNetObjectReference.Create(this));
     }
     [JSInvokable]
-    public Task ConfirmExternal(string provider, string userName, string name, string accesstoken)
+    public async Task ConfirmExternal(string provider, string userName, string name, string accesstoken)
     {
-        NavigationManager.NavigateTo($"/auth/externallogin?provider={provider}&userName={userName}&name={name}&accessToken={accesstoken}", true);
-        return Task.CompletedTask;
+        var user =await createUserWithExternalProvider(provider, userName, name, accesstoken);
+        await TokenProvider.GenerateJwt(user);
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        _logger.LogInformation("{@UserName} login successfully.", userName);
+    }
+
+    private async Task<ApplicationUser> createUserWithExternalProvider(string provider, string userName, string name, string accesstoken)
+    {
+        var user = await _userManager.FindByNameAsync(userName);
+        if (user is null)
+        {
+            var admin = await _userManager.FindByNameAsync(UserName.Administrator) ?? throw new NotFoundException($"Administrator's account Not Found.");
+            user = new ApplicationUser
+                {
+                    EmailConfirmed = true,
+                    IsActive = true,
+                    IsLive = true,
+                    UserName = userName,
+                    Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
+                    Provider = provider,
+                    DisplayName = name,
+                    SuperiorId = admin.Id,
+                    TenantId = admin.TenantId,
+                    TenantName = admin.TenantName
+                };
+            var createResult = await _userManager.CreateAsync(user);
+            if (createResult.Succeeded)
+            {
+                var assignResult = await _userManager.AddToRoleAsync(user, RoleName.Basic);
+            }
+            await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accesstoken));
+        }
+        return user;
+
     }
 }

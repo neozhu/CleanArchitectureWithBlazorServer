@@ -13,7 +13,7 @@ public interface IIdentityService : IService
     Task<Result<TokenResponse>> LoginAsync(TokenRequest request, CancellationToken cancellation = default);
     Task<string> GenerateJwtAsync(ApplicationUser user);
     Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellation = default);
-    Task<ClaimsPrincipal> ValidateToken(string token);
+    Task<ClaimsPrincipal> GetClaimsPrincipal(string token);
     Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default);
     
     Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default);

@@ -148,7 +148,7 @@ public class IdentityService : IIdentityService
         var response = new TokenResponse { Token = token, RefreshToken = user.RefreshToken, RefreshTokenExpiryTime = user.RefreshTokenExpiryTime };
         return await Result<TokenResponse>.SuccessAsync(response);
     }
-    public Task<ClaimsPrincipal> ValidateToken(string token)
+    public async Task<ClaimsPrincipal> GetClaimsPrincipal(string token)
     {
         var tokenValidationParameters = new TokenValidationParameters
         {
@@ -161,8 +161,12 @@ public class IdentityService : IIdentityService
             ValidateLifetime = false
         };
         var tokenHandler = new JwtSecurityTokenHandler();
-        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
-        return Task.FromResult(principal);
+        var result =await tokenHandler.ValidateTokenAsync(token, tokenValidationParameters);
+        if (result.IsValid)
+        {
+           return new ClaimsPrincipal(result.ClaimsIdentity);
+        }
+        return new ClaimsPrincipal(new ClaimsIdentity());
     }
     private string GenerateRefreshToken()
     {

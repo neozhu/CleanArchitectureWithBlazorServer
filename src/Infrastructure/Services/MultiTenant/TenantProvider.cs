@@ -1,7 +1,4 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
-using CleanArchitecture.Blazor.Infrastructure.Extensions;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Microsoft.AspNetCore.Http;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 public sealed class TenantProvider : ITenantProvider

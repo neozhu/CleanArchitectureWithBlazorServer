@@ -1,11 +1,9 @@
 ﻿using System.Security.Cryptography;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
-using CleanArchitecture.Blazor.Application.Constants;
-using CleanArchitecture.Blazor.Domain.Identity;
-using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
+
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public class TokenAuthProvider
 {
@@ -42,14 +40,14 @@ public class TokenAuthProvider
             var token = await _localStorage.GetAsync<string>(TokenKey);
             if (token.Success && !string.IsNullOrEmpty(token.Value))
             {
-                var principal = await _identityService.ValidateToken(token.Value);
+                var principal = await _identityService.GetClaimsPrincipal(token.Value);
                 if (principal?.Identity?.IsAuthenticated ?? false)
                 {
                     _tenantProvider.TenantId = principal?.GetTenantId();
                     _tenantProvider.TenantName = principal?.GetTenantName();
                     _currentUser.UserId = principal?.GetUserId();
                     _currentUser.UserName = principal?.GetUserName();
-                    return principal;
+                    return principal!;
                 }
             }
         }
