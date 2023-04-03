@@ -26,7 +26,8 @@ public partial class UserMenu
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            NavigationManager.NavigateTo("/auth/logout", true);
+            await  TokenProvider.RemoveAuthDataFromStorage();
+            NavigationManager.NavigateTo("/", true);
         }
     } 
 }

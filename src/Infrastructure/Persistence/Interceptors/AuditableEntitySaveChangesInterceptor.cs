@@ -60,7 +60,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                     {
                         mustenant.TenantId = tenantId;
                     }
-                    if (entry.Entity is IMayHaveTenant maytenant && !string.IsNullOrEmpty(tenantId))
+                    if (entry.Entity is IMayHaveTenant maytenant)
                     {
                         maytenant.TenantId = tenantId;
                     }

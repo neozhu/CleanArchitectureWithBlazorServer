@@ -1,7 +1,9 @@
 using CleanArchitecture.Blazor.Infrastructure.Constants;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
+using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
@@ -9,21 +11,29 @@ public class HubClient : IAsyncDisposable
 {
     private HubConnection _hubConnection;
     private string _hubUrl = String.Empty;
-    private string _userId = String.Empty;
+    private string? _userName=null;
     private readonly NavigationManager _navigationManager;
+    private readonly TokenAuthProvider _authProvider;
     private readonly ICurrentUserService _currentUserService;
     private bool _started = false;
     private bool _isDisposed;
     public HubClient(NavigationManager navigationManager,
+        TokenAuthProvider  authProvider,
         ICurrentUserService currentUserService
 )
     {
+        
         _navigationManager = navigationManager;
+        _authProvider = authProvider;
         _currentUserService = currentUserService;
-        _userId = _currentUserService.UserId;
+        _userName = currentUserService.UserName;
+        var token = _authProvider.AccessToken;
         _hubUrl = _navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
         _hubConnection = new HubConnectionBuilder()
-              .WithUrl(_hubUrl, options => options.Transports = HttpTransportType.WebSockets)
+              .WithUrl(_hubUrl, options => {
+                  options.AccessTokenProvider =()=> Task.FromResult(token);
+                  options.Transports = HttpTransportType.WebSockets;
+                  })
               .Build();
         _hubConnection.ServerTimeout = TimeSpan.FromSeconds(30);
         _hubConnection.On<string>(SignalR.OnConnect, (userId) =>
@@ -39,9 +49,9 @@ public class HubClient : IAsyncDisposable
         {
             NotificationReceived?.Invoke(this, message);
         });
-        _hubConnection.On<string, string>(SignalR.SendMessage, (userId, message) =>
+        _hubConnection.On<string, string>(SignalR.SendMessage, (from,message) =>
         {
-            HandleReceiveMessage(userId, message);
+            HandleReceiveMessage(from,message);
         });
         _hubConnection.On<string>(SignalR.JobCompleted, (message) =>
         {
@@ -59,15 +69,13 @@ public class HubClient : IAsyncDisposable
         if (_started) return;
         _started = true;
         await _hubConnection.StartAsync(cancellation);
-        await _hubConnection.SendAsync(SignalR.OnConnect, _userId);
-
     }
 
 
-    private void HandleReceiveMessage(string userId, string message)
+    private void HandleReceiveMessage(string from, string message)
     {
         // raise an event to subscribers
-        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(userId, message));
+        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(from, message));
     }
     public async Task StopAsync()
     {
@@ -87,7 +95,7 @@ public class HubClient : IAsyncDisposable
     }
     public async Task SendAsync(string message)
     {
-        await _hubConnection.SendAsync(SignalR.SendMessage, _userId, message);
+        await _hubConnection.SendAsync(SignalR.SendMessage, message);
     }
     public async Task NotifyAsync(string message)
     {

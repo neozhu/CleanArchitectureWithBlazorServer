@@ -1,21 +1,23 @@
 using System.Reflection;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using System.Text;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
+using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class AuthenticationServiceCollectionExtensions
 {
     public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)
     {
+       
         services
             .AddIdentity<ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
-        services.AddTransient<ITicketStore, InMemoryTicketStore>();
-        services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>, ConfigureCookieAuthenticationOptions>();
         services.Configure<IdentityOptions>(options =>
         {
             // Password settings
@@ -38,12 +40,11 @@ public static class AuthenticationServiceCollectionExtensions
             options.User.RequireUniqueEmail = true;
 
         });
-        services
-                 .AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationClaimsIdentityFactory>()
-                 .AddTransient<IIdentityService, IdentityService>()
-                 .AddAuthorization(options =>
+        services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationClaimsIdentityFactory>()
+                .AddScoped<IIdentityService, IdentityService>()
+                .AddAuthorization(options =>
                  {
-                     options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator"));
+                     options.AddPolicy("CanPurge", policy => policy.RequireUserName(UserName.Administrator));
                      // Here I stored necessary permissions/roles in a constant
                      foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
                      {
@@ -55,30 +56,41 @@ public static class AuthenticationServiceCollectionExtensions
                      }
                  })
                  .AddAuthentication()
-                 .AddCookie(options =>
+                 .AddJwtBearer(options =>
                  {
-                     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                     options.SlidingExpiration = true;
-                     options.AccessDeniedPath = "/";
-                 });
+                     options.SaveToken = true;
+                     options.RequireHttpsMetadata = false;
+                     options.TokenValidationParameters = new TokenValidationParameters()
+                     {
+                         ValidateIssuerSigningKey = true,
+                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppConfigurationSettings:Secret"])),
+                         ValidateIssuer = false,
+                         ValidateAudience = false,
+                         RoleClaimType = ClaimTypes.Role,
+                         ClockSkew = TimeSpan.Zero,
+                         ValidateLifetime = false
+                     };
 
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.Configure<CookiePolicyOptions>(options =>
-                 {
-                     // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                     options.CheckConsentNeeded = context => true;
-                     options.MinimumSameSitePolicy = SameSiteMode.None;
+                     options.Events = new JwtBearerEvents
+                     {
+                         OnMessageReceived = context =>
+                         {
+                             var accessToken = context.Request.Headers.Authorization;
 
-                 });
-        services.ConfigureApplicationCookie(options =>
-         {
-             options.Cookie.HttpOnly = true;
-             options.Events.OnRedirectToLogin = context =>
-             {
-                 context.Response.StatusCode = 401;
-                 return Task.CompletedTask;
-             };
-         });
+                             // If the request is for our hub...
+                             var path = context.HttpContext.Request.Path;
+                             if (!string.IsNullOrEmpty(accessToken) &&
+                                 (path.StartsWithSegments("/signalRHub")))
+                             {
+                                 // Read the token out of the query string
+                                 context.Token = accessToken.ToString().Substring(7);
+                             }
+                             return Task.CompletedTask;
+                         }
+                     };
+                 }); 
+   
+        services.AddScoped<TokenAuthProvider>();
         services.AddScoped<UserDataProvider>();
         services.AddScoped<IUserDataProvider>(sp =>
         {

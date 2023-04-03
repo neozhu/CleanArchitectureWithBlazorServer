@@ -1,4 +1,6 @@
+@using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 @inject IStringLocalizer<SharedResource> L
+@inject TokenAuthProvider TokenProvider
 @inherits FluxorComponent
 <MudTooltip Arrow="true" Text="@L["User Profile"]">
     <MudMenu AnchorOrigin="Origin.BottomRight"

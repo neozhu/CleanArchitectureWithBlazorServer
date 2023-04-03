@@ -10,4 +10,5 @@ public class AppConfigurationSettings
     public bool BehindSSLProxy { get; set; } 
     public string ProxyIP { get; set; } = String.Empty;
     public string ApplicationUrl { get; set; } = String.Empty;
+    public string ValidIssuer { get; set; } = string.Empty;
 }
