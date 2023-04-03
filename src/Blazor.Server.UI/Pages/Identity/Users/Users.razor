@@ -346,7 +346,7 @@
     {
         InvokeAsync(() =>
         {
-            foreach (var session in _usersStateContainer.UsersByConnectionId)
+            foreach (var session in _usersStateContainer.UsersByConnectionId.Where(x=>!string.IsNullOrEmpty(x.Value)).DistinctBy(x=>x.Value))
             {
                 Snackbar.Add(string.Format(
                        L["{0} online at moment."], session.Value), MudBlazor.Severity.Info);
