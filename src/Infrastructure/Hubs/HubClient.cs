@@ -31,7 +31,6 @@ public class HubClient : IAsyncDisposable
         _hubUrl = _navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
         _hubConnection = new HubConnectionBuilder()
               .WithUrl(_hubUrl, options => {
-                  options.Headers.Add("Authorization", $"Bearer {token}");
                   options.AccessTokenProvider =()=> Task.FromResult(token);
                   options.Transports = HttpTransportType.WebSockets;
                   })
@@ -96,7 +95,7 @@ public class HubClient : IAsyncDisposable
     }
     public async Task SendAsync(string message)
     {
-        await _hubConnection.SendAsync(SignalR.SendMessage, _userName, message);
+        await _hubConnection.SendAsync(SignalR.SendMessage, message);
     }
     public async Task NotifyAsync(string message)
     {

@@ -330,31 +330,12 @@
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-        _usersStateContainer.OnChange += HandleCircuitsChanged;
-
         _roles = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
-    }
-    public void Dispose()
-    {
-        _usersStateContainer.OnChange -= HandleCircuitsChanged;
     }
     private bool isOnline(string username)
     {
         return _usersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
     }
-    private void HandleCircuitsChanged()
-    {
-        InvokeAsync(() =>
-        {
-            foreach (var session in _usersStateContainer.UsersByConnectionId.Where(x=>!string.IsNullOrEmpty(x.Value)).DistinctBy(x=>x.Value))
-            {
-                Snackbar.Add(string.Format(
-                       L["{0} online at moment."], session.Value), MudBlazor.Severity.Info);
-            }
-
-        });
-    }
-
     private async Task<TableData<ApplicationUserDto>> ServerReload(TableState state)
     {
         try

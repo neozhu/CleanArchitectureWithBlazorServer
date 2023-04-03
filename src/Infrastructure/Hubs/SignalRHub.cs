@@ -20,6 +20,7 @@ public interface ISignalRHub
     Task Connect(string userId);
     Task SendNotification(string message);
 }
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class SignalRHub : Hub<ISignalRHub>
 {
     private static readonly ConcurrentDictionary<string, string> _onlineUsers = new();
@@ -50,9 +51,10 @@ public class SignalRHub : Hub<ISignalRHub>
         }
 
     }
-    public async Task SendMessage(string from,string message)
+    public async Task SendMessage(string message)
     {
-        await Clients.All.SendMessage(from,message);
+        var userName = Context.User?.Identity?.Name ?? string.Empty;
+        await Clients.All.SendMessage(userName, message);
     }
     public async Task SendNotification(string message)
     {

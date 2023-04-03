@@ -55,10 +55,8 @@ public static class AuthenticationServiceCollectionExtensions
                          }
                      }
                  })
-                 .AddAuthentication(options => {
-                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                 }).AddJwtBearer(options =>
+                 .AddAuthentication()
+                 .AddJwtBearer(options =>
                  {
                      options.SaveToken = true;
                      options.RequireHttpsMetadata = false;
