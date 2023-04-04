@@ -12,7 +12,6 @@ public class DashboardSettings
     public string AppName { get; set; } = "Admin Dashboard";
     public string AppFlavor { get; set; } = String.Empty;
     public string AppFlavorSubscript { get; set; } = String.Empty;
-
     public string Company { get; set; } = "Company";
     public string Copyright { get; set; } = "@2022 Copyright";
  
