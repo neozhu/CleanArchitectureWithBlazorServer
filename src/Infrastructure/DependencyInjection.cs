@@ -4,7 +4,6 @@
 using Microsoft.Extensions.Configuration;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
-using Microsoft.Extensions.DependencyInjection;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
@@ -52,10 +51,8 @@ public static class DependencyInjection
         services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
         services.AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
         services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
+        services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
         services.AddScoped<ApplicationDbContextInitialiser>();
-
-        
 
 
         services.AddLocalizationServices();

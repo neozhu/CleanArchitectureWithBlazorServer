@@ -17,9 +17,9 @@
         <PackageReference Include="Blazor-ApexCharts" Version="0.9.16-beta" />
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
-        <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.4.3" />
+        <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.4.6" />
        <PackageReference Include="MudBlazor" Version="6.2.0" />
-       <PackageReference Include="SixLabors.ImageSharp" Version="3.0.0" />
+       <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
