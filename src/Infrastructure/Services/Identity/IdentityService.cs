@@ -152,13 +152,13 @@ public class IdentityService : IIdentityService
     {
         var tokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuerSigningKey = true,
+            ValidateIssuerSigningKey = false,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfig.Secret)),
-            ValidateIssuer = false,
+            ValidateIssuer =false,
             ValidateAudience = false,
             RoleClaimType = ClaimTypes.Role,
             ClockSkew = TimeSpan.Zero,
-            ValidateLifetime = false
+            ValidateLifetime = true
         };
         var tokenHandler = new JwtSecurityTokenHandler();
         var result =await tokenHandler.ValidateTokenAsync(token, tokenValidationParameters);

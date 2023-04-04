@@ -62,13 +62,13 @@ public static class AuthenticationServiceCollectionExtensions
                      options.RequireHttpsMetadata = false;
                      options.TokenValidationParameters = new TokenValidationParameters()
                      {
-                         ValidateIssuerSigningKey = true,
-                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppConfigurationSettings:Secret"])),
+                         ValidateIssuerSigningKey = false,
+                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppConfigurationSettings:Secret"]!)),
                          ValidateIssuer = false,
                          ValidateAudience = false,
                          RoleClaimType = ClaimTypes.Role,
                          ClockSkew = TimeSpan.Zero,
-                         ValidateLifetime = false
+                         ValidateLifetime = true
                      };
 
                      options.Events = new JwtBearerEvents
