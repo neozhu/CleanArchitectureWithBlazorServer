@@ -13,7 +13,6 @@
 @inject IJSRuntime JS
 @inject IStringLocalizer<Documents> L
 @implements IDisposable
-@inherits FluxorComponent
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 <PageTitle>@Title</PageTitle>
 <style>
@@ -189,7 +188,7 @@
                     </div>
                 </MudTd>
                 <MudTd DataLabel="@L["Owner Name"]">
-                    @if (UserProfileState.Value.UserProfile.UserId == context.Owner.Id)
+                    @if (_currentUser.UserId == context.Owner?.Id)
                     {
                         <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Me </MudChip>
                     }
@@ -224,8 +223,7 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
-    [Inject]
-    private IState<UserProfileState> UserProfileState { get; set; } = null!;
+
     public string? Title { get; private set; }
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
     private MudTable<DocumentDto> _table = default!;
@@ -241,7 +239,8 @@
     private HubClient _client { get; set; } = default!;
     [Inject]
     private IMapper _mapper { get; set; } = default!;
-
+    [Inject]
+    private ICurrentUserService _currentUser { get; set; } = null!;
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     private string _tenantId = string.Empty;
@@ -267,16 +266,8 @@
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
         _client.JobCompleted += _client_JobCompleted;
         _client.JobStarted += _client_JobStarted;
-        _query = new DocumentsWithPaginationQuery() { CurrentUser = UserProfileState.Value.UserProfile };
-        SubscribeToAction<UserProfileUpdateAction>(async(x) =>
-        {
-            if (!string.IsNullOrEmpty(x.UserProfile.UserId) && _loading==false)
-            {
-                await Task.Delay(300);
-                await _table.ReloadServerData();
-                StateHasChanged();
-            }
-        });
+        _query = new DocumentsWithPaginationQuery() { CurrentUser = _currentUser };
+        
     }
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -311,7 +302,7 @@
         {
             _loading = true;
             _query.Keyword = _searchString;
-            _query.CurrentUser = UserProfileState.Value.UserProfile;
+            _query.CurrentUser = _currentUser;
             _query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
             _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
             _query.PageNumber = state.Page + 1;
