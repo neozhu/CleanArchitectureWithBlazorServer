@@ -7,10 +7,10 @@
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <Authorizing>
-                    <text>Please wait, we are authorizing you...</text>
+                    <text>@L["Please wait, we are authorizing you..."]</text>
                 </Authorizing>
                 <NotAuthorized>
-                    @if (@context.User.Identity?.IsAuthenticated is true)
+                    @if (@context.User.Identity?.IsAuthenticated??false)
                     {
                         <p>@L["You are not authorized to be here. For more information, contact your system administrator."]</p>
                     }

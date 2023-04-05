@@ -11,10 +11,10 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.Pagina
 public class DocumentsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<DocumentDto>>
 {
     public DocumentListView ListView { get; set; } = DocumentListView.All;
-    public required UserProfile CurrentUser { get; set; }
+    public required ICurrentUserService CurrentUser { get; set; }
     public override string ToString()
     {
-        return $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
+        return $"CurrentUserId:{CurrentUser.UserId},ListView:{ListView},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
     public string CacheKey => DocumentCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;
@@ -49,8 +49,6 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
     {
         public DocumentsQuery(DocumentsWithPaginationQuery request)
         {
-            //AddInclude(x=>x.Include(x=>x.Owner).ThenInclude(x=>x.Superior));
-            //AddInclude(x => x.Include(x=>x.Editor).ThenInclude(x=>x.Superior));
             Criteria = request.ListView switch
             {
                 DocumentListView.All => p => (p.CreatedBy == request.CurrentUser.UserId && p.IsPublic == false) || (p.IsPublic == true && p.TenantId == request.CurrentUser.TenantId),
