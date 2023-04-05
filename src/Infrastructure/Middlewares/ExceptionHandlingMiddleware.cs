@@ -7,17 +7,13 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
 
 internal class ExceptionHandlingMiddleware : IMiddleware
 {
-    private readonly ICurrentUserService _currentUserService;
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
     private readonly IStringLocalizer<ExceptionHandlingMiddleware> _localizer;
 
     public ExceptionHandlingMiddleware(
-  
-        ICurrentUserService currentUserService ,
         ILogger<ExceptionHandlingMiddleware> logger,
         IStringLocalizer<ExceptionHandlingMiddleware> localizer)
     {
-        _currentUserService = currentUserService;
         _logger = logger;
         _localizer = localizer;
     }
@@ -30,7 +26,6 @@ internal class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (Exception exception)
         {
-            var userId = _currentUserService.UserId;
             var responseModel = await Result.FailureAsync(new string[] { exception.Message });
             var response = context.Response;
             response.ContentType = "application/json";
