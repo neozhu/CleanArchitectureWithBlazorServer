@@ -1,7 +1,6 @@
 @using Blazor.Server.UI.Models.SideMenu
 
 @inject IStringLocalizer<SideMenu> L
-@inherits FluxorComponent
 <MudDrawer Breakpoint="Breakpoint.Md"
            Class="side-menu"
            Elevation="0"
@@ -25,19 +24,19 @@
                    FullWidth="true">
                 <ChildContent>
                     <MudStack Row="true">
-                        @if (string.IsNullOrEmpty(UserProfile.ProfilePictureDataUrl))
+                        @if (string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl))
                         {
                             <MudAvatar Color="Color.Primary">
-                                @UserProfile.UserName.ToUpper().FirstOrDefault()
+                                @UserProfile?.UserName.ToUpper().FirstOrDefault()
                             </MudAvatar>
                         }
                         else
                         {
-                            <MudAvatar Image="@UserProfile.ProfilePictureDataUrl" />
+                            <MudAvatar Image="@UserProfile?.ProfilePictureDataUrl" />
                         }
                         <MudStack Justify="Justify.SpaceBetween" Spacing="0">
-                            <MudText Typo="Typo.body1">@UserProfile.DisplayName</MudText>
-                            <MudText Typo="Typo.body2">@UserProfile.DefaultRole</MudText>
+                            <MudText Typo="Typo.body1">@UserProfile?.DisplayName</MudText>
+                            <MudText Typo="Typo.body2">@UserProfile?.DefaultRole</MudText>
                         </MudStack>
                     </MudStack>
                 </ChildContent>
@@ -47,7 +46,7 @@
     else
     {
         <div class="d-flex justify-center my-3">
-            <MudAvatar Image="@UserProfile.ProfilePictureDataUrl" />
+            <MudAvatar Image="@UserProfile?.ProfilePictureDataUrl" />
         </div>
     }
 

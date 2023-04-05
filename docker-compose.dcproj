@@ -27,4 +27,7 @@
   <ItemGroup>
     <None Remove="src\**" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Blazor.Server.UI\Pages\Identity\Users\Profile.razor.cs" />
+  </ItemGroup>
 </Project>

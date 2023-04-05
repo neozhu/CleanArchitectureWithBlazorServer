@@ -1,6 +1,4 @@
 global using MediatR;
-global using Fluxor;
-global using Fluxor.Blazor.Web.Components;
 global using Microsoft.Extensions.Localization;
 global using AutoMapper;
 global using AutoMapper.QueryableExtensions;
@@ -26,7 +24,6 @@ global using CleanArchitecture.Blazor.Application.Common.Specification;
 global using CleanArchitecture.Blazor.Application.Common.Exceptions;
 global using CleanArchitecture.Blazor.Infrastructure.Extensions;
 global using CleanArchitecture.Blazor.Application.Constants;
-global using CleanArchitecture.Blazor.Application.Features.Fluxor;
 global using Microsoft.AspNetCore.Components;
 
 global using MudBlazor;

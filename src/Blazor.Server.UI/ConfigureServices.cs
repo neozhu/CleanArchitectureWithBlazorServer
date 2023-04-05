@@ -9,6 +9,8 @@ using Blazored.LocalStorage;
 using MudBlazor.Services;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 using MudExtensions.Services;
+using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
+using Blazor.Server.UI.Components.Shared;
 
 namespace Blazor.Server.UI;
 
@@ -69,6 +71,8 @@ public static class ConfigureServices
         services.AddScoped<INotificationService, InMemoryNotificationService>();
         services.AddGoogleAnalytics("G-PRYNCB61NV");
         services.AddHealthChecks();
+        services.AddScoped<INotificationHandler<UpdateUserProfileCommand>, SideMenu>();
+        services.AddScoped<INotificationHandler<UpdateUserProfileCommand>, UserMenu>();
         return services;
     }
 }
