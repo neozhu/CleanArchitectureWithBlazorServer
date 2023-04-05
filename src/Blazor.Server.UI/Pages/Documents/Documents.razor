@@ -269,10 +269,6 @@
         _query = new DocumentsWithPaginationQuery() { CurrentUser = _currentUser };
         
     }
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        return base.OnAfterRenderAsync(firstRender);
-    }
 
     private void _client_JobCompleted(object? sender, string e)
     {

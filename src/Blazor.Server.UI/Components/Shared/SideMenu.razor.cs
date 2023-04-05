@@ -5,7 +5,7 @@ using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 
 namespace Blazor.Server.UI.Components.Shared;
 
-public partial class SideMenu:INotificationHandler<UpdateUserProfileCommand>
+public partial class SideMenu:INotificationHandler<UpdateUserProfileCommand>,IDisposable
 {
 
     private UserProfile? UserProfile { get; set; } = null!;
@@ -27,11 +27,17 @@ public partial class SideMenu:INotificationHandler<UpdateUserProfileCommand>
 
     protected override void OnInitialized()
     {
-        UserProfileChanged += (s, e) =>
-        {
-            UserProfile = e.UserProfile;
-            InvokeAsync(() => StateHasChanged());
-        };
+        UserProfileChanged += userProfileChangedHandler;
+    }
+
+    private void userProfileChangedHandler(object? sender, UpdateUserProfileEventArgs e)
+    {
+        UserProfile = e.UserProfile;
+        InvokeAsync(() => StateHasChanged());
+    }
+    public void Dispose()
+    {
+        UserProfileChanged -= userProfileChangedHandler;
     }
 
     public static event EventHandler<UpdateUserProfileEventArgs> UserProfileChanged=null!;

@@ -20,7 +20,7 @@
             </MudContainer>
         </NotAuthorized>
         <Authorized>
-            <UserLoginState />
+            
             <NavMenu SideMenuDrawerOpen="_sideMenuDrawerOpen"
                      OpenCommandPalette="OpenCommandPalette"
                      IsDarkMode="@_layoutService.IsDarkMode"
@@ -42,6 +42,7 @@
                     @Body
                 </MudContainer>
             </MudMainContent>
+                <UserLoginState />
         </Authorized>
     </AuthorizeView>
 </MudLayout>
