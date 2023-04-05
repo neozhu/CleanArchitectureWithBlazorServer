@@ -14,7 +14,7 @@ public class DocumentsWithPaginationQuery : PaginationFilter, ICacheableRequest<
     public required UserProfile CurrentUser { get; set; }
     public override string ToString()
     {
-        return $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
+        return $"CurrentUser:{CurrentUser.UserId},ListView:{ListView},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
     public string CacheKey => DocumentCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;

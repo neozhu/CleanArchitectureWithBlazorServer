@@ -189,7 +189,7 @@
                     </div>
                 </MudTd>
                 <MudTd DataLabel="@L["Owner Name"]">
-                    @if (UserProfile.UserId == context.Owner.Id)
+                    @if (UserProfileState.Value.UserProfile.UserId == context.Owner.Id)
                     {
                         <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Me </MudChip>
                     }
@@ -226,7 +226,6 @@
 @code {
     [Inject]
     private IState<UserProfileState> UserProfileState { get; set; } = null!;
-    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     public string? Title { get; private set; }
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
     private MudTable<DocumentDto> _table = default!;
@@ -268,14 +267,22 @@
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
         _client.JobCompleted += _client_JobCompleted;
         _client.JobStarted += _client_JobStarted;
-        _query = new DocumentsWithPaginationQuery() { CurrentUser = UserProfile };
-        UserProfileState.StateChanged += _userProfileState_StateChanged;
+        _query = new DocumentsWithPaginationQuery() { CurrentUser = UserProfileState.Value.UserProfile };
+        SubscribeToAction<UserProfileUpdateAction>(async(x) =>
+        {
+            if (!string.IsNullOrEmpty(x.UserProfile.UserId) && _loading==false)
+            {
+                await Task.Delay(300);
+                await _table.ReloadServerData();
+                StateHasChanged();
+            }
+        });
     }
-    private async void _userProfileState_StateChanged(object? sender, EventArgs e)
+    protected override Task OnAfterRenderAsync(bool firstRender)
     {
-        await _table.ReloadServerData();
-        StateHasChanged();
+        return base.OnAfterRenderAsync(firstRender);
     }
+
     private void _client_JobCompleted(object? sender, string e)
     {
         InvokeAsync(async () =>
@@ -297,7 +304,6 @@
     {
         _client.JobCompleted -= _client_JobCompleted;
         _client.JobStarted -= _client_JobStarted;
-        UserProfileState.StateChanged -= _userProfileState_StateChanged;
     }
     private async Task<TableData<DocumentDto>> ServerReload(TableState state)
     {
@@ -305,12 +311,12 @@
         {
             _loading = true;
             _query.Keyword = _searchString;
-            _query.CurrentUser = UserProfile;
+            _query.CurrentUser = UserProfileState.Value.UserProfile;
             _query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
             _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
             _query.PageNumber = state.Page + 1;
             _query.PageSize = state.PageSize;
-            var result = await _mediator.Send(_query).ConfigureAwait(false);
+            var result = await _mediator.Send(_query);
             return new TableData<DocumentDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally

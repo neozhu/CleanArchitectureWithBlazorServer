@@ -12,7 +12,7 @@ public class UserProfileState
     public UserProfile UserProfile { get; }
     public UserProfileState()
     {
-        UserProfile = new() { Email= "anonymous@dotnet6.cn", UserId=Guid.NewGuid().ToString(),UserName= "anonymous" };
+        UserProfile = new() { Email= string.Empty, UserId=string.Empty,UserName= string.Empty };
     }
     public UserProfileState(UserProfile userProfile)
     {
