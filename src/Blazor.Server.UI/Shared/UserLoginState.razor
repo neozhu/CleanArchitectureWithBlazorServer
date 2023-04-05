@@ -1,9 +1,9 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
 
-@inherits FluxorComponent
 @implements IAsyncDisposable
 @code{
     [CascadingParameter]
@@ -16,7 +16,7 @@
     private IIdentityService _identityService { get; set; }=default!;
 
     [Inject]
-    public IDispatcher Dispatcher { get; set; } = null!;
+    private IMediator _mediator { get; set; } = default!;
 
     public async ValueTask DisposeAsync()
     {
@@ -55,10 +55,10 @@
             }
         });
     }
-    private  Task setProfile(ApplicationUserDto userDto)
+    private  async Task setProfile(ApplicationUserDto userDto)
     {
-        Dispatcher.Dispatch(new UserProfileUpdateAction() { UserProfile=userDto.ToUserProfile()});
-        return Task.CompletedTask;
+        await  _mediator.Publish(new UpdateUserProfileCommand() { UserProfile = userDto.ToUserProfile() });
+
     }
     private void _client_Login(object? sender, string username)
     {
