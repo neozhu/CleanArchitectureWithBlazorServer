@@ -12,8 +12,6 @@ namespace Blazor.Server.UI.Pages.Identity.Users
 
         [Inject]
         private IMediator _mediator { get; set; } = default!;
-        [Inject]
-        private ICurrentUserService _currentUser { get; set; } = null!;
         private MudForm? _form = null !;
         private MudForm? _passwordform = null !;
         public string Title { get; set; } = "Profile";
@@ -22,7 +20,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         private Task<AuthenticationState> _authState { get; set; } = default !;
         [Inject]
         private IUploadService _uploadService { get; set; } = default !;
-        private UserProfile model { get; set; } = null!;
+        private UserProfile? model { get; set; } = null!;
         private UserProfileEditValidator _userValidator = new();
         private UserManager<ApplicationUser> _userManager { get; set; } = default !;
         [Inject]
@@ -71,8 +69,12 @@ namespace Blazor.Server.UI.Pages.Identity.Users
         protected override async Task OnInitializedAsync()
         {
             _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-            var userDto = await _identityService.GetApplicationUserDto(_currentUser.UserId);
-            this.model = userDto.ToUserProfile();
+            var userId = (await _authState).User.GetUserId();
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var userDto = await _identityService.GetApplicationUserDto(userId);
+                this.model = userDto.ToUserProfile();
+            }
         }
 
         private async Task UploadPhoto(InputFileChangeEventArgs e)

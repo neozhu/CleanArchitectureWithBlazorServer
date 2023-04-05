@@ -10,6 +10,10 @@
 <PageTitle>@Title</PageTitle>
 <ErrorBoundary>
     <ChildContent>
+        @if(model is null)
+        {
+            <MudProgressLinear Color="MudBlazor.Color.Primary" Indeterminate="true" Class="my-7" />
+        }else{
         <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" Elevation="6" ActivePanelIndexChanged="ActivePanelIndexChanged"
                  ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
             <MudTabPanel Text="@L["Profile"]">
@@ -149,6 +153,7 @@
                      style="height: calc(100vh - 265px);"></div>
             </MudTabPanel>
         </MudTabs>
+        }
     </ChildContent>
     <ErrorContent>
         <CustomError Exception="context"></CustomError>
