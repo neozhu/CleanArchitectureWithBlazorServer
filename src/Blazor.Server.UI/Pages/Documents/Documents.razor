@@ -267,7 +267,7 @@
         _client.JobCompleted += _client_JobCompleted;
         _client.JobStarted += _client_JobStarted;
         _query = new DocumentsWithPaginationQuery() { CurrentUser = _currentUser };
-        
+        await  _client.StartAsync();
     }
 
     private void _client_JobCompleted(object? sender, string e)

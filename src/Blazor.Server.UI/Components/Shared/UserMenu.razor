@@ -1,6 +1,6 @@
 @using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 @inject IStringLocalizer<SharedResource> L
-@inject TokenAuthProvider TokenProvider
+@inject AccessTokenProvider TokenProvider
 <MudTooltip Arrow="true" Text="@L["User Profile"]">
     <MudMenu AnchorOrigin="Origin.BottomRight"
              Icon="@Icons.Material.Filled.PermIdentity"
