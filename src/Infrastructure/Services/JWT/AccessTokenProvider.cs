@@ -7,7 +7,7 @@ using Azure.Core;
 using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
-public class TokenAuthProvider
+public class AccessTokenProvider
 {
     private readonly string TokenKey = nameof(TokenKey);
     private readonly ProtectedLocalStorage _localStorage;
@@ -17,7 +17,7 @@ public class TokenAuthProvider
     private readonly ICurrentUserService _currentUser;
     public string? AccessToken { get; private set; }
 
-    public TokenAuthProvider(ProtectedLocalStorage localStorage, NavigationManager navigation, IIdentityService identityService,
+    public AccessTokenProvider(ProtectedLocalStorage localStorage, NavigationManager navigation, IIdentityService identityService,
         ITenantProvider tenantProvider,
         ICurrentUserService currentUser)
     {

@@ -24,12 +24,6 @@ public interface ISignalRHub
 public class SignalRHub : Hub<ISignalRHub>
 {
     private static readonly ConcurrentDictionary<string, string> _onlineUsers = new();
-
-
-    public SignalRHub()
-    {
-
-    }
     public override async Task OnConnectedAsync()
     {
         var id = Context.ConnectionId;
@@ -63,17 +57,5 @@ public class SignalRHub : Hub<ISignalRHub>
     public async Task Completed(string message)
     {
         await Clients.All.Completed(message);
-    }
-    private bool _disposed = false;
-    // Protected implementation of Dispose pattern.
-    protected override void Dispose(bool disposing)
-    {
-        if (_disposed)
-        {
-            return;
-        }
-        _disposed = true;
-        // Call base class implementation.
-        base.Dispose(disposing);
     }
 }

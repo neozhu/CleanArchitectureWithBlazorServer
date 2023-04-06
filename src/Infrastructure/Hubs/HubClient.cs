@@ -11,22 +11,15 @@ public class HubClient : IAsyncDisposable
 {
     private HubConnection _hubConnection;
     private string _hubUrl = String.Empty;
-    private string? _userName=null;
     private readonly NavigationManager _navigationManager;
-    private readonly TokenAuthProvider _authProvider;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly AccessTokenProvider _authProvider;
     private bool _started = false;
-    private bool _isDisposed;
     public HubClient(NavigationManager navigationManager,
-        TokenAuthProvider  authProvider,
-        ICurrentUserService currentUserService
+        AccessTokenProvider  authProvider
 )
     {
-        
         _navigationManager = navigationManager;
         _authProvider = authProvider;
-        _currentUserService = currentUserService;
-        _userName = currentUserService.UserName;
         var token = _authProvider.AccessToken;
         _hubUrl = _navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
         _hubConnection = new HubConnectionBuilder()
@@ -77,22 +70,7 @@ public class HubClient : IAsyncDisposable
         // raise an event to subscribers
         MessageReceived?.Invoke(this, new MessageReceivedEventArgs(from, message));
     }
-    public async Task StopAsync()
-    {
-
-        if (_started && _hubConnection is not null)
-        {
-            // disconnect the client
-            await _hubConnection.StopAsync();
-            // There is a bug in the mono/SignalR client that does not
-            // close connections even after stop/dispose
-            // see https://github.com/mono/mono/issues/18628
-            // this means the demo won't show "xxx left the chat" since 
-            // the connections are left open
-            await _hubConnection.DisposeAsync();
-            _started = false;
-        }
-    }
+    
     public async Task SendAsync(string message)
     {
         await _hubConnection.SendAsync(SignalR.SendMessage, message);
@@ -103,13 +81,12 @@ public class HubClient : IAsyncDisposable
     }
     public async ValueTask DisposeAsync()
     {
-        if (_isDisposed) return;
-        _isDisposed = true;
-        await StopAsync();
+        try { await _hubConnection.StopAsync(); }
+        finally
+        {
+            await _hubConnection.DisposeAsync();
+        }
     }
-
-
-
     public event EventHandler<string>? Login;
     public event EventHandler<string>? JobStarted;
     public event EventHandler<string>? JobCompleted;

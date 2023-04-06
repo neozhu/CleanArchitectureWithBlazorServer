@@ -87,7 +87,7 @@ public static class AuthenticationServiceCollectionExtensions
                      };
                  }); 
    
-        services.AddScoped<TokenAuthProvider>();
+        services.AddScoped<AccessTokenProvider>();
         services.AddScoped<UserDataProvider>();
         services.AddScoped<IUserDataProvider>(sp =>
         {

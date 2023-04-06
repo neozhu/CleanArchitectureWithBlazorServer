@@ -7,7 +7,7 @@
 @using Microsoft.AspNetCore.DataProtection
 @using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
-@inject TokenAuthProvider TokenProvider
+@inject AccessTokenProvider TokenProvider
 @inject IJSRuntime JS
 @inherits OwningComponentBase
 @implements IDisposable
@@ -81,7 +81,7 @@
 @code {
     public string Title = "Sign In";
     private UserManager<ApplicationUser> _userManager { get; set; } = default!;
-    private TokenAuthProvider  _tokenProvider { get; set; } = default!;
+    private AccessTokenProvider  _tokenProvider { get; set; } = default!;
     [Inject] private ILogger<Login> _logger { get; set; } = default!;
     [Inject] private IDataProtectionProvider _dataProtectionProvider { get; set; } = default!;
     [Inject]
@@ -103,7 +103,7 @@
     {
         Title = L["Sign In"];
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        _tokenProvider = ScopedServices.GetRequiredService<TokenAuthProvider>();
+        _tokenProvider = ScopedServices.GetRequiredService<AccessTokenProvider>();
         return base.OnInitializedAsync();
     }
     private async Task OnSubmit()

@@ -4,62 +4,24 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
 
-@implements IAsyncDisposable
+@implements IDisposable
 @code{
-    [CascadingParameter]
-    protected Task<AuthenticationState> _authState { get; set; } = default!;
-    [Inject]
-    private NavigationManager _navigationManager { get; set; } = default!;
-    [Inject]
-    private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
-    [Inject]
-    private IIdentityService _identityService { get; set; }=default!;
-
-    [Inject]
-    private IMediator _mediator { get; set; } = default!;
-
-    public async ValueTask DisposeAsync()
+   
+    public void Dispose()
     {
-        await _client.StopAsync();
         _client.Login -= _client_Login;
         _client.Logout -= _client_Logout;
-        _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
+       
     }
     [Inject]
     private HubClient _client { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
-        var state = await _authState;
-        if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
-        {
-            var userDto = await _identityService.GetApplicationUserDto(state.User.GetUserId());
-            await setProfile(userDto);
-            _client.Login += _client_Login;
-            _client.Logout += _client_Logout;
+        _client.Login += _client_Login;
+        _client.Logout += _client_Logout;
             await _client.StartAsync().ConfigureAwait(false);
-
-        }
-        _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
     }
-    private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
-    {
-        InvokeAsync(async () =>
-        {
-            var state = await authenticationState;
-            if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
-            {
-                var userDto = await _identityService.GetApplicationUserDto(state.User.GetUserId());
-                await setProfile(userDto);
-                await _client.StartAsync();
-
-            }
-        });
-    }
-    private  async Task setProfile(ApplicationUserDto userDto)
-    {
-        await  _mediator.Publish(new UpdateUserProfileCommand() { UserProfile = userDto.ToUserProfile() });
-
-    }
+   
     private void _client_Login(object? sender, string username)
     {
         InvokeAsync(async () =>
