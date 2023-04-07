@@ -42,7 +42,7 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
         var dto = _mapper.Map<ProductDto>(request);
         if (request.Id > 0)
         {
-            var item = await _context.Products.FindAsync(new object[] { request.Id }, cancellationToken) ?? throw new NotFoundException($"Product with id: {request.Id} not found.");
+            var item = await _context.Products.Include(x=>x.Pictures).SingleOrDefaultAsync(x=>x.Id==request.Id) ?? throw new NotFoundException($"Product with id: {request.Id} not found.");
             item = _mapper.Map(dto, item);
             item.AddDomainEvent(new UpdatedEvent<Product>(item));
             await _context.SaveChangesAsync(cancellationToken);

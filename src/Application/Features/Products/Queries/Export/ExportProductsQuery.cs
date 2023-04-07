@@ -54,6 +54,7 @@ public class ExportProductsQueryHandler :
     {
         var data = await _context.Products.ApplyOrder(request)
                    .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+                   .AsNoTracking()
                    .ToListAsync(cancellationToken);
 
         

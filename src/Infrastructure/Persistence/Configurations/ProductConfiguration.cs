@@ -3,6 +3,7 @@
 
 using System.Text.Json;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
+using CleanArchitecture.Blazor.Infrastructure.Persistence.Conversions;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,5 +15,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {
         builder.Ignore(e => e.DomainEvents);
         builder.OwnsMany(e => e.Pictures, build => build.ToJson());
+        //builder.Property(x=>x.Pictures).HasJsonConversion();
+
     }
 }
