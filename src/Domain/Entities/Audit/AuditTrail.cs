@@ -17,7 +17,7 @@ public class AuditTrail : IEntity
     public DateTime DateTime { get; set; }
     public Dictionary<string, object?>? OldValues { get; set; } 
     public Dictionary<string, object?>? NewValues { get; set; }
-    public ICollection<string>? AffectedColumns { get; set; }
+    public List<string>? AffectedColumns { get; set; }
     public Dictionary<string, object> PrimaryKey { get; set; } = new();
 
     public List<PropertyEntry> TemporaryProperties { get; } = new();

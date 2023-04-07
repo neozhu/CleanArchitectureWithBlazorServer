@@ -40,8 +40,7 @@ public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuer
         _context = context;
         _mapper = mapper;
     }
-#pragma warning disable CS8602
-#pragma warning disable CS8604
+
     public async Task<PaginatedData<KeyValueDto>> Handle(KeyValuesWithPaginationQuery request, CancellationToken cancellationToken)
     {
 
