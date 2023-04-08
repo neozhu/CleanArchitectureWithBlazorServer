@@ -42,17 +42,18 @@ public class ExportCustomersQueryHandler :
             // TODO: Implement ExportCustomersQueryHandler method 
             var data = await _context.Customers.ApplyOrder(request)
                        .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
+                       .AsNoTracking()
                        .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,
                 new Dictionary<string, Func<CustomerDto, object?>>()
                 {
                     // TODO: Define the fields that should be exported, for example:
-                    {_localizer[_dto.GetMemberDescription("Id")],item => item.Id}, 
-{_localizer[_dto.GetMemberDescription("Name")],item => item.Name}, 
-{_localizer[_dto.GetMemberDescription("Description")],item => item.Description}, 
+                    {_localizer[_dto.GetMemberDescription(nameof(_dto.Id))],item => item.Id}, 
+{_localizer[_dto.GetMemberDescription(nameof(_dto.Name))],item => item.Name}, 
+{_localizer[_dto.GetMemberDescription(nameof(_dto.Description))],item => item.Description}, 
 
                 }
-                , _localizer["Customers"]);
+                , _localizer[_dto.GetClassDescription()]);
             return await Result<byte[]>.SuccessAsync(result);;
         }
 }

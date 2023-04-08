@@ -4,7 +4,7 @@
 using System.ComponentModel;
 namespace CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 
-
+[Description("Customers")]
 public class CustomerDto:IMapFrom<Customer>
 {
     public void Mapping(Profile profile)

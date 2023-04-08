@@ -10,7 +10,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.GetByI
     {
        [OperatorComparison(OperatorType.Equal)]
        public required int Id { get; set; }
+       [IgnoreFilter]
        public string CacheKey => CustomerCacheKey.GetByIdCacheKey($"{Id}");
+       [IgnoreFilter]
        public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
     }
     

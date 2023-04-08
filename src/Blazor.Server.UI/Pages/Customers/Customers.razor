@@ -154,7 +154,7 @@
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
                 @*TODO: Define the fields that should be displayed in data table*@
-                <MudTh><MudTableSortLabel SortLabel="Name" T="CustomerDto">@L[_currentDto.GetMemberDescription("Name")]</MudTableSortLabel></MudTh> 
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.Name)" T="CustomerDto">@L[_currentDto.GetMemberDescription(nameof(_currentDto.Name))]</MudTableSortLabel></MudTh> 
 
             </HeaderContent>
             <RowTemplate>
@@ -184,7 +184,7 @@
                     }
                 </MudTd>
                 @*TODO: Define the fields that should be displayed in data table*@
-                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription("Name")]"> 
+                <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription(nameof(context.Name))]"> 
                     <div class="d-flex flex-column">
                         <MudText>@context.Name</MudText>
                         <MudText Typo="Typo.body2">@context.Description</MudText>
@@ -238,7 +238,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Title = L["Customers"];
+        Title = L[_currentDto.GetClassDescription()];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Search)).Succeeded;
@@ -378,7 +378,7 @@
     {
         _uploading = true;
         var stream = new MemoryStream();
-        await file.OpenReadStream(GlobalVariable.maxAllowedSize).CopyToAsync(stream);
+        await file.OpenReadStream().CopyToAsync(stream);
         var command = new ImportCustomersCommand(file.Name, stream.ToArray());
         var result = await _mediator.Send(command);
         if (result.Succeeded)

@@ -33,6 +33,7 @@ public class ProductsWithPaginationQuery : PaginationFilterBase, ICacheableReque
     {
         return $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{Price?.Min},MaxPrice:{Price?.Max},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
     }
+    [IgnoreFilter]
     public string CacheKey => ProductCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
 }
