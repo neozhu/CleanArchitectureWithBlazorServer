@@ -48,9 +48,9 @@ public class ExportCustomersQueryHandler :
                 new Dictionary<string, Func<CustomerDto, object?>>()
                 {
                     // TODO: Define the fields that should be exported, for example:
-                    {_localizer[_dto.GetMemberDescription(nameof(_dto.Id))],item => item.Id}, 
-{_localizer[_dto.GetMemberDescription(nameof(_dto.Name))],item => item.Name}, 
-{_localizer[_dto.GetMemberDescription(nameof(_dto.Description))],item => item.Description}, 
+                    {_localizer[_dto.GetMemberDescription(x=>x.Id)],item => item.Id}, 
+{_localizer[_dto.GetMemberDescription(x=>x.Name)],item => item.Name}, 
+{_localizer[_dto.GetMemberDescription(x=>x.Description)],item => item.Description}, 
 
                 }
                 , _localizer[_dto.GetClassDescription()]);

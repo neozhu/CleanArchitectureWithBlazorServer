@@ -51,8 +51,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, CustomerDto, object?>>
             {
                 // TODO: Define the fields that should be read from Excel, for example:
-                { _localizer[_dto.GetMemberDescription(nameof(_dto.Name))], (row, item) => item.Name = row[_localizer[_dto.GetMemberDescription(nameof(_dto.Name))]].ToString() }, 
-{ _localizer[_dto.GetMemberDescription(nameof(_dto.Description))], (row, item) => item.Description = row[_localizer[_dto.GetMemberDescription(nameof(_dto.Description))]].ToString() }, 
+                { _localizer[_dto.GetMemberDescription(x=>x.Name)], (row, item) => item.Name = row[_localizer[_dto.GetMemberDescription(x=>x.Name)]].ToString() }, 
+{ _localizer[_dto.GetMemberDescription(x=>x.Description)], (row, item) => item.Description = row[_localizer[_dto.GetMemberDescription(x=>x.Description)]].ToString() }, 
 
             }, _localizer[_dto.GetClassDescription()]);
             if (result.Succeeded && result.Data is not null)
@@ -81,11 +81,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
             // TODO: Implement ImportCustomersCommandHandler method 
             var fields = new string[] {
                    // TODO: Define the fields that should be generate in the template, for example:
-                   _localizer[_dto.GetMemberDescription(nameof(_dto.Name))], 
-_localizer[_dto.GetMemberDescription(nameof(_dto.Description))], 
+                   _localizer[_dto.GetMemberDescription(x=>x.Name)], 
+_localizer[_dto.GetMemberDescription(x=>x.Description)], 
 
                 };
-            var result = await _excelService.CreateTemplateAsync(fields, _localizer["Customers"]);
+            var result = await _excelService.CreateTemplateAsync(fields, _localizer[_dto.GetClassDescription()]);
             return await Result<byte[]>.SuccessAsync(result);
         }
     }

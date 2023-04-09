@@ -168,10 +168,10 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Brand)" T="ProductDto">@L[_selectItem.GetMemberDescription(nameof(_selectItem.Brand))]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Name)" T="ProductDto">@L[_selectItem.GetMemberDescription(nameof(_selectItem.Name))]</MudTableSortLabel></MudTh>
-                <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="@nameof(_selectItem.Price)" T="ProductDto">@L[_selectItem.GetMemberDescription(nameof(_selectItem.Price))]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Unit)" T="ProductDto">@L[_selectItem.GetMemberDescription(nameof(_selectItem.Unit))]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Brand)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Brand)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Name)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Name)]</MudTableSortLabel></MudTh>
+                <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="@nameof(_selectItem.Price)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Price)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Unit)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Unit)]</MudTableSortLabel></MudTh>
 
             </HeaderContent>
             <RowTemplate>
@@ -200,15 +200,15 @@
                         </MudButton>
                     }
                 </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L[_selectItem.GetMemberDescription(nameof(_selectItem.Brand))]">@context.Brand</MudTd>
-                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(nameof(_selectItem.Name))]">
+                <MudTd HideSmall="true" DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Brand)]">@context.Brand</MudTd>
+                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Name)]">
                     <div class="d-flex flex-column">
                         <MudText>@context.Name</MudText>
                         <MudText Typo="Typo.body2">@context.Description</MudText>
                     </div>
                 </MudTd>
-                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(nameof(_selectItem.Price))]" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
-                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(nameof(_selectItem.Unit))]">@context.Unit</MudTd>
+                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Price)]" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
+                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Unit)]">@context.Unit</MudTd>
             </RowTemplate>
             <NoRecordsContent>
                 <MudText>@ConstantString.NOMACHING</MudText>
