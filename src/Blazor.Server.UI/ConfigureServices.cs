@@ -5,7 +5,6 @@ using Blazor.Server.UI.Services;
 using Blazor.Server.UI.Services.Navigation;
 using Blazor.Server.UI.Services.Notifications;
 using BlazorDownloadFile;
-using Blazored.LocalStorage;
 using MudBlazor.Services;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 using MudExtensions.Services;
@@ -41,16 +40,6 @@ public static class ConfigureServices
             .AddCircuitOptions(option => { option.DetailedErrors = true; });
         services.AddMudBlazorDialog();
         services.AddHotKeys2();
-        services.AddBlazoredLocalStorage(config =>
-        {
-            config.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-            config.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-            config.JsonSerializerOptions.IgnoreReadOnlyProperties = true;
-            config.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-            config.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            config.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
-            config.JsonSerializerOptions.WriteIndented = false;
-        });
         services.AddMudServices(config =>
         {
             config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
