@@ -9,10 +9,10 @@
             <MudGrid>
                 @*TODO: define mudform that should be edit fields, for example:*@
                 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription("Name")]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
                 </MudItem> 
 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription("Description")]" Lines="3" For="@(() => model.Description)" @bind-Value="model.Description"></MudTextField>
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Description)]" Lines="3" For="@(() => model.Description)" @bind-Value="model.Description"></MudTextField>
                 </MudItem> 
 
             </MudGrid>

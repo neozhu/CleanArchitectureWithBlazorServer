@@ -18,7 +18,9 @@ public class CustomersWithPaginationQuery : PaginationFilterBase, ICacheableRequ
     {
         return $"Listview:{ListView},Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
     }
+    [IgnoreFilter]
     public string CacheKey => CustomerCacheKey.GetPaginationCacheKey($"{this}");
+    [IgnoreFilter]
     public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
 }
     
@@ -69,6 +71,7 @@ public class SearchCustomersWithListView : FilteringOptionsBaseAttribute
         var today = DateTime.Now.Date;
         var start = Convert.ToDateTime(today.ToString("yyyy-MM-dd",CultureInfo.CurrentCulture) + " 00:00:00", CultureInfo.CurrentCulture);
         var end = Convert.ToDateTime(today.ToString("yyyy-MM-dd",CultureInfo.CurrentCulture) + " 23:59:59", CultureInfo.CurrentCulture);
+        var end30 = Convert.ToDateTime(today.AddDays(30).ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 23:59:59", CultureInfo.CurrentCulture);
         var listview = (CustomerListView)value;
         return listview switch {
             CustomerListView.All => expressionBody,
@@ -76,6 +79,11 @@ public class SearchCustomersWithListView : FilteringOptionsBaseAttribute
                                                                           Expression.Constant(start, typeof(DateTime?)))
                                             .Combine(Expression.LessThanOrEqual(Expression.Property(expressionBody, "Created"), 
                                                      Expression.Constant(end, typeof(DateTime?))), 
+                                                     CombineType.And),
+            CustomerListView.Created30Days => Expression.GreaterThanOrEqual(Expression.Property(expressionBody, "Created"), 
+                                                                          Expression.Constant(start, typeof(DateTime?)))
+                                            .Combine(Expression.LessThanOrEqual(Expression.Property(expressionBody, "Created"), 
+                                                     Expression.Constant(end30, typeof(DateTime?))), 
                                                      CombineType.And),
             _=> expressionBody
         };
@@ -87,4 +95,6 @@ public enum CustomerListView
     All,
     [Description("Created Toady")]
     CreatedToday,
+    [Description("Created within the last 30 days")]
+    Created30Days
 }

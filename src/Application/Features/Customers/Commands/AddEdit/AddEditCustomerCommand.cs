@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.ComponentModel;
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEdit;
@@ -14,6 +13,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEd
     public string Name {get;set;} = String.Empty; 
     [Description("Description")]
     public string? Description {get;set;} 
+
 
       public string CacheKey => CustomerCacheKey.GetAllCacheKey;
       public CancellationTokenSource? SharedExpiryTokenSource => CustomerCacheKey.SharedExpiryTokenSource();

@@ -40,7 +40,7 @@
                         <div class="d-flex gap-4">
                             <MudIcon Icon="@Icons.Material.Filled.QrCodeScanner" Size="Size.Large" />
                             <div class="d-flex flex-column">
-                                <MudText Typo="Typo.caption">@L["Products"]</MudText>
+                                <MudText Typo="Typo.caption">@L[_selectItem.GetClassDescription()]</MudText>
                             <MudEnumSelect Style="min-width:120px" TEnum="ProductListView" ValueChanged="OnChangedListView" Value="_query.ListView" Dense="true" Label="List View">
                                 </MudEnumSelect>
                             </div>
@@ -168,10 +168,10 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Brand" T="ProductDto">@L["Brand Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Name" T="ProductDto">@L["Product Name"]</MudTableSortLabel></MudTh>
-                <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="Price" T="ProductDto">@L["Price"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Unit" T="ProductDto">@L["Unit"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Brand)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Brand)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Name)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Name)]</MudTableSortLabel></MudTh>
+                <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="@nameof(_selectItem.Price)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Price)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Unit)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Unit)]</MudTableSortLabel></MudTh>
 
             </HeaderContent>
             <RowTemplate>
@@ -200,15 +200,15 @@
                         </MudButton>
                     }
                 </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L["Brand Name"]">@context.Brand</MudTd>
-                <MudTd DataLabel="@L["Product Name"]">
+                <MudTd HideSmall="true" DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Brand)]">@context.Brand</MudTd>
+                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Name)]">
                     <div class="d-flex flex-column">
                         <MudText>@context.Name</MudText>
                         <MudText Typo="Typo.body2">@context.Description</MudText>
                     </div>
                 </MudTd>
-                <MudTd DataLabel="@L["Price"]" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
-                <MudTd DataLabel="@L["Unit"]">@context.Unit</MudTd>
+                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Price)]" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
+                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Unit)]">@context.Unit</MudTd>
             </RowTemplate>
             <NoRecordsContent>
                 <MudText>@ConstantString.NOMACHING</MudText>
@@ -253,7 +253,7 @@
     private bool _canExport;
     protected override async Task OnInitializedAsync()
     {
-        Title = L["Products"];
+        Title = L[_selectItem.GetClassDescription()];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Search)).Succeeded;

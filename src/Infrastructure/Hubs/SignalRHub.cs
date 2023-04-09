@@ -33,6 +33,7 @@ public class SignalRHub : Hub<ISignalRHub>
             _onlineUsers.TryAdd(id, userName);
         }
         await Clients.All.Connect(userName);
+        await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
@@ -43,7 +44,7 @@ public class SignalRHub : Hub<ISignalRHub>
         {
             await Clients.All.Disconnect(userName);
         }
-
+        await base.OnConnectedAsync();
     }
     public async Task SendMessage(string message)
     {

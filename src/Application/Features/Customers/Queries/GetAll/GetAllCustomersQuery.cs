@@ -8,7 +8,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.GetAll
 
     public class GetAllCustomersQuery : ICacheableRequest<IEnumerable<CustomerDto>>
     {
+       [IgnoreFilter]
        public string CacheKey => CustomerCacheKey.GetAllCacheKey;
+       [IgnoreFilter]
        public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
     }
     
@@ -35,6 +37,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.GetAll
             // TODO: Implement GetAllCustomersQueryHandler method 
             var data = await _context.Customers
                          .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
+                         .AsNoTracking()
                          .ToListAsync(cancellationToken);
             return data;
         }

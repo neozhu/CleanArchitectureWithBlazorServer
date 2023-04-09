@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Reflection;
 
 namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 public static class DescriptionAttributeExtensions
@@ -14,14 +15,18 @@ public static class DescriptionAttributeExtensions
         }
         return name;
     }
-    public static string GetMemberDescription<T>(this T t, string memberName) where T : class
+    public static string GetMemberDescription<T, TProperty>(this T t, Expression<Func<T, TProperty>> property) where T : class
     {
-        if (t is null) t = (T)Activator.CreateInstance(typeof(T))!;
-        var memberInfo = t.GetType().GetMember(memberName)[0];
-        var descriptionAttributes = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), inherit: false);
-        if (descriptionAttributes.Any())
+        if (t is null) t = Activator.CreateInstance<T>();
+        var memberName = ((MemberExpression)property.Body).Member.Name;
+        var memberInfo = typeof(T).GetMember(memberName).FirstOrDefault();
+        if (memberInfo != null)
         {
-            return (descriptionAttributes.First() as DescriptionAttribute)!.Description;
+            var descriptionAttributes = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), inherit: false);
+            if (descriptionAttributes.Any())
+            {
+                return ((DescriptionAttribute)descriptionAttributes.First()).Description;
+            }
         }
         return memberName;
     }
