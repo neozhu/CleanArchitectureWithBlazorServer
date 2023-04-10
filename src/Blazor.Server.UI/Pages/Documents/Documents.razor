@@ -113,11 +113,11 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Title" T="DocumentDto">@L["Title"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Title" T="DocumentDto">@L["Recognize result"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="DocumentType" T="DocumentDto">@L["Document Type"]</MudTableSortLabel></MudTh>
-                <MudTh>@L["Owner"]</MudTh>
-                <MudTh>@L["Tenant Name"]</MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.Title)" T="DocumentDto">@L[_currentDto.GetMemberDescription(x=>x.Title)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.Status)" T="DocumentDto">@L["Recognize result"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.DocumentType)" T="DocumentDto">@L[_currentDto.GetMemberDescription(x=>x.DocumentType)]</MudTableSortLabel></MudTh>
+                <MudTh>@L[_currentDto.GetMemberDescription(x=>x.Owner)]</MudTh>
+                <MudTh>@L[_currentDto.GetMemberDescription(x=>x.TenantName)]</MudTh>
 
             </HeaderContent>
             <RowTemplate>
@@ -151,7 +151,7 @@
                     }
                 </MudTd>
 
-                <MudTd DataLabel="@L["Title"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Title)]">
                     <div class="d-flex flex-column">
                         <MudText>@context.Title</MudText>
                         <MudText Typo="Typo.body2">@context.Description</MudText>
@@ -181,13 +181,13 @@
                         </div>
                     </div>
                 </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L["Document Type"]">
+                <MudTd HideSmall="true" DataLabel="@L[_currentDto.GetMemberDescription(x=>x.DocumentType)]">
                     <div class="d-flex flex-column">
-                        <MudCheckBox Size="Size.Small" Label="@L["Is Public"]" Checked="@context.IsPublic" Disabled="true"></MudCheckBox>
+                        <MudCheckBox Size="Size.Small" Label="@L[_currentDto.GetMemberDescription(x=>x.IsPublic)]" Checked="@context.IsPublic" Disabled="true"></MudCheckBox>
                         <MudText Typo="Typo.body2">@context.DocumentType</MudText>
                     </div>
                 </MudTd>
-                <MudTd DataLabel="@L["Owner Name"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Owner)]">
                     @if (_currentUser.UserId == context.Owner?.Id)
                     {
                         <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Me </MudChip>
@@ -200,7 +200,7 @@
                         </div>
                     }
                 </MudTd>
-                <MudTd DataLabel="@L["Tenant Name"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.TenantName)]">
                     <div class="d-flex flex-column">
                         <MudText>@context.TenantName</MudText>
                         <MudText Typo="Typo.body2">@context.TenantId</MudText>
@@ -226,6 +226,7 @@
 
     public string? Title { get; private set; }
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
+    private DocumentDto _currentDto = new();
     private MudTable<DocumentDto> _table = default!;
     private int _defaultPageSize = 15;
     private string _searchString = string.Empty;
@@ -255,7 +256,7 @@
     private bool _canDownload;
     protected override async Task OnInitializedAsync()
     {
-        Title = L["Documents"];
+        Title = L[_currentDto.GetClassDescription()];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Search)).Succeeded;

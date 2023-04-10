@@ -123,8 +123,8 @@
   <data name="Audit Type" xml:space="preserve">
     <value>变更类型</value>
   </data>
-  <data name="Date Time" xml:space="preserve">
-    <value>时间</value>
+  <data name="Created DateTime" xml:space="preserve">
+    <value>创建时间</value>
   </data>
   <data name="Hide Details" xml:space="preserve">
     <value>隐藏明细</value>

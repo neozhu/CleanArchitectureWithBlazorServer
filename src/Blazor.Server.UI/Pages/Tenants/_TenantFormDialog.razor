@@ -9,7 +9,7 @@
         <MudForm Model="model" @ref="_form" Validation="@(modelValidator.ValidateValue)">
             <MudGrid>
                 <MudItem xs="12">
-                    <MudTextField Label="@L["Tenant Id"]" @bind-Value="model.Id"
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Id)]" @bind-Value="model.Id"
                                   For="@(() => model.Id)"
                                   ReadOnly="true"
                                   Required="true"
@@ -17,14 +17,14 @@
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L["Tenant Name"]" @bind-Value="model.Name"
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name"
                                   For="@(() => model.Name)"
                                   Required="true"
                                   RequiredError="@L["Tenant name is required!"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L["Description"]" @bind-Value="model.Description"
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Description)]" @bind-Value="model.Description"
                                   For="@(() => model.Description)">
                     </MudTextField>
                 </MudItem>

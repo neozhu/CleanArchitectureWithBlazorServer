@@ -30,7 +30,7 @@ internal class DeleteProductCommandTests: TestBase
     [Test]
     public async Task ShouldDeleteOne()
     {
-        var addcommand = new AddEditProductCommand() { Name = "Test", Brand = "Brand", Price = 100m, Unit = "EA", Pictures = new List<string>() { "/product.png" }, Description = "Description" };
+        var addcommand = new AddEditProductCommand() { Name = "Test", Brand = "Brand", Price = 100m, Unit = "EA", Description = "Description" };
         var result = await SendAsync(addcommand);
 
         await SendAsync(new DeleteProductCommand(new int[] { result.Data }));

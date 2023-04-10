@@ -25,7 +25,7 @@ internal class AddEditProductCommandTests: TestBase
     [Test]
     public async Task InsertItem()
     {
-        var addcommand = new AddEditProductCommand() { Name = "Test", Brand="Brand", Price=100m, Unit="EA", Pictures=new List<string>() { "/product.png" }, Description = "Description" };
+        var addcommand = new AddEditProductCommand() { Name = "Test", Brand="Brand", Price=100m, Unit="EA",  Description = "Description" };
         var result = await SendAsync(addcommand);
         var find = await FindAsync<Product>(result.Data);
         find.Should().NotBeNull();
@@ -37,7 +37,7 @@ internal class AddEditProductCommandTests: TestBase
     [Test]
     public async Task UpdateItem()
     {
-        var addcommand = new  AddEditProductCommand() { Name = "Test", Brand = "Brand", Price = 100m, Unit = "EA", Pictures = new List<string>() { "/product.png" }, Description = "Description" };
+        var addcommand = new  AddEditProductCommand() { Name = "Test", Brand = "Brand", Price = 100m, Unit = "EA",  Description = "Description" };
         var result = await SendAsync(addcommand);
         var find = await FindAsync<Product>(result.Data);
         var editcommand = new AddEditProductCommand() { Id = find.Id, Name = "Test1", Brand = "Brand1", Price =200m, Unit = "KG", Pictures= addcommand.Pictures, Description = "Description1" };
