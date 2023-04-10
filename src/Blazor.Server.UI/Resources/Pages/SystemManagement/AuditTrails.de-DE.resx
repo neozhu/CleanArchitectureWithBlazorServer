@@ -123,7 +123,7 @@
   <data name="Audit Type" xml:space="preserve">
     <value>Audit-Typ</value>
   </data>
-  <data name="Date Time" xml:space="preserve">
+  <data name="Created DateTime" xml:space="preserve">
     <value>Datum Uhrzeit</value>
   </data>
   <data name="Hide Details" xml:space="preserve">

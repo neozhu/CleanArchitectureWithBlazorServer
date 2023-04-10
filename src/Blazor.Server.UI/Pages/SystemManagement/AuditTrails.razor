@@ -61,11 +61,11 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh Style="width:190px">@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="UserId" T="AuditTrailDto">@L["User Id"]</MudTableSortLabel></MudTh>
-                <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="AuditType" T="AuditTrailDto">@L["Audit Type"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="TableName" T="AuditTrailDto">@L["Table Name"]</MudTableSortLabel></MudTh>
-                <MudTh>@L["Primary Key"]</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="DateTime" T="AuditTrailDto">@L["Date Time"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.UserId)" T="AuditTrailDto">@L[_currentDto.GetMemberDescription(x=>x.UserId)]</MudTableSortLabel></MudTh>
+                <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="@nameof(_currentDto.AuditType)" T="AuditTrailDto">@L[_currentDto.GetMemberDescription(x=>x.AuditType)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.TableName)" T="AuditTrailDto">@L[_currentDto.GetMemberDescription(x=>x.TableName)]</MudTableSortLabel></MudTh>
+                <MudTh>@L[_currentDto.GetMemberDescription(x=>x.PrimaryKey)]</MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.DateTime)" T="AuditTrailDto">@L[_currentDto.GetMemberDescription(x=>x.DateTime)]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ConstantString.ACTIONS">
@@ -76,22 +76,22 @@
                         @L[((context.ShowDetails == true) ? "Hide" : "Show") + " Details"]
                     </MudButton>
                 </MudTd>
-                <MudTd DataLabel="@L["User Id"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.UserId)]">
                     <div class="d-flex flex-column">
                         <MudText Typo="Typo.body2">@context.Owner?.UserName</MudText>
                         <MudText Typo="Typo.body2">@context.UserId</MudText>
                     </div>
                 </MudTd>
-                <MudTd Style="text-align:center" DataLabel="@L["Audit Type"]">
+                <MudTd Style="text-align:center" DataLabel="@L[_currentDto.GetMemberDescription(x=>x.AuditType)]">
                     @context.AuditType
                 </MudTd>
-                <MudTd DataLabel="@L["Table Name"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.TableName)]">
                     @context.TableName
                 </MudTd>
-                <MudTd DataLabel="@L["Primary Key"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.PrimaryKey)]">
                     @context.PrimaryKey
                 </MudTd>
-                <MudTd DataLabel="@L["Date Time"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.DateTime)]">
                     @context.DateTime
                 </MudTd>
             </RowTemplate>
@@ -146,13 +146,22 @@
     private int _defaultPageSize = 15;
     [Inject]
     private IMediator _mediator { get; set; } = default!;
+    private AuditTrailDto _currentDto = new();
     private AuditTrailsWithPaginationQuery _query = new();
+
+    [CascadingParameter]
+    private Task<AuthenticationState> _authState { get; set; } = default!;
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L[_currentDto.GetClassDescription()];
+        var state = await _authState;
+    }
+
     private async Task<TableData<AuditTrailDto>> ServerReload(TableState state)
     {
         try
         {
             _loading = true;
-      
             _query.Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
             _query.SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
             _query.Page = state.Page + 1;

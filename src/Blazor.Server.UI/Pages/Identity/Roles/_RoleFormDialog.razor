@@ -6,7 +6,7 @@
         <MudForm Model="model" @ref="_form">
             <MudGrid>
                 <MudItem xs="12">
-                    <MudTextField Label="@L["Name"]" @bind-Value="model.Name"
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name"
                                   Required="true"
                                   For="@(() => model.Name)"
                                   RequiredError="@L["DefaultRole name is required!"]"
@@ -14,7 +14,7 @@
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L["Description"]"
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Description)]"
                                   For="@(() => model.Description)"
                     @bind-Value="model.Description"></MudTextField>
                 </MudItem>

@@ -134,7 +134,7 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh>@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel T="ApplicationRoleDto" SortLabel="Name">@L["Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel T="ApplicationRoleDto" SortLabel="@nameof(_currentDto.Name)">@L[_currentDto.GetMemberDescription(x=>x.Name)]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ConstantString.ACTIONS">
@@ -162,7 +162,7 @@
                         </MudButton>
                     }
                 </MudTd>
-                <MudTd DataLabel="@L["Name"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
                     <div class="d-flex flex-column">
                         <MudText>@context.Name</MudText>
                         <MudText Typo="Typo.body2">@context.Description</MudText>
@@ -186,6 +186,7 @@
     private string _currentRoleName = string.Empty;
     private int _defaultPageSize = 15;
     private HashSet<ApplicationRoleDto> _selectItems = new();
+    private ApplicationRoleDto _currentDto = new();
     private string _searchString = string.Empty;
     public string? Title { get; private set; }
     [CascadingParameter]
@@ -212,7 +213,7 @@
     protected override async Task OnInitializedAsync()
     {
         _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
-        Title = L["Roles"];
+        Title = L[_currentDto.GetClassDescription()];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Search)).Succeeded;

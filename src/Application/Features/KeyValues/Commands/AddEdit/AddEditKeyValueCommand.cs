@@ -8,10 +8,15 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEd
 
 public class AddEditKeyValueCommand : IMapFrom<KeyValueDto>, ICacheInvalidatorRequest<Result<int>>
 {
+    [Description("Id")]
     public int Id { get; set; }
+    [Description("Name")]
     public Picklist Name { get; set; }
+    [Description("Value")]
     public string? Value { get; set; }
+    [Description("Text")]
     public string? Text { get; set; }
+    [Description("Description")]
     public string? Description { get; set; }
     public TrackingState TrackingState { get; set; } = TrackingState.Unchanged;
     public string CacheKey => KeyValueCacheKey.GetAllCacheKey;

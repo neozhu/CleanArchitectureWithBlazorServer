@@ -51,7 +51,7 @@
                     <div class="d-flex gap-4">
                         <MudIcon Icon="@Icons.Material.Filled.ViewList" Size="Size.Large" />
                         <div class="d-flex flex-column">
-                            <MudText Typo="Typo.caption">@L["Picklist"]</MudText>
+                            <MudText Typo="Typo.caption">@Title</MudText>
                             
                         </div>
                     </div>
@@ -169,29 +169,29 @@
                 </MudHidden>
             </ColGroup>
             <HeaderContent>
-                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object?>(x=>x.Name)">@L["Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object?>(x=>x.Value)">@L["Value"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object?>(x=>x.Text)">@L["Text"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<KeyValueDto, object?>(x=>x.Description)">@L["Description"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectedItem.Name)" T="KeyValueDto">@L[_selectedItem.GetMemberDescription(x=>x.Name)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectedItem.Value)" T="KeyValueDto">@L[_selectedItem.GetMemberDescription(x=>x.Value)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectedItem.Text)"  T="KeyValueDto" >@L[_selectedItem.GetMemberDescription(x=>x.Text)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectedItem.Description)" T="KeyValueDto" >@L[_selectedItem.GetMemberDescription(x=>x.Description)]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd DataLabel="@L["Name"]">@context?.Name.GetDescription()</MudTd>
-                <MudTd DataLabel="@L["Value"]">@context?.Value</MudTd>
-                <MudTd DataLabel="@L["Text"]">@context?.Text</MudTd>
-                <MudTd HideSmall="true" DataLabel="@L["Description"]">@context?.Description</MudTd>
+                <MudTd DataLabel="@L[_selectedItem.GetMemberDescription(x=>x.Name)]">@context?.Name.GetDescription()</MudTd>
+                <MudTd DataLabel="@L[_selectedItem.GetMemberDescription(x=>x.Value)]">@context?.Value</MudTd>
+                <MudTd DataLabel="@L[_selectedItem.GetMemberDescription(x=>x.Text)]">@context?.Text</MudTd>
+                <MudTd HideSmall="true" DataLabel="@L[_selectedItem.GetMemberDescription(x=>x.Description)]">@context?.Description</MudTd>
             </RowTemplate>
             <RowEditingTemplate>
-                <MudTd DataLabel="Name">
+                <MudTd DataLabel="@L[_selectedItem.GetMemberDescription(x=>x.Name)]">
                    <MudEnumSelect @bind-Value="@context.Name" TEnum="Picklist" Required="true" >                       
                    </MudEnumSelect>
                 </MudTd>
-                <MudTd DataLabel="Value">
+                <MudTd DataLabel="@L[_selectedItem.GetMemberDescription(x=>x.Value)]">
                     <MudTextField @bind-Value="@context.Value" Required />
                 </MudTd>
-                <MudTd DataLabel="Text">
+                <MudTd DataLabel="@L[_selectedItem.GetMemberDescription(x=>x.Text)]">
                     <MudTextField @bind-Value="@context.Text" Required />
                 </MudTd>
-                <MudTd DataLabel="Description">
+                <MudTd DataLabel="@L[_selectedItem.GetMemberDescription(x=>x.Description)]">
                     <MudTextField @bind-Value="@context.Description" />
                 </MudTd>
                 
@@ -239,6 +239,7 @@
     private bool _downloading;
     protected override async Task OnInitializedAsync()
     {
+        Title = L[_selectedItem.GetClassDescription()];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Dictionaries.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Dictionaries.Search)).Succeeded;

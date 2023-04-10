@@ -28,13 +28,14 @@
                   SortLabel="@ConstantString.ORDERBY"
                   MultiSelection="true" 
                   @bind-SelectedItems="_selectedItems"
+                  @bind-SelectedItem="_currentDto"
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="d-flex align-start flex-grow-1">
                     <div class="d-flex gap-4">
                         <MudIcon Icon="@Icons.Material.Filled.Domain" Size="Size.Large" />
                         <div class="d-flex flex-column">
-                            <MudText Typo="Typo.caption">@L["Tenants"]</MudText>
+                            <MudText Typo="Typo.caption">@Title</MudText>
                         </div>
                     </div>
                     <div class="flex-grow-1" />
@@ -102,8 +103,8 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh Style="width:80px">@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Id" T="TenantDto">@L["Tenant Id"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Name" T="TenantDto">@L["Tenant Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.Id)" T="TenantDto">@L[_currentDto.GetMemberDescription(x=>x.Id)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.Name)" T="TenantDto">@L[_currentDto.GetMemberDescription(x=>x.Name)]</MudTableSortLabel></MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ConstantString.ACTIONS">
@@ -131,10 +132,10 @@
                         </MudButton>
                     }
                 </MudTd>
-                  <MudTd DataLabel="@L["Tenant Id"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Id)]">
                     <MudText>@context.Id</MudText>
                 </MudTd>
-                <MudTd DataLabel="@L["Tenant Name"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
                     <MudText>@context.Name</MudText>
                     <MudText Typo="Typo.body2">@context.Description</MudText>
                 </MudTd>
@@ -161,7 +162,9 @@
     private int _defaultPageSize = 15;
     private HashSet<TenantDto> _selectedItems = new HashSet<TenantDto>();
     private MudTable<TenantDto> _table = default!;
+    private TenantDto _currentDto = new();
     private string _searchString = string.Empty;
+
     private bool _loading;
     [Inject]
     private IMediator _mediator { get; set; } = default!;
@@ -179,7 +182,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Title = L["Multi-Tenant"];
+        Title = L[_currentDto.GetClassDescription()];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Search)).Succeeded;

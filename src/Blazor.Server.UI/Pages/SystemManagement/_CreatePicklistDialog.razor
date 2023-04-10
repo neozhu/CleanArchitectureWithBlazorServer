@@ -9,26 +9,26 @@
         <MudForm Model="model" @ref="_form" Validation="@(modelValidator.ValidateValue)">
             <MudGrid>
                 <MudItem xs="12" md="6">
-                    <MudEnumSelect Label="@L["Name"]" @bind-Value="model.Name"
+                    <MudEnumSelect Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name"
                                    For="@(() => model.Name)"
                                    Required="true"
                                    RequiredError="@L["Name is required!"]">
                     </MudEnumSelect>
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField Label="@L["Description"]" @bind-Value="model.Description"
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Description)]" @bind-Value="model.Description"
                                   For="@(() => model.Description)">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField Label="@L["Value"]" @bind-Value="model.Value"
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Value)]" @bind-Value="model.Value"
                                   For="@(() => model.Value)"
                                   Required="true"
                                   RequiredError="@L["Value is required!"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField Label="@L["Text"]" @bind-Value="model.Text"
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Text)]" @bind-Value="model.Text"
                                   For="@(() => model.Text)"
                                   Required="true"
                                   RequiredError="@L["Text is required!"]">

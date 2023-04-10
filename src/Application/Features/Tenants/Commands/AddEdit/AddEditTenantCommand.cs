@@ -8,8 +8,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit
 
 public class AddEditTenantCommand : IMapFrom<TenantDto>, ICacheInvalidatorRequest<Result<string>>
 {
+    [Description("Tenant Id")]
     public string Id { get; set; } = Guid.NewGuid().ToString();
+    [Description("Tenant Name")]
     public string? Name { get; set; }
+    [Description("Description")]
     public string? Description { get; set; }
     public string CacheKey => TenantCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => TenantCacheKey.SharedExpiryTokenSource();

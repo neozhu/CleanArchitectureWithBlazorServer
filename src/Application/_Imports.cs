@@ -11,6 +11,7 @@ global using System.ComponentModel;
 global using System.Linq.Expressions;
 global using System.Globalization;
 global using System.Reflection;
+global using System.Text.Json;
 global using System.Linq.Dynamic.Core;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Primitives;

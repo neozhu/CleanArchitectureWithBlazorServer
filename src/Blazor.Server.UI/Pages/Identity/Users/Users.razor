@@ -166,14 +166,14 @@
             </ColGroup>
             <HeaderContent>
                 <MudTh Style="min-width:120px">@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="TenantId" T="ApplicationUserDto">@L["Tenant Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="UserName" T="ApplicationUserDto">@L["User Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="SuperiorId" T="ApplicationUserDto">@L["Superior Name"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Provider" T="ApplicationUserDto">@L["Provider"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Email" T="ApplicationUserDto">@L["Email / PhoneNumber"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="AssignedRoles" T="ApplicationUserDto">@L["Assigned Roles"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="IsActive" T="ApplicationUserDto">@L["Is Active"]</MudTableSortLabel></MudTh>
-                <MudTh>@L["Lock Status"]</MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.TenantId)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.TenantName)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.UserName)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.UserName)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.SuperiorId)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.SuperiorName)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.Provider)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.Provider)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.Email)" T="ApplicationUserDto">@L["Email / PhoneNumber"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.AssignedRoles)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.AssignedRoles)]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.IsActive)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.IsActive)]</MudTableSortLabel></MudTh>
+                <MudTh>@L[_currentDto.GetMemberDescription(x=>x.LockoutEnd)]</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@ConstantString.ACTIONS">
@@ -219,13 +219,13 @@
                         </MudButton>
                     }
                 </MudTd>
-                <MudTd DataLabel="@L["Tenant Name"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.TenantName)]">
                     <div class="d-flex flex-column">
                         <MudText>@context.TenantName</MudText>
                         <MudText Typo="Typo.body2">@context.TenantId</MudText>
                     </div>
                 </MudTd>
-                <MudTd DataLabel="@L["User Name"]">
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.UserName)]">
                     <div class="d-flex align-content-center flex-wrap">
                         <MudBadge Color="@(isOnline(context.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
                             <MudAvatar Image="@context.ProfilePictureDataUrl" Alt="@context.UserName">@context?.UserName?.First()</MudAvatar>
@@ -236,24 +236,24 @@
                         </div>
                     </div>
                 </MudTd>
-                <MudTd DataLabel="@L["Superior Name"]">@context.SuperiorName</MudTd>
-                <MudTd DataLabel="@L["Provider"]">@context.Provider</MudTd>
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.SuperiorName)]">@context.SuperiorName</MudTd>
+                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Provider)]">@context.Provider</MudTd>
                 <MudTd DataLabel="@L["Email / PhoneNumber"]">
                     <div class="d-flex flex-column">
                         <MudText Typo="Typo.body2">@context.Email</MudText>
                         <MudText Typo="Typo.body2">@context.PhoneNumber</MudText>
                     </div>
                 </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L["Assigned Roles"]">
+                <MudTd HideSmall="true" DataLabel="@L[_currentDto.GetMemberDescription(x=>x.AssignedRoles)]">
                     @foreach (var str in context.AssignedRoles)
                     {
                         <MudChip Variant="Variant.Text">@str</MudChip>
                     }
                 </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L["Is Active"]">
+                <MudTd HideSmall="true" DataLabel="@L[_currentDto.GetMemberDescription(x=>x.IsActive)]">
                     <MudCheckBox Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
-                    </MudTd>
-                    <MudTd HideSmall="true" DataLabel="@L["Lock Status"]">@context.LockoutEnd</MudTd>
+                </MudTd>
+                <MudTd HideSmall="true" DataLabel="@L[_currentDto.GetMemberDescription(x=>x.LockoutEnd)]">@context.LockoutEnd</MudTd>
                 </RowTemplate>
                 <PagerContent>
                     <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
@@ -267,11 +267,12 @@
             </ErrorContent>
             </ErrorBoundary>
 
-            @code {
+@code {
     [Inject]
     private IUsersStateContainer _usersStateContainer { get; set; } = default!;
     private int _defaultPageSize = 15;
     private HashSet<ApplicationUserDto> _selectItems = new();
+    private ApplicationUserDto _currentDto = new();
     private string _searchString = string.Empty;
     private string Title { get; set; } = "Users";
     private List<PermissionModel> _permissions = new();
@@ -318,7 +319,7 @@
 
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
-        Title = L["Users"];
+        Title = L[_currentDto.GetClassDescription()];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
