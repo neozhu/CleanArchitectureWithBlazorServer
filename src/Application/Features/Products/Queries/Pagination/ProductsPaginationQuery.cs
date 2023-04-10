@@ -27,6 +27,7 @@ public class ProductsWithPaginationQuery : PaginationFilterBase, ICacheableReque
                                                                          // a custom query expression is executed on the backend.
                                                                          // For example, if the user selects "My Products",
                                                                          // the query will be x => x.CreatedBy == CurrentUser.UserId
+    [IgnoreFilter]
     public UserProfile? CurrentUser { get; set; } // <-- This CurrentUser property gets its value from the information of
                                                   // the currently logged in user
     public override string ToString()
@@ -35,6 +36,7 @@ public class ProductsWithPaginationQuery : PaginationFilterBase, ICacheableReque
     }
     [IgnoreFilter]
     public string CacheKey => ProductCacheKey.GetPaginationCacheKey($"{this}");
+        [IgnoreFilter]
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
 }
 
