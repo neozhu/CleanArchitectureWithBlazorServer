@@ -183,10 +183,10 @@ public class Testing
         var scope = _scopeFactory.CreateScope();
         return scope.ServiceProvider.GetRequiredService<IPicklistService>();
     }
-    public static ITenantsService CreateTenantsService()
+    public static ITenantService CreateTenantsService()
     {
         var scope = _scopeFactory.CreateScope();
-        return scope.ServiceProvider.GetRequiredService<ITenantsService>();
+        return scope.ServiceProvider.GetRequiredService<ITenantService>();
     }
 
     [OneTimeTearDown]

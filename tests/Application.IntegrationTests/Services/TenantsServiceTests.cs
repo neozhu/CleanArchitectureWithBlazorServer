@@ -23,7 +23,7 @@ public class TenantsServiceTests : TestBase
     public async Task ShouldLoadDataSource()
     {
         var tenantsService = CreateTenantsService();
-        await tenantsService.Initialize();
+        tenantsService.Initialize();
         var count = tenantsService.DataSource.Count();
         Assert.AreEqual(2, count);
 
