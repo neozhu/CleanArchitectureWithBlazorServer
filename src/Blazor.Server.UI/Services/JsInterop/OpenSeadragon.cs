@@ -1,11 +1,20 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using System.Runtime.Versioning;
+﻿using Microsoft.JSInterop;
 
 namespace Blazor.Server.UI.Services.JsInterop;
 
-[SupportedOSPlatform("browser")]
 public partial class OpenSeadragon
 {
-    [JSImport("", "")]
-    internal static partial Task Show(string element, string url);
+    private readonly IJSRuntime _jsRuntime;
+
+    public OpenSeadragon(IJSRuntime jsRuntime)
+    {
+        _jsRuntime = jsRuntime;
+    }
+    public ValueTask Open(string url)
+    {
+        var target = "openseadragon";
+        return _jsRuntime.InvokeVoidAsync(JSInteropConstants.ShowOpenSeadragon, target, url);
+    }
+
+
 }

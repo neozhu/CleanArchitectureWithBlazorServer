@@ -1,6 +1,7 @@
 @page "/pages/documents"
 
 @using AutoMapper;
+@using Blazor.Server.UI.Services.JsInterop;
 @using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
@@ -368,7 +369,7 @@
         var dialog = DialogService.Show<_DocumentFormDialog>(string.Format(ConstantString.EDITTHEITEM, L["Document"]), parameters, options);
 
         await Task.Delay(300);
-        await JS.InvokeVoidAsync("showOpenSeadragon", "openseadragon", dto.URL);
+        if (!string.IsNullOrEmpty(dto.URL)) await (new OpenSeadragon(JS)).Open(dto.URL);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
