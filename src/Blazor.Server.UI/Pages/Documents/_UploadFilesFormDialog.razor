@@ -1,3 +1,4 @@
+@using Blazor.Server.UI.Services.JsInterop;
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Upload
 @using SixLabors.ImageSharp
@@ -190,7 +191,7 @@
     void Cancel() => MudDialog.Cancel();
     async Task Clear()
     {
-        await _js.InvokeVoidAsync("clearInput", "fileInput");
+        await (new InputClear(_js)).Clear("fileInput");
         uploadedFiles = new();
     }
     record FileUploadProgress(string FileName, long Size, IBrowserFile File)

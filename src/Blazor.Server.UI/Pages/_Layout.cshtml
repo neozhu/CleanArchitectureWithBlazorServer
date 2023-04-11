@@ -193,7 +193,7 @@
         var chart;
         async function createOrgChart(orgdata) {
             setTimeout(function () {
-                console.log(orgdata)
+                //console.log(orgdata)
                 const activeid = orgdata.find(x => x.isLoggedUser == true);
                 chart = new d3.OrgChart()
                     .nodeHeight((d) => 85 + 25)
@@ -223,7 +223,7 @@
                     .render();
 
                 if (activeid != null) {
-                    console.log(activeid)
+                    //console.log(activeid)
                     chart.setHighlighted(activeid.id).render();
                 }
             }, 50);

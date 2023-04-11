@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.JSInterop;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
+using Blazor.Server.UI.Services.JsInterop;
 
 namespace Blazor.Server.UI.Pages.Identity.Users
 {
@@ -36,7 +37,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
             if (index == 2)
             {
                 await LoadOrgData();
-                await JS.InvokeVoidAsync("createOrgChart", this._orgData);
+                await new OrgChart(JS).Create(_orgData);
             }
         }
 
