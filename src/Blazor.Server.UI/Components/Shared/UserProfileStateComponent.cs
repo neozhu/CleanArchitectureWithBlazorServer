@@ -16,8 +16,6 @@ public class UserProfileStateComponent : ComponentBase, INotificationHandler<Upd
     private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
     [Inject]
     private IIdentityService _identityService { get; set; } = default!;
-    [Inject]
-    private IMediator _mediator { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
         _userProfileChanged += userProfileChangedHandler;
@@ -42,9 +40,10 @@ public class UserProfileStateComponent : ComponentBase, INotificationHandler<Upd
             }
         });
     }
-    private async Task setProfile(ApplicationUserDto userDto)
+    private Task setProfile(ApplicationUserDto userDto)
     {
-        await _mediator.Publish(new UpdateUserProfileCommand() { UserProfile = userDto.ToUserProfile() });
+        UserProfile = userDto.ToUserProfile();
+        return Task.CompletedTask;
     }
     public void Dispose()
     {
