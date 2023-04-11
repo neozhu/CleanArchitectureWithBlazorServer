@@ -21,18 +21,13 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
     private bool _defaultDarkMode;
     [Inject] private IDialogService _dialogService { get; set; } = default!;
     [Inject] private HotKeys _hotKeys { get; set; } = default!;
-    [CascadingParameter]
-    protected Task<AuthenticationState> _authState { get; set; } = default!;
-    [Inject]
-    private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
-    [Inject]
-    private IIdentityService _identityService { get; set; } = default!;
-    [Inject]
-    private IMediator _mediator { get; set; } = default!;
+    
+    
+    
+   
     public void Dispose()
     {
         _layoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
-        _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         _hotKeysContext?.Dispose();
         GC.SuppressFinalize(this);
     }
@@ -52,37 +47,14 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
         _defaultDarkMode =await _mudThemeProvider.GetSystemPreference();
         UserPreferences = await _layoutService.ApplyUserPreferences(_defaultDarkMode);
     }
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         _layoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         _layoutService.SetBaseTheme(Theme.ApplicationTheme());
         _hotKeysContext = _hotKeys.CreateContext().Add(ModKey.Ctrl, Key.K, async () => await OpenCommandPalette(), "Open command palette.");
-        var state = await _authState;
-        if(state?.User?.Identity?.IsAuthenticated ?? false)
-        {
-            var userDto = await _identityService.GetApplicationUserDto(state.User.GetUserId());
-            await setProfile(userDto);
-        }
-        _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
+       
 
     }
-    private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
-    {
-        InvokeAsync(async () =>
-        {
-            var state = await authenticationState;
-            if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
-            {
-                var userDto = await _identityService.GetApplicationUserDto(state.User.GetUserId());
-                await setProfile(userDto);
-            }
-        });
-    }
-    private async Task setProfile(ApplicationUserDto userDto)
-    {
-        await _mediator.Publish(new UpdateUserProfileCommand() { UserProfile = userDto.ToUserProfile() });
-    }
-
     private async Task OnSystemPreferenceChanged(bool newValue)
     {
         await _layoutService.OnSystemPreferenceChanged(newValue);
