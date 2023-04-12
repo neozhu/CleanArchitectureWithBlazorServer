@@ -11,10 +11,10 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.Pagina
 public class DocumentsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<DocumentDto>>
 {
     public DocumentListView ListView { get; set; } = DocumentListView.All;
-    public required ICurrentUserService CurrentUser { get; set; }
+    public  UserProfile? CurrentUser { get; set; }
     public override string ToString()
     {
-        return $"CurrentUserId:{CurrentUser.UserId},ListView:{ListView},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
+        return $"CurrentUserId:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
     public string CacheKey => DocumentCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;

@@ -13,6 +13,7 @@
 
 @inject IJSRuntime JS
 @inject IStringLocalizer<Documents> L
+@inherits UserProfileStateComponent
 @implements IDisposable
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 <PageTitle>@Title</PageTitle>
@@ -189,7 +190,7 @@
                     </div>
                 </MudTd>
                 <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Owner)]">
-                    @if (_currentUser.UserId == context.Owner?.Id)
+                    @if (UserProfile?.UserId == context.Owner?.Id)
                     {
                         <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Me </MudChip>
                     }
@@ -241,12 +242,10 @@
     private HubClient _client { get; set; } = default!;
     [Inject]
     private IMapper _mapper { get; set; } = default!;
-    [Inject]
-    private ICurrentUserService _currentUser { get; set; } = null!;
-    [CascadingParameter]
-    private Task<AuthenticationState> _authState { get; set; } = default!;
+
+
     private string _tenantId = string.Empty;
-    private DocumentsWithPaginationQuery _query { get; set; } =null!;
+    private DocumentsWithPaginationQuery _query { get; set; } = new DocumentsWithPaginationQuery() ;
 
     private bool _canSearch;
     private bool _canCreate;
@@ -257,6 +256,7 @@
     private bool _canDownload;
     protected override async Task OnInitializedAsync()
     {
+       await base.OnInitializedAsync();
         Title = L[_currentDto.GetClassDescription()];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Create)).Succeeded;
@@ -268,7 +268,7 @@
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
         _client.JobCompleted += _client_JobCompleted;
         _client.JobStarted += _client_JobStarted;
-        _query = new DocumentsWithPaginationQuery() { CurrentUser = _currentUser };
+        
         await  _client.StartAsync();
     }
 
@@ -288,9 +288,10 @@
             Snackbar.Add(string.Format(L["{0} job started."], e), MudBlazor.Severity.Info);
         });
     }
-   
-    public void Dispose()
+
+    protected  void Dispose()
     {
+        base.Dispose();
         _client.JobCompleted -= _client_JobCompleted;
         _client.JobStarted -= _client_JobStarted;
     }
@@ -300,7 +301,7 @@
         {
             _loading = true;
             _query.Keyword = _searchString;
-            _query.CurrentUser = _currentUser;
+            _query.CurrentUser = UserProfile;
             _query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
             _query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
             _query.PageNumber = state.Page + 1;
