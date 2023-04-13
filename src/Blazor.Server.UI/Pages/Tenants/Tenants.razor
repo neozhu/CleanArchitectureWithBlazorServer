@@ -95,11 +95,11 @@
             </ToolBarContent>
             <Columns>
                 <SelectColumn />
-                <TemplateColumn Title="@ConstantString.ACTIONS">
+                <TemplateColumn Style="width:60px" Title="@ConstantString.ACTIONS" Sortable="false" >
                     <CellTemplate>
                     @if (_canEdit || _canDelete)
                     {
-                        <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                            <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                                  Dense="true"
                                  EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                             @if (_canEdit)
