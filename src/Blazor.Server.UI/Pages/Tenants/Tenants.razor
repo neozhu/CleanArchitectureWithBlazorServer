@@ -19,14 +19,13 @@
 </style>
 <ErrorBoundary>
     <ChildContent>
-        <MudTable ServerData="@(new Func<TableState, Task<TableData<TenantDto>>>(ServerReload))"
+        <MudDataGrid ServerData="@(ServerReload)"
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 300px)"
                   Loading="@_loading"
                   @bind-RowsPerPage="_defaultPageSize"
-                  SortLabel="@ConstantString.ORDERBY"
-                  MultiSelection="true" 
+                  MultiSelection="true"
                   @bind-SelectedItems="_selectedItems"
                   @bind-SelectedItem="_currentDto"
                   Hover="true" @ref="_table">
@@ -94,64 +93,50 @@
                     </div>
                 </div>
             </ToolBarContent>
-            <ColGroup>
-                <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                <col style="width:50px;" />
-                <col style="width:120px;" />
-                <col style="width:320px;" />
-                </MudHidden>
-            </ColGroup>
-            <HeaderContent>
-                <MudTh Style="width:80px">@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.Id)" T="TenantDto">@L[_currentDto.GetMemberDescription(x=>x.Id)]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.Name)" T="TenantDto">@L[_currentDto.GetMemberDescription(x=>x.Name)]</MudTableSortLabel></MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="@ConstantString.ACTIONS">
+            <Columns>
+                <SelectColumn />
+                <TemplateColumn Title="@ConstantString.ACTIONS">
+                    <CellTemplate>
                     @if (_canEdit || _canDelete)
                     {
                         <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" >
+                                 Dense="true"
+                                 EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                             @if (_canEdit)
                             {
-                                <MudMenuItem OnClick="@(()=>OnEdit(context))">@ConstantString.EDIT</MudMenuItem>
+                                <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
                             }
                             @if (_canDelete)
                             {
-                                <MudMenuItem OnClick="@(()=>OnDelete(context))">@ConstantString.DELETE</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
                             }
                         </MudMenu>
                     }
                     else
                     {
                         <MudButton Variant="Variant.Filled" DisableElevation="true"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
+                                   StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                                   Color="Color.Surface">
                             @ConstantString.NOALLOWED
                         </MudButton>
                     }
-                </MudTd>
-                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Id)]">
-                    <MudText>@context.Id</MudText>
-                </MudTd>
-                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
-                    <MudText>@context.Name</MudText>
-                    <MudText Typo="Typo.body2">@context.Description</MudText>
-                </MudTd>
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn Property="x => x.Id" Title="@L[_currentDto.GetMemberDescription(x=>x.Id)]" />
+                <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
+                    <CellTemplate>
+                        <div class="d-flex flex-column">
+                            <MudText>@context.Item.Name</MudText>
+                            <MudText Typo="Typo.body2">@context.Item.Description</MudText>
+                        </div>
+                    </CellTemplate>
+                </PropertyColumn>
               
-                
-            </RowTemplate>
-            <NoRecordsContent>
-                <MudText>@ConstantString.NOMACHING</MudText>
-            </NoRecordsContent>
-            <LoadingContent>
-                <MudText>@ConstantString.LOADING</MudText>
-            </LoadingContent>
+            </Columns>
             <PagerContent>
-                <MudTablePager />
+                <MudDataGridPager />
             </PagerContent>
-        </MudTable>
+        </MudDataGrid>
     </ChildContent>
     <ErrorContent>
         <CustomError Exception="context"></CustomError>
@@ -161,7 +146,7 @@
     public string? Title { get; private set; }
     private int _defaultPageSize = 15;
     private HashSet<TenantDto> _selectedItems = new HashSet<TenantDto>();
-    private MudTable<TenantDto> _table = default!;
+    private MudDataGrid<TenantDto> _table = default!;
     private TenantDto _currentDto = new();
     private string _searchString = string.Empty;
 
@@ -189,18 +174,18 @@
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Edit)).Succeeded;
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Delete)).Succeeded;
     }
-    private async Task<TableData<TenantDto>> ServerReload(TableState state)
+    private async Task<GridData<TenantDto>> ServerReload(GridState<TenantDto> state)
     {
         try
         {
             _loading = true;
             _query.Keyword = _searchString;
-            _query.Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
-            _query.SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            _query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy;
+            _query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending==false ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
             _query.Page = state.Page + 1;
             _query.PerPage = state.PageSize;
             var result = await _mediator.Send(_query);
-            return new TableData<TenantDto>() { TotalItems = result.TotalItems, Items = result.Items };
+            return new GridData<TenantDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
         {
