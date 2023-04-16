@@ -21,7 +21,7 @@
     <ChildContent>
         <MudDataGrid ServerData="@(ServerReload)"
                   FixedHeader="true"
-                  FixedFooter="true"
+                  FixedFooter="false"
                   Height="calc(100vh - 300px)"
                   Loading="@_loading"
                   @bind-RowsPerPage="_defaultPageSize"
@@ -94,8 +94,8 @@
                 </div>
             </ToolBarContent>
             <Columns>
-                <SelectColumn ></SelectColumn>
-                <TemplateColumn Style="width:60px" Title="@ConstantString.ACTIONS" Sortable="false" >
+                <SelectColumn ShowInFooter="false" >                 </SelectColumn>
+                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false" >
                     <CellTemplate>
                     @if (_canEdit || _canDelete)
                     {
@@ -122,7 +122,11 @@
                     }
                     </CellTemplate>
                 </TemplateColumn>
-                <PropertyColumn Property="x => x.Id" Title="@L[_currentDto.GetMemberDescription(x=>x.Id)]" />
+                <PropertyColumn CellStyle="width:300px"  Property="x => x.Id" Title="@L[_currentDto.GetMemberDescription(x=>x.Id)]">
+                    <FooterTemplate>
+                        @L["Selected"]: @(this._selectedItems.Count)
+                    </FooterTemplate>
+                </PropertyColumn>
                 <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
                     <CellTemplate>
                         <div class="d-flex flex-column">
