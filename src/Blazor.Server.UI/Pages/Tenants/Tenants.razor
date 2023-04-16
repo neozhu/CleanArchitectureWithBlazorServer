@@ -94,7 +94,7 @@
                 </div>
             </ToolBarContent>
             <Columns>
-                <SelectColumn />
+                <SelectColumn ></SelectColumn>
                 <TemplateColumn Style="width:60px" Title="@ConstantString.ACTIONS" Sortable="false" >
                     <CellTemplate>
                     @if (_canEdit || _canDelete)
@@ -133,8 +133,9 @@
                 </PropertyColumn>
               
             </Columns>
+
             <PagerContent>
-                <MudDataGridPager />
+                <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
         </MudDataGrid>
     </ChildContent>
