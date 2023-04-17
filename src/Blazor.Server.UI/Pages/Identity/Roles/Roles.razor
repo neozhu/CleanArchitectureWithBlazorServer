@@ -69,17 +69,7 @@
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
                                 }
-                                @if (_canImport)
-                                {
-                                    <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
-                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                           StartIcon="@Icons.Material.Filled.Upload"
-                                           Size="Size.Small"
-                                                           for="importdataInput"
-                                           HtmlTag="label"
-                                           Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.IMPORT</MudButton>
-                                }
+                                
                                 @if (_canExport)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -87,6 +77,30 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            IconColor="Color.Surface">@ConstantString.EXPORT</MudButton>
+                                }
+                                @if (_canImport)
+                                {
+                                    <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px;">
+                                        <ButtonTemplate>
+                                            <MudButton HtmlTag="label"
+                                                   Size="Size.Small"
+                                                   Variant="Variant.Outlined"
+                                                   Color="Color.Primary"
+                                                   Disabled="@_loading"
+                                                   StartIcon="@Icons.Material.Filled.Upload"
+                                                       for="@context">
+                                                @if (_uploading)
+                                                {
+                                                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                                                    @ConstantString.UPLOADING
+                                                }
+                                                else
+                                                {
+                                                    @ConstantString.IMPORT
+                                                }
+                                            </MudButton>
+                                        </ButtonTemplate>
+                                    </MudFileUpload>
                                 }
                             </MudHidden>
                             <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
@@ -99,16 +113,6 @@
                                     @if (_canDelete)
                                     {
                                         <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
-                                    }
-                                    @if (_canImport)
-                                    {
-                                        <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
-                                        <MudMenuItem for="importdataInput"
-                                                     HtmlTag="label">@ConstantString.IMPORT</MudMenuItem>
-                                    }
-                                    @if (_canExport)
-                                    {
-                                        <MudMenuItem OnClick="OnExport">@ConstantString.EXPORT</MudMenuItem>
                                     }
                                 </MudMenu>
                             </MudHidden>
@@ -206,6 +210,7 @@
     private bool _canExport;
     private bool _showPermissionsDrawer;
     private bool _loading;
+    private bool _uploading;
     protected override async Task OnInitializedAsync()
     {
         _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
@@ -491,7 +496,7 @@
 
         return Task.CompletedTask;
     }
-    private Task OnImportData(InputFileChangeEventArgs e)
+    private Task OnImportData(IBrowserFile file)
     {
         return Task.CompletedTask;
     }
