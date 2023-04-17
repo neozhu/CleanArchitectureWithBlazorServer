@@ -20,23 +20,22 @@ public static class DataGridExtensions
             var parameter = Expression.Parameter(typeof(T), "x");
             var orderByProperty = Expression.Property(parameter, sortDefinition.SortBy);
             var sortlambda= Expression.Lambda(orderByProperty, parameter);
-            var sortMethod = (() => sourceQuery.OrderBy<T, object>(k => null));
             if (orderedQuery is null)
             {
-                var method = typeof(Queryable).GetMethods()
+                var sortmethod = typeof(Queryable).GetMethods()
                 .Where(m => m.Name == (sortDefinition.Descending? "OrderByDescending" : "OrderBy") && m.IsGenericMethodDefinition)
                 .Where(m => m.GetParameters().ToList().Count == 2) // ensure selecting the right overload
                 .Single();
-                var genericMethod = method.MakeGenericMethod(typeof(T), orderByProperty.Type);
+                var genericMethod = sortmethod.MakeGenericMethod(typeof(T), orderByProperty.Type);
                 orderedQuery = (IOrderedQueryable<T>?)genericMethod.Invoke(genericMethod, new object[] { source, sortlambda });
             }
             else
             {
-                var method = typeof(Queryable).GetMethods()
+                var sortmethod = typeof(Queryable).GetMethods()
                 .Where(m => m.Name == (sortDefinition.Descending ? "ThenByDescending" : "ThenBy") && m.IsGenericMethodDefinition)
                 .Where(m => m.GetParameters().ToList().Count == 2) // ensure selecting the right overload
                 .Single();
-                var genericMethod = method.MakeGenericMethod(typeof(T), orderByProperty.Type);
+                var genericMethod = sortmethod.MakeGenericMethod(typeof(T), orderByProperty.Type);
                 orderedQuery = (IOrderedQueryable<T>?)genericMethod.Invoke(genericMethod, new object[] { source, sortlambda });
             }
         }
