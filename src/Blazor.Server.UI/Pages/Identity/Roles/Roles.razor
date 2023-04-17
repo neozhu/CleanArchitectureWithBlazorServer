@@ -22,17 +22,16 @@
 <ErrorBoundary>
     <ChildContent>
 
-        <MudTable @ref="_table"
+        <MudDataGrid @ref="_table"
                   FixedHeader="true"
-                  FixedFooter="true"
+                  FixedFooter="false"
                   Height="calc(100vh - 300px)"
                   Hover="true"
                   MultiSelection="true"
                   @bind-RowsPerPage="_defaultPageSize"
-                  @bind-SelectedItems="_selectItems"
-                  SortLabel="@ConstantString.ORDERBY"
+                  @bind-SelectedItems="_selectedItems"
                   Loading="@_loading"
-                  ServerData="@(new Func<TableState, Task<TableData<ApplicationRoleDto>>>(ServerReload))">
+                  ServerData="@(ServerReload)">
             <ToolBarContent>
                 <div class="d-flex align-start flex-grow-1">
                     <div class="d-flex gap-4">
@@ -64,7 +63,7 @@
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
                                            StartIcon="@Icons.Material.Filled.Delete"
-                                           Disabled="@(!(_selectItems.Count>0))"
+                                           Disabled="@(!(_selectedItems.Count>0))"
                                            OnClick="OnDeleteChecked"
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
@@ -125,54 +124,51 @@
                     </div>
                 </div>
             </ToolBarContent>
-            <ColGroup>
-                <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                    <col style="width:50px;" />
-                    <col style="width:120px;" />
-                    <col />
-                </MudHidden>
-            </ColGroup>
-            <HeaderContent>
-                <MudTh>@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel T="ApplicationRoleDto" SortLabel="@nameof(_currentDto.Name)">@L[_currentDto.GetMemberDescription(x=>x.Name)]</MudTableSortLabel></MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="@ConstantString.ACTIONS">
-                    @if (_canEdit || _canManagePermissions)
+             <Columns>
+                <SelectColumn ShowInFooter="false" ></SelectColumn>
+                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false" >
+                    <CellTemplate>
+                    @if (_canEdit || _canDelete)
                     {
-                        <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info">
+                            <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                                 Dense="true"
+                                 EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                             @if (_canEdit)
                             {
-                                <MudMenuItem OnClick="@(()=>OnEdit(context))">@ConstantString.EDIT</MudMenuItem>
+                                <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
                             }
-                            @if (_canManagePermissions)
+                            @if (_canDelete)
                             {
-                                <MudMenuItem OnClick="@(()=>OnSetPermissions(context))">@L["Set Permissions"]</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
                             }
                         </MudMenu>
                     }
                     else
                     {
                         <MudButton Variant="Variant.Filled" DisableElevation="true"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
+                                   StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                                   Color="Color.Surface">
                             @ConstantString.NOALLOWED
                         </MudButton>
                     }
-                </MudTd>
-                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
-                    <div class="d-flex flex-column">
-                        <MudText>@context.Name</MudText>
-                        <MudText Typo="Typo.body2">@context.Description</MudText>
-                    </div>
-                </MudTd>
-            </RowTemplate>
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
+                    <CellTemplate>
+                        <div class="d-flex flex-column">
+                            <MudText>@context.Item.Name</MudText>
+                            <MudText Typo="Typo.body2">@context.Item.Description</MudText>
+                        </div>
+                    </CellTemplate>
+                    <FooterTemplate>
+                        @L["Selected"]: @(this._selectedItems.Count)
+                    </FooterTemplate>
+                </PropertyColumn>
+            </Columns>
             <PagerContent>
-                <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
+                <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
-        </MudTable>
+        </MudDataGrid>
 
         <_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
     </ChildContent>
@@ -185,7 +181,7 @@
     private bool processing = false;
     private string _currentRoleName = string.Empty;
     private int _defaultPageSize = 15;
-    private HashSet<ApplicationRoleDto> _selectItems = new();
+    private HashSet<ApplicationRoleDto> _selectedItems = new();
     private ApplicationRoleDto _currentDto = new();
     private string _searchString = string.Empty;
     public string? Title { get; private set; }
@@ -200,7 +196,7 @@
     private IAppCache _cache { get; set; } = null!;
     private List<PermissionModel> _permissions = new();
     private IList<Claim> _assignedClaims = default!;
-    private MudTable<ApplicationRoleDto> _table = null!;
+    private MudDataGrid<ApplicationRoleDto> _table = null!;
     private bool _canCreate;
     private bool _canSearch;
     private bool _canEdit;
@@ -223,16 +219,18 @@
         _canImport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
     }
-    private async Task<TableData<ApplicationRoleDto>> ServerReload(TableState state)
+    private async Task<GridData<ApplicationRoleDto>> ServerReload(GridState<ApplicationRoleDto> state)
     {
         try
         {
             _loading = true;
-            var items = await _roleManager.Roles.Where(x => x.Name.Contains(_searchString) || x.Description.Contains(_searchString))
-                  .OrderBy($"{state.SortLabel ?? "Name"} {(state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString())}")
-                  .Skip(state.Page * state.PageSize).Take(state.PageSize).Select(x => new ApplicationRoleDto() { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName }).ToListAsync();
+            var items =await _roleManager.Roles.Where(x => x.Name.Contains(_searchString) || x.Description.Contains(_searchString))
+                  .EFOrderBySortDefinitions<ApplicationRole,ApplicationRoleDto>(state)
+                  .Skip(state.Page * state.PageSize).Take(state.PageSize)
+                  .Select(x => new ApplicationRoleDto() { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName })
+                  .ToListAsync();
             var total = await _roleManager.Roles.CountAsync(x => x.Name.Contains(_searchString) || x.Description.Contains(_searchString));
-            return new TableData<ApplicationRoleDto>() { TotalItems = total, Items = items };
+            return new GridData<ApplicationRoleDto>() { TotalItems = total, Items = items };
         }
         finally
         {
@@ -304,6 +302,7 @@
             }
         }
     }
+   
     private async Task OnSetPermissions(ApplicationRoleDto item)
     {
         _showPermissionsDrawer = true;
@@ -432,19 +431,46 @@
             processing = false;
         }
     }
-    private async Task OnDeleteChecked()
+    private async Task OnDelete(ApplicationRoleDto dto)
     {
         string deleteContent = ConstantString.DELETECONFIRMATION;
         var parameters = new DialogParameters
         {
-            { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, _selectItems.Count) }
+            { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, dto.Name) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            var deleteId = _selectItems.Select(x => x.Id).ToArray();
+            var deleteRoles = await _roleManager.Roles.Where(x => x.Id==dto.Id).ToListAsync();
+            foreach (var role in deleteRoles)
+            {
+                var deleteresult = await _roleManager.DeleteAsync(role);
+                if (!deleteresult.Succeeded)
+                {
+                    Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                    return;
+                }
+
+            }
+            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            await OnRefresh();
+        }
+    }
+    private async Task OnDeleteChecked()
+    {
+        string deleteContent = ConstantString.DELETECONFIRMATION;
+        var parameters = new DialogParameters
+        {
+            { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, _selectedItems.Count) }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            var deleteId = _selectedItems.Select(x => x.Id).ToArray();
             var deleteRoles = await _roleManager.Roles.Where(x => deleteId.Contains(x.Id)).ToListAsync();
             foreach (var role in deleteRoles)
             {
