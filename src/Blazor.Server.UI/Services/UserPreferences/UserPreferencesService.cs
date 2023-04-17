@@ -50,6 +50,7 @@ public class UserPreferencesService : IUserPreferencesService
         }
         catch (CryptographicException)
         {
+            await _localStorage.DeleteAsync(Key);
             return new UserPreferences();
         }
 
