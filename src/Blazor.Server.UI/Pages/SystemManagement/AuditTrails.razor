@@ -77,13 +77,13 @@
                         </CardHeaderContent>
                     </MudCardHeader>
                     <MudCardContent Class="pt-0">
-                        <MudText>Old Values</MudText>
+                        <MudText>@L[_currentDto.GetMemberDescription(x=>x.OldValues)]</MudText>
                         <code class="docs-code docs-code-primary">
                             @context.Item.OldValues
                         </code>
 
 
-                        <MudText>New Value</MudText>
+                        <MudText>@L[_currentDto.GetMemberDescription(x=>x.NewValues)]</MudText>
                         <code class="docs-code docs-code-primary">
                             @context.Item.NewValues
                         </code>
