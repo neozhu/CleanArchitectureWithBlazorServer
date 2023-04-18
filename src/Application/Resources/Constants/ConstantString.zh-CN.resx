@@ -123,8 +123,8 @@
   <data name="Add" xml:space="preserve">
     <value>新增</value>
   </data>
-  <data name="Create" xml:space="preserve">
-    <value>创建</value>
+  <data name="New" xml:space="preserve">
+    <value>新建</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>删除</value>

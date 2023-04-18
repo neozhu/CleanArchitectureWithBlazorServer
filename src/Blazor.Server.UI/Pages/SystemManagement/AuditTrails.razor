@@ -14,15 +14,15 @@
 </style>
 <ErrorBoundary>
     <ChildContent>
-        <MudTable ServerData="@(new Func<TableState, Task<TableData<AuditTrailDto>>>(ServerReload))"
-                  FixedHeader="true"
-                  FixedFooter="true"
-                  Virtualize="true"
-                  @bind-RowsPerPage="_defaultPageSize"
-                  Height="calc(100vh - 300px)"
-                  Loading="@_loading"
-                  SortLabel="@ConstantString.ORDERBY"
-                  Hover="true" @ref="_table">
+        <MudDataGrid ServerData="@(ServerReload)"
+                     T="AuditTrailDto"
+                     FixedHeader="true"
+                     FixedFooter="true"
+                     Virtualize="true"
+                     @bind-RowsPerPage="_defaultPageSize"
+                     Height="calc(100vh - 300px)"
+                     Loading="@_loading"
+                     Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="d-flex align-start flex-grow-1">
                     <div class="d-flex gap-4">
@@ -54,94 +54,61 @@
                     </div>
                 </div>
             </ToolBarContent>
-            <ColGroup>
-                <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                    <col style="width:180px;" />
-                </MudHidden>
-            </ColGroup>
-            <HeaderContent>
-                <MudTh Style="width:190px">@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.UserId)" T="AuditTrailDto">@L[_currentDto.GetMemberDescription(x=>x.UserId)]</MudTableSortLabel></MudTh>
-                <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="@nameof(_currentDto.AuditType)" T="AuditTrailDto">@L[_currentDto.GetMemberDescription(x=>x.AuditType)]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.TableName)" T="AuditTrailDto">@L[_currentDto.GetMemberDescription(x=>x.TableName)]</MudTableSortLabel></MudTh>
-                <MudTh>@L[_currentDto.GetMemberDescription(x=>x.PrimaryKey)]</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.DateTime)" T="AuditTrailDto">@L[_currentDto.GetMemberDescription(x=>x.DateTime)]</MudTableSortLabel></MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="@ConstantString.ACTIONS">
-                    <MudButton Variant="Variant.Filled" DisableElevation="true"
-                               OnClick="@(() => OnShowDetail(context))"
-                               StartIcon="@(context.ShowDetails == true?Icons.Material.Filled.Close:Icons.Material.Filled.Add)" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
-                        @L[((context.ShowDetails == true) ? "Hide" : "Show") + " Details"]
-                    </MudButton>
-                </MudTd>
-                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.UserId)]">
-                    <div class="d-flex flex-column">
-                        <MudText Typo="Typo.body2">@context.Owner?.UserName</MudText>
-                        <MudText Typo="Typo.body2">@context.UserId</MudText>
-                    </div>
-                </MudTd>
-                <MudTd Style="text-align:center" DataLabel="@L[_currentDto.GetMemberDescription(x=>x.AuditType)]">
-                    @context.AuditType
-                </MudTd>
-                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.TableName)]">
-                    @context.TableName
-                </MudTd>
-                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.PrimaryKey)]">
-                    @context.PrimaryKey
-                </MudTd>
-                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.DateTime)]">
-                    @context.DateTime
-                </MudTd>
-            </RowTemplate>
+            <Columns>
+                <HierarchyColumn T="AuditTrailDto" ButtonDisabledFunc="@(x => x.AuditType== AuditType.None)" />
+                <PropertyColumn Property="x => x.UserId" Title="@L[_currentDto.GetMemberDescription(x=>x.UserId)]">
+                    <CellTemplate>
+                        <div class="d-flex flex-column">
+                            <MudText Typo="Typo.body2">@context.Item.Owner?.UserName</MudText>
+                            <MudText Typo="Typo.body2">@context.Item.UserId</MudText>
+                        </div>
+                    </CellTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.AuditType" Title="@L[_currentDto.GetMemberDescription(x=>x.AuditType)]" />
+                <PropertyColumn Property="x => x.TableName" Title="@L[_currentDto.GetMemberDescription(x=>x.TableName)]" />
+                <PropertyColumn Property="x => x.PrimaryKey" Title="@L[_currentDto.GetMemberDescription(x=>x.PrimaryKey)]" />
+                <PropertyColumn Property="x => x.DateTime" Title="@L[_currentDto.GetMemberDescription(x=>x.DateTime)]" />
+            </Columns>
             <ChildRowContent>
-                @if (context.ShowDetails)
-                {
-                    <MudTr>
-                        <td colspan="5">
-                            <MudCard Elevation="0">
-                                <MudCardHeader>
-                                    <CardHeaderContent>
-                                        <MudText Typo="Typo.body1"><strong>@context.TableName</strong></MudText>
-                                    </CardHeaderContent>
-                                </MudCardHeader>
-                                <MudCardContent Class="pt-0">
-                                    <MudText>Old Values</MudText>
-                                    <code class="docs-code docs-code-primary">
-                                        @context.OldValues
-                                    </code>
+                <MudCard Elevation="0">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.body1"><strong>@context.Item.TableName</strong></MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent Class="pt-0">
+                        <MudText>Old Values</MudText>
+                        <code class="docs-code docs-code-primary">
+                            @context.Item.OldValues
+                        </code>
 
 
-                                    <MudText>New Value</MudText>
-                                    <code class="docs-code docs-code-primary">
-                                        @context.NewValues
-                                    </code>
+                        <MudText>New Value</MudText>
+                        <code class="docs-code docs-code-primary">
+                            @context.Item.NewValues
+                        </code>
 
-                                </MudCardContent>
-                            </MudCard>
-                        </td>
-                    </MudTr>
-                }
+                    </MudCardContent>
+                </MudCard>
             </ChildRowContent>
             <NoRecordsContent>
-                <MudText>@ConstantString.NOMACHING</MudText>
+                <MudText>@ConstantString.NORECORDS</MudText>
             </NoRecordsContent>
             <LoadingContent>
                 <MudText>@ConstantString.LOADING</MudText>
             </LoadingContent>
             <PagerContent>
-                <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
+                <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
-        </MudTable>
-    </ChildContent>
-    <ErrorContent>
-        <CustomError Exception="context"></CustomError>
-    </ErrorContent>
-</ErrorBoundary>
-@code {
+            </MudDataGrid>
+        </ChildContent>
+        <ErrorContent>
+            <CustomError Exception="context"></CustomError>
+        </ErrorContent>
+        </ErrorBoundary>
+        @code {
     public string Title { get; private set; } = "Audit Trails";
-    private MudTable<AuditTrailDto> _table = default!;
+    private MudDataGrid<AuditTrailDto> _table = null!;
     private bool _loading;
     private int _defaultPageSize = 15;
     [Inject]
@@ -157,18 +124,18 @@
         var state = await _authState;
     }
 
-    private async Task<TableData<AuditTrailDto>> ServerReload(TableState state)
+    private async Task<GridData<AuditTrailDto>> ServerReload(GridState<AuditTrailDto> state)
     {
         try
         {
             _loading = true;
-            _query.Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
-            _query.SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            _query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            _query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending == false ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
             _query.Page = state.Page + 1;
             _query.PerPage = state.PageSize;
 
             var result = await _mediator.Send(_query).ConfigureAwait(false);
-            return new TableData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
+            return new GridData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
         {

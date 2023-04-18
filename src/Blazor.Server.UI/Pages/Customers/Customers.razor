@@ -62,7 +62,7 @@
                                            Disabled="@_loading"
                                            OnClick="OnCreate"
                                            Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -121,7 +121,7 @@
                                            Disabled="@_loading"
                                            OnClick="OnCreate"
                                            Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -186,14 +186,14 @@
                 @*TODO: Define the fields that should be displayed in data table*@
                 <MudTd HideSmall="false" DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Name)]"> 
                     <div class="d-flex flex-column">
-                        <MudText>@context.Name</MudText>
+                        <MudText Typo="Typo.body2">@context.Name</MudText>
                         <MudText Typo="Typo.body2">@context.Description</MudText>
                     </div>
                 </MudTd>
 
             </RowTemplate>
             <NoRecordsContent>
-                <MudText>@ConstantString.NOMACHING</MudText>
+                <MudText>@ConstantString.NORECORDS</MudText>
             </NoRecordsContent>
             <LoadingContent>
                 <MudText>@ConstantString.LOADING</MudText>

@@ -14,7 +14,7 @@ public static class ConstantString
     public static string SUBMIT => Localize("Submit");
     public static string DELETE => Localize("Delete");
     public static string ADD => Localize("Add");
-    public static string CREATE => Localize("Create");
+    public static string NEW => Localize("New");
     public static string EXPORT => Localize("Export to Excel");
     public static string EXPORTPDF => Localize("Export to PDF");
     public static string IMPORT => Localize("Import from Excel");
@@ -72,7 +72,7 @@ public static class ConstantString
     public static string DELETECONFIRMATION => Localize("Are you sure you want to delete this item: {0}?");
     public static string DELETECONFIRMATIONWITHID => Localize("Are you sure you want to delete this item with Id: {0}?");
     public static string DELETECONFIRMWITHSELECTED => Localize("Are you sure you want to delete the selected items: {0}?");
-    public static string NOMACHING => Localize("No matching records found");
+    public static string NORECORDS => Localize("There are no records to view.");
     public static string LOADING => Localize("Loading...");
     public static string WATING => Localize("Wating...");
     public static string PROCESSING => Localize("Processing...");

@@ -147,8 +147,8 @@
   <data name="Close" xml:space="preserve">
     <value>Schließen</value>
   </data>
-  <data name="Create" xml:space="preserve">
-    <value>Erstellen</value>
+  <data name="New" xml:space="preserve">
+    <value>Neu</value>
   </data>
   <data name="Create a new {0}" xml:space="preserve">
     <value>Erstellen Sie ein neues {0}</value>

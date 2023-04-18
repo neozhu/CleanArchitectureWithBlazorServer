@@ -57,7 +57,7 @@
                                            Size="Size.Small"
                                            OnClick="OnCreate"
                                            Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -108,7 +108,7 @@
                                     <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
                                     @if (_canCreate)
                                     {
-                                        <MudMenuItem OnClick="OnCreate">@ConstantString.CREATE</MudMenuItem>
+                                        <MudMenuItem OnClick="OnCreate">@ConstantString.NEW</MudMenuItem>
                                     }
                                     @if (_canDelete)
                                     {
@@ -160,7 +160,7 @@
                 <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
                     <CellTemplate>
                         <div class="d-flex flex-column">
-                            <MudText>@context.Item.Name</MudText>
+                            <MudText Typo="Typo.body2">@context.Item.Name</MudText>
                             <MudText Typo="Typo.body2">@context.Item.Description</MudText>
                         </div>
                     </CellTemplate>

@@ -147,8 +147,8 @@
   <data name="Confirm" xml:space="preserve">
     <value>أكد</value>
   </data>
-  <data name="Create" xml:space="preserve">
-    <value>خلق</value>
+  <data name="New" xml:space="preserve">
+    <value>جديد</value>
   </data>
   <data name="Create a new {0}" xml:space="preserve">
     <value>إنشاء {0} جديد</value>

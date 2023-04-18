@@ -64,7 +64,7 @@
                                            Disabled="@_loading"
                                            OnClick="OnCreate"
                                            Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -133,7 +133,7 @@
                                            Disabled="@_loading"
                                            OnClick="OnCreate"
                                            Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -211,7 +211,7 @@
                 <MudTd DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Unit)]">@context.Unit</MudTd>
             </RowTemplate>
             <NoRecordsContent>
-                <MudText>@ConstantString.NOMACHING</MudText>
+                <MudText>@ConstantString.NORECORDS</MudText>
             </NoRecordsContent>
             <LoadingContent>
                 <MudText>@ConstantString.LOADING</MudText>
