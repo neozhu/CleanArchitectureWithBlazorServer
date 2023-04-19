@@ -20,7 +20,9 @@
                     }
                     else
                     {
-                        <MudAvatar Image="@UserProfile?.ProfilePictureDataUrl" />
+                        <MudAvatar>
+                            <MudImage Src="@UserProfile?.ProfilePictureDataUrl"></MudImage>
+                        </MudAvatar>
                     }
                     <MudStack Justify="Justify.SpaceBetween" Spacing="0">
                         <MudText Typo="Typo.body1">@UserProfile?.DisplayName</MudText>

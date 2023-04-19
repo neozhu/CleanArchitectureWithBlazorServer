@@ -18,6 +18,7 @@
 @using System.ComponentModel;
 @using System.Reflection;
 @using System.Security.Claims;
+@using System.Linq.Expressions;
 @inject IStringLocalizer<Users> L
 @attribute [Authorize(Policy = Permissions.Users.View)]
 <PageTitle>@Title</PageTitle>
@@ -28,18 +29,16 @@
 </style>
 <ErrorBoundary>
     <ChildContent>
-
-        <MudTable @ref="_table"
-                  FixedHeader="true"
-                  FixedFooter="true"
-                  Height="calc(100vh - 300px)"
-                  @bind-RowsPerPage="_defaultPageSize"
-                  Hover="true"
-                  MultiSelection="true"
-                  @bind-SelectedItems="_selectItems"
-                  SortLabel="@ConstantString.ORDERBY"
-                  Loading="@_loading"
-                  ServerData="@(new Func<TableState, Task<TableData<ApplicationUserDto>>>(ServerReload))">
+        <MudDataGrid @ref="_table"
+                     FixedHeader="true"
+                     FixedFooter="false"
+                     Height="calc(100vh - 300px)"
+                     @bind-RowsPerPage="_defaultPageSize"
+                     Hover="true"
+                     MultiSelection="true"
+                     @bind-SelectedItems="_selectedItems"
+                     Loading="@_loading"
+                     ServerData="@(ServerReload)">
             <ToolBarContent>
                 <div class="d-flex align-start flex-grow-1">
                     <div class="d-flex gap-4">
@@ -65,13 +64,13 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnCreate"
-                                           IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
                                            StartIcon="@Icons.Material.Filled.Delete"
-                                           Disabled="@(!(_selectItems.Count>0))"
+                                           Disabled="@(!(_selectedItems.Count>0))"
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnDeleteChecked"
@@ -119,13 +118,13 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnCreate"
-                                           IconColor="Color.Surface">@ConstantString.CREATE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
                                            StartIcon="@Icons.Material.Filled.Delete"
-                                           Disabled="@(!(_selectItems.Count>0))"
+                                           Disabled="@(!(_selectedItems.Count>0))"
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnDeleteChecked"
@@ -152,126 +151,132 @@
                     </div>
                 </div>
             </ToolBarContent>
-            <ColGroup>
-                <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                    <col style="min-width:50px;" />
-                    <col style="min-width:120px;" />
-                    <col style="min-width:160px;" />
-                    <col style="min-width:140px;" />
-                    <col style="min-width:120px;" />
-                    <col style="min-width:120px;" />
-                    <col style="min-width:160px;" />
-                    <col style="min-width:180px;" />
-                </MudHidden>
-            </ColGroup>
-            <HeaderContent>
-                <MudTh Style="min-width:120px">@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.TenantId)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.TenantName)]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.UserName)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.UserName)]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.SuperiorId)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.SuperiorName)]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.Provider)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.Provider)]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.Email)" T="ApplicationUserDto">@L["Email / PhoneNumber"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.AssignedRoles)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.AssignedRoles)]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_currentDto.IsActive)" T="ApplicationUserDto">@L[_currentDto.GetMemberDescription(x=>x.IsActive)]</MudTableSortLabel></MudTh>
-                <MudTh>@L[_currentDto.GetMemberDescription(x=>x.LockoutEnd)]</MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="@ConstantString.ACTIONS">
-                    @if (_canEdit || _canManageRoles || _canRestPassword || _canActive || _canManagePermissions)
-                    {
-                        <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true"
-                             Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
-                            @if (_canEdit)
-                            {
-                                <MudMenuItem OnClick=@(()=>OnEdit(context))>@ConstantString.EDIT</MudMenuItem>
-                            }
-                            @if (_canManagePermissions)
-                            {
-                                <MudMenuItem OnClick="@(()=>OnSetPermissions(context))">@L["Set Permissions"]</MudMenuItem>
-                            }
-                            @if (_canActive)
-                            {
-                                @if (context.IsActive)
+            <Columns>
+                <SelectColumn ShowInFooter="false"></SelectColumn>
+                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false">
+                    <CellTemplate>
+                        @if (_canEdit || _canDelete || _canManageRoles || _canRestPassword || _canActive || _canManagePermissions)
+                        {
+                            <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                                 Dense="true"
+                                 EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                                @if (_canEdit)
                                 {
-                                    <MudMenuItem OnClick=@(()=>OnSetActive(context))>@L["Set Inactive"]</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
                                 }
-                                else
+                                @if (_canDelete)
                                 {
-                                    <MudMenuItem OnClick=@(()=>OnSetActive(context))>@L["Set Active"]</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
                                 }
+                                @if (_canManagePermissions)
+                                {
+                                    <MudMenuItem OnClick="@(()=>OnSetPermissions(context.Item))">@L["Set Permissions"]</MudMenuItem>
+                                }
+                                @if (_canActive)
+                                {
+                                    @if (context.Item.IsActive)
+                                    {
+                                        <MudMenuItem OnClick=@(()=>OnSetActive(context.Item))>@L["Set Inactive"]</MudMenuItem>
+                                    }
+                                    else
+                                    {
+                                        <MudMenuItem OnClick=@(()=>OnSetActive(context.Item))>@L["Set Active"]</MudMenuItem>
+                                    }
 
-                            }
-                            @if (_canRestPassword)
-                            {
-                                <MudMenuItem OnClick=@(()=>OnResetPassword(context))>@L["Rest Password"]</MudMenuItem>
-                            }
-
-                        </MudMenu>
-                    }
-                    else
-                    {
-                        <MudButton Variant="Variant.Filled" DisableElevation="true"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
-                            @ConstantString.NOALLOWED
-                        </MudButton>
-                    }
-                </MudTd>
-                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.TenantName)]">
-                    <div class="d-flex flex-column">
-                        <MudText>@context.TenantName</MudText>
-                        <MudText Typo="Typo.body2">@context.TenantId</MudText>
-                    </div>
-                </MudTd>
-                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.UserName)]">
-                    <div class="d-flex align-content-center flex-wrap">
-                        <MudBadge Color="@(isOnline(context.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
-                            <MudAvatar Image="@context.ProfilePictureDataUrl" Alt="@context.UserName">@context?.UserName?.First()</MudAvatar>
-                        </MudBadge>
+                                }
+                                @if (_canRestPassword)
+                                {
+                                    <MudMenuItem OnClick=@(()=>OnResetPassword(context.Item))>@L["Rest Password"]</MudMenuItem>
+                                }
+                            </MudMenu>
+                        }
+                        else
+                        {
+                            <MudButton Variant="Variant.Filled" DisableElevation="true"
+                                   StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                                   Color="Color.Surface">
+                                @ConstantString.NOALLOWED
+                            </MudButton>
+                        }
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn Property="x => x.TenantId" Title="@L[_currentDto.GetMemberDescription(x=>x.TenantName)]">
+                    <CellTemplate>
                         <div class="d-flex flex-column">
-                            <MudText Class="ml-2 align-self-center">@context.UserName</MudText>
-                            <MudText Typo="Typo.body2" Class="ml-2 align-self-center">@context.DisplayName</MudText>
+                            <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
+                            <MudText Typo="Typo.body2">@context.Item.TenantId</MudText>
                         </div>
-                    </div>
-                </MudTd>
-                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.SuperiorName)]">@context.SuperiorName</MudTd>
-                <MudTd DataLabel="@L[_currentDto.GetMemberDescription(x=>x.Provider)]">@context.Provider</MudTd>
-                <MudTd DataLabel="@L["Email / PhoneNumber"]">
-                    <div class="d-flex flex-column">
-                        <MudText Typo="Typo.body2">@context.Email</MudText>
-                        <MudText Typo="Typo.body2">@context.PhoneNumber</MudText>
-                    </div>
-                </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L[_currentDto.GetMemberDescription(x=>x.AssignedRoles)]">
-                    @foreach (var str in context.AssignedRoles)
-                    {
-                        <MudChip Variant="Variant.Text">@str</MudChip>
-                    }
-                </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L[_currentDto.GetMemberDescription(x=>x.IsActive)]">
-                    <MudCheckBox Checked="@context.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
-                </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L[_currentDto.GetMemberDescription(x=>x.LockoutEnd)]">@context.LockoutEnd</MudTd>
-                </RowTemplate>
-                <PagerContent>
-                    <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
-                </PagerContent>
-                </MudTable>
+                    </CellTemplate>
+                    <FooterTemplate>
+                        @L["Selected"]: @(this._selectedItems.Count)
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x=>x.UserName)]">
+                    <CellTemplate>
+                        <div class="d-flex align-content-center flex-wrap">
+                            <MudBadge Color="@(isOnline(context.Item.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
+                                <MudAvatar>
+                                    <MudImage Src="@context.Item.ProfilePictureDataUrl"></MudImage>
+                                    @context.Item.UserName.First()
+                                </MudAvatar>
+                            </MudBadge>
+                            <div class="d-flex flex-column">
+                                <MudText Class="ml-2 align-self-center">@context.Item.UserName</MudText>
+                                <MudText Typo="Typo.body2" Class="ml-2 align-self-center">@context.Item.DisplayName</MudText>
+                            </div>
+                        </div>
+                    </CellTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.SuperiorName" Title="@L[_currentDto.GetMemberDescription(x=>x.SuperiorName)]" />
+                <PropertyColumn Property="x => x.Provider" Title="@L[_currentDto.GetMemberDescription(x=>x.Provider)]" />
+                <PropertyColumn Property="x => x.Email" Title="@L["Email / PhoneNumber"]">
+                    <CellTemplate>
+                        <div class="d-flex flex-column">
+                            <MudText Typo="Typo.body2">@context.Item.Email</MudText>
+                            <MudText Typo="Typo.body2">@context.Item.PhoneNumber</MudText>
+                        </div>
+                    </CellTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.AssignedRoles" Title="@L[_currentDto.GetMemberDescription(x=>x.AssignedRoles)]">
+                    <CellTemplate>
+                        @if (context.Item.AssignedRoles is not null)
+                        {
+                            foreach (var str in context.Item.AssignedRoles)
+                            {
+                                <MudChip Size="Size.Small" Variant="Variant.Text">@str</MudChip>
+                            }
+                        }
+                    </CellTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.IsActive" Title="@L[_currentDto.GetMemberDescription(x=>x.IsActive)]">
+                    <CellTemplate>
+                        <MudCheckBox Checked="@context.Item.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
+                    </CellTemplate>
+                </PropertyColumn>
+                    <PropertyColumn Property="x => x.LockoutEnd" Title="@L[_currentDto.GetMemberDescription(x=>x.LockoutEnd)]">
+                    <CellTemplate>
+                        @context.Item.LockoutEnd
+                    </CellTemplate>
+                    </PropertyColumn>
+            </Columns>
 
-                <_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@_processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
-            </ChildContent>
-            <ErrorContent>
-                <CustomError Exception="context"></CustomError>
-            </ErrorContent>
-            </ErrorBoundary>
+            <PagerContent>
+                <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
+            </PagerContent>
+        </MudDataGrid>
+
+        <_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@_processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
+    </ChildContent>
+    <ErrorContent>
+        <CustomError Exception="context"></CustomError>
+    </ErrorContent>
+</ErrorBoundary>
 
 @code {
     [Inject]
     private IUsersStateContainer _usersStateContainer { get; set; } = default!;
     private int _defaultPageSize = 15;
-    private HashSet<ApplicationUserDto> _selectItems = new();
+    private HashSet<ApplicationUserDto> _selectedItems = new();
     private ApplicationUserDto _currentDto = new();
     private string _searchString = string.Empty;
     private string Title { get; set; } = "Users";
@@ -295,7 +300,7 @@
     private IExcelService _excelService { get; set; } = null!;
     [Inject]
     private IMapper _mapper { get; set; } = null!;
-    private MudTable<ApplicationUserDto> _table = null!;
+    private MudDataGrid<ApplicationUserDto> _table = null!;
     private bool _processing;
     private bool _showPermissionsDrawer;
     private bool _canCreate;
@@ -337,29 +342,26 @@
     {
         return _usersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
     }
-    private async Task<TableData<ApplicationUserDto>> ServerReload(TableState state)
+
+    private async Task<GridData<ApplicationUserDto>> ServerReload(GridState<ApplicationUserDto> state)
     {
         try
         {
             _loading = true;
-            var items = await _userManager.Users.Where(x => (x.UserName.Contains(_searchString) ||
+            Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
+            (x.UserName.Contains(_searchString) ||
             x.Email.Contains(_searchString) ||
             x.DisplayName.Contains(_searchString) ||
             x.PhoneNumber.Contains(_searchString) ||
             x.TenantName.Contains(_searchString) ||
             x.Provider.Contains(_searchString)) &&
-            (_searchrole == null || (_searchrole != null && x.UserRoles.Any(x => x.Role.Name == _searchrole))))
+            (_searchrole == null || (_searchrole != null && x.UserRoles.Any(x => x.Role.Name == _searchrole)));
+            var items = await _userManager.Users.Where(searchPredicate)
                  .Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                 .OrderBy($"{state.SortLabel ?? "UserName"} {(state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString())}")
+                 .EFOrderBySortDefinitions<ApplicationUser, ApplicationUserDto>(state)
                  .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
-            var total = await _userManager.Users.CountAsync(x => (x.UserName.Contains(_searchString) ||
-            x.Email.Contains(_searchString) ||
-            x.DisplayName.Contains(_searchString) ||
-            x.PhoneNumber.Contains(_searchString) ||
-            x.TenantName.Contains(_searchString) ||
-            x.Provider.Contains(_searchString)) &&
-            (_searchrole == null || (_searchrole != null && x.UserRoles.Any(x => x.Role.Name == _searchrole))));
-            return new TableData<ApplicationUserDto>() { TotalItems = total, Items = items };
+            var total = await _userManager.Users.CountAsync(searchPredicate);
+            return new GridData<ApplicationUserDto>() { TotalItems = total, Items = items };
         }
         finally
         {
@@ -476,33 +478,59 @@
             }
         }
     }
+    private async Task OnDelete(ApplicationUserDto dto)
+    {
+        string deleteContent = ConstantString.DELETECONFIRMATION;
+        var parameters = new DialogParameters
+        {
+            { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, dto.UserName) }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            var deleteUser = await _userManager.Users.Where(x => x.Id == dto.Id).ToListAsync();
+            foreach (var user in deleteUser)
+            {
+                var deleteresult = await _userManager.DeleteAsync(user);
+                if (!deleteresult.Succeeded)
+                {
+                    Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                    return;
+                }
 
+            }
+            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            await OnRefresh();
+        }
+    }
     private async Task OnDeleteChecked()
     {
         var state = await _authState;
         var currentUserId = state.User.GetUserId();
-        var isSelectedItemContainCurrentUser = _selectItems.Any(x => x.Id == currentUserId);
+        var isSelectedItemContainCurrentUser = _selectedItems.Any(x => x.Id == currentUserId);
 
         if (isSelectedItemContainCurrentUser)
         {
-            if (_selectItems.Count == 1)
+            if (_selectedItems.Count == 1)
             {
                 Snackbar.Add($"{ConstantString.DELETEFAIL}", MudBlazor.Severity.Error);
                 return;
             }
 
-            _selectItems.Remove(_selectItems.First(x => x.Id == currentUserId));
+            _selectedItems.Remove(_selectedItems.First(x => x.Id == currentUserId));
         }
 
         string deleteContent = ConstantString.DELETECONFIRMATION;
-        var parameters = new DialogParameters { { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, _selectItems.Count) } };
+        var parameters = new DialogParameters { { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, _selectedItems.Count) } };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>(L["Delete"], parameters, options);
         var result = await dialog.Result;
 
         if (!result.Canceled)
         {
-            var deleteId = _selectItems.Select(x => x.Id).ToArray();
+            var deleteId = _selectedItems.Select(x => x.Id).ToArray();
             var deleteUsers = await _userManager.Users.Where(x => deleteId.Contains(x.Id)).ToListAsync();
 
             foreach (var deleteUser in deleteUsers)
@@ -692,27 +720,31 @@
     }
     private async Task OnExport()
     {
-        _exporting = true;
-        var items = await _userManager.Users.Where(x => (x.UserName.Contains(_searchString) ||
+        try
+        {
+            _exporting = true;
+            Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
+            (x.UserName.Contains(_searchString) ||
             x.Email.Contains(_searchString) ||
             x.DisplayName.Contains(_searchString) ||
             x.PhoneNumber.Contains(_searchString) ||
             x.TenantName.Contains(_searchString) ||
             x.Provider.Contains(_searchString)) &&
-            (_searchrole == null || (_searchrole != null && x.UserRoles.Any(x => x.Role.Name == _searchrole))))
-             .Select(x => new ApplicationUserDto()
-                 {
-                     Id = x.Id,
-                     UserName = x.UserName!,
-                     DisplayName = x.DisplayName,
-                     Email = x.Email!,
-                     PhoneNumber = x.PhoneNumber,
-                     TenantId = x.TenantId,
-                     TenantName = x.TenantName,
-                 }).ToListAsync();
-        var result = await _excelService.ExportAsync(items,
-                new Dictionary<string, Func<ApplicationUserDto, object?>>()
-                                        {
+            (_searchrole == null || (_searchrole != null && x.UserRoles.Any(x => x.Role.Name == _searchrole)));
+            var items = await _userManager.Users.Where(searchPredicate)
+                 .Select(x => new ApplicationUserDto()
+                     {
+                         Id = x.Id,
+                         UserName = x.UserName!,
+                         DisplayName = x.DisplayName,
+                         Email = x.Email!,
+                         PhoneNumber = x.PhoneNumber,
+                         TenantId = x.TenantId,
+                         TenantName = x.TenantName,
+                     }).ToListAsync();
+            var result = await _excelService.ExportAsync(items,
+                    new Dictionary<string, Func<ApplicationUserDto, object?>>()
+                                                            {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
@@ -720,11 +752,16 @@
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                                        }
-                , L["Users"]);
-        var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
-        Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
-        _exporting = false;
+                                                            }
+                    , L["Users"]);
+            var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
+            Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
+        }
+        finally
+        {
+            _exporting = false;
+        }
+
     }
 
     private async Task OnImportData(IBrowserFile file)

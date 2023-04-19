@@ -99,12 +99,13 @@
     [Inject] private LoginFormModellFluentValidator _loginValidator { get; set; } = default!;
 
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
+        await  base.OnInitializedAsync();
         Title = L["Sign In"];
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         _tokenProvider = ScopedServices.GetRequiredService<AccessTokenProvider>();
-        return base.OnInitializedAsync();
+       
     }
     private async Task OnSubmit()
     {

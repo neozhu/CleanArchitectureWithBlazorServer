@@ -147,8 +147,8 @@
   <data name="Close" xml:space="preserve">
     <value>選ぶ</value>
   </data>
-  <data name="Create" xml:space="preserve">
-    <value>作成</value>
+  <data name="New" xml:space="preserve">
+    <value>新しい</value>
   </data>
   <data name="Create a new {0}" xml:space="preserve">
     <value>新しい{0}を作成します</value>

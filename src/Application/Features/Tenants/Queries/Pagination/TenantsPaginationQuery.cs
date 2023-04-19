@@ -3,8 +3,7 @@
 
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
-using DocumentFormat.OpenXml.Wordprocessing;
-using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
+
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination;
 

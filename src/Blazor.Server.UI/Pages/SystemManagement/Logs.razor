@@ -16,15 +16,15 @@
 <ErrorBoundary>
     <ChildContent>
         <Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts @ref="chartcomponent" Data="_data"></Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts>
-        <MudTable ServerData="@(new Func<TableState, Task<TableData<LogDto>>>(ServerReload))"
-                  FixedHeader="true"
-                  FixedFooter="true"
-                  Virtualize="true"
-                  Height="calc(100vh - 360px)"
-                  Style="min-height:700px"
-                  Loading="@_loading"
-                  SortLabel="@ConstantString.ORDERBY"
-                  Hover="true" @ref="_table">
+        <MudDataGrid T="LogDto"
+                     ServerData="@(ServerReload)"
+                     FixedHeader="true"
+                     FixedFooter="false"
+                     Virtualize="true"
+                     Height="calc(100vh - 360px)"
+                     Style="min-height:700px"
+                     Loading="@_loading"
+                     Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="d-flex align-start flex-grow-1">
                     <div class="d-flex gap-4">
@@ -76,105 +76,66 @@
                 </div>
 
             </ToolBarContent>
-            <ColGroup>
-                <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                    <col style="width:180px;" />
-                    <col style="width:120px;" />
-                    <col style="width:90px;" />
-                    <col />
-                    <col />
-                </MudHidden>
-            </ColGroup>
-            <HeaderContent>
-                <MudTh>@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="TimeStamp" T="LogDto">@L["Time Stamp"]</MudTableSortLabel></MudTh>
-                <MudTh Style="text-align:center"><MudTableSortLabel SortLabel="Level" T="LogDto">@L["Level"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="Message" T="LogDto">@L["Message"]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="UserName" T="LogDto">@L["User Name"]</MudTableSortLabel></MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="@ConstantString.ACTIONS">
-                    <MudButton Variant="Variant.Filled" DisableElevation="true"
-                               OnClick="@(() => OnShowDetail(context))"
-                               StartIcon="@(context.ShowDetails == true?Icons.Material.Filled.Close:Icons.Material.Filled.Add)" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
-                        @L[((context.ShowDetails == true) ? "Hide" : "Show") + " Details"]
-                    </MudButton>
-                </MudTd>
-                <MudTd DataLabel="@L["Time Stamp"]">
-                    @context.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss")
-                </MudTd>
-                <MudTd Style="text-align:center" DataLabel="@L["Level"]">
-                    @switch (context.Level)
-                    {
-                        case "Trace":
-                            <MudChip Label="true">@context.Level</MudChip>
-                            break;
-                        case "Debug":
-                            <MudChip Label="true">@context.Level</MudChip>
-                            break;
-                        case "Information":
-                            <MudChip Color="Color.Info" Label="true">@context.Level</MudChip>
-                            break;
-                        case "Warning":
-                            <MudChip Color="Color.Warning" Label="true">@context.Level</MudChip>
-                            break;
-                        case "Error":
-                            <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
-                            break;
-                        case "Critical":
-                            <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
-                            break;
-                        default:
-                            <MudChip Label="true">@context.Level</MudChip>
-                            break;
-                    }
-
-                </MudTd>
-                <MudTd DataLabel="@L["Message"]">
-                    @context.Message
-                </MudTd>
-                <MudTd DataLabel="@L["User Name"]">
-                    @context.UserName
-                </MudTd>
-            </RowTemplate>
+            <Columns>
+                <HierarchyColumn T="LogDto" ButtonDisabledFunc="@(x => string.IsNullOrEmpty(x.Message))" />
+                <PropertyColumn Property="x => x.TimeStamp" Title="@L[_currentDto.GetMemberDescription(x=>x.TimeStamp)]" />
+                <PropertyColumn Property="x => x.Level" Title="@L[_currentDto.GetMemberDescription(x=>x.Level)]">
+                    <CellTemplate>
+                        @switch (context.Item.Level)
+                        {
+                            case "Information":
+                                <MudChip Color="Color.Info" Label="true">@context.Item.Level</MudChip>
+                                break;
+                            case "Warning":
+                                <MudChip Color="Color.Warning" Label="true">@context.Item.Level</MudChip>
+                                break;
+                            case "Error":
+                                <MudChip Color="Color.Error" Label="true">@context.Item.Level</MudChip>
+                                break;
+                            case "Critical":
+                                <MudChip Color="Color.Error" Label="true">@context.Item.Level</MudChip>
+                                break;
+                            case "Trace":
+                            case "Debug":
+                            default:
+                                <MudChip Label="true">@context.Item.Level</MudChip>
+                                break;
+                        }
+                    </CellTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.Message" Title="@L[_currentDto.GetMemberDescription(x=>x.Message)]" />
+                <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x=>x.UserName)]" />
+            </Columns>
             <ChildRowContent>
-                @if (context.ShowDetails)
-                {
-                    <MudTr>
-                        <td colspan="5">
-                            <MudCard Elevation="0">
-                                <MudCardHeader>
-                                    <CardHeaderContent>
-                                        <MudText Typo="Typo.body1"><strong>@context.Level</strong></MudText>
-                                    </CardHeaderContent>
-                                </MudCardHeader>
-                                <MudCardContent Class="pt-0">
-                                    <MudText>Message</MudText>
-                                    <MudText Typo="Typo.body2">@context.Message</MudText>
-                                    @if (!string.IsNullOrEmpty(context.Exception))
-                                    {
-                                        <MudText Color="Color.Error">Exception</MudText>
-                                        <MudText Color="Color.Warning" Typo="Typo.body2">@context.Exception</MudText>
-                                    }
-                                    <MudText>Client IP</MudText>
-                                    <MudText Typo="Typo.body2">@context.ClientIP</MudText>
-                                </MudCardContent>
-                            </MudCard>
-                        </td>
-                    </MudTr>
-                }
+                <MudCard Elevation="0">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.body1"><strong>@context.Item.Level</strong></MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent Class="pt-0">
+                        <MudText>@L[_currentDto.GetMemberDescription(x=>x.Message)]</MudText>
+                        <MudText Typo="Typo.body2">@context.Item.Message</MudText>
+                        @if (!string.IsNullOrEmpty(context.Item.Exception))
+                        {
+                            <MudText Color="Color.Error">@L[_currentDto.GetMemberDescription(x=>x.Exception)]</MudText>
+                            <MudText Color="Color.Warning" Typo="Typo.body2">@context.Item.Exception</MudText>
+                        }
+                        <MudText>@L[_currentDto.GetMemberDescription(x=>x.ClientIP)]</MudText>
+                        <MudText Typo="Typo.body2">@context.Item.ClientIP</MudText>
+                    </MudCardContent>
+                </MudCard>
             </ChildRowContent>
             <NoRecordsContent>
-                <MudText>@ConstantString.NOMACHING</MudText>
+                <MudText>@ConstantString.NORECORDS</MudText>
             </NoRecordsContent>
             <LoadingContent>
                 <MudText>@ConstantString.LOADING</MudText>
             </LoadingContent>
             <PagerContent>
-                <MudTablePager />
+                <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
-        </MudTable>
+        </MudDataGrid>
     </ChildContent>
     <ErrorContent>
         <CustomError Exception="context"></CustomError>
@@ -184,8 +145,9 @@
     private LogsLineCharts? chartcomponent;
     public string Title { get; private set; } = "Logs";
     private string _searchString = string.Empty;
-    private MudTable<LogDto> _table = default!;
-
+    private MudDataGrid<LogDto> _table = default!;
+    private LogDto _currentDto = new();
+    private int _defaultPageSize = 15;
     public List<LogTimeLineDto> _data { get; set; } = new();
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
@@ -212,17 +174,17 @@
         }
     }
 
-    private async Task<TableData<LogDto>> ServerReload(TableState state)
+    private async Task<GridData<LogDto>> ServerReload(GridState<LogDto> state)
     {
         try
         {
             _loading = true;
-            _query.Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
-            _query.SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            _query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            _query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending == false ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
             _query.Page = state.Page + 1;
             _query.PerPage = state.PageSize;
             var result = await _mediator.Send(_query).ConfigureAwait(false);
-            return new TableData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
+            return new GridData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
         {

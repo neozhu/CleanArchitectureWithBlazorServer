@@ -1,4 +1,7 @@
+using CleanArchitecture.Blazor.Application.Constants;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using DocumentFormat.OpenXml.InkML;
 
 namespace Blazor.Server.UI.Services.Notifications;
 
@@ -20,14 +23,22 @@ public class InMemoryNotificationService : INotificationService
 
     private async Task<DateTime> GetLastReadTimestamp()
     {
-        if ((await _localStorageService.GetAsync<DateTime>(LocalStorageKey)).Success==false)
+        try
         {
-            return DateTime.MinValue;
+            if ((await _localStorageService.GetAsync<DateTime>(LocalStorageKey)).Success == false)
+            {
+                return DateTime.MinValue;
+            }
+            else
+            {
+                var timestamp = await _localStorageService.GetAsync<DateTime>(LocalStorageKey);
+                return timestamp.Value;
+            }
         }
-        else
+        catch (CryptographicException)
         {
-            var timestamp = await _localStorageService.GetAsync<DateTime>(LocalStorageKey);
-            return timestamp.Value;
+            await _localStorageService.DeleteAsync(LocalStorageKey);
+            return DateTime.MinValue;
         }
     }
 
