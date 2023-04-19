@@ -21,33 +21,32 @@
 
 <ErrorBoundary>
     <ChildContent>
-       <MudDataGrid ServerData="@(ServerReload)"
-                  FixedHeader="true"
-                  FixedFooter="true"
-                  Virtualize="true"
-                  @bind-RowsPerPage="_defaultPageSize"
-                  Height="calc(100vh - 330px)"
-                  Loading="@_loading"
-                  SortLabel="@ConstantString.ORDERBY"
-                  MultiSelection="true"
-                  @bind-SelectedItems="_selectedItems"
-                  @bind-SelectedItem="_currentDto"
-                  Hover="true" @ref="_table">
+        <MudDataGrid ServerData="@(ServerReload)"
+                     FixedHeader="true"
+                     FixedFooter="true"
+                     Virtualize="true"
+                     @bind-RowsPerPage="_defaultPageSize"
+                     Height="calc(100vh - 330px)"
+                     Loading="@_loading"
+                     MultiSelection="true"
+                     @bind-SelectedItems="_selectedItems"
+                     @bind-SelectedItem="_currentDto"
+                     Hover="true" @ref="_table">
             <ToolBarContent>
-                 <div class="d-flex align-start flex-grow-1">
-                        <div class="d-flex gap-4">
-                            <MudIcon Icon="@Icons.Material.Filled.Window" Size="Size.Large" />
-                            <div class="d-flex flex-column">
-                                <MudText Typo="Typo.caption">@Title</MudText>
+                <div class="d-flex align-start flex-grow-1">
+                    <div class="d-flex gap-4">
+                        <MudIcon Icon="@Icons.Material.Filled.Window" Size="Size.Large" />
+                        <div class="d-flex flex-column">
+                            <MudText Typo="Typo.caption">@Title</MudText>
                             <MudEnumSelect Style="min-width:120px" TEnum="CustomerListView" ValueChanged="OnChangedListView" Value="_query.ListView" Dense="true" Label="List View">
-                                </MudEnumSelect>
-                            </div>
+                            </MudEnumSelect>
                         </div>
-                        <div class="flex-grow-1" />
+                    </div>
+                    <div class="flex-grow-1" />
 
-                        <div class="d-flex flex-column justify-end">
-                            <div class="d-flex">
-                             <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <div class="d-flex flex-column justify-end">
+                        <div class="d-flex">
+                            <MudHidden Breakpoint="Breakpoint.SmAndDown">
                                 <MudButton DisableElevation Variant="Variant.Outlined"
                                            Size="Size.Small"
                                            Disabled="@_loading"
@@ -89,7 +88,7 @@
                                 }
                                 @if (_canImport)
                                 {
-                                    <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px" >
+                                    <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px">
                                         <ButtonTemplate>
                                             <MudButton HtmlTag="label"
                                                    Size="Size.Small"
@@ -100,7 +99,7 @@
                                                        for="@context">
                                                 @if (_uploading)
                                                 {
-                                                    <MudProgressCircular  Size="Size.Small" Indeterminate="true" />
+                                                    <MudProgressCircular Size="Size.Small" Indeterminate="true" />
                                                     @ConstantString.UPLOADING
                                                 }
                                                 else
@@ -112,7 +111,7 @@
                                     </MudFileUpload>
                                 }
                             </MudHidden>
-                             <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+                            <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                                 @if (_canCreate)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -134,15 +133,15 @@
                                            IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
                                 }
                             </MudHidden>
-                            </div>
-                            @if (_canSearch)
-                            {
-                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_query.Keyword" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
-                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
-                            }
-                    
                         </div>
+                        @if (_canSearch)
+                        {
+                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_query.Keyword" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
+                        }
+
                     </div>
+                </div>
             </ToolBarContent>
             <Columns>
                 <SelectColumn ShowInFooter="false"></SelectColumn>
@@ -151,8 +150,8 @@
                         @if (_canEdit || _canDelete)
                         {
                             <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
-                                     Dense="true"
-                                     EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                                 Dense="true"
+                                 EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                                 @if (_canEdit)
                                 {
                                     <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
@@ -166,8 +165,8 @@
                         else
                         {
                             <MudButton Variant="Variant.Filled" DisableElevation="true"
-                                       StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                                       Color="Color.Surface">
+                                   StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                                   Color="Color.Surface">
                                 @ConstantString.NOALLOWED
                             </MudButton>
                         }
@@ -182,6 +181,7 @@
                         </div>
                     </CellTemplate>
                 </PropertyColumn>
+
             </Columns>
             <NoRecordsContent>
                 <MudText>@ConstantString.NORECORDS</MudText>
@@ -233,7 +233,7 @@
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Search)).Succeeded;
-        _canEdit   = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Edit)).Succeeded;
+        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Edit)).Succeeded;
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Export)).Succeeded;
@@ -271,7 +271,7 @@
     {
         CustomerCacheKey.Refresh();
         _selectedItems = new();
-        _query.Keyword  = string.Empty;
+        _query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
 
@@ -312,7 +312,7 @@
     private async Task OnDelete(CustomerDto dto)
     {
         var command = new DeleteCustomerCommand(new int[] { dto.Id });
-        var parameters = new DialogParameters 
+        var parameters = new DialogParameters
            {
              { nameof(DeleteConfirmation.Command),  command },
              { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Name) }
@@ -322,7 +322,7 @@
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-             await _table.ReloadServerData();
+            await _table.ReloadServerData();
         }
     }
 
@@ -356,7 +356,7 @@
         var result = await _mediator.Send(request);
         if (result.Succeeded)
         {
-            var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result.Data, contentType:"application/octet-stream");
+            var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result.Data, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
         }
         else
