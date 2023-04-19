@@ -23,7 +23,7 @@
 <ErrorBoundary>
     <ChildContent>
         <AdvancedSearchProductsComponent TRequest="_query" OnConditionChanged="ConditionChanged"></AdvancedSearchProductsComponent>
-        <MudTable ServerData="@(new Func<TableState, Task<TableData<ProductDto>>>(ServerReload))"
+        <MudDataGrid ServerData="@(ServerReload)"
                   FixedHeader="true"
                   FixedFooter="true"
                   Virtualize="true"
@@ -33,14 +33,14 @@
                   SortLabel="@ConstantString.ORDERBY"
                   MultiSelection="true"
                   @bind-SelectedItems="_selectedItems"
-                  @bind-SelectedItem="_selectItem"
+                  @bind-SelectedItem="_currentDto"
                   Hover="true" @ref="_table">
             <ToolBarContent>
                 <div class="d-flex align-start flex-grow-1">
                         <div class="d-flex gap-4">
                             <MudIcon Icon="@Icons.Material.Filled.QrCodeScanner" Size="Size.Large" />
                             <div class="d-flex flex-column">
-                                <MudText Typo="Typo.caption">@L[_selectItem.GetClassDescription()]</MudText>
+                                <MudText Typo="Typo.caption">@L[_currentDto.GetClassDescription()]</MudText>
                             <MudEnumSelect Style="min-width:120px" TEnum="ProductListView" ValueChanged="OnChangedListView" Value="_query.ListView" Dense="true" Label="List View">
                                 </MudEnumSelect>
                             </div>
@@ -156,60 +156,56 @@
                         </div>
                     </div>
             </ToolBarContent>
-            <ColGroup>
-                <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                    <col style="width:50px;" />
-                    <col style="width:120px;" />
-                    <col style="width:180px;" />
-                    <col style="width:60%;" />
-                    <col style="width:120px;" />
-                    <col style="width:120px;" />
-                </MudHidden>
-            </ColGroup>
-            <HeaderContent>
-                <MudTh>@ConstantString.ACTIONS</MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Brand)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Brand)]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Name)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Name)]</MudTableSortLabel></MudTh>
-                <MudTh Style="text-align:right"><MudTableSortLabel SortLabel="@nameof(_selectItem.Price)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Price)]</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortLabel="@nameof(_selectItem.Unit)" T="ProductDto">@L[_selectItem.GetMemberDescription(x=>x.Unit)]</MudTableSortLabel></MudTh>
+            <Columns>
+                <SelectColumn ShowInFooter="false"></SelectColumn>
+                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false">
+                    <CellTemplate>
+                        @if (_canEdit || _canDelete)
+                        {
+                            <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                                     Dense="true"
+                                     EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                                @if (_canEdit)
+                                {
+                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
+                                }
+                                @if (_canDelete)
+                                {
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
+                                }
+                            </MudMenu>
+                        }
+                        else
+                        {
+                            <MudButton Variant="Variant.Filled" DisableElevation="true"
+                                       StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                                       Color="Color.Surface">
+                                @ConstantString.NOALLOWED
+                            </MudButton>
+                        }
+                    </CellTemplate>
+                </TemplateColumn>
 
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd DataLabel="@ConstantString.ACTIONS">
-                    @if (_canEdit || _canDelete)
-                    {
-                        <MudMenu Label="@ConstantString.ACTIONS" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
-                            @if (_canEdit)
-                            {
-                                <MudMenuItem OnClick="@(()=>OnEdit(context))">@ConstantString.EDIT</MudMenuItem>
-                            }
-                            @if (_canDelete)
-                            {
-                                <MudMenuItem OnClick="@(()=>OnDelete(context))">@ConstantString.DELETE</MudMenuItem>
-                            }
-                        </MudMenu>
-                    }
-                    else
-                    {
-                        <MudButton Variant="Variant.Filled" DisableElevation="true"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
-                            @ConstantString.NOALLOWED
-                        </MudButton>
-                    }
-                </MudTd>
-                <MudTd HideSmall="true" DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Brand)]">@context.Brand</MudTd>
-                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Name)]">
-                    <div class="d-flex flex-column">
-                        <MudText>@context.Name</MudText>
-                        <MudText Typo="Typo.body2">@context.Description</MudText>
-                    </div>
-                </MudTd>
-                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Price)]" Style="text-align:right">@context.Price.ToString("C2")</MudTd>
-                <MudTd DataLabel="@L[_selectItem.GetMemberDescription(x=>x.Unit)]">@context.Unit</MudTd>
-            </RowTemplate>
+                <PropertyColumn Property="x => x.Brand" Title="@L[_currentDto.GetMemberDescription(x=>x.Brand)]">
+                    <FooterTemplate>
+                        @L["Selected"]: @(this._selectedItems.Count)
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
+                    <CellTemplate>
+                        <div class="d-flex flex-column">
+                            <MudText Typo="Typo.body2">@context.Item.Name</MudText>
+                            <MudText Typo="Typo.body2">@context.Item.Description</MudText>
+                        </div>
+                    </CellTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.Price" Title="@L[_currentDto.GetMemberDescription(x=>x.Price)]">
+                    <FooterTemplate>
+                        @L["Selected Total"]: @(this._selectedItems.Sum(x=>x.Price))
+                    </FooterTemplate>
+                </PropertyColumn>
+                <PropertyColumn Property="x => x.Unit" Title="@L[_currentDto.GetMemberDescription(x=>x.Unit)]" />
+            </Columns>
             <NoRecordsContent>
                 <MudText>@ConstantString.NORECORDS</MudText>
             </NoRecordsContent>
@@ -219,7 +215,7 @@
             <PagerContent>
                 <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
             </PagerContent>
-        </MudTable>
+        </MudDataGrid>
     </ChildContent>
     <ErrorContent>
         <CustomError Exception="context"></CustomError>
@@ -228,8 +224,8 @@
 @code {
     public string? Title { get; private set; }
     private HashSet<ProductDto> _selectedItems = new HashSet<ProductDto>();
-    private MudTable<ProductDto> _table = default!;
-    private ProductDto _selectItem = new();
+    private MudDataGrid<ProductDto> _table = default!;
+    private ProductDto _currentDto = new();
     private bool _loading;
     private bool _uploading;
     private bool _exporting;
@@ -253,7 +249,7 @@
     private bool _canExport;
     protected override async Task OnInitializedAsync()
     {
-        Title = L[_selectItem.GetClassDescription()];
+        Title = L[_currentDto.GetClassDescription()];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Search)).Succeeded;
@@ -262,17 +258,17 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Export)).Succeeded;
     }
-    private async Task<TableData<ProductDto>> ServerReload(TableState state)
+    private async Task<GridData<ProductDto>> ServerReload(GridState<ProductDto> state)
     {
         try
         {
             _loading = true;
-            _query.Sort = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
-            _query.SortBy = (state.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            _query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy??"Id";
+            _query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending??true ? AutoFilterer.Enums.Sorting.Descending : AutoFilterer.Enums.Sorting.Ascending);
             _query.Page = state.Page + 1;
             _query.PerPage = state.PageSize;
             var result = await _mediator.Send(_query).ConfigureAwait(false);
-            return new TableData<ProductDto>() { TotalItems = result.TotalItems, Items = result.Items };
+            return new GridData<ProductDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
         {
@@ -390,8 +386,8 @@
                 Unit = _query.Unit,
                 Keyword = _query.Keyword,
                 ListView = _query.ListView,
-                Sort = string.IsNullOrEmpty(_table.TableContext.SortFieldLabel) ? "Id" : _table.TableContext.SortFieldLabel,
-                SortBy = (_table.TableContext.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending)
+                Sort = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+                SortBy = (_table.SortDefinitions.Values.FirstOrDefault()?.Descending??false) ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending
             };
         var result = await _mediator.Send(request);
         if (result.Succeeded)
@@ -416,8 +412,8 @@
                 Unit = _query.Unit,
                 Keyword = _query.Keyword,
                 ListView = _query.ListView,
-                Sort = string.IsNullOrEmpty(_table.TableContext.SortFieldLabel) ? "Id" : _table.TableContext.SortFieldLabel,
-                SortBy = (_table.TableContext.SortDirection == SortDirection.Ascending ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending),
+                Sort = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+                SortBy = (_table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false) ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending,
                 ExportType = ExportType.PDF
             };
         var result = await _mediator.Send(request);
