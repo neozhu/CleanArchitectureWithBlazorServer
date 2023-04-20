@@ -41,7 +41,7 @@ public class UploadDocumentCommandHandler : IRequestHandler<UploadDocumentComman
         {
             var fileName = uploadRequest.FileName;
             var url = await _uploadService.UploadAsync(uploadRequest);
-            var document = new Document() { Title = fileName, URL = url, Status = JobStatus.NotStart, IsPublic = true, DocumentType = DocumentType.Image };
+            var document = new Document() { Title = fileName, URL = url, Status = JobStatus.Queueing, IsPublic = true, DocumentType = DocumentType.Image };
             document.AddDomainEvent(new CreatedEvent<Document>(document));
             list.Add(document);
         }

@@ -5,25 +5,26 @@
 
 using CleanArchitecture.Blazor.Application.Services.PaddleOCR;
 using Hangfire;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.EventHandlers;
 
 public class DocumentCreatedEventHandler : INotificationHandler<CreatedEvent<Document>>
 {
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly IApplicationDbContext _context;
-    private readonly IDocumentOcrJob _ocrJob;
     private readonly ILogger<DocumentCreatedEventHandler> _logger;
 
 
     public DocumentCreatedEventHandler(
+        IServiceScopeFactory scopeFactory,
         IApplicationDbContext context,
-        IDocumentOcrJob ocrJob,
         ILogger<DocumentCreatedEventHandler> logger
 
         )
     {
+        _scopeFactory = scopeFactory;
         _context = context;
-        _ocrJob = ocrJob;
         _logger = logger;
 
     }
@@ -32,12 +33,8 @@ public class DocumentCreatedEventHandler : INotificationHandler<CreatedEvent<Doc
         _logger.LogInformation("begin recognition: {id}", notification.Entity.Id);
         var domainEvent = notification.Entity;
         var id = domainEvent.Id;
-        var item = await _context.Documents.FindAsync(new object[] { id }, cancellationToken);
-        if (item is not null)
-        {
-            item.Status = JobStatus.Queueing;
-            await _context.SaveChangesAsync(cancellationToken);
-            BackgroundJob.Enqueue(() => _ocrJob.Recognition(domainEvent.Id, cancellationToken));
-        }
+        IDocumentOcrJob _ocrJob = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IDocumentOcrJob>();
+        BackgroundJob.Enqueue(() => _ocrJob.Do(id));
+
     }
 }
