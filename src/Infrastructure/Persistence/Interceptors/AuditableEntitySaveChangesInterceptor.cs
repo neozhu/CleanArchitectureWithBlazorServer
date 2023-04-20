@@ -179,9 +179,11 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                         auditEntry.NewValues[prop.Metadata.Name] = prop.CurrentValue;
                     }
                 }
-                context.Add(auditEntry);
+                
             }
+            await context.AddRangeAsync(_temporaryAuditTrailList);
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            _temporaryAuditTrailList.Clear();
         }
     }
 

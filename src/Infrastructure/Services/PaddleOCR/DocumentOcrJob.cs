@@ -60,6 +60,10 @@ public class DocumentOcrJob : IDocumentOcrJob
         }
 
     }
+    public void Do(int id)
+    {
+        Recognition(id, CancellationToken.None).Wait();
+    }
     public async Task Recognition(int id, CancellationToken cancellationToken)
     {
         try
@@ -69,9 +73,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                 _timer.Start();
                 var doc =await _context.Documents.FindAsync(id);
                 if (doc == null) return;
-                doc.Status = JobStatus.Doing;
                 await _hubContext.Clients.All.Start(doc.Title!);
-                await _context.SaveChangesAsync(cancellationToken);
                 DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                 if (string.IsNullOrEmpty(doc.URL)) return;
                 var imgfile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
@@ -84,9 +86,8 @@ public class DocumentOcrJob : IDocumentOcrJob
                     var result = await response.Content.ReadAsStringAsync();
                     var ocr_result = JsonSerializer.Deserialize<ocr_result>(result);
                     var ocr_status = ocr_result!.status;
-                    doc =await _context.Documents.FindAsync(id);
-                    doc!.Status = JobStatus.Done;
-                    doc!.Description = "recognize the result: " + ocr_status;
+                    doc.Status = JobStatus.Done;
+                    doc.Description = "recognize the result: " + ocr_status;
                     if (ocr_result.status == "000")
                     {
                         var content = _serializer.Serialize(ocr_result.results);
