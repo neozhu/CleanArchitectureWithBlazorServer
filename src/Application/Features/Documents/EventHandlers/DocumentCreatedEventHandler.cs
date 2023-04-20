@@ -28,13 +28,13 @@ public class DocumentCreatedEventHandler : INotificationHandler<CreatedEvent<Doc
         _logger = logger;
 
     }
-    public async Task Handle(CreatedEvent<Document> notification, CancellationToken cancellationToken)
+    public Task Handle(CreatedEvent<Document> notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("begin recognition: {id}", notification.Entity.Id);
         var domainEvent = notification.Entity;
         var id = domainEvent.Id;
         IDocumentOcrJob _ocrJob = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IDocumentOcrJob>();
         BackgroundJob.Enqueue(() => _ocrJob.Do(id));
-
+        return Task.CompletedTask;
     }
 }
