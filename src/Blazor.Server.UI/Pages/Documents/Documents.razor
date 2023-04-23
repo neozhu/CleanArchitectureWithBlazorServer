@@ -9,11 +9,12 @@
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
+@using CleanArchitecture.Blazor.Application.Features.Fluxor;
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
 
 @inject IJSRuntime JS
 @inject IStringLocalizer<Documents> L
-@inherits UserProfileStateComponent
+@inherits FluxorComponent
 @implements IDisposable
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 <PageTitle>@Title</PageTitle>
@@ -218,7 +219,11 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
-
+    [Inject]
+    private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
+    [CascadingParameter]
+    protected Task<AuthenticationState> _authState { get; set; } = default!;
     public string? Title { get; private set; }
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
     private DocumentDto _currentDto = new();

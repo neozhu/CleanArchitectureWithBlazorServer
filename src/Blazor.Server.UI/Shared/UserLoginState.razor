@@ -1,17 +1,24 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+@using CleanArchitecture.Blazor.Application.Features.Fluxor;
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
 
 @implements IDisposable
 @code {
-
+    [CascadingParameter]
+    protected Task<AuthenticationState> _authState { get; set; } = default!;
+    [Inject]
+    private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
+    [Inject]
+    public IDispatcher Dispatcher { get; set; } = null!;
     public void Dispose()
     {
         _client.Login -= _client_Login;
         _client.Logout -= _client_Logout;
-
+        _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
+        GC.SuppressFinalize(this);
     }
     [Inject]
     private HubClient _client { get; set; } = default!;
@@ -20,6 +27,13 @@
         _client.Login += _client_Login;
         _client.Logout += _client_Logout;
         await _client.StartAsync().ConfigureAwait(false);
+        _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
+        var state = await _authState;
+        if (state.User.Identity?.IsAuthenticated ?? false)
+        {
+            var userId = state.User.GetUserId();
+            setProfile(userId);
+        }
     }
 
     private void _client_Login(object? sender, string username)
@@ -38,6 +52,22 @@
             Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
 
         });
+    }
+    private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
+    {
+        InvokeAsync(async () =>
+        {
+            var state = await authenticationState;
+            if (state.User.Identity?.IsAuthenticated??false)
+            {
+                var userId = state.User.GetUserId();
+                setProfile(userId);
+            }
+        });
+    }
+    private void setProfile(string userId)
+    {
+        Dispatcher.Dispatch(new FetchUserDtoAction() { UserId = userId });
     }
 }
 

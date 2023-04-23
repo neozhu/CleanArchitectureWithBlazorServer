@@ -1,13 +1,17 @@
 using Blazor.Server.UI.Models.SideMenu;
 using Blazor.Server.UI.Services;
 using Blazor.Server.UI.Services.Navigation;
+using CleanArchitecture.Blazor.Application.Features.Fluxor;
+using Fluxor;
 
 namespace Blazor.Server.UI.Components.Shared;
 
-public partial class SideMenu: UserProfileStateComponent
+public partial class SideMenu: FluxorComponent
 {
 
-
+    [Inject]
+    private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     [EditorRequired] [Parameter] 
     public bool SideMenuDrawerOpen { get; set; } 
     
