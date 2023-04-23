@@ -7,6 +7,7 @@ using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Application.Services.MultiTenant;
 using CleanArchitecture.Blazor.Application.Services.Picklist;
+using Fluxor;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,10 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(CacheInvalidationBehaviour<,>));
          
             
+        });
+        services.AddFluxor(options => {
+            options.ScanAssemblies(Assembly.GetExecutingAssembly());
+            options.UseReduxDevTools();
         });
         services.AddLazyCache();
         services.AddScoped<PicklistService>();
