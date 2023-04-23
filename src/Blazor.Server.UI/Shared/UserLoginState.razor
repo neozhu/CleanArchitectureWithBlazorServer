@@ -5,13 +5,13 @@
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
 
 @implements IDisposable
-@code{
-   
+@code {
+
     public void Dispose()
     {
         _client.Login -= _client_Login;
         _client.Logout -= _client_Logout;
-       
+
     }
     [Inject]
     private HubClient _client { get; set; } = default!;
@@ -19,15 +19,15 @@
     {
         _client.Login += _client_Login;
         _client.Logout += _client_Logout;
-            await _client.StartAsync().ConfigureAwait(false);
+        await _client.StartAsync().ConfigureAwait(false);
     }
-   
+
     private void _client_Login(object? sender, string username)
     {
         InvokeAsync(async () =>
         {
             Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
-            
+
         });
     }
 
@@ -36,7 +36,7 @@
         InvokeAsync(async () =>
         {
             Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
-            
+
         });
     }
 }
