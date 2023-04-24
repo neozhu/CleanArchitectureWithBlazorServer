@@ -3,11 +3,11 @@ namespace Blazor.Server.UI.Components.Common;
 public partial class ErrorHandler
 {
 
-    public List<Exception> _receivedExceptions = new();
+    public List<Exception> ReceivedExceptions = new();
 
     protected override  Task OnErrorAsync(Exception exception)
     {
-        _receivedExceptions.Add(exception);
+        ReceivedExceptions.Add(exception);
         switch (exception)
         {
             case UnauthorizedAccessException:
@@ -19,7 +19,7 @@ public partial class ErrorHandler
 
     public new void Recover()
     {
-        _receivedExceptions.Clear();
+        ReceivedExceptions.Clear();
         base.Recover();
     }
 }

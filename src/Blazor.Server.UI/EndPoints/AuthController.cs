@@ -45,7 +45,7 @@ public class AuthController : Controller
             await _signInManager.SignInAsync(identityUser, isPersistent);
             identityUser.IsLive= true;
             await _userManager.UpdateAsync(identityUser);
-            _logger.LogInformation("{@UserName} login successful.", identityUser.UserName);
+            _logger.LogInformation("{@UserName} login successful", identityUser.UserName);
             return Redirect($"/{returnUrl}");
         }
 
@@ -101,7 +101,7 @@ public class AuthController : Controller
         var identityUser = await _userManager.FindByIdAsync(userId) ?? throw new NotFoundException($"Application user not found.");
         identityUser.IsLive = false;
         await _userManager.UpdateAsync(identityUser);
-        _logger.LogInformation("{@UserName} logout successful.", identityUser.UserName);
+        _logger.LogInformation("{@UserName} logout successful", identityUser.UserName);
         await _signInManager.SignOutAsync();
         return Redirect("/");
     }

@@ -1,10 +1,12 @@
+using Blazor.Server.UI.Services.UserPreferences;
+
 namespace Blazor.Server.UI.Services;
 
 public class LayoutService
 {
     private bool _systemPreferences;
     private readonly IUserPreferencesService _userPreferencesService;
-    private UserPreferences _userPreferences=new();
+    private UserPreferences.UserPreferences _userPreferences=new();
     public DarkLightMode DarkModeToggle = DarkLightMode.System;
     public bool IsRTL { get; private set; } = false;
     public bool IsDarkMode { get; private set; } = false;
@@ -25,7 +27,7 @@ public class LayoutService
         IsDarkMode = value;
     }
 
-    public async Task<UserPreferences> ApplyUserPreferences(bool isDarkModeDefaultTheme)
+    public async Task<UserPreferences.UserPreferences> ApplyUserPreferences(bool isDarkModeDefaultTheme)
     {
         _userPreferences = await _userPreferencesService.LoadUserPreferences();
         if (_userPreferences != null)
@@ -52,7 +54,7 @@ public class LayoutService
         else
         {
             IsDarkMode = isDarkModeDefaultTheme;
-            _userPreferences = new UserPreferences { IsDarkMode = IsDarkMode };
+            _userPreferences = new UserPreferences.UserPreferences { IsDarkMode = IsDarkMode };
             await _userPreferencesService.SaveUserPreferences(_userPreferences);
         }
         return _userPreferences;
@@ -147,7 +149,7 @@ public class LayoutService
         await _userPreferencesService.SaveUserPreferences(_userPreferences);
         OnMajorUpdateOccured();
     }
-    public async Task UpdateUserPreferences(UserPreferences preferences)
+    public async Task UpdateUserPreferences(UserPreferences.UserPreferences preferences)
     {
         _userPreferences = preferences;
         IsDarkMode = _userPreferences.DarkLightTheme switch

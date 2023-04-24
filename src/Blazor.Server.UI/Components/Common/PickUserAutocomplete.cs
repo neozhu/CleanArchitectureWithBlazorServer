@@ -8,14 +8,14 @@ public class PickUserAutocomplete : MudAutocomplete<string>
     [Parameter]
     public string TenantId { get; set; }=string.Empty;
     [Inject]
-    private IUserDataProvider _dataProvider { get; set; } = default!;
+    private IUserDataProvider DataProvider { get; set; } = default!;
 
     private List<ApplicationUserDto>? _userList;
   
 
     public override  Task SetParametersAsync(ParameterView parameters)
     {
-        SearchFuncWithCancel = searchKeyValues;
+        SearchFuncWithCancel = SearchKeyValues;
         Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;
@@ -24,10 +24,10 @@ public class PickUserAutocomplete : MudAutocomplete<string>
         return base.SetParametersAsync(parameters);
       
     }
-    private Task<IEnumerable<string>> searchKeyValues(string value, CancellationToken cancellation)
+    private Task<IEnumerable<string>> SearchKeyValues(string value, CancellationToken cancellation)
     {
         // if text is null or empty, show complete list
-        _userList = _dataProvider.DataSource.Where(x => x.TenantId == TenantId).ToList();
+        _userList = DataProvider.DataSource.Where(x => x.TenantId == TenantId).ToList();
         var result= new List<string>();
         if (_userList is not null && string.IsNullOrEmpty(value))
         {
@@ -40,7 +40,7 @@ public class PickUserAutocomplete : MudAutocomplete<string>
         return Task.FromResult(result.AsEnumerable());
     }
 
-    private string toString(string str)
+    private string ToString(string str)
     {
         if (!string.IsNullOrEmpty(str) && _userList != null && _userList.Any(x => (x.DisplayName != null && x.DisplayName.Contains(str, StringComparison.OrdinalIgnoreCase)) || x.UserName.Contains(str, StringComparison.OrdinalIgnoreCase)))
         {

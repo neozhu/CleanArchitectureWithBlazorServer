@@ -3,6 +3,7 @@ using Blazor.Server.UI.Components.Shared;
 using Blazor.Server.UI.Services;
 using Blazor.Server.UI.Services.Navigation;
 using Blazor.Server.UI.Services.Notifications;
+using Blazor.Server.UI.Services.UserPreferences;
 using BlazorDownloadFile;
 using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 using MudBlazor.Services;
@@ -13,7 +14,7 @@ namespace Blazor.Server.UI;
 
 public static class ConfigureServices
 {
-    public static IServiceCollection AddBlazorUIServices(this IServiceCollection services)
+    public static IServiceCollection AddBlazorUiServices(this IServiceCollection services)
     {
         services.AddRazorPages();
         services.AddServerSideBlazor(

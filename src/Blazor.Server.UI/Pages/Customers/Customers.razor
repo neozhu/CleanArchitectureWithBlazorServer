@@ -38,7 +38,7 @@
                         <MudIcon Icon="@Icons.Material.Filled.Window" Size="Size.Large" />
                         <div class="d-flex flex-column">
                             <MudText Typo="Typo.caption">@Title</MudText>
-                            <MudEnumSelect Style="min-width:120px" TEnum="CustomerListView" ValueChanged="OnChangedListView" Value="_query.ListView" Dense="true" Label="List View">
+                            <MudEnumSelect Style="min-width:120px" TEnum="CustomerListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
                             </MudEnumSelect>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
                         </div>
                         @if (_canSearch)
                         {
-                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
+                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
                         }
 
@@ -211,15 +211,15 @@
     private bool _downloading;
     private bool _exporting;
     [Inject]
-    private IMediator _mediator { get; set; } = default!;
+    private IMediator Mediator { get; set; } = default!;
     [Inject]
-    private IMapper _mapper { get; set; } = default!;
+    private IMapper Mapper { get; set; } = default!;
     [CascadingParameter]
-    private Task<AuthenticationState> _authState { get; set; } = default!;
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
 
-    private CustomersWithPaginationQuery _query { get; set; } = new();
+    private CustomersWithPaginationQuery Query { get; set; } = new();
     [Inject]
-    private IBlazorDownloadFileService _blazorDownloadFileService { get; set; } = null!;
+    private IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     private bool _canSearch;
     private bool _canCreate;
     private bool _canEdit;
@@ -230,7 +230,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        var state = await _authState;
+        var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Customers.Edit)).Succeeded;
@@ -243,11 +243,11 @@
         try
         {
             _loading = true;
-            _query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            _query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? AutoFilterer.Enums.Sorting.Descending : AutoFilterer.Enums.Sorting.Ascending);
-            _query.Page = state.Page + 1;
-            _query.PerPage = state.PageSize;
-            var result = await _mediator.Send(_query).ConfigureAwait(false);
+            Query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            Query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? AutoFilterer.Enums.Sorting.Descending : AutoFilterer.Enums.Sorting.Ascending);
+            Query.Page = state.Page + 1;
+            Query.PerPage = state.PageSize;
+            var result = await Mediator.Send(Query).ConfigureAwait(false);
             return new GridData<CustomerDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -259,19 +259,19 @@
     private async Task OnSearch(string text)
     {
         _selectedItems = new();
-        _query.Keyword = text;
+        Query.Keyword = text;
         await _table.ReloadServerData();
     }
     private async Task OnChangedListView(CustomerListView listview)
     {
-        _query.ListView = listview;
+        Query.ListView = listview;
         await _table.ReloadServerData();
     }
     private async Task OnRefresh()
     {
         CustomerCacheKey.Refresh();
         _selectedItems = new();
-        _query.Keyword = string.Empty;
+        Query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
 
@@ -280,7 +280,7 @@
         var command = new AddEditCustomerCommand();
         var parameters = new DialogParameters
             {
-                { nameof(_CustomerFormDialog.model),command },
+                { nameof(_CustomerFormDialog.Model),command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_CustomerFormDialog>
@@ -294,10 +294,10 @@
 
     private async Task OnEdit(CustomerDto dto)
     {
-        var command = _mapper.Map<AddEditCustomerCommand>(dto);
+        var command = Mapper.Map<AddEditCustomerCommand>(dto);
         var parameters = new DialogParameters
             {
-                { nameof(_CustomerFormDialog.model),command },
+                { nameof(_CustomerFormDialog.Model),command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_CustomerFormDialog>
@@ -348,15 +348,15 @@
         _exporting = true;
         var request = new ExportCustomersQuery()
             {
-                Keyword = _query.Keyword,
-                ListView = _query.ListView,
+                Keyword = Query.Keyword,
+                ListView = Query.ListView,
                 Sort = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
                 SortBy = (_table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false) ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending
             };
-        var result = await _mediator.Send(request);
+        var result = await Mediator.Send(request);
         if (result.Succeeded)
         {
-            var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result.Data, contentType: "application/octet-stream");
+            var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result.Data, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
         }
         else
@@ -371,7 +371,7 @@
         var stream = new MemoryStream();
         await file.OpenReadStream().CopyToAsync(stream);
         var command = new ImportCustomersCommand(file.Name, stream.ToArray());
-        var result = await _mediator.Send(command);
+        var result = await Mediator.Send(command);
         if (result.Succeeded)
         {
             await _table.ReloadServerData();

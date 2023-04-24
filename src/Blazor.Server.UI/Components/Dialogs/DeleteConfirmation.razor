@@ -26,10 +26,10 @@
     [Parameter]
     public IRequest<Result<int>> Command { get; set; } = default!;
     [Inject]
-    private IMediator _mediator { get; set; } = default!;
+    private IMediator Mediator { get; set; } = default!;
     async Task Submit()
     {
-        var result = await _mediator.Send(Command);
+        var result = await Mediator.Send(Command);
         if (result.Succeeded) {
             Snackbar.Add($"{ConstantString.DeleteSuccess}", MudBlazor.Severity.Info);
             MudDialog.Close(DialogResult.Ok(true));

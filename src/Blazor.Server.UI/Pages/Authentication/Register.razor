@@ -8,7 +8,7 @@
 <PageTitle>@Title</PageTitle>
 <AuthorizeView>
     <NotAuthorized Context="Auth">
-        <MudForm Model="@_model" @ref="@_form" Validation="@(_registerValidator.ValidateValue)">
+        <MudForm Model="@_model" @ref="@_form" Validation="@(RegisterValidator.ValidateValue)">
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
             <MudText>@L["have an account?"] <MudLink Href="/pages/authentication/login">@L["Sign In"]</MudLink></MudText>
 
@@ -79,18 +79,18 @@
 
 @code {
     public string Title = "Sign Up";
-    [Inject] private NavigationManager _navigation { get; set; } = default!;
-    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+    private UserManager<ApplicationUser> UserManager { get; set; } = default!;
     MudForm? _form;
     bool _loading;
-    RegisterFormModel _model = new();
-    [Inject] private RegisterFormModelFluentValidator _registerValidator { get; set; } = default!;
+    readonly RegisterFormModel _model = new();
+    [Inject] private RegisterFormModelFluentValidator RegisterValidator { get; set; } = default!;
     [Inject]
-    private IMailService _mailService { get; set; } = null!;
+    private IMailService MailService { get; set; } = null!;
 
     protected override Task OnInitializedAsync()
     {
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         return base.OnInitializedAsync();
     }
     private async Task Submit()
@@ -101,24 +101,24 @@
               await _form!.Validate();
                 if (_form!.IsValid)
                 {
-                    var user = new ApplicationUser()
+                    var user = new ApplicationUser
                     {
                         UserName = _model.UserName,
                         Email = _model.Email
                     };
-                    var result = await _userManager.CreateAsync(user, _model.Password!);
+                    var result = await UserManager.CreateAsync(user, _model.Password!);
                     if (result.Succeeded)
                     {
-                        var assignResult= await _userManager.AddToRoleAsync(user, RoleName.Basic);
+                        var assignResult= await UserManager.AddToRoleAsync(user, RoleName.Basic);
                         if (assignResult.Succeeded && !string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.UserName))
                         {
-                            var response= await sendWelcome(user.Email!, user.UserName!);
+                            var response= await SendWelcome(user.Email!, user.UserName!);
                             if (response.Successful == false)
                             {
                                 Snackbar.Add(string.Format(L["{0}"],response.ErrorMessages.FirstOrDefault()), MudBlazor.Severity.Warning);
                             }
                             Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
-                            _navigation.NavigateTo("/");
+                            Navigation.NavigateTo("/");
                         }
                         else
                         {
@@ -138,11 +138,11 @@
         }
     }
 
-    private Task<SendResponse> sendWelcome(string toemail, string userName)
+    private Task<SendResponse> SendWelcome(string toEmail, string userName)
     {
 
         var subject =string.Format(L["Welcome to {0}"],Settings.AppName);
         var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_welcome.txt");
-        return _mailService.SendAsync(toemail, subject, "_welcome", new { AppName = Settings.AppName, Email = toemail, UserName = userName });
+        return MailService.SendAsync(toEmail, subject, "_welcome", new { AppName = Settings.AppName, Email = toEmail, UserName = userName });
     }
 }

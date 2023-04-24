@@ -11,24 +11,24 @@ namespace Blazor.Server.UI.Pages.Identity.Users
     {
 
         [Inject]
-        private IMediator _mediator { get; set; } = default!;
+        private IMediator Mediator { get; set; } = default!;
         private MudForm? _form = null !;
-        private MudForm? _passwordform = null !;
+        private MudForm? _Passwordform = null !;
         public string Title { get; set; } = "Profile";
-        private bool submitting;
+        private bool _submitting;
         [CascadingParameter]
-        private Task<AuthenticationState> _authState { get; set; } = default !;
+        private Task<AuthenticationState> AuthState { get; set; } = default !;
         [Inject]
-        private IUploadService _uploadService { get; set; } = default !;
-        private UserProfile? model { get; set; } = null!;
-        private UserProfileEditValidator _userValidator = new();
-        private UserManager<ApplicationUser> _userManager { get; set; } = default !;
+        private IUploadService UploadService { get; set; } = default !;
+        private UserProfile? Model { get; set; } = null!;
+        private readonly UserProfileEditValidator _userValidator = new();
+        private UserManager<ApplicationUser> UserManager { get; set; } = default !;
         [Inject]
-        private IIdentityService _identityService { get; set; } = default !;
+        private IIdentityService IdentityService { get; set; } = default !;
         public string Id => Guid.NewGuid().ToString();
-        private ChangePasswordModel _changepassword { get; set; } = new();
-        private ChangePasswordModelValidator _passwordValidator = new();
-        private List<OrgItem> _orgData = new();
+        private ChangePasswordModel Changepassword { get; set; } = new();
+        private readonly ChangePasswordModelValidator _passwordValidator = new();
+        private readonly List<OrgItem> _orgData = new();
 
     
         private async void ActivePanelIndexChanged(int index)
@@ -42,101 +42,101 @@ namespace Blazor.Server.UI.Pages.Identity.Users
 
         private async Task LoadOrgData()
         {
-            var currerntuserName = (await _authState).User.GetUserName();
-            var list = await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).Include(x => x.Superior).ToListAsync();
+            var currentUsername = (await AuthState).User.GetUserName();
+            var list = await UserManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).Include(x => x.Superior).ToListAsync();
             foreach (var item in list)
             {
-                var roles = await _userManager.GetRolesAsync(item);
-                var count = await _userManager.Users.Where(x => x.SuperiorId == item.Id).CountAsync();
-                var orgitem = new OrgItem();
-                orgitem.id = item.Id;
-                orgitem.name = item.DisplayName ?? item.UserName;
-                orgitem.area = item.TenantName;
-                orgitem.profileUrl = item.ProfilePictureDataUrl;
-                orgitem.imageUrl = item.ProfilePictureDataUrl;
-                if (currerntuserName == item.UserName)
-                    orgitem.isLoggedUser = true;
-                orgitem.size = "";
-                orgitem.tags = item.PhoneNumber ?? item.Email;
+                var roles = await UserManager.GetRolesAsync(item);
+                var count = await UserManager.Users.Where(x => x.SuperiorId == item.Id).CountAsync();
+                var orgItem = new OrgItem();
+                orgItem.Id = item.Id;
+                orgItem.Name = item.DisplayName ?? item.UserName;
+                orgItem.Area = item.TenantName;
+                orgItem.ProfileUrl = item.ProfilePictureDataUrl;
+                orgItem.ImageUrl = item.ProfilePictureDataUrl;
+                if (currentUsername == item.UserName)
+                    orgItem.IsLoggedUser = true;
+                orgItem.Size = "";
+                orgItem.Tags = item.PhoneNumber ?? item.Email;
                 if (roles != null && roles.Count > 0)
-                    orgitem.positionName = string.Join(',', roles);
-                orgitem.parentId = item.SuperiorId;
-                orgitem._directSubordinates = count;
-                this._orgData.Add(orgitem);
+                    orgItem.PositionName = string.Join(',', roles);
+                orgItem.ParentId = item.SuperiorId;
+                orgItem.DirectSubordinates = count;
+                this._orgData.Add(orgItem);
             }
         }
 
         protected override async Task OnInitializedAsync()
         {
-            _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-            var userId = (await _authState).User.GetUserId();
+            UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+            var userId = (await AuthState).User.GetUserId();
             if (!string.IsNullOrEmpty(userId))
             {
-                var userDto = await _identityService.GetApplicationUserDto(userId);
-                this.model = userDto.ToUserProfile();
+                var userDto = await IdentityService.GetApplicationUserDto(userId);
+                this.Model = userDto.ToUserProfile();
             }
         }
 
         private async Task UploadPhoto(InputFileChangeEventArgs e)
         {
             var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
-            var imgstream = new MemoryStream();
-            await filestream.CopyToAsync(imgstream);
-            imgstream.Position = 0;
+            var imgStream = new MemoryStream();
+            await filestream.CopyToAsync(imgStream);
+            imgStream.Position = 0;
             using (var outStream = new MemoryStream())
             {
-                using (var image = Image.Load(imgstream))
+                using (var image = Image.Load(imgStream))
                 {
                     image.Mutate(i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(128, 128) }));
                     image.Save(outStream, SixLabors.ImageSharp.Formats.Png.PngFormat.Instance);
                     var filename = e.File.Name;
                     var fi = new FileInfo(filename);
                     var ext = fi.Extension;
-                    var result = await _uploadService.UploadAsync(new UploadRequest(Guid.NewGuid().ToString() + ext, UploadType.ProfilePicture, outStream.ToArray()));
-                    model.ProfilePictureDataUrl = result;
-                    var user = await _userManager.FindByIdAsync(model.UserId!);
-                    user!.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
-                    await _userManager.UpdateAsync(user);
+                    var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid().ToString() + ext, UploadType.ProfilePicture, outStream.ToArray()));
+                    Model.ProfilePictureDataUrl = result;
+                    var user = await UserManager.FindByIdAsync(Model.UserId!);
+                    user!.ProfilePictureDataUrl = Model.ProfilePictureDataUrl;
+                    await UserManager.UpdateAsync(user);
                     Snackbar.Add(L["The avatar has been updated."], MudBlazor.Severity.Info);
-                   await  _mediator.Publish(new UpdateUserProfileCommand() { UserProfile = model });
+                   await  Mediator.Publish(new UpdateUserProfileCommand() { UserProfile = Model });
                 }
             }
         }
 
         private async Task Submit()
         {
-            submitting = true;
+            _submitting = true;
             try
             {
                 await _form!.Validate();
                 if (_form.IsValid)
                 {
-                    var state = await _authState;
-                    var user = await _userManager.FindByIdAsync(model.UserId!);
-                    user!.PhoneNumber = model.PhoneNumber;
-                    user.DisplayName = model.DisplayName;
-                    user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
-                    await _userManager.UpdateAsync(user);
+                    var state = await AuthState;
+                    var user = await UserManager.FindByIdAsync(Model.UserId!);
+                    user!.PhoneNumber = Model.PhoneNumber;
+                    user.DisplayName = Model.DisplayName;
+                    user.ProfilePictureDataUrl = Model.ProfilePictureDataUrl;
+                    await UserManager.UpdateAsync(user);
                     Snackbar.Add($"{ConstantString.UpdateSuccess}", MudBlazor.Severity.Info);
-                    await _mediator.Publish(new UpdateUserProfileCommand() { UserProfile = model });
+                    await Mediator.Publish(new UpdateUserProfileCommand() { UserProfile = Model });
                 }
             }
             finally
             {
-                submitting = false;
+                _submitting = false;
             }
         }
 
         private async Task ChangePassword()
         {
-            submitting = true;
+            _submitting = true;
             try
             {
-                await _passwordform!.Validate();
-                if (_passwordform!.IsValid)
+                await _Passwordform!.Validate();
+                if (_Passwordform!.IsValid)
                 {
-                    var user = await _userManager.FindByIdAsync(model.UserId!);
-                    var result = await _userManager.ChangePasswordAsync(user!, _changepassword.CurrentPassword, _changepassword.NewPassword);
+                    var user = await UserManager.FindByIdAsync(Model.UserId!);
+                    var result = await UserManager.ChangePasswordAsync(user!, Changepassword.CurrentPassword, Changepassword.NewPassword);
                     if (result.Succeeded)
                     {
                         Snackbar.Add($"{L["Changed password successfully."]}", MudBlazor.Severity.Info);
@@ -149,7 +149,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
             }
             finally
             {
-                submitting = false;
+                _submitting = false;
             }
         }
         

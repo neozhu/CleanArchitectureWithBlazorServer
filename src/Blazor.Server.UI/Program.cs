@@ -25,7 +25,7 @@ builder.Host.UseSerilog((context, configuration) =>
           .WriteTo.Console()
     );
 
-builder.Services.AddBlazorUIServices();
+builder.Services.AddBlazorUiServices();
 builder.Services.AddInfrastructureServices(builder.Configuration)
                 .AddApplicationServices();
 
@@ -44,13 +44,13 @@ if (app.Environment.IsDevelopment())
     using (var scope = app.Services.CreateScope())
     {
 
-        var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-        await initialiser.InitialiseAsync();
-        await initialiser.SeedAsync();
+        var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+        await initializer.InitialiseAsync();
+        await initializer.SeedAsync();
         var notificationService = scope.ServiceProvider.GetService<INotificationService>();
-        if (notificationService is InMemoryNotificationService inmemoryService)
+        if (notificationService is InMemoryNotificationService inMemoryNotificationService)
         {
-            inmemoryService.Preload();
+            inMemoryNotificationService.Preload();
         }
     }
 }

@@ -156,13 +156,13 @@
 
     private bool _loading;
     [Inject]
-    private IMediator _mediator { get; set; } = default!;
+    private IMediator Mediator { get; set; } = default!;
     [Inject]
-    private IMapper _mapper { get; set; } = default!;
+    private IMapper Mapper { get; set; } = default!;
     [CascadingParameter]
-    private Task<AuthenticationState> _authState { get; set; } = default!;
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
 
-    private TenantsWithPaginationQuery _query { get; set; } = new();
+    private TenantsWithPaginationQuery Query { get; set; } = new();
 
     private bool _canSearch;
     private bool _canCreate;
@@ -172,7 +172,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        var state = await _authState;
+        var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Edit)).Succeeded;
@@ -183,12 +183,12 @@
         try
         {
             _loading = true;
-            _query.Keyword = _searchString;
-            _query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy;
-            _query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending==false ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
-            _query.Page = state.Page + 1;
-            _query.PerPage = state.PageSize;
-            var result = await _mediator.Send(_query);
+            Query.Keyword = _searchString;
+            Query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy;
+            Query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending==false ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            Query.Page = state.Page + 1;
+            Query.PerPage = state.PageSize;
+            var result = await Mediator.Send(Query);
             return new GridData<TenantDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -216,7 +216,7 @@
         var command = new AddEditTenantCommand();
         var parameters = new DialogParameters
             {
-        { nameof(_TenantFormDialog.model),command },
+        { nameof(_TenantFormDialog.Model),command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_TenantFormDialog>
@@ -229,10 +229,10 @@
     }
     private async Task OnEdit(TenantDto dto)
     {
-        var command = _mapper.Map<AddEditTenantCommand>(dto);
+        var command = Mapper.Map<AddEditTenantCommand>(dto);
         var parameters = new DialogParameters
                 {
-            { nameof(_TenantFormDialog.model),command },
+            { nameof(_TenantFormDialog.Model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_TenantFormDialog>

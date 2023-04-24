@@ -1,4 +1,5 @@
 using Blazor.Server.UI.Services;
+using Blazor.Server.UI.Services.UserPreferences;
 
 namespace Blazor.Server.UI.Components.Shared.Themes;
 
@@ -28,7 +29,7 @@ public partial class ThemesMenu
         "#F5B400",
         "#9C2727",
     };
-    private List<string> getColorDefinition()
+    private List<string> GetColorDefinition()
     {
         return UserPreferences.DarkLightTheme switch
         {

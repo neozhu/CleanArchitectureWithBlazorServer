@@ -1,4 +1,5 @@
 @using Blazor.Server.UI.Services
+@using Blazor.Server.UI.Services.UserPreferences
 @inject IStringLocalizer<SharedResource> L
 <MudDrawer Anchor="LayoutService.IsRTL?Anchor.Left:Anchor.Right"
            @bind-Open="ThemingDrawerOpen"
@@ -68,7 +69,7 @@
         </MudText>
         <MudGrid Class="my-3"
                  Spacing="3">
-            @foreach (var color in getColorDefinition())
+            @foreach (var color in GetColorDefinition())
             {
                 <MudItem xs="4">
                     <MudButton Class="@(color == UserPreferences.PrimaryColor ? "color-button color-button-selected" : "color-button")"

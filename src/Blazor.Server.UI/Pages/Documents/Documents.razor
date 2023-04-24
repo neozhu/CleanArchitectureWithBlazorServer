@@ -39,7 +39,7 @@
                         <MudIcon Icon="@Icons.Material.Filled.DocumentScanner" Size="Size.Large" />
                         <div class="d-flex flex-column">
                             <MudText Typo="Typo.caption">@L["Documents"]</MudText>
-                            <MudEnumSelect Style="min-width:120px" TEnum="DocumentListView" ValueChanged="OnChangedListView" Value="_query.ListView" Dense="true" Label="List View">
+                            <MudEnumSelect Style="min-width:120px" TEnum="DocumentListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
                             </MudEnumSelect>
                         </div>
                     </div>
@@ -219,7 +219,7 @@
 
     public string? Title { get; private set; }
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
-    private DocumentDto _currentDto = new();
+    private readonly DocumentDto _currentDto = new();
     private MudDataGrid<DocumentDto> _table = null!;
     private int _defaultPageSize = 15;
     private string _searchString = string.Empty;
@@ -228,15 +228,15 @@
     [Inject]
     IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     [Inject]
-    private IMediator _mediator { get; set; } = default!;
+    private IMediator Mediator { get; set; } = default!;
     [Inject]
-    private HubClient _client { get; set; } = default!;
+    private HubClient Client { get; set; } = default!;
     [Inject]
-    private IMapper _mapper { get; set; } = default!;
+    private IMapper Mapper { get; set; } = default!;
 
 
     private string _tenantId = string.Empty;
-    private DocumentsWithPaginationQuery _query { get; set; } = new DocumentsWithPaginationQuery() ;
+    private DocumentsWithPaginationQuery Query { get; set; } = new DocumentsWithPaginationQuery() ;
 
     private bool _canSearch;
     private bool _canCreate;
@@ -249,7 +249,7 @@
     {
        await base.OnInitializedAsync();
         Title = L[_currentDto.GetClassDescription()];
-        var state = await _authState;
+        var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Edit)).Succeeded;
@@ -257,10 +257,10 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
-        _client.JobCompleted += _client_JobCompleted;
-        _client.JobStarted += _client_JobStarted;
+        Client.JobCompleted += _client_JobCompleted;
+        Client.JobStarted += _client_JobStarted;
         
-        await  _client.StartAsync();
+        await  Client.StartAsync();
     }
 
     private void _client_JobCompleted(object? sender, string e)
@@ -283,21 +283,21 @@
     protected  void Dispose()
     {
         base.Dispose();
-        _client.JobCompleted -= _client_JobCompleted;
-        _client.JobStarted -= _client_JobStarted;
+        Client.JobCompleted -= _client_JobCompleted;
+        Client.JobStarted -= _client_JobStarted;
     }
     private async Task<GridData<DocumentDto>> ServerReload(GridState<DocumentDto> state)
     {
         try
         {
             _loading = true;
-            _query.Keyword = _searchString;
-            _query.CurrentUser = UserProfile;
-            _query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy??"Id";
-            _query.SortDirection = state.SortDefinitions.FirstOrDefault() == null ? SortDirection.Descending.ToString() : (state.SortDefinitions.First().Descending ? SortDirection.Descending.ToString():SortDirection.Ascending.ToString());
-            _query.PageNumber = state.Page + 1;
-            _query.PageSize = state.PageSize;
-            var result = await _mediator.Send(_query);
+            Query.Keyword = _searchString;
+            Query.CurrentUser = UserProfile;
+            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy??"Id";
+            Query.SortDirection = state.SortDefinitions.FirstOrDefault() == null ? SortDirection.Descending.ToString() : (state.SortDefinitions.First().Descending ? SortDirection.Descending.ToString():SortDirection.Ascending.ToString());
+            Query.PageNumber = state.Page + 1;
+            Query.PageSize = state.PageSize;
+            var result = await Mediator.Send(Query);
             return new GridData<DocumentDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -316,7 +316,7 @@
     }
     private async Task OnChangedListView(DocumentListView listview)
     {
-        _query.ListView = listview;
+        Query.ListView = listview;
         await _table.ReloadServerData();
     }
     private async Task OnSearch(string text)
@@ -337,7 +337,7 @@
         var command = new AddEditDocumentCommand() { DocumentType = DocumentType.Document };
         var parameters = new DialogParameters
             {
-        { nameof(_DocumentFormDialog.model),command },
+        { nameof(_DocumentFormDialog.Model),command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UploadFilesFormDialog>
@@ -351,11 +351,11 @@
     }
     private async Task OnEdit(DocumentDto dto)
     {
-        var command = _mapper.Map<AddEditDocumentCommand>(dto);
+        var command = Mapper.Map<AddEditDocumentCommand>(dto);
         var parameters = new DialogParameters
                 {
                     { nameof(DeleteConfirmation.Command),  command },
-                    { nameof(_DocumentFormDialog.model),command },
+                    { nameof(_DocumentFormDialog.Model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_DocumentFormDialog>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
@@ -409,7 +409,7 @@
         try
         {
             _downloading = true;
-            var file = await _mediator.Send(new GetFileStreamQuery(dto.Id));
+            var file = await Mediator.Send(new GetFileStreamQuery(dto.Id));
             if (file.Item2 != null)
             {
                 var result = await BlazorDownloadFileService.DownloadFile(file.Item1, file.Item2, "application/octet-stream");

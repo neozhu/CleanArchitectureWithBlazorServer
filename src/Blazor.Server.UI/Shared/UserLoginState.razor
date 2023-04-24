@@ -4,17 +4,17 @@
    
     public void Dispose()
     {
-        _client.Login -= _client_Login;
-        _client.Logout -= _client_Logout;
+        Client.Login -= _client_Login;
+        Client.Logout -= _client_Logout;
        
     }
     [Inject]
-    private HubClient _client { get; set; } = default!;
+    private HubClient Client { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
-        _client.Login += _client_Login;
-        _client.Logout += _client_Logout;
-            await _client.StartAsync().ConfigureAwait(false);
+        Client.Login += _client_Login;
+        Client.Logout += _client_Logout;
+            await Client.StartAsync().ConfigureAwait(false);
     }
    
     private void _client_Login(object? sender, string username)

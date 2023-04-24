@@ -12,8 +12,8 @@
         @if (_step == 1)
         {
             <MudText Typo="Typo.subtitle2">@L["Enter the email address linked to your account and you will recieve an email containing a token string to reset your password."]</MudText>
-            <MudTextField T="string" @bind-Value="@_emailaddress" Label="@L["E-mail"]" Variant="Variant.Outlined" Class="my-4"></MudTextField>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="mt-3" Disabled="@(string.IsNullOrEmpty(_emailaddress) || _sending )" OnClick="@(()=>resetPassword())">
+            <MudTextField T="string" @bind-Value="@_emailAddress" Label="@L["E-mail"]" Variant="Variant.Outlined" Class="my-4"></MudTextField>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="mt-3" Disabled="@(string.IsNullOrEmpty(_emailAddress) || _sending )" OnClick="@(()=>ResetPassword())">
                 @if (_sending)
                 {
                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -25,7 +25,7 @@
                 }
             </MudButton>
         }
-        else if (_step == 2 && _resetpasswordToken!=string.Empty)
+        else if (_step == 2 && _resetPasswordToken!=string.Empty)
         {
             <MudText Typo="Typo.subtitle2">@L["Enter the token string from the recovery email to set your new password."]</MudText>
             <MudTextField T="string" 
@@ -34,7 +34,7 @@
                       HelperText="@L["The input token string must be equal to the token string in the recovery email"]"
                 Variant="Variant.Outlined" 
                 Class="my-4"></MudTextField>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="mt-3" Disabled="@(_inputToken != _resetpasswordToken || _sending )" OnClick="@(()=>setNewPassword())">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="mt-3" Disabled="@(_inputToken != _resetPasswordToken || _sending )" OnClick="@(()=>SetNewPassword())">
                 @if (_sending)
                 {
                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -57,43 +57,43 @@
 @code {
     public string Title = "Forgot Password";
     private int _step = 1;
-    private string _emailaddress = string.Empty;
+    private string _emailAddress = string.Empty;
     private bool _sending = false;
-    private string _resetpasswordToken=string.Empty;
+    private string _resetPasswordToken = string.Empty;
     private string _inputToken = string.Empty;
 
     private ApplicationUser? _user = null;
-    private UserManager<ApplicationUser> _userManager { get; set; } = null!;
+    private UserManager<ApplicationUser> UserManager { get; set; } = null!;
     [Inject]
-    private IMailService _mailService { get; set; } = null!;
-    [Inject] private ILogger<Forgot> _logger { get; set; } = default!;
-    [Inject] private NavigationManager _navigation { get; set; } = default!;
+    private IMailService MailService { get; set; } = null!;
+    [Inject] private ILogger<Forgot> Logger { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
     protected override Task OnInitializedAsync()
     {
         Title = L["Forgot Password"];
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         return base.OnInitializedAsync();
     }
-    private async Task resetPassword()
+    private async Task ResetPassword()
     {
         try
         {
             _sending = true;
-            _user = await _userManager.FindByEmailAsync(_emailaddress) ?? throw new NotFoundException($"Application user {_emailaddress} Not Found."); ;
+            _user = await UserManager.FindByEmailAsync(_emailAddress) ?? throw new NotFoundException($"Application user {_emailAddress} Not Found."); ;
             if (_user is null)
             {
                 Snackbar.Add(L["No user found by email, please contact the administrator"], MudBlazor.Severity.Error);
                 return;
             }
-            _resetpasswordToken = await _userManager.GeneratePasswordResetTokenAsync(_user);
-            var response = await sendResetPasswordToken(_emailaddress, _user.UserName!, _resetpasswordToken);
+            _resetPasswordToken = await UserManager.GeneratePasswordResetTokenAsync(_user);
+            var response = await SendResetPasswordToken(_emailAddress, _user.UserName!, _resetPasswordToken);
             if (response.Successful)
             {
                 _step = 2;
                 Snackbar.Clear();
                 Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-                Snackbar.Add(string.Format(L["The email has been sent, please check the email:{0} "],_emailaddress), MudBlazor.Severity.Success,config=> { config.ShowCloseIcon = false; config.HideTransitionDuration = 5000; });
-                _logger.LogInformation("{@UserName}'s token: {@token} for resetting the password has been sent.", _user.UserName,_resetpasswordToken);
+                Snackbar.Add(string.Format(L["The email has been sent, please check the email:{0} "],_emailAddress), MudBlazor.Severity.Success,config=> { config.ShowCloseIcon = false; config.HideTransitionDuration = 5000; });
+                Logger.LogInformation("{@UserName}'s token: {@Token} for resetting the password has been sent", _user.UserName,_resetPasswordToken);
             }
             else
             {
@@ -116,16 +116,16 @@
         }
     }
 
-    private Task<SendResponse> sendResetPasswordToken(string toemail, string userName, string token)
+    private Task<SendResponse> SendResetPasswordToken(string toEmail, string userName, string token)
     {
 
         var subject = L["Verify your recovery email"];
         //var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_recoverypassword.txt");
-        return _mailService.SendAsync(toemail, subject, "_recoverypassword", new { AppName = Settings.AppName, Email = toemail, Token = token });
+        return MailService.SendAsync(toEmail, subject, "_recoverypassword", new { AppName = Settings.AppName, Email = toEmail, Token = token });
     }
 
 
-    private async Task setNewPassword()
+    private async Task SetNewPassword()
     {
         try
         {
@@ -142,14 +142,14 @@
             var result = await dialog.Result;
             if (!result.Canceled)
             {
-                var state = await _userManager.ResetPasswordAsync(_user, _inputToken, model.Password!);
+                var state = await UserManager.ResetPasswordAsync(_user, _inputToken, model.Password!);
                 if (state.Succeeded)
                 {
                     _user.IsActive = true;
-                    await _userManager.UpdateAsync(_user);
+                    await UserManager.UpdateAsync(_user);
                     Snackbar.Add($"{L["The new password has been set successfully, please login again"]}", MudBlazor.Severity.Info);
-                    _logger.LogInformation("{@UserName} has set a new password", model.UserName);
-                    _navigation.NavigateTo("/");
+                    Logger.LogInformation("{@UserName} has set a new password", model.UserName);
+                    Navigation.NavigateTo("/");
                 }
                 else
                 {

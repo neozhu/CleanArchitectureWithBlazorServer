@@ -113,16 +113,16 @@
     private bool _loading;
     private int _defaultPageSize = 15;
     [Inject]
-    private IMediator _mediator { get; set; } = default!;
-    private AuditTrailDto _currentDto = new();
-    private AuditTrailsWithPaginationQuery _query = new();
+    private IMediator Mediator { get; set; } = default!;
+    private readonly AuditTrailDto _currentDto = new();
+    private readonly AuditTrailsWithPaginationQuery _query = new();
 
     [CascadingParameter]
-    private Task<AuthenticationState> _authState { get; set; } = default!;
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        var state = await _authState;
+        var state = await AuthState;
     }
 
     private async Task<GridData<AuditTrailDto>> ServerReload(GridState<AuditTrailDto> state)
@@ -135,7 +135,7 @@
             _query.Page = state.Page + 1;
             _query.PerPage = state.PageSize;
 
-            var result = await _mediator.Send(_query).ConfigureAwait(false);
+            var result = await Mediator.Send(_query).ConfigureAwait(false);
             return new GridData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally

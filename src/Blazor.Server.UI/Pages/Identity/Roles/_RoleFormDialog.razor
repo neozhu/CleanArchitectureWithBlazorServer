@@ -3,20 +3,20 @@
 @inject IStringLocalizer<Roles> L
 <MudDialog>
     <DialogContent>
-        <MudForm Model="model" @ref="_form">
+        <MudForm Model="Model" @ref="_form">
             <MudGrid>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name"
+                    <MudTextField Label="@L[Model.GetMemberDescription(x=>x.Name)]" @bind-Value="Model.Name"
                                   Required="true"
-                                  For="@(() => model.Name)"
+                                  For="@(() => Model.Name)"
                                   RequiredError="@L["DefaultRole name is required!"]"
-                                  Validation="@(modelValidator.ValidateValue)">
+                                  Validation="@(_modelValidator.ValidateValue)">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Description)]"
-                                  For="@(() => model.Description)"
-                    @bind-Value="model.Description"></MudTextField>
+                    <MudTextField Label="@L[Model.GetMemberDescription(x=>x.Description)]"
+                                  For="@(() => Model.Description)"
+                    @bind-Value="Model.Description"></MudTextField>
                 </MudItem>
             </MudGrid>
         </MudForm>
@@ -29,10 +29,10 @@
 
 @code {
     MudForm? _form = default!;
-    RoleDtoValidator modelValidator = new RoleDtoValidator();
+    readonly RoleDtoValidator _modelValidator = new RoleDtoValidator();
     [EditorRequired]
     [Parameter]
-    public ApplicationRoleDto model { get; set; } = default!;
+    public ApplicationRoleDto Model { get; set; } = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
 

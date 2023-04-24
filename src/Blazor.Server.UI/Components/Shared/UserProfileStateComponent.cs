@@ -7,24 +7,24 @@ namespace Blazor.Server.UI.Components.Shared;
 
 public class UserProfileStateComponent : ComponentBase, INotificationHandler<UpdateUserProfileCommand>
 {
-    private static event EventHandler<UpdateUserProfileEventArgs> _userProfileChanged = null!;
+    private static event EventHandler<UpdateUserProfileEventArgs> UserProfileChanged = null!;
 
     public UserProfile? UserProfile { get; private set; } = null!;
     [CascadingParameter]
-    protected Task<AuthenticationState> _authState { get; set; } = default!;
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
-    private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
     [Inject]
-    private IIdentityService _identityService { get; set; } = default!;
+    private IIdentityService IdentityService { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
-        _userProfileChanged += userProfileChangedHandler;
-        _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
-        var state = await _authState;
+        UserProfileChanged += UserProfileChangedHandler;
+        AuthenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
+        var state = await AuthState;
         if (state?.User?.Identity?.IsAuthenticated ?? false)
         {
-            var userDto = await _identityService.GetApplicationUserDto(state.User.GetUserId());
-            await setProfile(userDto);
+            var userDto = await IdentityService.GetApplicationUserDto(state.User.GetUserId());
+            await SetProfile(userDto);
         }
         
     }
@@ -35,29 +35,29 @@ public class UserProfileStateComponent : ComponentBase, INotificationHandler<Upd
             var state = await authenticationState;
             if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
-                var userDto = await _identityService.GetApplicationUserDto(state.User.GetUserId());
-                await setProfile(userDto);
+                var userDto = await IdentityService.GetApplicationUserDto(state.User.GetUserId());
+                await SetProfile(userDto);
             }
         });
     }
-    private Task setProfile(ApplicationUserDto userDto)
+    private Task SetProfile(ApplicationUserDto userDto)
     {
         UserProfile = userDto.ToUserProfile();
         return Task.CompletedTask;
     }
     public void Dispose()
     {
-        _userProfileChanged -= userProfileChangedHandler;
-        _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
+        UserProfileChanged -= UserProfileChangedHandler;
+        AuthenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
     }
-    private void userProfileChangedHandler(object? sender, UpdateUserProfileEventArgs e)
+    private void UserProfileChangedHandler(object? sender, UpdateUserProfileEventArgs e)
     {
         UserProfile = e.UserProfile;
         InvokeAsync(() => StateHasChanged());
     }
     public Task Handle(UpdateUserProfileCommand notification, CancellationToken cancellationToken)
     {
-        _userProfileChanged?.Invoke(this, new UpdateUserProfileEventArgs() { UserProfile = notification.UserProfile });
+        UserProfileChanged?.Invoke(this, new UpdateUserProfileEventArgs() { UserProfile = notification.UserProfile });
         return Task.CompletedTask;
     }
 }

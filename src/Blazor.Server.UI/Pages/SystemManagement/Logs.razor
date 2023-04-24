@@ -16,7 +16,7 @@
 </style>
 <ErrorBoundary>
     <ChildContent>
-        <Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts @ref="chartcomponent" Data="_data"></Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts>
+        <Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts @ref="_chartComponent" Data="Data"></Blazor.Server.UI.Pages.SystemManagement.Components.LogsLineCharts>
         <MudDataGrid T="LogDto"
                      ServerData="@(ServerReload)"
                      FixedHeader="true"
@@ -143,34 +143,34 @@
     </ErrorContent>
 </ErrorBoundary>
 @code {
-    private LogsLineCharts? chartcomponent;
+    private LogsLineCharts? _chartComponent;
     public string Title { get; private set; } = "Logs";
     private string _searchString = string.Empty;
     private MudDataGrid<LogDto> _table = default!;
-    private LogDto _currentDto = new();
+    private readonly LogDto _currentDto = new();
     private int _defaultPageSize = 15;
-    public List<LogTimeLineDto> _data { get; set; } = new();
+    public List<LogTimeLineDto> Data { get; set; } = new();
     [CascadingParameter]
-    private Task<AuthenticationState> _authState { get; set; } = default!;
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
     private bool _loading;
     private bool _clearing;
     [Inject]
-    private IMediator _mediator { get; set; } = default!;
+    private IMediator Mediator { get; set; } = default!;
     private bool _canPurge;
-    private LogsWithPaginationQuery _query = new();
+    private readonly LogsWithPaginationQuery _query = new();
     protected override async void OnInitialized()
     {
         Title = L["Logs"];
-        var state = await _authState;
+        var state = await AuthState;
         _canPurge = (await AuthService.AuthorizeAsync(state.User, Permissions.Logs.Purge)).Succeeded;
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _data = await _mediator.Send(new LogsTimeLineChatDataQuery());
+            Data = await Mediator.Send(new LogsTimeLineChatDataQuery());
             StateHasChanged();
-            await chartcomponent!.RenderChart();
+            await _chartComponent!.RenderChart();
 
         }
     }
@@ -184,7 +184,7 @@
             _query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending == false ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
             _query.Page = state.Page + 1;
             _query.PerPage = state.PageSize;
-            var result = await _mediator.Send(_query).ConfigureAwait(false);
+            var result = await Mediator.Send(_query).ConfigureAwait(false);
             return new GridData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -233,7 +233,7 @@
             try
             {
                 var command = new ClearLogsCommand();
-                var result = await _mediator.Send(command);
+                var result = await Mediator.Send(command);
                 await _table.ReloadServerData();
                 Snackbar.Add(L["Logs are erased"], MudBlazor.Severity.Info);
             }

@@ -10,7 +10,7 @@
             <MudText Typo="Typo.h6">Set Permissions</MudText>
     </MudDrawerHeader>
     <MudStack AlignItems="AlignItems.Stretch" Class="px-5">
-        <MudTextField @bind-Value="keyword" Label="Search"
+        <MudTextField @bind-Value="Keyword" Label="Search"
                       Margin="Margin.Dense"
                       Variant="Variant.Text"
                       Adornment="Adornment.End"
@@ -18,7 +18,7 @@
                       AdornmentColor="Color.Secondary" />
     </MudStack>
     @if(Permissions.Any()){
-    @foreach (var group in Permissions.Where(x => x.Group.Contains(keyword, StringComparison.InvariantCultureIgnoreCase) || x.Description.Contains(keyword, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Group).Distinct().ToList())
+    @foreach (var group in Permissions.Where(x => x.Group.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase) || x.Description.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Group).Distinct().ToList())
     {
         <MudCard class="ma-4">
             <MudCardHeader>
@@ -72,7 +72,7 @@
     [EditorRequired][Parameter] public EventCallback<List<PermissionModel>> OnAssignAllChanged { get; set; }
     [EditorRequired][Parameter] public EventCallback<bool> OnOpenChanged { get; set; }
     [Parameter] public bool Waiting { get; set; }
-    private string keyword { get; set; } = string.Empty;
+    private string Keyword { get; set; } = string.Empty;
     private async Task OnAssignAll(string? groupName)
     {
         var list = new List<PermissionModel>();

@@ -5,8 +5,8 @@
 @inject IStringLocalizer<Logs> L
 
 <div class="d-flex flex-grow-1 mb-2">
-    <MudPaper Class="pa-5 flex-grow-1" Elevation="3" Style="@backgroundColor">
-        <ApexChart @ref="chart" Options="options" TItem="LogTimeLineDto" Height="180"
+    <MudPaper Class="pa-5 flex-grow-1" Elevation="3" Style="@BackgroundColor">
+        <ApexChart @ref="Chart" Options="Options" TItem="LogTimeLineDto" Height="180"
                       Debug
                    Title="@L["Collect logs by day"]">
 
@@ -22,24 +22,24 @@
     </div>
 
     @code {
-    private ApexChart<LogTimeLineDto>? chart { get; set; }
-    private ApexChartOptions<LogTimeLineDto> options { get; set; } = new();
+    private ApexChart<LogTimeLineDto>? Chart { get; set; }
+    private ApexChartOptions<LogTimeLineDto> Options { get; set; } = new();
     [EditorRequired][Parameter] public List<LogTimeLineDto> Data { get; set; } = new();
     [Inject]
-    private LayoutService _layoutService { get; set; } = null!;
-    public string backgroundColor = "background:#fff";
+    private LayoutService LayoutService { get; set; } = null!;
+    public string BackgroundColor = "background:#fff";
     protected override void OnInitialized()
     {
-        var isdarkmode = _layoutService.IsDarkMode;
-        var colors = isdarkmode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
-        backgroundColor = isdarkmode ? "background:rgb(66, 66, 66)" : "background:#fff";
+        var isDarkMode = LayoutService.IsDarkMode;
+        var colors = isDarkMode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
+        BackgroundColor = isDarkMode ? "background:rgb(66, 66, 66)" : "background:#fff";
 
-        options.Theme = new ApexCharts.Theme()
+        Options.Theme = new ApexCharts.Theme()
             {
-                Mode = (isdarkmode ? Mode.Dark : Mode.Light),
+                Mode = (isDarkMode ? Mode.Dark : Mode.Light),
             };
 
-        options.Fill = new Fill
+        Options.Fill = new Fill
             {
                 Type = new List<FillType> { FillType.Gradient },
                 Gradient = new FillGradient
@@ -53,8 +53,8 @@
                 },
 
             };
-        options.Yaxis = new List<YAxis>();
-        options.Yaxis.Add(new YAxis
+        Options.Yaxis = new List<YAxis>();
+        Options.Yaxis.Add(new YAxis
             {
                 Labels = new YAxisLabels
                 {
@@ -62,7 +62,7 @@
                 }
             }
         );
-        options.Xaxis = new XAxis
+        Options.Xaxis = new XAxis
             {
                 Labels = new XAxisLabels
                 {
@@ -72,13 +72,13 @@
                 }
             };
 
-        options.DataLabels = new DataLabels
+        Options.DataLabels = new DataLabels
             {
                 Formatter = @"function(value, opts) {
                    return  Number(value).toLocaleString();}"
             };
 
-        options.Tooltip = new ApexCharts.Tooltip
+        Options.Tooltip = new ApexCharts.Tooltip
             {
                 X = new TooltipX
                 {
@@ -88,27 +88,27 @@
                 }
             };
 
-        _layoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
+        LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
     }
     private async void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
     {
-        var isdarkmode = _layoutService.IsDarkMode;
-        var colors = isdarkmode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
-        backgroundColor = isdarkmode ? "background:rgb(66, 66, 66)" : "background:#fff";
-        options.Theme.Mode = (isdarkmode ? Mode.Dark : Mode.Light);
-        options.Fill.Gradient.GradientToColors = colors;
-        await chart!.UpdateOptionsAsync(true, true, false);
-        await chart!.RenderAsync();
+        var isDarkMode = LayoutService.IsDarkMode;
+        var colors = isDarkMode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
+        BackgroundColor = isDarkMode ? "background:rgb(66, 66, 66)" : "background:#fff";
+        Options.Theme.Mode = (isDarkMode ? Mode.Dark : Mode.Light);
+        Options.Fill.Gradient.GradientToColors = colors;
+        await Chart!.UpdateOptionsAsync(true, true, false);
+        await Chart!.RenderAsync();
         StateHasChanged();
     }
     public async Task RenderChart()
     {
-        await chart!.UpdateSeriesAsync(true);
-        await chart!.RenderAsync();
+        await Chart!.UpdateSeriesAsync(true);
+        await Chart!.RenderAsync();
     }
     public void Dispose()
     {
-        _layoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
+        LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
         GC.SuppressFinalize(this);
     }
 
