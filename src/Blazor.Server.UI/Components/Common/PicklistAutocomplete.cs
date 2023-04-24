@@ -1,3 +1,5 @@
+using CleanArchitecture.Blazor.Domain.Enums;
+
 namespace Blazor.Server.UI.Components.Common;
 
 public class PicklistAutocomplete : MudAutocomplete<string>

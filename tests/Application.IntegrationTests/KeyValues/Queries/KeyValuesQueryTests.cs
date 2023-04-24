@@ -3,6 +3,7 @@
 
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName;
 using CleanArchitecture.Blazor.Domain;
+using CleanArchitecture.Blazor.Domain.Enums;
 using FluentAssertions;
 using NUnit.Framework;
 

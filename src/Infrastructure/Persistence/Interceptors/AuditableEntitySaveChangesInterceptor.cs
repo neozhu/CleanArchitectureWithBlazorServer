@@ -1,4 +1,5 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Domain.Enums;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore.ChangeTracking;

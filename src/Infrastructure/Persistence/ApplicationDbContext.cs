@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
+using CleanArchitecture.Blazor.Domain.Entities.Logger;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;

@@ -3,6 +3,7 @@
 
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching;
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
+using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery;
 
