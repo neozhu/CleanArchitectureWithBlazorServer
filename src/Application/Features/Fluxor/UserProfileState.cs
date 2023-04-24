@@ -8,6 +8,7 @@ public class UserProfileState
     public bool IsLoading { get; }
     public UserProfileState()
     {
+        IsLoading = true;
         UserProfile = new() { Email= "", UserId="",UserName= "" };
     }
     public UserProfileState(bool loading,UserProfile? userProfile)
