@@ -1,10 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Document = CleanArchitecture.Blazor.Domain.Entities.Document;
+using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 

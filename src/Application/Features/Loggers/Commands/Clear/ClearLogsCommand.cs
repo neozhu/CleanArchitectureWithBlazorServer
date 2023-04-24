@@ -2,10 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-
-using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
-using static CleanArchitecture.Blazor.Application.Constants.Permissions;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Delete;
 

@@ -1,6 +1,5 @@
 using FluentEmail.MailKitSmtp;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class MessageServiceCollectionExtensions

@@ -1,9 +1,8 @@
-using CleanArchitecture.Blazor.Application.Common.Exceptions;
+using System.Collections.Generic;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Exceptions;
 
@@ -26,7 +25,7 @@ public class ValidationExceptionTests
     }
 
     [Test]
-    public void MulitpleValidationFailureForMultiplePropertiesCreatesAMultipleElementErrorDictionaryEachWithMultipleValues()
+    public void MultipleValidationFailureForMultiplePropertiesCreatesAMultipleElementErrorDictionaryEachWithMultipleValues()
     {
         var failures = new List<ValidationFailure>
             {

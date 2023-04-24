@@ -1,9 +1,12 @@
-using CleanArchitecture.Blazor.Application;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
-using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -15,10 +18,8 @@ using Moq;
 using NUnit.Framework;
 using Respawn;
 using Respawn.Graph;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+
+namespace CleanArchitecture.Blazor.Application.IntegrationTests;
 
 [SetUpFixture]
 public class Testing
@@ -49,7 +50,7 @@ public class Testing
             w.ApplicationName == "Blazor.Server.UI"));
 
         services.AddInfrastructureServices(_configuration)
-                .AddApplicationServices();
+            .AddApplicationServices();
 
         //services.AddLogging();
 

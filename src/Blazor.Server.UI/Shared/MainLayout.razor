@@ -1,10 +1,10 @@
 @inherits LayoutComponentBase
 
 @inject IStringLocalizer<SharedResource> L
-<MudRTLProvider RightToLeft="@_layoutService.IsRTL">
+<MudRTLProvider RightToLeft="@LayoutService.IsRTL">
 <MudDialogProvider />
 <MudSnackbarProvider />
-<MudThemeProvider @ref="@_mudThemeProvider"  Theme="@_layoutService.CurrentTheme" IsDarkMode="@_layoutService.IsDarkMode" IsDarkModeChanged="@_layoutService.SetDarkMode" />
+<MudThemeProvider @ref="@_mudThemeProvider"  Theme="@LayoutService.CurrentTheme" IsDarkMode="@LayoutService.IsDarkMode" IsDarkModeChanged="@LayoutService.SetDarkMode" />
 
 <MudLayout>
     <AuthorizeView>
@@ -23,10 +23,10 @@
             
             <NavMenu SideMenuDrawerOpen="_sideMenuDrawerOpen"
                      OpenCommandPalette="OpenCommandPalette"
-                     IsDarkMode="@_layoutService.IsDarkMode"
+                     IsDarkMode="@LayoutService.IsDarkMode"
                      ToggleSideMenuDrawer="ToggleSideMenuDrawer"
-                     RightToLeft="@_layoutService.IsRTL"
-                     RightToLeftToggle ="_layoutService.ToggleRightToLeft"
+                     RightToLeft="@LayoutService.IsRTL"
+                     RightToLeftToggle ="LayoutService.ToggleRightToLeft"
                      OnSettingClick="@(() => _themingDrawerOpen = true)"
                      />
             <SideMenu SideMenuDrawerOpen="_sideMenuDrawerOpen"
@@ -34,8 +34,8 @@
                        />
             <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
                         ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
-                        UserPreferences="UserPreferences"
-                        UserPreferencesChanged="_layoutService.UpdateUserPreferences" />
+                        UserPreferences="_userPreferences"
+                        UserPreferencesChanged="LayoutService.UpdateUserPreferences" />
             <ThemesButton OnClick="@(() => _themingDrawerOpen = true)" />
             <MudMainContent>
                 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mb-4 mt-4">

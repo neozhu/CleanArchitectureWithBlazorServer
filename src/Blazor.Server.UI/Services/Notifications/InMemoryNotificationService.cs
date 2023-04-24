@@ -1,7 +1,5 @@
-using CleanArchitecture.Blazor.Application.Constants;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using DocumentFormat.OpenXml.InkML;
 
 namespace Blazor.Server.UI.Services.Notifications;
 

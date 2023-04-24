@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Application.Common.Exceptions;
+namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 public class InternalServerException : ServerException
 {
     public InternalServerException(string message)

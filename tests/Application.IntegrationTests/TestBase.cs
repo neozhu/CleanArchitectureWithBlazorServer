@@ -1,7 +1,7 @@
-﻿using NUnit.Framework;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 
-namespace CleanArchitecture.Application.IntegrationTests
+namespace CleanArchitecture.Blazor.Application.IntegrationTests
 {
     using static Testing;
 

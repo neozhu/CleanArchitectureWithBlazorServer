@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Components;
-using CleanArchitecture.Blazor.Application.Common.Models;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Blazor.Server.UI.Components.Shared;

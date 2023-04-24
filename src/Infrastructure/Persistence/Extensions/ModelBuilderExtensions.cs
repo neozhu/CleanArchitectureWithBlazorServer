@@ -17,8 +17,8 @@ public static class ModelBuilderExtensions
         foreach (var entity in entities)
         {
             var newParam = Expression.Parameter(entity);
-            var newbody = ReplacingExpressionVisitor.Replace(expression.Parameters.Single(), newParam, expression.Body);
-            modelBuilder.Entity(entity).HasQueryFilter(Expression.Lambda(newbody, newParam));
+            var newBody = ReplacingExpressionVisitor.Replace(expression.Parameters.Single(), newParam, expression.Body);
+            modelBuilder.Entity(entity).HasQueryFilter(Expression.Lambda(newBody, newParam));
         }
     }
 }

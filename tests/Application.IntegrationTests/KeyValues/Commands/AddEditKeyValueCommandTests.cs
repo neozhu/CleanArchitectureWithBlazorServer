@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CleanArchitecture.Application.IntegrationTests;
-using CleanArchitecture.Blazor.Application.Common.Exceptions;
+﻿using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
-using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete;
 using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Enums;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -27,11 +21,11 @@ internal class AddEditKeyValueCommandTests : TestBase
     [Test]
     public async Task InsertItem()
     {
-        var addcommand = new AddEditKeyValueCommand() { Name= Domain.Picklist.Brand, Text="Test",Value="Test",Description= "Description" };
-        var result = await SendAsync(addcommand);
+        var addCommand = new AddEditKeyValueCommand() { Name= Picklist.Brand, Text="Test",Value="Test",Description= "Description" };
+        var result = await SendAsync(addCommand);
         var find = await FindAsync<KeyValue>(result.Data);
         find.Should().NotBeNull();
-        find.Name.Should().Be(Domain.Picklist.Brand);
+        find.Name.Should().Be(Picklist.Brand);
         find.Text.Should().Be("Test");
         find.Value.Should().Be("Test");
 
@@ -39,14 +33,14 @@ internal class AddEditKeyValueCommandTests : TestBase
     [Test]
     public async Task UpdateItem()
     {
-        var addcommand = new AddEditKeyValueCommand() { Name = Domain.Picklist.Brand, Text = "Test", Value = "Test", Description = "Description" };
-        var result = await SendAsync(addcommand);
+        var addCommand = new AddEditKeyValueCommand() { Name = Picklist.Brand, Text = "Test", Value = "Test", Description = "Description" };
+        var result = await SendAsync(addCommand);
         var find = await FindAsync<KeyValue>(result.Data);
-        var editcommand = new AddEditKeyValueCommand() { Id=find.Id, Name = Domain.Picklist.Brand, Text = "Test1", Value = "Test1", Description = "Description1" };
-        await SendAsync(editcommand);
+        var editCommand = new AddEditKeyValueCommand() { Id=find.Id, Name = Picklist.Brand, Text = "Test1", Value = "Test1", Description = "Description1" };
+        await SendAsync(editCommand);
         var updated = await FindAsync<KeyValue>(find.Id);
         updated.Should().NotBeNull();
-        updated.Name.Should().Be(Domain.Picklist.Brand);
+        updated.Name.Should().Be(Picklist.Brand);
         updated.Text.Should().Be("Test1");
         updated.Value.Should().Be("Test1");
         updated.Description.Should().Be("Description1");

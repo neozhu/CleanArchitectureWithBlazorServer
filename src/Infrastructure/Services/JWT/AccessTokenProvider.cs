@@ -1,13 +1,13 @@
 ﻿using System.Security.Cryptography;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public class AccessTokenProvider
 {
-    private readonly string TokenKey = nameof(TokenKey);
+    private readonly string _tokenKey = nameof(_tokenKey);
     private readonly ProtectedLocalStorage _localStorage;
     private readonly NavigationManager _navigation;
     private readonly IIdentityService _identityService;
@@ -28,7 +28,7 @@ public class AccessTokenProvider
     public async Task GenerateJwt(ApplicationUser applicationUser)
     {
         AccessToken = await _identityService.GenerateJwtAsync(applicationUser);
-        await _localStorage.SetAsync(TokenKey, AccessToken);
+        await _localStorage.SetAsync(_tokenKey, AccessToken);
         _tenantProvider.TenantId = applicationUser.TenantId;
         _tenantProvider.TenantName = applicationUser.TenantName;
         _currentUser.UserId = applicationUser.Id;
@@ -41,7 +41,7 @@ public class AccessTokenProvider
     {
         try
         {
-            var token = await _localStorage.GetAsync<string>(TokenKey);
+            var token = await _localStorage.GetAsync<string>(_tokenKey);
             if (token.Success && !string.IsNullOrEmpty(token.Value))
             {
                 AccessToken = token.Value;
@@ -72,7 +72,7 @@ public class AccessTokenProvider
 
     public async Task RemoveAuthDataFromStorage()
     {
-        await _localStorage.DeleteAsync(TokenKey);
+        await _localStorage.DeleteAsync(_tokenKey);
         _navigation.NavigateTo("/", true);
     }
 }

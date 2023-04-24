@@ -2,13 +2,13 @@
 
 @code {
     [CascadingParameter]
-    private Task<AuthenticationState> _authStateTask { get; set; } = null!;
+    private Task<AuthenticationState> AuthStateTask { get; set; } = null!;
     [Inject]
     protected NavigationManager NavigationManager { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await _authStateTask;
+        var authState = await AuthStateTask;
         if (authState?.User?.Identity is null || !authState.User.Identity.IsAuthenticated)
         {
             var returnUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);

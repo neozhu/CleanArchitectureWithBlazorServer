@@ -1,8 +1,4 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
-using CleanArchitecture.Blazor.Infrastructure.Services.Serialization;
 using Hangfire;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class HangfireServiceCollectionExtensions

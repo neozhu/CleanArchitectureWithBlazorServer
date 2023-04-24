@@ -8,23 +8,19 @@ namespace Blazor.Server.UI.Components.Shared;
 
 public partial class SideMenu: FluxorComponent
 {
-
+    [EditorRequired] [Parameter] public bool SideMenuDrawerOpen { get; set; }
+    [Inject] private IMenuService MenuService { get; set; } = null!;
     [Inject]
     private IState<UserProfileState> UserProfileState { get; set; } = null!;
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     private bool IsLoading   => UserProfileState.Value.IsLoading;
-    [EditorRequired] [Parameter] 
-    public bool SideMenuDrawerOpen { get; set; } 
     
     [EditorRequired] [Parameter]
     public EventCallback<bool> SideMenuDrawerOpenChanged { get; set; }
 
-    [Inject] 
-    private IMenuService _menuService { get; set; } = default!;
-    private IEnumerable<MenuSectionModel> _menuSections => _menuService.Features;
-    
-    [Inject] 
-    private LayoutService LayoutService { get; set; } = default!;
+    private IEnumerable<MenuSectionModel> MenuSections => MenuService.Features;
 
-    private string[] _roles => UserProfile?.AssignedRoles??new string[] { };
+    [Inject] private LayoutService LayoutService { get; set; } = default!;
+
+    private string[] Roles => UserProfile?.AssignedRoles ?? new string[] { };
 }

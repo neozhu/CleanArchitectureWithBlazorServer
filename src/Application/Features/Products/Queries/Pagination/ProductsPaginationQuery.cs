@@ -4,9 +4,6 @@
 
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Products.Queries;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 

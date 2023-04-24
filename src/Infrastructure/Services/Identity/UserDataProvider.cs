@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 public class UserDataProvider : IUserDataProvider
 {
     private readonly IMapper _mapper;
-    private readonly IServiceScopeFactory _scopeFactory;
     private readonly UserManager<ApplicationUser> _userManager;
     public List<ApplicationUserDto> DataSource { get; private set; }
 
@@ -18,8 +16,7 @@ public class UserDataProvider : IUserDataProvider
         IServiceScopeFactory scopeFactory)
     {
         _mapper = mapper;
-        _scopeFactory = scopeFactory;
-        var scope = _scopeFactory.CreateScope();
+        var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         DataSource = new List<ApplicationUserDto>();
     }

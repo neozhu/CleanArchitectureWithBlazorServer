@@ -1,8 +1,6 @@
-@using Microsoft.Extensions.Options
-@using Blazor.Server.UI.Models.Localization
 @using System.Globalization
+@using Microsoft.Extensions.Options
 @using Blazor.Server.UI.Services
-
 <MudTooltip Text="@CurrentLanguage">
     <MudMenu Class="mx-1" Icon="@Icons.Material.Outlined.Translate" Color="Color.Default" Dense="true">
         @if (SupportedLanguages is not null)
@@ -25,13 +23,13 @@
 @code {
     public string? CurrentLanguage { get; set; } = "en-US";
     public List<CultureInfo>? SupportedLanguages { get; set; } = new();
-    [Inject] private NavigationManager _navigation { get; set; } = null!;
-    [Inject] private IOptions<RequestLocalizationOptions> localizationOptions { get; set; } = null!;
+    [Inject] private NavigationManager Navigation { get; set; } = null!;
+    [Inject] private IOptions<RequestLocalizationOptions> LocalizationOptions { get; set; } = null!;
     [Inject] private LayoutService LayoutService { get; set; } = null!;
 
     protected override Task OnInitializedAsync()
     {
-        SupportedLanguages = localizationOptions.Value.SupportedCultures?.ToList();
+        SupportedLanguages = LocalizationOptions.Value.SupportedCultures?.ToList();
         CurrentLanguage = CultureInfo.CurrentCulture.Name;
         return Task.CompletedTask;
     }
@@ -40,7 +38,7 @@
     private async Task ChangeLanguageAsync(string languageCode)
     {
         CurrentLanguage = languageCode;
-        _navigation.NavigateTo(_navigation.BaseUri + "?culture=" + languageCode, forceLoad: true);
+        Navigation.NavigateTo(Navigation.BaseUri + "?culture=" + languageCode, forceLoad: true);
 
         if (new CultureInfo(languageCode).TextInfo.IsRightToLeft)
             await LayoutService.SetRightToLeft();

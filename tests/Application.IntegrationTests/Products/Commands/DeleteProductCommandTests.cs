@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using CleanArchitecture.Application.IntegrationTests;
-using CleanArchitecture.Blazor.Application.Common.Exceptions;
-using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
-using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete;
+using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll;
@@ -30,8 +24,8 @@ internal class DeleteProductCommandTests: TestBase
     [Test]
     public async Task ShouldDeleteOne()
     {
-        var addcommand = new AddEditProductCommand() { Name = "Test", Brand = "Brand", Price = 100m, Unit = "EA", Description = "Description" };
-        var result = await SendAsync(addcommand);
+        var addCommand = new AddEditProductCommand() { Name = "Test", Brand = "Brand", Price = 100m, Unit = "EA", Description = "Description" };
+        var result = await SendAsync(addCommand);
 
         await SendAsync(new DeleteProductCommand(new int[] { result.Data }));
 
@@ -57,8 +51,8 @@ internal class DeleteProductCommandTests: TestBase
         var deleted = await SendAsync(new DeleteProductCommand(id));
         deleted.Succeeded.Should().BeTrue();
 
-        var deleteresult = await SendAsync(query);
-        deleteresult.Should().BeNullOrEmpty();
+        var deleteResult = await SendAsync(query);
+        deleteResult.Should().BeNullOrEmpty();
 
 
     }

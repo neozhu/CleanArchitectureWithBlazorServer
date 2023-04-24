@@ -7,11 +7,7 @@ using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Application.Services.MultiTenant;
 using CleanArchitecture.Blazor.Application.Services.Picklist;
-using Fluxor;
-using MediatR;
-using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace CleanArchitecture.Blazor.Application;
 

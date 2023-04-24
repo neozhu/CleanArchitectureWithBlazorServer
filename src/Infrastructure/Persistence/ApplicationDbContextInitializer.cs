@@ -1,14 +1,19 @@
 ﻿using System.Reflection;
+using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Application.Constants.Permission;
+using CleanArchitecture.Blazor.Application.Constants.Role;
+using CleanArchitecture.Blazor.Application.Constants.User;
+using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
-public class ApplicationDbContextInitialiser
+public class ApplicationDbContextInitializer
 {
-    private readonly ILogger<ApplicationDbContextInitialiser> _logger;
+    private readonly ILogger<ApplicationDbContextInitializer> _logger;
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
 
-    public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+    public ApplicationDbContextInitializer(ILogger<ApplicationDbContextInitializer> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
     {
         _logger = logger;
         _context = context;
@@ -26,7 +31,7 @@ public class ApplicationDbContextInitialiser
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while initialising the database.");
+            _logger.LogError(ex, "An error occurred while initialising the database");
             throw;
         }
     }
@@ -39,7 +44,7 @@ public class ApplicationDbContextInitialiser
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while seeding the database.");
+            _logger.LogError(ex, "An error occurred while seeding the database");
             throw;
         }
     }
@@ -80,12 +85,12 @@ public class ApplicationDbContextInitialiser
         // Default roles
         var administratorRole = new ApplicationRole(RoleName.Administrator) { Description = "Admin Group" };
         var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
-        var Permissions = GetAllPermissions();
+        var permissions = GetAllPermissions();
         if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
         {
             await _roleManager.CreateAsync(administratorRole);
            
-            foreach (var permission in Permissions)
+            foreach (var permission in permissions)
             {
                 await _roleManager.AddClaimAsync(administratorRole, new System.Security.Claims.Claim(ApplicationClaimTypes.Permission, permission));
             }
@@ -93,7 +98,7 @@ public class ApplicationDbContextInitialiser
         if (_roleManager.Roles.All(r => r.Name != userRole.Name))
         {
             await _roleManager.CreateAsync(userRole);
-            foreach (var permission in Permissions)
+            foreach (var permission in permissions)
             {
                 if (permission.StartsWith("Permissions.Products"))
                     await _roleManager.AddClaimAsync(userRole, new System.Security.Claims.Claim(ApplicationClaimTypes.Permission, permission));

@@ -1,22 +1,21 @@
 @page "/pages/authentication/login"
-@using System.Text.RegularExpressions
-@using Blazor.Server.UI.Pages.Identity.Users
-@using CleanArchitecture.Blazor.Application.Common.Security
-@using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
-@using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.DataProtection
-@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
 @inject AccessTokenProvider TokenProvider
 @inject IJSRuntime JS
 @inherits OwningComponentBase
+@using CleanArchitecture.Blazor.Infrastructure.Services.JWT
+@using Microsoft.AspNetCore.DataProtection
+@using CleanArchitecture.Blazor.Application.Common.Security
+@using Blazor.Server.UI.Pages.Identity.Users
+@using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
+@using CleanArchitecture.Blazor.Application.Constants.Role
+@using CleanArchitecture.Blazor.Application.Constants.User
 @implements IDisposable
 @inject IStringLocalizer<Login> L
 
 <PageTitle>@Title</PageTitle>
 <AuthorizeView>
     <NotAuthorized Context="Auth">
-        <MudForm Model="@_model" @ref="@_form" @bind-IsValid="@_success" ValidationDelay="0" Validation="@(_loginValidator.ValidateValue)">
+        <MudForm Model="@_model" @ref="@_form" @bind-IsValid="@_success" ValidationDelay="0" Validation="@(LoginValidator.ValidateValue)">
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
             <MudText>@L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink></MudText>
             <MudTextField T="string"
@@ -52,7 +51,7 @@
                 @if (_loading)
                 {
                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2"> @ConstantString.LOADING</MudText>
+                    <MudText Class="ms-2"> @ConstantString.Loading</MudText>
                 }
                 else
                 {
@@ -80,10 +79,10 @@
 
 @code {
     public string Title = "Sign In";
-    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
-    private AccessTokenProvider  _tokenProvider { get; set; } = default!;
-    [Inject] private ILogger<Login> _logger { get; set; } = default!;
-    [Inject] private IDataProtectionProvider _dataProtectionProvider { get; set; } = default!;
+    private UserManager<ApplicationUser> UserManager { get; set; } = default!;
+    private AccessTokenProvider  AccessTokenProvider { get; set; } = default!;
+    [Inject] private ILogger<Login> Logger { get; set; } = default!;
+    [Inject] private IDataProtectionProvider DataProtectionProvider { get; set; } = default!;
     [Inject]
     protected NavigationManager NavigationManager { get; set; } = null!;
     private LoginFormModel _model = new()
@@ -96,15 +95,15 @@
     MudForm? _form;
     bool _success;
     bool _loading;
-    [Inject] private LoginFormModellFluentValidator _loginValidator { get; set; } = default!;
+    [Inject] private LoginFormModelFluentValidator LoginValidator { get; set; } = default!;
 
 
     protected override async Task OnInitializedAsync()
     {
         await  base.OnInitializedAsync();
         Title = L["Sign In"];
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        _tokenProvider = ScopedServices.GetRequiredService<AccessTokenProvider>();
+        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        AccessTokenProvider = ScopedServices.GetRequiredService<AccessTokenProvider>();
        
     }
     private async Task OnSubmit()
@@ -115,10 +114,10 @@
             await _form!.Validate();
             if (_form!.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(_model.UserName!);
+                var user = await UserManager.FindByNameAsync(_model.UserName!);
                 if (user is null)
                 {
-                    _logger.LogWarning("{@UserName} user does not exist.", _model.UserName);
+                    Logger.LogWarning("{@UserName} user does not exist", _model.UserName);
                     Snackbar.Add(L["No user found, or no authorization, please contact the administrator."], MudBlazor.Severity.Error);
                 }
                 else
@@ -129,17 +128,17 @@
                     }
                     else
                     {
-                        var result = await _userManager.CheckPasswordAsync(user, _model.Password!);
+                        var result = await UserManager.CheckPasswordAsync(user, _model.Password!);
                         if (!result)
                         {
-                            _logger.LogWarning("{@UserName} login fail.", _model.UserName);
+                            Logger.LogWarning("{@UserName} login fail", _model.UserName);
                             Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], MudBlazor.Severity.Error);
                         }
                         else
                         {
                             await TokenProvider.GenerateJwt(user);
                             NavigationManager.NavigateTo(NavigationManager.Uri, true);
-                            _logger.LogInformation("{@UserName} login successfully.", _model.UserName);
+                            Logger.LogInformation("{@UserName} login successfully", _model.UserName);
                         }
                     }
                 }
@@ -162,14 +161,14 @@
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            var token = await _userManager.GeneratePasswordResetTokenAsync(item);
-            var state = await _userManager.ResetPasswordAsync(item, token, model.Password!);
+            var token = await UserManager.GeneratePasswordResetTokenAsync(item);
+            var state = await UserManager.ResetPasswordAsync(item, token, model.Password!);
             if (state.Succeeded)
             {
                 item.IsActive = true;
-                await _userManager.UpdateAsync(item);
+                await UserManager.UpdateAsync(item);
                 Snackbar.Add($"{L["Password update successfuly"]}", MudBlazor.Severity.Info);
-                _logger.LogInformation("{@UserName} has set a new password", model.UserName);
+                Logger.LogInformation("{@UserName} has set a new password", model.UserName);
                 _model.Password = "";
             }
             else
@@ -183,20 +182,20 @@
         await JS.InvokeVoidAsync("externalLogin", provider, DotNetObjectReference.Create(this));
     }
     [JSInvokable]
-    public async Task ConfirmExternal(string provider, string userName, string name, string accesstoken)
+    public async Task ConfirmExternal(string provider, string userName, string name, string accessToken)
     {
-        var user =await createUserWithExternalProvider(provider, userName, name, accesstoken);
+        var user =await CreateUserWithExternalProvider(provider, userName, name, accessToken);
         await TokenProvider.GenerateJwt(user);
         NavigationManager.NavigateTo(NavigationManager.Uri, true);
-        _logger.LogInformation("{@UserName} login successfully.", userName);
+        Logger.LogInformation("{@UserName} login successfully", userName);
     }
 
-    private async Task<ApplicationUser> createUserWithExternalProvider(string provider, string userName, string name, string accesstoken)
+    private async Task<ApplicationUser> CreateUserWithExternalProvider(string provider, string userName, string name, string accessToken)
     {
-        var user = await _userManager.FindByNameAsync(userName);
+        var user = await UserManager.FindByNameAsync(userName);
         if (user is null)
         {
-            var admin = await _userManager.FindByNameAsync(UserName.Administrator) ?? throw new NotFoundException($"Administrator's account Not Found.");
+            var admin = await UserManager.FindByNameAsync(UserName.Administrator) ?? throw new NotFoundException($"Administrator's account Not Found.");
             user = new ApplicationUser
                 {
                     EmailConfirmed = true,
@@ -210,12 +209,12 @@
                     TenantId = admin.TenantId,
                     TenantName = admin.TenantName
                 };
-            var createResult = await _userManager.CreateAsync(user);
+            var createResult = await UserManager.CreateAsync(user);
             if (createResult.Succeeded)
             {
-                var assignResult = await _userManager.AddToRoleAsync(user, RoleName.Basic);
+                var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
             }
-            await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accesstoken));
+            await UserManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
         }
         return user;
 

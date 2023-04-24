@@ -1,11 +1,11 @@
 using System.Reflection;
 using System.Text;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Application.Constants.Permission;
+using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
-using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;

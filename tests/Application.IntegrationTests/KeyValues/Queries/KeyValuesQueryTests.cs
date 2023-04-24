@@ -2,11 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName;
-using CleanArchitecture.Blazor.Domain;
+using CleanArchitecture.Blazor.Domain.Enums;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Queries
+namespace CleanArchitecture.Blazor.Application.IntegrationTests.KeyValues.Queries
 {
     using static Testing;
     public class KeyValuesQueryTests : TestBase

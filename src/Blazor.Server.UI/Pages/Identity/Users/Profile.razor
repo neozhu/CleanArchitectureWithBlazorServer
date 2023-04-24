@@ -86,11 +86,11 @@
                                 @if (submitting)
                                 {
                                     <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
-                                    <MudText Class="ms-2">@ConstantString.WATING </MudText>
+                                    <MudText Class="ms-2">@ConstantString.Waiting </MudText>
                                 }
                                 else
                                 {
-                                    <MudText>@ConstantString.SAVE</MudText>
+                                    <MudText>@ConstantString.Save</MudText>
                                 }
                                 </MudButton>
                         </MudItem>
@@ -138,7 +138,7 @@
                                 @if (submitting)
                                 {
                                     <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
-                                    <MudText Class="ms-2">@ConstantString.WATING </MudText>
+                                    <MudText Class="ms-2">@ConstantString.Waiting </MudText>
                                 }
                                 else
                                 {
@@ -233,7 +233,7 @@
     }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
-        var filestream = e.File.OpenReadStream(GlobalVariable.maxAllowedSize);
+        var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
         var imgstream = new MemoryStream();
         await filestream.CopyToAsync(imgstream);
         imgstream.Position = 0;
@@ -270,7 +270,7 @@
                 user.DisplayName = model.DisplayName;
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await _userManager.UpdateAsync(user);
-                Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{ConstantString.UpdateSuccess}", MudBlazor.Severity.Info);
                 Dispatcher.Dispatch(new UserProfileUpdateAction() { UserProfile = model });
             }
         }

@@ -1,7 +1,6 @@
 using System.Net.Http.Headers;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
-using CleanArchitecture.Blazor.Infrastructure.Services.Serialization;
 using Polly;
+
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class HttpClientServiceCollectionExtensions
 {

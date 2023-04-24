@@ -1,6 +1,4 @@
-using MudBlazor;
-
-namespace Blazor.Server.UI;
+namespace Blazor.Server.UI.Theme;
 
 public class Theme
 {

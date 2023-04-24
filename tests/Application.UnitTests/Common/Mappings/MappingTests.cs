@@ -1,14 +1,13 @@
-using AutoMapper;
-using CleanArchitecture.Blazor.Application.Common.Mappings;
-using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
-using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
-using CleanArchitecture.Blazor.Domain.Entities;
-
-using NUnit.Framework;
 using System;
 using System.Runtime.Serialization;
+using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
+using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
+using CleanArchitecture.Blazor.Domain.Entities;
+using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Mappings;
 

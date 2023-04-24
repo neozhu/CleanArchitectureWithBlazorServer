@@ -4,6 +4,7 @@
 @using Blazor.Server.UI.Services.JsInterop;
 @using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+@using CleanArchitecture.Blazor.Application.Constants.Permission;
 @using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
@@ -42,7 +43,7 @@
                         <MudIcon Icon="@Icons.Material.Filled.DocumentScanner" Size="Size.Large" />
                         <div class="d-flex flex-column">
                             <MudText Typo="Typo.caption">@L["Documents"]</MudText>
-                            <MudEnumSelect Style="min-width:120px" TEnum="DocumentListView" ValueChanged="OnChangedListView" Value="_query.ListView" Dense="true" Label="List View">
+                            <MudEnumSelect Style="min-width:120px" TEnum="DocumentListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
                             </MudEnumSelect>
                         </div>
                     </div>
@@ -56,7 +57,7 @@
                                            Disabled="@_loading"
                                            OnClick="@(()=>OnRefresh())"
                                            StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
+                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.Refresh</MudButton>
                                 @if (_canCreate)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -75,21 +76,21 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnDeleteChecked"
-                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                                 }
 
 
                             </MudHidden>
                             <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                                 <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                                    <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
+                                    <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.Refresh</MudMenuItem>
                                     @if (_canCreate)
                                     {
                                         <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@L["Upload Pictures"]</MudMenuItem>
                                     }
                                     @if (_canDelete)
                                     {
-                                        <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
+                                        <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.Delete</MudMenuItem>
                                     }
 
                                 </MudMenu>
@@ -97,7 +98,7 @@
                         </div>
                         @if (_canSearch)
                         {
-                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
+                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
                         }
 
@@ -106,7 +107,7 @@
             </ToolBarContent>
             <Columns>
                 <SelectColumn ShowInFooter="false">                 </SelectColumn>
-                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false">
+                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
                     <CellTemplate>
                         @if (_canEdit || _canDelete)
                         {
@@ -115,15 +116,15 @@
                                      EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                                 @if (_canEdit)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                                 }
                                 @if (_canDelete)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                                 }
                                 @if (_canDownload)
                                 {
-                                    <MudMenuItem Disabled="@_downloading" OnClick="@(()=>OnDownload(context.Item))">@ConstantString.DOWNLOAD</MudMenuItem>
+                                    <MudMenuItem Disabled="@_downloading" OnClick="@(()=>OnDownload(context.Item))">@ConstantString.Download</MudMenuItem>
                                 }
                             </MudMenu>
                         }
@@ -132,7 +133,7 @@
                             <MudButton Variant="Variant.Filled" DisableElevation="true"
                                        StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                        Color="Color.Surface">
-                                @ConstantString.NOALLOWED
+                                @ConstantString.NoAllowed
                             </MudButton>
                         }
                     </CellTemplate>
@@ -204,10 +205,10 @@
                 </PropertyColumn>
             </Columns>
             <NoRecordsContent>
-                <MudText>@ConstantString.NORECORDS</MudText>
+                <MudText>@ConstantString.NoRecords</MudText>
             </NoRecordsContent>
             <LoadingContent>
-                <MudText>@ConstantString.LOADING</MudText>
+                <MudText>@ConstantString.Loading</MudText>
             </LoadingContent>
             <PagerContent>
                 <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
@@ -223,10 +224,10 @@
     private IState<UserProfileState> UserProfileState { get; set; } = null!;
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     [CascadingParameter]
-    protected Task<AuthenticationState> _authState { get; set; } = default!;
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
     public string? Title { get; private set; }
     private HashSet<DocumentDto> _selectedItems = new HashSet<DocumentDto>();
-    private DocumentDto _currentDto = new();
+    private readonly DocumentDto _currentDto = new();
     private MudDataGrid<DocumentDto> _table = null!;
     private int _defaultPageSize = 15;
     private string _searchString = string.Empty;
@@ -235,15 +236,15 @@
     [Inject]
     IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     [Inject]
-    private IMediator _mediator { get; set; } = default!;
+    private IMediator Mediator { get; set; } = default!;
     [Inject]
-    private HubClient _client { get; set; } = default!;
+    private HubClient Client { get; set; } = default!;
     [Inject]
-    private IMapper _mapper { get; set; } = default!;
+    private IMapper Mapper { get; set; } = default!;
 
 
     private string _tenantId = string.Empty;
-    private DocumentsWithPaginationQuery _query { get; set; } = new DocumentsWithPaginationQuery() ;
+    private DocumentsWithPaginationQuery Query { get; set; } = new DocumentsWithPaginationQuery() ;
 
     private bool _canSearch;
     private bool _canCreate;
@@ -256,7 +257,7 @@
     {
         await base.OnInitializedAsync();
         Title = L[_currentDto.GetClassDescription()];
-        var state = await _authState;
+        var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Edit)).Succeeded;
@@ -264,10 +265,10 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
-        _client.JobCompleted += _client_JobCompleted;
-        _client.JobStarted += _client_JobStarted;
+        Client.JobCompleted += _client_JobCompleted;
+        Client.JobStarted += _client_JobStarted;
         UserProfileState.StateChanged += StateOnStateChanged;
-        await  _client.StartAsync();
+        await Client.StartAsync();
     }
 
     private void _client_JobCompleted(object? sender, string e)
@@ -295,8 +296,8 @@
     public new void Dispose()
     {
         UserProfileState.StateChanged -= StateOnStateChanged;
-        _client.JobCompleted -= _client_JobCompleted;
-        _client.JobStarted -= _client_JobStarted;
+        Client.JobCompleted -= _client_JobCompleted;
+        Client.JobStarted -= _client_JobStarted;
         base.Dispose();
     }
     private async Task<GridData<DocumentDto>> ServerReload(GridState<DocumentDto> state)
@@ -304,13 +305,13 @@
         try
         {
             _loading = true;
-            _query.Keyword = _searchString;
-            _query.CurrentUser = UserProfile;
-            _query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy??"Id";
-            _query.SortDirection = state.SortDefinitions.FirstOrDefault() == null ? SortDirection.Descending.ToString() : (state.SortDefinitions.First().Descending ? SortDirection.Descending.ToString():SortDirection.Ascending.ToString());
-            _query.PageNumber = state.Page + 1;
-            _query.PageSize = state.PageSize;
-            var result = await _mediator.Send(_query);
+            Query.Keyword = _searchString;
+            Query.CurrentUser = UserProfile;
+            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy??"Id";
+            Query.SortDirection = state.SortDefinitions.FirstOrDefault() == null ? SortDirection.Descending.ToString() : (state.SortDefinitions.First().Descending ? SortDirection.Descending.ToString():SortDirection.Ascending.ToString());
+            Query.PageNumber = state.Page + 1;
+            Query.PageSize = state.PageSize;
+            var result = await Mediator.Send(Query);
             return new GridData<DocumentDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -329,7 +330,7 @@
     }
     private async Task OnChangedListView(DocumentListView listview)
     {
-        _query.ListView = listview;
+        Query.ListView = listview;
         await _table.ReloadServerData();
     }
     private async Task OnSearch(string text)
@@ -350,7 +351,7 @@
         var command = new AddEditDocumentCommand() { DocumentType = DocumentType.Document };
         var parameters = new DialogParameters
             {
-        { nameof(_DocumentFormDialog.model),command },
+        { nameof(_DocumentFormDialog.Model),command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UploadFilesFormDialog>
@@ -359,19 +360,19 @@
         if (!state.Canceled)
         {
             await _table.ReloadServerData();
-            Snackbar.Add(ConstantString.UPLOADSUCCESS, MudBlazor.Severity.Info);
+            Snackbar.Add(ConstantString.UploadSuccess, MudBlazor.Severity.Info);
         }
     }
     private async Task OnEdit(DocumentDto dto)
     {
-        var command = _mapper.Map<AddEditDocumentCommand>(dto);
+        var command = Mapper.Map<AddEditDocumentCommand>(dto);
         var parameters = new DialogParameters
                 {
                     { nameof(DeleteConfirmation.Command),  command },
-                    { nameof(_DocumentFormDialog.model),command },
+                    { nameof(_DocumentFormDialog.Model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<_DocumentFormDialog>(string.Format(ConstantString.EDITTHEITEM, L["Document"]), parameters, options);
+        var dialog = DialogService.Show<_DocumentFormDialog>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
 
         await Task.Delay(300);
         if (!string.IsNullOrEmpty(dto.URL)) await (new OpenSeadragon(JS)).Open(dto.URL);
@@ -388,10 +389,10 @@
         var parameters = new DialogParameters
                             {
                             { nameof(DeleteConfirmation.Command),  command },
-                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Title) }
+                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmation, dto.Title) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EDITTHEITEM, L["Document"]), parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -405,11 +406,11 @@
         var parameters = new DialogParameters
                             {
                             { nameof(DeleteConfirmation.Command),  command },
-                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMWITHSELECTED,_selectedItems.Count) }
+                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmWithSelected,_selectedItems.Count) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>
-        (string.Format(ConstantString.DELETETHEITEM, L["Document"]), parameters, options);
+        (string.Format(ConstantString.DeleteTheItem, L["Document"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -422,7 +423,7 @@
         try
         {
             _downloading = true;
-            var file = await _mediator.Send(new GetFileStreamQuery(dto.Id));
+            var file = await Mediator.Send(new GetFileStreamQuery(dto.Id));
             if (file.Item2 != null)
             {
                 var result = await BlazorDownloadFileService.DownloadFile(file.Item1, file.Item2, "application/octet-stream");

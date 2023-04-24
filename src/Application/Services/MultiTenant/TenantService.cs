@@ -1,7 +1,6 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
-using LazyCache;
 
 namespace CleanArchitecture.Blazor.Application.Services.MultiTenant;
 
@@ -10,40 +9,37 @@ public class TenantService : ITenantService
     private readonly IAppCache _cache;
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
-    public event Action? OnChange;
-    public List<TenantDto> DataSource { get; private set; } = new();
 
     public TenantService(
-      IAppCache cache,
-      IApplicationDbContext context, IMapper mapper)
+        IAppCache cache,
+        IApplicationDbContext context, IMapper mapper)
     {
         _cache = cache;
         _context = context;
         _mapper = mapper;
     }
+
+    public event Action? OnChange;
+    public List<TenantDto> DataSource { get; private set; } = new();
+
     public async Task InitializeAsync()
     {
-
         DataSource = await _cache.GetOrAddAsync(TenantCacheKey.TenantsCacheKey,
             () => _context.Tenants.OrderBy(x => x.Name)
                 .ProjectTo<TenantDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(),
-              TenantCacheKey.MemoryCacheEntryOptions);
-
-
-
+            TenantCacheKey.MemoryCacheEntryOptions);
     }
+
     public void Initialize()
     {
-
         DataSource = _cache.GetOrAdd(TenantCacheKey.TenantsCacheKey,
             () => _context.Tenants.OrderBy(x => x.Name)
                 .ProjectTo<TenantDto>(_mapper.ConfigurationProvider)
                 .ToList(),
-              TenantCacheKey.MemoryCacheEntryOptions);
-
-
+            TenantCacheKey.MemoryCacheEntryOptions);
     }
+
     public async Task Refresh()
     {
         _cache.Remove(TenantCacheKey.TenantsCacheKey);
@@ -51,7 +47,7 @@ public class TenantService : ITenantService
             () => _context.Tenants.OrderBy(x => x.Name)
                 .ProjectTo<TenantDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(),
-              TenantCacheKey.MemoryCacheEntryOptions);
+            TenantCacheKey.MemoryCacheEntryOptions);
         OnChange?.Invoke();
     }
 }

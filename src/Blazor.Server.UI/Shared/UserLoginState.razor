@@ -4,31 +4,30 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
-
 @implements IDisposable
 @code {
     [CascadingParameter]
-    protected Task<AuthenticationState> _authState { get; set; } = default!;
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
     private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
     [Inject]
     public IDispatcher Dispatcher { get; set; } = null!;
     public void Dispose()
     {
-        _client.Login -= _client_Login;
-        _client.Logout -= _client_Logout;
+        Client.Login -= _client_Login;
+        Client.Logout -= _client_Logout;
         _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         GC.SuppressFinalize(this);
     }
     [Inject]
-    private HubClient _client { get; set; } = default!;
+    private HubClient Client { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
-        _client.Login += _client_Login;
-        _client.Logout += _client_Logout;
-        await _client.StartAsync().ConfigureAwait(false);
+        Client.Login += _client_Login;
+        Client.Logout += _client_Logout;
+        await Client.StartAsync().ConfigureAwait(false);
         _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
-        var state = await _authState;
+        var state = await AuthState;
         if (state.User.Identity?.IsAuthenticated ?? false)
         {
             var userId = state.User.GetUserId();

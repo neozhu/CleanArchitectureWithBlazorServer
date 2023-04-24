@@ -1,18 +1,15 @@
-@using Blazor.Server.UI.Services.JsInterop;
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Upload
-@using SixLabors.ImageSharp
-@using SixLabors.ImageSharp.Formats
-@using SixLabors.ImageSharp.Processing
-
+@using Blazor.Server.UI.Services.JsInterop
+@using CleanArchitecture.Blazor.Domain.Enums
 @inherits MudComponentBase
 @inject IStringLocalizer<Documents> L
 <MudDialog>
     <DialogContent>
-        @if (uploadedFiles.Any())
+        @if (_uploadedFiles.Any())
         {
             <div class="d-flex flex-column flex-grow-1">
-                @foreach (var item in uploadedFiles)
+                @foreach (var item in _uploadedFiles)
                 {
                     <MudGrid Spacing="1">
                         <MudItem xs="4" Class="align-self-center">
@@ -36,9 +33,9 @@
     <DialogActions>
         <InputFile id="fileInput" OnChange="(async (e) =>await LoadFiles(e))" hidden multiple AllowedExtensions=".jpg;.png;"
                    CustomExtensionMessage="@L["Only .jpg and .png files are allowed."]" />
-        <MudButton Color="MudBlazor.Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!uploadedFiles.Any())" OnClick="Clear">@ConstantString.CLEAR</MudButton>
+        <MudButton Color="MudBlazor.Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!_uploadedFiles.Any())" OnClick="Clear">@ConstantString.Clear</MudButton>
         <MudButton Color="MudBlazor.Color.Info" StartIcon="@Icons.Material.Filled.AttachFile" HtmlTag="label" for="fileInput">@L["Choose files"]</MudButton>
-        <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled" OnClick="Submit" Disabled="@(_processing || _uploading || !uploadedFiles.Any())">
+        <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled" OnClick="Submit" Disabled="@(_processing || _uploading || !_uploadedFiles.Any())">
             @if (_processing)
             {
                 <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
@@ -46,7 +43,7 @@
             }
             else
             {
-                <MudText>@ConstantString.SUBMIT</MudText>
+                <MudText>@ConstantString.Submit</MudText>
             }
         </MudButton>
     </DialogActions>
@@ -54,29 +51,28 @@
 
 @code {
 
-    [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; } = default!;
-    [EditorRequired][Parameter] public AddEditDocumentCommand model { get; set; } = default!;
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [EditorRequired][Parameter] public AddEditDocumentCommand Model { get; set; } = default!;
     bool _processing;
     bool _uploading;
     [Inject]
-    private IJSRuntime _js { get; set; } = default!;
+    private IJSRuntime Js { get; set; } = default!;
     [Inject]
-    private ISender _mediator { get; set; } = default!;
-    [Inject] private IUploadService _uploadService { get; set; } = default!;
-    List<FileUploadProgress> uploadedFiles = new();
+    private ISender Mediator { get; set; } = default!;
+    [Inject] private IUploadService UploadService { get; set; } = default!;
+    List<FileUploadProgress> _uploadedFiles = new();
     private async ValueTask LoadFiles(InputFileChangeEventArgs e)
     {
         try
         {
             _uploading = true;
             var files = e.GetMultipleFiles(maximumFileCount: 100);
-            var startIndex = uploadedFiles.Count;
+            var startIndex = _uploadedFiles.Count;
             // Add all files to the UI
             foreach (var file in files)
             {
                 var progress = new FileUploadProgress(file.Name, file.Size, file);
-                uploadedFiles.Add(progress);
+                _uploadedFiles.Add(progress);
             }
 
             // We don't want to refresh the UI too frequently,
@@ -90,10 +86,10 @@
             {
                 foreach (var file in files)
                 {
-                    using var stream = file.OpenReadStream(GlobalVariable.maxAllowedSize);
+                    using var stream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
                     while (await stream.ReadAsync(buffer) is int read && read > 0)
                     {
-                        uploadedFiles[startIndex].UploadedBytes += read;
+                        _uploadedFiles[startIndex].UploadedBytes += read;
 
                         // TODO Do something with the file chunk, such as save it
                         // to a database or a local file system
@@ -134,20 +130,20 @@
         try
         {
             _processing = true;
-            if (uploadedFiles.Any())
+            if (_uploadedFiles.Any())
             {
                 var list = new List<UploadRequest>();
-                foreach (var uploaded in uploadedFiles)
+                foreach (var uploaded in _uploadedFiles)
                 {
                     try
                     {
-                        var filestream = uploaded.File.OpenReadStream(GlobalVariable.maxAllowedSize);
-                        var imgstream = new MemoryStream();
-                        await filestream.CopyToAsync(imgstream);
-                        imgstream.Position = 0;
+                        var filestream = uploaded.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
+                        var imgStream = new MemoryStream();
+                        await filestream.CopyToAsync(imgStream);
+                        imgStream.Position = 0;
                         using (var outStream = new MemoryStream())
                         {
-                            using (var image = Image.Load(imgstream))
+                            using (var image = Image.Load(imgStream))
                             {
                                 var scale = 0m;
                                 if (image.Width > 1600)
@@ -174,11 +170,9 @@
                     {
                         Snackbar.Add($"{e.Message}", MudBlazor.Severity.Error);
                     }
-                
-
                 }
-                var uploadcommand = new UploadDocumentCommand(list);
-                await _mediator.Send(uploadcommand);
+                var uploadCommand = new UploadDocumentCommand(list);
+                await Mediator.Send(uploadCommand);
                 await Clear();
                 MudDialog.Close(DialogResult.Ok(true));
             }
@@ -191,8 +185,8 @@
     void Cancel() => MudDialog.Cancel();
     async Task Clear()
     {
-        await (new InputClear(_js)).Clear("fileInput");
-        uploadedFiles = new();
+        await (new InputClear(Js)).Clear("fileInput");
+        _uploadedFiles = new();
     }
     record FileUploadProgress(string FileName, long Size, IBrowserFile File)
     {

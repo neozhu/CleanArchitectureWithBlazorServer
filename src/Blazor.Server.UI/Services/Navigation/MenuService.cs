@@ -1,6 +1,5 @@
 using Blazor.Server.UI.Models.SideMenu;
-using CleanArchitecture.Blazor.Infrastructure.Constants;
-using MudBlazor;
+using CleanArchitecture.Blazor.Application.Constants.Role;
 
 namespace Blazor.Server.UI.Services.Navigation;
 

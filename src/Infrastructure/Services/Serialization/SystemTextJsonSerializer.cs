@@ -1,7 +1,4 @@
-using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.Unicode;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Serialization;

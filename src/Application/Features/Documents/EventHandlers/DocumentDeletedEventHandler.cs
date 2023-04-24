@@ -2,10 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-
-using CleanArchitecture.Blazor.Application.Services.PaddleOCR;
-using Hangfire;
-using MediatR;
+using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.EventHandlers;
 
