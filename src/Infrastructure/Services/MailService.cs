@@ -52,7 +52,7 @@ public class MailService : IMailService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, $"Error sending an email to {to} with subject {subject}", to, subject);
+            _logger.LogError(e, "Error sending an email to {Unknown} with subject {Subject}", to, subject);
             throw;
         }
     }
@@ -79,7 +79,7 @@ public class MailService : IMailService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, $"Error sending an email to {to} with subject {subject} and template {template}", to, subject,template);
+            _logger.LogError(e, "Error sending an email to {Unknown} with subject {Subject} and template {Template}", to, subject,template);
             throw;
         }
     }

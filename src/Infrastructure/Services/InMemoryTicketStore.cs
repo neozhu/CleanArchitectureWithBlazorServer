@@ -15,7 +15,7 @@ public class InMemoryTicketStore : ITicketStore
 
     public InMemoryTicketStore(IMemoryCache cache)
     {
-        _cache = cache ?? throw new ArgumentNullException(nameof(_cache)); ;
+        _cache = cache ?? throw new ArgumentNullException(nameof(cache)); ;
     }
 
     public Task RemoveAsync(string key)

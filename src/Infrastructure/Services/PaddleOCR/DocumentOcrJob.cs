@@ -36,7 +36,7 @@ public class DocumentOcrJob : IDocumentOcrJob
         _logger = logger;
         _timer=new Stopwatch();
     }
-    private string readbase64string(string path)
+    private string ReadBase64String(string path)
     {
         using (Image image = Image.FromFile(path))
         {
@@ -68,21 +68,21 @@ public class DocumentOcrJob : IDocumentOcrJob
                 await _hubContext.Clients.All.Start(doc.Title!);
                 DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                 if (string.IsNullOrEmpty(doc.URL)) return;
-                var imgfile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
-                if (!File.Exists(imgfile)) return;
-                string base64string = readbase64string(imgfile);
+                var imgFile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
+                if (!File.Exists(imgFile)) return;
+                string base64String = ReadBase64String(imgFile);
                
-                var response = client.PostAsJsonAsync<dynamic>("", new { images = new string[] { base64string } }).Result;
+                var response = client.PostAsJsonAsync<dynamic>("", new { images = new string[] { base64String } }).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var result = await response.Content.ReadAsStringAsync();
-                    var ocr_result = JsonSerializer.Deserialize<ocr_result>(result);
-                    var ocr_status = ocr_result!.status;
+                    var ocrResult = JsonSerializer.Deserialize<OcrResult>(result);
+                    var ocrStatus = ocrResult!.Status;
                     doc.Status = JobStatus.Done;
-                    doc.Description = "recognize the result: " + ocr_status;
-                    if (ocr_result.status == "000")
+                    doc.Description = "recognize the result: " + ocrStatus;
+                    if (ocrResult.Status == "000")
                     {
-                        var content = _serializer.Serialize(ocr_result.results);
+                        var content = _serializer.Serialize(ocrResult.Results);
                         doc!.Content = content;
 
                     }
@@ -91,7 +91,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                     DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                     _timer.Stop();
                     var elapsedMilliseconds = _timer.ElapsedMilliseconds;
-                    _logger.LogInformation("Id: {id}, elapsed: {elapsedMilliseconds}, recognize the result: {@result},{@content}", id, elapsedMilliseconds, ocr_result, doc.Content);
+                    _logger.LogInformation("Id: {Id}, elapsed: {ElapsedMilliseconds}, recognize the result: {@Result},{@Content}", id, elapsedMilliseconds, ocrResult, doc.Content);
 
                 }
 
@@ -99,7 +99,7 @@ public class DocumentOcrJob : IDocumentOcrJob
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"{id}: recognize error {ex.Message}");
+            _logger.LogError(ex, "{Id}: recognize error {ExMessage}", id, ex.Message);
         }
 
     }
@@ -112,11 +112,11 @@ class result
     public string text { get; set; } = String.Empty;
     public List<int[]> text_region { get; set; } = new();
 }
-class ocr_result
+class OcrResult
 {
-    public string msg { get; set; } = String.Empty;
-    public List<result[]> results { get; set; } = new();
-    public string status { get; set; }=String.Empty;
+    public string Msg { get; set; } = String.Empty;
+    public List<result[]> Results { get; set; } = new();
+    public string Status { get; set; }=String.Empty;
 }
 
 

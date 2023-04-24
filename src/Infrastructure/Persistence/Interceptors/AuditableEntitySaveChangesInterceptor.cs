@@ -29,19 +29,19 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
 
-        updateEntities(eventData.Context!);
+        UpdateEntities(eventData.Context!);
         _temporaryAuditTrailList = TryInsertTemporaryAuditTrail(eventData.Context!, cancellationToken);
         _deletingDomainEvents = TryGetDeletingDomainEvents(eventData.Context!, cancellationToken);
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
     public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
     {
-        var resultvalueTask = await base.SavedChangesAsync(eventData, result, cancellationToken);
+        var resultValueTask = await base.SavedChangesAsync(eventData, result, cancellationToken);
         await TryUpdateTemporaryPropertiesForAuditTrail(eventData.Context!, cancellationToken).ConfigureAwait(false);
         await _mediator.DispatchDomainEvents(eventData.Context!, _deletingDomainEvents).ConfigureAwait(false);
-        return resultvalueTask;
+        return resultValueTask;
     }
-    private void updateEntities(DbContext context)
+    private void UpdateEntities(DbContext context)
     {
         var userId = _currentUserService.UserId;
         var tenantId = _tenantProvider.TenantId;
@@ -52,13 +52,13 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
                 case EntityState.Added:
                     entry.Entity.CreatedBy = userId;
                     entry.Entity.Created = _dateTime.Now;
-                    if (entry.Entity is IMustHaveTenant mustenant)
+                    if (entry.Entity is IMustHaveTenant mustTenant)
                     {
-                        mustenant.TenantId = tenantId;
+                        mustTenant.TenantId = tenantId;
                     }
-                    if (entry.Entity is IMayHaveTenant maytenant)
+                    if (entry.Entity is IMayHaveTenant mayTenant)
                     {
-                        maytenant.TenantId = tenantId;
+                        mayTenant.TenantId = tenantId;
                     }
                     break;
 

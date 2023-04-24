@@ -44,7 +44,7 @@ if (app.Environment.IsDevelopment())
     using (var scope = app.Services.CreateScope())
     {
 
-        var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+        var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
         await initializer.InitialiseAsync();
         await initializer.SeedAsync();
         var notificationService = scope.ServiceProvider.GetService<INotificationService>();

@@ -20,14 +20,14 @@ public interface ISignalRHub
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class SignalRHub : Hub<ISignalRHub>
 {
-    private static readonly ConcurrentDictionary<string, string> _onlineUsers = new();
+    private static readonly ConcurrentDictionary<string, string> OnlineUsers = new();
     public override async Task OnConnectedAsync()
     {
         var id = Context.ConnectionId;
         var userName = Context.User?.Identity?.Name ?? string.Empty;
-        if (!_onlineUsers.ContainsKey(id))
+        if (!OnlineUsers.ContainsKey(id))
         {
-            _onlineUsers.TryAdd(id, userName);
+            OnlineUsers.TryAdd(id, userName);
         }
         await Clients.All.Connect(userName);
         await base.OnConnectedAsync();
@@ -37,7 +37,7 @@ public class SignalRHub : Hub<ISignalRHub>
     {
         var id = Context.ConnectionId;
         //try to remove key from dictionary
-        if (_onlineUsers.TryRemove(id, out string? userName))
+        if (OnlineUsers.TryRemove(id, out string? userName))
         {
             await Clients.All.Disconnect(userName);
         }

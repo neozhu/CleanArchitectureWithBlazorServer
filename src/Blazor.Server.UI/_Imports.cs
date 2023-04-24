@@ -4,7 +4,6 @@ global using FluentValidation;
 global using Microsoft.EntityFrameworkCore;
 global using System.Data;
 global using Microsoft.Extensions.Logging;
-global using CleanArchitecture.Blazor.Domain;
 global using CleanArchitecture.Blazor.Domain.Entities;
 global using CleanArchitecture.Blazor.Domain.Identity;
 global using CleanArchitecture.Blazor.Application.Common.Models;

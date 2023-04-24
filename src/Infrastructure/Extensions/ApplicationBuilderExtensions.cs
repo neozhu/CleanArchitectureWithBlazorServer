@@ -1,3 +1,4 @@
+using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;

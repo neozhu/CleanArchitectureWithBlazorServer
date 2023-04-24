@@ -53,7 +53,7 @@ public static class DependencyInjection
         services.AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
         services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
         services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
-        services.AddScoped<ApplicationDbContextInitialiser>();
+        services.AddScoped<ApplicationDbContextInitializer>();
 
 
         services.AddLocalizationServices();
