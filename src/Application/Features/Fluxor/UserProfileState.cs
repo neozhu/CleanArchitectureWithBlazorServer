@@ -5,13 +5,15 @@ namespace CleanArchitecture.Blazor.Application.Features.Fluxor;
 public class UserProfileState
 {
     public UserProfile UserProfile { get; }
+    public bool IsLoading { get; }
     public UserProfileState()
     {
-        UserProfile = new() { Email= "", UserId=Guid.NewGuid().ToString(),UserName= "" };
+        UserProfile = new() { Email= "", UserId="",UserName= "" };
     }
-    public UserProfileState(UserProfile userProfile)
+    public UserProfileState(bool loading,UserProfile? userProfile)
     {
-        UserProfile = userProfile;
+        IsLoading = loading;
+        UserProfile = userProfile?? new() { Email = "", UserId = "", UserName = "" }; ;
     }
     public UserProfileState(ApplicationUserDto dto)
     {

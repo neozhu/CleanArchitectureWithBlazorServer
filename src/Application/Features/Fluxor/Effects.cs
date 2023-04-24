@@ -1,6 +1,4 @@
-﻿using System.Net.Http.Json;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Features.Fluxor;
 public class Effects

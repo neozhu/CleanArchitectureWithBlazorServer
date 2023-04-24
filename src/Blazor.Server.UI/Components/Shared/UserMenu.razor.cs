@@ -11,6 +11,7 @@ public partial class UserMenu: FluxorComponent
 {
     [Inject]
     private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    private bool IsLoading => UserProfileState.Value.IsLoading;
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     [Inject]

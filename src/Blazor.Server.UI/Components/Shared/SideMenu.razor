@@ -24,16 +24,22 @@
                    FullWidth="true">
                 <ChildContent>
                     <MudStack Row="true">
-                        @if (string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl))
+                        @if (IsLoading)
                         {
-                            <MudAvatar Color="Color.Primary">
-                                @UserProfile?.UserName.ToUpper().FirstOrDefault()
-                            </MudAvatar>
+                            <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
                         }
                         else
                         {
                             <MudAvatar>
+                                @if (string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl))
+                                {
+                                    <MudImage>@UserProfile?.UserName?.First()</MudImage>
+                                }
+                                else
+                                {
                                 <MudImage Src="@UserProfile?.ProfilePictureDataUrl"></MudImage>
+                                }
+                                
                             </MudAvatar>
                         }
                         <MudStack Justify="Justify.SpaceBetween" Spacing="0">

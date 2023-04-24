@@ -12,6 +12,7 @@ public partial class SideMenu: FluxorComponent
     [Inject]
     private IState<UserProfileState> UserProfileState { get; set; } = null!;
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
+    private bool IsLoading   => UserProfileState.Value.IsLoading;
     [EditorRequired] [Parameter] 
     public bool SideMenuDrawerOpen { get; set; } 
     
