@@ -132,7 +132,7 @@
                 <SelectColumn ShowInFooter="false" ></SelectColumn>
                 <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false" >
                     <CellTemplate>
-                    @if (_canEdit || _canDelete)
+                        @if (_canEdit || _canDelete || _canManagePermissions)
                     {
                             <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                                  Dense="true"
@@ -145,6 +145,10 @@
                             {
                                     <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
                             }
+                                @if (_canManagePermissions)
+                                {
+                                    <MudMenuItem OnClick="@(()=>OnSetPermissions(context.Item))">@L["Set Permissions"]</MudMenuItem>
+                                }
                         </MudMenu>
                     }
                     else
