@@ -79,7 +79,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
 
         private async Task UploadPhoto(InputFileChangeEventArgs e)
         {
-            var filestream = e.File.OpenReadStream(GlobalVariable.maxAllowedSize);
+            var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
             var imgstream = new MemoryStream();
             await filestream.CopyToAsync(imgstream);
             imgstream.Position = 0;
@@ -117,7 +117,7 @@ namespace Blazor.Server.UI.Pages.Identity.Users
                     user.DisplayName = model.DisplayName;
                     user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                     await _userManager.UpdateAsync(user);
-                    Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                    Snackbar.Add($"{ConstantString.UpdateSuccess}", MudBlazor.Severity.Info);
                     await _mediator.Publish(new UpdateUserProfileCommand() { UserProfile = model });
                 }
             }

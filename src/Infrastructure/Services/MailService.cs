@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
+using CleanArchitecture.Blazor.Application.Common.Configurations;
 using FluentEmail.Core;
 using FluentEmail.Core.Models;
 using Polly;

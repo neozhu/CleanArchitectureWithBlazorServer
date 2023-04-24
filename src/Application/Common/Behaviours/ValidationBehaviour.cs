@@ -17,14 +17,14 @@ where TRequest : IRequest<TResponse>
     public  async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var context = new ValidationContext<TRequest>(request);
-        var failrules = _validators
+        var failRules = _validators
             .Select(validator => validator.Validate(context))
             .SelectMany(result => result.Errors)
-            .Where(failrules => failrules != null)
+            .Where(failRules => failRules != null)
             .ToList();
-        if (failrules.Any())
+        if (failRules.Any())
         {
-            throw new ValidationException(failrules);
+            throw new ValidationException(failRules);
         }
         return await next().ConfigureAwait(false);
     }

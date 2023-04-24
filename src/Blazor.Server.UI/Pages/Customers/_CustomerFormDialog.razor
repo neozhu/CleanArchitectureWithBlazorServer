@@ -18,8 +18,8 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@ConstantString.CANCEL</MudButton>
-        <MudButton Loading="@_saving" Color="MudBlazor.Color.Primary" OnClick="Submit">@ConstantString.SAVE</MudButton>
+        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
+        <MudButton Loading="@_saving" Color="MudBlazor.Color.Primary" OnClick="Submit">@ConstantString.Save</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -46,7 +46,7 @@
             if (result.Succeeded)
             {
                 MudDialog.Close(DialogResult.Ok(true));
-                Snackbar.Add(ConstantString.SAVESUCCESS, MudBlazor.Severity.Info);
+                Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
             }
             else
             {

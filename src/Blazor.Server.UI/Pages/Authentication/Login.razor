@@ -6,6 +6,9 @@
 @using Microsoft.AspNetCore.DataProtection
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using Blazor.Server.UI.Pages.Identity.Users
+@using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
+@using CleanArchitecture.Blazor.Application.Constants.Role
+@using CleanArchitecture.Blazor.Application.Constants.User
 @implements IDisposable
 @inject IStringLocalizer<Login> L
 
@@ -48,7 +51,7 @@
                 @if (_loading)
                 {
                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2"> @ConstantString.LOADING</MudText>
+                    <MudText Class="ms-2"> @ConstantString.Loading</MudText>
                 }
                 else
                 {
@@ -92,7 +95,7 @@
     MudForm? _form;
     bool _success;
     bool _loading;
-    [Inject] private LoginFormModellFluentValidator _loginValidator { get; set; } = default!;
+    [Inject] private LoginFormModelFluentValidator _loginValidator { get; set; } = default!;
 
 
     protected override async Task OnInitializedAsync()

@@ -9,6 +9,10 @@
 @using System.ComponentModel
 @using System.Linq.Expressions
 @using System.Reflection
+@using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
+@using CleanArchitecture.Blazor.Application.Constants.ClaimTypes
+@using CleanArchitecture.Blazor.Application.Constants.Permission
+@using CleanArchitecture.Blazor.Application.Constants.Role
 @implements IDisposable
 @page "/identity/users"
 @inject IStringLocalizer<Users> L
@@ -48,7 +52,7 @@
                                            Disabled="@_loading"
                                            OnClick="@(()=>OnRefresh())"
                                            StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
+                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.Refresh</MudButton>
                                 @if (_canCreate)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -56,7 +60,7 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnCreate"
-                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.New</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -66,7 +70,7 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnDeleteChecked"
-                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                                 }
                                 @if (_canExport)
                                 {
@@ -75,7 +79,7 @@
                                                   Size="Size.Small"
                                                   @bind-Loading="_exporting" LoadingAdornment="Adornment.Start" OnClick="OnExport"
                                                   Style="margin-right: 4px; margin-bottom:4px"
-                                                  IconColor="Color.Surface">@ConstantString.EXPORT</MudLoadingButton>
+                                                  IconColor="Color.Surface">@ConstantString.Export</MudLoadingButton>
                                 }
                                 @if (_canImport)
                                 {
@@ -91,11 +95,11 @@
                                                 @if (_uploading)
                                                 {
                                                     <MudProgressCircular Size="Size.Small" Indeterminate="true" />
-                                                    @ConstantString.UPLOADING
+                                                    @ConstantString.Uploading
                                                 }
                                                 else
                                                 {
-                                                    @ConstantString.IMPORT
+                                                    @ConstantString.Import
                                                 }
                                             </MudButton>
                                         </ButtonTemplate>
@@ -110,7 +114,7 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnCreate"
-                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.New</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -120,7 +124,7 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnDeleteChecked"
-                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                                 }
                             </MudHidden>
                         </div>
@@ -133,7 +137,7 @@
                                         <MudSelectItem Value="@str">@str</MudSelectItem>
                                     }
                                 </MudSelect>
-                                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
+                                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
                             </MudStack>
 
@@ -145,7 +149,7 @@
             </ToolBarContent>
             <Columns>
                 <SelectColumn ShowInFooter="false"></SelectColumn>
-                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false">
+                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
                     <CellTemplate>
                         @if (_canEdit || _canDelete || _canManageRoles || _canRestPassword || _canActive || _canManagePermissions)
                         {
@@ -154,11 +158,11 @@
                                  EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                                 @if (_canEdit)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                                 }
                                 @if (_canDelete)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                                 }
                                 @if (_canManagePermissions)
                                 {
@@ -187,7 +191,7 @@
                             <MudButton Variant="Variant.Filled" DisableElevation="true"
                                    StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                    Color="Color.Surface">
-                                @ConstantString.NOALLOWED
+                                @ConstantString.NoAllowed
                             </MudButton>
                         }
                     </CellTemplate>
@@ -413,7 +417,7 @@
                 {
                     await _userManager.AddToRoleAsync(applicationUser, RoleName.Basic);
                 }
-                Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{ConstantString.CreateSuccess}", MudBlazor.Severity.Info);
                 await OnRefresh();
             }
             else
@@ -461,7 +465,7 @@
                         }
                     }
                 }
-                Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{ConstantString.UpdateSuccess}", MudBlazor.Severity.Info);
                 await OnRefresh();
             }
             else
@@ -472,13 +476,13 @@
     }
     private async Task OnDelete(ApplicationUserDto dto)
     {
-        string deleteContent = ConstantString.DELETECONFIRMATION;
+        string deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters
         {
             { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, dto.UserName) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
+        var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DeleteConfirmationTitle, parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
         {
@@ -493,7 +497,7 @@
                 }
 
             }
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.DeleteSuccess}", MudBlazor.Severity.Info);
             await OnRefresh();
         }
     }
@@ -507,14 +511,14 @@
         {
             if (_selectedItems.Count == 1)
             {
-                Snackbar.Add($"{ConstantString.DELETEFAIL}", MudBlazor.Severity.Error);
+                Snackbar.Add($"{ConstantString.DeleteFail}", MudBlazor.Severity.Error);
                 return;
             }
 
             _selectedItems.Remove(_selectedItems.First(x => x.Id == currentUserId));
         }
 
-        string deleteContent = ConstantString.DELETECONFIRMATION;
+        string deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters { { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, _selectedItems.Count) } };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>(L["Delete"], parameters, options);
@@ -534,7 +538,7 @@
                     return;
                 }
             }
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.DeleteSuccess}", MudBlazor.Severity.Info);
             await OnRefresh();
         }
 
@@ -548,7 +552,7 @@
         item.IsActive = !item.IsActive;
         if (state.Succeeded)
         {
-            Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.UpdateSuccess}", MudBlazor.Severity.Info);
         }
         else
         {
@@ -747,7 +751,7 @@
                                                             }
                     , L["Users"]);
             var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
-            Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
         }
         finally
         {
@@ -760,7 +764,7 @@
     {
         _uploading = true;
         var stream = new MemoryStream();
-        await file.OpenReadStream(GlobalVariable.maxAllowedSize).CopyToAsync(stream);
+        await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
         var result = await _excelService.ImportAsync(stream.ToArray(), mappers: new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
             {
                 { L["User Name"], (row, item) => item.UserName = row[L["User Name"]]?.ToString() },
@@ -790,7 +794,7 @@
             }
 
             await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.IMPORTSUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.ImportSuccess}", MudBlazor.Severity.Info);
         }
         else
         {

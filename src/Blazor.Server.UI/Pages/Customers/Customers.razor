@@ -3,6 +3,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagination
 @using BlazorDownloadFile
+@using CleanArchitecture.Blazor.Application.Constants.Permission
 @using CleanArchitecture.Blazor.Application.Features.Customers.Caching
 @using CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delete
@@ -51,7 +52,7 @@
                                            Disabled="@_loading"
                                            OnClick="@(()=>OnRefresh())"
                                            StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
+                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.Refresh</MudButton>
                                 @if (_canCreate)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -60,7 +61,7 @@
                                            Disabled="@_loading"
                                            OnClick="OnCreate"
                                            Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.New</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -70,19 +71,19 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnDeleteChecked"
-                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                                 }
                                 @if (_canExport)
                                 {
                                     <MudLoadingButton @bind-Loading="_exporting" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                                  Label="@ConstantString.EXPORT"
+                                                  Label="@ConstantString.Export"
                                                   Disabled="@_loading"
                                                   StartIcon="@Icons.Custom.FileFormats.FileExcel"
                                                   Size="Size.Small"
                                                   Style="margin-right: 4px; margin-bottom:4px"
                                                   OnClick="OnExport"
                                                   IconColor="Color.Surface">
-                                    @ConstantString.EXPORT
+                                    @ConstantString.Export
                                     </MudLoadingButton>
                                 }
                                 @if (_canImport)
@@ -99,11 +100,11 @@
                                                 @if (_uploading)
                                                 {
                                                     <MudProgressCircular Size="Size.Small" Indeterminate="true" />
-                                                    @ConstantString.UPLOADING
+                                                    @ConstantString.Uploading
                                                 }
                                                 else
                                                 {
-                                                    @ConstantString.IMPORT
+                                                    @ConstantString.Import
                                                 }
                                             </MudButton>
                                         </ButtonTemplate>
@@ -119,7 +120,7 @@
                                            Disabled="@_loading"
                                            OnClick="OnCreate"
                                            Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.New</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -129,13 +130,13 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnDeleteChecked"
-                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                                 }
                             </MudHidden>
                         </div>
                         @if (_canSearch)
                         {
-                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_query.Keyword" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
+                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
                         }
 
@@ -144,7 +145,7 @@
             </ToolBarContent>
             <Columns>
                 <SelectColumn ShowInFooter="false"></SelectColumn>
-                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false">
+                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
                     <CellTemplate>
                         @if (_canEdit || _canDelete)
                         {
@@ -153,11 +154,11 @@
                                  EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                                 @if (_canEdit)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                                 }
                                 @if (_canDelete)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                                 }
                             </MudMenu>
                         }
@@ -166,7 +167,7 @@
                             <MudButton Variant="Variant.Filled" DisableElevation="true"
                                    StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                    Color="Color.Surface">
-                                @ConstantString.NOALLOWED
+                                @ConstantString.NoAllowed
                             </MudButton>
                         }
                     </CellTemplate>
@@ -183,10 +184,10 @@
 
             </Columns>
             <NoRecordsContent>
-                <MudText>@ConstantString.NORECORDS</MudText>
+                <MudText>@ConstantString.NoRecords</MudText>
             </NoRecordsContent>
             <LoadingContent>
-                <MudText>@ConstantString.LOADING</MudText>
+                <MudText>@ConstantString.Loading</MudText>
             </LoadingContent>
             <PagerContent>
                 <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
@@ -314,10 +315,10 @@
         var parameters = new DialogParameters
            {
              { nameof(DeleteConfirmation.Command),  command },
-             { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Name) }
+             { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmation, dto.Name) }
            };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DeleteConfirmationTitle, parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -331,10 +332,10 @@
         var parameters = new DialogParameters
                         {
                              { nameof(DeleteConfirmation.Command),  command },
-                             { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMWITHSELECTED,_selectedItems.Count) }
+                             { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmWithSelected,_selectedItems.Count) }
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DeleteConfirmationTitle, parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -356,7 +357,7 @@
         if (result.Succeeded)
         {
             var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Customers"]}.xlsx", result.Data, contentType: "application/octet-stream");
-            Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
         }
         else
         {
@@ -374,7 +375,7 @@
         if (result.Succeeded)
         {
             await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.IMPORTSUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.ImportSuccess}", MudBlazor.Severity.Info);
         }
         else
         {

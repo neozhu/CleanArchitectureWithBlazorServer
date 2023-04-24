@@ -1,9 +1,9 @@
-namespace CleanArchitecture.Blazor.Application.Constants;
+namespace CleanArchitecture.Blazor.Application.Constants.LocalStorage;
 public static class LocalStorage
 {
-    public const string USERID = "UserId";
-    public const string USERNAME = "UserName";
-    public const string TENANTID = "TenantId";
-    public const string TENANTNAME = "TenantName";
-    public const string CLAIMSIDENTITY = "ClaimsIdentity";
+    public const string UserId = "UserId";
+    public const string Username = "UserName";
+    public const string TenantId = "TenantId";
+    public const string TenantName = "TenantName";
+    public const string ClaimsIdentity = "ClaimsIdentity";
 }

@@ -32,7 +32,7 @@
     <DialogActions>
         <InputFile id="fileInput" OnChange="(async (e) =>await LoadFiles(e))" hidden multiple AllowedExtensions=".jpg;.png;"
                    CustomExtensionMessage="@L["Only .jpg and .png files are allowed."]" />
-        <MudButton Color="MudBlazor.Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!uploadedFiles.Any())" OnClick="Clear">@ConstantString.CLEAR</MudButton>
+        <MudButton Color="MudBlazor.Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!uploadedFiles.Any())" OnClick="Clear">@ConstantString.Clear</MudButton>
         <MudButton Color="MudBlazor.Color.Info" StartIcon="@Icons.Material.Filled.AttachFile" HtmlTag="label" for="fileInput">@L["Choose files"]</MudButton>
         <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled" OnClick="Submit" Disabled="@(_processing || _uploading || !uploadedFiles.Any())">
             @if (_processing)
@@ -42,7 +42,7 @@
             }
             else
             {
-                <MudText>@ConstantString.SUBMIT</MudText>
+                <MudText>@ConstantString.Submit</MudText>
             }
         </MudButton>
     </DialogActions>
@@ -86,7 +86,7 @@
             {
                 foreach (var file in files)
                 {
-                    using var stream = file.OpenReadStream(GlobalVariable.maxAllowedSize);
+                    using var stream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
                     while (await stream.ReadAsync(buffer) is int read && read > 0)
                     {
                         uploadedFiles[startIndex].UploadedBytes += read;
@@ -137,7 +137,7 @@
                 {
                     try
                     {
-                        var filestream = uploaded.File.OpenReadStream(GlobalVariable.maxAllowedSize);
+                        var filestream = uploaded.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
                         var imgstream = new MemoryStream();
                         await filestream.CopyToAsync(imgstream);
                         imgstream.Position = 0;

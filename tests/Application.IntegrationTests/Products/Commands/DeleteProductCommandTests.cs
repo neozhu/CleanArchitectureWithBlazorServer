@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Application.IntegrationTests;
-using CleanArchitecture.Blazor.Application.Common.Exceptions;
+using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll;

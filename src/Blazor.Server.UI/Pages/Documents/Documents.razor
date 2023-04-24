@@ -11,6 +11,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
 @using Blazor.Server.UI.Services.JsInterop
+@using CleanArchitecture.Blazor.Application.Constants.Permission
 @implements IDisposable
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 <PageTitle>@Title</PageTitle>
@@ -52,7 +53,7 @@
                                            Disabled="@_loading"
                                            OnClick="@(()=>OnRefresh())"
                                            StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
+                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.Refresh</MudButton>
                                 @if (_canCreate)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -71,21 +72,21 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnDeleteChecked"
-                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                                 }
 
 
                             </MudHidden>
                             <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                                 <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                                    <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
+                                    <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.Refresh</MudMenuItem>
                                     @if (_canCreate)
                                     {
                                         <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@L["Upload Pictures"]</MudMenuItem>
                                     }
                                     @if (_canDelete)
                                     {
-                                        <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
+                                        <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.Delete</MudMenuItem>
                                     }
 
                                 </MudMenu>
@@ -93,7 +94,7 @@
                         </div>
                         @if (_canSearch)
                         {
-                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
+                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
                         }
 
@@ -102,7 +103,7 @@
             </ToolBarContent>
             <Columns>
                 <SelectColumn ShowInFooter="false">                 </SelectColumn>
-                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false">
+                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
                     <CellTemplate>
                         @if (_canEdit || _canDelete)
                         {
@@ -111,15 +112,15 @@
                                      EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                                 @if (_canEdit)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                                 }
                                 @if (_canDelete)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                                 }
                                 @if (_canDownload)
                                 {
-                                    <MudMenuItem Disabled="@_downloading" OnClick="@(()=>OnDownload(context.Item))">@ConstantString.DOWNLOAD</MudMenuItem>
+                                    <MudMenuItem Disabled="@_downloading" OnClick="@(()=>OnDownload(context.Item))">@ConstantString.Download</MudMenuItem>
                                 }
                             </MudMenu>
                         }
@@ -128,7 +129,7 @@
                             <MudButton Variant="Variant.Filled" DisableElevation="true"
                                        StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                        Color="Color.Surface">
-                                @ConstantString.NOALLOWED
+                                @ConstantString.NoAllowed
                             </MudButton>
                         }
                     </CellTemplate>
@@ -200,10 +201,10 @@
                 </PropertyColumn>
             </Columns>
             <NoRecordsContent>
-                <MudText>@ConstantString.NORECORDS</MudText>
+                <MudText>@ConstantString.NoRecords</MudText>
             </NoRecordsContent>
             <LoadingContent>
-                <MudText>@ConstantString.LOADING</MudText>
+                <MudText>@ConstantString.Loading</MudText>
             </LoadingContent>
             <PagerContent>
                 <MudTablePager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
@@ -345,7 +346,7 @@
         if (!state.Canceled)
         {
             await _table.ReloadServerData();
-            Snackbar.Add(ConstantString.UPLOADSUCCESS, MudBlazor.Severity.Info);
+            Snackbar.Add(ConstantString.UploadSuccess, MudBlazor.Severity.Info);
         }
     }
     private async Task OnEdit(DocumentDto dto)
@@ -357,7 +358,7 @@
                     { nameof(_DocumentFormDialog.model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<_DocumentFormDialog>(string.Format(ConstantString.EDITTHEITEM, L["Document"]), parameters, options);
+        var dialog = DialogService.Show<_DocumentFormDialog>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
 
         await Task.Delay(300);
         if (!string.IsNullOrEmpty(dto.URL)) await (new OpenSeadragon(JS)).Open(dto.URL);
@@ -374,10 +375,10 @@
         var parameters = new DialogParameters
                             {
                             { nameof(DeleteConfirmation.Command),  command },
-                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMATION, dto.Title) }
+                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmation, dto.Title) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EDITTHEITEM, L["Document"]), parameters, options);
+        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -391,11 +392,11 @@
         var parameters = new DialogParameters
                             {
                             { nameof(DeleteConfirmation.Command),  command },
-                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DELETECONFIRMWITHSELECTED,_selectedItems.Count) }
+                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmWithSelected,_selectedItems.Count) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>
-        (string.Format(ConstantString.DELETETHEITEM, L["Document"]), parameters, options);
+        (string.Format(ConstantString.DeleteTheItem, L["Document"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {

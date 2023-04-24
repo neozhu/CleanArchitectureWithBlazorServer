@@ -2,6 +2,7 @@
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching
+@using CleanArchitecture.Blazor.Application.Constants.Permission
 
 
 @attribute [Authorize(Policy = Permissions.AuditTrails.View)]
@@ -41,7 +42,7 @@
                                        Size="Size.Small"
                                        OnClick="@(()=>OnRefresh())"
                                        StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                       Style="margin-right: 5px;">@ConstantString.REFRESH</MudButton>
+                                       Style="margin-right: 5px;">@ConstantString.Refresh</MudButton>
                         </div>
 
                         <MudStack Row="true" AlignItems="AlignItems.Stretch">
@@ -92,10 +93,10 @@
                 </MudCard>
             </ChildRowContent>
             <NoRecordsContent>
-                <MudText>@ConstantString.NORECORDS</MudText>
+                <MudText>@ConstantString.NoRecords</MudText>
             </NoRecordsContent>
             <LoadingContent>
-                <MudText>@ConstantString.LOADING</MudText>
+                <MudText>@ConstantString.Loading</MudText>
             </LoadingContent>
             <PagerContent>
                 <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />

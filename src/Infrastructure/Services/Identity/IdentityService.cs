@@ -6,6 +6,8 @@ using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Configurations;
+using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;

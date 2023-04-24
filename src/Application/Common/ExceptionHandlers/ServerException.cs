@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace CleanArchitecture.Blazor.Application.Common.Exceptions;
+namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 public class ServerException : Exception
 {
     public IEnumerable<string> ErrorMessages { get; }

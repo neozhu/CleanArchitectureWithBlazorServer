@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Application.Common.Exceptions;
+namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 public class ConflictException : ServerException
 {
     public ConflictException(string message)

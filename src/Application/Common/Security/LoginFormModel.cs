@@ -9,13 +9,11 @@ namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 
 
-public class LoginFormModellFluentValidator : AbstractValidator<LoginFormModel>
+public class LoginFormModelFluentValidator : AbstractValidator<LoginFormModel>
 {
-    private readonly IStringLocalizer<LoginFormModellFluentValidator> _localizer;
+    private readonly IStringLocalizer<LoginFormModelFluentValidator> _localizer;
 
-    public LoginFormModellFluentValidator(
-        IStringLocalizer<LoginFormModellFluentValidator> localizer
-        )
+    public LoginFormModelFluentValidator(IStringLocalizer<LoginFormModelFluentValidator> localizer)
     {
         _localizer = localizer;
         RuleFor(x => x.UserName)

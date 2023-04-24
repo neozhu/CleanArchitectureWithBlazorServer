@@ -1,6 +1,6 @@
 
 using System.Threading.Tasks;
-using CleanArchitecture.Blazor.Application.Common.Exceptions;
+using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete;
 using CleanArchitecture.Blazor.Domain;

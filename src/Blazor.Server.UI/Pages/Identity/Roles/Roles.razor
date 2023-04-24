@@ -3,6 +3,9 @@
 @using System.Security.Claims
 @using System.ComponentModel
 @using System.Reflection
+@using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
+@using CleanArchitecture.Blazor.Application.Constants.ClaimTypes
+@using CleanArchitecture.Blazor.Application.Constants.Permission
 @inherits OwningComponentBase
 @page "/identity/roles"
 
@@ -44,7 +47,7 @@
                                            OnClick="OnRefresh"
                                            Disabled="@_loading"
                                            StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
+                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.Refresh</MudButton>
                                 @if (_canCreate)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -52,7 +55,7 @@
                                            Size="Size.Small"
                                            OnClick="OnCreate"
                                            Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.New</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -62,7 +65,7 @@
                                            OnClick="OnDeleteChecked"
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                                 }
                                 
                                 @if (_canExport)
@@ -71,7 +74,7 @@
                                            StartIcon="@Icons.Material.Filled.Download"
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.EXPORT</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.Export</MudButton>
                                 }
                                 @if (_canImport)
                                 {
@@ -87,11 +90,11 @@
                                                 @if (_uploading)
                                                 {
                                                     <MudProgressCircular Size="Size.Small" Indeterminate="true" />
-                                                    @ConstantString.UPLOADING
+                                                    @ConstantString.Uploading
                                                 }
                                                 else
                                                 {
-                                                    @ConstantString.IMPORT
+                                                    @ConstantString.Import
                                                 }
                                             </MudButton>
                                         </ButtonTemplate>
@@ -100,14 +103,14 @@
                             </MudHidden>
                             <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                                 <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                                    <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
+                                    <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.Refresh</MudMenuItem>
                                     @if (_canCreate)
                                     {
-                                        <MudMenuItem OnClick="OnCreate">@ConstantString.NEW</MudMenuItem>
+                                        <MudMenuItem OnClick="OnCreate">@ConstantString.New</MudMenuItem>
                                     }
                                     @if (_canDelete)
                                     {
-                                        <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
+                                        <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.Delete</MudMenuItem>
                                     }
                                 </MudMenu>
                             </MudHidden>
@@ -125,7 +128,7 @@
             </ToolBarContent>
              <Columns>
                 <SelectColumn ShowInFooter="false" ></SelectColumn>
-                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false" >
+                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Actions" Sortable="false" >
                     <CellTemplate>
                     @if (_canEdit || _canDelete)
                     {
@@ -134,11 +137,11 @@
                                  EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                             @if (_canEdit)
                             {
-                                <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
+                                <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                             }
                             @if (_canDelete)
                             {
-                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                             }
                         </MudMenu>
                     }
@@ -147,7 +150,7 @@
                         <MudButton Variant="Variant.Filled" DisableElevation="true"
                                    StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                    Color="Color.Surface">
-                            @ConstantString.NOALLOWED
+                            @ConstantString.NoAllowed
                         </MudButton>
                     }
                     </CellTemplate>
@@ -266,7 +269,7 @@
             var state = await _roleManager.CreateAsync(applicationRole);
             if (state.Succeeded)
             {
-                Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{ConstantString.CreateSuccess}", MudBlazor.Severity.Info);
                 await OnRefresh();
             }
             else
@@ -291,7 +294,7 @@
                 var state = await _roleManager.UpdateAsync(role);
                 if (state.Succeeded)
                 {
-                    Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                    Snackbar.Add($"{ConstantString.UpdateSuccess}", MudBlazor.Severity.Info);
                     await OnRefresh();
                 }
                 else
@@ -433,13 +436,13 @@
     }
     private async Task OnDelete(ApplicationRoleDto dto)
     {
-        string deleteContent = ConstantString.DELETECONFIRMATION;
+        string deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters
         {
             { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, dto.Name) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
+        var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DeleteConfirmationTitle, parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
         {
@@ -454,19 +457,19 @@
                 }
 
             }
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.DeleteSuccess}", MudBlazor.Severity.Info);
             await OnRefresh();
         }
     }
     private async Task OnDeleteChecked()
     {
-        string deleteContent = ConstantString.DELETECONFIRMATION;
+        string deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters
         {
             { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, _selectedItems.Count) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
+        var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DeleteConfirmationTitle, parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
         {
@@ -482,7 +485,7 @@
                 }
 
             }
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.DeleteSuccess}", MudBlazor.Severity.Info);
             await OnRefresh();
         }
     }
