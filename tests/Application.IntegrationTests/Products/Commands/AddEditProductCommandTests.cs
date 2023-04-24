@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using CleanArchitecture.Application.IntegrationTests;
 using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 using CleanArchitecture.Blazor.Domain.Entities;
 using FluentAssertions;
@@ -20,8 +19,8 @@ internal class AddEditProductCommandTests: TestBase
     [Test]
     public async Task InsertItem()
     {
-        var addcommand = new AddEditProductCommand() { Name = "Test", Brand="Brand", Price=100m, Unit="EA",  Description = "Description" };
-        var result = await SendAsync(addcommand);
+        var addCommand = new AddEditProductCommand() { Name = "Test", Brand="Brand", Price=100m, Unit="EA",  Description = "Description" };
+        var result = await SendAsync(addCommand);
         var find = await FindAsync<Product>(result.Data);
         find.Should().NotBeNull();
         find.Name.Should().Be("Test");
@@ -32,11 +31,11 @@ internal class AddEditProductCommandTests: TestBase
     [Test]
     public async Task UpdateItem()
     {
-        var addcommand = new  AddEditProductCommand() { Name = "Test", Brand = "Brand", Price = 100m, Unit = "EA",  Description = "Description" };
-        var result = await SendAsync(addcommand);
+        var addCommand = new  AddEditProductCommand() { Name = "Test", Brand = "Brand", Price = 100m, Unit = "EA",  Description = "Description" };
+        var result = await SendAsync(addCommand);
         var find = await FindAsync<Product>(result.Data);
-        var editcommand = new AddEditProductCommand() { Id = find.Id, Name = "Test1", Brand = "Brand1", Price =200m, Unit = "KG", Pictures= addcommand.Pictures, Description = "Description1" };
-        await SendAsync(editcommand);
+        var editCommand = new AddEditProductCommand() { Id = find.Id, Name = "Test1", Brand = "Brand1", Price =200m, Unit = "KG", Pictures= addCommand.Pictures, Description = "Description1" };
+        await SendAsync(editCommand);
         var updated = await FindAsync<Product>(find.Id);
         updated.Should().NotBeNull();
         updated.Id.Should().Be(find.Id);

@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using CleanArchitecture.Application.IntegrationTests;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll;
 using CleanArchitecture.Blazor.Domain.Entities;
 using NUnit.Framework;
@@ -30,8 +29,8 @@ internal class GetAllProductsQueryTests : TestBase
         var query = new GetAllProductsQuery();
         var result = await SendAsync(query);
         var id= result.Last().Id;
-        var productquery = new GetProductQuery() { Id = id };
-        var product = await SendAsync(productquery);
+        var getProductQuery = new GetProductQuery() { Id = id };
+        var product = await SendAsync(getProductQuery);
         Assert.AreEqual(id, product.Id);
     }
 }

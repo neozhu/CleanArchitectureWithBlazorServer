@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using CleanArchitecture.Application.IntegrationTests;
 using CleanArchitecture.Blazor.Domain.Entities;
 using NUnit.Framework;
 

@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using CleanArchitecture.Application.IntegrationTests;
 using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import;
 using FluentAssertions;
 using NUnit.Framework;
@@ -23,8 +22,8 @@ internal class ImportProductsCommandTests: TestBase
     public async Task ImportDataFromExcel()
     {
         var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        var excelfile = Path.Combine(dir,"../../../", "Products", "ImportExcel", "Products.xlsx");
-        var data = File.ReadAllBytes(excelfile);
+        var excelFile = Path.Combine(dir,"../../../", "Products", "ImportExcel", "Products.xlsx");
+        var data = File.ReadAllBytes(excelFile);
         var cmd = new ImportProductsCommand("Products.xlsx", data);
         var result = await SendAsync(cmd);
         result.Succeeded.Should().BeTrue();

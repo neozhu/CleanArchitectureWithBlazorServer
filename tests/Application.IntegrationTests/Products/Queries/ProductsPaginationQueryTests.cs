@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using CleanArchitecture.Application.IntegrationTests;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 using CleanArchitecture.Blazor.Domain.Entities;
 using NUnit.Framework;
@@ -25,7 +24,7 @@ internal class ProductsPaginationQueryTests : TestBase
         Assert.AreEqual(5, result.TotalItems);
     }
     [Test]
-    public async Task ShouldNotEmptyKewordQuery()
+    public async Task ShouldNotEmptyKeywordQuery()
     {
         var query = new ProductsWithPaginationQuery() { Keyword = "1" };
         var result = await SendAsync(query);

@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Identity;
@@ -19,6 +18,8 @@ using Moq;
 using NUnit.Framework;
 using Respawn;
 using Respawn.Graph;
+
+namespace CleanArchitecture.Blazor.Application.IntegrationTests;
 
 [SetUpFixture]
 public class Testing
@@ -49,7 +50,7 @@ public class Testing
             w.ApplicationName == "Blazor.Server.UI"));
 
         services.AddInfrastructureServices(_configuration)
-                .AddApplicationServices();
+            .AddApplicationServices();
 
         //services.AddLogging();
 

@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using CleanArchitecture.Application.IntegrationTests;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.PaginationQuery;
 using CleanArchitecture.Blazor.Domain.Entities;
 using CleanArchitecture.Blazor.Domain.Enums;
@@ -10,7 +9,7 @@ using static Testing;
 internal class KeyValuesWithPaginationQueryTests: TestBase
 {
     [SetUp]
-    public async Task initData()
+    public async Task InitData()
     {
         await AddAsync<KeyValue>(new KeyValue() { Name = Picklist.Brand, Text = "Text1", Value = "Value1" ,Description= "Test Description" });
         await AddAsync<KeyValue>(new KeyValue() { Name = Picklist.Brand, Text = "Text2", Value = "Value2", Description = "Test Description" });
@@ -27,7 +26,7 @@ internal class KeyValuesWithPaginationQueryTests: TestBase
         Assert.AreEqual(5, result.TotalItems);
     }
     [Test]
-    public async Task ShouldNotEmptyKewordQuery()
+    public async Task ShouldNotEmptyKeywordQuery()
     {
         var query = new KeyValuesWithPaginationQuery() { Keyword="1"};
         var result = await SendAsync(query);

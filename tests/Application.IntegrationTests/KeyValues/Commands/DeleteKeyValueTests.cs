@@ -1,15 +1,13 @@
-
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete;
-using CleanArchitecture.Blazor.Domain;
 using CleanArchitecture.Blazor.Domain.Entities;
 using CleanArchitecture.Blazor.Domain.Enums;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
+namespace CleanArchitecture.Blazor.Application.IntegrationTests.KeyValues.Commands
 {
     using static Testing;
 
@@ -27,14 +25,14 @@ namespace CleanArchitecture.Application.IntegrationTests.KeyValues.Commands
         [Test]
         public async Task ShouldDeleteKeyValue()
         {
-            var addcommand = new AddEditKeyValueCommand()
+            var addCommand = new AddEditKeyValueCommand()
             {
                 Name =  Picklist.Brand,
                 Text= "Word",
                 Value = "Word",
                 Description = "For Test"
             };
-           var result= await SendAsync(addcommand);
+           var result= await SendAsync(addCommand);
 
             await SendAsync(new DeleteKeyValueCommand(new int[] { result.Data }));
 

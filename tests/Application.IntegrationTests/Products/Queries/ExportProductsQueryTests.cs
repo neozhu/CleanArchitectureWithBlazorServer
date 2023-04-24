@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using CleanArchitecture.Application.IntegrationTests;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
 using FluentAssertions;
 using NUnit.Framework;
