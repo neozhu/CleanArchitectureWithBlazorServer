@@ -2,12 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
-using System.Threading;
-using DocumentFormat.OpenXml.Wordprocessing;
 using FluentEmail.Core;
 using FluentEmail.Core.Models;
-using MailKit.Net.Smtp;
-using MimeKit;
 using Polly;
 using Polly.Retry;
 

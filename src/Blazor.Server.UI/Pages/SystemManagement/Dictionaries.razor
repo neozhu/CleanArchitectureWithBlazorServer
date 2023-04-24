@@ -1,15 +1,12 @@
 @page "/system/picklist"
-@using Blazor.Server.UI.Components.Dialogs
+@using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs
+@using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Export
+@using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.PaginationQuery
 @using BlazorDownloadFile
-@using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
+@using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Import
-@using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs
-@using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
-@using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Export
-@using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.GetAll
-@using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.PaginationQuery;
 
 @attribute [Authorize(Policy = Permissions.Dictionaries.View)]
 @inject IStringLocalizer<Dictionaries> L

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Hangfire.Dashboard;
+﻿using Hangfire.Dashboard;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
 public class HangfireDashboardAsyncAuthorizationFilter : IDashboardAsyncAuthorizationFilter

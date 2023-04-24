@@ -4,7 +4,6 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
-
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 [Description("Audit Trails")]
 public class AuditTrailDto : IMapFrom<AuditTrail>

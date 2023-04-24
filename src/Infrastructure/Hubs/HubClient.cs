@@ -1,9 +1,6 @@
-using CleanArchitecture.Blazor.Infrastructure.Constants;
-using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.Connections;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Hubs;

@@ -3,7 +3,6 @@
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Common.Security;
-using System.Reflection;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
 

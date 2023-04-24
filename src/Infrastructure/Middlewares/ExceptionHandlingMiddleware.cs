@@ -2,7 +2,6 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
-
 namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
 
 internal class ExceptionHandlingMiddleware : IMiddleware

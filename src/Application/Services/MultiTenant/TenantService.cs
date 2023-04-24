@@ -1,7 +1,6 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
-using LazyCache;
 
 namespace CleanArchitecture.Blazor.Application.Services.MultiTenant;
 

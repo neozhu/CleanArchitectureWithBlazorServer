@@ -1,7 +1,3 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces;
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
-
 namespace Blazor.Server.UI.Components.Common;
 
 public class PicklistAutocomplete : MudAutocomplete<string>

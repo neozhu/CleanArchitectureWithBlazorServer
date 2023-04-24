@@ -1,7 +1,5 @@
 using Blazor.Server.UI.Components.Dialogs;
-using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 using Microsoft.AspNetCore.Components.Web;
-
 
 namespace Blazor.Server.UI.Components.Shared;
 

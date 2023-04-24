@@ -1,5 +1,3 @@
-using MudBlazor;
-
 namespace Blazor.Server.UI.Components.Common;
 
 public partial class ErrorHandler

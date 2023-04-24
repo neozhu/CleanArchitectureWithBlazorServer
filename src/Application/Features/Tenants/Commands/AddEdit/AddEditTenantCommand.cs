@@ -2,8 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
+
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit;
 
 public class AddEditTenantCommand : IMapFrom<TenantDto>, ICacheInvalidatorRequest<Result<string>>

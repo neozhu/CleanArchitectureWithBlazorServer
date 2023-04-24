@@ -1,6 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
+using System.Text;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
@@ -8,13 +11,8 @@ using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using LazyCache;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 

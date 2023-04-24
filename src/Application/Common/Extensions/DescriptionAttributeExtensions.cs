@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Reflection;
-
-namespace CleanArchitecture.Blazor.Application.Common.Extensions;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 public static class DescriptionAttributeExtensions
 {
     public static string GetDescription(this Enum e)

@@ -1,8 +1,5 @@
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
-using LazyCache;
 
 namespace CleanArchitecture.Blazor.Application.Services.Picklist;
 

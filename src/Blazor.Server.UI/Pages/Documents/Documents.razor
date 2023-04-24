@@ -1,19 +1,16 @@
 @page "/pages/documents"
 
-@using AutoMapper;
-@using Blazor.Server.UI.Services.JsInterop;
-@using BlazorDownloadFile
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
-@using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
-@using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
-@using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
-@using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
-@using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
-@using CleanArchitecture.Blazor.Infrastructure.Hubs
-
 @inject IJSRuntime JS
 @inject IStringLocalizer<Documents> L
 @inherits UserProfileStateComponent
+@using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
+@using CleanArchitecture.Blazor.Infrastructure.Hubs
+@using BlazorDownloadFile
+@using CleanArchitecture.Blazor.Application.Features.Documents.Caching
+@using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
+@using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
+@using Blazor.Server.UI.Services.JsInterop
 @implements IDisposable
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 <PageTitle>@Title</PageTitle>

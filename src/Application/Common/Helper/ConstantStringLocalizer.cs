@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Resources;
 
 namespace CleanArchitecture.Blazor.Application.Common.Helper;

@@ -1,5 +1,3 @@
-using MudBlazor;
-
 namespace Blazor.Server.UI;
 
 public class Theme

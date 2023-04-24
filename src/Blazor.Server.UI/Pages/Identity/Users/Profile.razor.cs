@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.JSInterop;
+using Blazor.Server.UI.Services.JsInterop;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
-using Blazor.Server.UI.Services.JsInterop;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Identity;
 
 namespace Blazor.Server.UI.Pages.Identity.Users
 {

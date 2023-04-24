@@ -1,9 +1,5 @@
 using Blazor.Server.UI.Components.Shared;
 using Blazor.Server.UI.Services;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
-using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
-using Microsoft.AspNetCore.Components.Authorization;
 using Toolbelt.Blazor.HotKeys2;
 
 namespace Blazor.Server.UI.Shared;

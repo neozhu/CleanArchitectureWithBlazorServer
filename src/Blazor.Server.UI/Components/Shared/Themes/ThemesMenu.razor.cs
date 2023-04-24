@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using Blazor.Server.UI.Services;
 
 namespace Blazor.Server.UI.Components.Shared.Themes;

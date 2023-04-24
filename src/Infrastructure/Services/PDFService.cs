@@ -1,7 +1,6 @@
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using System.Data;
 using Document = QuestPDF.Fluent.Document;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;

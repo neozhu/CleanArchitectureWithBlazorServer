@@ -1,5 +1,3 @@
-using MudBlazor;
-
 namespace Blazor.Server.UI.Services;
 
 public class LayoutService

@@ -2,11 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-
-using CleanArchitecture.Blazor.Application.Services.PaddleOCR;
-using Hangfire;
-using MediatR;
-
 namespace CleanArchitecture.Blazor.Application.Features.Documents.EventHandlers;
 
 public class DocumentDeletedEventHandler : INotificationHandler<DeletedEvent<Document>>

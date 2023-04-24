@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+
 namespace Blazor.Server.UI;
 public static class DataGridExtensions
 {
