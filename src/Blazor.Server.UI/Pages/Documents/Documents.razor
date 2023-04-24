@@ -254,7 +254,7 @@
     private bool _canDownload;
     protected override async Task OnInitializedAsync()
     {
-       await base.OnInitializedAsync();
+        await base.OnInitializedAsync();
         Title = L[_currentDto.GetClassDescription()];
         var state = await _authState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Create)).Succeeded;
@@ -266,7 +266,7 @@
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
         _client.JobCompleted += _client_JobCompleted;
         _client.JobStarted += _client_JobStarted;
-        
+        UserProfileState.StateChanged += StateOnStateChanged;
         await  _client.StartAsync();
     }
 
@@ -286,12 +286,19 @@
             Snackbar.Add(string.Format(L["{0} job started."], e), MudBlazor.Severity.Info);
         });
     }
-
-    protected  void Dispose()
+    private void StateOnStateChanged(object? sender, EventArgs args)
+    { 
+        InvokeAsync(async () => { 
+            StateHasChanged();
+            await _table.ReloadServerData();
+        });
+    }
+    public new void Dispose()
     {
-        base.Dispose();
+        UserProfileState.StateChanged -= StateOnStateChanged;
         _client.JobCompleted -= _client_JobCompleted;
         _client.JobStarted -= _client_JobStarted;
+        base.Dispose();
     }
     private async Task<GridData<DocumentDto>> ServerReload(GridState<DocumentDto> state)
     {
