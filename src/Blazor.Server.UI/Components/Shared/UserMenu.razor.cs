@@ -1,7 +1,5 @@
 using Blazor.Server.UI.Components.Dialogs;
-using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 using Microsoft.AspNetCore.Components.Web;
-
 
 namespace Blazor.Server.UI.Components.Shared;
 
@@ -14,12 +12,12 @@ public partial class UserMenu: UserProfileStateComponent
     {
         var parameters = new DialogParameters
             {
-                { nameof(LogoutConfirmation.ContentText), $"{ConstantString.LOGOUTCONFIRMATION}"},
+                { nameof(LogoutConfirmation.ContentText), $"{ConstantString.LogoutConfirmation}"},
                 { nameof(LogoutConfirmation.Color), Color.Error}
             };
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-        var dialog = DialogService.Show<LogoutConfirmation>(ConstantString.LOGOUTCONFIRMATIONTITLE, parameters, options);
+        var dialog = DialogService.Show<LogoutConfirmation>(ConstantString.LogoutConfirmationTitle, parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
         {

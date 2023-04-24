@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
@@ -15,7 +15,7 @@ public class InMemoryTicketStore : ITicketStore
 
     public InMemoryTicketStore(IMemoryCache cache)
     {
-        _cache = cache ?? throw new ArgumentNullException(nameof(_cache)); ;
+        _cache = cache ?? throw new ArgumentNullException(nameof(cache)); ;
     }
 
     public Task RemoveAsync(string key)

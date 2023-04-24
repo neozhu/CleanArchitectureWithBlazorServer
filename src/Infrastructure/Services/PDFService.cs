@@ -1,18 +1,17 @@
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using System.Data;
 using Document = QuestPDF.Fluent.Document;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class PDFService : IPDFService
 {
-    private const int marginPTs = 56;
-    private const string fontFamilyName = Fonts.Consolas;
-    private const float fontSize = 10F;
-    private const int maxCharsPerCell = 80;
-    private const int minCharsPerCell = 10;
+    private const int MarginPTs = 56;
+    private const string FontFamilyName = Fonts.Consolas;
+    private const float FontSize = 10F;
+    private const int MaxCharsPerCell = 80;
+    private const int MinCharsPerCell = 10;
 
     public async Task<byte[]> ExportAsync<TData>(IEnumerable<TData> data
         , Dictionary<string, Func<TData, object?>> mappers
@@ -25,9 +24,9 @@ public class PDFService : IPDFService
                     container.Page(page =>
                     {
                         page.Size(landscape? PageSizes.A4.Landscape() : PageSizes.A4);
-                        page.Margin(marginPTs, Unit.Point);
+                        page.Margin(MarginPTs, Unit.Point);
                         page.PageColor(QuestPDF.Helpers.Colors.White);
-                        page.DefaultTextStyle(x => x.FontSize(fontSize).FontFamily(fontFamilyName).Fallback(TextStyle.Default.FontFamily("simhei")));
+                        page.DefaultTextStyle(x => x.FontSize(FontSize).FontFamily(FontFamilyName).Fallback(TextStyle.Default.FontFamily("simhei")));
                         
                         page.Header()
                             .Text(title)
@@ -41,12 +40,12 @@ public class PDFService : IPDFService
                                 var dataList = data.ToList();
 
                                 // Rough fit columns calculation
-                                int tableWidth = landscape ? (int)(PageSizes.A4.Landscape().Width - (marginPTs * 2)) : (int)(PageSizes.A4.Width - (marginPTs * 2));
+                                int tableWidth = landscape ? (int)(PageSizes.A4.Landscape().Width - (MarginPTs * 2)) : (int)(PageSizes.A4.Width - (MarginPTs * 2));
                                 int[] columnsWidth = new int[headers.Count];
 
                                 for (uint c = 0; c < headers.Count; c++)
                                 {
-                                    var cellWidth = Math.Max(minCharsPerCell, Math.Min($"{headers[(int)c]}".Length,maxCharsPerCell));
+                                    var cellWidth = Math.Max(MinCharsPerCell, Math.Min($"{headers[(int)c]}".Length,MaxCharsPerCell));
 
                                     if (columnsWidth[c] < cellWidth)
                                         columnsWidth[c] = cellWidth;
@@ -59,7 +58,7 @@ public class PDFService : IPDFService
                                     uint c = 0;
                                     foreach (var value in result)
                                     {
-                                        var cellWidth = Math.Max(minCharsPerCell, Math.Min($"{value}".Length, maxCharsPerCell));
+                                        var cellWidth = Math.Max(MinCharsPerCell, Math.Min($"{value}".Length, MaxCharsPerCell));
                                         if (columnsWidth[c] < cellWidth)
                                             columnsWidth[c] = cellWidth;
                                         c += 1;
@@ -82,11 +81,10 @@ public class PDFService : IPDFService
                                 });
                                 
                                 // Create rows
-                                uint colIndex = 1;
                                 uint rowIndex = 1;
                                 foreach (var item in dataList)
                                 {
-                                    colIndex = 1;
+                                    uint colIndex = 1;
                                     rowIndex++;
 
                                     var result = headers.Select(header => mappers[header](item));
@@ -123,18 +121,7 @@ public class PDFService : IPDFService
     {
         if (value == null)
             return false;
-        else
-            return value is sbyte
-                || value is byte
-                || value is short
-                || value is ushort
-                || value is int
-                || value is uint
-                || value is long
-                || value is ulong
-                || value is float
-                || value is double
-                || value is decimal;
+        return value is sbyte or byte or short or ushort or int or uint or long or ulong or float or double or decimal;
     }
 
     static IContainer BlockCell(IContainer container)

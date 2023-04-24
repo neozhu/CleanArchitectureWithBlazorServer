@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-
+using CleanArchitecture.Blazor.Domain.Entities.Logger;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces;

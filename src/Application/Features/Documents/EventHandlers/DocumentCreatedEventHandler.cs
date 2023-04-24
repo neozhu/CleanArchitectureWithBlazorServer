@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
-
 using CleanArchitecture.Blazor.Application.Services.PaddleOCR;
 using Hangfire;
 using Microsoft.Extensions.DependencyInjection;

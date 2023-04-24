@@ -1,29 +1,21 @@
-using CleanArchitecture.Blazor.Infrastructure.Constants;
-using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http.Connections;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
 public class HubClient : IAsyncDisposable
 {
-    private HubConnection _hubConnection;
-    private string _hubUrl = String.Empty;
-    private readonly NavigationManager _navigationManager;
-    private readonly AccessTokenProvider _authProvider;
+    private readonly HubConnection _hubConnection;
     private bool _started = false;
     public HubClient(NavigationManager navigationManager,
         AccessTokenProvider  authProvider
 )
     {
-        _navigationManager = navigationManager;
-        _authProvider = authProvider;
-        var token = _authProvider.AccessToken;
-        _hubUrl = _navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
+        var token = authProvider.AccessToken;
+        string hubUrl = navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
         _hubConnection = new HubConnectionBuilder()
-              .WithUrl(_hubUrl, options => {
+              .WithUrl(hubUrl, options => {
                   options.AccessTokenProvider =()=> Task.FromResult(token);
                   options.Transports = HttpTransportType.WebSockets;
                   })

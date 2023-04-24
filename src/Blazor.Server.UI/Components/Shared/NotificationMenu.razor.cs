@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Components;
-using MudBlazor;
 using Blazor.Server.UI.Services.Notifications;
 
 namespace Blazor.Server.UI.Components.Shared;

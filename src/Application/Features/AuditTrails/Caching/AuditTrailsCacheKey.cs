@@ -5,7 +5,7 @@ namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching;
 
 public static class AuditTrailsCacheKey
 {
-    private static readonly TimeSpan refreshInterval = TimeSpan.FromMilliseconds(30);
+    private static readonly TimeSpan RefreshInterval = TimeSpan.FromMilliseconds(30);
     public const string GetAllCacheKey = "all-audittrails";
     public static string GetPaginationCacheKey(string parameters)
     {
@@ -13,16 +13,16 @@ public static class AuditTrailsCacheKey
     }
     static AuditTrailsCacheKey()
     {
-        _tokensource = new CancellationTokenSource(refreshInterval);
+        _tokenSource = new CancellationTokenSource(RefreshInterval);
     }
-    private static CancellationTokenSource _tokensource;
+    private static CancellationTokenSource _tokenSource;
     public static CancellationTokenSource SharedExpiryTokenSource()
     {
-        if (_tokensource.IsCancellationRequested)
+        if (_tokenSource.IsCancellationRequested)
         {
-            _tokensource = new CancellationTokenSource(refreshInterval);
+            _tokenSource = new CancellationTokenSource(RefreshInterval);
         }
-        return _tokensource;
+        return _tokenSource;
     }
     public static void Refresh() => SharedExpiryTokenSource().Cancel();
     public static MemoryCacheEntryOptions MemoryCacheEntryOptions => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));

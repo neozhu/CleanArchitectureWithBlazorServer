@@ -5,50 +5,50 @@ namespace Blazor.Server.UI.Components.Common;
 public class MultiTenantAutocomplete : MudAutocomplete<string>
 {
     [Inject]
-    private ITenantService _tenantsService { get; set; } = default!;
+    private ITenantService TenantsService { get; set; } = default!;
     protected override void OnInitialized()
     {
-        _tenantsService.OnChange += tenantsService_OnChange;
+        TenantsService.OnChange += tenantsService_OnChange;
     }
 
     private void tenantsService_OnChange()
     {
-       InvokeAsync(() =>StateHasChanged());
+       InvokeAsync(() => StateHasChanged());
     }
 
     protected override void Dispose(bool disposing)
     {
-        _tenantsService.OnChange -= tenantsService_OnChange;
+        TenantsService.OnChange -= tenantsService_OnChange;
         base.Dispose(disposing);
     }
 
 
     public override Task SetParametersAsync(ParameterView parameters)
     {
-        SearchFuncWithCancel = searchKeyValues;
-        ToStringFunc = toStringFunc;
+        SearchFuncWithCancel = SearchKeyValues;
+        base.ToStringFunc = ToStringFunc;
         Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;
         ShowProgressIndicator = true;
         return base.SetParametersAsync(parameters);
     }
-    private Task<IEnumerable<string>> searchKeyValues(string value, CancellationToken token)
+    private Task<IEnumerable<string>> SearchKeyValues(string value, CancellationToken token)
     {
         // if text is null or empty, show complete list
         if (string.IsNullOrEmpty(value))
         {
-            var result = _tenantsService.DataSource.OrderBy(x => x.Name).Select(x=>x.Id).ToList();
+            var result = TenantsService.DataSource.OrderBy(x => x.Name).Select(x=>x.Id).ToList();
             return Task.FromResult<IEnumerable<string>>(result);
         }
-        return Task.FromResult<IEnumerable<string>>(_tenantsService.DataSource.Where(x => x.Name!.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
+        return Task.FromResult<IEnumerable<string>>(TenantsService.DataSource.Where(x => x.Name!.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
           x.Description != null && x.Description.Contains(value, StringComparison.InvariantCultureIgnoreCase)
         ).OrderBy(x => x.Name).Select(x=>x.Id).ToList());
                                          
     }
-    private string toStringFunc(string val)
+    private string ToStringFunc(string val)
     {
-        return _tenantsService.DataSource.Where(x => x.Id == val).Select(x => x.Name).FirstOrDefault()??"";
+        return TenantsService.DataSource.Where(x => x.Id == val).Select(x => x.Name).FirstOrDefault()??"";
     }
 
 

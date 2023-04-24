@@ -1,26 +1,25 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
+using System.Text;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Configurations;
+using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using LazyCache;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 public class IdentityService : IIdentityService
 {
-    private readonly IServiceScopeFactory _scopeFactory;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly AppConfigurationSettings _appConfig;
@@ -29,8 +28,8 @@ public class IdentityService : IIdentityService
     private readonly IAppCache _cache;
     private readonly IMapper _mapper;
     private readonly IStringLocalizer<IdentityService> _localizer;
-    private TimeSpan refreshInterval => TimeSpan.FromSeconds(60);
-    private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
+    private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
+    private LazyCacheEntryOptions Options => new LazyCacheEntryOptions().SetAbsoluteExpiration(RefreshInterval, ExpirationMode.LazyExpiration);
     public IdentityService(
         IServiceScopeFactory scopeFactory,
         AppConfigurationSettings appConfig,
@@ -38,8 +37,7 @@ public class IdentityService : IIdentityService
          IMapper mapper,
         IStringLocalizer<IdentityService> localizer)
     {
-        _scopeFactory = scopeFactory;
-        var scope = _scopeFactory.CreateScope();
+        var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         _userClaimsPrincipalFactory = scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
@@ -53,13 +51,13 @@ public class IdentityService : IIdentityService
     public async Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default)
     {
         var key = $"GetUserNameAsync:{userId}";
-        var user = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId), _options);
+        var user = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId), Options);
         return user?.UserName;
     }
     public string GetUserName(string userId)
     {
         var key = $"GetUserName-byId:{userId}";
-        var user = _cache.GetOrAdd(key, () => _userManager.Users.SingleOrDefault(u => u.Id == userId), _options);
+        var user = _cache.GetOrAdd(key, () => _userManager.Users.SingleOrDefault(u => u.Id == userId), Options);
         return user?.UserName??string.Empty;
     }
     public async Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default)
@@ -86,7 +84,7 @@ public class IdentityService : IIdentityService
     public async Task<IDictionary<string, string?>> FetchUsers(string roleName, CancellationToken cancellation = default)
     {
         var result = await _userManager.Users
-             .Where(x => x.UserRoles.Where(y => y.Role.Name == roleName).Any())
+             .Where(x => x.UserRoles.Any(y => y.Role.Name == roleName))
              .Include(x => x.UserRoles)
              .ToDictionaryAsync(x => x.UserName!, y => y.DisplayName, cancellation);
         return result;
@@ -113,17 +111,17 @@ public class IdentityService : IIdentityService
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["Invalid Credentials."] });
         }
         user.RefreshToken = GenerateRefreshToken();
-        var TokenExpiryTime = DateTime.Now.AddDays(7);
+        var tokenExpiryTime = DateTime.Now.AddDays(7);
 
         if (request.RememberMe)
         {
-            TokenExpiryTime = DateTime.Now.AddYears(1);
+            tokenExpiryTime = DateTime.Now.AddYears(1);
         }
-        user.RefreshTokenExpiryTime = TokenExpiryTime;
+        user.RefreshTokenExpiryTime = tokenExpiryTime;
         await _userManager.UpdateAsync(user);
         
         var token = await GenerateJwtAsync(user);
-        var response = new TokenResponse { Token = token, RefreshTokenExpiryTime = TokenExpiryTime, RefreshToken = user.RefreshToken, ProfilePictureDataUrl = user.ProfilePictureDataUrl };
+        var response = new TokenResponse { Token = token, RefreshTokenExpiryTime = tokenExpiryTime, RefreshToken = user.RefreshToken, ProfilePictureDataUrl = user.ProfilePictureDataUrl };
         return await Result<TokenResponse>.SuccessAsync(response);
     }
 
@@ -231,14 +229,14 @@ public class IdentityService : IIdentityService
     public async Task<ApplicationUserDto> GetApplicationUserDto(string userId, CancellationToken cancellation = default)
     {
         var key = $"GetApplicationUserDto:{userId}";
-        var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).FirstAsync(cancellation), _options);
+        var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).FirstAsync(cancellation), Options);
         return result;
     }
     public async Task<List<ApplicationUserDto>?> GetUsers(string tenantId, CancellationToken cancellation = default)
     {
         var key = $"GetApplicationUserDtoListWithTenantId:{tenantId}";
         var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.TenantId == tenantId).Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                      .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync(), _options);
+                      .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync(), Options);
         return result;
     }
 }

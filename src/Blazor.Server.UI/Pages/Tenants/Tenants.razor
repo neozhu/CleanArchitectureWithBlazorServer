@@ -1,12 +1,11 @@
 @page "/system/tenants"
-
-
-
-@using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
-@using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination
+@using CleanArchitecture.Blazor.Application.Features.Tenants.Caching
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit
+@using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.Delete
+@using CleanArchitecture.Blazor.Application.Constants.Permission
+
 
 @inject IJSRuntime JS
 @inject IStringLocalizer<Tenants> L
@@ -46,7 +45,7 @@
                                            Disabled="@_loading"
                                            OnClick="@(()=>OnRefresh())"
                                            StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
+                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.Refresh</MudButton>
                                 @if (_canCreate)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -55,7 +54,7 @@
                                            Size="Size.Small"
                                            OnClick="OnCreate"
                                            Style="margin-right: 4px; margin-bottom:4px"
-                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.New</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -65,20 +64,20 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnDeleteChecked"
-                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                                 }
 
                             </MudHidden>
                             <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                                 <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                                    <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.REFRESH</MudMenuItem>
+                                    <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.Refresh</MudMenuItem>
                                     @if (_canCreate)
                                     {
-                                        <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@ConstantString.NEW</MudMenuItem>
+                                        <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@ConstantString.New</MudMenuItem>
                                     }
                                     @if (_canDelete)
                                     {
-                                        <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.DELETE</MudMenuItem>
+                                        <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.Delete</MudMenuItem>
                                     }
 
                                 </MudMenu>
@@ -86,7 +85,7 @@
                         </div>
                         @if (_canSearch)
                         {
-                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
+                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
                         }
 
@@ -95,7 +94,7 @@
             </ToolBarContent>
             <Columns>
                 <SelectColumn ShowInFooter="false" >                 </SelectColumn>
-                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false" >
+                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Actions" Sortable="false" >
                     <CellTemplate>
                     @if (_canEdit || _canDelete)
                     {
@@ -104,11 +103,11 @@
                                  EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                             @if (_canEdit)
                             {
-                                <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
+                                <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                             }
                             @if (_canDelete)
                             {
-                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                             }
                         </MudMenu>
                     }
@@ -117,7 +116,7 @@
                         <MudButton Variant="Variant.Filled" DisableElevation="true"
                                    StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                    Color="Color.Surface">
-                            @ConstantString.NOALLOWED
+                            @ConstantString.NoAllowed
                         </MudButton>
                     }
                     </CellTemplate>
@@ -157,13 +156,13 @@
 
     private bool _loading;
     [Inject]
-    private IMediator _mediator { get; set; } = default!;
+    private IMediator Mediator { get; set; } = default!;
     [Inject]
-    private IMapper _mapper { get; set; } = default!;
+    private IMapper Mapper { get; set; } = default!;
     [CascadingParameter]
-    private Task<AuthenticationState> _authState { get; set; } = default!;
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
 
-    private TenantsWithPaginationQuery _query { get; set; } = new();
+    private TenantsWithPaginationQuery Query { get; set; } = new();
 
     private bool _canSearch;
     private bool _canCreate;
@@ -173,7 +172,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        var state = await _authState;
+        var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Edit)).Succeeded;
@@ -184,12 +183,12 @@
         try
         {
             _loading = true;
-            _query.Keyword = _searchString;
-            _query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy;
-            _query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending==false ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
-            _query.Page = state.Page + 1;
-            _query.PerPage = state.PageSize;
-            var result = await _mediator.Send(_query);
+            Query.Keyword = _searchString;
+            Query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy;
+            Query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending==false ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            Query.Page = state.Page + 1;
+            Query.PerPage = state.PageSize;
+            var result = await Mediator.Send(Query);
             return new GridData<TenantDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -217,7 +216,7 @@
         var command = new AddEditTenantCommand();
         var parameters = new DialogParameters
             {
-        { nameof(_TenantFormDialog.model),command },
+        { nameof(_TenantFormDialog.Model),command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_TenantFormDialog>
@@ -230,10 +229,10 @@
     }
     private async Task OnEdit(TenantDto dto)
     {
-        var command = _mapper.Map<AddEditTenantCommand>(dto);
+        var command = Mapper.Map<AddEditTenantCommand>(dto);
         var parameters = new DialogParameters
                 {
-            { nameof(_TenantFormDialog.model),command },
+            { nameof(_TenantFormDialog.Model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_TenantFormDialog>
@@ -247,7 +246,7 @@
 
     private async Task OnDelete(TenantDto dto)
     {
-        var deleteContent = ConstantString.DELETECONFIRMATIONWITHID;
+        var deleteContent = ConstantString.DeleteConfirmationWithId;
         var command = new DeleteTenantCommand(new string[] { dto.Id });
         var parameters = new DialogParameters
                     {
@@ -266,7 +265,7 @@
     private async Task OnDeleteChecked()
     {
         var command = new DeleteTenantCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var deleteContent = ConstantString.DELETECONFIRMATION;
+        var deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters
                         {
                             { nameof(DeleteConfirmation.Command),  command },

@@ -4,22 +4,17 @@ using Blazor.Server.UI.Services.Navigation;
 
 namespace Blazor.Server.UI.Components.Shared;
 
-public partial class SideMenu: UserProfileStateComponent
+public partial class SideMenu : UserProfileStateComponent
 {
+    [EditorRequired] [Parameter] public bool SideMenuDrawerOpen { get; set; }
 
+    [EditorRequired] [Parameter] public EventCallback<bool> SideMenuDrawerOpenChanged { get; set; }
 
-    [EditorRequired] [Parameter] 
-    public bool SideMenuDrawerOpen { get; set; } 
-    
-    [EditorRequired] [Parameter]
-    public EventCallback<bool> SideMenuDrawerOpenChanged { get; set; }
+    [Inject] private IMenuService MenuService { get; set; } = default!;
 
-    [Inject] 
-    private IMenuService _menuService { get; set; } = default!;
-    private IEnumerable<MenuSectionModel> _menuSections => _menuService.Features;
-    
-    [Inject] 
-    private LayoutService LayoutService { get; set; } = default!;
+    private IEnumerable<MenuSectionModel> MenuSections => MenuService.Features;
 
-    private string[] _roles => UserProfile?.AssignedRoles??new string[] { };
+    [Inject] private LayoutService LayoutService { get; set; } = default!;
+
+    private string[] Roles => UserProfile?.AssignedRoles ?? new string[] { };
 }

@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using System.Runtime.Versioning;
-using Microsoft.JSInterop;
+﻿using Microsoft.JSInterop;
 
 namespace Blazor.Server.UI.Services.JsInterop;
 

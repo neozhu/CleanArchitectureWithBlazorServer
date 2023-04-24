@@ -1,32 +1,32 @@
-@using CleanArchitecture.Blazor.Application.Common.Exceptions
 @using System.Net
+@using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
 <MudPaper Class="py-4 px-6 rounded-lg d-flex flex-column">
-    <MudText Typo="Typo.h6" Color="Color.Error">@statusCode</MudText>
+    <MudText Typo="Typo.h6" Color="Color.Error">@StatusCode</MudText>
     <div class="d-flex align-center gap-4">
         <MudText Typo="Typo.subtitle2" >@DateTime.Now</MudText>
-        <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(()=>_showstacktrace=!_showstacktrace)">More</MudButton>
+        <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(()=>ShowStackTrace=!ShowStackTrace)">More</MudButton>
     </div>
-    <MudText>@_message For more information, contact your system administrator</MudText>
-    @if (_showstacktrace)
+    <MudText>@Message For more information, contact your system administrator</MudText>
+    @if (ShowStackTrace)
     {
-        <MudText Typo="Typo.body2" Class="mt-2">@stacktrace</MudText>
+        <MudText Typo="Typo.body2" Class="mt-2">@StackTrace</MudText>
     }
     <MudDivider Class="my-3" />
     <div class="mx-n2 mb-2">
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnRefresh">@ConstantString.REFRESH</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="OnRefresh">@ConstantString.Refresh</MudButton>
     </div>
     <div class="d-flex justify-end">
     </div>
 </MudPaper>
 
 @code {
-    private string? _message { get; set; }
-    private bool _showstacktrace { get; set; }
-    private string? stacktrace { get; set; }
-    private string? statusCode { get; set; } = HttpStatusCode.InternalServerError.ToString();
+    private string? Message { get; set; }
+    private bool ShowStackTrace { get; set; }
+    private string? StackTrace { get; set; }
+    private string? StatusCode { get; set; } = HttpStatusCode.InternalServerError.ToString();
     [EditorRequired][Parameter] public Exception Exception { get; set; } = default!;
-    [Inject] private NavigationManager _navigation { get; set; } = default!;
-    [Inject] private ILogger<CustomError> _logger { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+    [Inject] private ILogger<CustomError> Logger { get; set; } = default!;
     [CascadingParameter]
     private Task<AuthenticationState> _authState { get; set; } = default!;
     protected override async Task OnInitializedAsync()
@@ -36,10 +36,10 @@
         switch (Exception)
         {
             case ServerException e:
-                statusCode = e.StatusCode.ToString();
+                StatusCode = e.StatusCode.ToString();
                 if (e.ErrorMessages is not null)
                 {
-                    _message = string.Join(", ", e.ErrorMessages.ToArray());
+                    Message = string.Join(", ", e.ErrorMessages.ToArray());
                 }
                 break;
             default:
@@ -50,14 +50,14 @@
                         Exception = Exception.InnerException;
                     }
                 }
-                _message = Exception.Message;
+                Message = Exception.Message;
                 break;
         }
-        stacktrace = Exception.StackTrace;
-        _logger.LogError(Exception, "{message}. request url: {@url} {@UserName}", _message, _navigation.Uri, userName);
+        StackTrace = Exception.StackTrace;
+        Logger.LogError(Exception, "{Message}. request url: {@url} {@UserName}", Message, Navigation.Uri, userName);
     }
     private void OnRefresh()
     {
-        _navigation.NavigateTo(_navigation.Uri, true);
+        Navigation.NavigateTo(Navigation.Uri, true);
     }
 }

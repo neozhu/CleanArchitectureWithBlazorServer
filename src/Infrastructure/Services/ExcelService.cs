@@ -1,9 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using Microsoft.Extensions.Localization;
 using System.Data;
 using ClosedXML.Excel;
+using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
@@ -131,26 +131,26 @@ public class ExcelService : IExcelService
             {
                 return await Result<IEnumerable<TEntity>>.FailureAsync(errors);
             }
-            var lastrow = ws.LastRowUsed();
+            var lastRow = ws.LastRowUsed();
             var list = new List<TEntity>();
-            foreach (IXLRow row in ws.Rows(startRow, lastrow.RowNumber()))
+            foreach (IXLRow row in ws.Rows(startRow, lastRow.RowNumber()))
             {
                 try
                 {
-                    DataRow datarow = dt.Rows.Add();
+                    DataRow dataRow = dt.Rows.Add();
                     var item = (TEntity?)Activator.CreateInstance(typeof(TEntity))??throw new NullReferenceException($"{nameof(TEntity)}");
                     foreach (IXLCell cell in row.Cells())
                     {
                         if (cell.DataType == XLDataType.DateTime)
                         {
-                            datarow[cell.Address.ColumnNumber - 1] = cell.GetDateTime().ToString("yyyy-MM-dd HH:mm:ss");
+                            dataRow[cell.Address.ColumnNumber - 1] = cell.GetDateTime().ToString("yyyy-MM-dd HH:mm:ss");
                         }
                         else
                         {
-                            datarow[cell.Address.ColumnNumber - 1] = cell.Value.ToString();
+                            dataRow[cell.Address.ColumnNumber - 1] = cell.Value.ToString();
                         }
                     }
-                    headers.ForEach(x => mappers[x](datarow, item));
+                    headers.ForEach(x => mappers[x](dataRow, item));
                     list.Add(item);
                 }
                 catch (Exception e)

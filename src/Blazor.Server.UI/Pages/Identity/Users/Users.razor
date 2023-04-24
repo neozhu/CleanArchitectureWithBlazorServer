@@ -1,24 +1,20 @@
 @inherits OwningComponentBase
-@implements IDisposable
-@page "/identity/users"
-@using Blazor.Server.UI.Components.Dialogs
-@using BlazorDownloadFile;
-@using CleanArchitecture.Blazor.Application.Common.Exceptions
-@using Blazor.Server.UI.Pages.Identity.Roles;
+@using LazyCache
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
-@using CleanArchitecture.Blazor.Application.Common.Security
-@using CleanArchitecture.Blazor.Infrastructure.Constants
-@using CleanArchitecture.Blazor.Infrastructure.Services
-@using Duende.IdentityServer.Events
-@using LazyCache;
-@using Microsoft.AspNetCore.Components.Server.Circuits
-@using Microsoft.AspNetCore.Identity;
-@using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
-@using System.ComponentModel;
-@using System.Reflection;
-@using System.Security.Claims;
-@using System.Linq.Expressions;
+@using CleanArchitecture.Blazor.Application.Features.Identity.Dto
+@using Blazor.Server.UI.Pages.Identity.Roles
+@using BlazorDownloadFile
+@using System.Security.Claims
+@using System.ComponentModel
+@using System.Linq.Expressions
+@using System.Reflection
+@using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
+@using CleanArchitecture.Blazor.Application.Constants.ClaimTypes
+@using CleanArchitecture.Blazor.Application.Constants.Permission
+@using CleanArchitecture.Blazor.Application.Constants.Role
+@implements IDisposable
+@page "/identity/users"
 @inject IStringLocalizer<Users> L
 @attribute [Authorize(Policy = Permissions.Users.View)]
 <PageTitle>@Title</PageTitle>
@@ -56,7 +52,7 @@
                                            Disabled="@_loading"
                                            OnClick="@(()=>OnRefresh())"
                                            StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.REFRESH</MudButton>
+                                           Style="margin-right: 4px; margin-bottom:4px">@ConstantString.Refresh</MudButton>
                                 @if (_canCreate)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -64,7 +60,7 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnCreate"
-                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.New</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -74,7 +70,7 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnDeleteChecked"
-                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                                 }
                                 @if (_canExport)
                                 {
@@ -83,7 +79,7 @@
                                                   Size="Size.Small"
                                                   @bind-Loading="_exporting" LoadingAdornment="Adornment.Start" OnClick="OnExport"
                                                   Style="margin-right: 4px; margin-bottom:4px"
-                                                  IconColor="Color.Surface">@ConstantString.EXPORT</MudLoadingButton>
+                                                  IconColor="Color.Surface">@ConstantString.Export</MudLoadingButton>
                                 }
                                 @if (_canImport)
                                 {
@@ -99,11 +95,11 @@
                                                 @if (_uploading)
                                                 {
                                                     <MudProgressCircular Size="Size.Small" Indeterminate="true" />
-                                                    @ConstantString.UPLOADING
+                                                    @ConstantString.Uploading
                                                 }
                                                 else
                                                 {
-                                                    @ConstantString.IMPORT
+                                                    @ConstantString.Import
                                                 }
                                             </MudButton>
                                         </ButtonTemplate>
@@ -118,7 +114,7 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnCreate"
-                                           IconColor="Color.Surface">@ConstantString.NEW</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.New</MudButton>
                                 }
                                 @if (_canDelete)
                                 {
@@ -128,20 +124,20 @@
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
                                            OnClick="OnDeleteChecked"
-                                           IconColor="Color.Surface">@ConstantString.DELETE</MudButton>
+                                           IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                                 }
                             </MudHidden>
                         </div>
                         @if (_canSearch)
                         {
                             <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                                <MudSelect T="string" Placeholder="Search for role name" Value="@_searchrole" Clearable="true" ValueChanged="@(s=>OnSearchRole(s))" Style="width:150px">
+                                <MudSelect T="string" Placeholder="Search for role name" Value="@_searchRole" Clearable="true" ValueChanged="@(s=>OnSearchRole(s))" Style="width:150px">
                                     @foreach (var str in _roles)
                                     {
                                         <MudSelectItem Value="@str">@str</MudSelectItem>
                                     }
                                 </MudSelect>
-                                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.SEARCH" Adornment="Adornment.End"
+                                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
                             </MudStack>
 
@@ -153,7 +149,7 @@
             </ToolBarContent>
             <Columns>
                 <SelectColumn ShowInFooter="false"></SelectColumn>
-                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.ACTIONS" Sortable="false">
+                <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
                     <CellTemplate>
                         @if (_canEdit || _canDelete || _canManageRoles || _canRestPassword || _canActive || _canManagePermissions)
                         {
@@ -162,11 +158,11 @@
                                  EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                                 @if (_canEdit)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.EDIT</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                                 }
                                 @if (_canDelete)
                                 {
-                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.DELETE</MudMenuItem>
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                                 }
                                 @if (_canManagePermissions)
                                 {
@@ -195,7 +191,7 @@
                             <MudButton Variant="Variant.Filled" DisableElevation="true"
                                    StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                    Color="Color.Surface">
-                                @ConstantString.NOALLOWED
+                                @ConstantString.NoAllowed
                             </MudButton>
                         }
                     </CellTemplate>
@@ -274,32 +270,32 @@
 
 @code {
     [Inject]
-    private IUsersStateContainer _usersStateContainer { get; set; } = default!;
+    private IUsersStateContainer UsersStateContainer { get; set; } = default!;
     private int _defaultPageSize = 15;
     private HashSet<ApplicationUserDto> _selectedItems = new();
-    private ApplicationUserDto _currentDto = new();
+    private readonly ApplicationUserDto _currentDto = new();
     private string _searchString = string.Empty;
     private string Title { get; set; } = "Users";
     private List<PermissionModel> _permissions = new();
     private IList<Claim> _assignedClaims = default!;
     [CascadingParameter]
-    private Task<AuthenticationState> _authState { get; set; } = default!;
-    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
-    private RoleManager<ApplicationRole> _roleManager { get; set; } = default!;
-    private TimeSpan refreshInterval => TimeSpan.FromSeconds(60);
-    private LazyCacheEntryOptions _options => new LazyCacheEntryOptions().SetAbsoluteExpiration(refreshInterval, ExpirationMode.LazyExpiration);
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    private UserManager<ApplicationUser> UserManager { get; set; } = default!;
+    private RoleManager<ApplicationRole> RoleManager { get; set; } = default!;
+    private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
+    private LazyCacheEntryOptions Options => new LazyCacheEntryOptions().SetAbsoluteExpiration(RefreshInterval, ExpirationMode.LazyExpiration);
     [Inject]
-    private IAppCache _cache { get; set; } = null!;
+    private IAppCache Cache { get; set; } = null!;
     [Inject]
-    private ITenantProvider _tenantProvider { get; set; } = default!;
+    private ITenantProvider TenantProvider { get; set; } = default!;
     [Inject]
-    private ITenantService _tenantsService { get; set; } = null!;
+    private ITenantService TenantsService { get; set; } = null!;
     [Inject]
-    private IBlazorDownloadFileService _blazorDownloadFileService { get; set; } = null!;
+    private IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     [Inject]
-    private IExcelService _excelService { get; set; } = null!;
+    private IExcelService ExcelService { get; set; } = null!;
     [Inject]
-    private IMapper _mapper { get; set; } = null!;
+    private IMapper Mapper { get; set; } = null!;
     private MudDataGrid<ApplicationUserDto> _table = null!;
     private bool _processing;
     private bool _showPermissionsDrawer;
@@ -317,15 +313,15 @@
     private bool _exporting;
     private bool _uploading;
     private List<string?> _roles = new();
-    private string? _searchrole;
+    private string? _searchRole;
 
     protected override async Task OnInitializedAsync()
     {
 
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
         Title = L[_currentDto.GetClassDescription()];
-        var state = await _authState;
+        var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Edit)).Succeeded;
@@ -336,11 +332,11 @@
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-        _roles = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
+        _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
     }
     private bool isOnline(string username)
     {
-        return _usersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
+        return UsersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
     }
 
     private async Task<GridData<ApplicationUserDto>> ServerReload(GridState<ApplicationUserDto> state)
@@ -355,12 +351,12 @@
             x.PhoneNumber.Contains(_searchString) ||
             x.TenantName.Contains(_searchString) ||
             x.Provider.Contains(_searchString)) &&
-            (_searchrole == null || (_searchrole != null && x.UserRoles.Any(x => x.Role.Name == _searchrole)));
-            var items = await _userManager.Users.Where(searchPredicate)
+            (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole)));
+            var items = await UserManager.Users.Where(searchPredicate)
                  .Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                 .EFOrderBySortDefinitions<ApplicationUser, ApplicationUserDto>(state)
-                 .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
-            var total = await _userManager.Users.CountAsync(searchPredicate);
+                 .EfOrderBySortDefinitions<ApplicationUser, ApplicationUserDto>(state)
+                 .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
+            var total = await UserManager.Users.CountAsync(searchPredicate);
             return new GridData<ApplicationUserDto>() { TotalItems = total, Items = items };
         }
         finally
@@ -377,7 +373,7 @@
     private async Task OnSearchRole(string role)
     {
         if (_loading) return;
-        _searchrole = role;
+        _searchRole = role;
         await _table.ReloadServerData();
     }
     private async Task OnRefresh()
@@ -388,7 +384,7 @@
     {
         var model = new ApplicationUserDto() { Provider = "Local", Email = "", UserName = "", AssignedRoles = new string[] { RoleName.Basic } };
         var parameters = new DialogParameters {
-            { nameof(_UserFormDialog.model),model }
+            { nameof(_UserFormDialog.Model),model }
            };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
@@ -409,19 +405,19 @@
                     IsActive = model.IsActive,
                 };
             var password = model.Password;
-            var state = await _userManager.CreateAsync(applicationUser, password!);
+            var state = await UserManager.CreateAsync(applicationUser, password!);
 
             if (state.Succeeded)
             {
                 if (model.AssignedRoles is not null && model.AssignedRoles.Length > 0)
                 {
-                    await _userManager.AddToRolesAsync(applicationUser, model.AssignedRoles);
+                    await UserManager.AddToRolesAsync(applicationUser, model.AssignedRoles);
                 }
                 else
                 {
-                    await _userManager.AddToRoleAsync(applicationUser, RoleName.Basic);
+                    await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
                 }
-                Snackbar.Add($"{ConstantString.CREATESUCCESS}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{ConstantString.CreateSuccess}", MudBlazor.Severity.Info);
                 await OnRefresh();
             }
             else
@@ -435,15 +431,15 @@
     {
 
         var parameters = new DialogParameters {
-                   { nameof(_UserFormDialog.model),item }
+                   { nameof(_UserFormDialog.Model),item }
             };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
-            var state = await _authState;
+            var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
+            var state = await AuthState;
             user.Email = item.Email;
             user.PhoneNumber = item.PhoneNumber;
             user.ProfilePictureDataUrl = item.ProfilePictureDataUrl;
@@ -454,22 +450,22 @@
             user.TenantId = item.TenantId;
             user.TenantName = item.TenantName;
             user.SuperiorId = item.SuperiorId;
-            var identityResult = await _userManager.UpdateAsync(user);
+            var identityResult = await UserManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
-                var roles = await _userManager.GetRolesAsync(user!);
+                var roles = await UserManager.GetRolesAsync(user!);
                 if (roles.Count > 0)
                 {
-                    var removeRoleResult = await _userManager.RemoveFromRolesAsync(user, roles);
+                    var removeRoleResult = await UserManager.RemoveFromRolesAsync(user, roles);
                     if (removeRoleResult.Succeeded)
                     {
                         if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
                         {
-                            await _userManager.AddToRolesAsync(user, item.AssignedRoles);
+                            await UserManager.AddToRolesAsync(user, item.AssignedRoles);
                         }
                     }
                 }
-                Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{ConstantString.UpdateSuccess}", MudBlazor.Severity.Info);
                 await OnRefresh();
             }
             else
@@ -480,34 +476,34 @@
     }
     private async Task OnDelete(ApplicationUserDto dto)
     {
-        string deleteContent = ConstantString.DELETECONFIRMATION;
+        string deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters
         {
             { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, dto.UserName) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DELETECONFIRMATIONTITLE, parameters, options);
+        var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DeleteConfirmationTitle, parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            var deleteUser = await _userManager.Users.Where(x => x.Id == dto.Id).ToListAsync();
+            var deleteUser = await UserManager.Users.Where(x => x.Id == dto.Id).ToListAsync();
             foreach (var user in deleteUser)
             {
-                var deleteresult = await _userManager.DeleteAsync(user);
-                if (!deleteresult.Succeeded)
+                var deleteResult = await UserManager.DeleteAsync(user);
+                if (!deleteResult.Succeeded)
                 {
-                    Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                    Snackbar.Add($"{string.Join(",", (deleteResult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
                     return;
                 }
 
             }
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.DeleteSuccess}", MudBlazor.Severity.Info);
             await OnRefresh();
         }
     }
     private async Task OnDeleteChecked()
     {
-        var state = await _authState;
+        var state = await AuthState;
         var currentUserId = state.User.GetUserId();
         var isSelectedItemContainCurrentUser = _selectedItems.Any(x => x.Id == currentUserId);
 
@@ -515,14 +511,14 @@
         {
             if (_selectedItems.Count == 1)
             {
-                Snackbar.Add($"{ConstantString.DELETEFAIL}", MudBlazor.Severity.Error);
+                Snackbar.Add($"{ConstantString.DeleteFail}", MudBlazor.Severity.Error);
                 return;
             }
 
             _selectedItems.Remove(_selectedItems.First(x => x.Id == currentUserId));
         }
 
-        string deleteContent = ConstantString.DELETECONFIRMATION;
+        string deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters { { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, _selectedItems.Count) } };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>(L["Delete"], parameters, options);
@@ -531,18 +527,18 @@
         if (!result.Canceled)
         {
             var deleteId = _selectedItems.Select(x => x.Id).ToArray();
-            var deleteUsers = await _userManager.Users.Where(x => deleteId.Contains(x.Id)).ToListAsync();
+            var deleteUsers = await UserManager.Users.Where(x => deleteId.Contains(x.Id)).ToListAsync();
 
             foreach (var deleteUser in deleteUsers)
             {
-                var deleteresult = await _userManager.DeleteAsync(deleteUser);
-                if (!deleteresult.Succeeded)
+                var deleteResult = await UserManager.DeleteAsync(deleteUser);
+                if (!deleteResult.Succeeded)
                 {
-                    Snackbar.Add($"{string.Join(",", (deleteresult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                    Snackbar.Add($"{string.Join(",", (deleteResult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
                     return;
                 }
             }
-            Snackbar.Add($"{ConstantString.DELETESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.DeleteSuccess}", MudBlazor.Severity.Info);
             await OnRefresh();
         }
 
@@ -550,13 +546,13 @@
 
     private async Task OnSetActive(ApplicationUserDto item)
     {
-        var user = await _userManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
+        var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
         user.IsActive = !item.IsActive;
-        var state = await _userManager.UpdateAsync(user);
+        var state = await UserManager.UpdateAsync(user);
         item.IsActive = !item.IsActive;
         if (state.Succeeded)
         {
-            Snackbar.Add($"{ConstantString.UPDATESUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.UpdateSuccess}", MudBlazor.Severity.Info);
         }
         else
         {
@@ -576,9 +572,9 @@
         if (!result.Canceled)
         {
 
-            var user = await _userManager.FindByIdAsync(item.Id!);
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user!);
-            var state = await _userManager.ResetPasswordAsync(user!, token, model!.Password!);
+            var user = await UserManager.FindByIdAsync(item.Id!);
+            var token = await UserManager.GeneratePasswordResetTokenAsync(user!);
+            var state = await UserManager.ResetPasswordAsync(user!, token, model!.Password!);
             if (state.Succeeded)
             {
                 Snackbar.Add($"{L["Reset password successfully"]}", MudBlazor.Severity.Info);
@@ -604,14 +600,14 @@
     }
     private async Task<List<PermissionModel>> GetAllPermissions(ApplicationUserDto dto)
     {
-        Func<string, Task<IList<Claim>>> getcalims = async (userId) =>
+        Func<string, Task<IList<Claim>>> getClaims = async (userId) =>
         {
-            var user = await _userManager.FindByIdAsync(dto.Id) ?? throw new NotFoundException($"not found application user: {userId}");
-            var claims = await _userManager.GetClaimsAsync(user);
+            var user = await UserManager.FindByIdAsync(dto.Id) ?? throw new NotFoundException($"not found application user: {userId}");
+            var claims = await UserManager.GetClaimsAsync(user);
             return claims;
         };
         var key = $"get-claims-by-{dto.Id}";
-        _assignedClaims = await _cache.GetOrAddAsync(key, async () => await getcalims(dto.Id), _options);
+        _assignedClaims = await Cache.GetOrAddAsync(key, async () => await getClaims(dto.Id), Options);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
         foreach (var module in modules)
@@ -655,14 +651,14 @@
         {
             _processing = true;
             var userId = models.First().UserId;
-            var user = await _userManager.FindByIdAsync(userId!) ?? throw new NotFoundException($"not found application user: {userId}");
+            var user = await UserManager.FindByIdAsync(userId!) ?? throw new NotFoundException($"not found application user: {userId}");
             foreach (var model in models)
             {
                 if (model.Assigned)
                 {
                     if (model.ClaimType is not null && model.ClaimValue is not null)
                     {
-                        await _userManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
+                        await UserManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
                     }
                 }
                 else
@@ -670,7 +666,7 @@
                     var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
                     if (removed is not null)
                     {
-                        await _userManager.RemoveClaimAsync(user, removed);
+                        await UserManager.RemoveClaimAsync(user, removed);
                     }
                 }
             }
@@ -678,7 +674,7 @@
             Snackbar.Add($"{L["Authorization has been changed"]}", MudBlazor.Severity.Info);
             await Task.Delay(300);
             var key = $"get-claims-by-{user.Id}";
-            _cache.Remove(key);
+            Cache.Remove(key);
         }
         finally
         {
@@ -692,11 +688,11 @@
         {
             _processing = true;
             var userId = model.UserId!;
-            var user = await _userManager.FindByIdAsync(userId) ?? throw new NotFoundException($"Application user Not Found {userId}."); ;
+            var user = await UserManager.FindByIdAsync(userId) ?? throw new NotFoundException($"Application user Not Found {userId}."); ;
             model.Assigned = !model.Assigned;
             if (model.Assigned && model.ClaimType is not null && model.ClaimValue is not null)
             {
-                await _userManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
+                await UserManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
                 Snackbar.Add($"{L["Authorization successful"]}", MudBlazor.Severity.Info);
             }
             else
@@ -704,12 +700,12 @@
                 var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
                 if (removed is not null)
                 {
-                    await _userManager.RemoveClaimAsync(user, removed);
+                    await UserManager.RemoveClaimAsync(user, removed);
                 }
                 Snackbar.Add($"{L["Authorization canceled successfully"]}", MudBlazor.Severity.Info);
             }
             var key = $"get-claims-by-{user.Id}";
-            _cache.Remove(key);
+            Cache.Remove(key);
 
         }
         finally
@@ -730,8 +726,8 @@
             x.PhoneNumber.Contains(_searchString) ||
             x.TenantName.Contains(_searchString) ||
             x.Provider.Contains(_searchString)) &&
-            (_searchrole == null || (_searchrole != null && x.UserRoles.Any(x => x.Role.Name == _searchrole)));
-            var items = await _userManager.Users.Where(searchPredicate)
+            (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole)));
+            var items = await UserManager.Users.Where(searchPredicate)
                  .Select(x => new ApplicationUserDto()
                      {
                          Id = x.Id,
@@ -742,7 +738,7 @@
                          TenantId = x.TenantId,
                          TenantName = x.TenantName,
                      }).ToListAsync();
-            var result = await _excelService.ExportAsync(items,
+            var result = await ExcelService.ExportAsync(items,
                     new Dictionary<string, Func<ApplicationUserDto, object?>>()
                                                             {
                       {L["Id"],item => item.Id},
@@ -754,8 +750,8 @@
                       {L["Tenant Name"],item => item.TenantName},
                                                             }
                     , L["Users"]);
-            var downloadresult = await _blazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
-            Snackbar.Add($"{ConstantString.EXPORTSUCESS}", MudBlazor.Severity.Info);
+            var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
+            Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
         }
         finally
         {
@@ -768,8 +764,8 @@
     {
         _uploading = true;
         var stream = new MemoryStream();
-        await file.OpenReadStream(GlobalVariable.maxAllowedSize).CopyToAsync(stream);
-        var result = await _excelService.ImportAsync(stream.ToArray(), mappers: new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
+        await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
+        var result = await ExcelService.ImportAsync(stream.ToArray(), mappers: new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
             {
                 { L["User Name"], (row, item) => item.UserName = row[L["User Name"]]?.ToString() },
                 { L["Display Name"], (row, item) => item.DisplayName = row[L["Display Name"]]?.ToString() },
@@ -781,24 +777,24 @@
         {
             foreach (var user in result.Data)
             {
-                if (!_userManager.Users.Any(x => x.UserName == user.UserName || x.Email == user.Email))
+                if (!UserManager.Users.Any(x => x.UserName == user.UserName || x.Email == user.Email))
                 {
-                    var tenantId = _tenantsService.DataSource.Any(x => x.Name == user.TenantName) ? _tenantsService.DataSource.First(x => x.Name == user.TenantName).Id : _tenantsService.DataSource.First().Id;
+                    var tenantId = TenantsService.DataSource.Any(x => x.Name == user.TenantName) ? TenantsService.DataSource.First(x => x.Name == user.TenantName).Id : TenantsService.DataSource.First().Id;
                     user.TenantId = tenantId;
-                    var iresult = await _userManager.CreateAsync(user);
-                    if (iresult.Succeeded)
+                    var iResult = await UserManager.CreateAsync(user);
+                    if (iResult.Succeeded)
                     {
-                        await _userManager.AddToRolesAsync(user, new string[] { RoleName.Basic });
+                        await UserManager.AddToRolesAsync(user, new string[] { RoleName.Basic });
                     }
                     else
                     {
-                        Snackbar.Add($"{string.Join(',', iresult.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
+                        Snackbar.Add($"{string.Join(',', iResult.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
                     }
                 }
             }
 
             await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.IMPORTSUCCESS}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.ImportSuccess}", MudBlazor.Severity.Info);
         }
         else
         {

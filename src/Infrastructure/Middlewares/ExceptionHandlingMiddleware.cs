@@ -1,7 +1,7 @@
 using System.Net;
+using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
-
 
 namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
 

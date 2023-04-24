@@ -5,7 +5,7 @@
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
-namespace Blazor.Server.UI.Services;
+namespace Blazor.Server.UI.Services.UserPreferences;
 
 public interface IUserPreferencesService
 {
@@ -13,13 +13,13 @@ public interface IUserPreferencesService
     /// Saves UserPreferences in local storage
     /// </summary>
     /// <param name="userPreferences">The userPreferences to save in the local storage</param>
-    public Task SaveUserPreferences(UserPreferences userPreferences);
+    public Task SaveUserPreferences(Services.UserPreferences.UserPreferences userPreferences);
 
     /// <summary>
     /// Loads UserPreferences in local storage
     /// </summary>
     /// <returns>UserPreferences object. Null when no settings were found.</returns>
-    public Task<UserPreferences> LoadUserPreferences();
+    public Task<Services.UserPreferences.UserPreferences> LoadUserPreferences();
 }
 
 public class UserPreferencesService : IUserPreferencesService
@@ -32,26 +32,26 @@ public class UserPreferencesService : IUserPreferencesService
         _localStorage = localStorage;
     }
 
-    public async Task SaveUserPreferences(UserPreferences userPreferences)
+    public async Task SaveUserPreferences(Services.UserPreferences.UserPreferences userPreferences)
     {
         await _localStorage.SetAsync(Key, userPreferences);
     }
 
-    public async Task<UserPreferences> LoadUserPreferences()
+    public async Task<Services.UserPreferences.UserPreferences> LoadUserPreferences()
     {
         try
         {
-            var result = await _localStorage.GetAsync<UserPreferences>(Key);
+            var result = await _localStorage.GetAsync<Services.UserPreferences.UserPreferences>(Key);
             if (result.Success && result.Value is not null)
             {
                 return result.Value;
             }
-            return new UserPreferences();
+            return new Services.UserPreferences.UserPreferences();
         }
         catch (CryptographicException)
         {
             await _localStorage.DeleteAsync(Key);
-            return new UserPreferences();
+            return new Services.UserPreferences.UserPreferences();
         }
 
     }

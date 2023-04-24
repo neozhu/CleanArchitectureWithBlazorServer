@@ -1,26 +1,24 @@
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
-@using SixLabors.ImageSharp
-@using SixLabors.ImageSharp.Formats
-@using SixLabors.ImageSharp.Processing
+@using CleanArchitecture.Blazor.Domain.Enums
 @inherits MudComponentBase
 @inject IStringLocalizer<Documents> L
 <MudDialog>
     <DialogContent>
-        <MudForm Model="model" @ref="_form" Validation="@(modelValidator.ValidateValue)">
+        <MudForm Model="Model" @ref="_form" Validation="@(_modelValidator.ValidateValue)">
             <MudGrid>
                 <MudItem xs="12" sm="6">
-                    <MudTextField Label="@L["Title"]" @bind-Value="model.Title"
-                                  For="@(() => model.Title)"
+                    <MudTextField Label="@L["Title"]" @bind-Value="Model.Title"
+                                  For="@(() => Model.Title)"
                                   Required="true"
                                   RequiredError="@L["Title is required!"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <MudSelect Label="@L["Select Document Type"]"
-                               For="@(() => model.DocumentType)"
+                               For="@(() => Model.DocumentType)"
                                Required="true"
                                RequiredError="@L["Document type is required!"]"
-                               @bind-Value="model.DocumentType">
+                               @bind-Value="Model.DocumentType">
                         @foreach (var doctype in Enum.GetValues<DocumentType>())
                         {
                             <MudSelectItem Value="@doctype">@doctype</MudSelectItem>
@@ -29,25 +27,24 @@
                 </MudItem>
                 <MudItem xs="12">
                     <MudTextField Label="@L["Description"]"
-                                  For="@(() => model.Description)"
-                                  @bind-Value="model.Description"></MudTextField>
+                                  For="@(() => Model.Description)"
+                                  @bind-Value="Model.Description"></MudTextField>
                 </MudItem>
                 <MudItem xs="12">
                     <MudTextField Label="@L["Content"]"
                                   Lines="3" ReadOnly
-                                  For="@(() => model.Content)"
-                                  @bind-Value="model.Content"></MudTextField>
+                                  For="@(() => Model.Content)"
+                                  @bind-Value="Model.Content"></MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="6">
                    <MudTextField Label="@L["Job Status"]"
-                                For="@(() => model.Status)"
-                                ReadOnly
-                                @bind-Value="model.Status"></MudTextField>
+                                For="@(() => Model.Status)"
+                                @bind-Value="Model.Status"></MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="6">
                    <MudCheckBox Label="@L["Is Public"]"
-                                For="@(() => model.IsPublic)"
-                                @bind-Checked="model.IsPublic"></MudCheckBox>
+                                For="@(() => Model.IsPublic)"
+                                @bind-Checked="Model.IsPublic"></MudCheckBox>
                 </MudItem>
 
                 <MudItem>
@@ -61,8 +58,8 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@ConstantString.CANCEL</MudButton>
-        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">@ConstantString.OK</MudButton>
+        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">@ConstantString.Ok</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -70,9 +67,10 @@
     MudForm? _form = default!;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
-    AddEditDocumentCommandValidator modelValidator = new AddEditDocumentCommandValidator();
-    [EditorRequired][Parameter] public AddEditDocumentCommand model { get; set; } = default!;
-    const long MAXALLOWEDSIZE = 3145728;
+
+    readonly AddEditDocumentCommandValidator _modelValidator = new AddEditDocumentCommandValidator();
+    [EditorRequired][Parameter] public AddEditDocumentCommand Model { get; set; } = default!;
+    const long MaxAllowedSize = 3145728;
 
     async Task Submit()
     {
