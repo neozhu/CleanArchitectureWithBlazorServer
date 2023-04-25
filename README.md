@@ -45,14 +45,16 @@ docker run --name BlazorDashboardDB -e POSTGRES_DB='BlazorDashboardDb' -e POSTGR
 **Using PostgresSQL as database provider:**
 
 1. Run an instance of PostgresSQL
-2. Enable the `UsePostgresSQL` setting in `appsettings.json`.
+2. Enable the `UsePostgresSQL` setting in `appsettings.json`, and make sure `UseInMemoryDatabase` and `UseMSSQLServer`
+   are disabled.
 3. Change the password in the `PostgresSQLConnection` connecting string to whatever you changed `yourPassword`.
 4. Done
 
 ## Using Microsoft SQL Server as database provider
 
 1. Run an instance of Microsoft SQL Server (Standard, Express or LocalDB).
-2. Disable both `UseInMemoryDatabase` and `UsePostgresSQL` in `appsettings.json`.
+2. Enable the `UseMSSQLServer` setting in `appsettings.json`, and make sure `UseInMemoryDatabase` and `UsePostgresSQL`
+   are disabled.
 3. Change the `MSSQLServerConnection` connecting string to one matching your Microsoft SQL Server instance
 4. Done
 
