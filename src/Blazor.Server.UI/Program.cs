@@ -31,9 +31,6 @@ builder.Services.AddInfrastructureServices(builder.Configuration)
 
 var app = builder.Build();
 
-
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
 app.MapHealthChecks("/health");
 app.UseExceptionHandler("/Error");
 app.MapFallbackToPage("/_Host");
