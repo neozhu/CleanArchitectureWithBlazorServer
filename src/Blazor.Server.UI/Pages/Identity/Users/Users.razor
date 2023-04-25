@@ -12,6 +12,7 @@
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
 @using CleanArchitecture.Blazor.Application.Constants.ClaimTypes
 @using CleanArchitecture.Blazor.Application.Constants.Role
+@using Severity = MudBlazor.Severity
 @implements IDisposable
 @page "/identity/users"
 @inject IStringLocalizer<Users> L
@@ -383,7 +384,7 @@
     }
     private async Task OnCreate()
     {
-        var model = new ApplicationUserDto() { Provider = "Local", Email = "", UserName = "", AssignedRoles = new string[] { RoleName.Basic } };
+        var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleName.Basic } };
         var parameters = new DialogParameters {
             { nameof(_UserFormDialog.Model),model }
            };
@@ -392,8 +393,8 @@
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            var applicationUser = new ApplicationUser()
-                {
+            var applicationUser = new ApplicationUser
+            {
                     Provider = model.Provider,
                     DisplayName = model.DisplayName,
                     UserName = model.UserName,
@@ -418,12 +419,12 @@
                 {
                     await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
                 }
-                Snackbar.Add($"{ConstantString.CreateSuccess}", MudBlazor.Severity.Info);
+                Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
                 await OnRefresh();
             }
             else
             {
-                Snackbar.Add($"{string.Join(",", (state.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
+                Snackbar.Add($"{string.Join(",", state.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
             }
         }
     }
@@ -475,9 +476,10 @@
             }
         }
     }
+    
     private async Task OnDelete(ApplicationUserDto dto)
     {
-        string deleteContent = ConstantString.DeleteConfirmation;
+        var deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters
         {
             { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, dto.UserName) }
@@ -487,21 +489,38 @@
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            var deleteUser = await UserManager.Users.Where(x => x.Id == dto.Id).ToListAsync();
-            foreach (var user in deleteUser)
-            {
-                var deleteResult = await UserManager.DeleteAsync(user);
-                if (!deleteResult.Succeeded)
-                {
-                    Snackbar.Add($"{string.Join(",", (deleteResult.Errors.Select(x => x.Description).ToArray()))}", MudBlazor.Severity.Error);
-                    return;
-                }
+            // Requesting the current user id
+            var state = await AuthState;
+            var currentUserId = state.User.GetUserId();
 
+            // Checks if the current user is trying to remove his own account
+            if (currentUserId != null && currentUserId.Equals(dto.Id))
+            {
+                Snackbar.Add("You cannot delete your own account!", Severity.Error);
+                return;
             }
-            Snackbar.Add($"{ConstantString.DeleteSuccess}", MudBlazor.Severity.Info);
+
+            // Trying to find the user that needs to be deleted in the database (nullable check)
+            var requestedDeletedUser = await UserManager.FindByIdAsync(dto.Id);
+            if (requestedDeletedUser == null)
+            {
+                Snackbar.Add("The user doesn't seem to exist in the database!", Severity.Error);
+                return;
+            }
+
+            // Trying to remove the requested user
+            var deleteResult = await UserManager.DeleteAsync(requestedDeletedUser);
+            if (!deleteResult.Succeeded)
+            {
+                Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+                return;
+            }
+            
+            Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
         }
     }
+    
     private async Task OnDeleteChecked()
     {
         var state = await AuthState;
@@ -515,7 +534,6 @@
                 Snackbar.Add($"{ConstantString.DeleteFail}", MudBlazor.Severity.Error);
                 return;
             }
-
             _selectedItems.Remove(_selectedItems.First(x => x.Id == currentUserId));
         }
 
