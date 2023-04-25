@@ -130,13 +130,13 @@
                         @if (_canSearch)
                         {
                             <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                                <MudSelect T="string" Placeholder="Search for role name" Value="@_searchRole" Clearable="true" ValueChanged="@(s=>OnSearchRole(s))" Style="width:150px">
+                                <MudSelect T="string" Placeholder="Search for role name" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
                                     @foreach (var str in _roles)
                                     {
                                         <MudSelectItem Value="@str">@str</MudSelectItem>
                                     }
                                 </MudSelect>
-                                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
+                                <MudTextField T="string" Immediate="true" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
                             </MudStack>
 
@@ -344,31 +344,33 @@
         {
             _loading = true;
             Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
-            (x.UserName.Contains(_searchString) ||
-            x.Email.Contains(_searchString) ||
-            x.DisplayName.Contains(_searchString) ||
-            x.PhoneNumber.Contains(_searchString) ||
-            x.TenantName.Contains(_searchString) ||
-            x.Provider.Contains(_searchString)) &&
-            (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole)));
+            (x.UserName.ToLower().Contains(_searchString) ||
+            x.Email.ToLower().Contains(_searchString) ||
+            x.DisplayName.ToLower().Contains(_searchString) ||
+            x.PhoneNumber.ToLower().Contains(_searchString) ||
+            x.TenantName.ToLower().Contains(_searchString) ||
+            x.Provider.ToLower().Contains(_searchString)) &&
+            (_searchRole == null || (_searchRole != null && x.UserRoles.Any(applicationUserRole => applicationUserRole.Role.Name == _searchRole)));
             var items = await UserManager.Users.Where(searchPredicate)
                  .Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                 .EfOrderBySortDefinitions<ApplicationUser, ApplicationUserDto>(state)
+                 .EfOrderBySortDefinitions(state)
                  .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
             var total = await UserManager.Users.CountAsync(searchPredicate);
-            return new GridData<ApplicationUserDto>() { TotalItems = total, Items = items };
+            return new GridData<ApplicationUserDto> { TotalItems = total, Items = items };
         }
         finally
         {
             _loading = false;
         }
     }
+    
     private async Task OnSearch(string text)
     {
         if (_loading) return;
-        _searchString = text;
+        _searchString = text.ToLower();
         await _table.ReloadServerData();
     }
+    
     private async Task OnSearchRole(string role)
     {
         if (_loading) return;
