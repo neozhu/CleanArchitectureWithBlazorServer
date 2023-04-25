@@ -31,14 +31,12 @@ public static class DependencyInjection
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(
+                options.UseNpgsql(
                       configuration.GetConnectionString("DefaultConnection"),
                       builder =>
                       {
-                          builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
-                          builder.EnableRetryOnFailure(maxRetryCount: 5,
-                                                       maxRetryDelay: TimeSpan.FromSeconds(10),
-                                                       errorNumbersToAdd: null);
+                          builder.MigrationsAssembly("Blazor.Server.UI");
+                          builder.EnableRetryOnFailure(maxRetryCount: 5);
                           builder.CommandTimeout(15);
                       });
                 options.EnableDetailedErrors(detailedErrorsEnabled: true);

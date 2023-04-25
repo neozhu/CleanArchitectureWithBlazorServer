@@ -31,6 +31,7 @@
         <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="6.2.3" />
         <PackageReference Include="Duende.IdentityServer.EntityFramework.Storage" Version="6.2.3" />
         <PackageReference Include="Duende.IdentityServer.Storage" Version="6.2.3" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
         <PackageReference Include="Polly" Version="7.2.3" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.3.0" />
         <PackageReference Include="QuestPDF" Version="2022.12.2" />
