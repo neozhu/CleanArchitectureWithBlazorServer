@@ -116,7 +116,7 @@
                         </div>
                         @if (_canSearch)
                         {
-                            <MudTextField T="string" Value="_searchString" FullWidth="false" ValueChanged="@(s=>OnSearch(s))"
+                            <MudTextField T="string" Immediate="true" Value="_searchString" FullWidth="false" ValueChanged="@(OnSearch)"
                                       Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0 mb-3">
                             </MudTextField>
@@ -225,30 +225,36 @@
         _canImport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = false;// (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
     }
+    
     private async Task<GridData<ApplicationRoleDto>> ServerReload(GridState<ApplicationRoleDto> state)
     {
         try
         {
             _loading = true;
-            var items =await RoleManager.Roles.Where(x => x.Name.Contains(_searchString) || x.Description.Contains(_searchString))
-                  .EfOrderBySortDefinitions<ApplicationRole,ApplicationRoleDto>(state)
-                  .Skip(state.Page * state.PageSize).Take(state.PageSize)
-                  .Select(x => new ApplicationRoleDto() { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName })
-                  .ToListAsync();
-            var total = await RoleManager.Roles.CountAsync(x => x.Name.Contains(_searchString) || x.Description.Contains(_searchString));
-            return new GridData<ApplicationRoleDto>() { TotalItems = total, Items = items };
+            var items = await RoleManager.Roles
+                .Where(x => x.Name.ToLower().Contains(_searchString) || x.Description.ToLower().Contains(_searchString))
+                .EfOrderBySortDefinitions(state)
+                .Skip(state.Page * state.PageSize).Take(state.PageSize)
+                .Select(x => new ApplicationRoleDto
+                { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName })
+                .ToListAsync();
+            var total = await RoleManager.Roles.CountAsync(x =>
+                x.Name.ToLower().Contains(_searchString) || x.Description.ToLower().Contains(_searchString));
+            return new GridData<ApplicationRoleDto> { TotalItems = total, Items = items };
         }
         finally
         {
             _loading = false;
         }
     }
+    
     private async Task OnSearch(string text)
     {
         if (_loading) return;
-        _searchString = text;
+        _searchString = text.ToLower();
         await _table.ReloadServerData();
     }
+    
     private async Task OnRefresh()
     {
         await _table.ReloadServerData();
