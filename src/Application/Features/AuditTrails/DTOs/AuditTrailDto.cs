@@ -11,11 +11,9 @@ public class AuditTrailDto : IMapFrom<AuditTrail>
 {
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<AuditTrail, AuditTrailDto>( MemberList.None)
-           .ForMember(x => x.OldValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.OldValues, DefaultJsonSerializerOptions.Options)))
-           .ForMember(x => x.NewValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.NewValues, DefaultJsonSerializerOptions.Options)))
-           .ForMember(x => x.PrimaryKey, s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, DefaultJsonSerializerOptions.Options)))
-           .ForMember(x => x.AffectedColumns, s => s.MapFrom(y => JsonSerializer.Serialize(y.AffectedColumns, DefaultJsonSerializerOptions.Options)));
+        profile.CreateMap<AuditTrail, AuditTrailDto>(MemberList.None)
+            .ForMember(x => x.PrimaryKey, s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, DefaultJsonSerializerOptions.Options)));
+           
 
     }
     [Description("Id")]
@@ -29,11 +27,11 @@ public class AuditTrailDto : IMapFrom<AuditTrail>
     [Description("Created DateTime")]
     public DateTime DateTime { get; set; }
     [Description("Old Values")]
-    public string? OldValues { get; set; }
+    public Dictionary<string, object?>? OldValues { get; set; }
     [Description("New Values")]
-    public string? NewValues { get; set; }
+    public Dictionary<string, object?>? NewValues { get; set; }
     [Description("Affected Columns")]
-    public string? AffectedColumns { get; set; }
+    public List<string>? AffectedColumns { get; set; }
     [Description("Primary Key")]
     public string PrimaryKey { get; set; } = default!;
     [Description("Show Details")]
