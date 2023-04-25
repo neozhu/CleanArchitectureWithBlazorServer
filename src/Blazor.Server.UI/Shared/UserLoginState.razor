@@ -9,14 +9,14 @@
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
-    private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
     [Inject]
     public IDispatcher Dispatcher { get; set; } = null!;
     public void Dispose()
     {
         Client.Login -= _client_Login;
         Client.Logout -= _client_Logout;
-        _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
+        AuthenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         GC.SuppressFinalize(this);
     }
     [Inject]
@@ -26,7 +26,7 @@
         Client.Login += _client_Login;
         Client.Logout += _client_Logout;
         await Client.StartAsync().ConfigureAwait(false);
-        _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
+        AuthenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
         var state = await AuthState;
         if (state.User.Identity?.IsAuthenticated ?? false)
         {

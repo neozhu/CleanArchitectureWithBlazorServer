@@ -201,7 +201,7 @@
     private IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     [Inject]
     private IMediator Mediator { get; set; } = default!;
-    private KeyValuesWithPaginationQuery _request = new();
+    private KeyValuesWithPaginationQuery Query { get; set; } = new();
     private bool _canCreate;
     private bool _canSearch;
     private bool _canEdit;

@@ -16,7 +16,6 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
     private MudThemeProvider _mudThemeProvider=null!;
     private bool _themingDrawerOpen;
     private bool _defaultDarkMode;
-    [Inject] private IDialogService _dialogService { get; set; } = default!;
     [Inject] private HotKeys HotKeys { get; set; } = default!;
     
     
@@ -83,7 +82,7 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
                 FullWidth = true
             };
 
-            var commandPalette = _dialogService.Show<CommandPalette>("", options);
+            var commandPalette = DialogService.Show<CommandPalette>("", options);
             _commandPaletteOpen = true;
 
             await commandPalette.Result;
