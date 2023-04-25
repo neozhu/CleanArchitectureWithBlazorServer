@@ -791,12 +791,13 @@
                 { L["Email"], (row, item) => item.Email = row[L["Email"]]?.ToString() },
                 { L["Phone Number"], (row, item) => item.PhoneNumber = row[L["Phone Number"]]?.ToString() },
                 { L["Tenant Name"], (row, item) => item.TenantName = row[L["Tenant Name"]]?.ToString() },
+                { L["Tenant Id"], (row, item) => item.TenantId = row[L["Tenant Id"]]?.ToString() },
             }, L["Users"]);
         if (result.Succeeded)
         {
             foreach (var user in result.Data)
             {
-                if (!UserManager.Users.Any(x => x.UserName == user.UserName || x.Email == user.Email))
+                if (!UserManager.Users.Any(x => x.UserName == user.UserName))
                 {
                     var tenantId = TenantsService.DataSource.Any(x => x.Name == user.TenantName) ? TenantsService.DataSource.First(x => x.Name == user.TenantName).Id : TenantsService.DataSource.First().Id;
                     user.TenantId = tenantId;
