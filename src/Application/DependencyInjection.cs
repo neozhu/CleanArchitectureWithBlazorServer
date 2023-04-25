@@ -30,6 +30,10 @@ public static class DependencyInjection
          
             
         });
+        services.AddFluxor(options => {
+            options.ScanAssemblies(Assembly.GetExecutingAssembly());
+            options.UseReduxDevTools();
+        });
         services.AddLazyCache();
         services.AddScoped<PicklistService>();
         services.AddScoped<IPicklistService>(sp => {

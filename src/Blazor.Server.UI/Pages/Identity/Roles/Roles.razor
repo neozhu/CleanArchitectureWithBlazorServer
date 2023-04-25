@@ -1,11 +1,10 @@
 @using LazyCache
-@using CleanArchitecture.Blazor.Application.Features.Identity.Dto
 @using System.Security.Claims
 @using System.ComponentModel
 @using System.Reflection
+@using CleanArchitecture.Blazor.Application.Features.Identity.Dto
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
 @using CleanArchitecture.Blazor.Application.Constants.ClaimTypes
-@using CleanArchitecture.Blazor.Application.Constants.Permission
 @inherits OwningComponentBase
 @page "/identity/roles"
 
@@ -130,7 +129,7 @@
                 <SelectColumn ShowInFooter="false" ></SelectColumn>
                 <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Actions" Sortable="false" >
                     <CellTemplate>
-                    @if (_canEdit || _canDelete)
+                        @if (_canEdit || _canDelete || _canManagePermissions)
                     {
                             <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                                  Dense="true"
@@ -143,6 +142,10 @@
                             {
                                     <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                             }
+                                @if (_canManagePermissions)
+                                {
+                                    <MudMenuItem OnClick="@(()=>OnSetPermissions(context.Item))">@L["Set Permissions"]</MudMenuItem>
+                                }
                         </MudMenu>
                     }
                     else

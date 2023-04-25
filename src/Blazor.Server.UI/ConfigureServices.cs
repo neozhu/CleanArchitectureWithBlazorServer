@@ -59,7 +59,6 @@ public static class ConfigureServices
         services.AddScoped<INotificationService, InMemoryNotificationService>();
         services.AddGoogleAnalytics("G-PRYNCB61NV");
         services.AddHealthChecks();
-        services.AddScoped<INotificationHandler<UpdateUserProfileCommand>, UserProfileStateComponent>();
         return services;
     }
 }

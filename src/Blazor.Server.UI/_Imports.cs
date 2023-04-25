@@ -11,6 +11,7 @@ global using CleanArchitecture.Blazor.Application.Common.Interfaces;
 global using CleanArchitecture.Blazor.Infrastructure.Extensions;
 global using CleanArchitecture.Blazor.Application.Constants;
 global using Microsoft.AspNetCore.Components;
+global using Fluxor.Blazor.Web.Components;
 global using MudBlazor;
 global using Severity = MudBlazor.Severity;
 global using Color = MudBlazor.Color;

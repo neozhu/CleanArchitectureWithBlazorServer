@@ -1,12 +1,23 @@
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+@using CleanArchitecture.Blazor.Application.Features.Fluxor;
+@using CleanArchitecture.Blazor.Application.Features.Identity.Dto
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
 @implements IDisposable
-@code{
-   
+@code {
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
+    [Inject]
+    public IDispatcher Dispatcher { get; set; } = null!;
     public void Dispose()
     {
         Client.Login -= _client_Login;
         Client.Logout -= _client_Logout;
-       
+        AuthenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
+        GC.SuppressFinalize(this);
     }
     [Inject]
     private HubClient Client { get; set; } = default!;
@@ -14,15 +25,22 @@
     {
         Client.Login += _client_Login;
         Client.Logout += _client_Logout;
-            await Client.StartAsync().ConfigureAwait(false);
+        await Client.StartAsync().ConfigureAwait(false);
+        AuthenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
+        var state = await AuthState;
+        if (state.User.Identity?.IsAuthenticated ?? false)
+        {
+            var userId = state.User.GetUserId();
+            setProfile(userId);
+        }
     }
-   
+
     private void _client_Login(object? sender, string username)
     {
         InvokeAsync(async () =>
         {
             Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
-            
+
         });
     }
 
@@ -31,8 +49,24 @@
         InvokeAsync(async () =>
         {
             Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
-            
+
         });
+    }
+    private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
+    {
+        InvokeAsync(async () =>
+        {
+            var state = await authenticationState;
+            if (state.User.Identity?.IsAuthenticated??false)
+            {
+                var userId = state.User.GetUserId();
+                setProfile(userId);
+            }
+        });
+    }
+    private void setProfile(string userId)
+    {
+        Dispatcher.Dispatch(new FetchUserDtoAction() { UserId = userId });
     }
 }
 

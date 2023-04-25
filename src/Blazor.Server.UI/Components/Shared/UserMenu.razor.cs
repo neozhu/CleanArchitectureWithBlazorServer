@@ -1,10 +1,17 @@
 using Blazor.Server.UI.Components.Dialogs;
+using CleanArchitecture.Blazor.Application.Features.Fluxor;
+using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
+using Fluxor;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Blazor.Server.UI.Components.Shared;
 
-public partial class UserMenu: UserProfileStateComponent
+public partial class UserMenu: FluxorComponent
 {
+    [Inject]
+    private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    private bool IsLoading => UserProfileState.Value.IsLoading;
+    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     [Inject]
     protected NavigationManager NavigationManager { get; set; } = null!;
