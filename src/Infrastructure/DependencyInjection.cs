@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ITenantProvider, TenantProvider>();
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+        
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -48,7 +49,7 @@ public static class DependencyInjection
             });
             services.AddDatabaseDeveloperPageExceptionFilter();
         }
-        else
+        else if (configuration.GetValue<bool>("UseMSSQLServer"))
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -64,6 +65,14 @@ public static class DependencyInjection
                 options.EnableSensitiveDataLogging();
             });
             services.AddDatabaseDeveloperPageExceptionFilter();
+        }
+        else
+        {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseInMemoryDatabase("BlazorDashboardDb");
+                options.EnableSensitiveDataLogging();
+            });
         }
 
         services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.SectionName));
