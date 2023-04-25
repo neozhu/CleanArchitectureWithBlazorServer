@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Blazor.Server.UI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230425115258_UpdatedProductConfiguration")]
-    partial class UpdatedProductConfiguration
+    [Migration("20230425144203_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace Blazor.Server.UI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("NewValues")
                         .HasColumnType("text");
@@ -75,7 +75,7 @@ namespace Blazor.Server.UI.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
@@ -84,7 +84,7 @@ namespace Blazor.Server.UI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
@@ -111,7 +111,7 @@ namespace Blazor.Server.UI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
@@ -127,7 +127,7 @@ namespace Blazor.Server.UI.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
@@ -164,7 +164,7 @@ namespace Blazor.Server.UI.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
@@ -173,7 +173,7 @@ namespace Blazor.Server.UI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
@@ -227,7 +227,7 @@ namespace Blazor.Server.UI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UserName")
                         .HasColumnType("text");
@@ -249,7 +249,7 @@ namespace Blazor.Server.UI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
@@ -258,7 +258,7 @@ namespace Blazor.Server.UI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
@@ -286,7 +286,7 @@ namespace Blazor.Server.UI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
@@ -295,7 +295,7 @@ namespace Blazor.Server.UI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
@@ -429,7 +429,7 @@ namespace Blazor.Server.UI.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("RefreshTokenExpiryTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");

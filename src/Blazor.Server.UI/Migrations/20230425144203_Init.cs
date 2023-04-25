@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Blazor.Server.UI.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdatedProductConfiguration : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -40,7 +40,7 @@ namespace Blazor.Server.UI.Migrations
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     IsLive = table.Column<bool>(type: "boolean", nullable: false),
                     RefreshToken = table.Column<string>(type: "text", nullable: true),
-                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     SuperiorId = table.Column<string>(type: "text", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -75,9 +75,9 @@ namespace Blazor.Server.UI.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -95,9 +95,9 @@ namespace Blazor.Server.UI.Migrations
                     Value = table.Column<string>(type: "text", nullable: true),
                     Text = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -114,7 +114,7 @@ namespace Blazor.Server.UI.Migrations
                     Message = table.Column<string>(type: "text", nullable: true),
                     MessageTemplate = table.Column<string>(type: "text", nullable: true),
                     Level = table.Column<string>(type: "text", nullable: false),
-                    TimeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Exception = table.Column<string>(type: "text", nullable: true),
                     UserName = table.Column<string>(type: "text", nullable: true),
                     ClientIP = table.Column<string>(type: "text", nullable: true),
@@ -139,9 +139,9 @@ namespace Blazor.Server.UI.Migrations
                     Unit = table.Column<string>(type: "text", nullable: true),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
                     Pictures = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -156,9 +156,9 @@ namespace Blazor.Server.UI.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -284,7 +284,7 @@ namespace Blazor.Server.UI.Migrations
                     UserId = table.Column<string>(type: "text", nullable: true),
                     AuditType = table.Column<string>(type: "text", nullable: false),
                     TableName = table.Column<string>(type: "text", nullable: true),
-                    DateTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     OldValues = table.Column<string>(type: "text", nullable: true),
                     NewValues = table.Column<string>(type: "text", nullable: true),
                     AffectedColumns = table.Column<string>(type: "text", nullable: true),
@@ -314,9 +314,9 @@ namespace Blazor.Server.UI.Migrations
                     URL = table.Column<string>(type: "text", nullable: true),
                     DocumentType = table.Column<string>(type: "text", nullable: false),
                     TenantId = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
