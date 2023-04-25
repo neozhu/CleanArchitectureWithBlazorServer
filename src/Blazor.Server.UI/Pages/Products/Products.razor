@@ -203,7 +203,7 @@
                         @L["Selected Total"]: @(this._selectedItems.Sum(x=>x.Price))
                     </FooterTemplate>
                 </PropertyColumn>
-              g<PropertyColumn Property="x => x.Unit" Title="@L[_currentDto.GetMemberDescription(x=>x.Unit)]" />
+              <PropertyColumn Property="x => x.Unit" Title="@L[_currentDto.GetMemberDescription(x=>x.Unit)]" />
             </Columns>
             <NoRecordsContent>
                 <MudText>@ConstantString.NoRecords</MudText>
