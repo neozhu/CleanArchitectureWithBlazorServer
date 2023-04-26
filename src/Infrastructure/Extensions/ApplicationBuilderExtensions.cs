@@ -1,3 +1,4 @@
+using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using Hangfire;
@@ -50,4 +51,7 @@ public static class ApplicationBuilderExtensions
 
         return app;
     }
+
+
+    
 }

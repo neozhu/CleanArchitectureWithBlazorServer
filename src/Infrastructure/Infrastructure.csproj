@@ -20,6 +20,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">
             <PrivateAssets>all</PrivateAssets>
@@ -31,9 +32,12 @@
         <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="6.2.3" />
         <PackageReference Include="Duende.IdentityServer.EntityFramework.Storage" Version="6.2.3" />
         <PackageReference Include="Duende.IdentityServer.Storage" Version="6.2.3" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
         <PackageReference Include="Polly" Version="7.2.3" />
-        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.3.0" />
         <PackageReference Include="QuestPDF" Version="2022.12.2" />
+        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.3.0" />
+        <PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="3.5.0" />
+        <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
         <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="1.2.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />

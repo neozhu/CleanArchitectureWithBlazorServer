@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace Blazor.Server.UI.Models;
-
+# nullable disable
 public class NugetResponse
 {
     [JsonPropertyName("totalHits")]

@@ -25,6 +25,9 @@
     <ItemGroup>
         <ProjectReference Include="..\Application\Application.csproj" />
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj" />
+        <ProjectReference Include="..\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj" />
+        <ProjectReference Include="..\Migrators\Migrators.SqLite\Migrators.SqLite.csproj" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Resources\EmailTemplates\*" />
