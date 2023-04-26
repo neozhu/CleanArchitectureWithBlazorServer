@@ -33,10 +33,6 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<KeyValue> KeyValues { get; set; }
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Product> Products { get; set; }
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        return base.SaveChangesAsync(cancellationToken);
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
