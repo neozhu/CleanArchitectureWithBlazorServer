@@ -22,43 +22,17 @@ Blazor technology.
 
 ![image](https://user-images.githubusercontent.com/1549611/183799080-380e1f01-ef80-4568-80d2-517514aa59e5.png)
 
-## Supported databases
+## Supported Databases
 
-We have two natively supported databases. By default, the application will run on an in-memory database, provided by
-entity framework, but obviously, this shouldn't be used outside of testing.
+* PostgreSQL (Provider Name: `postgresql`)
+* Microsoft SQL Server (Provider Name: `mssql`)
+* SQLite (Provider Name: `sqlite`)
 
-- **PostgresSQL**
-- **Microsoft SQL Server(Standard, Express or localdb)**
+### How to select a specific Database?
 
-## Setting up a database
-
-### Using PostgresSQL as database provider
-
-**Setting up a PostgresSQL instance (skip if you already have a running instance):**
-
-Using docker run the following command in any terminal ([Docker](https://www.docker.com/) needs to be installed!)
-
-```bash
-docker run --name BlazorDashboardDB -e POSTGRES_DB='BlazorDashboardDb' -e POSTGRES_USER='BlazorDashboard' -e POSTGRES_PASSWORD='yourPassword' -p 5432:5432 postgres
-```
-
-**Using PostgresSQL as database provider:**
-
-1. Run an instance of PostgresSQL
-2. Enable the `UsePostgresSQL` setting in `appsettings.json`, and make sure `UseInMemoryDatabase` and `UseMSSQLServer`
-   are disabled.
-3. Change the password in the `PostgresSQLConnection` connecting string to whatever you changed `yourPassword`.
-4. Done
-
-### Using Microsoft SQL Server as database provider
-
-1. Run an instance of Microsoft SQL Server (Standard, Express or LocalDB).
-2. Enable the `UseMSSQLServer` setting in `appsettings.json`, and make sure `UseInMemoryDatabase` and `UsePostgresSQL`
-   are disabled.
-3. Change the `MSSQLServerConnection` connecting string to one matching your Microsoft SQL Server instance
-4. Done
-
-And you are ready to go!
+1. Open the `appsettings.json` file located in the src directory of the `Blazor.Server.UI` project.
+2. Change the setting `DBProvider` to the desired provider name (See Supported Databases).
+3. Change the `ConnectionString` to a connection string, which works for your selected database provider.
 
 ## Docker compose https deployment
 

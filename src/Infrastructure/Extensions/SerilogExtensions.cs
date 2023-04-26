@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Serilog.Configuration;
+﻿using Microsoft.AspNetCore.Builder;
 using Serilog.Events;
-using Serilog.Formatting.Compact;
 using Serilog;
 using CleanArchitecture.Blazor.Application.Common.Configurations;
 using Microsoft.Extensions.Configuration;
@@ -62,61 +55,66 @@ public static class SerilogExtensions
     }
     private static void WriteToSqlServer(LoggerConfiguration serilogConfig, string? connectionString)
     {
-        if (!string.IsNullOrEmpty(connectionString))
+        if (string.IsNullOrEmpty(connectionString))
         {
-            var sinkOpts = new MSSqlServerSinkOptions();
-            sinkOpts.TableName = "Loggers";
-            sinkOpts.SchemaName = "dbo";
-            sinkOpts.AutoCreateSqlDatabase = false;
-            sinkOpts.AutoCreateSqlTable = false;
-            sinkOpts.BatchPostingLimit = 100;
-            sinkOpts.BatchPeriod = new TimeSpan(0, 0, 20);
-
-            var columnOpts = new Serilog.Sinks.MSSqlServer.ColumnOptions();
-            columnOpts.Store.Add(StandardColumn.LogEvent);
-            columnOpts.AdditionalColumns = new Collection<SqlColumn>
-            {  new SqlColumn{ColumnName = "ClientIP", PropertyName = "ClientIP", DataType = SqlDbType.NVarChar, DataLength = 64},
-               new SqlColumn{ColumnName = "UserName",PropertyName = "UserName", DataType = SqlDbType.NVarChar, DataLength=64},
-               new SqlColumn{ColumnName = "ClientAgent", PropertyName = "ClientAgent", DataType = SqlDbType.NVarChar, DataLength = -1},
-            };
-            columnOpts.LogEvent.DataLength = 2048;
-            columnOpts.PrimaryKey = columnOpts.Id;
-            columnOpts.TimeStamp.NonClusteredIndex = true;
-
-            serilogConfig.WriteTo.Async(wt => wt.MSSqlServer(
-                   connectionString: connectionString,
-                   sinkOptions: sinkOpts,
-                   columnOptions: columnOpts
-                ));
+            return;
         }
+
+        var sinkOpts = new MSSqlServerSinkOptions
+        {
+            TableName = "Loggers", SchemaName = "dbo", AutoCreateSqlDatabase = false,
+            AutoCreateSqlTable = false,
+            BatchPostingLimit = 100,
+            BatchPeriod = new TimeSpan(0, 0, 20)
+        };
+
+        var columnOpts = new Serilog.Sinks.MSSqlServer.ColumnOptions();
+        columnOpts.Store.Add(StandardColumn.LogEvent);
+        columnOpts.AdditionalColumns = new Collection<SqlColumn>
+        {  
+            new SqlColumn{ColumnName = "ClientIP", PropertyName = "ClientIP", DataType = SqlDbType.NVarChar, DataLength = 64},
+            new SqlColumn{ColumnName = "UserName",PropertyName = "UserName", DataType = SqlDbType.NVarChar, DataLength=64},
+            new SqlColumn{ColumnName = "ClientAgent", PropertyName = "ClientAgent", DataType = SqlDbType.NVarChar, DataLength = -1},
+        };
+        columnOpts.LogEvent.DataLength = 2048;
+        columnOpts.PrimaryKey = columnOpts.Id;
+        columnOpts.TimeStamp.NonClusteredIndex = true;
+
+        serilogConfig.WriteTo.Async(wt => wt.MSSqlServer(
+            connectionString: connectionString,
+            sinkOptions: sinkOpts,
+            columnOptions: columnOpts
+        ));
     }
     private static void WriteToNpgsql(LoggerConfiguration serilogConfig, string? connectionString)
     {
-        if (!string.IsNullOrEmpty(connectionString))
+        if (string.IsNullOrEmpty(connectionString))
         {
-            string tableName = "Loggers";
-            //Used columns (Key is a column name) 
-            //Column type is writer's constructor parameter
-            IDictionary<string, ColumnWriterBase> columnOptions = new Dictionary<string, ColumnWriterBase>
-            {
-                {"Message", new RenderedMessageColumnWriter(NpgsqlDbType.Text) },
-                {"MessageTemplate", new MessageTemplateColumnWriter(NpgsqlDbType.Text) },
-                {"Level", new LevelColumnWriter(true, NpgsqlDbType.Varchar) },
-                {"TimeStamp", new TimestampColumnWriter(NpgsqlDbType.Timestamp) },
-                {"Exception", new ExceptionColumnWriter(NpgsqlDbType.Text) },
-                {"Properties", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
-                {"LogEvent", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
-                {"UserName", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
-                {"ClientIP", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
-                {"ClientAgent", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
-
-            };
-            serilogConfig.WriteTo.Async(wt => wt.PostgreSQL(
-                    connectionString: connectionString,
-                    tableName: tableName,
-                    columnOptions: columnOptions
-                ));
+            return;
         }
+
+        const string tableName = "Loggers";
+        //Used columns (Key is a column name) 
+        //Column type is writer's constructor parameter
+        IDictionary<string, ColumnWriterBase> columnOptions = new Dictionary<string, ColumnWriterBase>
+        {
+            {"Message", new RenderedMessageColumnWriter(NpgsqlDbType.Text) },
+            {"MessageTemplate", new MessageTemplateColumnWriter(NpgsqlDbType.Text) },
+            {"Level", new LevelColumnWriter(true, NpgsqlDbType.Varchar) },
+            {"TimeStamp", new TimestampColumnWriter(NpgsqlDbType.Timestamp) },
+            {"Exception", new ExceptionColumnWriter(NpgsqlDbType.Text) },
+            {"Properties", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
+            {"LogEvent", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
+            {"UserName", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
+            {"ClientIP", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
+            {"ClientAgent", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
+
+        };
+        serilogConfig.WriteTo.Async(wt => wt.PostgreSQL(
+            connectionString: connectionString,
+            tableName: tableName,
+            columnOptions: columnOptions
+        ));
     }
     private static void WriteToSqLite(LoggerConfiguration serilogConfig, string? connectionString)
     {
