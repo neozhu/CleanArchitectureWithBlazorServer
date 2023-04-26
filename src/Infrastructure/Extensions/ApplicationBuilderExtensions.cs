@@ -53,17 +53,5 @@ public static class ApplicationBuilderExtensions
     }
 
 
-    internal static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder builder, string dbProvider, string connectionString)
-    {
-        return dbProvider.ToLowerInvariant() switch
-        {
-            DbProviderKeys.Npgsql => builder.UseNpgsql(connectionString, e =>
-                                 e.MigrationsAssembly("Migrators.PostgreSQL")),
-            DbProviderKeys.SqlServer => builder.UseSqlServer(connectionString, e =>
-                                 e.MigrationsAssembly("Migrators.MSSQL")),
-            DbProviderKeys.SqLite => builder.UseSqlite(connectionString, e =>
-                                 e.MigrationsAssembly("Migrators.SqLite")),
-            _ => throw new InvalidOperationException($"DB Provider {dbProvider} is not supported."),
-        };
-    }
+    
 }

@@ -3,7 +3,7 @@
 namespace CleanArchitecture.Blazor.Application.Common.Configurations;
 public class DatabaseSettings: IValidatableObject
 {
-    public const string SectionName = nameof(DashboardSettings);
+    public const string SectionName = nameof(DatabaseSettings);
     public string DBProvider { get; set; } = string.Empty;
     public string ConnectionString { get; set; } = string.Empty;
 

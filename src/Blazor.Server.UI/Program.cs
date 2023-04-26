@@ -3,28 +3,10 @@ using Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
-using Serilog;
-using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, configuration) =>
-            configuration.ReadFrom.Configuration(context.Configuration)
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
-                .MinimumLevel.Override("Serilog", LogEventLevel.Error)
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Update", LogEventLevel.Error)
-                .MinimumLevel.Override("Hangfire.BackgroundJobServer", LogEventLevel.Error)
-                .MinimumLevel.Override("Hangfire.Server.BackgroundServerProcess", LogEventLevel.Error)
-                .MinimumLevel.Override("Hangfire.Server.ServerHeartbeatProcess", LogEventLevel.Error)
-                .MinimumLevel.Override("Hangfire.Processing.BackgroundExecution", LogEventLevel.Error)
-              
-          .Enrich.FromLogContext()
-          .Enrich.WithClientIp()
-          .Enrich.WithClientAgent()
-          .WriteTo.Console()
-    );
-
+builder.RegisterSerilog();
 builder.Services.AddBlazorUiServices();
 builder.Services.AddInfrastructureServices(builder.Configuration)
                 .AddApplicationServices();
