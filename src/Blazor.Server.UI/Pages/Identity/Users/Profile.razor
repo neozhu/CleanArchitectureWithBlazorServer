@@ -11,7 +11,7 @@
 <PageTitle>@Title</PageTitle>
 <ErrorBoundary>
     <ChildContent>
-        @if(model is null)
+        @if (IsLoading && string.IsNullOrEmpty(model.UserId))
         {
             <MudProgressLinear Color="MudBlazor.Color.Primary" Indeterminate="true" Class="my-7" />
         }else{
@@ -164,6 +164,7 @@
 @code {
     [Inject]
     private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    private bool IsLoading => UserProfileState.Value.IsLoading;
     [Inject]
     private IDispatcher Dispatcher { get; set; } = null!;
     private MudForm? _form = null!;
@@ -225,11 +226,23 @@
 
     }
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        return base.OnInitializedAsync();
-
+        UserProfileState.StateChanged += StateOnStateChanged;
+    }
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        UserProfileState.StateChanged -= StateOnStateChanged;
+    }
+    private void StateOnStateChanged(object? sender, EventArgs args)
+    {
+        InvokeAsync(async () =>
+        {
+            StateHasChanged();
+        });
     }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {

@@ -268,7 +268,7 @@
     </ErrorContent>
 </ErrorBoundary>
 
-@code {
+                @code {
     [Inject]
     private IUsersStateContainer UsersStateContainer { get; set; } = default!;
     private int _defaultPageSize = 15;
@@ -350,10 +350,15 @@
             x.DisplayName.ToLower().Contains(_searchString) ||
             x.PhoneNumber.ToLower().Contains(_searchString) ||
             x.TenantName.ToLower().Contains(_searchString) ||
-            x.Provider.ToLower().Contains(_searchString)) &&
-            (_searchRole == null || (_searchRole != null && x.UserRoles.Any(applicationUserRole => applicationUserRole.Role.Name == _searchRole)));
-            var items = await UserManager.Users.Where(searchPredicate)
-                 .Include(x => x.UserRoles).ThenInclude(x => x.Role)
+            x.Provider.ToLower().Contains(_searchString));
+            var query = UserManager.Users.Where(searchPredicate);
+            if (!string.IsNullOrEmpty(_searchRole))
+            {
+                query = query.Where(x => x.UserRoles.Any(y => y.Role.Name == _searchRole));
+            }
+            var items = await query
+                 .Include(x => x.UserRoles)
+                 .Include(x=>x.Superior)
                  .EfOrderBySortDefinitions(state)
                  .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
             var total = await UserManager.Users.CountAsync(searchPredicate);
