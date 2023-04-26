@@ -1,3 +1,4 @@
+using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using Hangfire;
@@ -49,5 +50,20 @@ public static class ApplicationBuilderExtensions
         });
 
         return app;
+    }
+
+
+    internal static DbContextOptionsBuilder UseDatabase(this DbContextOptionsBuilder builder, string dbProvider, string connectionString)
+    {
+        return dbProvider.ToLowerInvariant() switch
+        {
+            DbProviderKeys.Npgsql => builder.UseNpgsql(connectionString, e =>
+                                 e.MigrationsAssembly("Migrators.PostgreSQL")),
+            DbProviderKeys.SqlServer => builder.UseSqlServer(connectionString, e =>
+                                 e.MigrationsAssembly("Migrators.MSSQL")),
+            DbProviderKeys.SqLite => builder.UseSqlite(connectionString, e =>
+                                 e.MigrationsAssembly("Migrators.SqLite")),
+            _ => throw new InvalidOperationException($"DB Provider {dbProvider} is not supported."),
+        };
     }
 }

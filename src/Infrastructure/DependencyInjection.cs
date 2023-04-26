@@ -16,6 +16,12 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.SectionName));
+        services.Configure<DatabaseSettings>(configuration.GetSection(DatabaseSettings.SectionName));
+        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.SectionName));
+        services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
+        services.AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+        services.AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
         services.AddScoped<AuthenticationStateProvider, BlazorAuthStateProvider>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ITenantProvider, TenantProvider>();
@@ -29,56 +35,16 @@ public static class DependencyInjection
                 options.EnableSensitiveDataLogging();
             });
         }
-        else if (configuration.GetValue<bool>("UsePostgresSQL"))
-        {
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                // Enabling legacy datetime support for PostgresSQL
-                AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
-                options.UseNpgsql(
-                    configuration.GetConnectionString("PostgresSQLConnection"),
-                    builder =>
-                    {
-                        builder.MigrationsAssembly("Blazor.Server.UI");
-                        builder.EnableRetryOnFailure(5);
-                        builder.CommandTimeout(15);
-                    });
-                options.EnableDetailedErrors();
-                options.EnableSensitiveDataLogging();
-            });
-            services.AddDatabaseDeveloperPageExceptionFilter();
-        }
-        else if (configuration.GetValue<bool>("UseMSSQLServer"))
-        {
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseSqlServer(
-                    configuration.GetConnectionString("MSSQLServerConnection"),
-                    builder =>
-                    {
-                        builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
-                        builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-                        builder.CommandTimeout(15);
-                    });
-                options.EnableDetailedErrors();
-                options.EnableSensitiveDataLogging();
-            });
-            services.AddDatabaseDeveloperPageExceptionFilter();
-        }
         else
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseInMemoryDatabase("BlazorDashboardDb");
-                options.EnableSensitiveDataLogging();
-            });
+            services.AddDbContext<ApplicationDbContext>((p, m) =>
+             {
+                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+                 m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
+             });
         }
 
-        services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.SectionName));
-        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.SectionName));
-        services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
-        services.AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
+       
         services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
         services.AddTransient<IApplicationDbContext>(provider =>
             provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
