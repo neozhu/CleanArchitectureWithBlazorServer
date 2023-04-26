@@ -119,7 +119,7 @@ public static class SerilogExtensions
             needAutoCreateTable:false,
             schemaName: "public",
             useCopy: false
-        ).CreateLogger());
+        ));
     }
     private static void WriteToSqLite(LoggerConfiguration serilogConfig, string? connectionString)
     {

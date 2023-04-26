@@ -77,12 +77,12 @@ public class DocumentOcrJob : IDocumentOcrJob
                 {
                     var result = await response.Content.ReadAsStringAsync();
                     var ocrResult = JsonSerializer.Deserialize<OcrResult>(result);
-                    var ocrStatus = ocrResult!.Status;
+                    var ocrStatus = ocrResult!.status;
                     doc.Status = JobStatus.Done;
                     doc.Description = "recognize the result: " + ocrStatus;
-                    if (ocrResult.Status == "000")
+                    if (ocrResult.status == "000")
                     {
-                        var content = _serializer.Serialize(ocrResult.Results);
+                        var content = _serializer.Serialize(ocrResult.results);
                         doc!.Content = content;
 
                     }
@@ -114,9 +114,9 @@ class result
 }
 class OcrResult
 {
-    public string Msg { get; set; } = String.Empty;
-    public List<result[]> Results { get; set; } = new();
-    public string Status { get; set; }=String.Empty;
+    public string msg { get; set; } = String.Empty;
+    public List<result[]> results { get; set; } = new();
+    public string status { get; set; }=String.Empty;
 }
 
 
