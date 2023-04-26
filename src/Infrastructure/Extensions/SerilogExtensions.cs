@@ -72,7 +72,7 @@ public static class SerilogExtensions
             sinkOpts.BatchPostingLimit = 100;
             sinkOpts.BatchPeriod = new TimeSpan(0, 0, 20);
 
-            var columnOpts = new ColumnOptions();
+            var columnOpts = new Serilog.Sinks.MSSqlServer.ColumnOptions();
             columnOpts.Store.Add(StandardColumn.LogEvent);
             columnOpts.AdditionalColumns = new Collection<SqlColumn>
             {  new SqlColumn{ColumnName = "ClientIP", PropertyName = "ClientIP", DataType = SqlDbType.NVarChar, DataLength = 64},
