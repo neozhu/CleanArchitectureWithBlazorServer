@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using NpgsqlTypes;
 using Serilog.Sinks.PostgreSQL;
+using Serilog.Sinks.PostgreSQL.ColumnWriters;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class SerilogExtensions
@@ -103,18 +104,22 @@ public static class SerilogExtensions
             {"Level", new LevelColumnWriter(true, NpgsqlDbType.Varchar) },
             {"TimeStamp", new TimestampColumnWriter(NpgsqlDbType.Timestamp) },
             {"Exception", new ExceptionColumnWriter(NpgsqlDbType.Text) },
-            {"Properties", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
+            {"Properties", new PropertiesColumnWriter(NpgsqlDbType.Varchar) },
             {"LogEvent", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
-            {"UserName", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
-            {"ClientIP", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
-            {"ClientAgent", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
+            {"UserName", new SinglePropertyColumnWriter("UserName",PropertyWriteMethod.ToString,NpgsqlDbType.Varchar) },
+            {"ClientIP", new SinglePropertyColumnWriter("ClientIP",PropertyWriteMethod.ToString,NpgsqlDbType.Varchar) },
+            {"ClientAgent", new SinglePropertyColumnWriter("ClientAgent",PropertyWriteMethod.ToString,NpgsqlDbType.Varchar) },
 
         };
         serilogConfig.WriteTo.Async(wt => wt.PostgreSQL(
             connectionString: connectionString,
             tableName: tableName,
-            columnOptions: columnOptions
-        ));
+            columnOptions: columnOptions,
+            restrictedToMinimumLevel: LogEventLevel.Information,
+            needAutoCreateTable:false,
+            schemaName: "public",
+            useCopy: false
+        ).CreateLogger());
     }
     private static void WriteToSqLite(LoggerConfiguration serilogConfig, string? connectionString)
     {
