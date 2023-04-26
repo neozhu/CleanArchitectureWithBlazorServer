@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Migrations
+namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
 {
     /// <inheritdoc />
     public partial class owner : Migration
