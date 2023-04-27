@@ -78,33 +78,33 @@
             </ToolBarContent>
             <Columns>
                 <HierarchyColumn T="LogDto" ButtonDisabledFunc="@(x => string.IsNullOrEmpty(x.Message))" />
-                <PropertyColumn Property="x => x.TimeStamp" Title="@L[_currentDto.GetMemberDescription(x=>x.TimeStamp)]" />
-                <PropertyColumn Property="x => x.Level" Title="@L[_currentDto.GetMemberDescription(x=>x.Level)]">
+                <PropertyColumn Style="width:130px" Property="x => x.TimeStamp" Title="@L[_currentDto.GetMemberDescription(x=>x.TimeStamp)]" />
+                <PropertyColumn Style="width:120px" Property="x => x.Level" Title="@L[_currentDto.GetMemberDescription(x=>x.Level)]">
                     <CellTemplate>
                         @switch (context.Item.Level)
                         {
                             case "Information":
-                                <MudChip Color="Color.Info" Label="true">@context.Item.Level</MudChip>
+                                <MudChip Color="Color.Info" Size="Size.Small" >@context.Item.Level</MudChip>
                                 break;
                             case "Warning":
-                                <MudChip Color="Color.Warning" Label="true">@context.Item.Level</MudChip>
+                                <MudChip Color="Color.Warning" Size="Size.Small">@context.Item.Level</MudChip>
                                 break;
                             case "Error":
-                                <MudChip Color="Color.Error" Label="true">@context.Item.Level</MudChip>
+                                <MudChip Color="Color.Error" Size="Size.Small">@context.Item.Level</MudChip>
                                 break;
                             case "Critical":
-                                <MudChip Color="Color.Error" Label="true">@context.Item.Level</MudChip>
+                                <MudChip Color="Color.Error" Size="Size.Small">@context.Item.Level</MudChip>
                                 break;
                             case "Trace":
                             case "Debug":
                             default:
-                                <MudChip Label="true">@context.Item.Level</MudChip>
+                                <MudChip Size="Size.Small">@context.Item.Level</MudChip>
                                 break;
                         }
                     </CellTemplate>
                 </PropertyColumn>
                 <PropertyColumn Property="x => x.Message" Title="@L[_currentDto.GetMemberDescription(x=>x.Message)]" />
-                <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x=>x.UserName)]" />
+                <PropertyColumn Style="width:120px" Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x=>x.UserName)]" />
             </Columns>
             <ChildRowContent>
                 <MudCard Elevation="0">
@@ -123,6 +123,8 @@
                         }
                         <MudText>@L[_currentDto.GetMemberDescription(x=>x.ClientIP)]</MudText>
                         <MudText Typo="Typo.body2">@context.Item.ClientIP</MudText>
+                        <MudText>@L[_currentDto.GetMemberDescription(x=>x.ClientAgent)]</MudText>
+                        <MudText Typo="Typo.body2">@context.Item.ClientAgent</MudText>
                     </MudCardContent>
                 </MudCard>
             </ChildRowContent>
