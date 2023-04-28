@@ -130,7 +130,7 @@
     <value>Password is required!</value>
   </data>
   <data name="Password must be at least of length 6" xml:space="preserve">
-    <value>Password must be at least of length 6</value>
+      <value>Password must be at least 6 characters</value>
   </data>
   <data name="Password must contain at least one capital letter" xml:space="preserve">
     <value>Password must contain at least one capital letter</value>
@@ -142,7 +142,7 @@
     <value>Password must contain at least one lowercase letter</value>
   </data>
   <data name="Please check your username and password.  If you are still unable to log in, contact your administrator." xml:space="preserve">
-    <value>Please check your username and password.  If you are still unable to log in, contact your administrator.</value>
+      <value>Please check your username and password.  If you are still unable to log in, contact an administrator.</value>
   </data>
   <data name="Remember me?" xml:space="preserve">
     <value>Remember me?</value>
@@ -154,15 +154,15 @@
     <value>Sign Up</value>
   </data>
   <data name="User name" xml:space="preserve">
-    <value>User name</value>
+      <value>Username</value>
   </data>
   <data name="User name is required!" xml:space="preserve">
-    <value>User name is required!</value>
+      <value>Username is required!</value>
   </data>
   <data name="Please check your username and password. If you are still unable to log in, contact your administrator." xml:space="preserve">
-    <value>Please check your username and password. If you are still unable to log in, contact your administrator.</value>
+      <value>Please check your username and password. If you are still unable to log in, contact an administrator.</value>
   </data>
   <data name="No user found, or no authorization, please contact the administrator." xml:space="preserve">
-    <value>No user found, or no authorization, please contact the administrator.</value>
+      <value>No user found, or not authorized, please contact an administrator.</value>
   </data>
 </root>

@@ -124,10 +124,10 @@
     <value>E-mail</value>
   </data>
   <data name="e-mail is required!" xml:space="preserve">
-    <value>e-mail is required!</value>
+      <value>E-mail is required!</value>
   </data>
   <data name="have an account?" xml:space="preserve">
-    <value>have an account?</value>
+      <value>Have an account?</value>
   </data>
   <data name="I agree to the terms and privacy" xml:space="preserve">
     <value>I agree to the terms and privacy</value>
@@ -136,7 +136,7 @@
     <value>Password</value>
   </data>
   <data name="password is required!" xml:space="preserve">
-    <value>password is required!</value>
+      <value>Password is required!</value>
   </data>
   <data name="Register" xml:space="preserve">
     <value>Register</value>
@@ -151,9 +151,9 @@
     <value>Sign Up</value>
   </data>
   <data name="User Name" xml:space="preserve">
-    <value>User Name</value>
+      <value>Username</value>
   </data>
   <data name="user name is required!" xml:space="preserve">
-    <value>user name is required!</value>
+      <value>Username is required!</value>
   </data>
 </root>
