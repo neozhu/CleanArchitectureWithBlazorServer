@@ -149,7 +149,7 @@
                         {
                             await TokenProvider.GenerateJwt(user);
                             NavigationManager.NavigateTo(NavigationManager.Uri, true);
-                            Logger.LogInformation($"{user.UserName} has logged in successfully", user.UserName);
+                            Logger.LogInformation("{@UserName} has logged in successfully", user.UserName);
                         }
                     }
                 }
