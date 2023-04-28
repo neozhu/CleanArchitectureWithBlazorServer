@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Runtime.Serialization;
+
 namespace CleanArchitecture.Blazor.Application.Common.Mappings;
 
 public class MappingProfile : Profile
@@ -19,7 +21,7 @@ public class MappingProfile : Profile
         var argumentTypes = new Type[] { typeof(Profile) };
         foreach (var type in types)
         {
-            var instance = Activator.CreateInstance(type);
+            var instance = FormatterServices.GetUninitializedObject(type);
             var methodInfo = type.GetMethod(mappingMethodName);
             if (methodInfo != null)
             {

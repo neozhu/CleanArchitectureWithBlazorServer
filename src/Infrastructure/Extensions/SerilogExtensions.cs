@@ -10,6 +10,8 @@ using System.Data;
 using NpgsqlTypes;
 using Serilog.Sinks.PostgreSQL;
 using Serilog.Sinks.PostgreSQL.ColumnWriters;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static Serilog.Sinks.MSSqlServer.ColumnOptions;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class SerilogExtensions
@@ -30,9 +32,10 @@ public static class SerilogExtensions
                 .Enrich.FromLogContext()
                 .Enrich.WithClientIp()
                 .Enrich.WithClientAgent()
-                .WriteTo.Console()
+                .WriteTo.Async(wt=>wt.File("./log/log-.txt", rollingInterval: RollingInterval.Day))
+                .WriteTo.Async(wt=>wt.Console())
                 .WriteToDatabase(context.Configuration)
-    );
+            );
     }
     private static void WriteToDatabase(this LoggerConfiguration serilogConfig,IConfiguration configuration)
     {
@@ -53,6 +56,8 @@ public static class SerilogExtensions
                     break;
             }
         }
+        
+
     }
     private static void WriteToSqlServer(LoggerConfiguration serilogConfig, string? connectionString)
     {
@@ -73,7 +78,7 @@ public static class SerilogExtensions
         columnOpts.Store.Add(StandardColumn.LogEvent);
         columnOpts.AdditionalColumns = new Collection<SqlColumn>
         {  
-            new SqlColumn{ColumnName = "ClientIP", PropertyName = "ClientIP", DataType = SqlDbType.NVarChar, DataLength = 64},
+            new SqlColumn{ColumnName = "ClientIP", PropertyName = "ClientIp", DataType = SqlDbType.NVarChar, DataLength = 64},
             new SqlColumn{ColumnName = "UserName",PropertyName = "UserName", DataType = SqlDbType.NVarChar, DataLength=64},
             new SqlColumn{ColumnName = "ClientAgent", PropertyName = "ClientAgent", DataType = SqlDbType.NVarChar, DataLength = -1},
         };
@@ -107,7 +112,7 @@ public static class SerilogExtensions
             {"Properties", new PropertiesColumnWriter(NpgsqlDbType.Varchar) },
             {"LogEvent", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
             {"UserName", new SinglePropertyColumnWriter("UserName",PropertyWriteMethod.ToString,NpgsqlDbType.Varchar) },
-            {"ClientIP", new SinglePropertyColumnWriter("ClientIP",PropertyWriteMethod.ToString,NpgsqlDbType.Varchar) },
+            {"ClientIP", new SinglePropertyColumnWriter("ClientIp",PropertyWriteMethod.ToString,NpgsqlDbType.Varchar) },
             {"ClientAgent", new SinglePropertyColumnWriter("ClientAgent",PropertyWriteMethod.ToString,NpgsqlDbType.Varchar) },
 
         };
@@ -123,9 +128,15 @@ public static class SerilogExtensions
     }
     private static void WriteToSqLite(LoggerConfiguration serilogConfig, string? connectionString)
     {
-        if (!string.IsNullOrEmpty(connectionString))
+        if (string.IsNullOrEmpty(connectionString))
         {
-
+            return;
         }
+        const string tableName = "Loggers";
+        serilogConfig.WriteTo.Async(wt => wt.SQLite(
+            sqliteDbPath: connectionString,
+            tableName: tableName,
+            restrictedToMinimumLevel: LogEventLevel.Information
+        ));
     }
 }

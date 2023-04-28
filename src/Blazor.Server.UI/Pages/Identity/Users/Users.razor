@@ -223,7 +223,11 @@
                         </div>
                     </CellTemplate>
                 </PropertyColumn>
-                <PropertyColumn Property="x => x.SuperiorName" Title="@L[_currentDto.GetMemberDescription(x=>x.SuperiorName)]" />
+                <PropertyColumn Property="x => x.SuperiorId" Title="@L[_currentDto.GetMemberDescription(x=>x.SuperiorName)]">
+                    <CellTemplate>
+                        @context.Item.SuperiorName
+                    </CellTemplate>
+                </PropertyColumn>
                 <PropertyColumn Property="x => x.Provider" Title="@L[_currentDto.GetMemberDescription(x=>x.Provider)]" />
                 <PropertyColumn Property="x => x.Email" Title="@L["Email / PhoneNumber"]">
                     <CellTemplate>
@@ -233,7 +237,7 @@
                         </div>
                     </CellTemplate>
                 </PropertyColumn>
-                <PropertyColumn Property="x => x.AssignedRoles" Title="@L[_currentDto.GetMemberDescription(x=>x.AssignedRoles)]">
+                <PropertyColumn Sortable="false" Property="x => x.AssignedRoles" Title="@L[_currentDto.GetMemberDescription(x=>x.AssignedRoles)]">
                     <CellTemplate>
                         @if (context.Item.AssignedRoles is not null)
                         {
