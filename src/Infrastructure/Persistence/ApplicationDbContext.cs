@@ -45,6 +45,10 @@ public class ApplicationDbContext : IdentityDbContext<
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
+        if (!optionsBuilder.IsConfigured)
+        {
+
+        }
     }
 
 }

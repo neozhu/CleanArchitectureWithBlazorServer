@@ -10,6 +10,8 @@ using System.Data;
 using NpgsqlTypes;
 using Serilog.Sinks.PostgreSQL;
 using Serilog.Sinks.PostgreSQL.ColumnWriters;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static Serilog.Sinks.MSSqlServer.ColumnOptions;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class SerilogExtensions
@@ -126,9 +128,15 @@ public static class SerilogExtensions
     }
     private static void WriteToSqLite(LoggerConfiguration serilogConfig, string? connectionString)
     {
-        if (!string.IsNullOrEmpty(connectionString))
+        if (string.IsNullOrEmpty(connectionString))
         {
-
+            return;
         }
+        const string tableName = "Loggers";
+        serilogConfig.WriteTo.Async(wt => wt.SQLite(
+            sqliteDbPath: connectionString,
+            tableName: tableName,
+            restrictedToMinimumLevel: LogEventLevel.Information
+        ));
     }
 }
