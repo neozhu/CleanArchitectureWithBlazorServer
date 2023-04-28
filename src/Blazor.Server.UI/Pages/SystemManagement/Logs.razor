@@ -4,7 +4,9 @@
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
 @using CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery
 @using AutoFilterer.Enums
+@using CleanArchitecture.Blazor.Application.Constants.User
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Clear
+@using FluentEmail.Core
 @using Severity = MudBlazor.Severity
 
 @attribute [Authorize(Policy = Permissions.Logs.View)]
@@ -199,7 +201,18 @@
             Query.Page = state.Page + 1;
             Query.PerPage = state.PageSize;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
-            return new GridData<LogDto> { TotalItems = result.TotalItems, Items = result.Items };
+            var formattedItems = new List<LogDto>();
+            
+            foreach (var item in result.Items)
+            {
+                item.UserName = item.UserName?.Replace("\"", "");
+                item.Message = item.Message?.Replace("\"", "");
+                item.ClientIP = item.ClientIP?.Replace("\"", "");
+                
+                formattedItems.Add(item);
+            }
+
+            return new GridData<LogDto> { TotalItems = result.TotalItems, Items = formattedItems };
         }
         finally
         {

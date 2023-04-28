@@ -149,7 +149,7 @@
                         {
                             await TokenProvider.GenerateJwt(user);
                             NavigationManager.NavigateTo(NavigationManager.Uri, true);
-                            Logger.LogInformation("{@UserName} has logged in successfully", user.UserName);
+                            Logger.LogInformation("{@UserName} has successfully logged in", user.UserName);
                         }
                     }
                 }
@@ -198,7 +198,7 @@
         var user = await CreateUserWithExternalProvider(provider, userName, name, accessToken);
         await TokenProvider.GenerateJwt(user);
         NavigationManager.NavigateTo(NavigationManager.Uri, true);
-        Logger.LogInformation("{@UserName} has logged in successfully", userName);
+        Logger.LogInformation("{@UserName} has successfully logged in", userName);
     }
 
     private async Task<ApplicationUser> CreateUserWithExternalProvider(string provider, string userName, string name, string accessToken)
