@@ -141,7 +141,7 @@
   <data name="Password must contain at least one lowercase letter" xml:space="preserve">
     <value>La contraseña debe contener al menos una letra minúscula</value>
   </data>
-  <data name="Please check your username and password.  If you are still unable to log in, contact your administrator." xml:space="preserve">
+  <data name="Please check your username and password. If you are still unable to log in, contact an administrator." xml:space="preserve">
     <value>Por favor, compruebe su nombre de usuario y contraseña.  Si sigue sin poder conectarse, póngase en contacto con su administrador.</value>
   </data>
   <data name="Remember me?" xml:space="preserve">
@@ -159,10 +159,7 @@
   <data name="Username is required!" xml:space="preserve">
     <value>¡El nombre de usuario es obligatorio!</value>
   </data>
-  <data name="Please check your username and password. If you are still unable to log in, contact your administrator." xml:space="preserve">
-    <value>Por favor verifique su nombre de usuario y contraseña. Si sigue sin poder iniciar sesión, póngase en contacto con su administrador.</value>
-  </data>
-  <data name="No user found, or no authorization, please contact the administrator." xml:space="preserve">
+  <data name="No user found, or no authorization, please contact an administrator." xml:space="preserve">
     <value>No se encontró ningún usuario o no hay autorización, comuníquese con el administrador.</value>
   </data>
 </root>

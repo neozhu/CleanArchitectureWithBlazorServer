@@ -141,7 +141,7 @@
   <data name="Password must contain at least one lowercase letter" xml:space="preserve">
     <value>يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل</value>
   </data>
-  <data name="Please check your username and password.  If you are still unable to log in, contact your administrator." xml:space="preserve">
+  <data name="Please check your username and password. If you are still unable to log in, contact an administrator." xml:space="preserve">
     <value>يرجى التحقق من اسم المستخدم وكلمة المرور.  إذا كنت لا تزال غير قادر على تسجيل الدخول، فاتصل بالمسؤول.</value>
   </data>
   <data name="Remember me?" xml:space="preserve">
@@ -159,10 +159,7 @@
   <data name="Username is required!" xml:space="preserve">
     <value>اسم المستخدم مطلوب!</value>
   </data>
-  <data name="Please check your username and password. If you are still unable to log in, contact your administrator." xml:space="preserve">
-    <value>يرجى التحقق من اسم المستخدم وكلمة المرور الخاصة بك. إذا كنت لا تزال غير قادر على تسجيل الدخول ، فاتصل بالمسؤول.</value>
-  </data>
-  <data name="No user found, or no authorization, please contact the administrator." xml:space="preserve">
+  <data name="No user found, or no authorization, please contact an administrator." xml:space="preserve">
     <value>لم يتم العثور على مستخدم ، أو لا يوجد ترخيص ، يرجى الاتصال بالمسؤول.</value>
   </data>
 </root>

@@ -128,7 +128,7 @@
                 var user = await UserManager.FindByNameAsync(_model.UserName!);
                 if (user is null)
                 {
-                    Logger.LogWarning("Someone tried to login with the user {@UserName}, however this account does not exist", _model.UserName);
+                    Logger.LogWarning("Someone tried to login to the user {@UserName}, however this account does not exist", _model.UserName);
                     Snackbar.Add(L["No user found, or no authorization, please contact the administrator."], Severity.Error);
                 }
                 else
@@ -143,13 +143,13 @@
                         if (!result)
                         {
                             Logger.LogWarning("{@UserName} failed authentication", user.UserName);
-                            Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact your administrator."], Severity.Error);
+                            Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact an administrator."], Severity.Error);
                         }
                         else
                         {
                             await TokenProvider.GenerateJwt(user);
                             NavigationManager.NavigateTo(NavigationManager.Uri, true);
-                            Logger.LogInformation("{@UserName} has logged in successfully", user.UserName);
+                            Logger.LogInformation($"{user.UserName} has logged in successfully", user.UserName);
                         }
                     }
                 }

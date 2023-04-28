@@ -19,13 +19,10 @@ public class LoginFormModelFluentValidator : AbstractValidator<LoginFormModel>
         RuleFor(x => x.UserName)
             .NotEmpty().WithMessage(_localizer["Your username cannot be empty."])
             .Length(2, 100).WithMessage(_localizer["Username must be between 2 and 100 characters."]);
-        RuleFor(p => p.Password).NotEmpty().WithMessage(_localizer["Your password cannot be empty"])
-            .MinimumLength(6).WithMessage(_localizer["Your password length must be at least 6."])
-            .MaximumLength(16).WithMessage(_localizer["Your password length must not exceed 16."])
-            .Matches(@"[A-Z]+").WithMessage(_localizer["Your password must contain at least one uppercase letter."])
-            .Matches(@"[a-z]+").WithMessage(_localizer["Your password must contain at least one lowercase letter."])
-            .Matches(@"[0-9]+").WithMessage(_localizer["Your password must contain at least one number."])
-            .Matches(@"[\@\!\?\*\.]+").WithMessage(_localizer["Your password must contain at least one (@!? *.)."]);
+        RuleFor(p => p.Password)
+            .NotEmpty().WithMessage(_localizer["Your password cannot be empty"])
+            .MinimumLength(6).WithMessage(_localizer["Your password length must be at least 6 characters."])
+            .MaximumLength(16).WithMessage(_localizer["Your password length must not exceed 16 characters."]);
     }
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
