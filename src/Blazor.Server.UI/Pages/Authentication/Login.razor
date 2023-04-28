@@ -15,7 +15,7 @@
 
 <PageTitle>@_title</PageTitle>
 <AuthorizeView>
-    <NotAuthorized Context="Auth">
+    <NotAuthorized Context="auth">
         <MudForm Model="@_model" @ref="@_form" @bind-IsValid="@_success" ValidationDelay="0" Validation="@(LoginValidator.ValidateValue)">
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
             <MudText>
@@ -23,12 +23,11 @@
             </MudText>
             <MudTextField T="string"
                           @bind-Value="_model.UserName" For="@(() => _model.UserName)"
-                          Label="@L["User name"]"
+                          Label="@L["Username"]"
                           Variant="Variant.Outlined"
                           Required="true"
                           OnlyValidateIfDirty="true"
                           Immediate="true"
-                          RequiredError="@L["user name is required!"]"
                           Class="my-6">
             </MudTextField>
 
@@ -36,8 +35,8 @@
                               Label="@L["Password"]"
                               PasswordMode="true"
                               Variant="Variant.Outlined"
-                              Required="true"
-                              RequiredError="@L["password is required!"]"/>
+                              Required="true">
+            </MudPasswordField>
 
             <div Class="d-flex justify-space-between align-center">
                 <MudCheckBox For="@(() => _model.RememberMe)" @bind-Checked="_model.RememberMe" Label="@L["Remember me?"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>

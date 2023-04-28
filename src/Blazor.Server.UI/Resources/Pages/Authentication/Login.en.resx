@@ -153,11 +153,11 @@
   <data name="Sign Up" xml:space="preserve">
     <value>Sign Up</value>
   </data>
-  <data name="User name" xml:space="preserve">
-    <value>User name</value>
+  <data name="Username" xml:space="preserve">
+      <value>Username</value>
   </data>
-  <data name="User name is required!" xml:space="preserve">
-    <value>User name is required!</value>
+  <data name="Username is required!" xml:space="preserve">
+      <value>Username is required!</value>
   </data>
   <data name="Please check your username and password. If you are still unable to log in, contact your administrator." xml:space="preserve">
     <value>Please check your username and password. If you are still unable to log in, contact your administrator.</value>
