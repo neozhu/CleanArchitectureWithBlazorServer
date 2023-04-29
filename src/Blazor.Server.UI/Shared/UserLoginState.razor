@@ -31,7 +31,7 @@
         if (state.User.Identity?.IsAuthenticated ?? false)
         {
             var userId = state.User.GetUserId();
-            setProfile(userId);
+            SetProfile(userId);
         }
     }
 
@@ -39,7 +39,7 @@
     {
         InvokeAsync(async () =>
         {
-            Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
+            Snackbar.Add($"{username} has logged in.", MudBlazor.Severity.Info);
 
         });
     }
@@ -48,7 +48,7 @@
     {
         InvokeAsync(async () =>
         {
-            Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
+            Snackbar.Add($"{username} has logged out.", MudBlazor.Severity.Normal);
 
         });
     }
@@ -60,11 +60,11 @@
             if (state.User.Identity?.IsAuthenticated??false)
             {
                 var userId = state.User.GetUserId();
-                setProfile(userId);
+                SetProfile(userId);
             }
         });
     }
-    private void setProfile(string userId)
+    private void SetProfile(string userId)
     {
         Dispatcher.Dispatch(new FetchUserDtoAction() { UserId = userId });
     }

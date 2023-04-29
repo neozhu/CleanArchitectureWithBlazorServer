@@ -17,5 +17,4 @@ public class Logger : IEntity
     public string? ClientAgent { get; set; }
     public string? Properties { get; set; }
     public string? LogEvent { get; set; }
-
 }

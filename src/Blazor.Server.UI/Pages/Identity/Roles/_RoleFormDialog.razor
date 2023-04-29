@@ -6,7 +6,7 @@
         <MudForm Model="Model" @ref="_form">
             <MudGrid>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x=>x.Name)]" @bind-Value="Model.Name"
+                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Name)]" @bind-Value="Model.Name"
                                   Required="true"
                                   For="@(() => Model.Name)"
                                   RequiredError="@L["DefaultRole name is required!"]"
@@ -14,9 +14,10 @@
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x=>x.Description)]"
+                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Description)]"
                                   For="@(() => Model.Description)"
-                    @bind-Value="Model.Description"></MudTextField>
+                                  @bind-Value="Model.Description">
+                    </MudTextField>
                 </MudItem>
             </MudGrid>
         </MudForm>
@@ -28,24 +29,28 @@
 </MudDialog>
 
 @code {
-    MudForm? _form = default!;
-    readonly RoleDtoValidator _modelValidator = new RoleDtoValidator();
+    MudForm? _form;
+    readonly RoleDtoValidator _modelValidator = new();
+
     [EditorRequired]
     [Parameter]
     public ApplicationRoleDto Model { get; set; } = default!;
+
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
 
     async Task Submit()
     {
-
         await _form!.Validate();
         if (_form!.IsValid)
         {
             MudDialog.Close(DialogResult.Ok(true));
         }
-
     }
-    void Cancel() => MudDialog.Cancel();
+
+    void Cancel()
+    {
+        MudDialog.Cancel();
+    }
 
 }

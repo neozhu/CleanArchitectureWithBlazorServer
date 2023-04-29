@@ -133,7 +133,7 @@
     <value>Forgot Password?</value>
   </data>
   <data name="No user found by email, please contact the administrator" xml:space="preserve">
-    <value>No user found by email, please contact the administrator</value>
+      <value>No user found by email, please contact an administrator</value>
   </data>
   <data name="Reset Password" xml:space="preserve">
     <value>Reset Password</value>
@@ -166,6 +166,6 @@
     <value>{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password.</value>
   </data>
   <data name="{0}, please contact the administrator" xml:space="preserve">
-    <value>{0}, please contact the administrator</value>
+      <value>{0}, please contact an administrator</value>
   </data>
 </root>

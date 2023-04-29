@@ -141,7 +141,7 @@
   <data name="Password must contain at least one lowercase letter" xml:space="preserve">
     <value>パスワードには、少なくとも1つの小文字が含まれている必要があります。</value>
   </data>
-  <data name="Please check your username and password.  If you are still unable to log in, contact your administrator." xml:space="preserve">
+  <data name="Please check your username and password. If you are still unable to log in, contact an administrator." xml:space="preserve">
     <value>ユーザー名とパスワードを確認してください。 それでもログインできない場合は、管理者にお問い合わせください。</value>
   </data>
   <data name="Remember me?" xml:space="preserve">
@@ -153,16 +153,13 @@
   <data name="Sign Up" xml:space="preserve">
     <value>サインアップ</value>
   </data>
-  <data name="User name" xml:space="preserve">
+  <data name="Username" xml:space="preserve">
     <value>ユーザー名</value>
   </data>
-  <data name="User name is required!" xml:space="preserve">
+  <data name="Username is required!" xml:space="preserve">
     <value>ユーザー名が必要です</value>
   </data>
-  <data name="Please check your username and password. If you are still unable to log in, contact your administrator." xml:space="preserve">
-    <value>ユーザー名とパスワードを確認してください。 それでもログインできない場合は、管理者に連絡してください。</value>
-  </data>
-  <data name="No user found, or no authorization, please contact the administrator." xml:space="preserve">
+  <data name="No user found, or no authorization, please contact an administrator." xml:space="preserve">
     <value>ユーザーが見つからないか、権限がありません。管理者に連絡してください。</value>
   </data>
 </root>

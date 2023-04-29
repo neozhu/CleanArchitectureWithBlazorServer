@@ -1,9 +1,13 @@
 @page "/system/logs"
 @using Blazor.Server.UI.Pages.SystemManagement.Components
-@using CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
 @using CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery
+@using AutoFilterer.Enums
+@using CleanArchitecture.Blazor.Application.Constants.User
+@using CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Clear
+@using FluentEmail.Core
+@using Severity = MudBlazor.Severity
 
 @attribute [Authorize(Policy = Permissions.Logs.View)]
 @inject IStringLocalizer<Logs> L
@@ -28,34 +32,36 @@
             <ToolBarContent>
                 <div class="d-flex align-start flex-grow-1">
                     <div class="d-flex gap-4">
-                        <MudIcon Icon="@Icons.Material.Filled.BarChart" Size="Size.Large" />
+                        <MudIcon Icon="@Icons.Material.Filled.BarChart" Size="Size.Large"/>
                         <div class="d-flex flex-column">
                             <MudText Typo="Typo.caption">@L["Logs"]</MudText>
                             <MudEnumSelect Style="min-width:220px" TEnum="LogListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
                             </MudEnumSelect>
                         </div>
                     </div>
-                    <div class="flex-grow-1" />
+                    <div class="flex-grow-1"/>
 
                     <div class="d-flex flex-column justify-end">
                         <div class="d-flex">
                             <MudButton DisableElevation Variant="Variant.Outlined"
                                        Size="Size.Small"
                                        Disabled="@_loading"
-                                       OnClick="@(()=>OnRefresh())"
+                                       OnClick="@(OnRefresh)"
                                        StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                       Style="margin-right: 5px;">@ConstantString.Refresh</MudButton>
+                                       Style="margin-right: 5px;">
+                                @ConstantString.Refresh
+                            </MudButton>
                             @if (_canPurge)
                             {
                                 <MudButton DisableElevation Variant="Variant.Outlined"
-                                       Size="Size.Small"
-                                       Disabled="@(_loading || _clearing)"
-                                       OnClick="@(()=>OnPurge())"
-                                       StartIcon="@Icons.Material.Filled.ClearAll" IconColor="Color.Surface" Color="Color.Secondary"
-                                       Style="margin-right: 5px;">
-                                @if (_clearing)
+                                           Size="Size.Small"
+                                           Disabled="@(_loading || _clearing)"
+                                           OnClick="@(OnPurge)"
+                                           StartIcon="@Icons.Material.Filled.ClearAll" IconColor="Color.Surface" Color="Color.Secondary"
+                                           Style="margin-right: 5px;">
+                                    @if (_clearing)
                                     {
-                                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
                                         <MudText Class="ms-2">waiting</MudText>
                                     }
                                     else
@@ -68,8 +74,9 @@
                         </div>
                         <MudStack Row="true" AlignItems="AlignItems.Stretch">
                             <MudEnumSelect TEnum="LogLevel?" Placeholder="Search for level" Value="@Query.Level" Clearable="true" ValueChanged="OnChangedLevel" Style="width:160px" FullWidth="true"> </MudEnumSelect>
-                            <MudTextField T="string" Style="min-width:300px" ValueChanged="@(s=>OnSearch(s))" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End"
-                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+                            <MudTextField T="string" Style="min-width:300px" ValueChanged="@(OnSearch)" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium">
+                            </MudTextField>
                         </MudStack>
 
                     </div>
@@ -77,14 +84,14 @@
 
             </ToolBarContent>
             <Columns>
-                <HierarchyColumn T="LogDto" ButtonDisabledFunc="@(x => string.IsNullOrEmpty(x.Message))" />
-                <PropertyColumn Style="width:130px" Property="x => x.TimeStamp" Title="@L[_currentDto.GetMemberDescription(x=>x.TimeStamp)]" />
-                <PropertyColumn Style="width:120px" Property="x => x.Level" Title="@L[_currentDto.GetMemberDescription(x=>x.Level)]">
+                <HierarchyColumn T="LogDto" ButtonDisabledFunc="@(x => string.IsNullOrEmpty(x.Message))"/>
+                <PropertyColumn Style="width:130px" Property="x => x.TimeStamp" Title="@L[_currentDto.GetMemberDescription(x => x.TimeStamp)]"/>
+                <PropertyColumn Style="width:120px" Property="x => x.Level" Title="@L[_currentDto.GetMemberDescription(x => x.Level)]">
                     <CellTemplate>
                         @switch (context.Item.Level)
                         {
                             case "Information":
-                                <MudChip Color="Color.Info" Size="Size.Small" >@context.Item.Level</MudChip>
+                                <MudChip Color="Color.Info" Size="Size.Small">@context.Item.Level</MudChip>
                                 break;
                             case "Warning":
                                 <MudChip Color="Color.Warning" Size="Size.Small">@context.Item.Level</MudChip>
@@ -103,27 +110,29 @@
                         }
                     </CellTemplate>
                 </PropertyColumn>
-                <PropertyColumn Property="x => x.Message" Title="@L[_currentDto.GetMemberDescription(x=>x.Message)]" />
-                <PropertyColumn Style="width:120px" Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x=>x.UserName)]" />
+                <PropertyColumn Property="x => x.Message" Title="@L[_currentDto.GetMemberDescription(x => x.Message)]"/>
+                <PropertyColumn Style="width:120px" Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x => x.UserName)]"/>
             </Columns>
             <ChildRowContent>
                 <MudCard Elevation="0">
                     <MudCardHeader>
                         <CardHeaderContent>
-                            <MudText Typo="Typo.body1"><strong>@context.Item.Level</strong></MudText>
+                            <MudText Typo="Typo.body1">
+                                <strong>@context.Item.Level</strong>
+                            </MudText>
                         </CardHeaderContent>
                     </MudCardHeader>
                     <MudCardContent Class="pt-0">
-                        <MudText>@L[_currentDto.GetMemberDescription(x=>x.Message)]</MudText>
+                        <MudText>@L[_currentDto.GetMemberDescription(x => x.Message)]</MudText>
                         <MudText Typo="Typo.body2">@context.Item.Message</MudText>
                         @if (!string.IsNullOrEmpty(context.Item.Exception))
                         {
-                            <MudText Color="Color.Error">@L[_currentDto.GetMemberDescription(x=>x.Exception)]</MudText>
+                            <MudText Color="Color.Error">@L[_currentDto.GetMemberDescription(x => x.Exception)]</MudText>
                             <MudText Color="Color.Warning" Typo="Typo.body2">@context.Item.Exception</MudText>
                         }
-                        <MudText>@L[_currentDto.GetMemberDescription(x=>x.ClientIP)]</MudText>
+                        <MudText>@L[_currentDto.GetMemberDescription(x => x.ClientIP)]</MudText>
                         <MudText Typo="Typo.body2">@context.Item.ClientIP</MudText>
-                        <MudText>@L[_currentDto.GetMemberDescription(x=>x.ClientAgent)]</MudText>
+                        <MudText>@L[_currentDto.GetMemberDescription(x => x.ClientAgent)]</MudText>
                         <MudText Typo="Typo.body2">@context.Item.ClientAgent</MudText>
                     </MudCardContent>
                 </MudCard>
@@ -135,7 +144,7 @@
                 <MudText>@ConstantString.Loading</MudText>
             </LoadingContent>
             <PagerContent>
-                <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
+                <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"/>
             </PagerContent>
         </MudDataGrid>
     </ChildContent>
@@ -143,28 +152,35 @@
         <CustomError Exception="context"></CustomError>
     </ErrorContent>
 </ErrorBoundary>
+
 @code {
     private LogsLineCharts? _chartComponent;
-    public string Title { get; private set; } = "Logs";
+    private string Title { get; set; } = "Logs";
     private string _searchString = string.Empty;
     private MudDataGrid<LogDto> _table = default!;
     private readonly LogDto _currentDto = new();
     private int _defaultPageSize = 15;
-    public List<LogTimeLineDto> Data { get; set; } = new();
+    private List<LogTimeLineDto> Data { get; set; } = new();
+
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
+
     private bool _loading;
     private bool _clearing;
+
     [Inject]
     private IMediator Mediator { get; set; } = default!;
+
     private bool _canPurge;
-    private LogsWithPaginationQuery Query { get; set; } = new();
+    private LogsWithPaginationQuery Query { get; } = new();
+
     protected override async void OnInitialized()
     {
         Title = L["Logs"];
         var state = await AuthState;
         _canPurge = (await AuthService.AuthorizeAsync(state.User, Permissions.Logs.Purge)).Succeeded;
     }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -172,7 +188,6 @@
             Data = await Mediator.Send(new LogsTimeLineChatDataQuery());
             StateHasChanged();
             await _chartComponent!.RenderChart();
-
         }
     }
 
@@ -182,51 +197,68 @@
         {
             _loading = true;
             Query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            Query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending == false ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
+            Query.SortBy = state.SortDefinitions.FirstOrDefault()?.Descending == false ? Sorting.Ascending : Sorting.Descending;
             Query.Page = state.Page + 1;
             Query.PerPage = state.PageSize;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
-            return new GridData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
+            var formattedItems = new List<LogDto>();
+            
+            foreach (var item in result.Items)
+            {
+                item.UserName = item.UserName?.Replace("\"", "");
+                item.Message = item.Message?.Replace("\"", "");
+                item.ClientIP = item.ClientIP?.Replace("\"", "");
+                
+                formattedItems.Add(item);
+            }
+
+            return new GridData<LogDto> { TotalItems = result.TotalItems, Items = formattedItems };
         }
         finally
         {
             _loading = false;
         }
     }
+
     private async Task OnChangedListView(LogListView listview)
     {
         Query.ListView = listview;
         await _table.ReloadServerData();
     }
+
     private async Task OnChangedLevel(LogLevel? level)
     {
         Query.Level = level;
         await _table.ReloadServerData();
     }
+
     private async Task OnSearch(string text)
     {
         Query.Keyword = text;
         await _table.ReloadServerData();
     }
+
     private async Task OnRefresh()
     {
         Query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
+
     private Task OnShowDetail(LogDto dto)
     {
         dto.ShowDetails = !dto.ShowDetails;
         return Task.CompletedTask;
     }
+
     private async Task OnPurge()
     {
         var parameters = new DialogParameters
-                        {
-                    { nameof(ConfirmationDialog.ContentText), $"{L["Are you sure you want to erase all the logs?"]}" }
-                        };
+        {
+            { nameof(ConfirmationDialog.ContentText), $"{L["Are you sure you want to erase all the logs?"]}" }
+        };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>
-        ($"{L["Erase logs"]}", parameters, options);
+            ($"{L["Erase logs"]}", parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -236,13 +268,13 @@
                 var command = new ClearLogsCommand();
                 var result = await Mediator.Send(command);
                 await _table.ReloadServerData();
-                Snackbar.Add(L["Logs are erased"], MudBlazor.Severity.Info);
+                Snackbar.Add(L["Logs have been erased"], Severity.Info);
             }
             finally
             {
                 _clearing = false;
             }
-
         }
     }
+
 }

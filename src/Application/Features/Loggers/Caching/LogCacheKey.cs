@@ -5,28 +5,35 @@ namespace CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
 
 public static class LogsCacheKey
 {
-    private static readonly TimeSpan refreshInterval = TimeSpan.FromSeconds(30);
     public const string GetAllCacheKey = "all-logs";
-    public static string GetChartDataCacheKey(string parameters) {
+    private static readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(30);
+    private static CancellationTokenSource _tokenSource;
+
+    static LogsCacheKey()
+    {
+        _tokenSource = new CancellationTokenSource(RefreshInterval);
+    }
+
+    public static MemoryCacheEntryOptions MemoryCacheEntryOptions =>
+        new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
+
+    public static string GetChartDataCacheKey(string parameters)
+    {
         return $"GetChartDataCacheKey,{parameters}";
     }
+
     public static string GetPaginationCacheKey(string parameters)
     {
         return $"LogsTrailsWithPaginationQuery,{parameters}";
     }
-    static LogsCacheKey()
-    {
-        _tokensource = new CancellationTokenSource(refreshInterval);
-    }
-    private static CancellationTokenSource _tokensource;
+
     public static CancellationTokenSource SharedExpiryTokenSource()
     {
-        if (_tokensource.IsCancellationRequested)
+        if (_tokenSource.IsCancellationRequested)
         {
-            _tokensource = new CancellationTokenSource(refreshInterval);
+            _tokenSource = new CancellationTokenSource(RefreshInterval);
         }
-        return _tokensource;
-    }
-    public static MemoryCacheEntryOptions MemoryCacheEntryOptions => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
-}
 
+        return _tokenSource;
+    }
+}

@@ -7,30 +7,38 @@ namespace CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
 
 public class LogDto : IMapFrom<Logger>
 {
-    [Description("Id")]
+    [Description("Id")] 
     public int Id { get; set; }
-    [Description("Message")]
+
+    [Description("Message")] 
     public string? Message { get; set; }
-    [Description("Message Template")]
+
+    [Description("Message Template")] 
     public string? MessageTemplate { get; set; }
-    [Description("Level")]
+
+    [Description("Level")] 
     public string Level { get; set; } = default!;
+
     public bool ShowDetails { get; set; }
-    [Description("Time Stamp")]
+
+    [Description("Timestamp")] 
     public DateTime TimeStamp { get; set; } = DateTime.Now;
-    [Description("Exception")]
+
+    [Description("Exception")] 
     public string? Exception { get; set; }
-    [Description("User Name")]
+
+    [Description("Username")] 
     public string? UserName { get; set; }
-    [Description("Client IP")]
+
+    [Description("Client IP")] 
     public string? ClientIP { get; set; }
-    [Description("Client Agent")]
+
+    [Description("Client Agent")] 
     public string? ClientAgent { get; set; }
-    [Description("Properties")]
+
+    [Description("Properties")] 
     public string? Properties { get; set; }
-    [Description("Log Event")]
+
+    [Description("Log Event")] 
     public string? LogEvent { get; set; }
-   
-
-
 }
