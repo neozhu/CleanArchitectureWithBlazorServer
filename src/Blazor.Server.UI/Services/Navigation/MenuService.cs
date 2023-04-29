@@ -1,11 +1,17 @@
 using Blazor.Server.UI.Models.SideMenu;
 using CleanArchitecture.Blazor.Application.Constants.Role;
+using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 
 namespace Blazor.Server.UI.Services.Navigation;
 
 public class MenuService : IMenuService
 {
-    private readonly List<MenuSectionModel> _features = new List<MenuSectionModel>()
+    private readonly AccessTokenProvider _tokenProvider;
+    private readonly List<MenuSectionModel> _features;
+    public MenuService(AccessTokenProvider tokenProvider)
+    {
+        _tokenProvider = tokenProvider;
+        _features = new List<MenuSectionModel>()
     {
         new MenuSectionModel
         {
@@ -132,7 +138,7 @@ public class MenuService : IMenuService
                         new()
                         {
                             Title = "Jobs",
-                            Href = "/jobs",
+                            Href = $"/jobs?access_token={_tokenProvider.AccessToken}",
                             PageStatus = PageStatus.Completed,
                             Target="_blank"
                         }
@@ -141,7 +147,10 @@ public class MenuService : IMenuService
 
             }
         }
+
     };
+
+    }
 
     public IEnumerable<MenuSectionModel> Features => _features;
 }

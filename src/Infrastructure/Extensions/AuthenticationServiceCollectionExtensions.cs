@@ -77,8 +77,9 @@ public static class AuthenticationServiceCollectionExtensions
                          {
                              var accessToken = context.Request.Headers.Authorization;
                              var path = context.HttpContext.Request.Path;
+                             var isFromSignalR = path.StartsWithSegments("/signalRHub");
                              if (!string.IsNullOrEmpty(accessToken) &&
-                                 (path.StartsWithSegments("/signalRHub")))
+                                 isFromSignalR)
                              {
                                  context.Token = accessToken.ToString().Substring(7);
                              }

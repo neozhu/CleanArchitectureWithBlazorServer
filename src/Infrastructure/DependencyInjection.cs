@@ -7,6 +7,7 @@ using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
+using Hangfire.Dashboard;
 using Microsoft.Extensions.Configuration;
 
 namespace CleanArchitecture.Blazor.Infrastructure;

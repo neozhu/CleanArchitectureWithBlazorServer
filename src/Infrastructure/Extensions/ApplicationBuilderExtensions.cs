@@ -35,8 +35,7 @@ public static class ApplicationBuilderExtensions
         app.UseMiddlewares();
         app.UseHangfireDashboard("/jobs", new DashboardOptions
         {
-            Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
-            AsyncAuthorization = new[] { new HangfireDashboardAsyncAuthorizationFilter() }
+            AsyncAuthorization = new[] { new HangfireDashboardAsyncAuthorizationFilter(config["AppConfigurationSettings:Secret"]!) }
         });
         app.UseRouting();
         app.UseAuthentication();
