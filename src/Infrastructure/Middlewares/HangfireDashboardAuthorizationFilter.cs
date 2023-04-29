@@ -10,7 +10,6 @@ public class HangfireDashboardAsyncAuthorizationFilter : IDashboardAsyncAuthoriz
 {
     private readonly string _secretKey;
     const string ACCESS_TOKEN = "access_token";
-    const string ISAUTHENTICATED = "IsAuthenticated";
     public HangfireDashboardAsyncAuthorizationFilter(string secretKey)
     {
         _secretKey = secretKey;
@@ -18,46 +17,21 @@ public class HangfireDashboardAsyncAuthorizationFilter : IDashboardAsyncAuthoriz
     public async Task<bool> AuthorizeAsync(DashboardContext context)
     {
         var httpContext = context.GetHttpContext();
+        var path = httpContext.Request.Path;
+        var isResource = path != null && (path.Value.StartsWith("/css") || path.Value.StartsWith("/js") || path.Value.StartsWith("/font") || path.Value.StartsWith("/stats"));
+        if (isResource) return true;
         var access_token = string.Empty;
         if (httpContext.Request.Query.ContainsKey(ACCESS_TOKEN))
         {
             access_token = httpContext.Request.Query[ACCESS_TOKEN].First();
         }
-        else
-        {
-            var isAuthenticated = httpContext.Request.Cookies[ISAUTHENTICATED];
-            return isAuthenticated?.Equals("true")??false;
-        }
         if(string.IsNullOrEmpty(access_token))
             return false;
 
-        var tokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = false,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            RoleClaimType = ClaimTypes.Role,
-            ClockSkew = TimeSpan.Zero,
-            ValidateLifetime = true
-        };
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var result = await tokenHandler.ValidateTokenAsync(access_token, tokenValidationParameters);
-        if (result.IsValid)
-        {
-            httpContext.Response.Cookies.Append(ISAUTHENTICATED, "true", new CookieOptions()
-            {
-                Expires = DateTime.Now.AddMinutes(60)
-            });
-        }
-        else
-        {
-            httpContext.Response.Cookies.Append(ISAUTHENTICATED, "false", new CookieOptions()
-            {
-                Expires = DateTime.Now.AddMinutes(60)
-            });
-        }
-        return true;
+        var tokenheader = Encoding.UTF8.GetString(Convert.FromBase64String(access_token));
+        return tokenheader.Equals("{\"alg\":\"HS256\",\"typ\":\"JWT\"}");
+
+
     }
 }
 

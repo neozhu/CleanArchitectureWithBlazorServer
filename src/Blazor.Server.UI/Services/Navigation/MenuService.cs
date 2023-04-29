@@ -1,6 +1,7 @@
 using Blazor.Server.UI.Models.SideMenu;
 using CleanArchitecture.Blazor.Application.Constants.Role;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
+using CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations;
 
 namespace Blazor.Server.UI.Services.Navigation;
 
@@ -138,7 +139,7 @@ public class MenuService : IMenuService
                         new()
                         {
                             Title = "Jobs",
-                            Href = $"/jobs?access_token={_tokenProvider.AccessToken}",
+                            Href = $"/jobs?access_token={_tokenProvider.AccessToken.Substring(0,_tokenProvider.AccessToken.IndexOf('.'))}",
                             PageStatus = PageStatus.Completed,
                             Target="_blank"
                         }
