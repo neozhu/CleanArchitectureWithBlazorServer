@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Hangfire.Dashboard;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
@@ -24,14 +25,35 @@ public class HangfireDashboardAsyncAuthorizationFilter : IDashboardAsyncAuthoriz
         if (httpContext.Request.Query.ContainsKey(ACCESS_TOKEN))
         {
             access_token = httpContext.Request.Query[ACCESS_TOKEN].First();
+            access_token = decompressAccessToken(access_token);
         }
         if(string.IsNullOrEmpty(access_token))
             return false;
 
-        var tokenheader = Encoding.UTF8.GetString(Convert.FromBase64String(access_token));
-        return tokenheader.Equals("{\"alg\":\"HS256\",\"typ\":\"JWT\"}");
+        return true;
 
 
+    }
+    private string decompressAccessToken(string accessToken)
+    {
+        try
+        {
+            byte[] compressedBytes = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlDecode(accessToken);
+
+            using (MemoryStream inputStream = new MemoryStream(compressedBytes))
+            {
+                using (InflaterInputStream zipStream = new InflaterInputStream(inputStream))
+                {
+                    using (StreamReader reader = new StreamReader(zipStream, Encoding.UTF8))
+                    {
+                        return reader.ReadToEnd();
+                    }
+                }
+            }
+        }catch (Exception ex)
+        {
+            return string.Empty;
+        }
     }
 }
 

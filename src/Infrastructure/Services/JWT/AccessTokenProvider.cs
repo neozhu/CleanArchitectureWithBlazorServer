@@ -1,8 +1,12 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
+using ICSharpCode.SharpZipLib.BZip2;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Org.BouncyCastle.Security;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public class AccessTokenProvider
@@ -74,5 +78,18 @@ public class AccessTokenProvider
     {
         await _localStorage.DeleteAsync(_tokenKey);
         _navigation.NavigateTo("/", true);
+    }
+
+    public string CompressAccessToken()
+    {
+        byte[] inputBytes = Encoding.UTF8.GetBytes(AccessToken.Substring(0, AccessToken.IndexOf('.')));
+        using (MemoryStream outputStream = new MemoryStream())
+        {
+            using (DeflaterOutputStream zipStream = new DeflaterOutputStream(outputStream))
+            {
+                zipStream.Write(inputBytes, 0, inputBytes.Length);
+            }
+           return Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(outputStream.ToArray());
+        }
     }
 }

@@ -139,7 +139,7 @@ public class MenuService : IMenuService
                         new()
                         {
                             Title = "Jobs",
-                            Href = $"/jobs?access_token={_tokenProvider.AccessToken.Substring(0,_tokenProvider.AccessToken.IndexOf('.'))}",
+                            Href = $"/jobs?access_token={_tokenProvider.CompressAccessToken()}",
                             PageStatus = PageStatus.Completed,
                             Target="_blank"
                         }
