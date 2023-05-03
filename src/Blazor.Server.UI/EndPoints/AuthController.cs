@@ -45,7 +45,7 @@ public class AuthController : Controller
             await _signInManager.SignInAsync(identityUser, isPersistent);
             identityUser.IsLive= true;
             await _userManager.UpdateAsync(identityUser);
-            _logger.LogInformation("{@UserName} login successful", identityUser.UserName);
+            _logger.LogInformation("{@UserName} has successfully logged in", identityUser.UserName);
             return Redirect($"/{returnUrl}");
         }
 
