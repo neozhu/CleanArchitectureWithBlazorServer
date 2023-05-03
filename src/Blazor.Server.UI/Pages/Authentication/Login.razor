@@ -128,7 +128,7 @@
                 var user = await UserManager.FindByNameAsync(_model.UserName!);
                 if (user is null)
                 {
-                    Logger.LogWarning("Someone tried to login to the user {@UserName}, however this account does not exist", _model.UserName);
+                    Logger.LogWarning("Someone tried to login to the user {@UserName:l}, however this account does not exist", _model.UserName);
                     Snackbar.Add(L["No user found, or no authorization, please contact the administrator."], Severity.Error);
                 }
                 else
@@ -142,14 +142,14 @@
                         var result = await UserManager.CheckPasswordAsync(user, _model.Password!);
                         if (!result)
                         {
-                            Logger.LogWarning("{@UserName} failed authentication", user.UserName);
+                            Logger.LogWarning("{@UserName:l} failed authentication", user.UserName);
                             Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact an administrator."], Severity.Error);
                         }
                         else
                         {
                             await TokenProvider.GenerateJwt(user);
                             NavigationManager.NavigateTo(NavigationManager.Uri, true);
-                            Logger.LogInformation("{@UserName} has successfully logged in", user.UserName);
+                            Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
                         }
                     }
                 }
@@ -177,7 +177,7 @@
                 item.IsActive = true;
                 await UserManager.UpdateAsync(item);
                 Snackbar.Add($"{L["Password update successfuly"]}", Severity.Info);
-                Logger.LogInformation("{@UserName} has set a new password", item.UserName);
+                Logger.LogInformation("{@UserName:l} has set a new password", item.UserName);
                 _model.Password = "";
             }
             else
@@ -198,7 +198,7 @@
         var user = await CreateUserWithExternalProvider(provider, userName, name, accessToken);
         await TokenProvider.GenerateJwt(user);
         NavigationManager.NavigateTo(NavigationManager.Uri, true);
-        Logger.LogInformation("{@UserName} has successfully logged in", userName);
+        Logger.LogInformation("{@UserName:l} has successfully logged in", userName);
     }
 
     private async Task<ApplicationUser> CreateUserWithExternalProvider(string provider, string userName, string name, string accessToken)

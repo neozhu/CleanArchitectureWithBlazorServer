@@ -93,7 +93,7 @@
                 Snackbar.Clear();
                 Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
                 Snackbar.Add(string.Format(L["The email has been sent, please check the email:{0} "],_emailAddress), MudBlazor.Severity.Success,config=> { config.ShowCloseIcon = false; config.HideTransitionDuration = 5000; });
-                Logger.LogInformation("{@UserName}'s token: {@Token} for resetting the password has been sent", _user.UserName,_resetPasswordToken);
+                Logger.LogInformation("{@UserName:l}'s password reset token: {@Token} has been sent", _user.UserName,_resetPasswordToken);
             }
             else
             {
@@ -148,7 +148,7 @@
                     _user.IsActive = true;
                     await UserManager.UpdateAsync(_user);
                     Snackbar.Add($"{L["The new password has been set successfully, please login again"]}", MudBlazor.Severity.Info);
-                    Logger.LogInformation("{@UserName} has set a new password", model.UserName);
+                    Logger.LogInformation("{@UserName:l} has set a new password", model.UserName);
                     Navigation.NavigateTo("/");
                 }
                 else

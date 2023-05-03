@@ -32,7 +32,7 @@ public static class SerilogExtensions
                 .Enrich.WithClientIp()
                 .Enrich.WithClientAgent()
                 .WriteTo.Async(wt => wt.File("./log/log-.txt", rollingInterval: RollingInterval.Day))
-                .WriteTo.Async(wt => wt.Console())
+                .WriteTo.Async(wt => wt.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3} {ClientIp}] {Message:lj}{NewLine}{Exception}"))
                 .WriteToDatabase(context.Configuration)
         );
     }
@@ -118,8 +118,8 @@ public static class SerilogExtensions
             { "Exception", new ExceptionColumnWriter(NpgsqlDbType.Text) },
             { "Properties", new PropertiesColumnWriter(NpgsqlDbType.Varchar) },
             { "LogEvent", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
-            { "UserName", new SinglePropertyColumnWriter("UserName", PropertyWriteMethod.ToString, NpgsqlDbType.Varchar) }, 
-            { "ClientIP", new SinglePropertyColumnWriter("ClientIp", PropertyWriteMethod.ToString, NpgsqlDbType.Varchar) },
+            { "UserName", new SinglePropertyColumnWriter("UserName", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) }, 
+            { "ClientIP", new SinglePropertyColumnWriter("ClientIp", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
             { "ClientAgent", new SinglePropertyColumnWriter("ClientAgent", PropertyWriteMethod.ToString, NpgsqlDbType.Varchar) }
         };
         serilogConfig.WriteTo.Async(wt => wt.PostgreSQL(
