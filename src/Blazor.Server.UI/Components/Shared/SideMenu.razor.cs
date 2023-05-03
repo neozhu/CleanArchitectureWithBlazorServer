@@ -1,5 +1,6 @@
 using Blazor.Server.UI.Models.SideMenu;
 using Blazor.Server.UI.Services;
+using Blazor.Server.UI.Services.Layout;
 using Blazor.Server.UI.Services.Navigation;
 using CleanArchitecture.Blazor.Application.Features.Fluxor;
 using Fluxor;

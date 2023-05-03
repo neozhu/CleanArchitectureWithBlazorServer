@@ -1,11 +1,9 @@
 using Blazor.Analytics;
-using Blazor.Server.UI.Components.Shared;
-using Blazor.Server.UI.Services;
+using Blazor.Server.UI.Services.Layout;
 using Blazor.Server.UI.Services.Navigation;
 using Blazor.Server.UI.Services.Notifications;
 using Blazor.Server.UI.Services.UserPreferences;
 using BlazorDownloadFile;
-using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 using MudBlazor.Services;
 using MudExtensions.Services;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
