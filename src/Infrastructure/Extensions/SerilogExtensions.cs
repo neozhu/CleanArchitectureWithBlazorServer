@@ -32,7 +32,7 @@ public static class SerilogExtensions
                 .Enrich.WithClientIp()
                 .Enrich.WithClientAgent()
                 .WriteTo.Async(wt => wt.File("./log/log-.txt", rollingInterval: RollingInterval.Day))
-                .WriteTo.Async(wt => wt.Console())
+                .WriteTo.Async(wt => wt.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3} {ClientIp}] {Message:lj}{NewLine}{Exception}"))
                 .WriteToDatabase(context.Configuration)
         );
     }
