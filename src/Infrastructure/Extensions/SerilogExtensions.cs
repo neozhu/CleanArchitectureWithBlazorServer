@@ -120,7 +120,7 @@ public static class SerilogExtensions
             { "LogEvent", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
             { "UserName", new SinglePropertyColumnWriter("UserName", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) }, 
             { "ClientIP", new SinglePropertyColumnWriter("ClientIp", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
-            { "ClientAgent", new SinglePropertyColumnWriter("ClientAgent", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) }
+            { "ClientAgent", new SinglePropertyColumnWriter("ClientAgent", PropertyWriteMethod.ToString, NpgsqlDbType.Varchar) }
         };
         serilogConfig.WriteTo.Async(wt => wt.PostgreSQL(
             connectionString,

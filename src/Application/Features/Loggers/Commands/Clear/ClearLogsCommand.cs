@@ -40,7 +40,7 @@ public class ClearLogsCommandHandler : IRequestHandler<ClearLogsCommand, Result>
     {
         _context.Loggers.RemoveRange(_context.Loggers);
         await _context.SaveChangesAsync(cancellationToken);
-        _logger.LogInformation("Logs have been erased by {@UserName}", _currentUserService.UserName);
+        _logger.LogInformation("Logs have been erased by {@UserName:l}", _currentUserService.UserName);
         return await Result.SuccessAsync();
     }
 }
