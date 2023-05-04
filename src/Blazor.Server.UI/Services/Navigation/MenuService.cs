@@ -6,143 +6,128 @@ namespace Blazor.Server.UI.Services.Navigation;
 
 public class MenuService : IMenuService
 {
-    private readonly AccessTokenProvider _tokenProvider;
     private readonly List<MenuSectionModel> _features;
+
     public MenuService(AccessTokenProvider tokenProvider)
     {
-        _tokenProvider = tokenProvider;
-        _features = new List<MenuSectionModel>()
-    {
-        new MenuSectionModel
+        _features = new List<MenuSectionModel>
         {
-            Title = "Application",
-            SectionItems = new List<MenuSectionItemModel>
+            new()
             {
-                new() { Title = "Home", Icon = Icons.Material.Filled.Home, Href = "/" },
-                new()
+                Title = "Application",
+                SectionItems = new List<MenuSectionItemModel>
                 {
-                    Title = "E-Commerce",
-                    Icon = Icons.Material.Filled.ShoppingCart,
-                    PageStatus = PageStatus.Completed,
-                    IsParent = true,
-                    MenuItems = new List<MenuSectionSubItemModel>
+                    new() { Title = "Home", Icon = Icons.Material.Filled.Home, Href = "/" },
+                    new()
                     {
-                        new()
+                        Title = "E-Commerce",
+                        Icon = Icons.Material.Filled.ShoppingCart,
+                        PageStatus = PageStatus.Completed,
+                        IsParent = true,
+                        MenuItems = new List<MenuSectionSubItemModel>
                         {
-                            Title = "Products",
-                            Href = "/pages/products",
-                            PageStatus = PageStatus.Completed
-                        },
-                        new()
-                        {
-                            Title = "Documents",
-                            Href = "/pages/documents",
-                            PageStatus = PageStatus.Completed
+                            new()
+                            {
+                                Title = "Products",
+                                Href = "/pages/products",
+                                PageStatus = PageStatus.Completed
+                            },
+                            new()
+                            {
+                                Title = "Documents",
+                                Href = "/pages/documents",
+                                PageStatus = PageStatus.Completed
+                            }
                         }
+                    },
+                    new()
+                    {
+                        Title = "Analytics",
+                        Roles = new[] { RoleName.Administrator, RoleName.Users },
+                        Icon = Icons.Material.Filled.Analytics,
+                        Href = "/analytics",
+                        PageStatus = PageStatus.ComingSoon
+                    },
+                    new()
+                    {
+                        Title = "Banking",
+                        Roles = new[] { RoleName.Administrator, RoleName.Users },
+                        Icon = Icons.Material.Filled.Money,
+                        Href = "/banking",
+                        PageStatus = PageStatus.ComingSoon
+                    },
+                    new()
+                    {
+                        Title = "Booking",
+                        Roles = new[] { RoleName.Administrator, RoleName.Users },
+                        Icon = Icons.Material.Filled.CalendarToday,
+                        Href = "/booking",
+                        PageStatus = PageStatus.ComingSoon
                     }
-                },
-                new()
-                {
-                    Title = "Analytics",
-                    Roles = new[] { RoleName.Administrator, RoleName.Users },
-                    Icon = Icons.Material.Filled.Analytics,
-                    Href = "/analytics",
-                    PageStatus = PageStatus.ComingSoon
-                },
-                new()
-                {
-                    Title = "Banking",
-                    Roles = new[] { RoleName.Administrator, RoleName.Users },
-                    Icon = Icons.Material.Filled.Money,
-                    Href = "/banking",
-                    PageStatus = PageStatus.ComingSoon
-                },
-                new()
-                {
-                    Title = "Booking",
-                    Roles = new[] { RoleName.Administrator, RoleName.Users },
-                    Icon = Icons.Material.Filled.CalendarToday,
-                    Href = "/booking",
-                    PageStatus = PageStatus.ComingSoon
                 }
-            }
-        },
-        new MenuSectionModel
-        {
-            Title = "MANAGEMENT",
-            Roles = new[] { RoleName.Administrator },
-            SectionItems = new List<MenuSectionItemModel>
+            },
+            new()
             {
-                new()
+                Title = "MANAGEMENT",
+                Roles = new[] { RoleName.Administrator },
+                SectionItems = new List<MenuSectionItemModel>
                 {
-                    IsParent = true,
-                    Title = "Authorization",
-                    Icon = Icons.Material.Filled.ManageAccounts,
-                    MenuItems = new List<MenuSectionSubItemModel>
+                    new()
                     {
-                        new()
+                        IsParent = true,
+                        Title = "Authorization",
+                        Icon = Icons.Material.Filled.ManageAccounts,
+                        MenuItems = new List<MenuSectionSubItemModel>
                         {
-                            Title = "Multi-Tenant",
-                            Href = "/system/tenants",
-                            PageStatus = PageStatus.Completed
-                        },
-                        new()
-                        {
-                            Title = "Users",
-                            Href = "/identity/users",
-                            PageStatus = PageStatus.Completed
-                        },
-                        new()
-                        {
-                            Title = "Roles",
-                            Href = "/identity/roles",
-                            PageStatus = PageStatus.Completed
-                        },
-                        new()
-                        {
-                            Title = "Profile",
-                            Href = "/user/profile",
-                            PageStatus = PageStatus.Completed
+                            new()
+                            {
+                                Title = "Multi-Tenant",
+                                Href = "/system/tenants",
+                                PageStatus = PageStatus.Completed
+                            },
+                            new()
+                            {
+                                Title = "Users", Href = "/identity/users", PageStatus = PageStatus.Completed
+                            },
+                            new()
+                            {
+                                Title = "Roles", Href = "/identity/roles", PageStatus = PageStatus.Completed
+                            },
+                            new()
+                            {
+                                Title = "Profile", Href = "/user/profile", PageStatus = PageStatus.Completed
+                            }
                         }
-                    }
-                },
-                new()
-                {
-                    IsParent = true,
-                    Title = "System",
-                    Icon = Icons.Material.Filled.Devices,
-                    MenuItems = new List<MenuSectionSubItemModel>
+                    },
+                    new()
                     {
-                        new()
+                        IsParent = true,
+                        Title = "System",
+                        Icon = Icons.Material.Filled.Devices,
+                        MenuItems = new List<MenuSectionSubItemModel>
                         {
-                            Title = "Picklist",
-                            Href = "/system/picklist",
-                            PageStatus = PageStatus.Completed
-                        },
-                        new()
-                        {
-                            Title = "Audit Trails",
-                            Href = "/system/audittrails",
-                            PageStatus = PageStatus.Completed
-                        },
-                        new()
-                        {
-                            Title = "Log",
-                            Href = "/system/logs",
-                            PageStatus = PageStatus.Completed
-                        },
-                        new()
-                        {
-                            Title = "Jobs",
-                            Href = $"/jobs?access_token={_tokenProvider.CompressAccessToken()}",
-                            PageStatus = PageStatus.Completed,
-                            Target = "_blank"
+                            new() { Title = "Picklist", Href = "/system/picklist", PageStatus = PageStatus.Completed },
+                            new()
+                            {
+                                Title = "Audit Trails",
+                                Href = "/system/audittrails",
+                                PageStatus = PageStatus.Completed
+                            },
+                            new() { Title = "Log", Href = "/system/logs", PageStatus = PageStatus.Completed },
+                            new()
+                            {
+                                Title = "Jobs",
+                                Href =
+                                    $"/jobs?access_token={tokenProvider.CompressAccessToken()}",
+                                PageStatus = PageStatus.Completed,
+                                Target = "_blank"
+                            }
                         }
                     }
                 }
             }
-        }
-    };
+        };
+    }
 
     public IEnumerable<MenuSectionModel> Features => _features;
 }
