@@ -87,15 +87,21 @@ public class MenuService : IMenuService
                             },
                             new()
                             {
-                                Title = "Users", Href = "/identity/users", PageStatus = PageStatus.Completed
+                                Title = "Users",
+                                Href = "/identity/users",
+                                PageStatus = PageStatus.Completed
                             },
                             new()
                             {
-                                Title = "Roles", Href = "/identity/roles", PageStatus = PageStatus.Completed
+                                Title = "Roles",
+                                Href = "/identity/roles",
+                                PageStatus = PageStatus.Completed
                             },
                             new()
                             {
-                                Title = "Profile", Href = "/user/profile", PageStatus = PageStatus.Completed
+                                Title = "Profile",
+                                Href = "/user/profile",
+                                PageStatus = PageStatus.Completed
                             }
                         }
                     },
@@ -106,19 +112,28 @@ public class MenuService : IMenuService
                         Icon = Icons.Material.Filled.Devices,
                         MenuItems = new List<MenuSectionSubItemModel>
                         {
-                            new() { Title = "Picklist", Href = "/system/picklist", PageStatus = PageStatus.Completed },
+                            new()
+                            {
+                                Title = "Picklist",
+                                Href = "/system/picklist",
+                                PageStatus = PageStatus.Completed
+                            },
                             new()
                             {
                                 Title = "Audit Trails",
                                 Href = "/system/audittrails",
                                 PageStatus = PageStatus.Completed
                             },
-                            new() { Title = "Log", Href = "/system/logs", PageStatus = PageStatus.Completed },
+                            new()
+                            {
+                                Title = "Log",
+                                Href = "/system/logs",
+                                PageStatus = PageStatus.Completed
+                            },
                             new()
                             {
                                 Title = "Jobs",
-                                Href =
-                                    $"/jobs?access_token={tokenProvider.CompressAccessToken()}",
+                                Href = $"/jobs?access_token={tokenProvider.CompressAccessToken()}",
                                 PageStatus = PageStatus.Completed,
                                 Target = "_blank"
                             }
