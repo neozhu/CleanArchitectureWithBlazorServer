@@ -80,7 +80,7 @@ Blazor technology.
 
 ## Why I choose Blazor Server
 
-- I hate switching between C# and JavaScript at the same time in order to develop a project, which is way I opted for Blazor Server.
+- I hate switching between C# and JavaScript at the same time in order to develop a project, which is why I opted for Blazor Server.
 
 ## Characteristic
 
