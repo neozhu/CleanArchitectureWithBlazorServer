@@ -33,6 +33,7 @@
         <PackageReference Include="Duende.IdentityServer.EntityFramework.Storage" Version="6.2.3" />
         <PackageReference Include="Duende.IdentityServer.Storage" Version="6.2.3" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="7.0.4" />
         <PackageReference Include="Polly" Version="7.2.3" />
         <PackageReference Include="QuestPDF" Version="2022.12.4" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.3.0" />
@@ -43,6 +44,7 @@
         <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
         <PackageReference Include="Hangfire.InMemory" Version="0.3.7" />
         <PackageReference Include="Serilog.Sinks.SQLite" Version="5.5.0" />
+        <PackageReference Include="SimplerSoftware.EntityFrameworkCore.SqlServer.NodaTime" Version="7.0.0" />
 
     </ItemGroup>
     <ItemGroup>

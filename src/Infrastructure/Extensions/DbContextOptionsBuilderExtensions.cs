@@ -10,12 +10,19 @@ internal static class DbContextOptionsBuilderExtensions
         switch (dbProvider.ToLowerInvariant())
         {
             case DbProviderKeys.Npgsql:
-                AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
                 return builder.UseNpgsql(connectionString,
-                    e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.PostgreSQL"));
+                    e =>
+                    {
+                        e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.PostgreSQL");
+                        e.UseNodaTime();
+                    });
             case DbProviderKeys.SqlServer:
                 return builder.UseSqlServer(connectionString,
-                    e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.MSSQL"));
+                    e =>
+                    {
+                        e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.MSSQL");
+                        e.UseNodaTime();
+                    });
             case DbProviderKeys.SqLite:
                 return builder.UseSqlite(connectionString,
                     e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.SqLite"));
