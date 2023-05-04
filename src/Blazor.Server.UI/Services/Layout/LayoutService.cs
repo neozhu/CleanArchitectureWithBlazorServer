@@ -1,6 +1,6 @@
 using Blazor.Server.UI.Services.UserPreferences;
 
-namespace Blazor.Server.UI.Services;
+namespace Blazor.Server.UI.Services.Layout;
 
 public class LayoutService
 {

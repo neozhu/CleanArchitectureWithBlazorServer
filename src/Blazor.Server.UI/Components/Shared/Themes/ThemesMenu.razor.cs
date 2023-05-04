@@ -1,4 +1,5 @@
 using Blazor.Server.UI.Services;
+using Blazor.Server.UI.Services.Layout;
 using Blazor.Server.UI.Services.UserPreferences;
 
 namespace Blazor.Server.UI.Components.Shared.Themes;

@@ -540,7 +540,7 @@
         {
             if (_selectedItems.Count == 1)
             {
-                Snackbar.Add($"{ConstantString.DeleteFail}", Severity.Error);
+                Snackbar.Add("You cannot delete your own account!", Severity.Error);
                 return;
             }
             _selectedItems.Remove(_selectedItems.First(x => x.Id == currentUserId));

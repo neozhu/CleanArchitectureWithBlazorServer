@@ -1,5 +1,5 @@
 using Blazor.Server.UI.Components.Shared;
-using Blazor.Server.UI.Services;
+using Blazor.Server.UI.Services.Layout;
 using Blazor.Server.UI.Services.UserPreferences;
 using Toolbelt.Blazor.HotKeys2;
 

@@ -1,7 +1,6 @@
 using Blazor.Server.UI.Models.SideMenu;
 using CleanArchitecture.Blazor.Application.Constants.Role;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
-using CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations;
 
 namespace Blazor.Server.UI.Services.Navigation;
 
@@ -19,12 +18,7 @@ public class MenuService : IMenuService
             Title = "Application",
             SectionItems = new List<MenuSectionItemModel>
             {
-                new()
-                {
-                    Title = "Home",
-                    Icon = Icons.Material.Filled.Home,
-                    Href = "/"
-                },
+                new() { Title = "Home", Icon = Icons.Material.Filled.Home, Href = "/" },
                 new()
                 {
                     Title = "E-Commerce",
@@ -33,22 +27,24 @@ public class MenuService : IMenuService
                     IsParent = true,
                     MenuItems = new List<MenuSectionSubItemModel>
                     {
-                        new(){
-                             Title = "Products",
-                             Href = "/pages/products",
-                             PageStatus = PageStatus.Completed,
+                        new()
+                        {
+                            Title = "Products",
+                            Href = "/pages/products",
+                            PageStatus = PageStatus.Completed
                         },
-                        new(){
-                             Title = "Documents",
-                             Href = "/pages/documents",
-                             PageStatus = PageStatus.Completed,
+                        new()
+                        {
+                            Title = "Documents",
+                            Href = "/pages/documents",
+                            PageStatus = PageStatus.Completed
                         }
                     }
                 },
                 new()
                 {
                     Title = "Analytics",
-                    Roles=new string[]{ RoleName.Administrator, RoleName.Users },
+                    Roles = new[] { RoleName.Administrator, RoleName.Users },
                     Icon = Icons.Material.Filled.Analytics,
                     Href = "/analytics",
                     PageStatus = PageStatus.ComingSoon
@@ -56,7 +52,7 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Banking",
-                    Roles=new string[]{ RoleName.Administrator,RoleName.Users },
+                    Roles = new[] { RoleName.Administrator, RoleName.Users },
                     Icon = Icons.Material.Filled.Money,
                     Href = "/banking",
                     PageStatus = PageStatus.ComingSoon
@@ -64,18 +60,17 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Booking",
-                    Roles=new string[]{ RoleName.Administrator,RoleName.Users },
+                    Roles = new[] { RoleName.Administrator, RoleName.Users },
                     Icon = Icons.Material.Filled.CalendarToday,
                     Href = "/booking",
                     PageStatus = PageStatus.ComingSoon
                 }
             }
         },
-
         new MenuSectionModel
         {
             Title = "MANAGEMENT",
-            Roles=new string[]{ RoleName.Administrator },
+            Roles = new[] { RoleName.Administrator },
             SectionItems = new List<MenuSectionItemModel>
             {
                 new()
@@ -109,7 +104,6 @@ public class MenuService : IMenuService
                             Href = "/user/profile",
                             PageStatus = PageStatus.Completed
                         }
-
                     }
                 },
                 new()
@@ -118,7 +112,8 @@ public class MenuService : IMenuService
                     Title = "System",
                     Icon = Icons.Material.Filled.Devices,
                     MenuItems = new List<MenuSectionSubItemModel>
-                    {   new()
+                    {
+                        new()
                         {
                             Title = "Picklist",
                             Href = "/system/picklist",
@@ -141,17 +136,13 @@ public class MenuService : IMenuService
                             Title = "Jobs",
                             Href = $"/jobs?access_token={_tokenProvider.CompressAccessToken()}",
                             PageStatus = PageStatus.Completed,
-                            Target="_blank"
+                            Target = "_blank"
                         }
                     }
                 }
-
             }
         }
-
     };
-
-    }
 
     public IEnumerable<MenuSectionModel> Features => _features;
 }

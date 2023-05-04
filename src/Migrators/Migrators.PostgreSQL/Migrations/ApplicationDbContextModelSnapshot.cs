@@ -60,7 +60,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AuditTrails");
+                    b.ToTable("AuditTrails", (string)null);
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Customer", b =>
@@ -93,7 +93,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Document", b =>
@@ -149,7 +149,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Documents");
+                    b.ToTable("Documents", (string)null);
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.KeyValue", b =>
@@ -187,7 +187,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("KeyValues");
+                    b.ToTable("KeyValues", (string)null);
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Logger.Logger", b =>
@@ -231,7 +231,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Loggers");
+                    b.ToTable("Loggers", (string)null);
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Product", b =>
@@ -274,7 +274,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Tenant", b =>
@@ -302,7 +302,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tenants");
+                    b.ToTable("Tenants", (string)null);
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationRole", b =>
@@ -549,7 +549,8 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                 {
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Owner")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Owner");
                 });
@@ -558,11 +559,13 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                 {
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Owner")
                         .WithMany()
-                        .HasForeignKey("CreatedBy");
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Editor")
                         .WithMany()
-                        .HasForeignKey("LastModifiedBy");
+                        .HasForeignKey("LastModifiedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CleanArchitecture.Blazor.Domain.Entities.Tenant", "Tenant")
                         .WithMany()

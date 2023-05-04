@@ -13,7 +13,8 @@ public class AuditTrailConfiguration : IEntityTypeConfiguration<AuditTrail>
     {
         builder.HasOne(x => x.Owner)
                .WithMany()
-               .HasForeignKey(x => x.UserId);
+               .HasForeignKey(x => x.UserId)
+               .OnDelete(DeleteBehavior.SetNull);
         builder.Navigation(e => e.Owner).AutoInclude();
         builder.Property(t => t.AuditType)
            .HasConversion<string>();

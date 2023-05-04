@@ -13,8 +13,7 @@ public class LogsTimeLineChatDataQuery : ICacheableRequest<List<LogTimeLineDto>>
     public MemoryCacheEntryOptions? Options => LogsCacheKey.MemoryCacheEntryOptions;
 }
 
-public class LogsChatDataQueryHandler :
-     IRequestHandler<LogsTimeLineChatDataQuery, List<LogTimeLineDto>>
+public class LogsChatDataQueryHandler : IRequestHandler<LogsTimeLineChatDataQuery, List<LogTimeLineDto>>
 
 {
     private readonly IApplicationDbContext _context;
@@ -23,38 +22,34 @@ public class LogsChatDataQueryHandler :
     public LogsChatDataQueryHandler(
         IApplicationDbContext context,
         IStringLocalizer<LogsChatDataQueryHandler> localizer
-        )
+    )
     {
         _context = context;
         _localizer = localizer;
     }
+
     public async Task<List<LogTimeLineDto>> Handle(LogsTimeLineChatDataQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Loggers.Where(x => x.TimeStamp >= request.LastDateTime)
-                  .GroupBy(x => new {  x.TimeStamp.Date })
-                  .Select(x => new { x.Key.Date, Total = x.Count() })
-                  .OrderBy(x => x.Date)
-                  .ToListAsync(cancellationToken);
-        
-        var result = new List<LogTimeLineDto>();
-        var end = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,0, 0, 0);
-        var start = request.LastDateTime.Date;
+            .GroupBy(x => new { x.TimeStamp.Date })
+            .Select(x => new { x.Key.Date, Total = x.Count() })
+            .OrderBy(x => x.Date)
+            .ToListAsync(cancellationToken);
+
+        List<LogTimeLineDto> result = new();
+        DateTime end = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+        DateTime start = request.LastDateTime.Date;
 
         while (start <= end)
         {
-                var item = data.Where(x => x.Date == start.Date).FirstOrDefault();
-                if (item != null)
-                {
-                    result.Add(new LogTimeLineDto { dt = item.Date, total = item.Total });
-                }
-                else
-                {
-                    result.Add(new LogTimeLineDto { dt = start, total = 0 });
+            var item = data.FirstOrDefault(x => x.Date == start.Date);
+            result.Add(item != null
+                ? new LogTimeLineDto { dt = item.Date, total = item.Total }
+                : new LogTimeLineDto { dt = start, total = 0 });
 
-                }
-            
             start = start.AddDays(1);
         }
-        return result.OrderBy(x=>x.dt).ToList();
+
+        return result.OrderBy(x => x.dt).ToList();
     }
 }
