@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using NpgsqlTypes;
 using Serilog;
+using Serilog.Configuration;
+using Serilog.Core;
 using Serilog.Events;
 using Serilog.Sinks.MSSqlServer;
 using Serilog.Sinks.PostgreSQL;
@@ -29,6 +31,7 @@ public static class SerilogExtensions
                 .MinimumLevel.Override("Hangfire.Server.ServerHeartbeatProcess", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.Processing.BackgroundExecution", LogEventLevel.Error)
                 .Enrich.FromLogContext()
+                .Enrich.WithUtcTime()
                 .Enrich.WithClientIp()
                 .Enrich.WithClientAgent()
                 .WriteTo.Async(wt => wt.File("./log/log-.txt", rollingInterval: RollingInterval.Day))
@@ -47,8 +50,7 @@ public static class SerilogExtensions
         string? dbProvider =
             configuration.GetValue<string>($"{nameof(DatabaseSettings)}:{nameof(DatabaseSettings.DBProvider)}");
         string? connectionString =
-            configuration.GetValue<string>(
-                $"{nameof(DatabaseSettings)}:{nameof(DatabaseSettings.ConnectionString)}");
+            configuration.GetValue<string>($"{nameof(DatabaseSettings)}:{nameof(DatabaseSettings.ConnectionString)}");
         switch (dbProvider)
         {
             case DbProviderKeys.SqlServer:
@@ -80,15 +82,28 @@ public static class SerilogExtensions
             BatchPeriod = new TimeSpan(0, 0, 20)
         };
 
-        ColumnOptions columnOpts = new();
-        columnOpts.Store.Add(StandardColumn.LogEvent);
-        columnOpts.AdditionalColumns = new Collection<SqlColumn>
+        ColumnOptions columnOpts = new()
         {
-            new() { ColumnName = "ClientIP", PropertyName = "ClientIp", DataType = SqlDbType.NVarChar, DataLength = 64 },
-            new() { ColumnName = "UserName", PropertyName = "UserName", DataType = SqlDbType.NVarChar, DataLength = 64 },
-            new() { ColumnName = "ClientAgent", PropertyName = "ClientAgent", DataType = SqlDbType.NVarChar, DataLength = -1 }
+            Store = new Collection<StandardColumn>
+            {
+                StandardColumn.Id,
+                StandardColumn.TimeStamp,
+                StandardColumn.Level,
+                StandardColumn.LogEvent,
+                StandardColumn.Exception,
+                StandardColumn.Message,
+                StandardColumn.MessageTemplate,
+                StandardColumn.Properties
+            },
+            AdditionalColumns = new Collection<SqlColumn>
+            {
+                new() { ColumnName = "ClientIP", PropertyName = "ClientIp", DataType = SqlDbType.NVarChar, DataLength = 64 },
+                new() { ColumnName = "UserName", PropertyName = "UserName", DataType = SqlDbType.NVarChar, DataLength = 64 },
+                new() { ColumnName = "ClientAgent", PropertyName = "ClientAgent", DataType = SqlDbType.NVarChar, DataLength = -1 }
+            },
+            TimeStamp = { ConvertToUtc = true, ColumnName = "TimeStamp" },
+            LogEvent = { DataLength = 2048 }
         };
-        columnOpts.LogEvent.DataLength = 2048;
         columnOpts.PrimaryKey = columnOpts.Id;
         columnOpts.TimeStamp.NonClusteredIndex = true;
 
@@ -118,7 +133,7 @@ public static class SerilogExtensions
             { "Exception", new ExceptionColumnWriter(NpgsqlDbType.Text) },
             { "Properties", new PropertiesColumnWriter(NpgsqlDbType.Varchar) },
             { "LogEvent", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
-            { "UserName", new SinglePropertyColumnWriter("UserName", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) }, 
+            { "UserName", new SinglePropertyColumnWriter("UserName", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
             { "ClientIP", new SinglePropertyColumnWriter("ClientIp", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
             { "ClientAgent", new SinglePropertyColumnWriter("ClientAgent", PropertyWriteMethod.ToString, NpgsqlDbType.Varchar) }
         };
@@ -146,5 +161,19 @@ public static class SerilogExtensions
             tableName,
             LogEventLevel.Information
         ));
+    }
+
+
+    public static LoggerConfiguration WithUtcTime(this LoggerEnrichmentConfiguration enrichmentConfiguration)
+    {
+        return enrichmentConfiguration.With<UtcTimestampEnricher>();
+    }
+}
+
+internal class UtcTimestampEnricher : ILogEventEnricher
+{
+    public void Enrich(LogEvent logEvent, ILogEventPropertyFactory pf)
+    {
+        logEvent.AddOrUpdateProperty(pf.CreateProperty("TimeStamp", logEvent.Timestamp.UtcDateTime));
     }
 }
