@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Concurrent;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -13,6 +14,7 @@ public interface ISignalRHub
     Task Start(string message);
     Task Completed(string message);
     Task SendMessage(string from,string message);
+    Task SendMessage(string from,string to, string message);
     Task Disconnect(string userId);
     Task Connect(string userId);
     Task SendNotification(string message);
@@ -47,6 +49,11 @@ public class SignalRHub : Hub<ISignalRHub>
     {
         var userName = Context.User?.Identity?.Name ?? string.Empty;
         await Clients.All.SendMessage(userName, message);
+    }
+    public async Task SendMessage(string to,string message)
+    {
+        var userId = Context.User?.GetUserId() ?? string.Empty;
+        await Clients.User(to).SendMessage(userId, message);
     }
     public async Task SendNotification(string message)
     {
