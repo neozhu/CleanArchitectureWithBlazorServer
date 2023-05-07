@@ -49,8 +49,6 @@ public class HubClient : IAsyncDisposable
     }
     public async Task StartAsync(CancellationToken cancellation = default)
     {
-        //if (_hubConnection.State != HubConnectionState.Disconnected)
-        //    throw new ApplicationException("Connection is in progress or has already been established");
         if (_started) return;
         _started = true;
         await _hubConnection.StartAsync(cancellation);

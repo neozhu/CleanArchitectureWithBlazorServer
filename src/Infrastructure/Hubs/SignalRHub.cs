@@ -52,8 +52,8 @@ public class SignalRHub : Hub<ISignalRHub>
     }
     public async Task SendMessage(string to,string message)
     {
-        var userId = Context.User?.GetUserId() ?? string.Empty;
-        await Clients.User(to).SendMessage(userId, message);
+        var userName = Context.User?.Identity?.Name ?? string.Empty;
+        await Clients.User(to).SendMessage(userName, message);
     }
     public async Task SendNotification(string message)
     {
