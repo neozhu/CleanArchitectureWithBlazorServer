@@ -13,7 +13,7 @@ public interface ISignalRHub
     Task Start(string message);
     Task Completed(string message);
     Task SendMessage(string from, string message);
-    Task SendMessage(string from, string to, string message);
+    Task SendPrivateMessage(string from, string to, string message);
     Task Disconnect(string userId);
     Task Connect(string userId);
     Task SendNotification(string message);
@@ -55,10 +55,10 @@ public class SignalRHub : Hub<ISignalRHub>
         await Clients.All.SendMessage(username, message);
     }
 
-    public async Task SendMessage(string to, string message)
+    public async Task SendPrivateMessage(string to, string message)
     {
         string username = Context.User?.Identity?.Name ?? string.Empty;
-        await Clients.User(to).SendMessage(username, message);
+        await Clients.User(to).SendPrivateMessage(username,to, message);
     }
 
     public async Task SendNotification(string message)

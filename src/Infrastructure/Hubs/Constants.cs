@@ -9,6 +9,7 @@ public static class SignalR
     public const string SendUpdateDashboard = "UpdateDashboard";
     public const string SendNotification = "SendNotification";
     public const string SendMessage = "SendMessage";
+    public const string SendPrivateMessage = "SendPrivateMessage";
     public const string OnConnect = "Connect";
     public const string OnDisconnect = "Disconnect";
     public const string OnChangeRolePermissions = "OnChangeRolePermissions";

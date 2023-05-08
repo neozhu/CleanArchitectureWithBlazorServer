@@ -30,6 +30,7 @@ public class HubClient : IAsyncDisposable
         _hubConnection.On<string>(SignalR.SendNotification,
             message => { NotificationReceived?.Invoke(this, message); });
         _hubConnection.On<string, string>(SignalR.SendMessage, HandleReceiveMessage);
+        _hubConnection.On<string, string, string>(SignalR.SendPrivateMessage, HandleReceivePrivateMessage);
         _hubConnection.On<string>(SignalR.JobCompleted, message => { JobCompleted?.Invoke(this, message); });
         _hubConnection.On<string>(SignalR.JobStart, message => { JobStarted?.Invoke(this, message); });
     }
@@ -60,7 +61,11 @@ public class HubClient : IAsyncDisposable
         // raise an event to subscribers
         MessageReceived?.Invoke(this, new MessageReceivedEventArgs(from, message));
     }
-
+    private void HandleReceivePrivateMessage(string from,string to, string message)
+    {
+        // raise an event to subscribers
+        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(from, message));
+    }
     public async Task SendAsync(string message)
     {
         await _hubConnection.SendAsync(SignalR.SendMessage, message);
