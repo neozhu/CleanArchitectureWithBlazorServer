@@ -12,12 +12,10 @@ public class HubClient : IAsyncDisposable
     private readonly HubConnection _hubConnection;
     private bool _started;
 
-    public HubClient(NavigationManager navigationManager,
-        AccessTokenProvider authProvider
-    )
+    public HubClient(NavigationManager navigationManager, AccessTokenProvider authProvider)
     {
-        string? token = authProvider.AccessToken;
-        string hubUrl = navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
+        var token = authProvider.AccessToken;
+        var hubUrl = navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(hubUrl, options =>
             {
@@ -26,33 +24,22 @@ public class HubClient : IAsyncDisposable
             })
             .Build();
         _hubConnection.ServerTimeout = TimeSpan.FromSeconds(30);
-        _hubConnection.On<string>(SignalR.OnConnect, userId =>
-        {
-            Login?.Invoke(this, userId);
-        });
+        _hubConnection.On<string>(SignalR.OnConnect, userId => { Login?.Invoke(this, userId); });
 
-        _hubConnection.On<string>(SignalR.OnDisconnect, userId =>
-        {
-            Logout?.Invoke(this, userId);
-        });
-        _hubConnection.On<string>(SignalR.SendNotification, message =>
-        {
-            NotificationReceived?.Invoke(this, message);
-        });
+        _hubConnection.On<string>(SignalR.OnDisconnect, userId => { Logout?.Invoke(this, userId); });
+        _hubConnection.On<string>(SignalR.SendNotification,
+            message => { NotificationReceived?.Invoke(this, message); });
         _hubConnection.On<string, string>(SignalR.SendMessage, HandleReceiveMessage);
-        _hubConnection.On<string>(SignalR.JobCompleted, message =>
-        {
-            JobCompleted?.Invoke(this, message);
-        });
-        _hubConnection.On<string>(SignalR.JobStart, message =>
-        {
-            JobStarted?.Invoke(this, message);
-        });
+        _hubConnection.On<string>(SignalR.JobCompleted, message => { JobCompleted?.Invoke(this, message); });
+        _hubConnection.On<string>(SignalR.JobStart, message => { JobStarted?.Invoke(this, message); });
     }
 
     public async ValueTask DisposeAsync()
     {
-        try { await _hubConnection.StopAsync(); }
+        try
+        {
+            await _hubConnection.StopAsync();
+        }
         finally
         {
             await _hubConnection.DisposeAsync();
@@ -61,10 +48,7 @@ public class HubClient : IAsyncDisposable
 
     public async Task StartAsync(CancellationToken cancellation = default)
     {
-        if (_started)
-        {
-            return;
-        }
+        if (_started) return;
 
         _started = true;
         await _hubConnection.StartAsync(cancellation);
