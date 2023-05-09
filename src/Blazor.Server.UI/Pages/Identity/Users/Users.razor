@@ -137,7 +137,7 @@
                                         <MudSelectItem Value="@str">@str</MudSelectItem>
                                     }
                                 </MudSelect>
-                                <MudTextField T="string" Immediate="true" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
+                                <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
                             </MudStack>
 
