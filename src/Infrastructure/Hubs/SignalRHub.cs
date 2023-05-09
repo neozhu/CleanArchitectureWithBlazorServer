@@ -26,12 +26,9 @@ public class SignalRHub : Hub<ISignalRHub>
 
     public override async Task OnConnectedAsync()
     {
-        string id = Context.ConnectionId;
-        string username = Context.User?.Identity?.Name ?? string.Empty;
-        if (!OnlineUsers.ContainsKey(id))
-        {
-            OnlineUsers.TryAdd(id, username);
-        }
+        var id = Context.ConnectionId;
+        var username = Context.User?.Identity?.Name ?? string.Empty;
+        if (!OnlineUsers.ContainsKey(id)) OnlineUsers.TryAdd(id, username);
 
         await Clients.All.Connect(username);
         await base.OnConnectedAsync();
@@ -39,26 +36,23 @@ public class SignalRHub : Hub<ISignalRHub>
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        string id = Context.ConnectionId;
+        var id = Context.ConnectionId;
         //try to remove key from dictionary
-        if (OnlineUsers.TryRemove(id, out string? username))
-        {
-            await Clients.All.Disconnect(username);
-        }
+        if (OnlineUsers.TryRemove(id, out var username)) await Clients.All.Disconnect(username);
 
         await base.OnConnectedAsync();
     }
 
     public async Task SendMessage(string message)
     {
-        string username = Context.User?.Identity?.Name ?? string.Empty;
+        var username = Context.User?.Identity?.Name ?? string.Empty;
         await Clients.All.SendMessage(username, message);
     }
 
     public async Task SendPrivateMessage(string to, string message)
     {
-        string username = Context.User?.Identity?.Name ?? string.Empty;
-        await Clients.User(to).SendPrivateMessage(username,to, message);
+        var username = Context.User?.Identity?.Name ?? string.Empty;
+        await Clients.User(to).SendPrivateMessage(username, to, message);
     }
 
     public async Task SendNotification(string message)
