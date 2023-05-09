@@ -25,11 +25,11 @@ public class HubClient : IAsyncDisposable
             .Build();
         _hubConnection.ServerTimeout = TimeSpan.FromSeconds(30);
         _hubConnection.On<string>(SignalR.OnConnect, userId => { Login?.Invoke(this, userId); });
-
         _hubConnection.On<string>(SignalR.OnDisconnect, userId => { Logout?.Invoke(this, userId); });
         _hubConnection.On<string>(SignalR.SendNotification,
             message => { NotificationReceived?.Invoke(this, message); });
         _hubConnection.On<string, string>(SignalR.SendMessage, HandleReceiveMessage);
+        _hubConnection.On<string, string, string>(SignalR.SendPrivateMessage, HandleReceivePrivateMessage);
         _hubConnection.On<string>(SignalR.JobCompleted, message => { JobCompleted?.Invoke(this, message); });
         _hubConnection.On<string>(SignalR.JobStart, message => { JobStarted?.Invoke(this, message); });
     }
@@ -56,6 +56,12 @@ public class HubClient : IAsyncDisposable
 
 
     private void HandleReceiveMessage(string from, string message)
+    {
+        // raise an event to subscribers
+        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(from, message));
+    }
+
+    private void HandleReceivePrivateMessage(string from, string to, string message)
     {
         // raise an event to subscribers
         MessageReceived?.Invoke(this, new MessageReceivedEventArgs(from, message));
