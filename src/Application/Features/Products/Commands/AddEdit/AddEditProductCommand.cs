@@ -11,7 +11,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdi
 
 public class AddEditProductCommand : IMapFrom<ProductDto>, ICacheInvalidatorRequest<Result<int>>
 {
-
     public int Id { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
@@ -29,20 +28,23 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
+
     public AddEditProductCommandHandler(
         IApplicationDbContext context,
         IMapper mapper
-        )
+    )
     {
         _context = context;
         _mapper = mapper;
     }
+
     public async Task<Result<int>> Handle(AddEditProductCommand request, CancellationToken cancellationToken)
     {
         var dto = _mapper.Map<ProductDto>(request);
         if (request.Id > 0)
         {
-            var item = await _context.Products.Include(x=>x.Pictures).SingleOrDefaultAsync(x=>x.Id==request.Id) ?? throw new NotFoundException($"Product with id: {request.Id} not found.");
+            var item = await _context.Products.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken) ??
+                       throw new NotFoundException($"Product with id: {request.Id} not found.");
             item = _mapper.Map(dto, item);
             item.AddDomainEvent(new UpdatedEvent<Product>(item));
             await _context.SaveChangesAsync(cancellationToken);
@@ -56,7 +58,5 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
             await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
-
     }
 }
-
