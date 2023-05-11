@@ -93,6 +93,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
+        <MudLoadingButton Loading="@_saving" OnClick="SaveAndNew">@ConstantString.SaveAndNew</MudLoadingButton>
         <MudLoadingButton Loading="@_saving" Color="MudBlazor.Color.Primary" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
     </DialogActions>
 </MudDialog>
@@ -129,9 +130,9 @@
             }
         }
     }
-    private async Task PreviewImage(string url, List<ProductImage> imgs)
+    private async Task PreviewImage(string url, IList<ProductImage> imgs)
     {
-      await  JS.InvokeVoidAsync("previewImage", url, imgs.Select(x=>x.Url).ToArray());
+        await  JS.InvokeVoidAsync("previewImage", url, imgs.Select(x=>x.Url).ToArray());
     }
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
@@ -195,6 +196,32 @@
             {
                 MudDialog.Close(DialogResult.Ok(true));
                 Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+            }
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+    async Task SaveAndNew()
+    {
+        try
+        {
+            _saving = true;
+            await _form!.Validate().ConfigureAwait(false);
+            if (!_form!.IsValid)
+                return;
+            var result = await Mediator.Send(Model);
+
+            if (result.Succeeded)
+            {
+                Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                Model = new AddEditProductCommand() { };
             }
             else
             {
