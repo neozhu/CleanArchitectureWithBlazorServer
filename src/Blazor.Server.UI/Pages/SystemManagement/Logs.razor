@@ -85,7 +85,11 @@
             </ToolBarContent>
             <Columns>
                 <HierarchyColumn T="LogDto" ButtonDisabledFunc="@(x => string.IsNullOrEmpty(x.Message))"/>
-                <PropertyColumn Style="width:130px" Property="x => x.TimeStamp" Title="@L[_currentDto.GetMemberDescription(x => x.TimeStamp)]"/>
+                <PropertyColumn Style="width:130px" Property="x => x.TimeStamp" Title="@L[_currentDto.GetMemberDescription(x => x.TimeStamp)]">
+                    <CellTemplate>
+                        <ToLocal DateTime="@context.Item.TimeStamp.ToLocalTime()" Format="dd/mm/yyyy HH:MM:ss"></ToLocal>
+                    </CellTemplate>
+                </PropertyColumn>
                 <PropertyColumn Style="width:120px" Property="x => x.Level" Title="@L[_currentDto.GetMemberDescription(x => x.Level)]">
                     <CellTemplate>
                         @switch (context.Item.Level)

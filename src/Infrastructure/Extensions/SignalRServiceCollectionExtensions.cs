@@ -9,7 +9,7 @@ public static class SignalRServiceCollectionExtensions
     {
         services.AddSingleton<IUsersStateContainer, UsersStateContainer>()
             .AddScoped<CircuitHandler, CircuitHandlerService>()
-            .AddTransient<HubClient>()
+            .AddScoped<HubClient>()
             .AddSignalR();
     }
 }

@@ -10,7 +10,7 @@ public class Logger : IEntity
     public string? MessageTemplate { get; set; }
     public string Level { get; set; } = default!;
 
-    public DateTime TimeStamp { get; set; } = DateTime.Now;
+    public DateTime TimeStamp { get; set; } = DateTime.UtcNow;
     public string? Exception { get; set; }
     public string? UserName { get; set; }
     public string? ClientIP { get; set; }
