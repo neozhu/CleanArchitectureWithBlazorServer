@@ -19,7 +19,7 @@ public class ProductDto:IMapFrom<Product>
     [Description("Price")]
     public decimal Price { get; set; }
     [Description("Pictures")]
-    public IList<ProductImage>? Pictures { get; set; }
+    public List<ProductImage>? Pictures { get; set; }
 
    
 }
