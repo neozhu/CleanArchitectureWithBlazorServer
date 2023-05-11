@@ -8,12 +8,14 @@ public static class ConstantString
     public static string Submit => Localize("Submit");
     public static string Delete => Localize("Delete");
     public static string Add => Localize("Add");
+    public static string Clone => Localize("Clone");
     public static string New => Localize("New");
     public static string Export => Localize("Export to Excel");
     public static string ExportPDF => Localize("Export to PDF");
     public static string Import => Localize("Import from Excel");
     public static string Actions => Localize("Actions");
     public static string Save => Localize("Save");
+    public static string SaveAndNew => Localize("Save & New");
     public static string SaveChanges => Localize("Save Changes");
     public static string Cancel => Localize("Cancel");
     public static string Close => Localize("Close");

@@ -11,7 +11,7 @@ public class Product : BaseAuditableEntity
     public string? Brand { get; set; }
     public string? Unit { get; set; }
     public decimal Price { get; set; }
-    public IList<ProductImage>? Pictures { get; set; }
+    public List<ProductImage>? Pictures { get; set; }
 
 }
 

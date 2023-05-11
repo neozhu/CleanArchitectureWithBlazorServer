@@ -16,8 +16,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(e => e.Pictures)
             .HasConversion(
                 v => JsonSerializer.Serialize(v, DefaultJsonSerializerOptions.Options),
-                v => JsonSerializer.Deserialize<IList<ProductImage>>(v, DefaultJsonSerializerOptions.Options),
-                new ValueComparer<IList<ProductImage>>(
+                v => JsonSerializer.Deserialize<List<ProductImage>>(v, DefaultJsonSerializerOptions.Options),
+                new ValueComparer<List<ProductImage>>(
                     (c1, c2) => c1.SequenceEqual(c2),
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                     c => c.ToList()));

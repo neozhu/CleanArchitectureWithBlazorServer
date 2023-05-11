@@ -125,7 +125,7 @@
                         </div>
                         @if (_canSearch)
                         {
-                            <MudTextField T="string" Immediate="true" Value="_searchString" FullWidth="false" ValueChanged="@(OnSearch)"
+                            <MudTextField T="string" Immediate="false" Value="_searchString" FullWidth="false" ValueChanged="@(OnSearch)"
                                           Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
                                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0 mb-3">
                             </MudTextField>
