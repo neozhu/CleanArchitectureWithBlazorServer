@@ -22,7 +22,7 @@ public class LogDto : IMapFrom<Logger>
     public bool ShowDetails { get; set; }
 
     [Description("Timestamp")] 
-    public DateTime TimeStamp { get; set; } = DateTime.Now;
+    public DateTime TimeStamp { get; set; } = DateTime.UtcNow;
 
     [Description("Exception")] 
     public string? Exception { get; set; }
