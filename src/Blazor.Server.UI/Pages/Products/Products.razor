@@ -325,10 +325,7 @@
         var dialog = DialogService.Show<_ProductFormDialog>
         (string.Format(ConstantString.CreateAnItem, L["Product"]), parameters, options);
         var state = await dialog.Result;
-        if (!state.Canceled)
-        {
-            await _table.ReloadServerData();
-        }
+        await _table.ReloadServerData();
     }
     private async Task OnClone()
     {
@@ -351,10 +348,8 @@
         var dialog = DialogService.Show<_ProductFormDialog>
         (string.Format(ConstantString.CreateAnItem, L["Product"]), parameters, options);
         var state = await dialog.Result;
-        if (!state.Canceled)
-        {
-            await _table.ReloadServerData();
-        }
+        await _table.ReloadServerData();
+
     }
     private async Task OnEdit(ProductDto dto)
     {
@@ -367,11 +362,7 @@
         var dialog = DialogService.Show<_ProductFormDialog>
         (string.Format(ConstantString.EditTheItem, L["Product"]), parameters, options);
         var state = await dialog.Result;
-        if (!state.Canceled)
-        {
-            await _table.ReloadServerData();
-        }
-
+        await _table.ReloadServerData();
     }
 
     private async Task OnDelete(ProductDto dto)
