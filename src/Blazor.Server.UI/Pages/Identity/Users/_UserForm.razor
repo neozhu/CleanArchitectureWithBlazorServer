@@ -1,14 +1,17 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
-@using CleanArchitecture.Blazor.Domain.Enums
+@using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
+@using Severity = MudBlazor.Severity
+@using Size = SixLabors.ImageSharp.Size
+@using SixLabors.ImageSharp.Formats.Png
 @inherits MudComponentBase
 @inject IStringLocalizer<Users> L
 
 
 <MudForm Model="@Model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)">
-    <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden" />
-    <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden" />
-    <InputFile id="UploadPhoto" OnChange="UploadPhoto" hidden accept=".jpg, .jpeg, .png" />
+    <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden"/>
+    <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden"/>
+    <InputFile id="UploadPhoto" OnChange="UploadPhoto" hidden accept=".jpg, .jpeg, .png"/>
     <MudGrid>
         <MudItem sm="12">
             <div class="d-flex justify-center">
@@ -19,13 +22,14 @@
                 }
                 else
                 {
-                    <MudAvatar Image="@Model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;" />
+                    <MudAvatar Image="@Model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;"/>
                 }
                 <MudTooltip Text="@L["Click upload a photo."]">
                     <MudIconButton HtmlTag="label"
-                                   Color="MudBlazor.Color.Info"
+                                   Color="Color.Info"
                                    Icon="@Icons.Material.Filled.PhotoCamera"
-                                   for="UploadPhoto"></MudIconButton>
+                                   for="UploadPhoto">
+                    </MudIconButton>
                 </MudTooltip>
             </div>
         </MudItem>
@@ -57,32 +61,33 @@
                                         OwnerName="@Model.UserName"
                                         Clearable="true"
                                         Label="@L["Select Superior"]"
-                                        @bind-Value="@Model.SuperiorId"> </PickSuperiorIdAutocomplete>
-           
+                                        @bind-Value="@Model.SuperiorId">
+            </PickSuperiorIdAutocomplete>
+
         </MudItem>
         @if (string.IsNullOrEmpty(Model.Id))
         {
             <MudItem xs="12" sm="6">
                 <MudPasswordField Immediate="true"
-                              Label="@L["Password"]"
-                              @bind-Value="Model.Password"
-                              For="@(() => Model.Password)"
-                              Variant="Variant.Text"
-                              PasswordMode="true"
-                              Required="true"
-                              RequiredError="@L["password is required!"]"
-                              Class="mt-4" />
+                                  Label="@L["Password"]"
+                                  @bind-Value="Model.Password"
+                                  For="@(() => Model.Password)"
+                                  Variant="Variant.Text"
+                                  PasswordMode="true"
+                                  Required="true"
+                                  RequiredError="@L["password is required!"]"
+                                  Class="mt-4"/>
             </MudItem>
             <MudItem xs="12" sm="6">
                 <MudPasswordField Immediate="true"
-                              Label="@L["Confirm Password"]"
-                              @bind-Value="Model.ConfirmPassword"
-                              For="@(() => Model.ConfirmPassword)"
-                              Variant="Variant.Text"
-                              PasswordMode="true"
-                              Required="true"
-                              RequiredError="@L["confrm password is required!"]"
-                              Class="mt-4" />
+                                  Label="@L["Confirm Password"]"
+                                  @bind-Value="Model.ConfirmPassword"
+                                  For="@(() => Model.ConfirmPassword)"
+                                  Variant="Variant.Text"
+                                  PasswordMode="true"
+                                  Required="true"
+                                  RequiredError="@L["confrm password is required!"]"
+                                  Class="mt-4"/>
             </MudItem>
         }
         <MudItem xs="12" sm="6">
@@ -99,43 +104,55 @@
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
             <div class="d-fex">
-                <MudCheckBox For="@(() =>Model.IsActive)" T="bool" @bind-Checked="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
+                <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
             </div>
         </MudItem>
         <MudItem xs="12" sm="12">
-            <MudText  Typo="Typo.caption">@L["Assign Roles"]</MudText>
+            <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
             <MudGrid Class="mt-1">
-                @for (int i = 0; i < Roles.Count; i++)
+                @for (var i = 0; i < Roles.Count; i++)
                 {
                     var x = i;
                     <MudItem xs="6" sm="6" Class="py-0 my=0">
-                        <MudCheckBox   T="bool" Checked="@Roles[x].Value" Label="@Roles[x].Key" CheckedChanged="@(s=>Roles[x].Value=s)"></MudCheckBox>
+                        <MudCheckBox T="bool" Checked="@Roles[x].Value" Label="@Roles[x].Key" CheckedChanged="@(s => Roles[x].Value = (bool)s)"></MudCheckBox>
                     </MudItem>
                 }
             </MudGrid>
         </MudItem>
 
 
-
     </MudGrid>
 </MudForm>
 
 @code {
+
     public class CheckItem
     {
         public string Key { get; set; } = string.Empty;
         public bool Value { get; set; }
     }
+
     MudForm? _form = default!;
     private List<CheckItem> Roles { get; set; } = new();
 
-    [Inject] private IUploadService UploadService { get; set; } = default!;
-    [Inject] private ITenantService TenantsService { get; set; } = default!;
-    [Inject] private RoleManager<ApplicationRole> RoleManager { get; set; } = default!;
+    [Inject]
+    private IUploadService UploadService { get; set; } = default!;
+
+    [Inject]
+    private ITenantService TenantsService { get; set; } = default!;
+
+    [Inject]
+    private RoleManager<ApplicationRole> RoleManager { get; set; } = default!;
+
     ApplicationUserDtoValidator _modelValidator = new();
 
-    [EditorRequired][Parameter] public ApplicationUserDto Model { get; set; } = default!;
-    [EditorRequired][Parameter] public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
+    [EditorRequired]
+    [Parameter]
+    public ApplicationUserDto Model { get; set; } = default!;
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -144,18 +161,18 @@
         {
             if (Model.AssignedRoles != null && Model.AssignedRoles.Contains(role))
             {
-                Roles.Add(new() { Key = role!, Value = true });
+                Roles.Add(new CheckItem { Key = role!, Value = true });
             }
             else
             {
-                Roles.Add(new() { Key = role!, Value = false });
+                Roles.Add(new CheckItem { Key = role!, Value = false });
             }
         }
-
     }
-    private  Task TenantSelectChanged(string id)
+
+    private Task TenantSelectChanged(string id)
     {
-        var tenant = TenantsService.DataSource.Find(x=>x.Id==id);
+        var tenant = TenantsService.DataSource.Find(x => x.Id == id);
         Model.TenantId = tenant?.Id;
         Model.TenantName = tenant?.Name;
         return Task.CompletedTask;
@@ -172,18 +189,19 @@
             using (var image = Image.Load(imgStream))
             {
                 image.Mutate(
-                   i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(128, 128) }));
-                image.Save(outStream, SixLabors.ImageSharp.Formats.Png.PngFormat.Instance);
+                    i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) }));
+                image.Save(outStream, PngFormat.Instance);
                 var filename = e.File.Name;
                 var fi = new FileInfo(filename);
                 var ext = fi.Extension;
-                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid().ToString() + ext, UploadType.ProfilePicture, outStream.ToArray()));
+                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.ProfilePicture, outStream.ToArray()));
                 Model.ProfilePictureDataUrl = result;
-                //Do your validations here
-                Snackbar.Add(ConstantString.UploadSuccess, MudBlazor.Severity.Info);
+    //Do your validations here
+                Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
             }
         }
     }
+
     public async Task Submit()
     {
         if (_form is not null)
@@ -196,4 +214,5 @@
             }
         }
     }
+
 }
