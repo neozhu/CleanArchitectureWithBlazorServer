@@ -32,24 +32,28 @@ public static class SerilogExtensions
                 .MinimumLevel.Override("Hangfire.Processing.BackgroundExecution", LogEventLevel.Error)
                 .Enrich.FromLogContext()
                 .Enrich.WithUtcTime()
-                .Enrich.WithClientIp()
-                .Enrich.WithClientAgent()
                 .WriteTo.Async(wt => wt.File("./log/log-.txt", rollingInterval: RollingInterval.Day))
-                .WriteTo.Async(wt => wt.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3} {ClientIp}] {Message:lj}{NewLine}{Exception}"))
-                .WriteToDatabase(context.Configuration)
+                .WriteTo.Async(wt =>
+                    wt.Console(
+                        outputTemplate:
+                        "[{Timestamp:HH:mm:ss} {Level:u3} {ClientIp}] {Message:lj}{NewLine}{Exception}"))
+                .ApplyConfigPreferences(context.Configuration)
         );
     }
 
-    private static void WriteToDatabase(this LoggerConfiguration serilogConfig, IConfiguration configuration)
+    private static void ApplyConfigPreferences(this LoggerConfiguration serilogConfig, IConfiguration configuration)
     {
-        if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-        {
-            return;
-        }
+        EnrichWithClientInfo(serilogConfig, configuration);
+        WriteToDatabase(serilogConfig, configuration);
+    }
 
-        string? dbProvider =
+    private static void WriteToDatabase(LoggerConfiguration serilogConfig, IConfiguration configuration)
+    {
+        if (configuration.GetValue<bool>("UseInMemoryDatabase")) return;
+
+        var dbProvider =
             configuration.GetValue<string>($"{nameof(DatabaseSettings)}:{nameof(DatabaseSettings.DBProvider)}");
-        string? connectionString =
+        var connectionString =
             configuration.GetValue<string>($"{nameof(DatabaseSettings)}:{nameof(DatabaseSettings.ConnectionString)}");
         switch (dbProvider)
         {
@@ -65,12 +69,18 @@ public static class SerilogExtensions
         }
     }
 
+    private static void EnrichWithClientInfo(LoggerConfiguration serilogConfig, IConfiguration configuration)
+    {
+        var privacySettings = configuration.GetRequiredSection(PrivacySettings.Privacy).Get<PrivacySettings>();
+
+        if (privacySettings == null) return;
+        if (privacySettings.LogClientIpAddresses) serilogConfig.Enrich.WithClientIp();
+        if (privacySettings.LogClientAgents) serilogConfig.Enrich.WithClientAgent();
+    }
+
     private static void WriteToSqlServer(LoggerConfiguration serilogConfig, string? connectionString)
     {
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            return;
-        }
+        if (string.IsNullOrEmpty(connectionString)) return;
 
         MSSqlServerSinkOptions sinkOpts = new()
         {
@@ -97,9 +107,19 @@ public static class SerilogExtensions
             },
             AdditionalColumns = new Collection<SqlColumn>
             {
-                new() { ColumnName = "ClientIP", PropertyName = "ClientIp", DataType = SqlDbType.NVarChar, DataLength = 64 },
-                new() { ColumnName = "UserName", PropertyName = "UserName", DataType = SqlDbType.NVarChar, DataLength = 64 },
-                new() { ColumnName = "ClientAgent", PropertyName = "ClientAgent", DataType = SqlDbType.NVarChar, DataLength = -1 }
+                new()
+                {
+                    ColumnName = "ClientIP", PropertyName = "ClientIp", DataType = SqlDbType.NVarChar, DataLength = 64
+                },
+                new()
+                {
+                    ColumnName = "UserName", PropertyName = "UserName", DataType = SqlDbType.NVarChar, DataLength = 64
+                },
+                new()
+                {
+                    ColumnName = "ClientAgent", PropertyName = "ClientAgent", DataType = SqlDbType.NVarChar,
+                    DataLength = -1
+                }
             },
             TimeStamp = { ConvertToUtc = true, ColumnName = "TimeStamp" },
             LogEvent = { DataLength = 2048 }
@@ -116,10 +136,7 @@ public static class SerilogExtensions
 
     private static void WriteToNpgsql(LoggerConfiguration serilogConfig, string? connectionString)
     {
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            return;
-        }
+        if (string.IsNullOrEmpty(connectionString)) return;
 
         const string tableName = "Loggers";
         //Used columns (Key is a column name) 
@@ -135,7 +152,10 @@ public static class SerilogExtensions
             { "LogEvent", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
             { "UserName", new SinglePropertyColumnWriter("UserName", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
             { "ClientIP", new SinglePropertyColumnWriter("ClientIp", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
-            { "ClientAgent", new SinglePropertyColumnWriter("ClientAgent", PropertyWriteMethod.ToString, NpgsqlDbType.Varchar) }
+            {
+                "ClientAgent",
+                new SinglePropertyColumnWriter("ClientAgent", PropertyWriteMethod.ToString, NpgsqlDbType.Varchar)
+            }
         };
         serilogConfig.WriteTo.Async(wt => wt.PostgreSQL(
             connectionString,
@@ -150,10 +170,7 @@ public static class SerilogExtensions
 
     private static void WriteToSqLite(LoggerConfiguration serilogConfig, string? connectionString)
     {
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            return;
-        }
+        if (string.IsNullOrEmpty(connectionString)) return;
 
         const string tableName = "Loggers";
         serilogConfig.WriteTo.Async(wt => wt.SQLite(
