@@ -71,7 +71,7 @@ public static class SerilogExtensions
 
     private static void EnrichWithClientInfo(LoggerConfiguration serilogConfig, IConfiguration configuration)
     {
-        var privacySettings = configuration.GetRequiredSection(PrivacySettings.Privacy).Get<PrivacySettings>();
+        var privacySettings = configuration.GetRequiredSection(PrivacySettings.Key).Get<PrivacySettings>();
 
         if (privacySettings == null) return;
         if (privacySettings.LogClientIpAddresses) serilogConfig.Enrich.WithClientIp();
