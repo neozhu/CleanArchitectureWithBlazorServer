@@ -121,6 +121,7 @@
     [EditorRequired]
     [Parameter]
     public AddEditProductCommand Model { get; set; } = default!;
+    [Parameter] public Action? Refresh { get; set; } = null!;
 
     const long MaxAllowedSize = 3145728;
     bool _uploading;
@@ -232,10 +233,10 @@
             if (!_form!.IsValid)
                 return;
             var result = await Mediator.Send(Model);
-
             if (result.Succeeded)
             {
                 Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
+                Refresh?.Invoke();
                 Model = new AddEditProductCommand();
             }
             else

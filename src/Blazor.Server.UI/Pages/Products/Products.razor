@@ -319,13 +319,15 @@
         var command = new AddEditProductCommand() { Pictures = new List<ProductImage>() };
         var parameters = new DialogParameters
                 {
+                  { nameof(_ProductFormDialog.Refresh),new Action(() =>_table.ReloadServerData()) },
                   { nameof(_ProductFormDialog.Model),command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
         (string.Format(ConstantString.CreateAnItem, L["Product"]), parameters, options);
         var state = await dialog.Result;
-        await _table.ReloadServerData();
+        if(!state.Canceled)
+            await _table.ReloadServerData();
     }
     private async Task OnClone()
     {
@@ -341,28 +343,32 @@
 
             };
         var parameters = new DialogParameters
-                {
-                  { nameof(_ProductFormDialog.Model),command },
+            {
+                     { nameof(_ProductFormDialog.Refresh),new Action(() =>_table.ReloadServerData()) },
+                     { nameof(_ProductFormDialog.Model),command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
         (string.Format(ConstantString.CreateAnItem, L["Product"]), parameters, options);
         var state = await dialog.Result;
-        await _table.ReloadServerData();
+        if (!state.Canceled)
+            await _table.ReloadServerData();
 
     }
     private async Task OnEdit(ProductDto dto)
     {
         var command = Mapper.Map<AddEditProductCommand>(dto);
         var parameters = new DialogParameters
-                    {
-                    { nameof(_ProductFormDialog.Model),command },
-                };
+            {
+                 { nameof(_ProductFormDialog.Refresh),new Action(() =>_table.ReloadServerData()) },
+                 { nameof(_ProductFormDialog.Model),command },
+            };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
         (string.Format(ConstantString.EditTheItem, L["Product"]), parameters, options);
         var state = await dialog.Result;
-        await _table.ReloadServerData();
+        if (!state.Canceled)
+            await _table.ReloadServerData();
     }
 
     private async Task OnDelete(ProductDto dto)
