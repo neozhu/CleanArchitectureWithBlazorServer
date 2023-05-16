@@ -11,6 +11,9 @@ COPY ["src/Blazor.Server.UI/Blazor.Server.UI.csproj", "src/Blazor.Server.UI/"]
 COPY ["src/Application/Application.csproj", "src/Application/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
+COPY ["src/Migrators/Migrators.SqLite/Migrators.SqLite.csproj", "src/Migrators/Migrators.SqLite/"]
+COPY ["src/Migrators/Migrators.MSSQL/Migrators.MSSQL.csproj", "src/Migrators/Migrators.MSSQL/"]
+COPY ["src/Migrators/Migrators.PostgreSQL/Migrators.PostgreSQL.csproj", "src/Migrators/Migrators.PostgreSQL/"]
 RUN dotnet restore "src/Blazor.Server.UI/Blazor.Server.UI.csproj"
 COPY . .
 WORKDIR "/src/src/Blazor.Server.UI"

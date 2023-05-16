@@ -8,8 +8,11 @@ services:
       dockerfile: src/Blazor.Server.UI/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - UseInMemoryDatabase=true
-      - ConnectionStrings__DefaultConnection=Server=sqldb;Database=BlazorDashboardDb;User=sa;Password=Password@123;MultipleActiveResultSets=true
+      - UseInMemoryDatabase=false
+      #- DatabaseSettings__DBProvider=mssql
+      #- DatabaseSettings__ConnectionString=Server=sqldb;Database=BlazorDashboardDb;User=sa;Password=Password@123;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=true
+      - DatabaseSettings__DBProvider=postgresql
+      - DatabaseSettings__ConnectionString=Server=postgresdb;Database=BlazorDashboardDb;User Id=postgres;Password=postgrespw;
       - ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=Password@123
       #- ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/Blazor.Server.UI.pfx
@@ -21,6 +24,7 @@ services:
       - "5001:443"
     depends_on:
       - sqldb
+      - postgresdb
     restart: on-failure
 
   sqldb:
@@ -37,7 +41,18 @@ services:
       - ${USERPROFILE}\mssql_data:/var/opt/mssql/data
       - ${USERPROFILE}\mssql_log:/var/opt/mssql/log
       - ${USERPROFILE}\mssql_backup:/var/opt/mssql/backup
+  postgresdb:
+    image: "postgres:latest"
+    restart: always
+    container_name: "postgresdb"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespw
+      - POSTGRES_DB=BlazorDashboardDb
+    volumes:
+      - ${USERPROFILE}\postgres_data:/var/lib/postgresql/data
 volumes:
   mssql_data:
   mssql_log:
   mssql_backup:
+  postgres_data:
