@@ -4,6 +4,3 @@ services:
   dashboard:
     environment:
       - "ASPNETCORE_ENVIRONMENT=Development"
-  sqldb:
-    ports:
-      - "1433:1433"

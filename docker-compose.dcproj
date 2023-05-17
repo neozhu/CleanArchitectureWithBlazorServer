@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿
 <Project ToolsVersion="15.0" Sdk="Microsoft.Docker.Sdk">
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
@@ -7,6 +7,7 @@
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>dashboard</DockerServiceName>
+    <UserSecretsId>c2a88436-9d6a-4e45-9717-475eb7b1e87d</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.yml" />

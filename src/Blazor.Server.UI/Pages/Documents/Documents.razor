@@ -268,7 +268,7 @@
         Client.JobCompleted += _client_JobCompleted;
         Client.JobStarted += _client_JobStarted;
         UserProfileState.StateChanged += StateOnStateChanged;
-        await Client.StartAsync();
+        //await Client.StartAsync();
     }
 
     private void _client_JobCompleted(object? sender, string e)

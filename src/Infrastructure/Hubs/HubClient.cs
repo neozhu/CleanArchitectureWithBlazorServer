@@ -15,7 +15,7 @@ public class HubClient : IAsyncDisposable
     public HubClient(NavigationManager navigationManager, AccessTokenProvider authProvider)
     {
         var token = authProvider.AccessToken;
-        var hubUrl = navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
+        var hubUrl = navigationManager.ToAbsoluteUri(SignalR.HubUrl);
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(hubUrl, options =>
             {

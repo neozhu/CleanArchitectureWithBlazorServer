@@ -3,6 +3,7 @@ version: '3.8'
 services:
   dashboard:
     image: ${DOCKER_REGISTRY-}blazorserver
+    container_name: "blazorapp"
     build:
       context: .
       dockerfile: src/Blazor.Server.UI/Dockerfile
@@ -14,11 +15,11 @@ services:
       - DatabaseSettings__DBProvider=postgresql
       - DatabaseSettings__ConnectionString=Server=postgresdb;Database=BlazorDashboardDb;User Id=postgres;Password=postgrespw;
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      #- ASPNETCORE_Kestrel__Certificates__Default__Password=Password@123
-      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/Blazor.Server.UI.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=mypassword@123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/blazorapp.pfx
     volumes:
-     - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets:ro
-     - ~/.aspnet/https:/root/.aspnet/https:ro
+     - ${APPDATA}\microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+     - ${USERPROFILE}\.aspnet\https:/root/.aspnet/https:ro
     ports:
       - "5000:80"
       - "5001:443"
@@ -35,8 +36,6 @@ services:
       - MSSQL_DATA_DIR=/var/opt/mssql/data
       - MSSQL_LOG_DIR=/var/opt/mssql/log
       - MSSQL_BACKUP_DIR=/var/opt/mssql/backup
-    ports:
-      - "1433:1433"
     volumes:
       - ${USERPROFILE}\mssql_data:/var/opt/mssql/data
       - ${USERPROFILE}\mssql_log:/var/opt/mssql/log
