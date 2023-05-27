@@ -17,9 +17,9 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.SectionName));
-        services.Configure<DatabaseSettings>(configuration.GetSection(DatabaseSettings.SectionName));
-        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.SectionName));
+        services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.Key));
+        services.Configure<DatabaseSettings>(configuration.GetSection(DatabaseSettings.Key));
+        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.Key));
         services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
         services.AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);
         services.AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);

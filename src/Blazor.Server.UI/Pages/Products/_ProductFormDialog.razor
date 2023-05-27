@@ -98,7 +98,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudLoadingButton Loading="@_saving" OnClick="SaveAndNew">@ConstantString.SaveAndNew</MudLoadingButton>
+        <MudLoadingButton Loading="@_saveingnew" OnClick="SaveAndNew">@ConstantString.SaveAndNew</MudLoadingButton>
         <MudLoadingButton Loading="@_saving" Color="Color.Primary" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
     </DialogActions>
 </MudDialog>
@@ -106,6 +106,7 @@
 @code {
     MudForm? _form;
     private bool _saving;
+    private bool _saveingnew;
 
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
@@ -230,7 +231,7 @@
     {
         try
         {
-            _saving = true;
+            _saveingnew = true;
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
@@ -248,7 +249,7 @@
         }
         finally
         {
-            _saving = false;
+            _saveingnew = false;
         }
     }
 

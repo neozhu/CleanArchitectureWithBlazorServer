@@ -3,12 +3,38 @@
 
 namespace CleanArchitecture.Blazor.Application.Common.Configurations;
 
+/// <summary>
+///     Configuration wrapper for the app configuration section
+/// </summary>
 public class AppConfigurationSettings
 {
-    public const string SectionName = nameof(AppConfigurationSettings);
-    public string Secret { get; set; }=String.Empty;
-    public bool BehindSSLProxy { get; set; } 
-    public string ProxyIP { get; set; } = String.Empty;
-    public string ApplicationUrl { get; set; } = String.Empty;
+    /// <summary>
+    ///     App configuration key constraint
+    /// </summary>
+    public const string Key = nameof(AppConfigurationSettings);
+    
+    /// <summary>
+    ///     Contains the application secret, used for signing
+    /// </summary>
+    public string Secret { get; set; } = string.Empty;
+    
+    /// <summary>
+    ///     Undocumented
+    /// </summary>
+    public bool BehindSSLProxy { get; set; }
+    
+    /// <summary>
+    ///     Undocumented
+    /// </summary>
+    public string ProxyIP { get; set; } = string.Empty;
+    
+    /// <summary>
+    ///     Undocumented
+    /// </summary>
+    public string ApplicationUrl { get; set; } = string.Empty;
+    
+    /// <summary>
+    ///     Undocumented
+    /// </summary>
     public bool Resilience { get; set; }
 }
