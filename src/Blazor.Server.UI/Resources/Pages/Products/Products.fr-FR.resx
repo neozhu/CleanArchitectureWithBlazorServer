@@ -159,4 +159,13 @@
   <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
     <value>La taille recommandée pour le téléchargement d'images est de 640X320.</value>
   </data>
+  <data name="Upload picture" xml:space="preserve">
+    <value>Charger une photo</value>
+  </data>
+  <data name="Erase image" xml:space="preserve">
+    <value>Effacer l'image</value>
+  </data>
+  <data name="Are you sure you want to erase this image?" xml:space="preserve">
+    <value>Voulez-vous vraiment effacer cette image ?</value>
+  </data>
 </root>

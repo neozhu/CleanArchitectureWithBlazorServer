@@ -183,4 +183,16 @@
   <data name="sign in" xml:space="preserve">
     <value>Iniciar sessió</value>
   </data>
+  <data name="{0} has logged out." xml:space="preserve">
+    <value>{0} ha tancat la sessió.</value>
+  </data>
+  <data name="{0} has logged in." xml:space="preserve">
+    <value>{0} ha iniciat sessió.</value>
+  </data>
+  <data name="User Profile" xml:space="preserve">
+    <value>Perfil d'usuari</value>
+  </data>
+  <data name="Notification" xml:space="preserve">
+    <value>Notificació</value>
+  </data>
 </root>

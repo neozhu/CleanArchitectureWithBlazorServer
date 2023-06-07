@@ -153,4 +153,31 @@
   <data name="Download" xml:space="preserve">
     <value>Descarregar</value>
   </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Propietari</value>
+  </data>
+  <data name="{0} job started." xml:space="preserve">
+    <value>{0} feina començada.</value>
+  </data>
+  <data name="{0} recognize completed." xml:space="preserve">
+    <value>{0} reconeixement completat.</value>
+  </data>
+  <data name="Upload Pictures" xml:space="preserve">
+    <value>Carrega Imatges</value>
+  </data>
+  <data name="Recognize result" xml:space="preserve">
+    <value>Reconeix el resultat</value>
+  </data>
+  <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
+    <value>Si us plau, feu clic al botó [Tria fitxers] per pujar la vostra foto.</value>
+  </data>
+  <data name="Only .jpg and .png files are allowed." xml:space="preserve">
+    <value>Només es permeten fitxers .jpg i .png.</value>
+  </data>
+  <data name="Choose files" xml:space="preserve">
+    <value>Trieu fitxers</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Contingut</value>
+  </data>
 </root>

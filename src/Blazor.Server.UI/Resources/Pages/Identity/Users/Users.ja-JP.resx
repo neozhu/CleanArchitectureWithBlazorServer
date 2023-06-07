@@ -225,4 +225,10 @@
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>メール/電話番号</value>
   </data>
+  <data name="Permission removed successfully!" xml:space="preserve">
+    <value>権限が正常に削除されました。</value>
+  </data>
+  <data name="Permission added successfully!" xml:space="preserve">
+    <value>権限が正常に追加されました。</value>
+  </data>
 </root>

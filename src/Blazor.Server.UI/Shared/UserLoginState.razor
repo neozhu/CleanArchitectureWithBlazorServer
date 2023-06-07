@@ -1,9 +1,10 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
-@using CleanArchitecture.Blazor.Application.Features.Fluxor;
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+@using CleanArchitecture.Blazor.Application.Features.Fluxor
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
-@using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notification
 @using CleanArchitecture.Blazor.Infrastructure.Hubs
+@inject IStringLocalizer<SharedResource> L
 @implements IDisposable
 @code {
     [CascadingParameter]
@@ -39,7 +40,7 @@
     {
         InvokeAsync(async () =>
         {
-            Snackbar.Add($"{username} has logged in.", MudBlazor.Severity.Info);
+            Snackbar.Add(string.Format(L["{0} has logged in."],username), MudBlazor.Severity.Info);
 
         });
     }
@@ -48,7 +49,7 @@
     {
         InvokeAsync(async () =>
         {
-            Snackbar.Add($"{username} has logged out.", MudBlazor.Severity.Normal);
+            Snackbar.Add(string.Format(L["{0} has logged out."],username), MudBlazor.Severity.Normal);
 
         });
     }

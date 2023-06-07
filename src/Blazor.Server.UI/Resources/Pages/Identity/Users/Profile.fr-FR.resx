@@ -168,4 +168,7 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>Tenant Name</value>
   </data>
+  <data name="Status" xml:space="preserve">
+    <value>Statut</value>
+  </data>
 </root>

@@ -153,4 +153,7 @@
   <data name="user name is required!" xml:space="preserve">
     <value>user name is required!</value>
   </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
 </root>

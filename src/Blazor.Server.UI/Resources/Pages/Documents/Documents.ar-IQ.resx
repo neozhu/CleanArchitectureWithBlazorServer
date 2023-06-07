@@ -151,10 +151,10 @@
     <value>تحميل بنجاح</value>
   </data>
   <data name="{0} job started." xml:space="preserve">
-    <value>بدأت {0} المهمة.</value>
+    <value>بدأت مهمة {0}.</value>
   </data>
   <data name="{0} recognize completed." xml:space="preserve">
-    <value>{0} التعرف على اكتمال.</value>
+    <value>اكتمل التعرف على {0}.</value>
   </data>
   <data name="Choose files" xml:space="preserve">
     <value>اختر الملفات</value>
@@ -176,5 +176,8 @@
   </data>
   <data name="Download" xml:space="preserve">
     <value>تحميل</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>مالك</value>
   </data>
 </root>

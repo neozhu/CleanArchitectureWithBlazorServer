@@ -183,4 +183,16 @@
   <data name="sign in" xml:space="preserve">
     <value>sign in</value>
   </data>
+  <data name="{0} has logged out." xml:space="preserve">
+    <value>{0}님이 로그아웃했습니다.</value>
+  </data>
+  <data name="{0} has logged in." xml:space="preserve">
+    <value>{0}님이 로그인했습니다.</value>
+  </data>
+  <data name="User Profile" xml:space="preserve">
+    <value>유저 프로필</value>
+  </data>
+  <data name="Notification" xml:space="preserve">
+    <value>공고</value>
+  </data>
 </root>

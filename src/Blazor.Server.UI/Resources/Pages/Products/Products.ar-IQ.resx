@@ -159,4 +159,13 @@
   <data name="Unit" xml:space="preserve">
     <value>وحدة</value>
   </data>
+  <data name="Upload picture" xml:space="preserve">
+    <value>تحميل الصورة</value>
+  </data>
+  <data name="Erase image" xml:space="preserve">
+    <value>محو الصورة</value>
+  </data>
+  <data name="Are you sure you want to erase this image?" xml:space="preserve">
+    <value>هل أنت متأكد أنك تريد محو هذه الصورة؟</value>
+  </data>
 </root>

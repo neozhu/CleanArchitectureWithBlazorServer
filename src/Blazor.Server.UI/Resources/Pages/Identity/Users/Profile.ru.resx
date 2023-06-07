@@ -168,4 +168,7 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>Имя арендатора</value>
   </data>
+  <data name="Status" xml:space="preserve">
+    <value>Положение дел</value>
+  </data>
 </root>

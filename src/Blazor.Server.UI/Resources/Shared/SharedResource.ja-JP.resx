@@ -183,4 +183,16 @@
   <data name="sign in" xml:space="preserve">
     <value>sign in</value>
   </data>
+  <data name="{0} has logged out." xml:space="preserve">
+    <value>{0} がログアウトしました。</value>
+  </data>
+  <data name="{0} has logged in." xml:space="preserve">
+    <value>{0} がログインしました。</value>
+  </data>
+  <data name="User Profile" xml:space="preserve">
+    <value>ユーザープロフィール</value>
+  </data>
+  <data name="Notification" xml:space="preserve">
+    <value>通知</value>
+  </data>
 </root>

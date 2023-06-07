@@ -225,4 +225,10 @@
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>이메일/전화번호</value>
   </data>
+  <data name="Permission removed successfully!" xml:space="preserve">
+    <value>권한이 성공적으로 제거되었습니다!</value>
+  </data>
+  <data name="Permission added successfully!" xml:space="preserve">
+    <value>권한이 성공적으로 추가되었습니다!</value>
+  </data>
 </root>

@@ -159,4 +159,13 @@
   <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
     <value>画像のアップロードは640X320サイズを推奨します。</value>
   </data>
+  <data name="Upload picture" xml:space="preserve">
+    <value>写真をアップロードする</value>
+  </data>
+  <data name="Erase image" xml:space="preserve">
+    <value>画像を消去する</value>
+  </data>
+  <data name="Are you sure you want to erase this image?" xml:space="preserve">
+    <value>この画像を消去してもよろしいですか?</value>
+  </data>
 </root>

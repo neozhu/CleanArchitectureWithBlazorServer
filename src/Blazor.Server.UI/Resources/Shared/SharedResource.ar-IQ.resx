@@ -183,4 +183,16 @@
   <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
     <value>أنت غير مصرح لك بالتواجد هنا. لمزيد من المعلومات، اتصل بمسؤول النظام.</value>
   </data>
+  <data name="{0} has logged out." xml:space="preserve">
+    <value>قام {0} بتسجيل الخروج.</value>
+  </data>
+  <data name="{0} has logged in." xml:space="preserve">
+    <value>قام {0} بتسجيل الدخول.</value>
+  </data>
+  <data name="User Profile" xml:space="preserve">
+    <value>ملف تعريفي للمستخدم</value>
+  </data>
+  <data name="Notification" xml:space="preserve">
+    <value>إشعار</value>
+  </data>
 </root>

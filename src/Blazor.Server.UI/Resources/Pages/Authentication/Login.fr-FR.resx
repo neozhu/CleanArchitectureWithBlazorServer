@@ -162,4 +162,19 @@
   <data name="No user found, or no authorization, please contact an administrator." xml:space="preserve">
     <value>Aucun utilisateur trouvé, ou aucune autorisation, veuillez contacter l'administrateur.</value>
   </data>
+  <data name="User name is required!" xml:space="preserve">
+    <value>Nom d'utilisateur est nécessaire!</value>
+  </data>
+  <data name="Please check your username and password. If you are still unable to log in, contact your administrator." xml:space="preserve">
+    <value>Veuillez vérifier votre nom d'utilisateur et votre mot de passe. Si vous ne parvenez toujours pas à vous connecter, contactez votre administrateur.</value>
+  </data>
+  <data name="No user found, or no authorization, please contact the administrator." xml:space="preserve">
+    <value>Aucun utilisateur trouvé, ou aucune autorisation, veuillez contacter l'administrateur.</value>
+  </data>
+  <data name="User name" xml:space="preserve">
+    <value>Nom d'utilisateur</value>
+  </data>
+  <data name="Please check your username and password.  If you are still unable to log in, contact your administrator." xml:space="preserve">
+    <value>Veuillez vérifier votre nom d'utilisateur et votre mot de passe. Si vous ne parvenez toujours pas à vous connecter, contactez votre administrateur.</value>
+  </data>
 </root>

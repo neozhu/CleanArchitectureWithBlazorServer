@@ -153,4 +153,7 @@
   <data name="user name is required!" xml:space="preserve">
     <value>ユーザーネームは必須です</value>
   </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>パスワードを認証する</value>
+  </data>
 </root>

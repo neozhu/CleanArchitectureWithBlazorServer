@@ -162,4 +162,19 @@
   <data name="No user found, or no authorization, please contact an administrator." xml:space="preserve">
     <value>No s'ha trobat cap usuari o no hi ha autorització, contacti amb l'administrador.administrador.</value>
   </data>
+  <data name="User name is required!" xml:space="preserve">
+    <value>El nom d'usuari és obligatori!</value>
+  </data>
+  <data name="Please check your username and password. If you are still unable to log in, contact your administrator." xml:space="preserve">
+    <value>Comproveu el vostre nom d'usuari i contrasenya. Si encara no podeu iniciar sessió, poseu-vos en contacte amb el vostre administrador.</value>
+  </data>
+  <data name="No user found, or no authorization, please contact the administrator." xml:space="preserve">
+    <value>No s'ha trobat cap usuari o no hi ha autorització, poseu-vos en contacte amb l'administrador.</value>
+  </data>
+  <data name="User name" xml:space="preserve">
+    <value>Nom d'usuari</value>
+  </data>
+  <data name="Please check your username and password.  If you are still unable to log in, contact your administrator." xml:space="preserve">
+    <value>Comproveu el vostre nom d'usuari i contrasenya. Si encara no podeu iniciar sessió, poseu-vos en contacte amb el vostre administrador.</value>
+  </data>
 </root>

@@ -163,6 +163,9 @@
     <value>Esteu segur que voleu esborrar aquesta imatge?</value>
   </data>
   <data name="Erase image" xml:space="preserve">
-    <value>Borrar imatge</value>
+    <value>Esborra la imatge</value>
+  </data>
+  <data name="Upload picture" xml:space="preserve">
+    <value>Carrega la imatge</value>
   </data>
 </root>
