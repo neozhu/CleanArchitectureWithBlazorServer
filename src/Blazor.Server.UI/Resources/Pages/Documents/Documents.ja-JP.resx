@@ -151,10 +151,10 @@
     <value>アップロードに成功しました。</value>
   </data>
   <data name="{0} job started." xml:space="preserve">
-    <value>{0} ジョブを開始しました。</value>
+    <value>{0} ジョブが開始されました。</value>
   </data>
   <data name="{0} recognize completed." xml:space="preserve">
-    <value>{0}の認識が完了しました。</value>
+    <value>{0} の認識が完了しました。</value>
   </data>
   <data name="Choose files" xml:space="preserve">
     <value>ファイルを選択</value>
@@ -176,5 +176,8 @@
   </data>
   <data name="Download" xml:space="preserve">
     <value>ダウンロード</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>オーナー</value>
   </data>
 </root>

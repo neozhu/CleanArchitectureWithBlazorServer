@@ -183,4 +183,16 @@
   <data name="sign in" xml:space="preserve">
     <value>sign in</value>
   </data>
+  <data name="{0} has logged out." xml:space="preserve">
+    <value>{0} вышел из системы.</value>
+  </data>
+  <data name="{0} has logged in." xml:space="preserve">
+    <value>{0} вошел в систему.</value>
+  </data>
+  <data name="User Profile" xml:space="preserve">
+    <value>Профиль пользователя</value>
+  </data>
+  <data name="Notification" xml:space="preserve">
+    <value>Уведомление</value>
+  </data>
 </root>

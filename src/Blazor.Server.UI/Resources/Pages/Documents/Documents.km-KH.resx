@@ -151,10 +151,10 @@
     <value>업로드에 성공했습니다.</value>
   </data>
   <data name="{0} job started." xml:space="preserve">
-    <value>작업{0} 시작되었습니다.</value>
+    <value>{0} 작업이 시작되었습니다.</value>
   </data>
   <data name="{0} recognize completed." xml:space="preserve">
-    <value>{0} 완료를 인식합니다.</value>
+    <value>{0} 인식이 완료되었습니다.</value>
   </data>
   <data name="Choose files" xml:space="preserve">
     <value>파일 선택</value>
@@ -176,5 +176,8 @@
   </data>
   <data name="Download" xml:space="preserve">
     <value>다운로드</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>소유자</value>
   </data>
 </root>

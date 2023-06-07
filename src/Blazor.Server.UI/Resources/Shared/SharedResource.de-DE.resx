@@ -183,4 +183,16 @@
   <data name="sign in" xml:space="preserve">
     <value>sign in</value>
   </data>
+  <data name="{0} has logged out." xml:space="preserve">
+    <value>{0} hat sich abgemeldet.</value>
+  </data>
+  <data name="{0} has logged in." xml:space="preserve">
+    <value>{0} hat sich angemeldet.</value>
+  </data>
+  <data name="User Profile" xml:space="preserve">
+    <value>Benutzerprofil</value>
+  </data>
+  <data name="Notification" xml:space="preserve">
+    <value>Benachrichtigung</value>
+  </data>
 </root>

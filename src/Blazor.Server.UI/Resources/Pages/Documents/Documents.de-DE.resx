@@ -151,7 +151,7 @@
     <value>Upload erfolgreich</value>
   </data>
   <data name="{0} job started." xml:space="preserve">
-    <value>{0} Auftrag gestartet.</value>
+    <value>{0} Job gestartet.</value>
   </data>
   <data name="{0} recognize completed." xml:space="preserve">
     <value>{0} erkennen abgeschlossen.</value>
@@ -176,5 +176,8 @@
   </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Eigentümer</value>
   </data>
 </root>

@@ -159,4 +159,13 @@
   <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
     <value>이미지 업로드 권장 크기는 640X320입니다.</value>
   </data>
+  <data name="Upload picture" xml:space="preserve">
+    <value>사진 업로드</value>
+  </data>
+  <data name="Erase image" xml:space="preserve">
+    <value>이미지 지우기</value>
+  </data>
+  <data name="Are you sure you want to erase this image?" xml:space="preserve">
+    <value>이 이미지를 지우시겠습니까?</value>
+  </data>
 </root>

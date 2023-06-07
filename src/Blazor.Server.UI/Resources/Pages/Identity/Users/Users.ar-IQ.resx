@@ -225,4 +225,10 @@
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>البريد الإلكتروني / رقم الهاتف</value>
   </data>
+  <data name="Permission removed successfully!" xml:space="preserve">
+    <value>تمت إزالة الإذن بنجاح!</value>
+  </data>
+  <data name="Permission added successfully!" xml:space="preserve">
+    <value>تمت إضافة الإذن بنجاح!</value>
+  </data>
 </root>

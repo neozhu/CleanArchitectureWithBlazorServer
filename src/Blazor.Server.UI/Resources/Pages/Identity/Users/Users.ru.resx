@@ -225,4 +225,10 @@
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>Электронная почта / номер телефона</value>
   </data>
+  <data name="Permission removed successfully!" xml:space="preserve">
+    <value>Разрешение успешно удалено!</value>
+  </data>
+  <data name="Permission added successfully!" xml:space="preserve">
+    <value>Разрешение успешно добавлено!</value>
+  </data>
 </root>

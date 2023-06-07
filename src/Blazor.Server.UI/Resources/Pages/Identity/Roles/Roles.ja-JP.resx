@@ -147,4 +147,16 @@
   <data name="Unassigned successfully" xml:space="preserve">
     <value>無事未設定</value>
   </data>
+  <data name="Permission removed successfully!" xml:space="preserve">
+    <value>権限が正常に削除されました。</value>
+  </data>
+  <data name="Assigned Roles" xml:space="preserve">
+    <value>割り当てられた役割</value>
+  </data>
+  <data name="Email / PhoneNumber" xml:space="preserve">
+    <value>メールアドレス/電話番号</value>
+  </data>
+  <data name="Permission added successfully!" xml:space="preserve">
+    <value>権限が正常に追加されました。</value>
+  </data>
 </root>

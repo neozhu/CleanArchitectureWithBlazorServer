@@ -168,4 +168,7 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>세입자 이름</value>
   </data>
+  <data name="Status" xml:space="preserve">
+    <value>상태</value>
+  </data>
 </root>

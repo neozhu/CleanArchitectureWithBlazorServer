@@ -189,4 +189,10 @@
   <data name="User Profile" xml:space="preserve">
     <value>用户信息</value>
   </data>
+  <data name="{0} has logged out." xml:space="preserve">
+    <value>{0} 已经注销.</value>
+  </data>
+  <data name="{0} has logged in." xml:space="preserve">
+    <value>{0} 登录</value>
+  </data>
 </root>

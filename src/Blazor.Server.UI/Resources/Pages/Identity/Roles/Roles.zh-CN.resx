@@ -153,4 +153,10 @@
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>电子邮件 / 电话</value>
   </data>
+  <data name="Permission removed successfully!" xml:space="preserve">
+    <value>权限删除成功</value>
+  </data>
+  <data name="Permission added successfully!" xml:space="preserve">
+    <value>授权成功</value>
+  </data>
 </root>

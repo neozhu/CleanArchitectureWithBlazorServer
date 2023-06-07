@@ -154,7 +154,7 @@
     <value>{0} trabajo iniciado.</value>
   </data>
   <data name="{0} recognize completed." xml:space="preserve">
-    <value>{0} reconocer completado.</value>
+    <value>{0} reconocimiento completado.</value>
   </data>
   <data name="Choose files" xml:space="preserve">
     <value>Elija los archivos</value>
@@ -176,5 +176,8 @@
   </data>
   <data name="Download" xml:space="preserve">
     <value>Descargar</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>Dueño</value>
   </data>
 </root>

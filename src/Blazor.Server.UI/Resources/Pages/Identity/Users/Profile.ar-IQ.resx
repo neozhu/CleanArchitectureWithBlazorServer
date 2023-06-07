@@ -168,4 +168,7 @@
   <data name="Tenant Name" xml:space="preserve">
     <value>اسم المستأجر</value>
   </data>
+  <data name="Status" xml:space="preserve">
+    <value>حالة</value>
+  </data>
 </root>

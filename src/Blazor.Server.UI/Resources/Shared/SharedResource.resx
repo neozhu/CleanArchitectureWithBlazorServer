@@ -189,4 +189,10 @@
   <data name="User Profile" xml:space="preserve">
     <value>User Profile</value>
   </data>
+  <data name="{0} has logged in." xml:space="preserve">
+    <value>{0} has logged in.</value>
+  </data>
+  <data name="{0} has logged out." xml:space="preserve">
+    <value>{0} has logged out.</value>
+  </data>
 </root>

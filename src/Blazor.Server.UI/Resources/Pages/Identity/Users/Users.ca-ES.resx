@@ -207,4 +207,28 @@
   <data name="Display Name" xml:space="preserve">
     <value>Nom per visualitzar</value>
   </data>
+  <data name="Permission removed successfully!" xml:space="preserve">
+    <value>S'ha eliminat el permís correctament!</value>
+  </data>
+  <data name="Permission added successfully!" xml:space="preserve">
+    <value>S'ha afegit el permís correctament!</value>
+  </data>
+  <data name="Set Permissions" xml:space="preserve">
+    <value>Establir permisos</value>
+  </data>
+  <data name="Select Superior" xml:space="preserve">
+    <value>Seleccioneu Superior</value>
+  </data>
+  <data name="Superior Name" xml:space="preserve">
+    <value>Nom superior</value>
+  </data>
+  <data name="Rest Password" xml:space="preserve">
+    <value>Rest Password</value>
+  </data>
+  <data name="Email / PhoneNumber" xml:space="preserve">
+    <value>Correu electrònic/Número de telèfon</value>
+  </data>
+  <data name="Assigned Roles" xml:space="preserve">
+    <value>Rols assignats</value>
+  </data>
 </root>

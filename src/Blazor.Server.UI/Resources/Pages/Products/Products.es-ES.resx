@@ -160,9 +160,12 @@
     <value>El tamaño recomendado para subir imágenes es 640X320</value>
   </data>
   <data name="Are you sure you want to erase this image?" xml:space="preserve">
-    <value>¿Estás seguro de que quieres borrar esta imagen?</value>
+    <value>¿Seguro que quieres borrar esta imagen?</value>
   </data>
   <data name="Erase image" xml:space="preserve">
     <value>Borrar imagen</value>
+  </data>
+  <data name="Upload picture" xml:space="preserve">
+    <value>Subir foto</value>
   </data>
 </root>
