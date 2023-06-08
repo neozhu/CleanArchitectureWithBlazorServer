@@ -24,6 +24,7 @@ public static class SerilogExtensions
             configuration.ReadFrom.Configuration(context.Configuration)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
+                .MinimumLevel.Override("MudBlazor", LogEventLevel.Information)
                 .MinimumLevel.Override("Serilog", LogEventLevel.Error)
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Update", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.BackgroundJobServer", LogEventLevel.Error)
