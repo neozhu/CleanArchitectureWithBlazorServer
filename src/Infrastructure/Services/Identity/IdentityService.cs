@@ -232,11 +232,25 @@ public class IdentityService : IIdentityService
         var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).FirstAsync(cancellation), Options);
         return result;
     }
-    public async Task<List<ApplicationUserDto>?> GetUsers(string tenantId, CancellationToken cancellation = default)
+    public async Task<List<ApplicationUserDto>?> GetUsers(string? tenantId, CancellationToken cancellation = default)
     {
         var key = $"GetApplicationUserDtoListWithTenantId:{tenantId}";
-        var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.TenantId == tenantId).Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                      .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync(), Options);
+        Func<string?, CancellationToken, Task<List<ApplicationUserDto>?>> getUsersByTenantId = async (tenantId, token) =>
+        {
+            if (string.IsNullOrEmpty(tenantId))
+            {
+                return await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role)
+                       .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
+            }
+            else
+            {
+                return await _userManager.Users.Where(x => x.TenantId == tenantId).Include(x => x.UserRoles).ThenInclude(x => x.Role)
+                      .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
+            }
+             
+
+        };
+        var result = await _cache.GetOrAddAsync(key, () => getUsersByTenantId(tenantId,cancellation), Options);
         return result;
     }
 }
