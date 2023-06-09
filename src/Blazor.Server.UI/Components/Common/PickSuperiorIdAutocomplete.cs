@@ -8,7 +8,7 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
     private List<ApplicationUserDto>? _userList;
 
     [Parameter] 
-    public string TenantId { get; set; } = string.Empty;
+    public string? TenantId { get; set; } 
 
     [Parameter] 
     public string OwnerName { get; set; } = string.Empty;
