@@ -10,9 +10,9 @@ public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>
         RuleFor(v => v.TenantId)
              .MaximumLength(256)
              .NotEmpty();
-        RuleFor(v => v.SuperiorId)
-             .MaximumLength(256)
-             .NotEmpty().When(x=>!x.UserName.Equals("Administrator", StringComparison.CurrentCultureIgnoreCase));
+        //RuleFor(v => v.SuperiorId)
+        //     .MaximumLength(256)
+        //     .NotEmpty().When(x=>!x.UserName.Equals("Administrator", StringComparison.CurrentCultureIgnoreCase));
         RuleFor(v => v.Provider)
              .MaximumLength(256)
              .NotEmpty();
