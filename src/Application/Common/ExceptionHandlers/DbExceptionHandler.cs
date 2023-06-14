@@ -20,8 +20,7 @@ public class
         TResponse response = Activator.CreateInstance<TResponse>();
         if (response is Result result)
         {
-            result.Succeeded = false;
-            result.Errors = GetErrors(exception);
+            result = new Result { Succeeded = false, Errors = GetErrors(exception) };
             state.SetHandled(response);
         }
 

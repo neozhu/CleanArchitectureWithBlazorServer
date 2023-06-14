@@ -5,9 +5,9 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 
 public interface IResult
 {
-    string[] Errors { get; set; }
+    string[] Errors { get; init; }
 
-    bool Succeeded { get; set; }
+    bool Succeeded { get; init; }
 }
 public interface IResult<out T> : IResult
 {

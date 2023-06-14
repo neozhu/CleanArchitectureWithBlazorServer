@@ -15,9 +15,9 @@ public class ValidationExceptionHandler<TRequest, TResponse, TException> : IRequ
         var response = Activator.CreateInstance<TResponse>();
         if(response is Result result)
         {
-            result.Succeeded = false;
-            result.Errors = exception.Errors.Select(x => x.ErrorMessage).Distinct().ToArray();
-            state.SetHandled(response);
+ 
+            result = new Result { Succeeded = false, Errors = exception.Errors.Select(x => x.ErrorMessage).Distinct().ToArray() };
+            state.SetHandled((TResponse)(object)result);
         }
         return Task.CompletedTask;
     }

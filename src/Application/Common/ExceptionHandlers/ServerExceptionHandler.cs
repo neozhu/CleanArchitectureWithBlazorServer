@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 public class ServerExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
     where TRequest : IRequest<Result>
     where TException : ServerException
@@ -15,8 +17,7 @@ public class ServerExceptionHandler<TRequest, TResponse, TException> : IRequestE
         var response = Activator.CreateInstance<TResponse>();
         if (response is Result result)
         {
-            result.Succeeded = false;
-            result.Errors = new string[] { exception.Message };
+            result =new Result { Succeeded = false, Errors = new string[] { exception.Message } };
             state.SetHandled(response);
         }
         return Task.CompletedTask;
