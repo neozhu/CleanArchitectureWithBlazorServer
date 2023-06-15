@@ -210,8 +210,6 @@
             if (!_form!.IsValid)
                 return;
 
-            Model.Name = null;
-            Model.Brand = null;
             var result = await Mediator.Send(Model);
 
             if (result.Succeeded)
