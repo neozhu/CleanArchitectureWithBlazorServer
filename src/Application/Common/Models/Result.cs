@@ -15,9 +15,9 @@ public class Result : IResult
         Errors = errors.ToArray();
     }
 
-    public bool Succeeded { get; set; }
+    public bool Succeeded { get; init; }
 
-    public string[] Errors { get; set; }
+    public string[] Errors { get; init; }
 
     public string ErrorMessage => string.Join(", ", Errors??new string[] { });
 

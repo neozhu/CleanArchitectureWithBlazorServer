@@ -1,6 +1,7 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 public class ValidationExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
-    where TRequest : IRequest<Result>
+    where TRequest : IRequest<Result<int>>
+    where TResponse: Result<int>
     where TException : ValidationException
 {
     private readonly ILogger<ValidationExceptionHandler<TRequest, TResponse, TException>> _logger;
@@ -12,13 +13,7 @@ public class ValidationExceptionHandler<TRequest, TResponse, TException> : IRequ
 
     public Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state, CancellationToken cancellationToken)
     {
-        var response = Activator.CreateInstance<TResponse>();
-        if(response is Result result)
-        {
-            result.Succeeded = false;
-            result.Errors = exception.Errors.Select(x => x.ErrorMessage).Distinct().ToArray();
-            state.SetHandled(response);
-        }
+        state.SetHandled((TResponse)Result<int>.Failure(exception.Errors.Select(x => x.ErrorMessage).Distinct().ToArray()));
         return Task.CompletedTask;
     }
 }

@@ -38,7 +38,7 @@ internal class ExceptionHandlingMiddleware : IMiddleware
             }
             if (!string.IsNullOrEmpty(exception.Message))
             {
-                responseModel.Errors=new string[] { exception.Message };
+                responseModel= await Result.FailureAsync(new string[] { exception.Message });
             }
             switch (exception)
             {
@@ -46,7 +46,7 @@ internal class ExceptionHandlingMiddleware : IMiddleware
                     response.StatusCode = (int)e.StatusCode;
                     if (e.ErrorMessages is not null)
                     {
-                        responseModel.Errors = e.ErrorMessages.ToArray();
+                        responseModel = await Result.FailureAsync(e.ErrorMessages.ToArray());
                     }
                     break;
                 case KeyNotFoundException:
