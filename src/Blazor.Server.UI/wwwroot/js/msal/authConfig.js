@@ -1,9 +1,9 @@
 const msalConfig = {
     auth: {
-        clientId: "28a686de-99c7-49b5-9c7b-46c74fafbb57",
-        clientSecret: "d4ff6a43-d105-44d7-8f1e-67af15b6d885",
+        clientId: "89c688b8-6933-4a93-8bb4-c2c3513a4d76",
+        clientSecret: "770077e1-dbbf-4613-b95c-685f6c5d815c",
         authority: "https://login.microsoftonline.com/common",
-        redirectUri: "https://mudblazor-s.dotnet6.cn/",
+        redirectUri: "https://architecture.blazorserver.com/",
     },
     cache: {
         cacheLocation: "sessionStorage", // This configures where your cache will be stored
