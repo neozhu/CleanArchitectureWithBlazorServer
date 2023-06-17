@@ -6,7 +6,7 @@ Blazor technology.
 
 ## Live Demo
 
-- Blazor Server mode: https://mudblazor-s.dotnet6.cn/
+- Blazor Server mode:https://architecture.blazorserver.com/
 - (IP accelerate): http://106.52.105.140:6101/
 
 ## Screenshots and video
