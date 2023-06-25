@@ -8,7 +8,7 @@ using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
 
-public class AddEditKeyValueCommand : IMapFrom<KeyValueDto>, ICacheInvalidatorRequest<Result<int>>
+public class AddEditKeyValueCommand : ICacheInvalidatorRequest<Result<int>>
 {
     [Description("Id")]
     public int Id { get; set; }
@@ -23,6 +23,14 @@ public class AddEditKeyValueCommand : IMapFrom<KeyValueDto>, ICacheInvalidatorRe
     public TrackingState TrackingState { get; set; } = TrackingState.Unchanged;
     public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => KeyValueCacheKey.SharedExpiryTokenSource();
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<KeyValueDto, AddEditKeyValueCommand>().ReverseMap();
+        }
+    }
 }
 
 public class AddEditKeyValueCommandHandler : IRequestHandler<AddEditKeyValueCommand, Result<int>>

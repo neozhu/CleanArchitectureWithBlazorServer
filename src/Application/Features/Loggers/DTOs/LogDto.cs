@@ -1,11 +1,12 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 using CleanArchitecture.Blazor.Domain.Entities.Logger;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
 
-public class LogDto : IMapFrom<Logger>
+public class LogDto 
 {
     [Description("Id")] 
     public int Id { get; set; }
@@ -41,4 +42,12 @@ public class LogDto : IMapFrom<Logger>
 
     [Description("Log Event")] 
     public string? LogEvent { get; set; }
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<Logger, LogDto>().ReverseMap();
+        }
+    }
 }

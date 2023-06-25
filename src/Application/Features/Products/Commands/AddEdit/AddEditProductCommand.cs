@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 
-public class AddEditProductCommand : IMapFrom<ProductDto>, ICacheInvalidatorRequest<Result<int>>
+public class AddEditProductCommand : ICacheInvalidatorRequest<Result<int>>
 {
     public int Id { get; set; }
     public string? Name { get; set; }
@@ -22,6 +22,14 @@ public class AddEditProductCommand : IMapFrom<ProductDto>, ICacheInvalidatorRequ
     public IReadOnlyList<IBrowserFile>? UploadPictures { get; set; }
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource();
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<AddEditProductCommand, ProductDto>().ReverseMap();
+        }
+    }
 }
 
 public class AddEditProductCommandHandler : IRequestHandler<AddEditProductCommand, Result<int>>

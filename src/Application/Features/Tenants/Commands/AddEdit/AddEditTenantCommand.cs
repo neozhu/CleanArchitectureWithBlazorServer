@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit;
 
-public class AddEditTenantCommand : IMapFrom<TenantDto>, ICacheInvalidatorRequest<Result<string>>
+public class AddEditTenantCommand : ICacheInvalidatorRequest<Result<string>>
 {
     [Description("Tenant Id")]
     public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -17,6 +17,14 @@ public class AddEditTenantCommand : IMapFrom<TenantDto>, ICacheInvalidatorReques
     public string? Description { get; set; }
     public string CacheKey => TenantCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => TenantCacheKey.SharedExpiryTokenSource();
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<TenantDto, AddEditTenantCommand>().ReverseMap();
+        }
+    }
 }
 
 public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand, Result<string>>
