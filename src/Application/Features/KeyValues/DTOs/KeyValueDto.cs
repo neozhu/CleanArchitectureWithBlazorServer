@@ -1,12 +1,13 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 
 [Description("Picklist")]
-public partial class KeyValueDto : IMapFrom<KeyValue>
+public partial class KeyValueDto
 {
     [Description("Id")]
     public int Id { get; set; }
@@ -19,4 +20,12 @@ public partial class KeyValueDto : IMapFrom<KeyValue>
     [Description("Description")]
     public string? Description { get; set; }
     public TrackingState TrackingState { get; set; } = TrackingState.Unchanged;
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<KeyValue, KeyValueDto>().ReverseMap();
+        }
+    }
 }

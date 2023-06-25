@@ -4,7 +4,7 @@
 namespace CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 [Description("Products")]
-public class ProductDto:IMapFrom<Product>
+public class ProductDto
     {
     [Description("Id")]
     public int Id { get; set; }
@@ -21,6 +21,12 @@ public class ProductDto:IMapFrom<Product>
     [Description("Pictures")]
     public List<ProductImage>? Pictures { get; set; }
 
-   
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<Product, ProductDto>().ReverseMap();
+        }
+    }
 }
 

@@ -1,6 +1,8 @@
 using System;
+using System.Reflection;
 using System.Runtime.Serialization;
 using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Mappings;
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
@@ -18,12 +20,7 @@ public class MappingTests
 
     public MappingTests()
     {
-        _configuration = new MapperConfiguration(cfg =>
-        {
-            //cfg.Advanced.AllowAdditiveTypeMapCreation = true;
-            cfg.AddProfile<MappingProfile>();
-        });
-
+        _configuration = new MapperConfiguration(cfg =>       cfg.AddMaps(Assembly.GetAssembly(typeof(IApplicationDbContext))));
         _mapper = _configuration.CreateMapper();
     }
 

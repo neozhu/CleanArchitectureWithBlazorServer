@@ -1,20 +1,15 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using AutoMapper;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 [Description("Documents")]
-public partial class DocumentDto : IMapFrom<Document>
+public partial class DocumentDto
 {
-    public void Mapping(Profile profile)
-    {
-        profile.CreateMap<Document, DocumentDto>(MemberList.None)
-           .ForMember(x => x.TenantName, s => s.MapFrom(y => y.Tenant!.Name));
-        profile.CreateMap<DocumentDto, Document>(MemberList.None)
-           .ForMember(x => x.Tenant, s => s.Ignore());
-    }
+
     [Description("Id")]
     public int Id { get; set; }
     [Description("Title")]
@@ -37,4 +32,15 @@ public partial class DocumentDto : IMapFrom<Document>
     public string? Content { get; set; }
     [Description("Owner")]
     public ApplicationUserDto? Owner { get; set; }
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<Document, DocumentDto>(MemberList.None)
+           .ForMember(x => x.TenantName, s => s.MapFrom(y => y.Tenant!.Name));
+            CreateMap<DocumentDto, Document>(MemberList.None)
+               .ForMember(x => x.Tenant, s => s.Ignore());
+        }
+    }
+
 }

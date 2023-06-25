@@ -1,16 +1,10 @@
-﻿using CleanArchitecture.Blazor.Domain.Identity;
+﻿using AutoMapper;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 [Description("Users")]
-public class ApplicationUserDto:IMapFrom<ApplicationUser>
+public class ApplicationUserDto
 {
-    public void Mapping(Profile profile)
-    {
-        profile.CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
-           .ForMember(x => x.SuperiorName, s => s.MapFrom(y => y.Superior.UserName))
-           .ForMember(x=>x.AssignedRoles,s=>s.MapFrom(y=>y.UserRoles.Select(r=>r.Role.Name)));
-         
-    }
     [Description("User Id")]
     public string Id { get; set; } = string.Empty;
     [Description("User Name")]
@@ -66,4 +60,14 @@ public class ApplicationUserDto:IMapFrom<ApplicationUser>
 
     };
     public bool IsInRole(string role)=> AssignedRoles?.Contains(role)??false;
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
+          .ForMember(x => x.SuperiorName, s => s.MapFrom(y => y.Superior.UserName))
+          .ForMember(x => x.AssignedRoles, s => s.MapFrom(y => y.UserRoles.Select(r => r.Role.Name)));
+        }
+    }
 }

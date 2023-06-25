@@ -7,15 +7,9 @@ using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 [Description("Audit Trails")]
-public class AuditTrailDto : IMapFrom<AuditTrail>
+public class AuditTrailDto 
 {
-    public void Mapping(Profile profile)
-    {
-        profile.CreateMap<AuditTrail, AuditTrailDto>(MemberList.None)
-            .ForMember(x => x.PrimaryKey, s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, DefaultJsonSerializerOptions.Options)));
-           
-
-    }
+ 
     [Description("Id")]
     public int Id { get; set; }
     [Description("User Id")]
@@ -38,4 +32,13 @@ public class AuditTrailDto : IMapFrom<AuditTrail>
     public bool ShowDetails { get; set; }
     [Description("Owner")]
     public ApplicationUserDto? Owner { get; set; }
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<AuditTrail, AuditTrailDto>(MemberList.None)
+             .ForMember(x => x.PrimaryKey, s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, DefaultJsonSerializerOptions.Options)));
+        }
+    }
 }

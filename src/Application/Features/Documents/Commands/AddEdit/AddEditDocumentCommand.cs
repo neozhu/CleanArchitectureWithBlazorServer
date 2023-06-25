@@ -4,11 +4,13 @@
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
+using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit;
 
-public class AddEditDocumentCommand :IMapFrom<DocumentDto>, ICacheInvalidatorRequest<Result<int>>
+public class AddEditDocumentCommand :ICacheInvalidatorRequest<Result<int>>
 {
     [Description("Id")]
     public int Id { get; set; }
@@ -33,7 +35,13 @@ public class AddEditDocumentCommand :IMapFrom<DocumentDto>, ICacheInvalidatorReq
 
     public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource();
     public UploadRequest? UploadRequest { get; set; }
-  
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<AddEditDocumentCommand, DocumentDto>().ReverseMap();
+        }
+    }
 }
 
 public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentCommand, Result<int>>
