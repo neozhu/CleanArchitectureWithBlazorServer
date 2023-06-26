@@ -1,24 +1,26 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
 namespace CleanArchitecture.Blazor.Application.Features.Fluxor;
+
 [FeatureState]
 public class UserProfileState
 {
-    public UserProfile UserProfile { get; }
-    public bool IsLoading { get; }
     public UserProfileState()
     {
         IsLoading = true;
-        UserProfile = new() { Email= "", UserId="",UserName= "" };
+        UserProfile = new UserProfile { Email = "", UserId = "", UserName = "" };
     }
-    public UserProfileState(bool loading,UserProfile? userProfile)
+
+    public UserProfileState(bool loading, UserProfile? userProfile)
     {
         IsLoading = loading;
-        UserProfile = userProfile?? new() { Email = "", UserId = "", UserName = "" }; ;
+        UserProfile = userProfile ?? new UserProfile { Email = "", UserId = "", UserName = "" };
+        ;
     }
+
     public UserProfileState(ApplicationUserDto dto)
     {
-        UserProfile = new UserProfile()
+        UserProfile = new UserProfile
         {
             UserId = dto.Id,
             ProfilePictureDataUrl = dto.ProfilePictureDataUrl,
@@ -36,4 +38,7 @@ public class UserProfileState
             DefaultRole = dto.DefaultRole
         };
     }
+
+    public UserProfile UserProfile { get; }
+    public bool IsLoading { get; }
 }

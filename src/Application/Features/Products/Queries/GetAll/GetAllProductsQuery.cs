@@ -11,27 +11,30 @@ public class GetAllProductsQuery : ICacheableRequest<IEnumerable<ProductDto>>
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
 }
+
 public class GetProductQuery : FilterBase, ICacheableRequest<ProductDto>
 {
     [OperatorComparison(OperatorType.Equal)]
     public required int Id { get; set; }
+
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
 }
+
 public class GetAllProductsQueryHandler :
-     IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDto>>,
-     IRequestHandler<GetProductQuery, ProductDto>
+    IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDto>>,
+    IRequestHandler<GetProductQuery, ProductDto>
 
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
     private readonly IStringLocalizer<GetAllProductsQueryHandler> _localizer;
+    private readonly IMapper _mapper;
 
     public GetAllProductsQueryHandler(
         IApplicationDbContext context,
         IMapper mapper,
         IStringLocalizer<GetAllProductsQueryHandler> localizer
-        )
+    )
     {
         _context = context;
         _mapper = mapper;
@@ -42,18 +45,16 @@ public class GetAllProductsQueryHandler :
     {
         //TODO:Implementing GetAllProductsQueryHandler method 
         var data = await _context.Products
-                     .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
-                     .ToListAsync(cancellationToken);
+            .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
         return data;
     }
 
     public async Task<ProductDto> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Products.ApplyFilter(request)
-                   .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
-                   .FirstOrDefaultAsync(cancellationToken);
+            .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(cancellationToken);
         return data;
     }
 }
-
-

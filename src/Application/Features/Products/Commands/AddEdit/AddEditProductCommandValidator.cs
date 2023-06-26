@@ -7,31 +7,29 @@ public class AddEditProductCommandValidator : AbstractValidator<AddEditProductCo
 {
     public AddEditProductCommandValidator()
     {
-       
         RuleFor(v => v.Name)
-              .MaximumLength(256)
-              .NotEmpty();
+            .MaximumLength(256)
+            .NotEmpty();
         RuleFor(v => v.Unit)
             .MaximumLength(2)
             .NotEmpty();
         RuleFor(v => v.Brand)
-           .MaximumLength(30)
-           .NotEmpty();
+            .MaximumLength(30)
+            .NotEmpty();
         RuleFor(v => v.Price)
-               .GreaterThanOrEqualTo(0);
+            .GreaterThanOrEqualTo(0);
         RuleFor(v => v.Description)
-                   .MaximumLength(1024);
+            .MaximumLength(1024);
         RuleFor(v => v.Pictures).NotEmpty().WithMessage("Please upload product pictures.");
-        RuleFor(v => v.UploadPictures).NotEmpty().When(x =>x.Pictures==null || !x.Pictures.Any()).WithMessage("Please upload product pictures.");
-        
+        RuleFor(v => v.UploadPictures).NotEmpty().When(x => x.Pictures == null || !x.Pictures.Any())
+            .WithMessage("Please upload product pictures.");
     }
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
     {
-        var result = await ValidateAsync(ValidationContext<AddEditProductCommand>.CreateWithOptions((AddEditProductCommand)model, x => x.IncludeProperties(propertyName)));
-        if (result.IsValid)
-            return Array.Empty<string>();
-        return result.Errors.Select(e => e.ErrorMessage);
+        var result =
+            await ValidateAsync(ValidationContext<AddEditProductCommand>.CreateWithOptions((AddEditProductCommand)model,
+                x => x.IncludeProperties(propertyName)));
+        return result.IsValid ? Array.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
     };
 }
-

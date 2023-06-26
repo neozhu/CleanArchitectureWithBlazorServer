@@ -10,16 +10,16 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEd
 
 public class AddEditKeyValueCommand : ICacheInvalidatorRequest<Result<int>>
 {
-    [Description("Id")]
-    public int Id { get; set; }
-    [Description("Name")]
-    public Picklist Name { get; set; }
-    [Description("Value")]
-    public string? Value { get; set; }
-    [Description("Text")]
-    public string? Text { get; set; }
-    [Description("Description")]
-    public string? Description { get; set; }
+    [Description("Id")] public int Id { get; set; }
+
+    [Description("Name")] public Picklist Name { get; set; }
+
+    [Description("Value")] public string? Value { get; set; }
+
+    [Description("Text")] public string? Text { get; set; }
+
+    [Description("Description")] public string? Description { get; set; }
+
     public TrackingState TrackingState { get; set; } = TrackingState.Unchanged;
     public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => KeyValueCacheKey.SharedExpiryTokenSource();
@@ -40,12 +40,13 @@ public class AddEditKeyValueCommandHandler : IRequestHandler<AddEditKeyValueComm
 
     public AddEditKeyValueCommandHandler(
         IApplicationDbContext context,
-         IMapper mapper
-        )
+        IMapper mapper
+    )
     {
         _context = context;
         _mapper = mapper;
     }
+
     public async Task<Result<int>> Handle(AddEditKeyValueCommand request, CancellationToken cancellationToken)
     {
         var dto = _mapper.Map<KeyValueDto>(request);
@@ -57,7 +58,7 @@ public class AddEditKeyValueCommandHandler : IRequestHandler<AddEditKeyValueComm
             keyValue = _mapper.Map(dto, keyValue);
             keyValue.AddDomainEvent(new UpdatedEvent<KeyValue>(keyValue));
             await _context.SaveChangesAsync(cancellationToken);
-            return Result<int>.Success(keyValue.Id);
+            return await Result<int>.SuccessAsync(keyValue.Id);
         }
         else
         {
@@ -67,7 +68,5 @@ public class AddEditKeyValueCommandHandler : IRequestHandler<AddEditKeyValueComm
             await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(keyValue.Id);
         }
-
-
     }
 }

@@ -18,14 +18,14 @@ public class AddEditDocumentCommandValidator : AbstractValidator<AddEditDocument
         RuleFor(v => v.UploadRequest)
             .NotNull()
             .When(x => x.Id <= 0);
-
-
     }
+
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
     {
-        var result = await ValidateAsync(ValidationContext<AddEditDocumentCommand>.CreateWithOptions((AddEditDocumentCommand)model, x => x.IncludeProperties(propertyName)));
-        if (result.IsValid)
-            return Array.Empty<string>();
-        return result.Errors.Select(e => e.ErrorMessage);
+        var result =
+            await ValidateAsync(
+                ValidationContext<AddEditDocumentCommand>.CreateWithOptions((AddEditDocumentCommand)model,
+                    x => x.IncludeProperties(propertyName)));
+        return result.IsValid ? Array.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
     };
 }

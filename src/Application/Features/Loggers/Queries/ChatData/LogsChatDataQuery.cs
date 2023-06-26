@@ -28,7 +28,8 @@ public class LogsChatDataQueryHandler : IRequestHandler<LogsTimeLineChatDataQuer
         _localizer = localizer;
     }
 
-    public async Task<List<LogTimeLineDto>> Handle(LogsTimeLineChatDataQuery request, CancellationToken cancellationToken)
+    public async Task<List<LogTimeLineDto>> Handle(LogsTimeLineChatDataQuery request,
+        CancellationToken cancellationToken)
     {
         var data = await _context.Loggers.Where(x => x.TimeStamp >= request.LastDateTime)
             .GroupBy(x => new { x.TimeStamp.Date })
@@ -38,7 +39,7 @@ public class LogsChatDataQueryHandler : IRequestHandler<LogsTimeLineChatDataQuer
 
         List<LogTimeLineDto> result = new();
         DateTime end = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
-        DateTime start = request.LastDateTime.Date;
+        var start = request.LastDateTime.Date;
 
         while (start <= end)
         {

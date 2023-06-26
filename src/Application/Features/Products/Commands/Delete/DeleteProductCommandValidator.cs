@@ -3,14 +3,10 @@
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete;
 
-    public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand>
+public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand>
+{
+    public DeleteProductCommandValidator()
     {
-        public DeleteProductCommandValidator()
-        {
- 
-           RuleFor(v => v.Id).NotNull().ForEach(v=>v.NotEqual(0));
-      
-        }
+        RuleFor(v => v.Id).NotNull().ForEach(v => v.NotEqual(0));
     }
-  
-
+}

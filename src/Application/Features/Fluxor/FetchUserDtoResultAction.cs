@@ -1,12 +1,12 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
 namespace CleanArchitecture.Blazor.Application.Features.Fluxor;
+
 public class FetchUserDtoResultAction
 {
-    public UserProfile UserProfile { get; }
     public FetchUserDtoResultAction(ApplicationUserDto dto)
     {
-        UserProfile = new UserProfile()
+        UserProfile = new UserProfile
         {
             UserId = dto.Id,
             ProfilePictureDataUrl = dto.ProfilePictureDataUrl,
@@ -23,4 +23,6 @@ public class FetchUserDtoResultAction
             DefaultRole = dto.DefaultRole
         };
     }
+
+    public UserProfile UserProfile { get; }
 }

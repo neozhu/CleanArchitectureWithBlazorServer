@@ -3,15 +3,12 @@
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Import;
 
-    public class ImportProductsCommandValidator : AbstractValidator<ImportProductsCommand>
+public class ImportProductsCommandValidator : AbstractValidator<ImportProductsCommand>
+{
+    public ImportProductsCommandValidator()
     {
-        public ImportProductsCommandValidator()
-        {
-          
-          RuleFor(v => v.Data)
-                .NotNull()
-               .NotEmpty();
-   
-        }
+        RuleFor(v => v.Data)
+            .NotNull()
+            .NotEmpty();
     }
-
+}

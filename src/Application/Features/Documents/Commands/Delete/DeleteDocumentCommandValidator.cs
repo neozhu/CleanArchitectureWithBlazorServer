@@ -10,4 +10,3 @@ public class DeleteDocumentCommandValidator : AbstractValidator<DeleteDocumentCo
         RuleFor(x => x.Id).NotNull().NotEmpty();
     }
 }
-

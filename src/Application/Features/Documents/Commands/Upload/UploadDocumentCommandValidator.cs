@@ -9,5 +9,4 @@ public class UploadDocumentCommandValidator : AbstractValidator<UploadDocumentCo
     {
         RuleFor(v => v.UploadRequests).NotNull().NotEmpty();
     }
-     
 }

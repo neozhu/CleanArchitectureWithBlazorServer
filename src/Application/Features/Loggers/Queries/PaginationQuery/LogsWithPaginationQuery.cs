@@ -47,7 +47,7 @@ public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, Paginat
     public async Task<PaginatedData<LogDto>> Handle(LogsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        PaginatedData<LogDto> data = await _context.Loggers.ApplyFilterWithoutPagination(request)
+        var data = await _context.Loggers.ApplyFilterWithoutPagination(request)
             .ProjectTo<LogDto>(_mapper.ConfigurationProvider)
             .PaginatedDataAsync(request.Page, request.PerPage);
 
@@ -60,15 +60,15 @@ public class SearchLogsWithListView : FilteringOptionsBaseAttribute
     public override Expression BuildExpression(Expression expressionBody, PropertyInfo targetProperty,
         PropertyInfo filterProperty, object value)
     {
-        DateTime today = DateTime.Now.Date;
-        DateTime start = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
+        var today = DateTime.Now.Date;
+        var start = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
             CultureInfo.CurrentCulture);
-        DateTime end = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 23:59:59",
+        var end = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 23:59:59",
             CultureInfo.CurrentCulture);
-        DateTime last30days =
+        var last30days =
             Convert.ToDateTime(today.AddDays(-30).ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
                 CultureInfo.CurrentCulture);
-        LogListView listview = (LogListView)value;
+        var listview = (LogListView)value;
         return listview switch
         {
             LogListView.All => expressionBody,

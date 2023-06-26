@@ -29,10 +29,7 @@ public static class LogsCacheKey
 
     public static CancellationTokenSource SharedExpiryTokenSource()
     {
-        if (_tokenSource.IsCancellationRequested)
-        {
-            _tokenSource = new CancellationTokenSource(RefreshInterval);
-        }
+        if (_tokenSource.IsCancellationRequested) _tokenSource = new CancellationTokenSource(RefreshInterval);
 
         return _tokenSource;
     }
