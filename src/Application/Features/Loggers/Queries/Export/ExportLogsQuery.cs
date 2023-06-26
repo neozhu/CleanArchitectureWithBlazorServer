@@ -7,7 +7,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.Export;
 
 public class ExportLogsQuery : IRequest<byte[]>
 {
-    public string Keyword { get; set; } = String.Empty;
+    public string Keyword { get; set; } = string.Empty;
     public string OrderBy { get; set; } = "Id";
     public string SortDirection { get; set; } = "Descending";
 }
@@ -34,12 +34,12 @@ public class ExportLogsQueryHandler : IRequestHandler<ExportLogsQuery, byte[]>
 
     public async Task<byte[]> Handle(ExportLogsQuery request, CancellationToken cancellationToken)
     {
-        List<LogDto> data = await _context.Loggers
+        var data = await _context.Loggers
             .Where(x => x.Message!.Contains(request.Keyword) || x.Exception!.Contains(request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<LogDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
-        byte[] result = await _excelService.ExportAsync(data,
+        var result = await _excelService.ExportAsync(data,
             new Dictionary<string, Func<LogDto, object?>>
             {
                 //{ _localizer["Id"], item => item.Id },

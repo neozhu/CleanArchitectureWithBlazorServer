@@ -16,10 +16,10 @@ public class ClearLogsCommandHandler : IRequestHandler<ClearLogsCommand, Result>
 
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUserService _currentUserService;
     private readonly IStringLocalizer<ClearLogsCommandHandler> _localizer;
     private readonly ILogger<ClearLogsCommandHandler> _logger;
     private readonly IMapper _mapper;
-    private readonly ICurrentUserService _currentUserService;
 
     public ClearLogsCommandHandler(
         IApplicationDbContext context,

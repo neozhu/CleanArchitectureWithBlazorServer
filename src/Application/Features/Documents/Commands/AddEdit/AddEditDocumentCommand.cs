@@ -4,37 +4,36 @@
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
-using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit;
 
-public class AddEditDocumentCommand :ICacheInvalidatorRequest<Result<int>>
+public class AddEditDocumentCommand : ICacheInvalidatorRequest<Result<int>>
 {
-    [Description("Id")]
-    public int Id { get; set; }
-    [Description("Title")]
-    public string? Title { get; set; }
-    [Description("Description")]
-    public string? Description { get; set; }
-    [Description("Is Public")]
-    public bool IsPublic { get; set; }
-    [Description("URL")]
-    public string? URL { get; set; }
-    [Description("Document Type")]
-    public DocumentType DocumentType { get; set; } = DocumentType.Document;
-    [Description("Tenant Id")]
-    public string? TenantId { get; set; }
-    [Description("Tenant Name")]
-    public string? TenantName { get; set; }
-    [Description("Status")]
-    public JobStatus Status { get; set; } = JobStatus.NotStart;
-    [Description("Content")]
-    public string? Content { get; set; }
+    [Description("Id")] public int Id { get; set; }
+
+    [Description("Title")] public string? Title { get; set; }
+
+    [Description("Description")] public string? Description { get; set; }
+
+    [Description("Is Public")] public bool IsPublic { get; set; }
+
+    [Description("URL")] public string? URL { get; set; }
+
+    [Description("Document Type")] public DocumentType DocumentType { get; set; } = DocumentType.Document;
+
+    [Description("Tenant Id")] public string? TenantId { get; set; }
+
+    [Description("Tenant Name")] public string? TenantName { get; set; }
+
+    [Description("Status")] public JobStatus Status { get; set; } = JobStatus.NotStart;
+
+    [Description("Content")] public string? Content { get; set; }
+
+    public UploadRequest? UploadRequest { get; set; }
 
     public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource();
-    public UploadRequest? UploadRequest { get; set; }
+
     private class Mapping : Profile
     {
         public Mapping()
@@ -52,14 +51,15 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
 
     public AddEditDocumentCommandHandler(
         IApplicationDbContext context,
-         IMapper mapper,
-         IUploadService uploadService
-        )
+        IMapper mapper,
+        IUploadService uploadService
+    )
     {
         _context = context;
         _mapper = mapper;
         _uploadService = uploadService;
     }
+
     public async Task<Result<int>> Handle(AddEditDocumentCommand request, CancellationToken cancellationToken)
     {
         var dto = _mapper.Map<DocumentDto>(request);
@@ -68,10 +68,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
             var document = await _context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);
             _ = document ?? throw new NotFoundException($"Document {request.Id} Not Found.");
             document.AddDomainEvent(new UpdatedEvent<Document>(document));
-            if (request.UploadRequest != null)
-            {
-                document.URL = await _uploadService.UploadAsync(request.UploadRequest);
-            }
+            if (request.UploadRequest != null) document.URL = await _uploadService.UploadAsync(request.UploadRequest);
             document.Title = request.Title;
             document.Description = request.Description;
             document.IsPublic = request.IsPublic;
@@ -82,16 +79,12 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
         else
         {
             var document = _mapper.Map<Document>(dto);
-            if (request.UploadRequest != null)
-            {
-                document.URL = await _uploadService.UploadAsync(request.UploadRequest); ;
-            }
+            if (request.UploadRequest != null) document.URL = await _uploadService.UploadAsync(request.UploadRequest);
+
             document.AddDomainEvent(new CreatedEvent<Document>(document));
             _context.Documents.Add(document);
             await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(document.Id);
         }
-
-
     }
 }

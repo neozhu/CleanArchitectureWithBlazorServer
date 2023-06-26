@@ -5,25 +5,36 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 
 public static class DocumentCacheKey
 {
-    private static readonly TimeSpan refreshInterval = TimeSpan.FromHours(1);
     public const string GetAllCacheKey = "all-documents";
-    public static string GetStreamByIdKey(int id) => $"GetStreamByIdKey:{id}";
+    private static readonly TimeSpan RefreshInterval = TimeSpan.FromHours(1);
+    private static CancellationTokenSource _tokenSource;
+
     static DocumentCacheKey()
     {
-        _tokensource = new CancellationTokenSource(refreshInterval);
+        _tokenSource = new CancellationTokenSource(RefreshInterval);
     }
+
+    public static MemoryCacheEntryOptions MemoryCacheEntryOptions =>
+        new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
+
+    public static string GetStreamByIdKey(int id)
+    {
+        return $"GetStreamByIdKey:{id}";
+    }
+
     public static string GetPaginationCacheKey(string parameters)
     {
         return $"DocumentsWithPaginationQuery,{parameters}";
     }
-    private static CancellationTokenSource _tokensource;
-    public static CancellationTokenSource SharedExpiryTokenSource() {
-        if (_tokensource.IsCancellationRequested)
-        {
-            _tokensource = new CancellationTokenSource(refreshInterval);
-        }
-        return _tokensource;
+
+    public static CancellationTokenSource SharedExpiryTokenSource()
+    {
+        if (_tokenSource.IsCancellationRequested) _tokenSource = new CancellationTokenSource(RefreshInterval);
+        return _tokenSource;
     }
-    public static void Refresh() => SharedExpiryTokenSource().Cancel();
-    public static MemoryCacheEntryOptions MemoryCacheEntryOptions => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
+
+    public static void Refresh()
+    {
+        SharedExpiryTokenSource().Cancel();
+    }
 }

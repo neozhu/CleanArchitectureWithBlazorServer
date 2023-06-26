@@ -7,14 +7,14 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delet
 
 public class DeleteDocumentCommand : ICacheInvalidatorRequest<Result<int>>
 {
-    public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource();
-    public int[] Id { get; set; }
     public DeleteDocumentCommand(int[] id)
     {
         Id = id;
     }
-}
 
+    public int[] Id { get; set; }
+    public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource();
+}
 
 public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentCommand, Result<int>>
 
@@ -23,10 +23,11 @@ public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentComman
 
     public DeleteDocumentCommandHandler(
         IApplicationDbContext context
-        )
+    )
     {
         _context = context;
     }
+
     public async Task<Result<int>> Handle(DeleteDocumentCommand request, CancellationToken cancellationToken)
     {
         var items = await _context.Documents.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
@@ -35,7 +36,8 @@ public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentComman
             item.AddDomainEvent(new DeletedEvent<Document>(item));
             _context.Documents.Remove(item);
         }
-        var result= await _context.SaveChangesAsync(cancellationToken);
+
+        var result = await _context.SaveChangesAsync(cancellationToken);
         return await Result<int>.SuccessAsync(result);
     }
 }
