@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -13,15 +14,14 @@ public class ValidationExceptionTests
     [Test]
     public void SingleValidationFailureCreatesASingleElementErrorDictionary()
     {
-        var failures = new List<ValidationFailure>
-            {
-                new ValidationFailure("Age", "'Age' must be over 18"),
-            };
+        var expectedErrorMessage = "'Age' must be over 18";
 
-        var actual = new ValidationException(failures);
-
-        actual.Should().BeEquivalentTo(new List<string>() { "'Age' must be over 18" });
-        
+        var failures = new List<ValidationFailure> {
+            new ValidationFailure("Age", expectedErrorMessage),
+        };
+        var validationException = new ValidationException(failures);
+        var actualErrorMessages = validationException.Errors.Select(x => x.ErrorMessage);
+        actualErrorMessages.Should().BeEquivalentTo(new List<string> { expectedErrorMessage });
     }
 
     [Test]
@@ -41,7 +41,7 @@ public class ValidationExceptionTests
 
         actual.Should().NotBeEmpty();
 
-        
+
 
     }
 }

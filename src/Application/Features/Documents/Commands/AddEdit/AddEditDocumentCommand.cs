@@ -38,7 +38,7 @@ public class AddEditDocumentCommand : ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<AddEditDocumentCommand, DocumentDto>().ReverseMap();
+            CreateMap<AddEditDocumentCommand, DocumentDto>(MemberList.None).ReverseMap();
         }
     }
 }

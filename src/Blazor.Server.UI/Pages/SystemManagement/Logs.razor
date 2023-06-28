@@ -239,12 +239,6 @@
         await _table.ReloadServerData();
     }
 
-    private Task OnShowDetail(LogDto dto)
-    {
-        dto.ShowDetails = !dto.ShowDetails;
-        return Task.CompletedTask;
-    }
-
     private async Task OnPurge()
     {
         var parameters = new DialogParameters

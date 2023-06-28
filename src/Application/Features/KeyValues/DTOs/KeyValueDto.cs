@@ -24,7 +24,7 @@ public class KeyValueDto
     {
         public Mapping()
         {
-            CreateMap<KeyValue, KeyValueDto>().ReverseMap();
+            CreateMap<KeyValue, KeyValueDto>(MemberList.None).ReverseMap();
         }
     }
 }
