@@ -11,7 +11,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-  services:
+    services:
       sql:
         image: mcr.microsoft.com/mssql/server
         ports:
@@ -20,18 +20,18 @@ jobs:
           SA_PASSWORD: Your_password123
           ACCEPT_EULA: Y
           
- steps:
+    steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 7.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-       env:
+      env:
         DatabaseSettings__DBProvider: mssql
         ConnectionStrings__ConnectionString: Server=.;Database=BlazorDashboardDb-Test;User=sa;Password=Your_password123;MultipleActiveResultSets=true;Encrypt=false;
