@@ -19,13 +19,13 @@
 
 
 @code {
-    [Parameter] public RenderFragment Stripes { get; set; }
-    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public RenderFragment Stripes { get; set; } = null!;
+    [Parameter] public RenderFragment ChildContent { get; set; } = null!;
     [Parameter] public bool Straight { get; set; }
     [Parameter] public bool StraightEnd { get; set; }
-    [Parameter] public string SectionClass { get; set; }
-    [Parameter] public string BackgroundClass { get; set; }
-    [Parameter] public string Class { get; set; }
+    [Parameter] public string SectionClass { get; set; } = null!;
+    [Parameter] public string BackgroundClass { get; set; } = null!;
+    [Parameter] public string Class { get; set; } = null!;
 
     protected string SectionClassnames =>
         new CssBuilder("mud-landingpage-section")

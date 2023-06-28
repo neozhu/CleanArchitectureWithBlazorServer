@@ -6,8 +6,8 @@ public class Theme
     {
         var theme = new MudTheme()
         {
-
-            Palette = new Palette
+            
+            Palette = new PaletteLight
             {
                 Primary = "#2d4275",
                 Black = "#0A0E19",
@@ -23,7 +23,7 @@ public class Theme
                 GrayLight = "#9CA3AF",
                 GrayLighter = "#adbdccff"
             },
-            PaletteDark = new Palette
+            PaletteDark = new PaletteDark
             {
                 Primary = "#7e6fff",
                 Dark= "#343a40",

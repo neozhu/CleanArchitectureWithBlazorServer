@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
-
+#pragma warning disable CS8981
 namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
 {
     public partial class documentwithtenant : Migration

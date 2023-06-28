@@ -98,7 +98,7 @@ public class AuthController : Controller
     public async Task<IActionResult> Logout()
     {
         var userId = _signInManager.Context.User.GetUserId();
-        var identityUser = await _userManager.FindByIdAsync(userId) ?? throw new NotFoundException($"Application user not found.");
+        var identityUser = await _userManager.FindByIdAsync(userId!) ?? throw new NotFoundException($"Application user not found.");
         identityUser.IsLive = false;
         await _userManager.UpdateAsync(identityUser);
         _logger.LogInformation("{@UserName} logout successful", identityUser.UserName);

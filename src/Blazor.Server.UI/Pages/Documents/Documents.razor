@@ -245,7 +245,7 @@
 
 
     private string _tenantId = string.Empty;
-    private DocumentsWithPaginationQuery Query { get; set; } = new DocumentsWithPaginationQuery() ;
+    private DocumentsWithPaginationQuery Query { get; set; } = default!;
 
     private bool _canSearch;
     private bool _canCreate;
@@ -270,6 +270,7 @@
         Client.JobStarted += _client_JobStarted;
         UserProfileState.StateChanged += StateOnStateChanged;
         await Client.StartAsync();
+        Query = new DocumentsWithPaginationQuery() { CurrentUser = UserProfile };
     }
 
     private void _client_JobCompleted(object? sender, string e)
