@@ -4,10 +4,8 @@
 name: .NET
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -22,7 +20,7 @@ jobs:
           SA_PASSWORD: Your_password123
           ACCEPT_EULA: Y
           
-   steps:
+ steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
