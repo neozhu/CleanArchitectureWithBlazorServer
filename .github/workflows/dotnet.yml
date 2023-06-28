@@ -25,13 +25,13 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 7.0.x
     - name: Restore dependencies
       run: dotnet restore CleanArchitecture.Blazor.sln
     - name: Build
       run: dotnet build CleanArchitecture.Blazor.sln --no-restore --configuration Release
     - name: Test
-      run: dotnet test --no-build --configuration Release --filter "FullyQualifiedName!~AcceptanceTests"
+      run: dotnet test CleanArchitecture.Blazor.sln --no-build --configuration Release --filter "FullyQualifiedName!~AcceptanceTests"
       env:
         DatabaseSettings__DBProvider: mssql
-        ConnectionStrings__ConnectionString: Server=.;Database=BlazorDashboardDb-Test;User=sa;Password=Your_password123;MultipleActiveResultSets=true;Encrypt=false;
+        ConnectionStrings__ConnectionString: Server=.;Database=BlazorDashboardDb.Test;User=sa;Password=Your_password123;MultipleActiveResultSets=true;Encrypt=false;
