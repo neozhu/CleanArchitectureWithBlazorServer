@@ -34,7 +34,7 @@ internal class ProductsPaginationQueryTests : TestBase
     [Test]
     public async Task ShouldNotEmptySpecificationQuery()
     {
-        var query = new ProductsWithPaginationQuery() { Keyword = "1", Brand= "Test1",  Unit="EA", Name="1" };
+        var query = new ProductsWithPaginationQuery() { Keyword = "1", Brand= "Test1",  Unit="EA", Name= "Test1" };
         var result = await SendAsync(query);
         Assert.AreEqual(1, result.TotalItems);
     }

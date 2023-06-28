@@ -58,7 +58,6 @@
                                 @if (_canCreate)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                           Disabled="@_editing"
                                            StartIcon="@Icons.Material.Filled.Add"
                                            Size="Size.Small"
                                            OnClick="OnCreate"
@@ -69,7 +68,7 @@
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Secondary"
                                            StartIcon="@Icons.Material.Filled.Delete"
-                                           Disabled="@(!(_selectedItems.Count>0) || _editing)"
+                                           Disabled="@(!(_selectedItems.Count>0))"
                                            OnClick="OnDeleteChecked"
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
@@ -121,7 +120,6 @@
                                 @if (_canCreate)
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                           Disabled="@_editing"
                                            StartIcon="@Icons.Material.Filled.Add"
                                            Size="Size.Small"
                                            OnClick="OnCreate"
@@ -132,7 +130,7 @@
                                 {
                                     <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Secondary"
                                            StartIcon="@Icons.Material.Filled.Delete"
-                                           Disabled="@(!(_selectedItems.Count>0) || _editing)"
+                                           Disabled="@(!(_selectedItems.Count>0))"
                                            OnClick="OnDeleteChecked"
                                            Size="Size.Small"
                                            Style="margin-right: 4px; margin-bottom:4px"
@@ -188,11 +186,10 @@
     private HashSet<KeyValueDto> _selectedItems = new HashSet<KeyValueDto>();
     private KeyValueDto SelectedItem { get; set; } = new();
     private KeyValueDto ElementBeforeEdit { get; set; } = new();
-    private bool _canCancelEdit = true;
+
     private string _searchString = string.Empty;
     private Picklist? _searchPicklist = null;
     private int _defaultPageSize = 15;
-    private bool _editing;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]

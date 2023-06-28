@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.Pagina
 public class DocumentsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<DocumentDto>>
 {
     public DocumentListView ListView { get; set; } = DocumentListView.All;
-    public UserProfile? CurrentUser { get; set; }
+    public required UserProfile CurrentUser { get; set; }
     public string CacheKey => DocumentCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;
 

@@ -239,7 +239,7 @@
     }
     private void StateOnStateChanged(object? sender, EventArgs args)
     {
-        InvokeAsync(async () =>
+        InvokeAsync(() =>
         {
             StateHasChanged();
         });

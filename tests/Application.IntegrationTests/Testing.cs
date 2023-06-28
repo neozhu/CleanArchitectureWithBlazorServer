@@ -71,7 +71,7 @@ public class Testing
 
         _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
 
-        _checkpoint =await Respawner.CreateAsync(_configuration.GetConnectionString("DefaultConnection"), new RespawnerOptions
+        _checkpoint =await Respawner.CreateAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"), new RespawnerOptions
         {
             TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
         });
@@ -143,7 +143,7 @@ public class Testing
 
     public static async Task ResetState()
     {
-        await _checkpoint.ResetAsync(_configuration.GetConnectionString("DefaultConnection"));
+        await _checkpoint.ResetAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
         _currentUserId = null;
         _currentTenantId = null;
     }

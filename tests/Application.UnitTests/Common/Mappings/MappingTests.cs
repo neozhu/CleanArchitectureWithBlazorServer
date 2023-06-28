@@ -20,7 +20,7 @@ public class MappingTests
 
     public MappingTests()
     {
-        _configuration = new MapperConfiguration(cfg =>       cfg.AddMaps(Assembly.GetAssembly(typeof(IApplicationDbContext))));
+        _configuration = new MapperConfiguration(cfg => cfg.AddMaps(Assembly.GetAssembly(typeof(IApplicationDbContext))));
         _mapper = _configuration.CreateMapper();
     }
 

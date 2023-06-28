@@ -245,14 +245,14 @@
         {
             _loading = true;
             var items = await RoleManager.Roles
-                .Where(x => x.Name.ToLower().Contains(_searchString) || x.Description.ToLower().Contains(_searchString))
+                .Where(x => x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString))
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize)
                 .Select(x => new ApplicationRoleDto
                 { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName })
                 .ToListAsync();
             var total = await RoleManager.Roles.CountAsync(x =>
-                x.Name.ToLower().Contains(_searchString) || x.Description.ToLower().Contains(_searchString));
+                x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString));
             return new GridData<ApplicationRoleDto> { TotalItems = total, Items = items };
         }
         finally
@@ -363,12 +363,12 @@
 
             var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             allPermissions.AddRange(from field in fields
-                select field.GetValue(null)
+                                    select field.GetValue(null)
                 into propertyValue
-                where propertyValue is not null
-                select propertyValue.ToString()
+                                    where propertyValue is not null
+                                    select propertyValue.ToString()
                 into claimValue
-                select new PermissionModel
+                                    select new PermissionModel
                 {
                     RoleId = dto.Id,
                     ClaimValue = claimValue,
@@ -385,7 +385,7 @@
         _showPermissionsDrawer = state;
         return Task.CompletedTask;
     }
-    
+
     private async Task OnAssignChangedHandler(PermissionModel model)
     {
         try
@@ -515,6 +515,8 @@
 
     private Task OnImportData(IBrowserFile file)
     {
+        _uploading = true;
+        _uploading = false;
         return Task.CompletedTask;
     }
 

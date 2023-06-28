@@ -25,6 +25,7 @@
                      FixedHeader="true"
                      FixedFooter="false"
                      Virtualize="true"
+                     RowsPerPage="@_defaultPageSize"
                      Height="calc(100vh - 360px)"
                      Style="min-height:700px"
                      Loading="@_loading"
@@ -236,12 +237,6 @@
     {
         Query.Keyword = string.Empty;
         await _table.ReloadServerData();
-    }
-
-    private Task OnShowDetail(LogDto dto)
-    {
-        dto.ShowDetails = !dto.ShowDetails;
-        return Task.CompletedTask;
     }
 
     private async Task OnPurge()

@@ -23,7 +23,7 @@ public class UserProfileStateComponent : ComponentBase, INotificationHandler<Upd
         var state = await AuthState;
         if (state?.User?.Identity?.IsAuthenticated ?? false)
         {
-            var userDto = await IdentityService.GetApplicationUserDto(state.User.GetUserId());
+            var userDto = await IdentityService.GetApplicationUserDto(state.User.GetUserId()!);
             await SetProfile(userDto);
         }
         
@@ -35,7 +35,7 @@ public class UserProfileStateComponent : ComponentBase, INotificationHandler<Upd
             var state = await authenticationState;
             if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
-                var userDto = await IdentityService.GetApplicationUserDto(state.User.GetUserId());
+                var userDto = await IdentityService.GetApplicationUserDto(state.User.GetUserId()!);
                 await SetProfile(userDto);
             }
         });

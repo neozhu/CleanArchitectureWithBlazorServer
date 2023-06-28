@@ -11,7 +11,7 @@ public class ConstantStringTests
         Assert.AreEqual("Edit", ConstantString.Edit);
         Assert.AreEqual("Delete", ConstantString.Delete);
         Assert.AreEqual("Add", ConstantString.Add);
-        Assert.AreEqual("Create", ConstantString.New);
+        Assert.AreEqual("New", ConstantString.New);
         Assert.AreEqual("Export to Excel", ConstantString.Export);
         Assert.AreEqual("Import from Excel", ConstantString.Import);
         Assert.AreEqual("Actions", ConstantString.Actions);

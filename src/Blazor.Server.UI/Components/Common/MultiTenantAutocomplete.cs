@@ -26,7 +26,7 @@ public class MultiTenantAutocomplete : MudAutocomplete<string>
     public override Task SetParametersAsync(ParameterView parameters)
     {
         SearchFuncWithCancel = SearchKeyValues;
-        base.ToStringFunc = ToStringFunc;
+        ToStringFunc = ToTenantNameStringFunc;
         Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;
@@ -46,7 +46,7 @@ public class MultiTenantAutocomplete : MudAutocomplete<string>
         ).OrderBy(x => x.Name).Select(x=>x.Id).ToList());
                                          
     }
-    private string ToStringFunc(string val)
+    string ToTenantNameStringFunc(string val)
     {
         return TenantsService.DataSource.Where(x => x.Id == val).Select(x => x.Name).FirstOrDefault()??"";
     }

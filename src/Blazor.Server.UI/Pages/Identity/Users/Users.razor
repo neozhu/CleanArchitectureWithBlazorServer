@@ -349,12 +349,12 @@
         {
             _loading = true;
             Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
-            (x.UserName.ToLower().Contains(_searchString) ||
-            x.Email.ToLower().Contains(_searchString) ||
-            x.DisplayName.ToLower().Contains(_searchString) ||
-            x.PhoneNumber.ToLower().Contains(_searchString) ||
-            x.TenantName.ToLower().Contains(_searchString) ||
-            x.Provider.ToLower().Contains(_searchString));
+            (x.UserName!.ToLower().Contains(_searchString) ||
+            x.Email!.ToLower().Contains(_searchString) ||
+            x.DisplayName!.ToLower().Contains(_searchString) ||
+            x.PhoneNumber!.ToLower().Contains(_searchString) ||
+            x.TenantName!.ToLower().Contains(_searchString) ||
+            x.Provider!.ToLower().Contains(_searchString));
             var query = UserManager.Users.Where(searchPredicate);
             if (!string.IsNullOrEmpty(_searchRole))
             {
@@ -739,12 +739,12 @@
         {
             _exporting = true;
             Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
-            (x.UserName.Contains(_searchString) ||
-            x.Email.Contains(_searchString) ||
-            x.DisplayName.Contains(_searchString) ||
-            x.PhoneNumber.Contains(_searchString) ||
-            x.TenantName.Contains(_searchString) ||
-            x.Provider.Contains(_searchString)) &&
+            (x.UserName!.Contains(_searchString) ||
+            x.Email!.Contains(_searchString) ||
+            x.DisplayName!.Contains(_searchString) ||
+            x.PhoneNumber!.Contains(_searchString) ||
+            x.TenantName!.Contains(_searchString) ||
+            x.Provider!.Contains(_searchString)) &&
             (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole)));
             var items = await UserManager.Users.Where(searchPredicate)
                  .Select(x => new ApplicationUserDto
@@ -795,7 +795,7 @@
             }, L["Users"]);
         if (result.Succeeded)
         {
-            foreach (var user in result.Data)
+            foreach (var user in result.Data!)
             {
                 if (!UserManager.Users.Any(x => x.UserName == user.UserName))
                 {

@@ -10,16 +10,16 @@
     bool _isFlagsEnum;
     private static bool IsNullableEnum => Nullable.GetUnderlyingType(typeof(TEnum))?.IsEnum ?? false;
 
-    private static IList<TEnum> EnumValueList => EnumOrUnderlyingType.GetEnumValues().Cast<TEnum>().ToList();
+    private static IList<TEnum> EnumValueList => EnumOrUnderlyingType!.GetEnumValues().Cast<TEnum>().ToList();
 
-    private static Type EnumOrUnderlyingType => IsNullableEnum ? Nullable.GetUnderlyingType(typeof(TEnum)) : typeof(TEnum);
+    private static Type? EnumOrUnderlyingType => IsNullableEnum ? Nullable.GetUnderlyingType(typeof(TEnum)) : typeof(TEnum);
 
     protected override void OnInitialized()
     {
         Dense = true;
         TransformOrigin = Origin.TopLeft;
         AnchorOrigin = Origin.BottomLeft;
-        _isFlagsEnum = EnumOrUnderlyingType.GetCustomAttribute<FlagsAttribute>() != null;
+        _isFlagsEnum = EnumOrUnderlyingType!.GetCustomAttribute<FlagsAttribute>() != null;
         MultiSelection = _isFlagsEnum;
         base.OnInitialized();
     }
@@ -67,13 +67,13 @@
     }
     private T SetFlag<T>(T flag, bool set)
     {
-        Enum value = Value as Enum;
+        Enum? value = Value as Enum;
 
-        Type underlyingType = Enum.GetUnderlyingType(EnumOrUnderlyingType);
+        Type underlyingType = Enum.GetUnderlyingType(EnumOrUnderlyingType!);
 
         // note: AsInt mean: math integer vs enum (not the c# int type)
-        dynamic valueAsInt = Convert.ChangeType(value, underlyingType);
-        dynamic flagAsInt = Convert.ChangeType(flag, underlyingType);
+        dynamic valueAsInt = Convert.ChangeType(value!, underlyingType);
+        dynamic flagAsInt = Convert.ChangeType(flag!, underlyingType);
         if (set)
             valueAsInt |= flagAsInt;
         else
