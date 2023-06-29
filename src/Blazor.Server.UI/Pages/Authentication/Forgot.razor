@@ -93,7 +93,7 @@
                 Snackbar.Clear();
                 Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
                 Snackbar.Add(string.Format(L["The email has been sent, please check the email:{0} "],_emailAddress), MudBlazor.Severity.Success,config=> { config.ShowCloseIcon = false; config.HideTransitionDuration = 5000; });
-                Logger.LogInformation("{@UserName:l}'s password reset token: {@Token} has been sent", _user.UserName,_resetPasswordToken);
+                Logger.LogInformation("{@UserName:l}'s password reset token: {@Token} has been sent", _user.UserName,"******");
             }
             else
             {
