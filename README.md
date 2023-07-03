@@ -68,11 +68,21 @@ Blazor technology.
 - install the project template
     - run CLI: `dotnet new install ./`
     - run CLI: `dotnet new list`
-- create a solution with the template
-    - run CLI: `dotnet new ca-blazorserver-sln`
-
+      
 <img width="828" alt="image" src="https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/f23022e0-3fd6-475a-96ab-84b0d3328e4c">
 
+- create a solution with the template
+    - run CLI: `dotnet new ca-blazorserver-sln` or `dotnet new ca-blazorserver-sln -n NewProjectName(root namesapces)`
+
+
+- build a project template with nuget.exe
+    - run CLI: `.\nuget.exe add -Source .\ CleanArchitecture.Blazor.Solution.Template.1.0.0-preview.1.nupkg`
+      <img width="1329" alt="image" src="https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/7c56dec5-5935-4fc5-ad81-8bcb65e9d0dc">
+    - create a new project from Clean Architecture for Blazor Server Solution
+      <img width="769" alt="image" src="https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/ed7eb20f-aec2-4f69-95b7-d47c2eb20428">
+
+
+  
 
 ## Why I choose Blazor Server
 
