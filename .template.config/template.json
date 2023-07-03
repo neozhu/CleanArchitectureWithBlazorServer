@@ -33,7 +33,11 @@
         "**/.git/**",
         "**/.github/**",
         "*.nuspec",
-        "src/Blazor.Server.UI/Files/**"
+        "*.nupkg",
+        "src/Blazor.Server.UI/Files/**",
+        "launchSettings.json",
+        "*.exe",
+        "cleanarchitecture.blazor.solution.template/**/**"
       ]
     }
   ]
