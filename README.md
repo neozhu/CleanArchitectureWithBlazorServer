@@ -63,20 +63,16 @@ Blazor technology.
     
         - ![image](https://user-images.githubusercontent.com/1549611/183537444-3d1b2980-b131-4e9d-bfe1-7b475f760b57.png)
 
-## How to build solution templates
+## How to install solution templates
 
-- run CLI: `dotnet new --install sayedha.templates`
-- create solution/project template
-    - create `.template.config`
-    - run CLI: `dotnet new templatejson`
-    - edit templatejson file
 - install the project template
-    - run CLI: `dotnet new --install ./`
-    - run CLI: `dotnet new --list`
+    - run CLI: `dotnet new install ./`
+    - run CLI: `dotnet new list`
 - create a solution with the template
-    - run CLI: `dotnet new ca-blazor-sln`
+    - run CLI: `dotnet new ca-blazorserver-sln`
 
-  ![image](https://user-images.githubusercontent.com/1549611/182025444-04c9c8db-2b11-44b3-8091-acffcc37a899.png)
+<img width="828" alt="image" src="https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/f23022e0-3fd6-475a-96ab-84b0d3328e4c">
+
 
 ## Why I choose Blazor Server
 
