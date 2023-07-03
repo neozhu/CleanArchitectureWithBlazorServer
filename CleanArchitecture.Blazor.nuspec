@@ -26,7 +26,6 @@
     <packageTypes>
       <packageType name="Template" />
     </packageTypes>
-
   </metadata>
 
   <files>
