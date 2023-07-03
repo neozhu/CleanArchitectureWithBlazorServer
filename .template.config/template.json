@@ -3,10 +3,10 @@
     "author": "hualin.zhu",
     "classifications": ["Web","Blazor","Clean Architecture"],
     "name": "Clean Architecture for Blazor Server Solution",
-    "defaultName": "Clean.Architecture.Blazor",
-    "identity": "Clean.Architecture.Blazor.Solution.CSharp",
-    "groupIdentity": "Clean.Architecture.Blazor.Solution",
-    "shortName": "ca-blazor-sln",
+    "defaultName": "CleanArchitecture.Blazor",
+    "identity": "CleanArchitecture.Blazor.Solution.CSharp",
+    "groupIdentity": "CleanArchitecture.Blazor.Solution",
+    "shortName": "ca-blazorserver-sln",
     "tags": {
       "language": "C#",
       "type": "project"
@@ -16,27 +16,25 @@
     "description": "This is a solution templates for creating a Blazor Server application following the principles of Clean Architecture",
     "sources": [
     {
-      "target": "./src/",
-      "copyOnly": "**/*.txt",
-      "exclude": "**/*.reg",
-      "include": "**/*",
-      "modifiers": [
-        {
-          "condition": "(IndividualAuth)",
-          "exclude": "individual_auth.filelist"
-        }
+      "source": "./",
+      "target": "./",
+      "exclude": [
+        "README.md",
+        "**/[Bb]in/**",
+        "**/[Oo]bj/**",
+        ".template.config/**/*",
+        "templates/**/*",
+        ".vs/**/*",
+        ".vscode/**/*",
+        "doc/**/*",
+        "**/*.filelist",
+        "**/*.user",
+        "**/*.lock.json",
+        "**/.git/**",
+        "**/.github/**",
+        "*.nuspec",
+        "src/Blazor.Server.UI/Files/**"
       ]
-    },
-    {
-      "target": "./tests/",
-      "condition": "TestProject"
     }
-  ],
-    "symbols": {
-    "TestProject": {
-      "type": "parameter",
-      "dataType": "bool",
-      "defaultValue": "false"
-    }
-  },
+  ]
   }
