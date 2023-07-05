@@ -1,6 +1,6 @@
 {
     "$schema": "http://json.schemastore.org/template",
-    "author": "hualin.zhu",
+    "author": "hl.z",
     "classifications": ["Web","Blazor","Clean Architecture"],
     "name": "Clean Architecture for Blazor Server Solution",
     "defaultName": "CleanArchitecture.Blazor",
@@ -34,10 +34,9 @@
         "**/.github/**",
         "*.nuspec",
         "*.nupkg",
-        "src/Blazor.Server.UI/Files/**",
         "launchSettings.json",
         "*.exe",
-        "cleanarchitecture.blazor.solution.template/**/**"
+        "src/Blazor.Server.UI/Files/**"
       ]
     }
   ]

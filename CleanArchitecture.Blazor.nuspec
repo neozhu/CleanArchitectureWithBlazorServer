@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-
     <id>CleanArchitecture.Blazor.Solution.Template</id>
-    <version>1.0.0-preview.2</version>
+    <version>1.0.0-preview.3</version>
     <title>Clean Architecture Blazor Solution Template</title>
-    <authors>JasonTaylorDev</authors>
+    <authors>hl.z</authors>
     <description>Clean Architecture Blazor Solution Template for .NET 7.</description>
     <summary>
       A Clean Architecture Blazor Server Solution Template for creating a Single-Page Application (SPA) with ASP.NET Core.
     </summary>
     <releaseNotes>
-      Added item template for creating use cases (commands and queries)
+      1.0.0-preview.3
+      - Clean up the project structure
     </releaseNotes>
 
     <projectUrl>https://github.com/neozhu/CleanArchitectureWithBlazorServer</projectUrl>
@@ -31,7 +31,7 @@
   <files>
     <file src=".template.config\icon.png" />
     <file src="README.md" />
-    <file src=".\**" target="content" exclude="**\bin\**;**\obj\**;**\.vs\**;**\.vscode\**;**\wwwroot\dist\**;content\Directory.Build.*;**\.git\**;**\.github\**;**\CODE_OF_CONDUCT.md;**\LICENSE;**\README.md;" />
+    <file src=".\**" target="content" exclude=".template.config\**;*.exe\;*\bin\**;**\obj\**;**\.vs\**;**\.vscode\**;**\wwwroot\dist\**;content\Directory.Build.*;**\.git\**;**\.github\**;**\CODE_OF_CONDUCT.md;**\LICENSE;**\README.md;" />
   </files>
 
 </package>
