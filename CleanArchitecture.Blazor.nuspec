@@ -3,7 +3,7 @@
   <metadata>
 
     <id>CleanArchitecture.Blazor.Solution.Template</id>
-    <version>1.0.0-preview.1</version>
+    <version>1.0.0-preview.2</version>
     <title>Clean Architecture Blazor Solution Template</title>
     <authors>JasonTaylorDev</authors>
     <description>Clean Architecture Blazor Solution Template for .NET 7.</description>
