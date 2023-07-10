@@ -12,7 +12,7 @@ jobs:
 
     runs-on: ubuntu-latest
     services:
-      sql:
+      sqldb:
         image: mcr.microsoft.com/mssql/server
         ports:
           - 1433:1433
@@ -30,8 +30,8 @@ jobs:
       run: dotnet restore CleanArchitecture.Blazor.sln
     - name: Build
       run: dotnet build CleanArchitecture.Blazor.sln --no-restore --configuration Release
-#    - name: Test
-#      run: dotnet test CleanArchitecture.Blazor.sln --no-build --configuration Release --filter "FullyQualifiedName!~AcceptanceTests"
+    - name: Test
+      run: dotnet test CleanArchitecture.Blazor.sln --no-build --configuration Release --filter "FullyQualifiedName!~AcceptanceTests"
       env:
         DatabaseSettings__DBProvider: mssql
-        ConnectionStrings__ConnectionString: Server=.;Database=BlazorDashboardDb.Test;User=sa;Password=Your_password123;MultipleActiveResultSets=true;Encrypt=false;
+        ConnectionStrings__ConnectionString: Server=sqldb;Database=BlazorDashboardDb.Test;User=sa;Password=Your_password123;MultipleActiveResultSets=true;Encrypt=false;
