@@ -84,8 +84,8 @@ public class ImportProductsCommandHandler :
                 },
                 {
                     _localizer["Pictures"],
-                    (row, item) => item.Pictures = string.IsNullOrEmpty(_localizer["Pictures"].ToString())
-                        ? null
+                    (row, item) => item.Pictures = string.IsNullOrEmpty(row[_localizer["Pictures"]].ToString())
+                        ? new List<ProductImage>()
                         : _serializer.Deserialize<List<ProductImage>>(row[_localizer["Pictures"]].ToString())
                 }
             }, _localizer["Products"]);

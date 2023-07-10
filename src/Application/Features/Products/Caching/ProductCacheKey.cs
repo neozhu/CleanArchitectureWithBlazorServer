@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using DocumentFormat.OpenXml.Spreadsheet;
+
 namespace CleanArchitecture.Blazor.Application.Features.Products.Caching;
 
 public static class ProductCacheKey
@@ -9,6 +11,11 @@ public static class ProductCacheKey
     public const string GetAllCacheKey = "all-Products";
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromHours(1);
     private static CancellationTokenSource _tokenSource;
+
+    public static string GetProductByIdCacheKey(int id)
+    {
+        return $"GetProductById,{id}";
+    }
 
     static ProductCacheKey()
     {

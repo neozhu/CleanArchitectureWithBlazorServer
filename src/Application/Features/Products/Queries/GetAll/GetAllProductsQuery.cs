@@ -17,7 +17,7 @@ public class GetProductQuery : FilterBase, ICacheableRequest<ProductDto>
     [OperatorComparison(OperatorType.Equal)]
     public required int Id { get; set; }
 
-    public string CacheKey => ProductCacheKey.GetAllCacheKey;
+    public string CacheKey => ProductCacheKey.GetProductByIdCacheKey(Id);
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
 }
 
