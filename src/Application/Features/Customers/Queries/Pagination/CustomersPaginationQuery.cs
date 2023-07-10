@@ -61,7 +61,7 @@ public class CustomersPaginationSpecification : Specification<Customer>
     public CustomersPaginationSpecification(CustomersWithPaginationQuery query)
     {
         Criteria = q => q.Name != null;
-        if (!string.IsNullOrEmpty(query.Keyword)) And(x => x.Name.Contains(query.Keyword));
+        if (!string.IsNullOrEmpty(query.Keyword)) And(x => x.Name!.Contains(query.Keyword));
     }
 }
 
