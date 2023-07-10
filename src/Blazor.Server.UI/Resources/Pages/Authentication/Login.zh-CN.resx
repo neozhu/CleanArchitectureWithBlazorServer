@@ -165,4 +165,16 @@
   <data name="No user found, or no authorization, please contact the administrator." xml:space="preserve">
     <value>没有找到用户，或者没有授权，请联系管理员。</value>
   </data>
+  <data name="Please check your username and password. If you are still unable to log in, contact an administrator." xml:space="preserve">
+    <value>请检查用户名和密码, 如果还是不能登录, 请联系管理员</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="Username is required!" xml:space="preserve">
+    <value>用户名必填</value>
+  </data>
+  <data name="No user found, or no authorization, please contact an administrator." xml:space="preserve">
+    <value>没有找到该用户, 请联系管理员</value>
+  </data>
 </root>
