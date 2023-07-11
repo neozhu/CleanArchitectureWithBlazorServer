@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Constants.User;
+
 public abstract class UserName
 {
     public const string Administrator = nameof(Administrator);
