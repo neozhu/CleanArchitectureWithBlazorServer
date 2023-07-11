@@ -3,10 +3,10 @@
 
 namespace CleanArchitecture.Blazor.Application.Constants.Role;
 
-public static class RoleName
+public abstract class RoleName
 {
-    public const string Administrator = "Admin";
-    public const string Basic = "Basic";
-    public const string Users = "Users";
+    public const string Admin = nameof(Admin);
+    public const string Basic =nameof(Basic);
+    public const string Users =nameof(Users);
 
 }

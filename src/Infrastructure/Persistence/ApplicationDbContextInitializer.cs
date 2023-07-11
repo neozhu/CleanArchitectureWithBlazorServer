@@ -84,7 +84,7 @@ public class ApplicationDbContextInitializer
         }
 
         // Default roles
-        var administratorRole = new ApplicationRole(RoleName.Administrator) { Description = "Admin Group" };
+        var administratorRole = new ApplicationRole(RoleName.Admin) { Description = "Admin Group" };
         var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
         var permissions = GetAllPermissions();
         if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
@@ -106,8 +106,8 @@ public class ApplicationDbContextInitializer
             }
         }
         // Default users
-        var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = "Administrator", Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
-        var demo = new ApplicationUser { UserName = UserName.Demo, IsActive = true, Provider = "Local", TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = "Demo", Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
+        var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
+        var demo = new ApplicationUser { UserName = UserName.Demo, IsActive = true, Provider = "Local", TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Demo, Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
 
 
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))
