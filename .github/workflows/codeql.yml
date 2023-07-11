@@ -25,14 +25,17 @@ jobs:
     name: Analyze
     runs-on: ubuntu-latest
     permissions:
-      security-events: write
+       contents: read
+       security-events: write
+       pull-requests: read
 
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ['javascript', 'csharp']
         
     steps:
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.102
+        
     - name: Checkout repository
       uses: actions/checkout@v3
 
@@ -40,7 +43,7 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        languages: ${{ matrix.language }}
+        languages: csharp
 
     # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
     # If this step fails, then you should remove it and run the build manually (see below)
@@ -57,7 +60,10 @@ jobs:
     #     echo "Run, Build Application using script"
     #     ./location_of_script_within_repo/buildscript.sh
 
+    - run: |
+       dotnet build csharp
+       
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
       with:
-        languages: ${{ matrix.language }}
+        languages: csharp
