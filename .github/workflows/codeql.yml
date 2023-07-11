@@ -29,7 +29,11 @@ jobs:
       contents: read
       security-events: write
 
-
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['javascript', 'csharp']
+        
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -37,6 +41,8 @@ jobs:
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
+      with:
+        languages: csharp
 
     # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
     # If this step fails, then you should remove it and run the build manually (see below)
