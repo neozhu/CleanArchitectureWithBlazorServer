@@ -18,25 +18,27 @@ on:
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
   schedule:
-    - cron: '22 18 * * 1'
+    - cron: '0 0 * * 1'
 
 jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
     permissions:
-      actions: read
-      contents: read
-      security-events: write
+       contents: read
+       security-events: write
+       pull-requests: read
 
-
-    steps:
+        
+    steps:  
     - name: Checkout repository
       uses: actions/checkout@v3
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
+      with:
+        languages: csharp
 
     # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
     # If this step fails, then you should remove it and run the build manually (see below)
@@ -52,6 +54,8 @@ jobs:
     # - run: |
     #     echo "Run, Build Application using script"
     #     ./location_of_script_within_repo/buildscript.sh
-
+       
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
+      with:
+        languages: csharp

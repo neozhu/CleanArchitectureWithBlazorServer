@@ -3,10 +3,10 @@
 
 namespace CleanArchitecture.Blazor.Application.Constants.User;
 
-public static class UserName
+public abstract class UserName
 {
-    public const string Administrator = "Administrator";
-    public const string Demo = "Demo";
-    public const string Users = "Users";
+    public const string Administrator = nameof(Administrator);
+    public const string Demo = nameof(Demo);
+    public const string Users = nameof(Users);
     public const string DefaultPassword = "Password123!";
 }

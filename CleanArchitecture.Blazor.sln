@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		CleanArchitecture.Blazor.nuspec = CleanArchitecture.Blazor.nuspec
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -33,11 +34,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.UnitTests", "tests\D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrators", "Migrators", "{5C45543E-B3FA-4C1F-9D7D-DA2E6654BD61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrators.MSSQL", "src\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj", "{910C5689-CC8A-4E5B-8894-B00515C90466}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Migrators.MSSQL", "src\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj", "{910C5689-CC8A-4E5B-8894-B00515C90466}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrators.PostgreSQL", "src\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj", "{08778353-0814-41BB-B49E-36BBA8D7751D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Migrators.PostgreSQL", "src\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj", "{08778353-0814-41BB-B49E-36BBA8D7751D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrators.SqLite", "src\Migrators\Migrators.SqLite\Migrators.SqLite.csproj", "{469D68F1-379E-46A6-AAC3-CD1E4C0E7D77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Migrators.SqLite", "src\Migrators\Migrators.SqLite\Migrators.SqLite.csproj", "{469D68F1-379E-46A6-AAC3-CD1E4C0E7D77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
