@@ -48,12 +48,17 @@ Blazor technology.
     - cmd: `dotnet user-secrets init`
     - cmd: `dotnet user-secrets -p Blazor.Server.UI.csproj set "Kestrel:Certificates:Development:Password" "Password@123"`
 
-## Code Generator Extension Plugin for visual studio.net 2022
+## Code Generator Extension for visual studio.net 2022
 
 <div><video controls src="https://user-images.githubusercontent.com/1549611/197116874-f28414ca-7fc1-463a-b887-0754a5bb3e01.mp4" muted="false"></video></div>
 
-- CleanArchitectureCodeGenerator(branch: blazor)
-- https://github.com/neozhu/CleanArchitectureCodeGenerator/tree/blazor
+### Install CleanArchitecture CodeGenerator For Blaozr App
+- Open Manage Extensions Search with `CleanArchitecture CodeGenerator For Blaozr App`
+![image](https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/555d274c-8f62-438b-ac7a-6d327e4c23c8)
+- Download to Install
+
+### CleanArchitecture CodeGenerator For Blaozr App Repo.
+- https://github.com/neozhu/CleanArchitectureCodeGenerator
 - The code generator can automatically generate the standard code
     - Application Layer Code
     
