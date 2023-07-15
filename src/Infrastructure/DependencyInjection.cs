@@ -7,6 +7,7 @@ using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
@@ -25,8 +26,8 @@ public static class DependencyInjection
         services.AddScoped<AuthenticationStateProvider, BlazorAuthStateProvider>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ITenantProvider, TenantProvider>();
-        services.AddScoped<AuditableEntitySaveChangesInterceptor>();
-        
+        services.AddScoped<ISaveChangesInterceptor,AuditableEntityInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -40,6 +41,7 @@ public static class DependencyInjection
             services.AddDbContext<ApplicationDbContext>((p, m) =>
              {
                  var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+                 m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
                  m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
              });
         }
