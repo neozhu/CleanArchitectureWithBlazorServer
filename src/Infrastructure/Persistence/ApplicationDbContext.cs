@@ -15,15 +15,11 @@ public class ApplicationDbContext : IdentityDbContext<
 {
 
 
-    private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
-
     public ApplicationDbContext(
-        DbContextOptions<ApplicationDbContext> options,
-
-        AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor
+        DbContextOptions<ApplicationDbContext> options
         ) : base(options)
     {
-        _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
+  
     }
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<Logger> Loggers { get; set; }
@@ -44,7 +40,6 @@ public class ApplicationDbContext : IdentityDbContext<
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
         if (!optionsBuilder.IsConfigured)
         {
 

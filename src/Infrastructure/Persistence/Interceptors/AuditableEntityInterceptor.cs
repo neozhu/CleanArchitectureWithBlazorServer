@@ -6,15 +6,14 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
-public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
+public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
     private readonly ITenantProvider _tenantProvider;
     private readonly ICurrentUserService _currentUserService;
-    private readonly IMediator _mediator;
     private readonly IDateTime _dateTime;
     private List<AuditTrail> _temporaryAuditTrailList = new();
     private List<DomainEvent> _deletingDomainEvents = new();
-    public AuditableEntitySaveChangesInterceptor(
+    public AuditableEntityInterceptor(
         ITenantProvider tenantProvider,
         ICurrentUserService currentUserService,
                 IMediator mediator,
@@ -22,7 +21,6 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     {
         _tenantProvider = tenantProvider;
         _currentUserService = currentUserService;
-        _mediator = mediator;
         _dateTime = dateTime;
     }
 
@@ -31,14 +29,12 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 
         UpdateEntities(eventData.Context!);
         _temporaryAuditTrailList = TryInsertTemporaryAuditTrail(eventData.Context!, cancellationToken);
-        _deletingDomainEvents = TryGetDeletingDomainEvents(eventData.Context!, cancellationToken);
         return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
     public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result, CancellationToken cancellationToken = default)
     {
         var resultValueTask = await base.SavedChangesAsync(eventData, result, cancellationToken);
         await TryUpdateTemporaryPropertiesForAuditTrail(eventData.Context!, cancellationToken).ConfigureAwait(false);
-        await _mediator.DispatchDomainEvents(eventData.Context!, _deletingDomainEvents).ConfigureAwait(false);
         return resultValueTask;
     }
     private void UpdateEntities(DbContext context)
@@ -182,23 +178,6 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
             _temporaryAuditTrailList.Clear();
         }
     }
-
-    private List<DomainEvent> TryGetDeletingDomainEvents(DbContext context, CancellationToken cancellationToken = default)
-    {
-        var entities = context.ChangeTracker
-            .Entries<BaseEntity>()
-            .Where(e => e.Entity.DomainEvents.Any() && e.State == EntityState.Deleted)
-            .Select(e => e.Entity);
-
-        var domainEvents = entities
-            .SelectMany(e => e.DomainEvents)
-            .ToList();
-
-        entities.ToList().ForEach(e => e.ClearDomainEvents());
-        return domainEvents;
-    }
-
-
 }
 
 public static class Extensions
