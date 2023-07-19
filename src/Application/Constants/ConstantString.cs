@@ -59,6 +59,8 @@ public static class ConstantString
 
     //========================================================
 
+    public static string Selected=> Localize("Selected");
+    public static string SelectedTotal => Localize("Selected Total");
     public static string AdvancedSearch => Localize("Advanced Search");
     public static string OrderBy => Localize("Order By");
     public static string CreateAnItem => Localize("Create a new {0}");

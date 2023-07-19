@@ -279,4 +279,10 @@
   <data name="Submit" xml:space="preserve">
     <value>送信</value>
   </data>
+  <data name="Clone" xml:space="preserve">
+    <value>クローン</value>
+  </data>
+  <data name="Save &amp; New" xml:space="preserve">
+    <value>保存して新規作成</value>
+  </data>
 </root>

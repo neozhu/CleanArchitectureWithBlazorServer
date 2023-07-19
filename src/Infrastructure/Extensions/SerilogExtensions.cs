@@ -76,7 +76,7 @@ public static class SerilogExtensions
 
         if (privacySettings == null) return;
         if (privacySettings.LogClientIpAddresses) serilogConfig.Enrich.WithClientIp();
-        if (privacySettings.LogClientAgents) serilogConfig.Enrich.WithClientAgent();
+
     }
 
     private static void WriteToSqlServer(LoggerConfiguration serilogConfig, string? connectionString)
