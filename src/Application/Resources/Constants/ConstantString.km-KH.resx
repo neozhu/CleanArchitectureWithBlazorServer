@@ -279,4 +279,10 @@
   <data name="Submit" xml:space="preserve">
     <value>제출하다</value>
   </data>
+  <data name="Clone" xml:space="preserve">
+    <value>클론</value>
+  </data>
+  <data name="Save &amp; New" xml:space="preserve">
+    <value>저장 후 새로 만들기</value>
+  </data>
 </root>

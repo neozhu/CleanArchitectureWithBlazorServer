@@ -279,4 +279,10 @@
   <data name="Submit" xml:space="preserve">
     <value>Presentar</value>
   </data>
+  <data name="Clone" xml:space="preserve">
+    <value>Clonar</value>
+  </data>
+  <data name="Save &amp; New" xml:space="preserve">
+    <value>Desa i nou</value>
+  </data>
 </root>

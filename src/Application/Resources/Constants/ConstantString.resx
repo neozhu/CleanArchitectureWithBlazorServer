@@ -279,4 +279,16 @@
   <data name="Submit" xml:space="preserve">
     <value>Submit</value>
   </data>
+  <data name="Clone" xml:space="preserve">
+    <value>Clone</value>
+  </data>
+  <data name="Save &amp; New" xml:space="preserve">
+    <value>Save &amp; New</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="Selected Total" xml:space="preserve">
+    <value>Selected Total</value>
+  </data>
 </root>

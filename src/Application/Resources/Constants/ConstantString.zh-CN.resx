@@ -279,4 +279,16 @@
   <data name="Submit" xml:space="preserve">
     <value>提交</value>
   </data>
+  <data name="Clone" xml:space="preserve">
+    <value>克隆</value>
+  </data>
+  <data name="Save &amp; New" xml:space="preserve">
+    <value>保存 &amp; 新增</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>选中</value>
+  </data>
+  <data name="Selected Total" xml:space="preserve">
+    <value>选中的汇总</value>
+  </data>
 </root>
