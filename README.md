@@ -18,7 +18,7 @@ Blazor technology.
 
 [![Everything Is AWESOME](doc/page.png)](https://www.youtube.com/embed/GyZJl_dG-Pg "Everything Is AWESOME")
 
-## Development Enviroment
+## Development Environment
 
 - Microsoft Visual Studio Community 2022 (64-bit)
 - Docker
@@ -44,7 +44,7 @@ Blazor technology.
 - Create self-signed development certificates for the project
     - cmd: `dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\Blazor.Server.UI.pfx -p Password@123`
     - cmd: `dotnet dev-certs https --trust`
-- Manage User secrets to save password
+- Manage User secrets to save the password
     - cmd: `dotnet user-secrets init`
     - cmd: `dotnet user-secrets -p Blazor.Server.UI.csproj set "Kestrel:Certificates:Development:Password" "Password@123"`
 
@@ -52,12 +52,12 @@ Blazor technology.
 
 <div><video controls src="https://user-images.githubusercontent.com/1549611/197116874-f28414ca-7fc1-463a-b887-0754a5bb3e01.mp4" muted="false"></video></div>
 
-### Install CleanArchitecture CodeGenerator For Blaozr App
+### Install CleanArchitecture CodeGenerator For Blazor App
 - Open Manage Extensions Search with `CleanArchitecture CodeGenerator For Blaozr App`
 ![image](https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/555d274c-8f62-438b-ac7a-6d327e4c23c8)
 - Download to Install
 
-### CleanArchitecture CodeGenerator For Blaozr App Repo.
+### CleanArchitecture CodeGenerator For Blazor App Repo
 - https://github.com/neozhu/CleanArchitectureCodeGenerator
 - The code generator can automatically generate the standard code
     - Application Layer Code
@@ -94,7 +94,7 @@ Blazor technology.
 
   
 
-## Why I choose Blazor Server
+## Why I chose Blazor Server
 
 - I hate switching between C# and JavaScript at the same time in order to develop a project, which is why I opted for Blazor Server.
 
@@ -102,7 +102,7 @@ Blazor technology.
 
 - Avoid repeating work
 - Focus on story implementation
-- Integration Hangfire dasboard
+- Integration Hangfire dashboard
 - Implementation OCR image recognition
 
   ![image](https://user-images.githubusercontent.com/1549611/185576711-31ab3081-ba22-43f3-b837-c8f1de981442.png)
