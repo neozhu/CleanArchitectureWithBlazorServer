@@ -44,7 +44,7 @@ Blazor technology.
 - Create self-signed development certificates for the project
     - cmd: `dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\Blazor.Server.UI.pfx -p Password@123`
     - cmd: `dotnet dev-certs https --trust`
-- Manage User secrets to save password
+- Manage User secrets to save the password
     - cmd: `dotnet user-secrets init`
     - cmd: `dotnet user-secrets -p Blazor.Server.UI.csproj set "Kestrel:Certificates:Development:Password" "Password@123"`
 
