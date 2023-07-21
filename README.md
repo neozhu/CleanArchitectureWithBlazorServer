@@ -18,7 +18,7 @@ Blazor technology.
 
 [![Everything Is AWESOME](doc/page.png)](https://www.youtube.com/embed/GyZJl_dG-Pg "Everything Is AWESOME")
 
-## Development environment
+## Development Environment
 
 - Microsoft Visual Studio Community 2022 (64-bit)
 - Docker
