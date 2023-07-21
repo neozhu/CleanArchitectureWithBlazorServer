@@ -5,14 +5,14 @@ using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http.Connections;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 builder.RegisterSerilog();
-builder.Services.AddBlazorUiServices();
+builder.AddBlazorUiServices();
 builder.Services.AddInfrastructureServices(builder.Configuration)
     .AddApplicationServices();
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 app.MapHealthChecks("/health");
 app.UseExceptionHandler("/Error");
@@ -24,12 +24,12 @@ app.MapBlazorHub(options => options.Transports = HttpTransportType.WebSockets);
 if (app.Environment.IsDevelopment())
 {
     // Initialise and seed database
-    using (IServiceScope scope = app.Services.CreateScope())
+    using (var scope = app.Services.CreateScope())
     {
-        ApplicationDbContextInitializer initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
+        var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
         await initializer.InitialiseAsync();
         await initializer.SeedAsync();
-        INotificationService? notificationService = scope.ServiceProvider.GetService<INotificationService>();
+        var notificationService = scope.ServiceProvider.GetService<INotificationService>();
         if (notificationService is InMemoryNotificationService inMemoryNotificationService)
         {
             inMemoryNotificationService.Preload();

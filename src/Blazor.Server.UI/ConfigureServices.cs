@@ -4,6 +4,7 @@ using Blazor.Server.UI.Services.Navigation;
 using Blazor.Server.UI.Services.Notifications;
 using Blazor.Server.UI.Services.UserPreferences;
 using BlazorDownloadFile;
+using CleanArchitecture.Blazor.Application.Common.Configurations;
 using MudBlazor.Services;
 using MudExtensions.Services;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
@@ -12,18 +13,18 @@ namespace Blazor.Server.UI;
 
 public static class ConfigureServices
 {
-    public static IServiceCollection AddBlazorUiServices(this IServiceCollection services)
+    public static WebApplicationBuilder AddBlazorUiServices(this WebApplicationBuilder builder)
     {
-        services.AddRazorPages();
-        services.AddServerSideBlazor(
-            options =>
-            {
-                options.DetailedErrors = true;
-                options.DisconnectedCircuitMaxRetained = 100;
-                options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
-                options.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(1);
-                options.MaxBufferedUnacknowledgedRenderBatches = 10;
-            }
+        builder.Services.AddRazorPages();
+        builder.Services.AddServerSideBlazor(
+                options =>
+                {
+                    options.DetailedErrors = true;
+                    options.DisconnectedCircuitMaxRetained = 100;
+                    options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
+                    options.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(1);
+                    options.MaxBufferedUnacknowledgedRenderBatches = 10;
+                }
             ).AddHubOptions(options =>
             {
                 options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
@@ -35,9 +36,9 @@ public static class ConfigureServices
                 options.StreamBufferCapacity = 10;
             })
             .AddCircuitOptions(option => { option.DetailedErrors = true; });
-        services.AddMudBlazorDialog();
-        services.AddHotKeys2();
-        services.AddMudServices(config =>
+        builder.Services.AddMudBlazorDialog();
+        builder.Services.AddHotKeys2();
+        builder.Services.AddMudServices(config =>
         {
             config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
             config.SnackbarConfiguration.PreventDuplicates = false;
@@ -49,14 +50,22 @@ public static class ConfigureServices
             config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
         });
 
-        services.AddMudExtensions();
-        services.AddScoped<LayoutService>();
-        services.AddBlazorDownloadFile();
-        services.AddScoped<IUserPreferencesService, UserPreferencesService>();
-        services.AddScoped<IMenuService, MenuService>();
-        services.AddScoped<INotificationService, InMemoryNotificationService>();
-        services.AddGoogleAnalytics("G-PRYNCB61NV");
-        services.AddHealthChecks();
-        return services;
+        builder.Services.AddMudExtensions();
+        builder.Services.AddScoped<LayoutService>();
+        builder.Services.AddBlazorDownloadFile();
+        builder.Services.AddScoped<IUserPreferencesService, UserPreferencesService>();
+        builder.Services.AddScoped<IMenuService, MenuService>();
+        builder.Services.AddScoped<INotificationService, InMemoryNotificationService>();
+        builder.Services.AddHealthChecks();
+
+        var privacySettings = builder.Configuration.GetRequiredSection(PrivacySettings.Key).Get<PrivacySettings>();
+        if (privacySettings is not { UseGoogleAnalytics: true }) return builder;
+
+        if (privacySettings.GoogleAnalyticsKey is null or "")
+            throw new ArgumentNullException(nameof(privacySettings.GoogleAnalyticsKey));
+
+        builder.Services.AddGoogleAnalytics(privacySettings.GoogleAnalyticsKey);
+
+        return builder;
     }
 }
