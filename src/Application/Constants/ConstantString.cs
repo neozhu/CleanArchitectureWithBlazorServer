@@ -39,6 +39,7 @@ public static class ConstantString
     public static string Microsoft => Localize("Microsoft");
     public static string Facebook => Localize("Facebook");
     public static string Google => Localize("Google");
+    public static string OtpLess => Localize("OtpLess");
 
     //============================================================================//
     // for toast message
