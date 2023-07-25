@@ -107,7 +107,12 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
 
+    <script src="https://otpless.com/auth.js"></script>
+
     <script type="text/javascript">
+        function otpless(otplessUser) {
+            alert(JSON.stringify(otplessUser));
+        }
 
         async function externalLogin(provider, dotNetHelper) {
             if (provider == 'Microsoft') {
