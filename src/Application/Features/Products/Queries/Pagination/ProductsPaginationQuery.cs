@@ -5,6 +5,7 @@
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 
@@ -12,34 +13,71 @@ public class ProductsWithPaginationQuery : PaginationFilterBase, ICacheableReque
 {
     public string? Name { get; set; }
     public string? Brand { get; set; }
-
     public string? Unit { get; set; }
     public Range<decimal> Price { get; set; } = new();
-
-    [CompareTo("Name", "Brand", "Description")] // <-- This filter will be applied to Name or Brand or Description.
-    [StringFilterOptions(StringFilterOption.Contains)]
     public string? Keyword { get; set; }
-
-    [CompareTo(typeof(SearchProductsWithListView), "Name")]
     public ProductListView ListView { get; set; } =
         ProductListView.All; //<-- When the user selects a different ListView,
+    public UserProfile? CurrentUser { get; set; } // <-- This CurrentUser property gets its value from the information of
 
-    // a custom query expression is executed on the backend.
-    // For example, if the user selects "My Products",
-    // the query will be x => x.CreatedBy == CurrentUser.UserId
-    [IgnoreFilter]
-    public UserProfile?
-        CurrentUser { get; set; } // <-- This CurrentUser property gets its value from the information of
+    public string CacheKey => ProductCacheKey.GetPaginationCacheKey($"{this}");
 
-    [IgnoreFilter] public string CacheKey => ProductCacheKey.GetPaginationCacheKey($"{this}");
-
-    [IgnoreFilter] public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
+    public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
 
     // the currently logged in user
     public override string ToString()
     {
         return
             $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{Price?.Min},MaxPrice:{Price?.Max},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+    }
+
+    public Expression<Func<Product, bool>> LinqExpression()
+    {
+        Expression<Func<Product, bool>> initExpr = product => true;
+        Expression<Func<Product, bool>> keywordExpre = product => product.Name.Contains(Keyword) || product.Description.Contains(Keyword);
+        Expression<Func<Product, bool>> brandExpre = product => product.Brand.Contains(Brand);
+        Expression<Func<Product, bool>> unitExpre = product => product.Unit.Equals(Unit);
+        Expression<Func<Product, bool>> priceExpre = product => product.Price >= Price.Min && product.Price <= Price.Max;
+        var parameter = Expression.Parameter(typeof(Product));
+
+        switch (ListView)
+        {
+            case ProductListView.My:
+                Expression<Func<Product, bool>> myexp = product => product.CreatedBy == CurrentUser.UserId;
+                initExpr = initExpr.And(myexp);
+                break;
+            case ProductListView.CreatedToday:
+                var today = DateTime.Now;
+                Expression<Func<Product, bool>> todayexp = product => product.Created.Value.Date == today.Date;
+                initExpr = initExpr.And(todayexp);
+                break;
+            case ProductListView.Created30Days:
+                var last30day = DateTime.Now.AddDays(-30);
+                Expression<Func<Product, bool>> last30exp = product => product.Created.Value.Date >= last30day.Date;
+                initExpr = initExpr.And(last30exp);
+                break;
+            case ProductListView.All:
+            default:
+                break;
+        }
+
+        if (!string.IsNullOrEmpty(Keyword))
+        {
+            initExpr = initExpr.And(keywordExpre);
+        }
+        if (!string.IsNullOrEmpty(Brand))
+        {
+            initExpr = initExpr.And(brandExpre);
+        }
+        if (!string.IsNullOrEmpty(Unit))
+        {
+            initExpr = initExpr.And(unitExpre);
+        }
+        if (Price != null && Price.Max != null && Price.Min != null)
+        {
+            initExpr = initExpr.And(priceExpre);
+        }
+        return initExpr;
     }
 }
 
@@ -64,7 +102,8 @@ public class ProductsWithPaginationQueryHandler :
     public async Task<PaginatedData<ProductDto>> Handle(ProductsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Products.ApplyFilterWithoutPagination(request)
+        var expresss = request.LinqExpression();
+        var data = await _context.Products.Where(expresss)
             .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
             .PaginatedDataAsync(request.Page, request.PerPage);
         return data;
