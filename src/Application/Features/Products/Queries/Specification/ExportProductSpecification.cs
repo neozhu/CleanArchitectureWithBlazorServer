@@ -1,10 +1,10 @@
-using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
+﻿using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
 
-public class SearchProductSpecification : Specification<Product>
+public class ExportProductSpecification : Specification<Product>
 {
-    public SearchProductSpecification(ProductsWithPaginationQuery query)
+    public ExportProductSpecification(ExportProductsQuery query)
     {
         var today = DateTime.Now.Date;
         var start = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",

@@ -2,7 +2,6 @@
 @using Blazor.Server.UI.Pages.SystemManagement.Components
 @using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
-@using AutoFilterer.Enums
 @using CleanArchitecture.Blazor.Application.Constants.User
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Clear
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery
@@ -201,10 +200,10 @@
         try
         {
             _loading = true;
-            Query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            Query.SortBy = state.SortDefinitions.FirstOrDefault()?.Descending == false ? Sorting.Ascending : Sorting.Descending;
-            Query.Page = state.Page + 1;
-            Query.PerPage = state.PageSize;
+            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
+            Query.PageNumber = state.Page + 1;
+            Query.PageSize = state.PageSize;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
 
             return new GridData<LogDto> { TotalItems = result.TotalItems, Items = result.Items };
