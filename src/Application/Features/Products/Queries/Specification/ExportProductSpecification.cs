@@ -1,10 +1,10 @@
-using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
+﻿using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
 
-public class SearchProductSpecification : Specification<Product>
+public class ExportProductSpecification : Specification<Product>
 {
-    public SearchProductSpecification(ProductsWithPaginationQuery query)
+    public ExportProductSpecification(ExportProductsQuery query)
     {
         Criteria = q => q.Name != null;
         if (!string.IsNullOrEmpty(query.Keyword))
@@ -13,7 +13,7 @@ public class SearchProductSpecification : Specification<Product>
         if (!string.IsNullOrEmpty(query.Name)) And(x => x.Name!.Contains(query.Name));
         if (!string.IsNullOrEmpty(query.Unit)) And(x => x.Unit == query.Unit);
         if (!string.IsNullOrEmpty(query.Brand)) And(x => x.Brand == query.Brand);
-        if (query.MaxPrice is not null) And(x=>x.Price <= query.MaxPrice);
+        if (query.MaxPrice is not null) And(x => x.Price <= query.MaxPrice);
         if (query.MinPrice is not null) And(x => x.Price >= query.MinPrice);
 
         var today = DateTime.Now.Date;
@@ -30,7 +30,7 @@ public class SearchProductSpecification : Specification<Product>
                 And(product => product.CreatedBy == query.CurrentUser.UserId);
                 break;
             case ProductListView.CreatedToday:
-                And(product => product.Created >= start && product.Created<=end);
+                And(product => product.Created >= start && product.Created <= end);
                 break;
             case ProductListView.Created30Days:
                 And(product => product.Created >= last30day);
