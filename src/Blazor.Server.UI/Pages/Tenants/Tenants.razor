@@ -184,10 +184,10 @@
         {
             _loading = true;
             Query.Keyword = _searchString;
-            Query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy;
-            Query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending==false ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
-            Query.Page = state.Page + 1;
-            Query.PerPage = state.PageSize;
+            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
+            Query.PageNumber = state.Page + 1;
+            Query.PageSize = state.PageSize;
             var result = await Mediator.Send(Query);
             return new GridData<TenantDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }

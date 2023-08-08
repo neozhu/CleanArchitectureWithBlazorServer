@@ -1,30 +1,24 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.PaginationQuery;
 
-public class KeyValuesWithPaginationQuery : PaginationFilterBase, ICacheableRequest<PaginatedData<KeyValueDto>>
+public class KeyValuesWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<KeyValueDto>>
 {
-    [CompareTo("Value", "Text", "Description")] // <-- This filter will be applied to Name or Brand or Description.
-    [StringFilterOptions(StringFilterOption.Contains)]
-    public string? Keyword { get; set; }
-
-    [OperatorComparison(OperatorType.Equal)]
-    [CompareTo("Name")]
     public Picklist? Picklist { get; set; }
-
     public string CacheKey => $"{nameof(KeyValuesWithPaginationQuery)},{this}";
-
     public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
-
     public override string ToString()
     {
-        return $"Picklist:{Picklist},Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+        return $"Picklist:{Picklist},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
+    public KeyValuesQuerySpec Specification => new KeyValuesQuerySpec(this);
 }
 
 public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuery, PaginatedData<KeyValueDto>>
@@ -44,10 +38,19 @@ public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuer
     public async Task<PaginatedData<KeyValueDto>> Handle(KeyValuesWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.KeyValues.ApplyFilterWithoutPagination(request)
+        var data = await _context.KeyValues.Specify(request.Specification)
             .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.Page, request.PerPage);
+            .PaginatedDataAsync(request.PageNumber, request.PageSize);
 
         return data;
+    }
+}
+public class KeyValuesQuerySpec : Specification<KeyValue>
+{
+    public KeyValuesQuerySpec(KeyValuesWithPaginationQuery request)
+    {
+        Query.Where(p => p.Name== request.Picklist, request.Picklist is not null)
+             .Where(x => x.Description.Contains(request.Keyword) || x.Text.Contains(request.Keyword) || x.Value.Contains(request.Keyword), !string.IsNullOrEmpty(request.Keyword));
+
     }
 }

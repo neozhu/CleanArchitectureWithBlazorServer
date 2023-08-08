@@ -18,6 +18,8 @@ public class DocumentsWithPaginationQuery : PaginationFilter, ICacheableRequest<
         return
             $"CurrentUserId:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
+
+    public DocumentsQuerySpec Specification=>new DocumentsQuerySpec(this);
 }
 
 public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuery, PaginatedData<DocumentDto>>
@@ -37,36 +39,29 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
     public async Task<PaginatedData<DocumentDto>> Handle(DocumentsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Documents
-            .Specify(new DocumentsQuery(request))
+        var data = await _context.Documents.Specify(request.Specification)
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<DocumentDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.PageNumber, request.PageSize);
+            .PaginatedDataAsync(request.PageNumber,request.PageSize);
 
         return data;
     }
 
-    private class DocumentsQuery : Specification<Document>
+    
+}
+public class DocumentsQuerySpec : Specification<Document>
+{
+    public DocumentsQuerySpec(DocumentsWithPaginationQuery request)
     {
-        public DocumentsQuery(DocumentsWithPaginationQuery request)
-        {
-            Criteria = request.ListView switch
-            {
-                DocumentListView.All => p =>
-                    (p.CreatedBy == request.CurrentUser.UserId && p.IsPublic == false) ||
-                    (p.IsPublic == true && p.TenantId == request.CurrentUser.TenantId),
-                DocumentListView.My => p =>
-                    p.CreatedBy == request.CurrentUser.UserId && p.TenantId == request.CurrentUser.TenantId,
-                DocumentListView.CreatedToday => p => p.Created.Value.Date == DateTime.Now.Date,
-                _ => throw new NotImplementedException()
-            };
+        Query.Where(p =>
+                (p.CreatedBy == request.CurrentUser.UserId && p.IsPublic == false) ||
+                (p.IsPublic == true && p.TenantId == request.CurrentUser.TenantId), request.ListView == DocumentListView.All)
+             .Where(p =>
+                p.CreatedBy == request.CurrentUser.UserId && p.TenantId == request.CurrentUser.TenantId, request.ListView == DocumentListView.My)
+             .Where(p => p.Created.Value.Date == DateTime.Now.Date, request.ListView == DocumentListView.CreatedToday)
+             .Where(x => x.Title.Contains(request.Keyword) || x.Description.Contains(request.Keyword) || x.Content.Contains(request.Keyword), !string.IsNullOrEmpty(request.Keyword));
 
-
-            if (!string.IsNullOrEmpty(request.Keyword))
-                And(x => x.Title.Contains(request.Keyword) || x.Description.Contains(request.Keyword) ||
-                         x.Content.Contains(request.Keyword));
         }
-    }
 }
 
 public enum DocumentListView

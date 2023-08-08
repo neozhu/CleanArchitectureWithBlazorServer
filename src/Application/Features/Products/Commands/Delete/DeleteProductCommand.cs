@@ -6,15 +6,14 @@ using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete;
 
-public class DeleteProductCommand : FilterBase, ICacheInvalidatorRequest<Result<int>>
+public class DeleteProductCommand : ICacheInvalidatorRequest<Result<int>>
 {
     public DeleteProductCommand(int[] id)
     {
         Id = id;
     }
 
-    [ArraySearchFilter] public int[] Id { get; }
-
+    public int[] Id { get; }
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource();
 }
@@ -39,7 +38,7 @@ public class DeleteProductCommandHandler :
 
     public async Task<Result<int>> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var items = await _context.Products.ApplyFilter(request).ToListAsync(cancellationToken);
+        var items = await _context.Products.Where(x=>request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
         {
             item.AddDomainEvent(new DeletedEvent<Product>(item));
