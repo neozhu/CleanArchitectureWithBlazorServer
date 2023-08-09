@@ -171,7 +171,7 @@ public class LayoutService
         CurrentTheme.Palette.Secondary = SecondaryColor;
         CurrentTheme.PaletteDark.Secondary = SecondaryColor;
         CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
-        CurrentTheme.Typography.Default.FontSize = DefaultFontSize+"rem";
+        CurrentTheme.Typography.Default.FontSize = DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         await _userPreferencesService.SaveUserPreferences(_userPreferences);
         OnMajorUpdateOccured();
     }
