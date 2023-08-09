@@ -1,10 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 using CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
 using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
 using CleanArchitecture.Blazor.Domain.Entities.Logger;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery;
@@ -39,10 +37,8 @@ public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, Paginat
     public async Task<PaginatedData<LogDto>> Handle(LogsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Loggers.Specify(request.Specification)
-            .ProjectTo<LogDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.PageNumber, request.PageSize);
-
+        var data = await _context.Loggers.OrderBy($"{request.OrderBy} {request.SortDirection}")
+                        .ProjectToPaginatedDataAsync<Logger, LogDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
         return data;
     }
 }

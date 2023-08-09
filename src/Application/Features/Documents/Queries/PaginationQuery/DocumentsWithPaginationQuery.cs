@@ -39,10 +39,8 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
     public async Task<PaginatedData<DocumentDto>> Handle(DocumentsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Documents.Specify(request.Specification)
-            .OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectTo<DocumentDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.PageNumber,request.PageSize);
+        var data = await _context.Documents.OrderBy($"{request.OrderBy} {request.SortDirection}")
+                        .ProjectToPaginatedDataAsync<Document, DocumentDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
 
         return data;
     }

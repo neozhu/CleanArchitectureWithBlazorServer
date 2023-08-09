@@ -54,11 +54,9 @@ public class ProductsWithPaginationQueryHandler :
     public async Task<PaginatedData<ProductDto>> Handle(ProductsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-   
-        var data = await _context.Products.Specify(request.Specification)
-            .OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.PageNumber, request.PageSize);
+
+        var data = await _context.Products.OrderBy($"{request.OrderBy} {request.SortDirection}")
+                        .ProjectToPaginatedDataAsync<Product,ProductDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
         return data;
     }
 }
