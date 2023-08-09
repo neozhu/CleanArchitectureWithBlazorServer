@@ -1,8 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 using CleanArchitecture.Blazor.Domain.Enums;
@@ -38,9 +36,8 @@ public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuer
     public async Task<PaginatedData<KeyValueDto>> Handle(KeyValuesWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.KeyValues.Specify(request.Specification)
-            .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.PageNumber, request.PageSize);
+        var data = await _context.KeyValues.OrderBy($"{request.OrderBy} {request.SortDirection}")
+                        .ProjectToPaginatedDataAsync<KeyValue, KeyValueDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
 
         return data;
     }

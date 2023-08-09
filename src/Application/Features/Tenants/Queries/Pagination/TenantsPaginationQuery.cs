@@ -15,6 +15,7 @@ public class TenantsWithPaginationQuery : PaginationFilter, ICacheableRequest<Pa
     {
         return $"Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
+    public TenantsPaginationSpecification Specification => new TenantsPaginationSpecification(this);
 }
 
 public class TenantsWithPaginationQueryHandler :
@@ -38,9 +39,17 @@ public class TenantsWithPaginationQueryHandler :
     public async Task<PaginatedData<TenantDto>> Handle(TenantsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Tenants.Where(x=>x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
-            .ProjectTo<TenantDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.PageNumber, request.PageSize);
+        var data = await _context.Tenants.OrderBy($"{request.OrderBy} {request.SortDirection}")
+                        .ProjectToPaginatedDataAsync<Tenant, TenantDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
         return data;
+    }
+}
+
+public class TenantsPaginationSpecification : Specification<Tenant>
+{
+    public TenantsPaginationSpecification(TenantsWithPaginationQuery query)
+    {
+        Query.Where(q => q.Name != null)
+              .Where(q => q.Name.Contains(query.Keyword) || q.Description.Contains(query.Keyword), !string.IsNullOrEmpty(query.Keyword));
     }
 }

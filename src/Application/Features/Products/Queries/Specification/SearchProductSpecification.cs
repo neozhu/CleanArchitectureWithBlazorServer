@@ -25,5 +25,7 @@ public class SearchProductSpecification : Specification<Product>
              .Where(product => product.CreatedBy == query.CurrentUser.UserId, query.ListView == ProductListView.My)
              .Where(product => product.Created >= start && product.Created <= end, query.ListView == ProductListView.CreatedToday)
              .Where(product => product.Created >= last30day, query.ListView == ProductListView.Created30Days);
+
+        
     }
 }

@@ -56,9 +56,9 @@ public class ExportProductsQueryHandler :
 
     public async Task<Result<byte[]>> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Products.Specify(request.Specification)
-            .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+        var data = await _context.Products.ApplySpecification(request.Specification)
             .AsNoTracking()
+            .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
 
