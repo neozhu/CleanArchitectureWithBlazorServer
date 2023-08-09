@@ -1,3 +1,4 @@
+using System.Globalization;
 using Blazor.Server.UI.Services;
 using Blazor.Server.UI.Services.Layout;
 using Blazor.Server.UI.Services.UserPreferences;
@@ -76,8 +77,7 @@ public partial class ThemesMenu
     }
     private async Task ChangedFontSize(ChangeEventArgs args)
     {
-        UserPreferences.DefaultFontSize = double.Parse(args?.Value?.ToString() ?? "0");
+        UserPreferences.DefaultFontSize = double.Parse(args?.Value?.ToString() ?? "0", NumberStyles.Float, CultureInfo.InvariantCulture);
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
-    
 }
