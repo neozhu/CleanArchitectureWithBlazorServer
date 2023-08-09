@@ -9,21 +9,22 @@ using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
 
-public class ExportProductsQuery : OrderableFilterBase, IRequest<Result<byte[]>>
+public class ExportProductsQuery :  IRequest<Result<byte[]>>
 {
     public string? Name { get; set; }
     public string? Brand { get; set; }
     public string? Unit { get; set; }
-    public Range<decimal> Price { get; set; } = new();
-
-    [CompareTo("Name", "Brand", "Description")]
-    [StringFilterOptions(StringFilterOption.Contains)]
+    public decimal? MaxPrice { get; set; }
+    public decimal? MinPrice { get; set; }
     public string? Keyword { get; set; }
-
-    [CompareTo(typeof(SearchProductsWithListView), "Name")]
-    public ProductListView ListView { get; set; } = ProductListView.All;
+    
+    public string? OrderBy { get; set; }
+    public string? SortDirection { get; set; }
+    public ProductListView ListView { get; set; } = ProductListView.All; //<-- When the user selects a different ListView,
+    public UserProfile? CurrentUser { get; set; } // <-- This CurrentUser property gets its value from the information of
 
     public ExportType ExportType { get; set; }
+    public ExportProductSpecification Specification => new ExportProductSpecification(this);
 }
 
 public class ExportProductsQueryHandler :
@@ -55,9 +56,9 @@ public class ExportProductsQueryHandler :
 
     public async Task<Result<byte[]>> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Products.ApplyOrder(request)
-            .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+        var data = await _context.Products.ApplySpecification(request.Specification)
             .AsNoTracking()
+            .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
 

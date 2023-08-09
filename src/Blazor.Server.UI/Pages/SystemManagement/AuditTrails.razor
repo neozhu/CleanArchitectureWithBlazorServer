@@ -3,6 +3,7 @@
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching
 
+@inherits FluxorComponent
 @attribute [Authorize(Policy = Permissions.AuditTrails.View)]
 @inject IStringLocalizer<AuditTrails> L
 <PageTitle>@L[Title]</PageTitle>
@@ -119,6 +120,10 @@
     private bool _loading;
     private int _defaultPageSize = 15;
     [Inject]
+    private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
+
+    [Inject]
     private IMediator Mediator { get; set; } = default!;
     private readonly AuditTrailDto _currentDto = new();
     private AuditTrailsWithPaginationQuery Query { get; set; } = new();
@@ -136,10 +141,11 @@
         try
         {
             _loading = true;
-            Query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            Query.SortBy = (state.SortDefinitions.FirstOrDefault()?.Descending == false ? AutoFilterer.Enums.Sorting.Ascending : AutoFilterer.Enums.Sorting.Descending);
-            Query.Page = state.Page + 1;
-            Query.PerPage = state.PageSize;
+            Query.CurrentUser = UserProfile;
+            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
+            Query.PageNumber = state.Page + 1;
+            Query.PageSize = state.PageSize;
 
             var result = await Mediator.Send(Query).ConfigureAwait(false);
             return new GridData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };

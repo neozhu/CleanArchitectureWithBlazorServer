@@ -11,14 +11,6 @@ public partial class PaginationFilter : BaseFilter
 
 public class BaseFilter
 {
-    public Search? AdvancedSearch { get; set; }
-
-    public string Keyword { get; set; }=String.Empty;
+    public string? Keyword { get; set; }
 }
 
-public partial class Search
-{
-    public List<string> Fields { get; set; } = new();
-    public string Keyword { get; set; } = String.Empty;
-
-}

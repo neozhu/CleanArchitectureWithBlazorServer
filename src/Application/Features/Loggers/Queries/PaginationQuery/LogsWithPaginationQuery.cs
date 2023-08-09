@@ -3,31 +3,21 @@
 
 using CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
 using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
+using CleanArchitecture.Blazor.Domain.Entities.Logger;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery;
 
-public class LogsWithPaginationQuery : PaginationFilterBase, ICacheableRequest<PaginatedData<LogDto>>
+public class LogsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<LogDto>>
 {
-    [CompareTo("Message", "Exception", "UserName", "ClientIP")]
-    [StringFilterOptions(StringFilterOption.Contains)]
-    public string? Keyword { get; set; }
-
-    [IgnoreFilter] public LogLevel? Level { get; set; }
-
-    [CompareTo("Level")]
-    [StringFilterOptions(StringFilterOption.Equals)]
-    public string? LevelString => Level?.ToString();
-
-    [CompareTo(typeof(SearchLogsWithListView), "Id")]
+    public LogLevel? Level { get; set; }
     public LogListView ListView { get; set; } = LogListView.All;
-
     public string CacheKey => LogsCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => LogsCacheKey.MemoryCacheEntryOptions;
-
     public override string ToString()
     {
-        return $"Listview:{ListView},{LevelString},Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+        return $"Listview:{ListView},{Level},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
+    public LogsQuerySpec Specification => new LogsQuerySpec(this);
 }
 
 public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, PaginatedData<LogDto>>
@@ -47,18 +37,15 @@ public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, Paginat
     public async Task<PaginatedData<LogDto>> Handle(LogsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Loggers.ApplyFilterWithoutPagination(request)
-            .ProjectTo<LogDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.Page, request.PerPage);
-
+        var data = await _context.Loggers.OrderBy($"{request.OrderBy} {request.SortDirection}")
+                        .ProjectToPaginatedDataAsync<Logger, LogDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
         return data;
     }
 }
 
-public class SearchLogsWithListView : FilteringOptionsBaseAttribute
+public class LogsQuerySpec : Specification<Logger>
 {
-    public override Expression BuildExpression(Expression expressionBody, PropertyInfo targetProperty,
-        PropertyInfo filterProperty, object value)
+    public LogsQuerySpec(LogsWithPaginationQuery request)
     {
         var today = DateTime.Now.Date;
         var start = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
@@ -68,23 +55,10 @@ public class SearchLogsWithListView : FilteringOptionsBaseAttribute
         var last30days =
             Convert.ToDateTime(today.AddDays(-30).ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
                 CultureInfo.CurrentCulture);
-        var listview = (LogListView)value;
-        return listview switch
-        {
-            LogListView.All => expressionBody,
-            LogListView.Last30days => Expression
-                .GreaterThanOrEqual(Expression.Property(expressionBody, "TimeStamp"),
-                    Expression.Constant(last30days, typeof(DateTime)))
-                .Combine(Expression.LessThanOrEqual(Expression.Property(expressionBody, "TimeStamp"),
-                        Expression.Constant(end, typeof(DateTime))),
-                    CombineType.And),
-            LogListView.CreatedToday => Expression.GreaterThanOrEqual(Expression.Property(expressionBody, "TimeStamp"),
-                    Expression.Constant(start, typeof(DateTime)))
-                .Combine(Expression.LessThanOrEqual(Expression.Property(expressionBody, "TimeStamp"),
-                        Expression.Constant(end, typeof(DateTime))),
-                    CombineType.And),
-            _ => expressionBody
-        };
+        Query.Where(p => p.TimeStamp.Date == DateTime.Now.Date, request.ListView == LogListView.CreatedToday)
+             .Where(p => p.TimeStamp >= last30days, request.ListView == LogListView.Last30days)
+             .Where(p => p.Level== request.Level.ToString(), request.Level is not null)
+             .Where(x => x.Message.Contains(request.Keyword) || x.Exception.Contains(request.Keyword) || x.UserName.Contains(request.Keyword), !string.IsNullOrEmpty(request.Keyword));
     }
 }
 
@@ -92,7 +66,6 @@ public enum LogListView
 {
     [Description("All")] All,
     [Description("Created Toady")] CreatedToday,
-
     [Description("View of the last 30 days")]
     Last30days
 }

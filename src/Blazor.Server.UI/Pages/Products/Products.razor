@@ -1,10 +1,10 @@
 @page "/pages/products"
+@using CleanArchitecture.Blazor.Application.Features.Fluxor;
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
 @using BlazorDownloadFile
-@using AutoFilterer.Enums
 @using CleanArchitecture.Blazor.Application.Features.Products.Caching
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
@@ -12,7 +12,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification
 @using Severity = MudBlazor.Severity
 
-
+@inherits FluxorComponent
 @inject IJSRuntime JS
 @inject IStringLocalizer<Products> L
 @attribute [Authorize(Policy = Permissions.Products.View)]
@@ -255,7 +255,9 @@
     private bool _exporting;
     private bool _pdfExporting;
     private int _defaultPageSize = 15;
-
+    [Inject]
+    private IState<UserProfileState> UserProfileState { get; set; } = null!;
+    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     [Inject]
     private IMediator Mediator { get; set; } = default!;
 
@@ -294,10 +296,11 @@
         try
         {
             _loading = true;
-            Query.Sort = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            Query.SortBy = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? Sorting.Descending : Sorting.Ascending;
-            Query.Page = state.Page + 1;
-            Query.PerPage = state.PageSize;
+            Query.CurrentUser = UserProfile;
+            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
+            Query.PageNumber = state.Page + 1;
+            Query.PageSize = state.PageSize;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
             return new GridData<ProductDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
@@ -438,12 +441,14 @@
             {
                 Brand = Query.Brand,
                 Name = Query.Name,
-                Price = Query.Price,
+                MinPrice=Query.MinPrice,
+                MaxPrice = Query.MaxPrice,
                 Unit = Query.Unit,
                 Keyword = Query.Keyword,
                 ListView = Query.ListView,
-                Sort = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-                SortBy = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? Sorting.Ascending : Sorting.Descending
+                OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+                SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
+                ExportType = ExportType.Excel
             };
         var result = await Mediator.Send(request);
         if (result.Succeeded)
@@ -465,12 +470,13 @@
             {
                 Brand = Query.Brand,
                 Name = Query.Name,
-                Price = Query.Price,
+                MinPrice = Query.MinPrice,
+                MaxPrice = Query.MaxPrice,
                 Unit = Query.Unit,
                 Keyword = Query.Keyword,
                 ListView = Query.ListView,
-                Sort = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-                SortBy = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? Sorting.Ascending : Sorting.Descending,
+                OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+                SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
                 ExportType = ExportType.PDF
             };
         var result = await Mediator.Send(request);

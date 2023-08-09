@@ -3,8 +3,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
-using CleanArchitecture.Blazor.Application.Common.Mappings;
-using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
@@ -31,7 +29,6 @@ public class MappingTests
     }
 
     [Test]
-    [TestCase(typeof(Customer), typeof(CustomerDto))]
     [TestCase(typeof(Document), typeof(DocumentDto))]
     [TestCase(typeof(KeyValue), typeof(KeyValueDto))]
     [TestCase(typeof(Product), typeof(ProductDto))]

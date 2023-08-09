@@ -6,19 +6,16 @@ using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination;
 
-public class TenantsWithPaginationQuery : PaginationFilterBase, ICacheableRequest<PaginatedData<TenantDto>>
+public class TenantsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<TenantDto>>
 {
-    [CompareTo("Id", "Name", "Description")] // <-- This filter will be applied to Name or Brand or Description.
-    [StringFilterOptions(StringFilterOption.Contains)]
-    public string? Keyword { get; set; }
-
     public string CacheKey => TenantCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => TenantCacheKey.MemoryCacheEntryOptions;
 
     public override string ToString()
     {
-        return $"Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+        return $"Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
+    public TenantsPaginationSpecification Specification => new TenantsPaginationSpecification(this);
 }
 
 public class TenantsWithPaginationQueryHandler :
@@ -42,9 +39,17 @@ public class TenantsWithPaginationQueryHandler :
     public async Task<PaginatedData<TenantDto>> Handle(TenantsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Tenants.ApplyFilterWithoutPagination(request)
-            .ProjectTo<TenantDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.Page, request.PerPage);
+        var data = await _context.Tenants.OrderBy($"{request.OrderBy} {request.SortDirection}")
+                        .ProjectToPaginatedDataAsync<Tenant, TenantDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
         return data;
+    }
+}
+
+public class TenantsPaginationSpecification : Specification<Tenant>
+{
+    public TenantsPaginationSpecification(TenantsWithPaginationQuery query)
+    {
+        Query.Where(q => q.Name != null)
+              .Where(q => q.Name.Contains(query.Keyword) || q.Description.Contains(query.Keyword), !string.IsNullOrEmpty(query.Keyword));
     }
 }

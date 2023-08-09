@@ -21,22 +21,14 @@ public class GetFileStreamQuery : ICacheableRequest<(string, byte[])>
 public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (string, byte[])>
 {
     private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserService _currentUserService;
-    private readonly ILogger<GetFileStreamQueryHandler> _logger;
-    private readonly IMapper _mapper;
 
 
     public GetFileStreamQueryHandler(
-        ILogger<GetFileStreamQueryHandler> logger,
-        ICurrentUserService currentUserService,
-        IApplicationDbContext context,
-        IMapper mapper
+        IApplicationDbContext context
+
     )
     {
-        _logger = logger;
-        _currentUserService = currentUserService;
-        _context = context;
-        _mapper = mapper;
+       _context = context;
     }
 
     public async Task<(string, byte[])> Handle(GetFileStreamQuery request, CancellationToken cancellationToken)
@@ -57,10 +49,9 @@ public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (st
     {
         public DocumentsQuery(string userId, string tenantId, string keyword)
         {
-            Criteria = p => (p.CreatedBy == userId && p.IsPublic == false) || p.IsPublic == true;
-            And(x => x.TenantId == tenantId);
-            if (!string.IsNullOrEmpty(keyword))
-                And(x => x.Title!.Contains(keyword) || x.Description!.Contains(keyword));
+            Query.Where(p=>(p.CreatedBy == userId && p.IsPublic == false) || p.IsPublic == true)
+                 .Where(x => x.TenantId == tenantId, !string.IsNullOrEmpty(tenantId) )
+                 .Where(x => x.Title!.Contains(keyword) || x.Description!.Contains(keyword),!string.IsNullOrEmpty(keyword));
         }
     }
 }

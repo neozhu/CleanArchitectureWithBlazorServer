@@ -12,9 +12,8 @@ public class GetAllProductsQuery : ICacheableRequest<IEnumerable<ProductDto>>
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
 }
 
-public class GetProductQuery : FilterBase, ICacheableRequest<ProductDto>
+public class GetProductQuery : ICacheableRequest<ProductDto>
 {
-    [OperatorComparison(OperatorType.Equal)]
     public required int Id { get; set; }
 
     public string CacheKey => ProductCacheKey.GetProductByIdCacheKey(Id);
@@ -52,7 +51,7 @@ public class GetAllProductsQueryHandler :
 
     public async Task<ProductDto> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Products.ApplyFilter(request)
+        var data = await _context.Products.Where(x=>x.Id==request.Id)
             .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
         return data;

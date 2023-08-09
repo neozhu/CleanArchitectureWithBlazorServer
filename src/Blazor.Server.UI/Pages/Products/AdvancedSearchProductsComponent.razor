@@ -27,13 +27,13 @@
                                 @bind-Value="TRequest.Unit"></PicklistAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudNumericField Clearable="true" @bind-Value="TRequest.Price.Min"
+            <MudNumericField Clearable="true" @bind-Value="TRequest.MinPrice"
                           Placeholder="@L["Search for minimum price"]"
                              TextChanged="TextChanged">
             </MudNumericField>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <MudNumericField @bind-Value="TRequest.Price.Max"
+            <MudNumericField @bind-Value="TRequest.MaxPrice"
                              Clearable="true"
                           Placeholder="@L["Search for maximum price"]"
                              TextChanged="TextChanged">

@@ -1,109 +1,81 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagination;
 
-public class CustomersWithPaginationQuery : PaginationFilterBase, ICacheableRequest<PaginatedData<CustomerDto>>
+public class CustomersWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<CustomerDto>>
 {
-    [CompareTo("Name", "Description")] // <-- This filter will be applied to Name or Description.
-    [StringFilterOptions(StringFilterOption.Contains)]
-    public string? Keyword { get; set; }
-
-    [CompareTo(typeof(SearchCustomersWithListView), "Id")]
-    public CustomerListView ListView { get; set; } =
-        CustomerListView.All; //<-- When the user selects a different ListView,
-
-    [IgnoreFilter] public string CacheKey => CustomerCacheKey.GetPaginationCacheKey($"{this}");
-
-    [IgnoreFilter] public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
-
-    // a custom query expression is executed on the filter.
+    public CustomerListView ListView { get; set; } = CustomerListView.All; 
+    public UserProfile? CurrentUser { get; set; }
     public override string ToString()
     {
-        return $"Listview:{ListView},Search:{Keyword},Sort:{Sort},SortBy:{SortBy},{Page},{PerPage}";
+        return $"Listview:{ListView}, Search:{Keyword}, {OrderBy}, {SortDirection}, {PageNumber}, {PageSize}";
     }
+    public string CacheKey => CustomerCacheKey.GetPaginationCacheKey($"{this}");
+    public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
+    public CustomersPaginationSpecification Specification => new CustomersPaginationSpecification(this);
 }
-
+    
 public class CustomersWithPaginationQueryHandler :
-    IRequestHandler<CustomersWithPaginationQuery, PaginatedData<CustomerDto>>
+         IRequestHandler<CustomersWithPaginationQuery, PaginatedData<CustomerDto>>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly IStringLocalizer<CustomersWithPaginationQueryHandler> _localizer;
-    private readonly IMapper _mapper;
+        private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IStringLocalizer<CustomersWithPaginationQueryHandler> _localizer;
 
-    public CustomersWithPaginationQueryHandler(
-        IApplicationDbContext context,
-        IMapper mapper,
-        IStringLocalizer<CustomersWithPaginationQueryHandler> localizer
-    )
-    {
-        _context = context;
-        _mapper = mapper;
-        _localizer = localizer;
-    }
+        public CustomersWithPaginationQueryHandler(
+            IApplicationDbContext context,
+            IMapper mapper,
+            IStringLocalizer<CustomersWithPaginationQueryHandler> localizer
+            )
+        {
+            _context = context;
+            _mapper = mapper;
+            _localizer = localizer;
+        }
 
-    public async Task<PaginatedData<CustomerDto>> Handle(CustomersWithPaginationQuery request,
-        CancellationToken cancellationToken)
-    {
-        // TODO: Implement CustomersWithPaginationQueryHandler method 
-        var data = await _context.Customers.ApplyFilterWithoutPagination(request)
-            .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
-            .PaginatedDataAsync(request.Page, request.PerPage);
+        public async Task<PaginatedData<CustomerDto>> Handle(CustomersWithPaginationQuery request, CancellationToken cancellationToken)
+        {
+           // TODO: Implement CustomersWithPaginationQueryHandler method 
+           var data = await _context.Customers.OrderBy($"{request.OrderBy} {request.SortDirection}")
+                        .ProjectToPaginatedDataAsync<Customer, CustomerDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
         return data;
-    }
+        }
 }
 
 public class CustomersPaginationSpecification : Specification<Customer>
 {
     public CustomersPaginationSpecification(CustomersWithPaginationQuery query)
     {
-        Criteria = q => q.Name != null;
-        if (!string.IsNullOrEmpty(query.Keyword)) And(x => x.Name!.Contains(query.Keyword));
-    }
-}
-
-public class SearchCustomersWithListView : FilteringOptionsBaseAttribute
-{
-    public override Expression BuildExpression(Expression expressionBody, PropertyInfo targetProperty,
-        PropertyInfo filterProperty, object value)
-    {
         var today = DateTime.Now.Date;
         var start = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
             CultureInfo.CurrentCulture);
         var end = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 23:59:59",
             CultureInfo.CurrentCulture);
-        var end30 = Convert.ToDateTime(
-            today.AddDays(30).ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 23:59:59",
+        var last30day = Convert.ToDateTime(
+            today.AddDays(-30).ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
             CultureInfo.CurrentCulture);
-        var listview = (CustomerListView)value;
-        return listview switch
-        {
-            CustomerListView.All => expressionBody,
-            CustomerListView.CreatedToday => Expression.GreaterThanOrEqual(
-                    Expression.Property(expressionBody, "Created"),
-                    Expression.Constant(start, typeof(DateTime?)))
-                .Combine(Expression.LessThanOrEqual(Expression.Property(expressionBody, "Created"),
-                        Expression.Constant(end, typeof(DateTime?))),
-                    CombineType.And),
-            CustomerListView.Created30Days => Expression.GreaterThanOrEqual(
-                    Expression.Property(expressionBody, "Created"),
-                    Expression.Constant(start, typeof(DateTime?)))
-                .Combine(Expression.LessThanOrEqual(Expression.Property(expressionBody, "Created"),
-                        Expression.Constant(end30, typeof(DateTime?))),
-                    CombineType.And),
-            _ => expressionBody
-        };
+
+       Query.Where(q => q.Name != null)
+             .Where(q => q.Name!.Contains(query.Keyword) || q.Description!.Contains(query.Keyword), !string.IsNullOrEmpty(query.Keyword))
+             .Where(q => q.CreatedBy == query.CurrentUser.UserId, query.ListView == CustomerListView.My && query.CurrentUser is not null)
+             .Where(q => q.Created >= start && q.Created <= end, query.ListView == CustomerListView.CreatedToday)
+             .Where(q => q.Created >= last30day, query.ListView == CustomerListView.Created30Days);
+       
     }
 }
 
 public enum CustomerListView
 {
-    [Description("All")] All,
-    [Description("Created Toady")] CreatedToday,
-
+    [Description("All")]
+    All,
+    [Description("My")]
+    My,
+    [Description("Created Toady")]
+    CreatedToday,
     [Description("Created within the last 30 days")]
     Created30Days
 }

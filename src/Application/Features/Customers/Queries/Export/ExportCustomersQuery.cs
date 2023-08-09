@@ -7,52 +7,76 @@ using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagination
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export;
 
-public class ExportCustomersQuery : OrderableFilterBase, IRequest<Result<byte[]>>
+public class ExportCustomersQuery : BaseFilter, IRequest<Result<byte[]>>
 {
-    [CompareTo("Name", "Description")] // <-- This filter will be applied to Name or Description.
-    [StringFilterOptions(StringFilterOption.Contains)]
-    public string? Keyword { get; set; }
+      public string OrderBy { get; set; } = "Id";
+      public string SortDirection { get; set; } = "Descending";
+      public CustomerListView ListView { get; set; } = CustomerListView.All;
+      public UserProfile? CurrentUser { get; set; }
+      public CustomersExportSpecification Specification => new CustomersExportSpecification(this);
+}
+    
+public class ExportCustomersQueryHandler :
+         IRequestHandler<ExportCustomersQuery, Result<byte[]>>
+{
+        private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IExcelService _excelService;
+        private readonly IStringLocalizer<ExportCustomersQueryHandler> _localizer;
+        private readonly CustomerDto _dto = new();
+        public ExportCustomersQueryHandler(
+            IApplicationDbContext context,
+            IMapper mapper,
+            IExcelService excelService,
+            IStringLocalizer<ExportCustomersQueryHandler> localizer
+            )
+        {
+            _context = context;
+            _mapper = mapper;
+            _excelService = excelService;
+            _localizer = localizer;
+        }
 
-    [CompareTo(typeof(SearchCustomersWithListView), "Id")]
-    public CustomerListView ListView { get; set; } = CustomerListView.All;
+        public async Task<Result<byte[]>> Handle(ExportCustomersQuery request, CancellationToken cancellationToken)
+        {
+            // TODO: Implement ExportCustomersQueryHandler method 
+            var data = await _context.Customers.ApplySpecification(request.Specification)
+                       .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                       .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
+                       .AsNoTracking()
+                       .ToListAsync(cancellationToken);
+            var result = await _excelService.ExportAsync(data,
+                new Dictionary<string, Func<CustomerDto, object?>>()
+                {
+                    // TODO: Define the fields that should be exported, for example:
+                    {_localizer[_dto.GetMemberDescription(x=>x.Id)],item => item.Id}, 
+{_localizer[_dto.GetMemberDescription(x=>x.Name)],item => item.Name}, 
+{_localizer[_dto.GetMemberDescription(x=>x.Description)],item => item.Description}, 
+
+                }
+                , _localizer[_dto.GetClassDescription()]);
+            return await Result<byte[]>.SuccessAsync(result);;
+        }
 }
 
-public class ExportCustomersQueryHandler : IRequestHandler<ExportCustomersQuery, Result<byte[]>>
+public class CustomersExportSpecification : Specification<Customer>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly CustomerDto _dto = new();
-    private readonly IExcelService _excelService;
-    private readonly IStringLocalizer<ExportCustomersQueryHandler> _localizer;
-    private readonly IMapper _mapper;
-
-    public ExportCustomersQueryHandler(
-        IApplicationDbContext context,
-        IMapper mapper,
-        IExcelService excelService,
-        IStringLocalizer<ExportCustomersQueryHandler> localizer
-    )
+    public CustomersExportSpecification(ExportCustomersQuery query)
     {
-        _context = context;
-        _mapper = mapper;
-        _excelService = excelService;
-        _localizer = localizer;
-    }
+        var today = DateTime.Now.Date;
+        var start = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
+            CultureInfo.CurrentCulture);
+        var end = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 23:59:59",
+            CultureInfo.CurrentCulture);
+        var last30day = Convert.ToDateTime(
+            today.AddDays(-30).ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
+            CultureInfo.CurrentCulture);
 
-    public async Task<Result<byte[]>> Handle(ExportCustomersQuery request, CancellationToken cancellationToken)
-    {
-        // TODO: Implement ExportCustomersQueryHandler method 
-        var data = await _context.Customers.ApplyOrder(request)
-            .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
-        var result = await _excelService.ExportAsync(data,
-            new Dictionary<string, Func<CustomerDto, object?>>
-            {
-                // TODO: Define the fields that should be exported, for example:
-                { _localizer[_dto.GetMemberDescription(x => x.Id)], item => item.Id },
-                { _localizer[_dto.GetMemberDescription(x => x.Name)], item => item.Name },
-                { _localizer[_dto.GetMemberDescription(x => x.Description)], item => item.Description }
-            }, _localizer[_dto.GetClassDescription()]);
-        return await Result<byte[]>.SuccessAsync(result);
+       Query.Where(q => q.Name != null)
+             .Where(q => q.Name!.Contains(query.Keyword) || q.Description!.Contains(query.Keyword), !string.IsNullOrEmpty(query.Keyword))
+             .Where(q => q.CreatedBy == query.CurrentUser.UserId, query.ListView == CustomerListView.My && query.CurrentUser is not null)
+             .Where(q => q.Created >= start && q.Created <= end, query.ListView == CustomerListView.CreatedToday)
+             .Where(q => q.Created >= last30day, query.ListView == CustomerListView.Created30Days);
+       
     }
 }
