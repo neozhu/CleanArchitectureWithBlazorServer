@@ -1,19 +1,19 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagination;
+using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Specification;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export;
 
-public class ExportCustomersQuery : BaseFilter, IRequest<Result<byte[]>>
+public class ExportCustomersQuery : CustomerAdvancedFilter, IRequest<Result<byte[]>>
 {
       public string OrderBy { get; set; } = "Id";
       public string SortDirection { get; set; } = "Descending";
       public CustomerListView ListView { get; set; } = CustomerListView.All;
       public UserProfile? CurrentUser { get; set; }
-      public CustomersExportSpecification Specification => new CustomersExportSpecification(this);
+      public CustomerAdvancedPaginationSpec Specification => new CustomerAdvancedPaginationSpec(this);
 }
     
 public class ExportCustomersQueryHandler :
