@@ -3,20 +3,20 @@
 
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
-using CleanArchitecture.Blazor.Domain.Enums;
+using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Specification;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.PaginationQuery;
 
-public class KeyValuesWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<KeyValueDto>>
+public class KeyValuesWithPaginationQuery : KeyValueAdvancedFilter, ICacheableRequest<PaginatedData<KeyValueDto>>
 {
-    public Picklist? Picklist { get; set; }
+  
     public string CacheKey => $"{nameof(KeyValuesWithPaginationQuery)},{this}";
     public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
     public override string ToString()
     {
         return $"Picklist:{Picklist},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
-    public KeyValuesQuerySpec Specification => new KeyValuesQuerySpec(this);
+    public KeyValueAdvancedSpecification Specification => new KeyValueAdvancedSpecification(this);
 }
 
 public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuery, PaginatedData<KeyValueDto>>
@@ -40,14 +40,5 @@ public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuer
                         .ProjectToPaginatedDataAsync<KeyValue, KeyValueDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
 
         return data;
-    }
-}
-public class KeyValuesQuerySpec : Specification<KeyValue>
-{
-    public KeyValuesQuerySpec(KeyValuesWithPaginationQuery request)
-    {
-        Query.Where(p => p.Name== request.Picklist, request.Picklist is not null)
-             .Where(x => x.Description.Contains(request.Keyword) || x.Text.Contains(request.Keyword) || x.Value.Contains(request.Keyword), !string.IsNullOrEmpty(request.Keyword));
-
     }
 }

@@ -3,13 +3,13 @@
 
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Documents.Queries.Specification;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
 
-public class DocumentsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<DocumentDto>>
+public class DocumentsWithPaginationQuery : AdvancedDocumentsFilter, ICacheableRequest<PaginatedData<DocumentDto>>
 {
-    public DocumentListView ListView { get; set; } = DocumentListView.All;
-    public required UserProfile CurrentUser { get; set; }
+    
     public string CacheKey => DocumentCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;
 
@@ -19,7 +19,7 @@ public class DocumentsWithPaginationQuery : PaginationFilter, ICacheableRequest<
             $"CurrentUserId:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
 
-    public DocumentsQuerySpec Specification=>new DocumentsQuerySpec(this);
+    public AdvancedDocumentsSpecification Specification =>new AdvancedDocumentsSpecification(this);
 }
 
 public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuery, PaginatedData<DocumentDto>>
@@ -47,24 +47,5 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
 
     
 }
-public class DocumentsQuerySpec : Specification<Document>
-{
-    public DocumentsQuerySpec(DocumentsWithPaginationQuery request)
-    {
-        Query.Where(p =>
-                (p.CreatedBy == request.CurrentUser.UserId && p.IsPublic == false) ||
-                (p.IsPublic == true && p.TenantId == request.CurrentUser.TenantId), request.ListView == DocumentListView.All)
-             .Where(p =>
-                p.CreatedBy == request.CurrentUser.UserId && p.TenantId == request.CurrentUser.TenantId, request.ListView == DocumentListView.My)
-             .Where(p => p.Created.Value.Date == DateTime.Now.Date, request.ListView == DocumentListView.CreatedToday)
-             .Where(x => x.Title.Contains(request.Keyword) || x.Description.Contains(request.Keyword) || x.Content.Contains(request.Keyword), !string.IsNullOrEmpty(request.Keyword));
 
-        }
-}
 
-public enum DocumentListView
-{
-    [Description("All")] All,
-    [Description("My Document")] My,
-    [Description("Created Toady")] CreatedToday
-}

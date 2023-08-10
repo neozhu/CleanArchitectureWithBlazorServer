@@ -8,16 +8,9 @@ using CleanArchitecture.Blazor.Application.Features.Products.Queries.Specificati
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 
-public class ProductsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<ProductDto>>
+public class ProductsWithPaginationQuery : ProductAdvancedFilter, ICacheableRequest<PaginatedData<ProductDto>>
 {
-    public string? Name { get; set; }
-    public string? Brand { get; set; }
-    public string? Unit { get; set; }
-    public decimal? MaxPrice { get; set; }
-    public decimal? MinPrice { get; set; }
-    public string? Keyword { get; set; }
-    public ProductListView ListView { get; set; } = ProductListView.All; //<-- When the user selects a different ListView,
-    public UserProfile? CurrentUser { get; set; } // <-- This CurrentUser property gets its value from the information of
+   
 
     public string CacheKey => ProductCacheKey.GetPaginationCacheKey($"{this}");
 
@@ -30,7 +23,7 @@ public class ProductsWithPaginationQuery : PaginationFilter, ICacheableRequest<P
             $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{MinPrice},MaxPrice:{MaxPrice},SortDirection:{SortDirection},OrderBy:{OrderBy},{ PageNumber},{PageSize}";
     }
 
-    public SearchProductSpecification Specification => new SearchProductSpecification(this);
+    public ProductAdvancedSpecification Specification => new ProductAdvancedSpecification(this);
 }
 
 public class ProductsWithPaginationQueryHandler :
