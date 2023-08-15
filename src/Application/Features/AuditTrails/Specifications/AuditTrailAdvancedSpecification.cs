@@ -1,5 +1,5 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Specification;
-
+﻿namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
+#nullable disable warnings
 public class AuditTrailAdvancedSpecification : Specification<AuditTrail>
 {
     public AuditTrailAdvancedSpecification(AuditTrailAdvancedFilter filter)

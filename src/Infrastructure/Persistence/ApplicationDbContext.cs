@@ -3,7 +3,6 @@
 
 using System.Reflection;
 using CleanArchitecture.Blazor.Domain.Entities.Logger;
-using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 

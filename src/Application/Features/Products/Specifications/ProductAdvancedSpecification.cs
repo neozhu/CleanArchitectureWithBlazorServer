@@ -1,6 +1,6 @@
 
-namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
-
+namespace CleanArchitecture.Blazor.Application.Features.Products.Specifications;
+#nullable disable warnings
 public class ProductAdvancedSpecification : Specification<Product>
 {
     public ProductAdvancedSpecification(ProductAdvancedFilter filter)

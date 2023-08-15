@@ -1,11 +1,11 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Enums;
-using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
+#nullable disable warnings
 public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
     private readonly ITenantProvider _tenantProvider;

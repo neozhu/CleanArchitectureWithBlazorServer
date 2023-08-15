@@ -1,5 +1,5 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Specification;
-
+﻿namespace CleanArchitecture.Blazor.Application.Features.Customers.Specifications;
+#nullable disable warnings
 public class CustomerAdvancedPaginationSpec : Specification<Customer>
 {
     public CustomerAdvancedPaginationSpec(CustomerAdvancedFilter filter)

@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.Specification;
+﻿namespace CleanArchitecture.Blazor.Application.Features.Loggers.Specifications;
 public enum LogListView
 {
     [Description("All")] All,

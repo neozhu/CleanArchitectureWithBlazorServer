@@ -53,7 +53,7 @@ public class GetAllProductsQueryHandler :
     {
         var data = await _context.Products.Where(x=>x.Id==request.Id)
             .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken)??throw new NotFoundException($"Product with id: {request.Id} not found.");
         return data;
     }
 }

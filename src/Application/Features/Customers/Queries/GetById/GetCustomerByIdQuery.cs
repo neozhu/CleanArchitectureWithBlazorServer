@@ -3,7 +3,7 @@
 
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
-using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Specification;
+using CleanArchitecture.Blazor.Application.Features.Customers.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.GetById;
 

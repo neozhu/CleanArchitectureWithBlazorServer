@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
+﻿namespace CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 
 public enum ProductListView
 {

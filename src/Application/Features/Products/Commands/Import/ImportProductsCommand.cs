@@ -65,7 +65,7 @@ public class ImportProductsCommandHandler :
         var result = await _excelService.CreateTemplateAsync(fields, _localizer["Products"]);
         return await Result<byte[]>.SuccessAsync(result);
     }
-
+#nullable disable warnings
     public async Task<Result<int>> Handle(ImportProductsCommand request, CancellationToken cancellationToken)
     {
         var result = await _excelService.ImportAsync(request.Data,

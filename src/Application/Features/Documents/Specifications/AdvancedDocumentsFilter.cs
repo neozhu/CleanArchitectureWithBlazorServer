@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.Specification;
+﻿namespace CleanArchitecture.Blazor.Application.Features.Documents.Specifications;
 
 public enum DocumentListView
 {
