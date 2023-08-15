@@ -2,17 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Pagination;
-using CleanArchitecture.Blazor.Application.Features.Customers.Queries.Specification;
+using CleanArchitecture.Blazor.Application.Features.Customers.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Export;
 
 public class ExportCustomersQuery : CustomerAdvancedFilter, IRequest<Result<byte[]>>
 {
-      public string OrderBy { get; set; } = "Id";
-      public string SortDirection { get; set; } = "Descending";
-      public CustomerListView ListView { get; set; } = CustomerListView.All;
-      public UserProfile? CurrentUser { get; set; }
       public CustomerAdvancedPaginationSpec Specification => new CustomerAdvancedPaginationSpec(this);
 }
     
@@ -58,7 +53,7 @@ public class ExportCustomersQueryHandler :
             return await Result<byte[]>.SuccessAsync(result);;
         }
 }
-
+#nullable disable warnings
 public class CustomersExportSpecification : Specification<Customer>
 {
     public CustomersExportSpecification(ExportCustomersQuery query)

@@ -3,7 +3,7 @@
 
 using CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
 using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.Specification;
+using CleanArchitecture.Blazor.Application.Features.Loggers.Specifications;
 using CleanArchitecture.Blazor.Domain.Entities.Logger;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery;

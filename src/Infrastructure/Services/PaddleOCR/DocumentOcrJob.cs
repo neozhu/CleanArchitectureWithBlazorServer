@@ -4,6 +4,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Net.Http.Json;
+using System.Runtime.Versioning;
 using System.Text.Json;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
@@ -13,6 +14,7 @@ using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
+[SupportedOSPlatform("windows")]
 public class DocumentOcrJob : IDocumentOcrJob
 {
     private readonly IHubContext<SignalRHub, ISignalRHub> _hubContext;
@@ -105,7 +107,7 @@ public class DocumentOcrJob : IDocumentOcrJob
     }
 
 }
-
+#pragma warning disable CS8981
 class result
 {
     public decimal confidence { get; set; }
@@ -118,5 +120,5 @@ class OcrResult
     public List<result[]> results { get; set; } = new();
     public string status { get; set; }=String.Empty;
 }
-
+#pragma warning restore CS8981
 

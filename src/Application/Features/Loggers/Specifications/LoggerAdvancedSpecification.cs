@@ -1,7 +1,7 @@
 ﻿using CleanArchitecture.Blazor.Domain.Entities.Logger;
 
-namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.Specification;
-
+namespace CleanArchitecture.Blazor.Application.Features.Loggers.Specifications;
+#nullable disable warnings
 public class LoggerAdvancedSpecification : Specification<Logger>
 {
     public LoggerAdvancedSpecification(LoggerAdvancedFilter filter)

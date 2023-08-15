@@ -1,8 +1,10 @@
+using System.Runtime.Versioning;
 using CleanArchitecture.Blazor.Application.Services.PaddleOCR;
 using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
+[SupportedOSPlatform("windows")]
 public static class ServicesCollectionExtensions
 {
     public static IServiceCollection AddServices(this IServiceCollection services)

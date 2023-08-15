@@ -44,7 +44,7 @@ public class TenantsWithPaginationQueryHandler :
         return data;
     }
 }
-
+#nullable disable warnings
 public class TenantsPaginationSpecification : Specification<Tenant>
 {
     public TenantsPaginationSpecification(TenantsWithPaginationQuery query)

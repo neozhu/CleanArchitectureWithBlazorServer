@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Customers.Queries.Specification;
+﻿namespace CleanArchitecture.Blazor.Application.Features.Customers.Specifications;
 
 public enum CustomerListView
 {

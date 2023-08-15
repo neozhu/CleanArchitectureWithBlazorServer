@@ -4,8 +4,7 @@
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
-using CleanArchitecture.Blazor.Domain.Enums;
+using CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
 
@@ -41,7 +40,7 @@ public class ExportProductsQueryHandler :
         _pdfService = pdfService;
         _localizer = localizer;
     }
-
+#nullable disable warnings
     public async Task<Result<byte[]>> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Products.ApplySpecification(request.Specification)

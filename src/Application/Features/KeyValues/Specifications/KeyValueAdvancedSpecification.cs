@@ -1,5 +1,5 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Specification;
-
+﻿namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Specifications;
+#nullable disable warnings
 public class KeyValueAdvancedSpecification : Specification<KeyValue>
 {
     public KeyValueAdvancedSpecification(KeyValueAdvancedFilter filter)

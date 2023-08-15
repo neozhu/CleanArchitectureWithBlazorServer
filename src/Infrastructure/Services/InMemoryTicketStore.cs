@@ -9,6 +9,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 /// More info: http://www.dotnettips.info/post/2581
 /// And http://www.dotnettips.info/post/2575
 /// </summary>
+#nullable disable warnings
 public class InMemoryTicketStore : ITicketStore
 {
     private readonly IMemoryCache _cache;

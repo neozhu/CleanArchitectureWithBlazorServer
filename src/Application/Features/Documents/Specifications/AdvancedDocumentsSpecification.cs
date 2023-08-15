@@ -1,12 +1,12 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.Specification;
- 
+﻿namespace CleanArchitecture.Blazor.Application.Features.Documents.Specifications;
+#nullable disable warnings
 public class AdvancedDocumentsSpecification : Specification<Document>
 {
     public AdvancedDocumentsSpecification(AdvancedDocumentsFilter filter)
     {
         Query.Where(p =>
-                (p.CreatedBy == filter.CurrentUser.UserId && p.IsPublic == false) ||
-                (p.IsPublic == true && p.TenantId == filter.CurrentUser.TenantId), filter.ListView == DocumentListView.All)
+                p.CreatedBy == filter.CurrentUser.UserId && p.IsPublic == false ||
+                p.IsPublic == true && p.TenantId == filter.CurrentUser.TenantId, filter.ListView == DocumentListView.All)
              .Where(p =>
                 p.CreatedBy == filter.CurrentUser.UserId && p.TenantId == filter.CurrentUser.TenantId, filter.ListView == DocumentListView.My)
              .Where(p => p.Created.Value.Date == DateTime.Now.Date, filter.ListView == DocumentListView.CreatedToday)
