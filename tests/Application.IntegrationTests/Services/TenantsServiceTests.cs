@@ -15,7 +15,7 @@ public class TenantsServiceTests : TestBase
         
     }
     [Test]
-    public async Task ShouldLoadDataSource()
+    public void ShouldLoadDataSource()
     {
         var tenantsService = CreateTenantsService();
         tenantsService.Initialize();
