@@ -21,3 +21,4 @@ global using CleanArchitecture.Blazor.Infrastructure.Middlewares;
 global using CleanArchitecture.Blazor.Infrastructure.Persistence;
 global using CleanArchitecture.Blazor.Infrastructure.Services;
 global using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
+global using CleanArchitecture.Blazor.Infrastructure.Extensions;

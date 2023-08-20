@@ -63,7 +63,7 @@
     private string _inputToken = string.Empty;
 
     private ApplicationUser? _user = null;
-    private UserManager<ApplicationUser> UserManager { get; set; } = null!;
+    private CustomUserManager UserManager { get; set; } = null!;
     [Inject]
     private IMailService MailService { get; set; } = null!;
     [Inject] private ILogger<Forgot> Logger { get; set; } = default!;
@@ -71,7 +71,7 @@
     protected override Task OnInitializedAsync()
     {
         Title = L["Forgot Password"];
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        UserManager = ScopedServices.GetRequiredService<CustomUserManager>();
         return base.OnInitializedAsync();
     }
     private async Task ResetPassword()

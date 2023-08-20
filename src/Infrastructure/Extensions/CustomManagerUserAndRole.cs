@@ -13,7 +13,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
         ILookupNormalizer keyNormalizer,
         IdentityErrorDescriber errors,
         IServiceProvider services,
-        ILogger<UserManager<ApplicationUser>> logger)
+        ILogger<CustomUserManager> logger)
         : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
     {
     }
@@ -26,7 +26,7 @@ public class CustomRoleManager : RoleManager<ApplicationRole>
         IEnumerable<IRoleValidator<ApplicationRole>> roleValidators,
         ILookupNormalizer keyNormalizer,
         IdentityErrorDescriber errors,
-        ILogger<RoleManager<ApplicationRole>> logger)
+        ILogger<CustomRoleManager> logger)
         : base(store, roleValidators, keyNormalizer, errors, logger)
     {
     }

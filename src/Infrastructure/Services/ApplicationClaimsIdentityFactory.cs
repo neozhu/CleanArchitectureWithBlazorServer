@@ -7,10 +7,10 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 #nullable disable
 public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly CustomUserManager _userManager;
 
-    public ApplicationClaimsIdentityFactory(UserManager<ApplicationUser> userManager,
-        RoleManager<ApplicationRole> roleManager,
+    public ApplicationClaimsIdentityFactory(CustomUserManager userManager,
+        CustomRoleManager roleManager,
         IOptions<IdentityOptions> optionsAccessor) : base(userManager, roleManager, optionsAccessor)
     {
         _userManager = userManager;

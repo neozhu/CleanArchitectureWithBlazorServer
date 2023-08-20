@@ -80,7 +80,7 @@
 @code {
     public string Title = "Sign Up";
     [Inject] private NavigationManager Navigation { get; set; } = default!;
-    private UserManager<ApplicationUser> UserManager { get; set; } = default!;
+    private CustomUserManager UserManager { get; set; } = default!;
     MudForm? _form;
     bool _loading;
     readonly RegisterFormModel _model = new();
@@ -90,7 +90,7 @@
 
     protected override Task OnInitializedAsync()
     {
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        UserManager = ScopedServices.GetRequiredService<CustomUserManager>();
         return base.OnInitializedAsync();
     }
     private async Task Submit()

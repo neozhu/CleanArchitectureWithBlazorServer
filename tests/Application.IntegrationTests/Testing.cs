@@ -111,7 +111,7 @@ public class Testing
     {
         using var scope = _scopeFactory.CreateScope();
 
-        var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+        var userManager = scope.ServiceProvider.GetService<CustomUserManager>();
 
         var user = new ApplicationUser { UserName = userName, Email = userName };
 

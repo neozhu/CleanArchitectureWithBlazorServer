@@ -141,7 +141,7 @@
     private ITenantService TenantsService { get; set; } = default!;
 
     [Inject]
-    private RoleManager<ApplicationRole> RoleManager { get; set; } = default!;
+    private CustomRoleManager RoleManager { get; set; } = default!;
 
     ApplicationUserDtoValidator _modelValidator = new();
 

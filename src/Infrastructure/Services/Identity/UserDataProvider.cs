@@ -6,7 +6,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 public class UserDataProvider : IUserDataProvider
 {
     private readonly IMapper _mapper;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly CustomUserManager _userManager;
     public List<ApplicationUserDto> DataSource { get; private set; }
 
     public event Action? OnChange;
@@ -17,7 +17,7 @@ public class UserDataProvider : IUserDataProvider
     {
         _mapper = mapper;
         var scope = scopeFactory.CreateScope();
-        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>();
         DataSource = new List<ApplicationUserDto>();
     }
     public void Initialize()

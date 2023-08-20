@@ -20,17 +20,18 @@ public static class SerilogExtensions
 {
     public static void RegisterSerilog(this WebApplicationBuilder builder)
     {
+        var logLevel = LogEventLevel.Debug;
         builder.Host.UseSerilog((context, configuration) =>
             configuration.ReadFrom.Configuration(context.Configuration)
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
-                .MinimumLevel.Override("MudBlazor", LogEventLevel.Information)
-                .MinimumLevel.Override("Serilog", LogEventLevel.Error)
-                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Update", LogEventLevel.Error)
-                .MinimumLevel.Override("Hangfire.BackgroundJobServer", LogEventLevel.Error)
-                .MinimumLevel.Override("Hangfire.Server.BackgroundServerProcess", LogEventLevel.Error)
-                .MinimumLevel.Override("Hangfire.Server.ServerHeartbeatProcess", LogEventLevel.Error)
-                .MinimumLevel.Override("Hangfire.Processing.BackgroundExecution", LogEventLevel.Error)
+                .MinimumLevel.Override("Microsoft", logLevel)
+                .MinimumLevel.Override("Microsoft.AspNetCore", logLevel)
+                .MinimumLevel.Override("MudBlazor", LogEventLevel.Fatal)
+                .MinimumLevel.Override("Serilog", logLevel)
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Update", logLevel)
+                .MinimumLevel.Override("Hangfire.BackgroundJobServer", logLevel)
+                .MinimumLevel.Override("Hangfire.Server.BackgroundServerProcess", logLevel)
+                .MinimumLevel.Override("Hangfire.Server.ServerHeartbeatProcess", logLevel)
+                .MinimumLevel.Override("Hangfire.Processing.BackgroundExecution", logLevel)
                 .Enrich.FromLogContext()
                 .Enrich.WithUtcTime()
                 .WriteTo.Async(wt => wt.File("./log/log-.txt", rollingInterval: RollingInterval.Day))
@@ -39,6 +40,26 @@ public static class SerilogExtensions
                         outputTemplate:
                         "[{Timestamp:HH:mm:ss} {Level:u3} {ClientIp}] {Message:lj}{NewLine}{Exception}"))
                 .ApplyConfigPreferences(context.Configuration)
+        /*  builder.Host.UseSerilog((context, configuration) =>
+              configuration.ReadFrom.Configuration(context.Configuration)
+                  .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
+                  .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
+                  .MinimumLevel.Override("MudBlazor", LogEventLevel.Information)
+                  .MinimumLevel.Override("Serilog", LogEventLevel.Error)
+                  .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Update", LogEventLevel.Error)
+                  .MinimumLevel.Override("Hangfire.BackgroundJobServer", LogEventLevel.Error)
+                  .MinimumLevel.Override("Hangfire.Server.BackgroundServerProcess", LogEventLevel.Error)
+                  .MinimumLevel.Override("Hangfire.Server.ServerHeartbeatProcess", LogEventLevel.Error)
+                  .MinimumLevel.Override("Hangfire.Processing.BackgroundExecution", LogEventLevel.Error)
+                  .Enrich.FromLogContext()
+                  .Enrich.WithUtcTime()
+                  .WriteTo.Async(wt => wt.File("./log/log-.txt", rollingInterval: RollingInterval.Day))
+                  .WriteTo.Async(wt =>
+                      wt.Console(
+                          outputTemplate:
+                          "[{Timestamp:HH:mm:ss} {Level:u3} {ClientIp}] {Message:lj}{NewLine}{Exception}"))
+                  .ApplyConfigPreferences(context.Configuration)
+                  */
         );
     }
 

@@ -82,7 +82,7 @@
 
 @code {
     private string _title = "Sign In";
-    private UserManager<ApplicationUser> UserManager { get; set; } = default!;
+    private CustomUserManager UserManager { get; set; } = default!;
     private AccessTokenProvider AccessTokenProvider { get; set; } = default!;
 
     [Inject]
@@ -113,7 +113,7 @@
     {
         await base.OnInitializedAsync();
         _title = L["Sign In"];
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        UserManager = ScopedServices.GetRequiredService<CustomUserManager>();
         AccessTokenProvider = ScopedServices.GetRequiredService<AccessTokenProvider>();
     }
 

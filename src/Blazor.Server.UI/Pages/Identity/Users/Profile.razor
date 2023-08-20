@@ -178,7 +178,7 @@
 
     private UserProfile model => UserProfileState.Value.UserProfile;
     private UserProfileEditValidator _userValidator = new();
-    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
+    private CustomUserManager _userManager { get; set; } = default!;
     [Inject]
     private IIdentityService _identityService { get; set; } = default!;
     public string Id => Guid.NewGuid().ToString();
@@ -229,7 +229,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        _userManager = ScopedServices.GetRequiredService<CustomUserManager>();
         UserProfileState.StateChanged += StateOnStateChanged;
     }
     protected override void Dispose(bool disposing)

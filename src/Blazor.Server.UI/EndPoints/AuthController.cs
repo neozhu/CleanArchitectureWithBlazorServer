@@ -10,13 +10,13 @@ public class AuthController : Controller
 {
     private readonly ILogger<AuthController> _logger;
     private readonly IDataProtectionProvider _dataProtectionProvider;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly CustomUserManager _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
 
     public AuthController(
         ILogger<AuthController> logger,
         IDataProtectionProvider dataProtectionProvider,
-        UserManager<ApplicationUser> userManager,
+        CustomUserManager userManager,
         SignInManager<ApplicationUser> signInManager
     )
     {

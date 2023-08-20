@@ -284,8 +284,8 @@
     private IList<Claim> _assignedClaims = default!;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
-    private UserManager<ApplicationUser> UserManager { get; set; } = default!;
-    private RoleManager<ApplicationRole> RoleManager { get; set; } = default!;
+    private CustomUserManager UserManager { get; set; } = default!;
+    private CustomRoleManager RoleManager { get; set; } = default!;
     private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
     private LazyCacheEntryOptions Options => new LazyCacheEntryOptions().SetAbsoluteExpiration(RefreshInterval, ExpirationMode.LazyExpiration);
     [Inject]
@@ -322,8 +322,8 @@
     protected override async Task OnInitializedAsync()
     {
 
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        UserManager = ScopedServices.GetRequiredService<CustomUserManager>();
+        RoleManager = ScopedServices.GetRequiredService<CustomRoleManager>();
         Title = L[_currentDto.GetClassDescription()];
         var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
