@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using CleanArchitecture.Blazor.Domain.Entities.Logger;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
@@ -34,6 +35,9 @@ public class ApplicationDbContext : IdentityDbContext<
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
+
+        builder.Entity<ApplicationUserRole>()
+            .HasKey(ur => new { ur.UserId, ur.RoleId, ur.TenantId });
     }
 
 

@@ -16,6 +16,7 @@ public static class AuthenticationServiceCollectionExtensions
        
         services
             .AddIdentity<ApplicationUser, ApplicationRole>()
+            .AddUserManager<CustomUserManager>().AddRoleManager<CustomRoleManager>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
         services.Configure<IdentityOptions>(options =>
