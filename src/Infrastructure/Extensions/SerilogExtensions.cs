@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
 using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using Microsoft.AspNetCore.Builder;
@@ -39,7 +40,9 @@ public static class SerilogExtensions
                     wt.Console(
                         outputTemplate:
                         "[{Timestamp:HH:mm:ss} {Level:u3} {ClientIp}] {Message:lj}{NewLine}{Exception}"))
+                
                 .ApplyConfigPreferences(context.Configuration)
+                
         /*  builder.Host.UseSerilog((context, configuration) =>
               configuration.ReadFrom.Configuration(context.Configuration)
                   .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
@@ -65,6 +68,11 @@ public static class SerilogExtensions
 
     private static void ApplyConfigPreferences(this LoggerConfiguration serilogConfig, IConfiguration configuration)
     {
+        serilogConfig//.Enrich.WithExceptionDetails()
+            .Enrich.With(new StackTraceEnricher()) // Custom enricher for stack trace with line numbers
+            //.Enrich.WithProperty("ApplicationName", "Blazor.Server.UI")
+            //.Enrich.WithProperty("Version", FileVersionInfo.GetVersionInfo(typeof(Program).Assembly.Location).FileVersion)
+            .MinimumLevel.Information();
         EnrichWithClientInfo(serilogConfig, configuration);
         WriteToDatabase(serilogConfig, configuration);
     }
@@ -215,5 +223,22 @@ internal class UtcTimestampEnricher : ILogEventEnricher
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory pf)
     {
         logEvent.AddOrUpdateProperty(pf.CreateProperty("TimeStamp", logEvent.Timestamp.UtcDateTime));
+    }
+}
+public class StackTraceEnricher : ILogEventEnricher
+{
+    public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+    {
+        var stackTrace = new StackTrace(true);
+        var stackFrames = stackTrace.GetFrames();
+
+        if (stackFrames != null)
+        {
+            var frames = stackFrames
+                .Select(frame => $"{frame.GetMethod()} ({frame.GetFileName()}:{frame.GetFileLineNumber()})")
+                .ToList();
+
+            logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("StackTraceWithLineNumbers", frames, true));
+        }
     }
 }

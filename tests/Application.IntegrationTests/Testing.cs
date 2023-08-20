@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Application.Constants.Role;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
@@ -126,7 +127,9 @@ public class Testing
                 await roleManager.CreateAsync(new IdentityRole(role));
             }
 
-            await userManager.AddToRolesAsync(user, roles);
+            //todo enable below line by making context object
+            //await userManager.AddToRolesAsyncWithTenant(user,user.TenantId, context, roles);
+            // await userManager.AddToRolesAsync(user, roles);
         }
 
         if (result.Succeeded)

@@ -4,6 +4,7 @@ using CleanArchitecture.Blazor.Application.Constants.Permission;
 using CleanArchitecture.Blazor.Application.Constants.Role;
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 public class ApplicationDbContextInitializer
@@ -113,12 +114,13 @@ public class ApplicationDbContextInitializer
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))
         {
             await _userManager.CreateAsync(administrator, UserName.DefaultPassword);
-            await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name! });
+            await UserManagerExtensions.AddToRolesAsyncWithTenantName(administrator.Id, "Master", _context, new[] { administratorRole.Name! });
         }
         if (_userManager.Users.All(u => u.UserName != demo.UserName))
         {
             await _userManager.CreateAsync(demo, UserName.DefaultPassword);
-            await _userManager.AddToRolesAsync(demo, new[] { userRole.Name! });
+            await UserManagerExtensions.AddToRolesAsyncWithTenantName(demo.Id, "Master", _context, new[] { userRole.Name! });
+            //await _userManager.AddToRolesAsync(demo, new[] { userRole.Name! });
         }
 
         // Default data

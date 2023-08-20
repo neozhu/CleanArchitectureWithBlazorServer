@@ -81,6 +81,8 @@
 </AuthorizeView>
 
 @code {
+    [Inject]
+    private IApplicationDbContext context { get; set; } = default!;
     private string _title = "Sign In";
     private CustomUserManager UserManager { get; set; } = default!;
     private AccessTokenProvider AccessTokenProvider { get; set; } = default!;
@@ -223,7 +225,8 @@
             var createResult = await UserManager.CreateAsync(user);
             if (createResult.Succeeded)
             {
-                var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
+                var assignResult = await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, admin.TenantId, context, RoleName.Basic);
+                //var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
             }
             await UserManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
         }

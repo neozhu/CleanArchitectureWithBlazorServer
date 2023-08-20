@@ -1,5 +1,6 @@
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Constants.Role;
+using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -12,14 +13,16 @@ public class AuthController : Controller
     private readonly IDataProtectionProvider _dataProtectionProvider;
     private readonly CustomUserManager _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IApplicationDbContext context;
 
     public AuthController(
         ILogger<AuthController> logger,
         IDataProtectionProvider dataProtectionProvider,
         CustomUserManager userManager,
-        SignInManager<ApplicationUser> signInManager
+        SignInManager<ApplicationUser> signInManager,IApplicationDbContext _context
     )
     {
+        context = _context;
         _logger = logger;
         _dataProtectionProvider = dataProtectionProvider;
         _userManager = userManager;
@@ -77,7 +80,7 @@ public class AuthController : Controller
             {
                 return Unauthorized();
             }
-            var assignResult = await _userManager.AddToRoleAsync(user, RoleName.Basic);
+            var assignResult = await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, admin.TenantId, context, RoleName.Basic);
             if (!createResult.Succeeded)
             {
                 return Unauthorized();

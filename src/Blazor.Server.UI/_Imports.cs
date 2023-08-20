@@ -15,3 +15,4 @@ global using Fluxor.Blazor.Web.Components;
 global using MudBlazor;
 global using Severity = MudBlazor.Severity;
 global using Color = MudBlazor.Color;
+global using CleanArchitecture.Blazor.Domain.Identity;

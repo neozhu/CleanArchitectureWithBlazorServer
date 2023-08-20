@@ -78,6 +78,8 @@
 
 
 @code {
+    [Inject]
+    private IApplicationDbContext context { get; set; } = default!;
     public string Title = "Sign Up";
     [Inject] private NavigationManager Navigation { get; set; } = default!;
     private CustomUserManager UserManager { get; set; } = default!;
@@ -109,8 +111,9 @@
                     var result = await UserManager.CreateAsync(user, _model.Password!);
                     if (result.Succeeded)
                     {
-                        var assignResult= await UserManager.AddToRoleAsync(user, RoleName.Basic);
-                        if (assignResult.Succeeded && !string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.UserName))
+                    var assignResult = await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, user.TenantId, context, RoleName.Basic);
+                        //var assignResult= await UserManager.AddToRoleAsync(user, RoleName.Basic);
+                        if (assignResult>0 && !string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.UserName))
                         {
                             var response= await SendWelcome(user.Email!, user.UserName!);
                             if (response.Successful == false)

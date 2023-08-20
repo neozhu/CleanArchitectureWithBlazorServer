@@ -3,12 +3,15 @@
 
 
 using CleanArchitecture.Blazor.Domain.Entities.Logger;
+using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
+    DbSet<ApplicationUserRole> UserRoles { get; set; }
+    DbSet<ApplicationRole> Roles { get; set; }
     DbSet<Logger> Loggers { get; set; }
     DbSet<AuditTrail> AuditTrails { get; set; }
     DbSet<Document> Documents { get; set; }
@@ -18,4 +21,5 @@ public interface IApplicationDbContext
     DbSet<Customer> Customers { get; set; }
     ChangeTracker ChangeTracker { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync();
 }
