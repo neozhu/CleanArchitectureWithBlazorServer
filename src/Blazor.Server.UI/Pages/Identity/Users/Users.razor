@@ -477,7 +477,9 @@
                     {
                         if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
                         {
+                            await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, user.TenantId, context, item.AssignedRoles);
                             await UserManager.AddToRolesAsync(user, item.AssignedRoles);
+
                         }
                     }
                 }
