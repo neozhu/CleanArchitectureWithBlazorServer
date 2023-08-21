@@ -32,7 +32,7 @@ public class ApplicationDbContext : IdentityDbContext<
 
     public async Task<int> SaveChangesAsync()
     {
-        return await SaveChangesAsync();
+        return await base.SaveChangesAsync(CancellationToken.None);
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
