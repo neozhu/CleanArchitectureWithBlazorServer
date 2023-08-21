@@ -469,21 +469,28 @@
             var identityResult = await UserManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
-                var roles = await UserManager.GetRolesAsync(user!);
-                if (roles.Count > 0)
-                {
-                    var removeRoleResult = await UserManager.RemoveFromRolesAsync(user, roles);
-                    if (removeRoleResult.Succeeded)
-                    {
-                        if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
-                        {
-                            await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, user.TenantId, context, item.AssignedRoles);
-                            await UserManager.AddToRolesAsync(user, item.AssignedRoles);
+                var modifyCount = 0;
+                if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
+                    modifyCount = await UserManagerExtensions.UpdateRolesAsyncWithTenantId(user.Id, user.TenantId, context, item.AssignedRoles);
+                //todo had to make which tenant,like other than default tenant
 
-                        }
-                    }
-                }
-                Snackbar.Add($"{ConstantString.UpdateSuccess}", Severity.Info);
+
+
+                /*var roles = await UserManager.GetRolesAsync(user!);
+                   if (roles.Count > 0)
+                  {
+                    var removeRoleResult = await UserManager.RemoveFromRolesAsync(user, roles);
+      if (removeRoleResult.Succeeded)
+      {
+          if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
+          {
+              await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, user.TenantId, context, item.AssignedRoles);
+              await UserManager.AddToRolesAsync(user, item.AssignedRoles);
+
+          }
+      }  }*/
+
+                Snackbar.Add($"Role update:{modifyCount} {ConstantString.UpdateSuccess}", Severity.Info);
                 await OnRefresh();
             }
             else
@@ -771,7 +778,7 @@
                      }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                     new Dictionary<string, Func<ApplicationUserDto, object?>>
-                            {
+                                                                {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
@@ -779,7 +786,7 @@
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                                                                    }
+                                                                                                        }
                     , L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
