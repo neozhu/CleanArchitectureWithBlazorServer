@@ -470,8 +470,8 @@
             if (identityResult.Succeeded)
             {
                 var modifyCount = 0;
-                if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
-                    modifyCount = await UserManagerExtensions.UpdateRolesAsyncWithTenantId(user.Id, user.TenantId, context, item.AssignedRoles);
+                if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0 && Guid.TryParse(user.TenantId,out Guid tid))
+                    modifyCount = await UserManagerExtensions.UpdateRolesAsyncWithTenantId(user.Id, tid.ToString(), context, item.AssignedRoles);
                 //todo had to make which tenant,like other than default tenant
 
 

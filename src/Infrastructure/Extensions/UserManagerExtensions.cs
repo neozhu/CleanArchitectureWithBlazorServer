@@ -60,6 +60,7 @@ public static class UserManagerExtensions
         {
             var result = await context.SaveChangesAsync();
             Console.WriteLine($"Role changes count:{result},Add:{toAdd.Count()},Remove:{toRemove.Count()}");
+            return result;
         }
         Console.WriteLine($"Not Role changes");
         return 0;
