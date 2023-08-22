@@ -171,6 +171,7 @@
 
     private Task TenantSelectChanged(string id)
     {
+        //based upon tenant, show roles
         var tenant = TenantsService.DataSource.Find(x => x.Id == id);
         Model.TenantId = tenant?.Id;
         Model.TenantName = tenant?.Name;

@@ -369,6 +369,11 @@
                  .Include(x => x.Superior)
                  .EfOrderBySortDefinitions(state)
                  .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
+                 //todo fetch tenants of allowed only based on user role/permissions
+                 //as this is admin page,
+                 //for internal load all tenants
+                 //any others ,load only of there tenants
+                 //user search separate page
             var total = await UserManager.Users.CountAsync(searchPredicate);
             return new GridData<ApplicationUserDto> { TotalItems = total, Items = items };
         }
