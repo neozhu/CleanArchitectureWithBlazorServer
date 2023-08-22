@@ -1,3 +1,11 @@
+0>Switch tenant feature for users ,possibly on landing page(Heading) makes useful 
+
 1>Load tenants based upon the user role and tenants on admin pages,as ,multi-level roles
 2>On used edit page,based upon role changes load roles
 For both 1 & 2 make common function called load tenant based on user role/tenant all
+
+  //todo fetch tenants of allowed only based on user role/permissions
+  //as this is admin page,
+  //for internal load all tenants
+  //any others ,load only of there tenants
+  //user search separate page

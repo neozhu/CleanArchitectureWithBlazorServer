@@ -37,7 +37,14 @@ public static class UserManagerExtensions
     {
         //todo we can check for tenanttype if it roles exists or not kind of more check
         var existingRoles = await context.UserRoles.Where(item => item.UserId == userId && item.TenantId == tenantId).Select(x => new { UserRole = x, x.RoleId, x.Role.Name }).ToListAsync();
-
+        if (newSelectedRoles == null || !newSelectedRoles.Any())
+        {
+            if (!existingRoles.Any()) return 0;
+            context.UserRoles.RemoveRange(existingRoles.Select(x => x.UserRole));
+            var result = await context.SaveChangesAsync();
+            Console.WriteLine($"Roles removed :{result}");
+            return result;
+        }
         var toAdd = newSelectedRoles.Except(existingRoles.Select(x => x.Name));
         var toRemove = existingRoles.Where(e => !newSelectedRoles.ToList().Contains(e.Name!)).ToList();
 
