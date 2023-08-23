@@ -33,6 +33,70 @@
                 </MudTooltip>
             </div>
         </MudItem>
+        
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L["Provider"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <PickSuperiorIdAutocomplete For="@(() => Model.SuperiorId)"
+                                        OwnerName="@Model.UserName"
+                                        Clearable="true"
+                                        Label="@L["Select Superior"]"
+                                        @bind-Value="@Model.SuperiorId">
+            </PickSuperiorIdAutocomplete>
+
+        </MudItem>
+        @if (Model.Provider == "Local")
+        {
+            <MudItem xs="12" sm="6">
+                <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
+            </MudItem>
+
+            @if (string.IsNullOrEmpty(Model.Id))
+            {
+                <MudItem xs="12" sm="6">
+                    <MudPasswordField Immediate="true"
+                    Label="@L["Password"]"
+                    @bind-Value="Model.Password"
+                    For="@(() => Model.Password)"
+                    Variant="Variant.Text"
+                    PasswordMode="true"
+                    Required="true"
+                    RequiredError="@L["password is required!"]"
+                    Class="mt-4"/>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudPasswordField Immediate="true"
+                    Label="@L["Confirm Password"]"
+                    @bind-Value="Model.ConfirmPassword"
+                    For="@(() => Model.ConfirmPassword)"
+                    Variant="Variant.Text"
+                    PasswordMode="true"
+                    Required="true"
+                    RequiredError="@L["confrm password is required!"]"
+                    Class="mt-4"/>
+                </MudItem>
+            }
+
+        }
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+
+        <MudItem xs="12" sm="6">
+            <MudText Typo="Typo.caption">@L["Status"]</MudText>
+            <div class="d-fex">
+                <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
+            </div>
+        </MudItem>
+
+
         <MudItem sm="6" xs="12">
             <MudSelect For="@(() => Model.TenantId)"
                        T="string"
@@ -49,61 +113,9 @@
             </MudSelect>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L["Provider"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <PickSuperiorIdAutocomplete For="@(() => Model.SuperiorId)"
-                                        OwnerName="@Model.UserName"
-                                        Clearable="true"
-                                        Label="@L["Select Superior"]"
-                                        @bind-Value="@Model.SuperiorId">
-            </PickSuperiorIdAutocomplete>
-
-        </MudItem>
-        @if (string.IsNullOrEmpty(Model.Id))
-        {
-            <MudItem xs="12" sm="6">
-                <MudPasswordField Immediate="true"
-                                  Label="@L["Password"]"
-                                  @bind-Value="Model.Password"
-                                  For="@(() => Model.Password)"
-                                  Variant="Variant.Text"
-                                  PasswordMode="true"
-                                  Required="true"
-                                  RequiredError="@L["password is required!"]"
-                                  Class="mt-4"/>
-            </MudItem>
-            <MudItem xs="12" sm="6">
-                <MudPasswordField Immediate="true"
-                                  Label="@L["Confirm Password"]"
-                                  @bind-Value="Model.ConfirmPassword"
-                                  For="@(() => Model.ConfirmPassword)"
-                                  Variant="Variant.Text"
-                                  PasswordMode="true"
-                                  Required="true"
-                                  RequiredError="@L["confrm password is required!"]"
-                                  Class="mt-4"/>
-            </MudItem>
-        }
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-
-
-        <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
             <div class="d-fex">
-                <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
+                <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsUserTenantRolesActive" Label="@L["Is User-Tenant Roles Active"]"></MudCheckBox>
             </div>
         </MudItem>
         <MudItem xs="12" sm="12">

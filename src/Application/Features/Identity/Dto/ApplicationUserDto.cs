@@ -16,6 +16,7 @@ public class ApplicationUserDto
     [Description("Tenant Id")] public string? TenantId { get; set; }
 
     [Description("Tenant Name")] public string? TenantName { get; set; }
+    [Description("Is User-Tenant Roles Active")] public bool IsUserTenantRolesActive { get; set; }
 
     [Description("Profile Photo")] public string? ProfilePictureDataUrl { get; set; }
 
@@ -31,9 +32,9 @@ public class ApplicationUserDto
 
     [Description("Default Role")] public string? DefaultRole => AssignedRoles?.FirstOrDefault();
 
-    [Description("Is Active")] public bool IsActive { get; set; }
+    [Description("Is User Active")] public bool IsActive { get; set; }
 
-    [Description("Is Live")] public bool IsLive { get; set; }
+    [Description("Is User Live")] public bool IsLive { get; set; }
 
     [Description("Password")] public string? Password { get; set; }
 

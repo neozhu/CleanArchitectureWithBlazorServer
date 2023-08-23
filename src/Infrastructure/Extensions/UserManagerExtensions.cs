@@ -31,11 +31,10 @@ public static class UserManagerExtensions
     }
 
     public static async Task<int> UpdateRolesAsyncWithTenantId(
-    string userId,
-    string tenantId, IApplicationDbContext context,
-    params string[] newSelectedRoles)
+    string userId, string tenantId, IApplicationDbContext context
+    , bool isActiveTenantAllRoles = false, params string[] newSelectedRoles)
     {
-        //todo we can check for tenanttype if it roles exists or not kind of more check
+        //todo we can check for tenantType if it roles exists or not kind of more check
         var existingRoles = await context.UserRoles.Where(item => item.UserId == userId && item.TenantId == tenantId).Select(x => new { UserRole = x, x.RoleId, x.Role.Name }).ToListAsync();
         if (newSelectedRoles == null || !newSelectedRoles.Any())
         {
@@ -52,21 +51,26 @@ public static class UserManagerExtensions
         {
             var toAddList = new List<ApplicationUserRole>();
             var toAddRoles = await context.Roles.Where(item => toAdd.Contains(item.Name)).Select(x => x.Id).ToListAsync();
-            toAddRoles.ForEach(t => toAddList.Add(new ApplicationUserRole() { UserId = userId, TenantId = tenantId, RoleId = t }));
+            toAddRoles.ForEach(t => toAddList.Add(new ApplicationUserRole() { UserId = userId, TenantId = tenantId, RoleId = t, IsActive = isActiveTenantAllRoles }));
             await context.UserRoles.AddRangeAsync(toAddList);
-            Console.WriteLine($"Adding {toAdd.Count()} rules({toAdd})");
+            Console.WriteLine($"Adding {toAdd.Count()} rules({string.Join(",", toAdd)})");
         }
 
         if (toRemove.Any())
         {
             context.UserRoles.RemoveRange(toRemove.Select(x => x.UserRole));
-            Console.WriteLine($"Removing {toRemove.Count()} rules({toAdd})");
+            Console.WriteLine($"Removing {toRemove.Count():0} rules({string.Join(",", toRemove)})");
         }
 
-        if (toAdd.Any() || toRemove.Any())
+        if (toAdd.Any() || toRemove.Any()|| (existingRoles != null && existingRoles.Any(e => e.UserRole.IsActive != isActiveTenantAllRoles)))
         {
+            if (existingRoles != null && existingRoles.Any(e => e.UserRole.IsActive != isActiveTenantAllRoles))
+            {
+                var forActivationChange = await context.UserRoles.Where(item => item.UserId == userId && item.TenantId == tenantId).ToListAsync();
+                forActivationChange?.ForEach(r => r.IsActive = isActiveTenantAllRoles);
+            }
             var result = await context.SaveChangesAsync();
-            Console.WriteLine($"Role changes count:{result},Add:{toAdd.Count()},Remove:{toRemove.Count()}");
+            Console.WriteLine($"Role changes count:{result},Add:{toAdd?.Count():0},Remove:{toRemove?.Count():0}");
             return result;
         }
         Console.WriteLine($"Not Role changes");

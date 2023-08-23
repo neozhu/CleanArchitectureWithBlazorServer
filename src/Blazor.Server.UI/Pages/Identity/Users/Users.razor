@@ -476,7 +476,7 @@
             {
                 var modifyCount = 0;
                 if (Guid.TryParse(user.TenantId, out Guid tid))
-                    modifyCount = await UserManagerExtensions.UpdateRolesAsyncWithTenantId(user.Id, tid.ToString(), context, item.AssignedRoles);
+                    modifyCount = await UserManagerExtensions.UpdateRolesAsyncWithTenantId(user.Id, tid.ToString(), context, item.IsUserTenantRolesActive, item.AssignedRoles);
                 //todo had to make which tenant,like other than default tenant
                 Snackbar.Add($"Role update:{modifyCount} {ConstantString.UpdateSuccess}", Severity.Info);
                 await OnRefresh();
