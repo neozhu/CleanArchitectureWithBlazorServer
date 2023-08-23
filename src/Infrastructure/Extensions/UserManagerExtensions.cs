@@ -73,7 +73,7 @@ public static class UserManagerExtensions
             Console.WriteLine($"Role changes count:{result},Add:{toAdd?.Count():0},Remove:{toRemove?.Count():0}");
             return result;
         }
-        Console.WriteLine($"Not Role changes");
+        Console.WriteLine($"No Role changes");
         return 0;
     }
 

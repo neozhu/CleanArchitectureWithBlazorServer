@@ -129,23 +129,28 @@
                                 }
                             </MudHidden>
                         </div>
-                        @if (_canSearch)
-                        {
-                            <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                                <MudSelect T="string" Placeholder="Search for role name" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
-                                    @foreach (var str in _roles)
-                                    {
-                                        <MudSelectItem Value="@str">@str</MudSelectItem>
-                                    }
-                                </MudSelect>
-                                <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
-                            </MudStack>
-
-
-                        }
-
-                    </div>
+                    @if (_canSearch)
+                    {
+                        <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                            <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="Tenant or Role name" Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
+                        </MudStack>
+                        <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                            <MudSelect T="string" Placeholder="Search for tenant" Value="@_searchTenant" Clearable="true" ValueChanged="@(OnSearchTenant)">
+                                @foreach (var str in _tenants)
+                                {
+                                    <MudSelectItem Value="@str">@str</MudSelectItem>
+                                }
+                            </MudSelect>
+                            <MudSelect T="string" Placeholder="Search for role" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)">
+                                @foreach (var str in _roles)
+                                {
+                                    <MudSelectItem Value="@str">@str</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudStack>
+                    }
+                </div>
                 </div>
             </ToolBarContent>
             <Columns>
@@ -321,6 +326,8 @@
     private bool _uploading;
     private List<string?> _roles = new();
     private string? _searchRole;
+    private List<string?> _tenants = new();
+    private string? _searchTenant;
 
 
     protected override async Task OnInitializedAsync()
@@ -330,6 +337,8 @@
         RoleManager = ScopedServices.GetRequiredService<CustomRoleManager>();
         Title = L[_currentDto.GetClassDescription()];
         var state = await AuthState;
+        // var tid=state.User.GetTenantId();
+        // var rid=state.User.GetAssignRoles();
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Edit)).Succeeded;
@@ -341,6 +350,7 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
+        _tenants = await context.Tenants.Select(x => x.Name).ToListAsync();
     }
     private bool isOnline(string username)
     {
@@ -351,6 +361,9 @@
     {
         try
         {
+            var userState = await AuthState;
+            var tenantId = userState.User.GetTenantId();
+            var roles = userState.User.GetAssignRoles();
             _loading = true;
             Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
             (x.UserName!.ToLower().Contains(_searchString) ||
@@ -360,9 +373,16 @@
             x.TenantName!.ToLower().Contains(_searchString) ||
             x.Provider!.ToLower().Contains(_searchString));
             var query = UserManager.Users.Where(searchPredicate);
+           
+
             if (!string.IsNullOrEmpty(_searchRole))
             {
                 query = query.Where(x => x.UserRoles.Any(y => y.Role.Name == _searchRole));
+            }
+            if (!string.IsNullOrEmpty(_searchTenant))
+            {
+                //todo change this to tenantId
+                query = query.Where(x => x.UserRoles.Any(y => y.Tenant.Name == _searchTenant));
             }
             var items = await query
                  .Include(x => x.UserRoles)
@@ -396,6 +416,13 @@
         _searchRole = role;
         await _table.ReloadServerData();
     }
+    private async Task OnSearchTenant(string tenant)
+    {
+        if (_loading) return;
+        _searchTenant = tenant;
+        await _table.ReloadServerData();
+    }
+    
     private async Task OnRefresh()
     {
         await _table.ReloadServerData();

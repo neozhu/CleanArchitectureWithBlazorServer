@@ -187,6 +187,8 @@
         var tenant = TenantsService.DataSource.Find(x => x.Id == id);
         Model.TenantId = tenant?.Id;
         Model.TenantName = tenant?.Name;
+        //todo 1 take all standard roles from default structure and then add more assigned from Userroles table
+        Model.AssignedRoles = RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id)).Select(r=>r.Name).ToArray();
         return Task.CompletedTask;
     }
 

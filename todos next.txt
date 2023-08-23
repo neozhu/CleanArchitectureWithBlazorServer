@@ -1,3 +1,13 @@
+tenant based search implemented
+based on tenant ,need to load roles also implemented 
+but refereshing the roles grid is pending
+
+
+
+
+
+
+
 0>Switch tenant feature for users ,possibly on landing page(Heading) makes useful 
 
 1>Load tenants based upon the user role and tenants on admin pages,as ,multi-level roles
