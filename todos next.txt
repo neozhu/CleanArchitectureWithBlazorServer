@@ -1,3 +1,6 @@
+on tenant change currently assigned roles shows 
+but addition to that had to show all roles(unassigned) and active status of tenant
+
 tenant based search implemented
 based on tenant ,need to load roles also implemented 
 but refereshing the roles grid is pending

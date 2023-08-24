@@ -121,7 +121,7 @@
         <MudItem xs="12" sm="12">
             <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
             <MudGrid Class="mt-1">
-                @for (var i = 0; i < Roles.Count; i++)
+                @for (var i = 0; i <  Roles.Count; i++)
                 {
                     var x = i;
                     <MudItem xs="6" sm="6" Class="py-0 my=0">
@@ -130,13 +130,11 @@
                 }
             </MudGrid>
         </MudItem>
-
-
+       
     </MudGrid>
 </MudForm>
 
 @code {
-
     public class CheckItem
     {
         public string Key { get; set; } = string.Empty;
@@ -167,7 +165,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var array = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
+        var array = await RoleManager.Roles.Select(x => x.Name).ToListAsync();//this is all roles
         foreach (var role in array)
         {
             if (Model.AssignedRoles != null && Model.AssignedRoles.Contains(role))
@@ -181,14 +179,15 @@
         }
     }
 
-    private Task TenantSelectChanged(string id)
+    private async Task<Task> TenantSelectChanged(string id)
     {
         //based upon tenant, show roles
         var tenant = TenantsService.DataSource.Find(x => x.Id == id);
         Model.TenantId = tenant?.Id;
         Model.TenantName = tenant?.Name;
         //todo 1 take all standard roles from default structure and then add more assigned from Userroles table
-        Model.AssignedRoles = RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id)).Select(r=>r.Name).ToArray();
+        Roles = await RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id))
+        .Select(r => new CheckItem { Key = r.Name!, Value = true }).ToListAsync();
         return Task.CompletedTask;
     }
 
