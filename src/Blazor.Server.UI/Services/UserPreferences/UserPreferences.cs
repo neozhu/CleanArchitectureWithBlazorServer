@@ -16,10 +16,36 @@ public class UserPreferences
     /// </summary>
     public bool IsDarkMode { get; set; }
     public string PrimaryColor { get; set; } = "#2d4275";
+    public string PrimaryDarken => AdjustBrightness(PrimaryColor,0.8);
+    public string PrimaryLighten => AdjustBrightness(PrimaryColor, 0.8);
     public string SecondaryColor { get; set; } = "#ff4081ff";
     public double BorderRadius { get; set; } = 4;
     public double DefaultFontSize { get; set; } = 0.8125;
     public DarkLightMode DarkLightTheme { get; set; }
+
+
+    private string AdjustBrightness(string hexColor, double factor)
+    {
+        if (hexColor.StartsWith("#"))
+        {
+            hexColor = hexColor.Substring(1); // 删除#前缀，如果存在
+        }
+
+        if (hexColor.Length != 6)
+        {
+            throw new ArgumentException("Invalid hex color code. It must be 6 characters long.");
+        }
+
+        int r = int.Parse(hexColor.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+        int g = int.Parse(hexColor.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+        int b = int.Parse(hexColor.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+
+        int newR = (int)Math.Clamp(r * factor, 0, 255);
+        int newG = (int)Math.Clamp(g * factor, 0, 255);
+        int newB = (int)Math.Clamp(b * factor, 0, 255);
+
+        return $"#{newR:X2}{newG:X2}{newB:X2}";
+    }
 }
 public enum DarkLightMode
 {
