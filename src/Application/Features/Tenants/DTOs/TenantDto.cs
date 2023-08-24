@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
+
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
 [Description("Tenants")]
@@ -11,6 +13,7 @@ public class TenantDto
     [Description("Tenant Name")] public string? Name { get; set; }
 
     [Description("Description")] public string? Description { get; set; }
+    [Description("Tenant Type")] public byte Type { get; set; } = (byte)TenantType.Patient;
 
     private class Mapping : Profile
     {

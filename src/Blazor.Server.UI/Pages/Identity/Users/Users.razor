@@ -337,7 +337,7 @@
         RoleManager = ScopedServices.GetRequiredService<CustomRoleManager>();
         Title = L[_currentDto.GetClassDescription()];
         var state = await AuthState;
-        // var tid=state.User.GetTenantId();
+        // var tid=state.User.GetTenantId();//based on this logged in user tid  and role had to fetch the tenants and all data
         // var rid=state.User.GetAssignRoles();
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;

@@ -1,5 +1,6 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
+@using CleanArchitecture.Blazor.Infrastructure;
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Severity = MudBlazor.Severity
 @using Size = SixLabors.ImageSharp.Size
@@ -9,9 +10,9 @@
 
 
 <MudForm Model="@Model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)">
-    <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden"/>
-    <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden"/>
-    <InputFile id="UploadPhoto" OnChange="UploadPhoto" hidden accept=".jpg, .jpeg, .png"/>
+    <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden" />
+    <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden" />
+    <InputFile id="UploadPhoto" OnChange="UploadPhoto" hidden accept=".jpg, .jpeg, .png" />
     <MudGrid>
         <MudItem sm="12">
             <div class="d-flex justify-center">
@@ -22,7 +23,7 @@
                 }
                 else
                 {
-                    <MudAvatar Image="@Model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;"/>
+                    <MudAvatar Image="@Model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;" />
                 }
                 <MudTooltip Text="@L["Click upload a photo."]">
                     <MudIconButton HtmlTag="label"
@@ -33,7 +34,7 @@
                 </MudTooltip>
             </div>
         </MudItem>
-        
+
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L["Provider"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
@@ -42,7 +43,7 @@
                                         OwnerName="@Model.UserName"
                                         Clearable="true"
                                         Label="@L["Select Superior"]"
-                                        @bind-Value="@Model.SuperiorId">
+            @bind-Value="@Model.SuperiorId">
             </PickSuperiorIdAutocomplete>
 
         </MudItem>
@@ -56,25 +57,25 @@
             {
                 <MudItem xs="12" sm="6">
                     <MudPasswordField Immediate="true"
-                    Label="@L["Password"]"
+                                      Label="@L["Password"]"
                     @bind-Value="Model.Password"
-                    For="@(() => Model.Password)"
-                    Variant="Variant.Text"
-                    PasswordMode="true"
-                    Required="true"
-                    RequiredError="@L["password is required!"]"
-                    Class="mt-4"/>
+                                      For="@(() => Model.Password)"
+                                      Variant="Variant.Text"
+                                      PasswordMode="true"
+                                      Required="true"
+                                      RequiredError="@L["password is required!"]"
+                                      Class="mt-4" />
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <MudPasswordField Immediate="true"
-                    Label="@L["Confirm Password"]"
+                                      Label="@L["Confirm Password"]"
                     @bind-Value="Model.ConfirmPassword"
-                    For="@(() => Model.ConfirmPassword)"
-                    Variant="Variant.Text"
-                    PasswordMode="true"
-                    Required="true"
-                    RequiredError="@L["confrm password is required!"]"
-                    Class="mt-4"/>
+                                      For="@(() => Model.ConfirmPassword)"
+                                      Variant="Variant.Text"
+                                      PasswordMode="true"
+                                      Required="true"
+                                      RequiredError="@L["confrm password is required!"]"
+                                      Class="mt-4" />
                 </MudItem>
             }
 
@@ -121,7 +122,7 @@
         <MudItem xs="12" sm="12">
             <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
             <MudGrid Class="mt-1">
-                @for (var i = 0; i <  Roles.Count; i++)
+                @for (var i = 0; i < Roles.Count; i++)
                 {
                     var x = i;
                     <MudItem xs="6" sm="6" Class="py-0 my=0">
@@ -130,7 +131,7 @@
                 }
             </MudGrid>
         </MudItem>
-       
+
     </MudGrid>
 </MudForm>
 
@@ -183,11 +184,15 @@
     {
         //based upon tenant, show roles
         var tenant = TenantsService.DataSource.Find(x => x.Id == id);
+
         Model.TenantId = tenant?.Id;
         Model.TenantName = tenant?.Name;
         //todo 1 take all standard roles from default structure and then add more assigned from Userroles table
         Roles = await RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id))
         .Select(r => new CheckItem { Key = r.Name!, Value = true }).ToListAsync();
+
+        StaticData.Roles.Where(x => x.TenantType == tenant.Type && !Roles.Any(r => r.Key == x.Name))//todo need to validate more
+        .ToList().ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
         return Task.CompletedTask;
     }
 
@@ -209,7 +214,7 @@
                 var ext = fi.Extension;
                 var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.ProfilePicture, outStream.ToArray()));
                 Model.ProfilePictureDataUrl = result;
-    //Do your validations here
+                //Do your validations here
                 Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
             }
         }

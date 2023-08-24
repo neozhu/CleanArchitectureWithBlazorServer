@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
+using System.Reflection.Emit;
 using CleanArchitecture.Blazor.Domain.Entities.Logger;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,7 @@ public class ApplicationDbContext : IdentityDbContext<
         DbContextOptions<ApplicationDbContext> options
         ) : base(options)
     {
-  
+
     }
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<Logger> Loggers { get; set; }
@@ -43,6 +44,15 @@ public class ApplicationDbContext : IdentityDbContext<
 
         builder.Entity<ApplicationUserRole>()
             .HasKey(ur => new { ur.UserId, ur.RoleId, ur.TenantId });
+
+        /*
+        builder.Entity<ApplicationRole>()
+             .HasKey(r => new { r.Id, r.TenantType });
+
+        builder.Entity<ApplicationRoleClaim>()
+    .HasOne<ApplicationRole>()
+    .WithMany()
+    .HasForeignKey(rc => rc.RoleId);*/
     }
 
 

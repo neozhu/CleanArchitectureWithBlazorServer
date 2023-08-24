@@ -48,6 +48,12 @@ public class IdentityService : IIdentityService
         _localizer = localizer;
     }
 
+    public async Task<List<ApplicationRoleDto>> GetAllRoles()
+    {
+        var key = $"GetAllRoles";
+        var roles = await _cache.GetOrAddAsync(key, async () => await _roleManager.Roles.ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider).ToListAsync());
+        return roles;
+    }
     public async Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default)
     {
         var key = $"GetUserNameAsync:{userId}";
