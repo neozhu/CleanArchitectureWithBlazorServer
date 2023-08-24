@@ -21,7 +21,7 @@ public class Theme
                 DarkLighten = "#1A1643",
                 GrayDefault = "#4B5563",
                 GrayLight = "#9CA3AF",
-                GrayLighter = "#adbdccff"
+                GrayLighter = "#adbdccff",
             },
             PaletteDark = new PaletteDark
             {

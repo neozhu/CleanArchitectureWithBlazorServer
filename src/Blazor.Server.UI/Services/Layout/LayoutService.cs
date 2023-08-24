@@ -50,6 +50,12 @@ public class LayoutService
             CurrentTheme.Palette.Secondary = SecondaryColor;
             CurrentTheme.PaletteDark.Secondary = SecondaryColor;
             CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
+
+            CurrentTheme.Palette.PrimaryLighten = _userPreferences.PrimaryLighten;
+            CurrentTheme.PaletteDark.PrimaryLighten = _userPreferences.PrimaryLighten;
+            CurrentTheme.Palette.PrimaryDarken = _userPreferences.PrimaryDarken;
+            CurrentTheme.PaletteDark.PrimaryDarken = _userPreferences.PrimaryDarken;
+
             CurrentTheme.Typography.Default.FontSize = DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         }
         else
@@ -120,9 +126,15 @@ public class LayoutService
     public void SetBaseTheme(MudTheme theme)
     {
         CurrentTheme = theme;
+   
         CurrentTheme.Palette.Primary = PrimaryColor;
         CurrentTheme.PaletteDark.Primary = PrimaryColor;
+        CurrentTheme.Palette.PrimaryLighten = _userPreferences.PrimaryLighten;
+        CurrentTheme.PaletteDark.PrimaryLighten = _userPreferences.PrimaryLighten;
+        CurrentTheme.Palette.PrimaryDarken = _userPreferences.PrimaryDarken;
+        CurrentTheme.PaletteDark.PrimaryDarken = _userPreferences.PrimaryDarken;
         CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
+        CurrentTheme.Typography.Default.FontSize = DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem"; //Added
         OnMajorUpdateOccured();
     }
 
@@ -166,13 +178,8 @@ public class LayoutService
         BorderRadius = _userPreferences.BorderRadius;
         DefaultFontSize = _userPreferences.DefaultFontSize;
         DarkModeToggle = _userPreferences.DarkLightTheme;
-        CurrentTheme.Palette.Primary = PrimaryColor;
-        CurrentTheme.PaletteDark.Primary = PrimaryColor;
-        CurrentTheme.Palette.Secondary = SecondaryColor;
-        CurrentTheme.PaletteDark.Secondary = SecondaryColor;
-        CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
-        CurrentTheme.Typography.Default.FontSize = DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         await _userPreferencesService.SaveUserPreferences(_userPreferences);
-        OnMajorUpdateOccured();
+        SetBaseTheme(Theme.Theme.ApplicationTheme());
+   
     }
 }
