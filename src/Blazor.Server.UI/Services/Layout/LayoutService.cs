@@ -1,5 +1,6 @@
 using System.Globalization;
 using Blazor.Server.UI.Services.UserPreferences;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Blazor.Server.UI.Services.Layout;
 
@@ -42,20 +43,11 @@ public class LayoutService
             };
             IsRTL = _userPreferences.RightToLeft;
             PrimaryColor = _userPreferences.PrimaryColor;
-            SecondaryColor = _userPreferences.SecondaryColor;
             BorderRadius = _userPreferences.BorderRadius;
             DefaultFontSize = _userPreferences.DefaultFontSize;
             CurrentTheme.Palette.Primary = PrimaryColor;
             CurrentTheme.PaletteDark.Primary = PrimaryColor;
-            CurrentTheme.Palette.Secondary = SecondaryColor;
-            CurrentTheme.PaletteDark.Secondary = SecondaryColor;
             CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
-
-            CurrentTheme.Palette.PrimaryLighten = _userPreferences.PrimaryLighten;
-            CurrentTheme.PaletteDark.PrimaryLighten = _userPreferences.PrimaryLighten;
-            CurrentTheme.Palette.PrimaryDarken = _userPreferences.PrimaryDarken;
-            CurrentTheme.PaletteDark.PrimaryDarken = _userPreferences.PrimaryDarken;
-
             CurrentTheme.Typography.Default.FontSize = DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         }
         else
@@ -126,13 +118,13 @@ public class LayoutService
     public void SetBaseTheme(MudTheme theme)
     {
         CurrentTheme = theme;
-   
-        CurrentTheme.Palette.Primary = PrimaryColor;
-        CurrentTheme.PaletteDark.Primary = PrimaryColor;
-        CurrentTheme.Palette.PrimaryLighten = _userPreferences.PrimaryLighten;
-        CurrentTheme.PaletteDark.PrimaryLighten = _userPreferences.PrimaryLighten;
-        CurrentTheme.Palette.PrimaryDarken = _userPreferences.PrimaryDarken;
-        CurrentTheme.PaletteDark.PrimaryDarken = _userPreferences.PrimaryDarken;
+
+        if (!PrimaryColor.IsNullOrEmpty())
+        {
+            CurrentTheme.Palette.Primary = PrimaryColor;
+            CurrentTheme.PaletteDark.Primary = PrimaryColor;
+        }
+
         CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
         CurrentTheme.Typography.Default.FontSize = DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem"; //Added
         OnMajorUpdateOccured();
@@ -142,6 +134,7 @@ public class LayoutService
     {
         PrimaryColor = color;
         CurrentTheme.Palette.Primary = PrimaryColor;
+        CurrentTheme.PaletteDark.Primary = PrimaryColor;
         _userPreferences.PrimaryColor = PrimaryColor;
         await _userPreferencesService.SaveUserPreferences(_userPreferences);
         OnMajorUpdateOccured();
@@ -150,6 +143,7 @@ public class LayoutService
     {
         SecondaryColor = color;
         CurrentTheme.Palette.Secondary = SecondaryColor;
+        CurrentTheme.PaletteDark.Secondary = SecondaryColor;
         _userPreferences.SecondaryColor = SecondaryColor;
         await _userPreferencesService.SaveUserPreferences(_userPreferences);
         OnMajorUpdateOccured();
@@ -174,7 +168,6 @@ public class LayoutService
         };
         IsRTL = _userPreferences.RightToLeft;
         PrimaryColor = _userPreferences.PrimaryColor;
-        SecondaryColor = _userPreferences.SecondaryColor;
         BorderRadius = _userPreferences.BorderRadius;
         DefaultFontSize = _userPreferences.DefaultFontSize;
         DarkModeToggle = _userPreferences.DarkLightTheme;
