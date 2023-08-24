@@ -1,6 +1,8 @@
+@using Blazor.Server.UI.Services.Layout
 
 @inject IStringLocalizer<SharedResource> L
 <Fluxor.Blazor.Web.StoreInitializer />
+<LoadingScreen LayoutService="LayoutService" LoadingDelayMs="3000">
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
@@ -31,3 +33,14 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+</LoadingScreen>
+@code{
+    [Inject] private LayoutService LayoutService { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        LayoutService.SetBaseTheme(Theme.Theme.ApplicationTheme());
+        await LayoutService.ApplyUserPreferences(true);
+    }
+}
