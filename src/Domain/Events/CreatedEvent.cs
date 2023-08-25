@@ -3,7 +3,7 @@
 
 
 namespace CleanArchitecture.Blazor.Domain.Events;
-public class CreatedEvent<T> : DomainEvent where T : BaseEntity
+public class CreatedEvent<T> : DomainEvent where T : IEntity
 {
     public CreatedEvent(T entity)
     {
