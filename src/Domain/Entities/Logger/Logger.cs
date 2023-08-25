@@ -3,7 +3,7 @@
 
 namespace CleanArchitecture.Blazor.Domain.Entities.Logger;
 
-public class Logger : IEntity
+public class Logger : IEntity<int>
 {
     public int Id { get; set; }
     public string? Message { get; set; }

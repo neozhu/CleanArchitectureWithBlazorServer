@@ -41,7 +41,6 @@ public class DeleteTenantCommandHandler :
         var items = await _context.Tenants.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
         {
-            item.AddDomainEvent(new UpdatedEvent<Tenant>(item));
             _context.Tenants.Remove(item);
         }
 
