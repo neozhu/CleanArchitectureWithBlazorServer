@@ -184,15 +184,24 @@
     {
         //based upon tenant, show roles
         var tenant = TenantsService.DataSource.Find(x => x.Id == id);
+        if (tenant != null)
+        {
+            Model.TenantId = tenant?.Id;
+            Model.TenantName = tenant?.Name;
+            //todo 1 take all standard roles from default structure and then add more assigned from Userroles table
+            Roles = await RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id))
+            .Select(r => new CheckItem { Key = r.Name!, Value = true }).ToListAsync();
 
-        Model.TenantId = tenant?.Id;
-        Model.TenantName = tenant?.Name;
-        //todo 1 take all standard roles from default structure and then add more assigned from Userroles table
-        Roles = await RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id))
-        .Select(r => new CheckItem { Key = r.Name!, Value = true }).ToListAsync();
+            StaticData.Roles.Where(x => x.TenantType == tenant.Type && !Roles.Any(r => r.Key == x.Name))//todo need to validate more
+            .ToList().ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
+        }
+        else
+        {
 
-        StaticData.Roles.Where(x => x.TenantType == tenant.Type && !Roles.Any(r => r.Key == x.Name))//todo need to validate more
-        .ToList().ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
+            Roles = new();
+            Model.TenantId = null;
+            Model.TenantName = null;
+        }
         return Task.CompletedTask;
     }
 
