@@ -62,7 +62,7 @@ public class ApplicationUserDto
         };
     }
 
-    public bool IsInRole(string role)
+    public bool IsInRole(string role)//todo had to add tenant id parameter to check
     {
         return AssignedRoles?.Contains(role) ?? false;
     }
@@ -73,7 +73,9 @@ public class ApplicationUserDto
         {
             CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
                 .ForMember(x => x.SuperiorName, s => s.MapFrom(y => y.Superior!.UserName))
-                .ForMember(x => x.AssignedRoles, s => s.MapFrom(y => y.UserRoles.Select(r => r.Role.Name)));
+                .ForMember(x => x.AssignedRoles, s => s.MapFrom(y => y.UserRoles.Where(g=>g.TenantId==y.TenantId).Select(r => r.Role.Name)))
+                .ForMember(x=>x.IsUserTenantRolesActive, s => s.MapFrom(y => y.UserRoles.Any(r => r.IsActive)))
+                ;
         }
     }
 }

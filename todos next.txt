@@ -1,4 +1,4 @@
-on users page load,had to enable checkmark of istenat-user active based on role selection condition pending
+---------------------on users page load,checkmark of istenat-user active based on role selection condition
 ---------------tenant based search implemented
 ------------users page based on tenant ,need to load roles  implemented 
 
