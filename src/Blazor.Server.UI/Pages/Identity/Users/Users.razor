@@ -1,4 +1,5 @@
 @inherits OwningComponentBase
+@using CleanArchitecture.Blazor.Infrastructure.Persistence;
 @using LazyCache
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
@@ -128,6 +129,28 @@
                                 }
                             </MudHidden>
                         </div>
+                    @if (_canSearch)
+                    {
+                        <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                            <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="Tenant or Role name" Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
+                        </MudStack>
+                        <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                            <MudSelect T="string" Placeholder="Search for tenant" Value="@_searchTenant" Clearable="true" ValueChanged="@(OnSearchTenant)">
+                                @foreach (var str in _tenants)
+                                {
+                                    <MudSelectItem Value="@str">@str</MudSelectItem>
+                                }
+                            </MudSelect>
+                            <MudSelect T="string" Placeholder="Search for role" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)">
+                                @foreach (var str in _roles)
+                                {
+                                    <MudSelectItem Value="@str">@str</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudStack>
+                    }
+                </div>
                         @if (_canSearch)
                         {
                             <MudStack Row="true" AlignItems="AlignItems.Stretch">
@@ -145,7 +168,7 @@
                         }
 
                     </div>
-                </div>
+                
             </ToolBarContent>
             <Columns>
                 <SelectColumn ShowInFooter="false"></SelectColumn>
@@ -279,6 +302,9 @@
  </ErrorBoundary>
 
  @code {
+
+    [Inject]
+    private IApplicationDbContext context { get; set; } = default!;
     [Inject]
     private IUsersStateContainer UsersStateContainer { get; set; } = default!;
     private int _defaultPageSize = 15;
@@ -290,8 +316,8 @@
     private IList<Claim> _assignedClaims = default!;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
-    private UserManager<ApplicationUser> UserManager { get; set; } = default!;
-    private RoleManager<ApplicationRole> RoleManager { get; set; } = default!;
+    private CustomUserManager UserManager { get; set; } = default!;
+    private CustomRoleManager RoleManager { get; set; } = default!;
     private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
     private LazyCacheEntryOptions Options => new LazyCacheEntryOptions().SetAbsoluteExpiration(RefreshInterval, ExpirationMode.LazyExpiration);
     [Inject]
@@ -324,14 +350,19 @@
     private bool _uploading;
     private List<string?> _roles = new();
     private string? _searchRole;
+    private List<string?> _tenants = new();
+    private string? _searchTenant;
+
 
     protected override async Task OnInitializedAsync()
     {
 
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        UserManager = ScopedServices.GetRequiredService<CustomUserManager>();
+        RoleManager = ScopedServices.GetRequiredService<CustomRoleManager>();
         Title = L[_currentDto.GetClassDescription()];
         var state = await AuthState;
+        // var tid=state.User.GetTenantId();//based on this logged in user tid  and role had to fetch the tenants and all data
+        // var rid=state.User.GetAssignRoles();
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Edit)).Succeeded;
@@ -343,6 +374,7 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
+        _tenants = await context.Tenants.Select(x => x.Name).ToListAsync();
     }
     private bool isOnline(string username)
     {
@@ -353,6 +385,9 @@
     {
         try
         {
+            var userState = await AuthState;
+            var tenantId = userState.User.GetTenantId();
+            var roles = userState.User.GetAssignRoles();
             _loading = true;
             Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
             (x.UserName!.ToLower().Contains(_searchString) ||
@@ -362,15 +397,27 @@
             x.TenantName!.ToLower().Contains(_searchString) ||
             x.Provider!.ToLower().Contains(_searchString));
             var query = UserManager.Users.Where(searchPredicate);
+           
+
             if (!string.IsNullOrEmpty(_searchRole))
             {
                 query = query.Where(x => x.UserRoles.Any(y => y.Role.Name == _searchRole));
+            }
+            if (!string.IsNullOrEmpty(_searchTenant))
+            {
+                //todo change this to tenantId
+                query = query.Where(x => x.UserRoles.Any(y => y.Tenant.Name == _searchTenant));
             }
             var items = await query
                  .Include(x => x.UserRoles)
                  .Include(x => x.Superior)
                  .EfOrderBySortDefinitions(state)
                  .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
+            //todo fetch tenants of allowed only based on user role/permissions
+            //as this is admin page,
+            //for internal load all tenants
+            //any others ,load only of there tenants
+            //user search separate page
             var total = await UserManager.Users.CountAsync(searchPredicate);
             return new GridData<ApplicationUserDto> { TotalItems = total, Items = items };
         }
@@ -393,6 +440,13 @@
         _searchRole = role;
         await _table.ReloadServerData();
     }
+    private async Task OnSearchTenant(string tenant)
+    {
+        if (_loading) return;
+        _searchTenant = tenant;
+        await _table.ReloadServerData();
+    }
+    
     private async Task OnRefresh()
     {
         await _table.ReloadServerData();
@@ -428,11 +482,12 @@
             {
                 if (model.AssignedRoles is not null && model.AssignedRoles.Length > 0)
                 {
-                    await UserManager.AddToRolesAsync(applicationUser, model.AssignedRoles);
+                    await UserManagerExtensions.AddToRolesAsyncWithTenantId(applicationUser.Id, applicationUser.TenantId, context, model.AssignedRoles);
                 }
                 else
                 {
-                    await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
+                    await UserManagerExtensions.AddToRolesAsyncWithTenantId(applicationUser.Id, applicationUser.TenantId, context, RoleName.Basic);
+                    // await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
                 }
                 Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
                 await OnRefresh();
@@ -470,19 +525,11 @@
             var identityResult = await UserManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
-                var roles = await UserManager.GetRolesAsync(user!);
-                if (roles.Count > 0)
-                {
-                    var removeRoleResult = await UserManager.RemoveFromRolesAsync(user, roles);
-                    if (removeRoleResult.Succeeded)
-                    {
-                        if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
-                        {
-                            await UserManager.AddToRolesAsync(user, item.AssignedRoles);
-                        }
-                    }
-                }
-                Snackbar.Add($"{ConstantString.UpdateSuccess}", Severity.Info);
+                var modifyCount = 0;
+                if (Guid.TryParse(user.TenantId, out Guid tid))
+                    modifyCount = await UserManagerExtensions.UpdateRolesAsyncWithTenantId(user.Id, tid.ToString(), context, item.IsUserTenantRolesActive, item.AssignedRoles);
+                //todo had to make which tenant,like other than default tenant
+                Snackbar.Add($"Role update:{modifyCount} {ConstantString.UpdateSuccess}", Severity.Info);
                 await OnRefresh();
             }
             else
@@ -778,7 +825,7 @@
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                                                                }
+                        }
                     , L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
@@ -815,7 +862,8 @@
                     var iResult = await UserManager.CreateAsync(user);
                     if (iResult.Succeeded)
                     {
-                        await UserManager.AddToRolesAsync(user, new[] { RoleName.Basic });
+                        await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, user.TenantId, context, RoleName.Basic);
+                        // await UserManager.AddToRolesAsync(user, new[] { RoleName.Basic });
                     }
                     else
                     {
