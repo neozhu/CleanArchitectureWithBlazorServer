@@ -1,12 +1,11 @@
 @using Blazor.Server.UI.Services.Layout
-
 @inject IStringLocalizer<SharedResource> L
 @inject NavigationManager NavManager
 
-<Fluxor.Blazor.Web.StoreInitializer />
+<Fluxor.Blazor.Web.StoreInitializer/>
 
 <LoadingScreen IsLoaded="@_isLoaded" LayoutService="LayoutService">
-    <div class="page-transition @transitionClass">
+    <div class="page-transition @_transitionClass">
         <CascadingAuthenticationState>
             <Router AppAssembly="@typeof(App).Assembly">
                 <Found Context="routeData">
@@ -15,7 +14,7 @@
                             <text>@L["Please wait, we are authorizing you..."]</text>
                         </Authorizing>
                         <NotAuthorized>
-                            @if (@context.User.Identity?.IsAuthenticated ?? false)
+                            @if (context.User.Identity?.IsAuthenticated ?? false)
                             {
                                 <p>@L["You are not authorized to be here. For more information, contact your system administrator."]</p>
                             }
@@ -31,7 +30,9 @@
                     <PageTitle>Not found</PageTitle>
                     <LayoutView Layout="@typeof(MainLayout)">
                         <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex">
-                            <p role="alert">@L["Sorry, there's nothing at this address."] <MudButton Variant="Variant.Filled" Size="Size.Small" Link="/">@L["Go Home"]</MudButton></p>
+                            <p role="alert">
+                                @L["Sorry, there's nothing at this address."] <MudButton Variant="Variant.Filled" Size="Size.Small" Link="/">@L["Go Home"]</MudButton>
+                            </p>
                         </MudContainer>
                     </LayoutView>
                 </NotFound>
@@ -41,24 +42,27 @@
 </LoadingScreen>
 
 @code{
-    [Inject] private LayoutService LayoutService { get; set; }
-    private string transitionClass = "loadScreen-initial-hidden";
+
+    [Inject]
+    private LayoutService LayoutService { get; set; }
+
+    private string _transitionClass = "loadScreen-initial-hidden";
     private bool _isLoaded = true;
-    
+
     protected override async Task OnInitializedAsync()
     {
         LayoutService.SetBaseTheme(Theme.Theme.ApplicationTheme());
         await LayoutService.ApplyUserPreferences(true);
         NavManager.LocationChanged += HandleLocationChanged;
     }
-    
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             if (Settings.EnableLoadingScreen)
             {
-                transitionClass = ""; 
+                _transitionClass = "";
                 _isLoaded = false;
                 StateHasChanged();
 
@@ -70,27 +74,27 @@
             }
         }
     }
-    
+
     private async void HandleLocationChanged(object sender, LocationChangedEventArgs e)
     {
-        if (Settings.EnableLoadingScreen)
-        {
-            //transitionClass = "loadScreen-fade-out";
-            transitionClass = "";
+        if (!Settings.EnableLoadingScreen) return;
+        
+        //transitionClass = "loadScreen-fade-out";
+        _transitionClass = "";
 
-            _isLoaded = false;
-            StateHasChanged();
+        _isLoaded = false;
+        StateHasChanged();
 
-            await Task.Delay(600);
+        await Task.Delay(600);
 
-            //transitionClass = "loadScreen-fade-in";
-            _isLoaded = true;
-            StateHasChanged();
-        }
+        //transitionClass = "loadScreen-fade-in";
+        _isLoaded = true;
+        StateHasChanged();
     }
-    
+
     public void Dispose()
     {
         NavManager.LocationChanged -= HandleLocationChanged;
     }
+
 }
