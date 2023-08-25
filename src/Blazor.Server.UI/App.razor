@@ -42,14 +42,19 @@
 
 @code{
     [Inject] private LayoutService LayoutService { get; set; }
-    private string transitionClass = "loadScreen-initial-hidden";
+    private string transitionClass = string.Empty; 
     private bool _isLoaded = true;
     
     protected override async Task OnInitializedAsync()
     {
+        transitionClass = Settings.EnableLoadingScreen ? "loadScreen-initial-hidden" : string.Empty;
         LayoutService.SetBaseTheme(Theme.Theme.ApplicationTheme());
         await LayoutService.ApplyUserPreferences(true);
-        NavManager.LocationChanged += HandleLocationChanged;
+
+        if (Settings.EnableLoadingTransitionScreen)
+        {
+            NavManager.LocationChanged += HandleLocationChanged;
+        }
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -63,8 +68,7 @@
                 StateHasChanged();
 
                 await Task.Delay(Settings.LoadingScreenDuration >= 0 ? Settings.LoadingScreenDuration : 2000);
-
-                //transitionClass = "loadScreen-fade-in";
+                
                 _isLoaded = true;
                 StateHasChanged();
             }
@@ -73,24 +77,17 @@
     
     private async void HandleLocationChanged(object sender, LocationChangedEventArgs e)
     {
-        if (Settings.EnableLoadingScreen)
+        if (Settings.EnableLoadingTransitionScreen)
         {
-            //transitionClass = "loadScreen-fade-out";
             transitionClass = "";
 
             _isLoaded = false;
             StateHasChanged();
 
-            await Task.Delay(600);
+            await Task.Delay(Settings.LoadingTransitionScreenDuration >= 0 ? Settings.LoadingTransitionScreenDuration : 600);
 
-            //transitionClass = "loadScreen-fade-in";
             _isLoaded = true;
             StateHasChanged();
         }
-    }
-    
-    public void Dispose()
-    {
-        NavManager.LocationChanged -= HandleLocationChanged;
     }
 }
