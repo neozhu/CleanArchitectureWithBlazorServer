@@ -129,46 +129,31 @@
                                 }
                             </MudHidden>
                         </div>
-                    @if (_canSearch)
-                    {
-                        <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                            <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="Tenant or Role name" Adornment="Adornment.End"
-                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
-                        </MudStack>
-                        <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                            <MudSelect T="string" Placeholder="Search for tenant" Value="@_searchTenant" Clearable="true" ValueChanged="@(OnSearchTenant)">
-                                @foreach (var str in _tenants)
-                                {
-                                    <MudSelectItem Value="@str">@str</MudSelectItem>
-                                }
-                            </MudSelect>
-                            <MudSelect T="string" Placeholder="Search for role" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)">
-                                @foreach (var str in _roles)
-                                {
-                                    <MudSelectItem Value="@str">@str</MudSelectItem>
-                                }
-                            </MudSelect>
-                        </MudStack>
-                    }
-                </div>
                         @if (_canSearch)
                         {
                             <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                                <MudSelect T="string" Placeholder="Search for role name" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
+                                <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="Tenant or Role name" Adornment="Adornment.End"
+                                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
+                            </MudStack>
+                            <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                                <MudSelect T="string" Placeholder="Search for tenant" Value="@_searchTenant" Clearable="true" ValueChanged="@(OnSearchTenant)">
+                                    @foreach (var str in _tenants)
+                                    {
+                                        <MudSelectItem Value="@str">@str</MudSelectItem>
+                                    }
+                                </MudSelect>
+                                <MudSelect T="string" Placeholder="Search for role" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)">
                                     @foreach (var str in _roles)
                                     {
                                         <MudSelectItem Value="@str">@str</MudSelectItem>
                                     }
                                 </MudSelect>
-                                <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
                             </MudStack>
-
-
                         }
-
                     </div>
-                
+                   
+                </div>
+
             </ToolBarContent>
             <Columns>
                 <SelectColumn ShowInFooter="false"></SelectColumn>
@@ -397,7 +382,7 @@
             x.TenantName!.ToLower().Contains(_searchString) ||
             x.Provider!.ToLower().Contains(_searchString));
             var query = UserManager.Users.Where(searchPredicate);
-           
+
 
             if (!string.IsNullOrEmpty(_searchRole))
             {
@@ -446,7 +431,7 @@
         _searchTenant = tenant;
         await _table.ReloadServerData();
     }
-    
+
     private async Task OnRefresh()
     {
         await _table.ReloadServerData();
@@ -519,9 +504,19 @@
             user.Provider = item.Provider;
             user.UserName = item.UserName;
             user.IsActive = item.IsActive;
-            user.TenantId = item.TenantId;
-            user.TenantName = item.TenantName;
+            if (item.IsUserTenantRolesActive && item.AssignedRoles!=null && item.AssignedRoles.Any())//change tenant only if its IsUserTenantRolesActive & having any roles
+            {
+                user.TenantId = item.TenantId;
+                user.TenantName = item.TenantName;
+            }
+            else
+            {
+                user.TenantId = user.UserRoles.OrderBy(x => x.Role.Level).FirstOrDefault(ur => ur.UserId == user.Id && ur.TenantId != item.TenantId & ur.IsActive == true).TenantId;
+                user.TenantName = string.IsNullOrEmpty(user.TenantId) ? string.Empty : TenantsService.DataSource.Find(x => x.Id == user.TenantId)?.Name;
+
+            }
             user.SuperiorId = item.SuperiorId;
+
             var identityResult = await UserManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
@@ -817,7 +812,7 @@
                      }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                     new Dictionary<string, Func<ApplicationUserDto, object?>>
-                        {
+                                                {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
@@ -825,7 +820,7 @@
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                        }
+                                                }
                     , L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);

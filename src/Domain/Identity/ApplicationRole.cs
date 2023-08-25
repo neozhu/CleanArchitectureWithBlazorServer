@@ -12,6 +12,7 @@ public class ApplicationRole : IdentityRole
     //public bool IsActive { get; set; } = true;
     public string? Description { get; set; }
     public byte TenantType { get; set; } = (byte)Enums.TenantType.Patient;
+    public byte Level { get; set; } = 1;
     public virtual ICollection<ApplicationRoleClaim> RoleClaims { get; set; }
     public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
     //add isActive,activatedBy,deactivatedBy

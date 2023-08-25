@@ -12,7 +12,12 @@ public class StaticData//only for first time
     public async Task<List<ApplicationRoleDto>> LoadUserBaseRoles(bool forceLoad = false)
     {
         if (forceLoad || Roles == null || !Roles.Any())
-            Roles = await _identityService.GetAllRoles();
+            Roles = (await _identityService.GetAllRoles()).OrderByDescending(r=>r.Level).ToList();
         return Roles;
+    }
+
+    public static List<ApplicationRoleDto>? RolesOfTenantType(byte tenantType)
+    {
+        return tenantType == 0 ? (List<ApplicationRoleDto>?)null : (Roles?.Where(x => x.TenantType == tenantType).ToList());
     }
 }

@@ -140,6 +140,7 @@
     {
         public string Key { get; set; } = string.Empty;
         public bool Value { get; set; }
+        public byte Level { get; set; }//for hierarchy order
     }
 
     MudForm? _form = default!;
@@ -166,18 +167,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var array = await RoleManager.Roles.Select(x => x.Name).ToListAsync();//this is all roles
-        foreach (var role in array)
+        //take all standard roles from default structure and then add more assigned from??????????????????? Userroles table
+        //step1: load standard roles as per tenant
+        //step2: update assigned roles
+        var tenant = TenantsService.DataSource.Find(x => x.Id == Model.TenantId);
+        if (tenant != null)
         {
-            if (Model.AssignedRoles != null && Model.AssignedRoles.Contains(role))
+            StaticData.RolesOfTenantType(tenant.Type).ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
+            if (Model.AssignedRoles != null && Model.AssignedRoles.Intersect(Roles.Select(x => x.Key)).Count() > 0)
             {
-                Roles.Add(new CheckItem { Key = role!, Value = true });
-            }
-            else
-            {
-                Roles.Add(new CheckItem { Key = role!, Value = false });
+                Model.AssignedRoles.Intersect(Roles.Select(x => x.Key)).ToList().ForEach(a => { Roles.Find(r => r.Key == a).Value = true; });
             }
         }
+
     }
 
     private async Task<Task> TenantSelectChanged(string id)
@@ -186,14 +188,19 @@
         var tenant = TenantsService.DataSource.Find(x => x.Id == id);
         if (tenant != null)
         {
+            Roles = new();
             Model.TenantId = tenant?.Id;
             Model.TenantName = tenant?.Name;
             //todo 1 take all standard roles from default structure and then add more assigned from Userroles table
-            Roles = await RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id))
-            .Select(r => new CheckItem { Key = r.Name!, Value = true }).ToListAsync();
-
-            StaticData.Roles.Where(x => x.TenantType == tenant.Type && !Roles.Any(r => r.Key == x.Name))//todo need to validate more
-            .ToList().ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
+            //step1: load standard roles as per tenant
+            //step2: update assigned roles
+            if (StaticData.Roles != null && StaticData.Roles.Any())
+            {
+                StaticData.RolesOfTenantType(tenant.Type).ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
+                var existingRoles = await RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id)).Select(x => x.Name).ToListAsync();
+                if (existingRoles != null && existingRoles.Any())
+                    Roles.ForEach(r => { if (existingRoles.Contains(r.Key)) r.Value = true; });
+            }
         }
         else
         {
