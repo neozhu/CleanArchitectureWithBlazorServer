@@ -4,7 +4,7 @@ public class AuditTrailAdvancedSpecification : Specification<AuditTrail>
 {
     public AuditTrailAdvancedSpecification(AuditTrailAdvancedFilter filter)
     {
-        var today = DateTime.Now.Date;
+        var today = DateTime.Now.ToUniversalTime().Date;
         var start = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
             CultureInfo.CurrentCulture);
         var end = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 23:59:59",
