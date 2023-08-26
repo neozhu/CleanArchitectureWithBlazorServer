@@ -12,7 +12,6 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
     private readonly ICurrentUserService _currentUserService;
     private readonly IDateTime _dateTime;
     private List<AuditTrail> _temporaryAuditTrailList = new();
-    private List<DomainEvent> _deletingDomainEvents = new();
     public AuditableEntityInterceptor(
         ITenantProvider tenantProvider,
         ICurrentUserService currentUserService,

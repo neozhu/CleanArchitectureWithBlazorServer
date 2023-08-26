@@ -68,7 +68,11 @@
                 <PropertyColumn Property="x => x.AuditType" Title="@L[_currentDto.GetMemberDescription(x=>x.AuditType)]" />
                 <PropertyColumn Property="x => x.TableName" Title="@L[_currentDto.GetMemberDescription(x=>x.TableName)]" />
                 <PropertyColumn Property="x => x.PrimaryKey" Title="@L[_currentDto.GetMemberDescription(x=>x.PrimaryKey)]" />
-                <PropertyColumn Property="x => x.DateTime" Title="@L[_currentDto.GetMemberDescription(x=>x.DateTime)]" />
+                <PropertyColumn Property="x => x.DateTime" Title="@L[_currentDto.GetMemberDescription(x=>x.DateTime)]">
+                    <CellTemplate>
+                         <ToLocal  DateTime="@context.Item.DateTime.ToLocalTime()" Format="dd/mm/yyyy HH:MM:ss"></ToLocal>
+                    </CellTemplate>
+                </PropertyColumn>
             </Columns>
             <ChildRowContent>
                 <MudCard Elevation="0" Class="d-flex flex-grow-0">

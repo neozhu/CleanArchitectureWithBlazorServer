@@ -37,9 +37,8 @@
 </LoadingScreen>
 
 @code{
-
     [Inject]
-    private LayoutService LayoutService { get; set; }
+    private LayoutService LayoutService { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
