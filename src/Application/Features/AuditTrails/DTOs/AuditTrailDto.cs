@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 [Description("Audit Trails")]
 public class AuditTrailDto
 {
-    [Description("Id")] public int Id { get; set; }
+    [Description("Id")] public string Id { get; set; } = Guid.NewGuid().ToString();
 
     [Description("User Id")] public string? UserId { get; set; }
 
