@@ -1,3 +1,4 @@
+remove applicationdbcontext & some mroe from ui project for security
 while fetching role or userrole had to look for isactive and tenant(mostly done)
 move all activity to services and avoid using usermanager ,instead use userservices
 ---------------------on users page load,checkmark of istenat-user active based on role selection condition
