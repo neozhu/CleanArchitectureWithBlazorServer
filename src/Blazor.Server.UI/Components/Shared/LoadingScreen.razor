@@ -126,12 +126,11 @@ else
 }
 
 @code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
-
-    [Parameter]
-    public LayoutService LayoutService { get; set; }
+    public LayoutService LayoutService { get; set; } = null!;
     
     [Parameter]
     public int LoadingDelayMs { get; set; }
