@@ -65,13 +65,10 @@ public class AuthController : Controller
         if (user is null)
         {
             var admin = await _userManager.FindByNameAsync("administrator") ?? throw new NotFoundException($"Application user administrator Not Found.");
-            var role = await _roleManager.FindByNameAsync(RoleName.Basic, TenantType.Patient);
-            var rolesToInsert = new List<ApplicationUserRole>();
-            rolesToInsert.Add(new ApplicationUserRole() { TenantId = admin.TenantId, Role = role });
-            /*if (rolesList != null && rolesList.Any())
-                {
-                rolesList.ForEach(r => rolesToInsert.Add(new ApplicationUserRole() { TenantId = admin.TenantId, Role = r }));
-            }*/
+            if (admin.TenantId == null) return null;
+            var rl = await _roleManager.FindByNameAsync(RoleName.Basic);
+            if (rl == null) return null;
+            var rolesToInsert = new List<ApplicationUserRole>() { new ApplicationUserRole() { TenantId = admin.TenantId, Role = rl } };
             user = new ApplicationUser
             {
                 EmailConfirmed = true,
@@ -91,8 +88,6 @@ public class AuthController : Controller
             {
                 return Unauthorized();
             }
-           // var assignResult = await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, admin.TenantId, context, RoleName.Basic);
-           
             await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
         }
 

@@ -9,4 +9,7 @@ public abstract class RoleName
     public const string Basic =nameof(Basic);
     public const string Users =nameof(Users);
 
+    public const string DefaultRole1 = nameof(Basic);
+   // public const string DefaultRole2 = nameof(Basic);
+
 }

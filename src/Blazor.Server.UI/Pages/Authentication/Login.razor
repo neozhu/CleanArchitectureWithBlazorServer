@@ -212,13 +212,6 @@
         if (user is null)
         {
             var admin = await UserManager.FindByNameAsync(UserName.Administrator) ?? throw new NotFoundException("Administrator's account Not Found.");
-            var role = await RoleManager.FindByNameAsync(RoleName.Basic, TenantType.Patient);
-            var rolesToInsert = new List<ApplicationUserRole>();
-            rolesToInsert.Add(new ApplicationUserRole() { TenantId = admin.TenantId, Role = role });
-            /*if (rolesList != null && rolesList.Any())
-                {
-                rolesList.ForEach(r => rolesToInsert.Add(new ApplicationUserRole() { TenantId = admin.TenantId, Role = r }));
-            }*/
             user = new ApplicationUser
                 {
                     EmailConfirmed = true,
@@ -230,17 +223,14 @@
                     DisplayName = name,
                     SuperiorId = admin.Id,
                     TenantId = admin.TenantId,
-                    TenantName = admin.TenantName,
-                    UserRoles = rolesToInsert
+                    TenantName = admin.TenantName
                 };
-            var createResult = await UserManager.CreateAsync(user);
+            var createResult = await UserManager.CreateAsync(user);//extension handlees default tenant & roles
             if (!createResult.Succeeded)
             {
                 return null;
             }
             await UserManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
-            //  var assignResult = await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, admin.TenantId, context, RoleName.Basic);
-            //var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
         }
         return user;
     }

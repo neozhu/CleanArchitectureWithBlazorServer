@@ -1,3 +1,10 @@
+self register, assign default tenant and default role as guest
+-externallogin
+
+
+others adding then add under creator tenant if not then add default tenant & role
+-users page
+
 remove applicationdbcontext & some mroe from ui project for security
 while fetching role or userrole had to look for isactive and tenant(mostly done)
 move all activity to services and avoid using usermanager ,instead use userservices

@@ -10,6 +10,7 @@ using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using LazyCache;
 using Microsoft.AspNetCore.Authorization;
@@ -238,6 +239,7 @@ public class IdentityService : IIdentityService
         var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).FirstAsync(cancellation), Options);
         return result;
     }
+    
     public async Task<List<ApplicationUserDto>?> GetUsers(string? tenantId, CancellationToken cancellation = default)
     {
         var key = $"GetApplicationUserDtoListWithTenantId:{tenantId}";
@@ -257,6 +259,14 @@ public class IdentityService : IIdentityService
 
         };
         var result = await _cache.GetOrAddAsync(key, () => getUsersByTenantId(tenantId,cancellation), Options);
+        return result;
+    }
+
+
+    public async Task<TenantDto> GetTenantsOfUser(string userId, CancellationToken cancellation = default)
+    {
+        var key = $"GetTenantsOfUser:{userId}";
+        var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Select(x => x.UserRoles.Select(ur => ur.Tenant)).ProjectTo<TenantDto>(_mapper.ConfigurationProvider).FirstAsync(cancellation), Options);
         return result;
     }
 }

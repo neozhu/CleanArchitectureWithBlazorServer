@@ -151,7 +151,7 @@
                             </MudStack>
                         }
                     </div>
-                   
+
                 </div>
 
             </ToolBarContent>
@@ -288,8 +288,8 @@
 
  @code {
 
-    [Inject]
-    private IApplicationDbContext context { get; set; } = default!;
+    // [Inject]
+    // private IApplicationDbContext context { get; set; } = default!;
     [Inject]
     private IUsersStateContainer UsersStateContainer { get; set; } = default!;
     private int _defaultPageSize = 15;
@@ -359,7 +359,7 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
-        _tenants = await context.Tenants.Select(x => x.Name).ToListAsync();
+        _tenants = TenantsService.DataSource.Select(x => x.Name).ToList();//fetch tenants based on user level permissions
     }
     private bool isOnline(string username)
     {
@@ -452,19 +452,21 @@
                     Provider = model.Provider,
                     DisplayName = model.DisplayName,
                     UserName = model.UserName,
-                    TenantId = model.TenantId,
+                    TenantId = model.TenantId,//this has to be
                     TenantName = model.TenantName,
                     Email = model.Email,
                     PhoneNumber = model.PhoneNumber,
                     SuperiorId = model.SuperiorId,
                     ProfilePictureDataUrl = model.ProfilePictureDataUrl,
-                    IsActive = model.IsActive,
+                    IsActive = model.IsActive
                 };
             var password = model.Password;
-            var state = await UserManager.CreateAsync(applicationUser, password!);
+            var state = await UserManager.CreateAsync(applicationUser, model.AssignedRoles.ToList(), model.TenantId, password!);
 
             if (state.Succeeded)
             {
+                /*
+                //todo remove this to make it as per userroles
                 if (model.AssignedRoles is not null && model.AssignedRoles.Length > 0)
                 {
                     await UserManagerExtensions.AddToRolesAsyncWithTenantId(applicationUser.Id, applicationUser.TenantId, context, model.AssignedRoles);
@@ -474,6 +476,7 @@
                     await UserManagerExtensions.AddToRolesAsyncWithTenantId(applicationUser.Id, applicationUser.TenantId, context, RoleName.Basic);
                     // await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
                 }
+                */
                 Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
                 await OnRefresh();
             }
@@ -504,7 +507,7 @@
             user.Provider = item.Provider;
             user.UserName = item.UserName;
             user.IsActive = item.IsActive;
-            if (item.IsUserTenantRolesActive && item.AssignedRoles!=null && item.AssignedRoles.Any())//change tenant only if its IsUserTenantRolesActive & having any roles
+            if (item.IsUserTenantRolesActive && item.AssignedRoles != null && item.AssignedRoles.Any())//change tenant only if its IsUserTenantRolesActive & having any roles
             {
                 user.TenantId = item.TenantId;
                 user.TenantName = item.TenantName;
@@ -812,7 +815,7 @@
                      }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                     new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                                {
+                                                        {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
@@ -820,7 +823,7 @@
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                                                }
+                                                        }
                     , L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
@@ -854,13 +857,9 @@
                 {
                     var tenantId = TenantsService.DataSource.Any(x => x.Name == user.TenantName) ? TenantsService.DataSource.First(x => x.Name == user.TenantName).Id : TenantsService.DataSource.First().Id;
                     user.TenantId = tenantId;
-                    var iResult = await UserManager.CreateAsync(user);
-                    if (iResult.Succeeded)
-                    {
-                        await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, user.TenantId, context, RoleName.Basic);
-                        // await UserManager.AddToRolesAsync(user, new[] { RoleName.Basic });
-                    }
-                    else
+                    //var iResult = await UserManager.CreateAsync(user);
+                    var iResult = await UserManager.CreateAsync(user, null, user.TenantId);
+                    if (!iResult.Succeeded)
                     {
                         Snackbar.Add($"{string.Join(',', iResult.Errors.Select(x => x.Description))}", Severity.Error);
                     }

@@ -4,6 +4,7 @@
 using System.Security.Claims;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
@@ -26,4 +27,7 @@ public interface IIdentityService : IService
     Task<ApplicationUserDto> GetApplicationUserDto(string userId,CancellationToken cancellation=default);
     string GetUserName(string userId);
     Task<List<ApplicationUserDto>?> GetUsers(string? tenantId, CancellationToken cancellation = default);
+
+
+    Task<TenantDto> GetTenantsOfUser(string userId, CancellationToken cancellation = default);
 }

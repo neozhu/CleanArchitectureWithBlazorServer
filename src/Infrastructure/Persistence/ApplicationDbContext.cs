@@ -22,6 +22,9 @@ public class ApplicationDbContext : IdentityDbContext<
     {
 
     }
+   // public DbSet<ApplicationUserRole> ApplicationUserRoles { get; set; }
+
+
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<Logger> Loggers { get; set; }
     public DbSet<AuditTrail> AuditTrails { get; set; }

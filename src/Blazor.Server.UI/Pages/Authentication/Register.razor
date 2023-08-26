@@ -32,23 +32,23 @@
                           Variant="Variant.Outlined"></MudTextField>
 
             <MudPasswordField Immediate="true"
-                          Label="@L["Password"]"
-                          @bind-Value="_model.Password"
-                          For="@(() => _model.Password)"
-                          PasswordMode="true"
-                          Variant="Variant.Outlined"
-                          Required="true"
-                          RequiredError="@L["password is required!"]"
-                          Class="mt-4" />
-            <MudPasswordField Immediate="true"
-                          Label="@L["Confirm Password"]"
-                          @bind-Value="_model.ConfirmPassword"
-                          For="@(() => _model.ConfirmPassword)"
-                          Variant="Variant.Outlined"
+                              Label="@L["Password"]"
+                              @bind-Value="_model.Password"
+                              For="@(() => _model.Password)"
                               PasswordMode="true"
-                          Required="true"
-                          RequiredError="@L["password is required!"]"
-                         Class="mt-4" />
+                              Variant="Variant.Outlined"
+                              Required="true"
+                              RequiredError="@L["password is required!"]"
+                              Class="mt-4" />
+            <MudPasswordField Immediate="true"
+                              Label="@L["Confirm Password"]"
+                              @bind-Value="_model.ConfirmPassword"
+                              For="@(() => _model.ConfirmPassword)"
+                              Variant="Variant.Outlined"
+                              PasswordMode="true"
+                              Required="true"
+                              RequiredError="@L["password is required!"]"
+                              Class="mt-4" />
 
             <MudCheckBox For="@(() => _model.AgreeToTerms)" @bind-Checked="@_model.AgreeToTerms" Label="@L["I agree to the terms and privacy"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
 
@@ -78,8 +78,6 @@
 
 
 @code {
-    [Inject]
-    private IApplicationDbContext context { get; set; } = default!;
     public string Title = "Sign Up";
     [Inject] private NavigationManager Navigation { get; set; } = default!;
     private CustomUserManager UserManager { get; set; } = default!;
@@ -100,40 +98,40 @@
         try
         {
             _loading = true;
-              await _form!.Validate();
-                if (_form!.IsValid)
-                {
-                    var user = new ApplicationUser
+            await _form!.Validate();
+            if (_form!.IsValid)
+            {
+                var user = new ApplicationUser
                     {
                         UserName = _model.UserName,
                         Email = _model.Email
                     };
-                    var result = await UserManager.CreateAsync(user, _model.Password!);
-                    if (result.Succeeded)
+                var result = await UserManager.CreateAsync(user, _model.Password!);
+                if (result.Succeeded)
+                {
+                 //   var assignResult = await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, user.TenantId, context, RoleName.Basic);
+                    //var assignResult= await UserManager.AddToRoleAsync(user, RoleName.Basic);
+                    if ( !string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.UserName))
                     {
-                    var assignResult = await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, user.TenantId, context, RoleName.Basic);
-                        //var assignResult= await UserManager.AddToRoleAsync(user, RoleName.Basic);
-                        if (assignResult>0 && !string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.UserName))
+                        var response = await SendWelcome(user.Email!, user.UserName!);
+                        if (response.Successful == false)
                         {
-                            var response= await SendWelcome(user.Email!, user.UserName!);
-                            if (response.Successful == false)
-                            {
-                                Snackbar.Add(string.Format(L["{0}"],response.ErrorMessages.FirstOrDefault()), MudBlazor.Severity.Warning);
-                            }
-                            Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
-                            Navigation.NavigateTo("/");
+                            Snackbar.Add(string.Format(L["{0}"], response.ErrorMessages.FirstOrDefault()), MudBlazor.Severity.Warning);
                         }
-                        else
-                        {
-                            Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
-                        }
+                        Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
+                        Navigation.NavigateTo("/");
                     }
                     else
                     {
                         Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
                     }
                 }
-            
+                else
+                {
+                    Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
+                }
+            }
+
         }
         finally
         {
@@ -144,8 +142,8 @@
     private Task<SendResponse> SendWelcome(string toEmail, string userName)
     {
 
-        var subject =string.Format(L["Welcome to {0}"],Settings.AppName);
-        var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_welcome.txt");
+        var subject = string.Format(L["Welcome to {0}"], Settings.AppName);
+        var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates", "_welcome.txt");
         return MailService.SendAsync(toEmail, subject, "_welcome", new { AppName = Settings.AppName, Email = toEmail, UserName = userName });
     }
 }
