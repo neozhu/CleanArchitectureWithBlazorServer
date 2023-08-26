@@ -1,17 +1,20 @@
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Constants.Role;
+using CleanArchitecture.Blazor.Domain.Enums;
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+//NOTE THI is not using
 namespace Blazor.Server.UI.EndPoints;
 public class AuthController : Controller
 {
     private readonly ILogger<AuthController> _logger;
     private readonly IDataProtectionProvider _dataProtectionProvider;
     private readonly CustomUserManager _userManager;
+    private readonly CustomRoleManager _roleManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IApplicationDbContext context;
 
@@ -19,10 +22,10 @@ public class AuthController : Controller
         ILogger<AuthController> logger,
         IDataProtectionProvider dataProtectionProvider,
         CustomUserManager userManager,
-        SignInManager<ApplicationUser> signInManager,IApplicationDbContext _context
+        SignInManager<ApplicationUser> signInManager, CustomRoleManager roleManager
     )
     {
-        context = _context;
+        _roleManager = roleManager;
         _logger = logger;
         _dataProtectionProvider = dataProtectionProvider;
         _userManager = userManager;
@@ -30,7 +33,7 @@ public class AuthController : Controller
     }
     [HttpGet("/auth/login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(string token,string returnUrl)
+    public async Task<IActionResult> Login(string token, string returnUrl)
     {
         var dataProtector = _dataProtectionProvider.CreateProtector("Login");
         var data = dataProtector.Unprotect(token);
@@ -46,7 +49,7 @@ public class AuthController : Controller
             var isPersistent = true;
             await _userManager.ResetAccessFailedCountAsync(identityUser);
             await _signInManager.SignInAsync(identityUser, isPersistent);
-            identityUser.IsLive= true;
+            identityUser.IsLive = true;
             await _userManager.UpdateAsync(identityUser);
             _logger.LogInformation("{@UserName} has successfully logged in", identityUser.UserName);
             return Redirect($"/{returnUrl}");
@@ -62,6 +65,13 @@ public class AuthController : Controller
         if (user is null)
         {
             var admin = await _userManager.FindByNameAsync("administrator") ?? throw new NotFoundException($"Application user administrator Not Found.");
+            var role = await _roleManager.FindByNameAsync(RoleName.Basic, TenantType.Patient);
+            var rolesToInsert = new List<ApplicationUserRole>();
+            rolesToInsert.Add(new ApplicationUserRole() { TenantId = admin.TenantId, Role = role });
+            /*if (rolesList != null && rolesList.Any())
+                {
+                rolesList.ForEach(r => rolesToInsert.Add(new ApplicationUserRole() { TenantId = admin.TenantId, Role = r }));
+            }*/
             user = new ApplicationUser
             {
                 EmailConfirmed = true,
@@ -73,18 +83,16 @@ public class AuthController : Controller
                 DisplayName = name,
                 SuperiorId = admin.Id,
                 TenantId = admin.TenantId,
-                TenantName = admin.TenantName
+                TenantName = admin.TenantName,
+                UserRoles = rolesToInsert
             };
             var createResult = await _userManager.CreateAsync(user);
             if (!createResult.Succeeded)
             {
                 return Unauthorized();
             }
-            var assignResult = await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, admin.TenantId, context, RoleName.Basic);
-            if (!createResult.Succeeded)
-            {
-                return Unauthorized();
-            }
+           // var assignResult = await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, admin.TenantId, context, RoleName.Basic);
+           
             await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
         }
 
