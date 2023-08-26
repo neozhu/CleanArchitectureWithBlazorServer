@@ -1,3 +1,5 @@
+while fetching role or userrole had to look for isactive and tenant(mostly done)
+
 ---------------------on users page load,checkmark of istenat-user active based on role selection condition
 ---------------tenant based search implemented
 ------------users page based on tenant ,need to load roles  implemented 

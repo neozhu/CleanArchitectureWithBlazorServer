@@ -511,7 +511,7 @@
             }
             else
             {
-                user.TenantId = user.UserRoles.OrderBy(x => x.Role.Level).FirstOrDefault(ur => ur.UserId == user.Id && ur.TenantId != item.TenantId & ur.IsActive == true).TenantId;
+                user.TenantId = user.UserRoles.OrderBy(x => x.Role.Level).FirstOrDefault(ur => ur.UserId == user.Id && ur.TenantId != item.TenantId & ur.IsActive == true)?.TenantId;
                 user.TenantName = string.IsNullOrEmpty(user.TenantId) ? string.Empty : TenantsService.DataSource.Find(x => x.Id == user.TenantId)?.Name;
 
             }
