@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Blazor.Application.Constants.Role;
+using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Identity;
@@ -9,8 +10,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
 {
     public const string defaultTenantId = "";//todo make it loaded as per db
     private readonly CustomRoleManager _roleManager;
-    private readonly IUserRoleStore<ApplicationUser> _userRoleStore;
-    private readonly IUserStore<ApplicationUser> _store;
+    private readonly IServiceProvider _serviceProvider;
     public CustomUserManager(
          IUserStore<ApplicationUser> store,
          IOptions<IdentityOptions> optionsAccessor,
@@ -20,11 +20,9 @@ public class CustomUserManager : UserManager<ApplicationUser>
          ILookupNormalizer keyNormalizer,
          IdentityErrorDescriber errors,
          IServiceProvider services,
-         ILogger<UserManager<ApplicationUser>> logger, CustomRoleManager roleManager, IUserRoleStore<ApplicationUser> userRoleStore)
+         ILogger<UserManager<ApplicationUser>> logger, CustomRoleManager roleManager)
          : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
     {
-        _userRoleStore = userRoleStore;
-        _store = store;
         _roleManager = roleManager;
     }
     /*
@@ -100,37 +98,57 @@ public class CustomUserManager : UserManager<ApplicationUser>
     public async Task<IdentityResult> UpdateRolesAsyncWithTenantId(ApplicationUser user, List<string> newRoleNames, string tenantId)
     {
         // Retrieve the current roles of the user for the given tenant
-        var currentRoles = await GetRolesAsync(user, tenantId);
-
-        // Calculate roles to be added and removed
-        var rolesToAdd = newRoleNames.Except(currentRoles);
-        var rolesToRemove = currentRoles.Except(newRoleNames);
-
-        // Add new roles
-        foreach (var roleName in rolesToAdd)
+        var currentRoles = await GetRoleNamesAsync(userId: user.Id, tenantId: tenantId, roleId: null);
+        if (currentRoles != null && currentRoles.Any())
         {
-            await AddToRoleAsync(user, roleName);
-        }
+            // Calculate roles to be added and removed
+            var rolesToAdd = newRoleNames.Except(currentRoles);
+            var rolesToRemove = currentRoles.Except(newRoleNames);
 
-        // Remove old roles
-        foreach (var roleName in rolesToRemove)
-        {
-            await RemoveFromRoleAsync(user, roleName);
+            // Add new roles
+            foreach (var roleName in rolesToAdd)
+            {
+                await AddToRoleAsync(user, roleName);
+            }
+
+            // Remove old roles
+            foreach (var roleName in rolesToRemove)
+            {
+                await RemoveFromRoleAsync(user, roleName);
+            }
         }
 
         return IdentityResult.Success;
     }
 
-    private async Task<IList<string>> GetRolesAsync(ApplicationUser user, string tenantId)
+    public async Task<IList<ApplicationUserRole>> GetUserRoleTenantIdsAsync(string userId, string roleId = null, string tenantId = null)
     {
-        var rolesForTenant = await _userRoleStore.GetRolesAsync(user,CancellationToken.None);
-        return rolesForTenant;
-        // Implement logic to retrieve user's roles for the given tenant
-        // This might involve querying your data store for the roles
+        using var scope = _serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
 
-        // Example pseudocode:
-        // return await _userRoleStore.GetRolesAsync(user, tenantId);
-        // Ensure you have implemented the custom user role store
+        var query = dbContext.UserRoles.AsQueryable();
+        if (!string.IsNullOrEmpty(tenantId))
+            query = query.Where(role => role.TenantId == tenantId);
+        if (!string.IsNullOrEmpty(roleId))
+            query = query.Where(role => role.RoleId == roleId);
+        if (!string.IsNullOrEmpty(userId))
+            query = query.Where(role => role.UserId == userId);
+        return await query.ToListAsync();
+    }
+
+    public async Task<List<string?>> GetRoleNamesAsync(string userId, string roleId = null, string tenantId = null)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
+
+        var query = dbContext.UserRoles.AsQueryable();
+        if (!string.IsNullOrEmpty(tenantId))
+            query = query.Where(role => role.TenantId == tenantId);
+        if (!string.IsNullOrEmpty(roleId))
+            query = query.Where(role => role.RoleId == roleId);
+        if (!string.IsNullOrEmpty(userId))
+            query = query.Where(role => role.UserId == userId);
+        return await query.Select(x => x.Role.Name).ToListAsync();
     }
 }
 
