@@ -81,8 +81,7 @@
 </AuthorizeView>
 
 @code {
-    [Inject]
-    private IApplicationDbContext context { get; set; } = default!;
+    
     private string _title = "Sign In";
     private CustomUserManager UserManager { get; set; } = default!;
 
