@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using CleanArchitecture.Blazor.Domain.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
 [Description("Roles")]
@@ -14,4 +17,12 @@ public class ApplicationRoleDto
     [Description("Normalized Name")] public string? NormalizedName { get; set; }
 
     [Description("Description")] public string? Description { get; set; }
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<ApplicationRole, ApplicationRoleDto>(MemberList.None).ReverseMap();
+        }
+    }
 }

@@ -9,6 +9,7 @@
   <ItemGroup>
       <PackageReference Include="Ardalis.Specification" Version="7.0.0" />
       <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="7.0.0" />
+      <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="6.0.4" />
       <PackageReference Include="ClosedXML" Version="0.102.1" />
       <PackageReference Include="jcamp.FluentEmail.Core" Version="3.2.0" />
       <PackageReference Include="jcamp.FluentEmail.MailKit" Version="3.2.0" />

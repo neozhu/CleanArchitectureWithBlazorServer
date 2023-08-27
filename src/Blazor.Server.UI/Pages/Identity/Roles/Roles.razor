@@ -202,7 +202,8 @@
 
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
-
+    [Inject]
+    private IMapper Mapper { get; set; } = null!;
     private RoleManager<ApplicationRole> RoleManager { get; set; } = default!;
 
     private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
@@ -248,8 +249,7 @@
                 .Where(x => x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString))
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize)
-                .Select(x => new ApplicationRoleDto
-                { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName })
+                .ProjectTo<ApplicationRoleDto>(Mapper.ConfigurationProvider)
                 .ToListAsync();
             var total = await RoleManager.Roles.CountAsync(x =>
                 x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString));
