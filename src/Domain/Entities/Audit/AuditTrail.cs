@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CleanArchitecture.Blazor.Domain.Entities.Audit;
 
-public class AuditTrail : IEntity
+public class AuditTrail : IEntity<int>
 {
     public int Id { get; set; }
     public string? UserId { get; set; }

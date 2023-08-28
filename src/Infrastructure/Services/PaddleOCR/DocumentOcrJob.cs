@@ -72,21 +72,25 @@ public class DocumentOcrJob : IDocumentOcrJob
                 if (string.IsNullOrEmpty(doc.URL)) return;
                 var imgFile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
                 if (!File.Exists(imgFile)) return;
-                string base64String = ReadBase64String(imgFile);
-               
-                var response = client.PostAsJsonAsync<dynamic>("", new { images = new string[] { base64String } }).Result;
+                // Create multipart/form-data content
+                using var form = new MultipartFormDataContent();
+                using var fileStream = new FileStream(imgFile, FileMode.Open);
+                using var fileContent = new StreamContent(fileStream);
+
+                form.Add(fileContent, "file", Path.GetFileName(imgFile));  // "image" is the form parameter name for the file
+
+                var response = await client.PostAsync("", form);
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var result = await response.Content.ReadAsStringAsync();
                     var ocrResult = JsonSerializer.Deserialize<OcrResult>(result);
-                    var ocrStatus = ocrResult!.status;
                     doc.Status = JobStatus.Done;
-                    doc.Description = "recognize the result: " + ocrStatus;
-                    if (ocrResult.status == "000")
+                   
+                    if (ocrResult is not null)
                     {
-                        var content = _serializer.Serialize(ocrResult.results);
-                        doc!.Content = content;
-
+                        var content = string.Join(',', ocrResult.data);
+                        doc.Description = $"recognize the result: success";
+                        doc.Content = content;
                     }
                     await _context.SaveChangesAsync(cancellationToken);
                     await _hubContext.Clients.All.Completed(doc.Title!);
@@ -108,17 +112,9 @@ public class DocumentOcrJob : IDocumentOcrJob
 
 }
 #pragma warning disable CS8981
-class result
-{
-    public decimal confidence { get; set; }
-    public string text { get; set; } = String.Empty;
-    public List<int[]> text_region { get; set; } = new();
-}
 class OcrResult
 {
-    public string msg { get; set; } = String.Empty;
-    public List<result[]> results { get; set; } = new();
-    public string status { get; set; }=String.Empty;
+    public string[] data { get; set; } = Array.Empty<string>();
 }
 #pragma warning restore CS8981
 
