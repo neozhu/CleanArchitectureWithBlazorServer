@@ -19,19 +19,9 @@ public class DashboardSettings
     public bool EnableLoadingScreen { get; set; } = true;
 
     /// <summary>
-    ///     Specifies whether to enable the loading screen on navigation transitions
-    /// </summary>
-    public bool EnableLoadingTransitionScreen { get; set; } = false;
-
-    /// <summary>
     ///     Specifies the duration of the loading screen in milliseconds
     /// </summary>
-    public int LoadingScreenDuration { get; set; } = 1000;
-
-    /// <summary>
-    ///     Specifies the duration of the loading screen on navigation in milliseconds
-    /// </summary>
-    public int LoadingTransitionScreenDuration { get; set; } = 600;
+    public int LoadingScreenDuration { get; set; } = 3000;
 
     /// <summary>
     ///     Current application version
