@@ -14,6 +14,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     public const string defaultTenantId = "";//todo make it loaded as per db
     private readonly CustomRoleManager _roleManager;
     private readonly IServiceProvider _serviceProvider;
+    private readonly ApplicationDbContext dbContext;
     public CustomUserManager(
          IUserStore<ApplicationUser> store,
          IOptions<IdentityOptions> optionsAccessor,
@@ -28,6 +29,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     {
         _roleManager = roleManager;
         _serviceProvider = services;
+        dbContext = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
     }
     /*
     public async override Task<IdentityResult> CreateAsync(ApplicationUser user)
@@ -81,14 +83,19 @@ public class CustomUserManager : UserManager<ApplicationUser>
     {
         return await CreateAsync(user, new List<string> { RoleName.DefaultRole1 }, tenantId, password);
     }
-
+    public override async Task<ApplicationUser?> FindByNameAsync(string userName)
+    {
+        if (string.IsNullOrEmpty(userName)) return null;
+        userName = userName.Trim().TrimEnd().TrimStart().ToUpperInvariant();
+        return await Users.Include(x => x.UserRoles).Include(x => x.UserClaims).FirstOrDefaultAsync(x => x.NormalizedUserName == userName);
+    }
 
     public async Task<IdentityResult> CreateAsync(ApplicationUser user, List<string> roles = null, string tenantId = null, string password = null)
     {
         if (string.IsNullOrEmpty(tenantId)) tenantId = defaultTenantId;
         if (string.IsNullOrEmpty(user.TenantId)) user.TenantId = tenantId;//this overrides already assigned tenant,had to make sure
         if (roles == null || !roles.Any()) return await CreateWithDefaultRolesAsync(user, user.TenantId, password);
-        user.UserRoles = new List<ApplicationUserRole>();//here it ignores already exisitng UserRoles //TODO need to tink of this
+        user.UserRoles = new List<ApplicationUserRole>();//here it ignores already existing UserRoles //TODO need to tink of this
         roles.ForEach(c =>
         {
             var roleId = (_roleManager.FindByNameAsync(c).Result)?.Id;
@@ -103,8 +110,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     {
         if (user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
             || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
-        using var scope = _serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
+
         roleNames = roleNames.Select(x => x.Trim().TrimStart().TrimEnd().ToUpper())
             .Where(str => !string.IsNullOrEmpty(str)).Distinct()
             .GroupBy(i => i).Select(x => x.Key).ToList();
