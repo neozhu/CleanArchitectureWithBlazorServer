@@ -1,4 +1,4 @@
-role update-also make changes based on Active state
+role update-also make changes based on Active state.
 
 self register, assign default tenant and default role as guest
 -externallogin
