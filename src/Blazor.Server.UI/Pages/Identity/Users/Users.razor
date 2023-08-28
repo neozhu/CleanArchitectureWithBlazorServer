@@ -526,7 +526,7 @@
                 var modifyCount = 0;
                 if (Guid.TryParse(user.TenantId, out Guid tid))
                 {
-                     await UserManager.UpdateRolesAsyncWithTenantId(user, item.AssignedRoles?.ToList(), user.TenantId);
+                     await UserManager.RolesUpdateInsert(user, item.AssignedRoles);
                     //modifyCount = await UserManagerExtensions.UpdateRolesAsyncWithTenantId(user.Id, tid.ToString(), context, item.IsUserTenantRolesActive, item.AssignedRoles);
                 }
                 //todo had to make which tenant,like other than default tenant

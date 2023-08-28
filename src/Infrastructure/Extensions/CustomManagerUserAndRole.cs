@@ -99,40 +99,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
         return result;
     }
 
-    public async Task<IdentityResult> UpdateRolesAsyncWithTenantId(ApplicationUser user, List<string> newRoleNames, string tenantId)
-    {
-        // Retrieve the current roles of the user for the given tenant
-        var currentRoles = (await GetUserRoleTenantIdsAsync(userId: user.Id, tenantId: tenantId, roleId: null!));
-        IEnumerable<string> rolesToAdd = newRoleNames;
-        IEnumerable<string> rolesToRemove = new List<string>();
-        if (currentRoles != null && currentRoles.Any())
-        {
-            var current = currentRoles.Select(x => x.Role.Name!);
-            rolesToAdd = newRoleNames.Except(current);
-            rolesToRemove = current.Except(newRoleNames);
-            if (!currentRoles.All(x => x.IsActive == user.IsUserTenantRolesActive))
-            {//instead of update,doing remove and insert
-                rolesToAdd = newRoleNames;
-                rolesToRemove = current;
-            }
-        }
-
-        // Remove old roles
-        foreach (var roleName in rolesToRemove)
-        {
-            await RemoveFromRoleAsync(user, roleName);
-        }
-
-        // Add new roles
-        foreach (var roleName in rolesToAdd)
-        {//by default all insertion will isactive=true
-            await AddToRoleAsync(user, roleName);
-        }
-
-        return IdentityResult.Success;
-    }
-
-    public async Task<int?> RolesUpdateInsert(ApplicationUser user, List<string> roleNames)
+    public async Task<int?> RolesUpdateInsert(ApplicationUser user, IEnumerable<string> roleNames)
     {
         if (user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
             || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
