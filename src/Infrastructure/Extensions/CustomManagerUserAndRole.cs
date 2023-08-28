@@ -24,6 +24,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
          : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
     {
         _roleManager = roleManager;
+        _serviceProvider = services;
     }
     /*
     public async override Task<IdentityResult> CreateAsync(ApplicationUser user)

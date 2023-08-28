@@ -40,6 +40,10 @@ public class HubClient : IAsyncDisposable
         {
             await _hubConnection.StopAsync();
         }
+        catch (Exception e)
+        {
+            Console.WriteLine("Madhu-Error" + e.ToString());
+        }
         finally
         {
             await _hubConnection.DisposeAsync();

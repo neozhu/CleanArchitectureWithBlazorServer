@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<ITenantProvider, TenantProvider>();
         services.AddScoped<ISaveChangesInterceptor,AuditableEntityInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+     //   services.AddScoped<CustomUserManager>();//not required
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
             services.AddDbContext<ApplicationDbContext>(options =>
