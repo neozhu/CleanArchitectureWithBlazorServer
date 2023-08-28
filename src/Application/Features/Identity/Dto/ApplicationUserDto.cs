@@ -1,4 +1,6 @@
-﻿using CleanArchitecture.Blazor.Domain.Identity;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using CleanArchitecture.Blazor.Domain.Identity;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
@@ -16,7 +18,7 @@ public class ApplicationUserDto
     [Description("Tenant Id")] public string? TenantId { get; set; }
 
     [Description("Tenant Name")] public string? TenantName { get; set; }
-    [Description("Is User-Tenant Roles Active")] public bool IsUserTenantRolesActive { get; set; }
+    [Description("Is User-Tenant Roles Active")][NotMapped] public bool IsUserTenantRolesActive { get; set; } = true;
 
     [Description("Profile Photo")] public string? ProfilePictureDataUrl { get; set; }
 

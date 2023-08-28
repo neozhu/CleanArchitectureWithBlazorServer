@@ -13,5 +13,5 @@ public class ApplicationUserRole : IdentityUserRole<string>
     [ForeignKey("TenantId")]
     public virtual Tenant Tenant { get; set; } = default!;
     public string TenantId { get; set; } = default!;
-    public bool IsActive { get; set; } = false;
+    public bool IsActive { get; set; } = true;
 }

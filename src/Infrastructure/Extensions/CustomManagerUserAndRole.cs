@@ -1,7 +1,10 @@
-﻿using CleanArchitecture.Blazor.Application.Constants.Role;
+﻿using System.Linq;
+using CleanArchitecture.Blazor.Application.Constants.Role;
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
+using FluentEmail.Core;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
@@ -99,27 +102,110 @@ public class CustomUserManager : UserManager<ApplicationUser>
     public async Task<IdentityResult> UpdateRolesAsyncWithTenantId(ApplicationUser user, List<string> newRoleNames, string tenantId)
     {
         // Retrieve the current roles of the user for the given tenant
-        var currentRoles = await GetRoleNamesAsync(userId: user.Id, tenantId: tenantId, roleId: null);
+        var currentRoles = (await GetUserRoleTenantIdsAsync(userId: user.Id, tenantId: tenantId, roleId: null!));
+        IEnumerable<string> rolesToAdd = newRoleNames;
+        IEnumerable<string> rolesToRemove = new List<string>();
         if (currentRoles != null && currentRoles.Any())
         {
-            // Calculate roles to be added and removed
-            var rolesToAdd = newRoleNames.Except(currentRoles);
-            var rolesToRemove = currentRoles.Except(newRoleNames);
-
-            // Add new roles
-            foreach (var roleName in rolesToAdd)
-            {
-                await AddToRoleAsync(user, roleName);
-            }
-
-            // Remove old roles
-            foreach (var roleName in rolesToRemove)
-            {
-                await RemoveFromRoleAsync(user, roleName);
+            var current = currentRoles.Select(x => x.Role.Name!);
+            rolesToAdd = newRoleNames.Except(current);
+            rolesToRemove = current.Except(newRoleNames);
+            if (!currentRoles.All(x => x.IsActive == user.IsUserTenantRolesActive))
+            {//instead of update,doing remove and insert
+                rolesToAdd = newRoleNames;
+                rolesToRemove = current;
             }
         }
 
+        // Remove old roles
+        foreach (var roleName in rolesToRemove)
+        {
+            await RemoveFromRoleAsync(user, roleName);
+        }
+
+        // Add new roles
+        foreach (var roleName in rolesToAdd)
+        {//by default all insertion will isactive=true
+            await AddToRoleAsync(user, roleName);
+        }
+
         return IdentityResult.Success;
+    }
+
+    public async Task<int?> RolesUpdateInsert(ApplicationUser user, List<string> roleNames)
+    {
+        if (user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
+            || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
+        using var scope = _serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
+        roleNames = roleNames.Select(x => x.Trim().TrimStart().TrimEnd().ToUpper())
+            .Where(str => !string.IsNullOrEmpty(str)).Distinct()
+            .GroupBy(i => i).Select(x => x.Key).ToList();
+        if (roleNames.Any())
+        {
+            var existingAll = dbContext.UserRoles.Where(role => role.TenantId == user.TenantId);
+            //todo might need to include Role also to get name
+            var existing = existingAll.Where(x => roleNames.Contains(x.Role.NormalizedName!));
+            var changesTriggered = false;
+            if (existing.All(x => x.IsActive != user.IsUserTenantRolesActive))//existing update
+            {
+                existing.ForEach(x =>
+                {
+                    x.IsActive = user.IsUserTenantRolesActive;
+                    dbContext.UserRoles.Attach(x);
+                    dbContext.Entry(x).State = EntityState.Modified;
+                });
+                changesTriggered = true;
+            }
+
+            var toInsert = roleNames.Except(existingAll.Select(x => x.Role.Name));
+            var toRemove = existingAll.Select(x => x.Role.Name).Except(roleNames);
+
+            if (toInsert.Any())
+            {
+                var toAdd = new List<ApplicationUserRole>();
+                toInsert.ForEach(x =>
+                {
+                    var roleId = (dbContext.Roles.FirstOrDefault(r => r.NormalizedName == x.ToUpper()))?.Id;
+                    if (string.IsNullOrEmpty(roleId)) return;
+                    toAdd.Add(new ApplicationUserRole() { UserId = user.Id, TenantId = user.TenantId, RoleId = roleId });
+                });
+                await dbContext.UserRoles.AddRangeAsync(toAdd);
+                changesTriggered = true;
+            }
+            if (toRemove.Any())
+            {
+                dbContext.UserRoles.RemoveRange(existingAll.Where(x => toRemove.Contains(x.Role.Name)));
+                changesTriggered = true;
+            }
+            return changesTriggered ? await dbContext.SaveChangesAsync() : 0;
+        }
+        return 0;
+    }
+    public override async Task<IdentityResult> RemoveFromRoleAsync(ApplicationUser user, string roleName)
+    {
+        if (user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
+            || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
+        using var scope = _serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
+
+        var existing = dbContext.UserRoles.Where(role => role.TenantId == user.TenantId && role.Role.Name == roleName);
+        dbContext.UserRoles.RemoveRange(existing);
+        return await dbContext.SaveChangesAsync() > 0 ? IdentityResult.Success : null;
+    }
+
+    public override async Task<IdentityResult> AddToRoleAsync(ApplicationUser user, string roleName)
+    {
+        if (user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
+             || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
+        using var scope = _serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
+
+        var roleId = (await dbContext.Roles.FirstOrDefaultAsync(x => x.NormalizedName == roleName.ToUpper()))?.Id;
+        if (string.IsNullOrEmpty(roleId)) return null;
+        var newInserted = dbContext.UserRoles
+            .AddAsync(new ApplicationUserRole() { UserId = user.Id, TenantId = user.TenantId, RoleId = roleId });
+        return await dbContext.SaveChangesAsync() > 0 ? IdentityResult.Success : null;
     }
 
     public async Task<IList<ApplicationUserRole>> GetUserRoleTenantIdsAsync(string userId, string roleId = null, string tenantId = null)
@@ -135,21 +221,6 @@ public class CustomUserManager : UserManager<ApplicationUser>
         if (!string.IsNullOrEmpty(userId))
             query = query.Where(role => role.UserId == userId);
         return await query.ToListAsync();
-    }
-
-    public async Task<List<string?>> GetRoleNamesAsync(string userId, string roleId = null, string tenantId = null)
-    {
-        using var scope = _serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
-
-        var query = dbContext.UserRoles.AsQueryable();
-        if (!string.IsNullOrEmpty(tenantId))
-            query = query.Where(role => role.TenantId == tenantId);
-        if (!string.IsNullOrEmpty(roleId))
-            query = query.Where(role => role.RoleId == roleId);
-        if (!string.IsNullOrEmpty(userId))
-            query = query.Where(role => role.UserId == userId);
-        return await query.Select(x => x.Role.Name).ToListAsync();
     }
 }
 
