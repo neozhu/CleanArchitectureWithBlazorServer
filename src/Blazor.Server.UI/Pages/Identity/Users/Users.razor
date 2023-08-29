@@ -523,7 +523,7 @@
             var identityResult = await UserManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
-                var modifyCount? = 0;
+                int? modifyCount = 0;
                 if (Guid.TryParse(user.TenantId, out Guid tid))
                 {
                     modifyCount= await UserManager.RolesUpdateInsert(user, item.AssignedRoles);
