@@ -1,4 +1,7 @@
-role update-also make changes based on Active state.
+Users page, load tenants which are allowed to me ...
+on change load based on UserRoles table,rather Users table
+
+-----------------role update-also make changes based on Active state.
 
 self register, assign default tenant and default role as guest
 -externallogin
