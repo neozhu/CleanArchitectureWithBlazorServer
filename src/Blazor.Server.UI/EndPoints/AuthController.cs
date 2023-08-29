@@ -16,7 +16,6 @@ public class AuthController : Controller
     private readonly CustomUserManager _userManager;
     private readonly CustomRoleManager _roleManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IApplicationDbContext context;
 
     public AuthController(
         ILogger<AuthController> logger,
