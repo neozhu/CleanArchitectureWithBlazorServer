@@ -31,54 +31,6 @@ public class CustomUserManager : UserManager<ApplicationUser>
         _serviceProvider = services;
         dbContext = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
     }
-    /*
-    public async override Task<IdentityResult> CreateAsync(ApplicationUser user)
-    {
-        return await CreateAsync(user, null);
-    }
-    public async override Task<IdentityResult> CreateAsync(ApplicationUser user, string password = null)
-    {
-        if (string.IsNullOrEmpty(user.TenantId)) user.TenantId = defaultTenantId;
-        if (user.UserRoles == null || !user.UserRoles.Any())
-            return await CreateWithDefaultRolesAsync(user, tenantId: user.TenantId);
-        var result = string.IsNullOrEmpty(password) ? await base.CreateAsync(user) : await base.CreateAsync(user, password);
-        return result;
-    }
-    public async Task<IdentityResult> CreateAsync(ApplicationUser user, List<string> roles, string tenantId = null, string password = null)
-    {
-        if (string.IsNullOrEmpty(user.TenantId)) user.TenantId = defaultTenantId;
-        return await CreateAsync(user, roles, user.TenantId);
-    }
-
-    public async Task<IdentityResult> CreateAsync(ApplicationUser user, List<string> roles, string tenantId)
-    {
-        if (string.IsNullOrEmpty(tenantId)) tenantId = defaultTenantId;
-        if (roles == null || !roles.Any()) return await CreateWithDefaultRolesAsync(user, tenantId);
-        user.UserRoles = new List<ApplicationUserRole>();
-        roles.ForEach(c =>
-        {
-            var roleId = (_roleManager.FindByNameAsync(c).Result)?.Id;
-            if (roleId != null) user.UserRoles.Add(new ApplicationUserRole() { RoleId = roleId, TenantId = tenantId });
-        });
-
-        return await CreateAsync(user, null, roles, tenantId);
-    }
-
-
-    public async Task<IdentityResult> CreateAsync(ApplicationUser user, string password, List<string> roles)
-    {
-        if (string.IsNullOrEmpty(user.TenantId)) user.TenantId = defaultTenantId;
-        if (roles == null || !roles.Any()) return await CreateWithDefaultRolesAsync(user, user.TenantId);
-        user.UserRoles = new List<ApplicationUserRole>();
-        roles.ForEach(c =>
-        {
-            var roleId = (_roleManager.FindByNameAsync(c).Result)?.Id;
-            if (roleId != null) user.UserRoles.Add(new ApplicationUserRole() { RoleId = roleId, TenantId = tenantId });
-        });
-
-        return await CreateAsync(user, password, roles, tenantId);
-    }
-    */
     public async Task<IdentityResult> CreateWithDefaultRolesAsync(ApplicationUser user, string tenantId = null, string password = null)
     {
         return await CreateAsync(user, new List<string> { RoleName.DefaultRole1 }, tenantId, password);
@@ -116,7 +68,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
             .GroupBy(i => i).Select(x => x.Key).ToList();
         if (roleNames.Any())
         {
-            var existingAll = dbContext.UserRoles.Where(role => role.TenantId == user.TenantId);
+            var existingAll = dbContext.UserRoles.Where(role => role.UserId==user.Id &&  role.TenantId == user.TenantId);
             //todo might need to include Role also to get name
             var existing = existingAll.Where(x => roleNames.Contains(x.Role.NormalizedName!));
             var changesTriggered = false;
@@ -131,8 +83,8 @@ public class CustomUserManager : UserManager<ApplicationUser>
                 changesTriggered = true;
             }
 
-            var toInsert = roleNames.Except(existingAll.Select(x => x.Role.Name));
-            var toRemove = existingAll.Select(x => x.Role.Name).Except(roleNames);
+            var toInsert = roleNames.Except(existingAll.Select(x => x.Role.NormalizedName));
+            var toRemove = existingAll.Select(x => x.Role.NormalizedName).ToList().Except(roleNames);
 
             if (toInsert.Any())
             {
@@ -148,7 +100,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
             }
             if (toRemove.Any())
             {
-                dbContext.UserRoles.RemoveRange(existingAll.Where(x => toRemove.Contains(x.Role.Name)));
+                dbContext.UserRoles.RemoveRange(existingAll.Where(x => toRemove.Contains(x.Role.NormalizedName)));
                 changesTriggered = true;
             }
             return changesTriggered ? await dbContext.SaveChangesAsync() : 0;
@@ -157,8 +109,9 @@ public class CustomUserManager : UserManager<ApplicationUser>
     }
     public override async Task<IdentityResult> RemoveFromRoleAsync(ApplicationUser user, string roleName)
     {
-        if (user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
+        if (string.IsNullOrEmpty(roleName)|| user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
             || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
+        roleName = roleName.ToUpperInvariant();
         using var scope = _serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
 
@@ -169,8 +122,9 @@ public class CustomUserManager : UserManager<ApplicationUser>
 
     public override async Task<IdentityResult> AddToRoleAsync(ApplicationUser user, string roleName)
     {
-        if (user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
+        if (string.IsNullOrEmpty(roleName) || user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
              || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
+        roleName = roleName.ToUpperInvariant();
         using var scope = _serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
 

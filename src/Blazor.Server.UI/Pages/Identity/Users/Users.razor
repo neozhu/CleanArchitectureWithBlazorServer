@@ -523,14 +523,14 @@
             var identityResult = await UserManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
-                var modifyCount = 0;
+                var modifyCount? = 0;
                 if (Guid.TryParse(user.TenantId, out Guid tid))
                 {
-                     await UserManager.RolesUpdateInsert(user, item.AssignedRoles);
+                    modifyCount= await UserManager.RolesUpdateInsert(user, item.AssignedRoles);
                     //modifyCount = await UserManagerExtensions.UpdateRolesAsyncWithTenantId(user.Id, tid.ToString(), context, item.IsUserTenantRolesActive, item.AssignedRoles);
                 }
                 //todo had to make which tenant,like other than default tenant
-                Snackbar.Add($"Role update:{modifyCount} {ConstantString.UpdateSuccess}", Severity.Info);
+                Snackbar.Add($"Role update:{modifyCount??0} {ConstantString.UpdateSuccess}", Severity.Info);
                 await OnRefresh();
             }
             else
