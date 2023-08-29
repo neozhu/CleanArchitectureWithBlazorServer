@@ -21,7 +21,7 @@ public static class SerilogExtensions
 {
     public static void RegisterSerilog(this WebApplicationBuilder builder)
     {
-        var logLevel = LogEventLevel.Debug;
+        var logLevel = LogEventLevel.Error;
         builder.Host.UseSerilog((context, configuration) =>
             configuration.ReadFrom.Configuration(context.Configuration)
                 .MinimumLevel.Override("Microsoft", logLevel)

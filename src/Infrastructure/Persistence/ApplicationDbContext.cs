@@ -14,8 +14,6 @@ public class ApplicationDbContext : IdentityDbContext<
     ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
     ApplicationRoleClaim, ApplicationUserToken>, IApplicationDbContext
 {
-
-
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options
         ) : base(options)
