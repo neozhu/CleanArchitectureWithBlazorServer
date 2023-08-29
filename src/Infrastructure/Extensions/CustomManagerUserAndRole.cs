@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Linq.Dynamic.Core;
 using CleanArchitecture.Blazor.Application.Constants.Role;
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
@@ -6,6 +7,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Identity;
+using static CleanArchitecture.Blazor.Application.Constants.Permission.Permissions;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
@@ -35,11 +37,23 @@ public class CustomUserManager : UserManager<ApplicationUser>
     {
         return await CreateAsync(user, new List<string> { RoleName.DefaultRole1 }, tenantId, password);
     }
+    public override async Task<ApplicationUser?> FindByIdAsync(string userId)
+    {
+        return await Users
+            .Include(x => x.UserRoles).ThenInclude(x => x.Role)
+            .Include(x => x.UserRoles).ThenInclude(x => x.Tenant)
+            .Include(x => x.UserClaims)
+            .FirstOrDefaultAsync(x => x.Id == userId);
+    }
     public override async Task<ApplicationUser?> FindByNameAsync(string userName)
     {
         if (string.IsNullOrEmpty(userName)) return null;
         userName = userName.Trim().TrimEnd().TrimStart().ToUpperInvariant();
-        return await Users.Include(x => x.UserRoles).Include(x => x.UserClaims).FirstOrDefaultAsync(x => x.NormalizedUserName == userName);
+        return await Users
+            .Include(x => x.UserRoles).ThenInclude(x => x.Role)
+            .Include(x => x.UserRoles).ThenInclude(x => x.Tenant)
+            .Include(x => x.UserClaims)
+            .FirstOrDefaultAsync(x=>x.NormalizedUserName == userName);
     }
 
     public async Task<IdentityResult> CreateAsync(ApplicationUser user, List<string> roles = null, string tenantId = null, string password = null)
@@ -68,7 +82,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
             .GroupBy(i => i).Select(x => x.Key).ToList();
         if (roleNames.Any())
         {
-            var existingAll = dbContext.UserRoles.Where(role => role.UserId==user.Id &&  role.TenantId == user.TenantId);
+            var existingAll = dbContext.UserRoles.Where(role => role.UserId == user.Id && role.TenantId == user.TenantId);
             //todo might need to include Role also to get name
             var existing = existingAll.Where(x => roleNames.Contains(x.Role.NormalizedName!));
             var changesTriggered = false;
@@ -109,7 +123,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     }
     public override async Task<IdentityResult> RemoveFromRoleAsync(ApplicationUser user, string roleName)
     {
-        if (string.IsNullOrEmpty(roleName)|| user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
+        if (string.IsNullOrEmpty(roleName) || user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
             || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
         roleName = roleName.ToUpperInvariant();
         using var scope = _serviceProvider.CreateScope();
@@ -162,6 +176,7 @@ public class CustomRoleManager : RoleManager<ApplicationRole>
         : base(store, roleValidators, keyNormalizer, errors, logger)
     {
     }
+
     public async Task<ApplicationRole> FindByNameAsync(string roleName, TenantType type)
     {
         return await FindByNameAsync(roleName, (byte)type);
