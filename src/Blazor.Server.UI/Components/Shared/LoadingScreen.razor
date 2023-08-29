@@ -1,7 +1,7 @@
 ﻿@using Blazor.Server.UI.Services.Layout
 @inherits LayoutComponentBase
 
-@if (_isLoaded)
+@if (IsLoaded)
 {
     @ChildContent
 }
@@ -126,22 +126,16 @@ else
 }
 
 @code {
+
     [Parameter]
     public RenderFragment ChildContent { get; set; } = null!;
 
     [Parameter]
     public LayoutService LayoutService { get; set; } = null!;
-    
-    [Parameter]
-    public int LoadingDelayMs { get; set; }
 
-    private bool _isLoaded;
+    [Parameter]
+    public bool IsLoaded { get; set; }
 
     private string Gradient => $"background-image: linear-gradient(-120deg, {(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Background : LayoutService.CurrentTheme.Palette.Background)} 50%, {(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Surface : LayoutService.CurrentTheme.Palette.Surface)} 50%);";
 
-    protected override async Task OnInitializedAsync()
-    {
-        await Task.Delay(LoadingDelayMs);
-        _isLoaded = true;
-    }
 }
