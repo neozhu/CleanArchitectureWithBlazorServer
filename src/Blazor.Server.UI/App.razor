@@ -1,7 +1,7 @@
 @using Blazor.Server.UI.Services.Layout
 @inject IStringLocalizer<SharedResource> L
 @inject NavigationManager NavManager
-
+@implements IDisposable
 <Fluxor.Blazor.Web.StoreInitializer/>
 
 <LoadingScreen IsLoaded="@_isLoaded" LayoutService="LayoutService">
@@ -60,7 +60,14 @@
             NavManager.LocationChanged += HandleLocationChanged;
         }
     }
-
+    public void Dispose()
+    {
+        if (Settings.EnableLoadingTransitionScreen)
+        {
+            NavManager.LocationChanged -= HandleLocationChanged;
+        }
+        GC.SuppressFinalize(this);
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -70,26 +77,21 @@
                 _transitionClass = "";
                 _isLoaded = false;
                 StateHasChanged();
-
                 await Task.Delay(Settings.LoadingScreenDuration >= 0 ? Settings.LoadingScreenDuration : 2000);
-
                 _isLoaded = true;
                 StateHasChanged();
             }
         }
     }
 
-    private async void HandleLocationChanged(object sender, LocationChangedEventArgs e)
+    private async void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
     {
         if (Settings.EnableLoadingTransitionScreen)
         {
             _transitionClass = "";
-
             _isLoaded = false;
             StateHasChanged();
-
             await Task.Delay(Settings.LoadingTransitionScreenDuration >= 0 ? Settings.LoadingTransitionScreenDuration : 600);
-
             _isLoaded = true;
             StateHasChanged();
         }

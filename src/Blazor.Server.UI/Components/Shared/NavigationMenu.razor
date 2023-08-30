@@ -1,11 +1,11 @@
-@using Blazor.Server.UI.Models.SideMenu;
-@inject IStringLocalizer<SideMenu> L
+@using Blazor.Server.UI.Models.NavigationMenu;
+@inject IStringLocalizer<NavigationMenu> L
 @inherits FluxorComponent
 <MudDrawer Breakpoint="Breakpoint.Md"
            Class="side-menu"
            Elevation="0"
-           Open="SideMenuDrawerOpen"
-           OpenChanged="@(e => SideMenuDrawerOpenChanged.InvokeAsync(e))"
+           Open="DrawerOpen"
+           OpenChanged="@(e => DrawerOpenChanged.InvokeAsync(e))"
            Variant="DrawerVariant.Responsive">
     <MudDrawerHeader Class="align-center d-flex align-center pa-0">
         <MudIcon Class="ml-6 mr-2"
@@ -17,7 +17,7 @@
         </MudText>
     </MudDrawerHeader>
 
-    @if (SideMenuDrawerOpen)
+    @if (DrawerOpen)
     {
         <div class="mx-3">
             <MudButton Class="d-flex justify-start my-3 user-button"
@@ -73,7 +73,7 @@
         {
             @if(section is not null)
             {
-                @if (SideMenuDrawerOpen)
+                @if (DrawerOpen)
                 {
                     <div class="@(LayoutService.IsRTL? "mr-6":"ml-6") my-3">
                         <MudText Typo="Typo.caption">
@@ -93,7 +93,7 @@
                             <MudNavGroup Icon="@sectionItem.Icon" Title="@L[sectionItem.Title]">
                                 @foreach (var menuItem in sectionItem.MenuItems.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
                                 {
-                                    @if (SideMenuDrawerOpen)
+                                    @if (DrawerOpen)
                                     {
                                         <MudNavLink Disabled="@(menuItem.PageStatus != PageStatus.Completed)" Href="@(menuItem.Href)" Target="@(menuItem.Target)" Match="NavLinkMatch.All">
                                             <div class="d-flex">
