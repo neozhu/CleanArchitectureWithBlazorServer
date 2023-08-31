@@ -22,6 +22,8 @@
     }
     [Inject]
     private HubClient Client { get; set; } = default!;
+    [Inject]
+    private IUsersStateContainer UsersStateContainer { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
         Client.Login += _client_Login;
@@ -36,20 +38,21 @@
         }
     }
 
-    private void _client_Login(object? sender, string username)
+    private void _client_Login(object? sender, UserStateChangeEventArgs args)
     {
         InvokeAsync(() =>
         {
-            Snackbar.Add(string.Format(L["{0} has logged in."],username), MudBlazor.Severity.Info);
-
+            Snackbar.Add(string.Format(L["{0} has logged in."], args.UserName), MudBlazor.Severity.Info);
+            UsersStateContainer.AddOrUpdate(args.ConnectionId, args.UserName);
         });
     }
 
-    private void _client_Logout(object? sender, string username)
+    private void _client_Logout(object? sender, UserStateChangeEventArgs args)
     {
         InvokeAsync(() =>
         {
-            Snackbar.Add(string.Format(L["{0} has logged out."],username), MudBlazor.Severity.Normal);
+            Snackbar.Add(string.Format(L["{0} has logged out."], args.UserName), MudBlazor.Severity.Normal);
+            UsersStateContainer.Remove(args.ConnectionId);
 
         });
     }

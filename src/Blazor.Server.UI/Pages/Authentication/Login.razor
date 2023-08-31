@@ -22,7 +22,7 @@
                 @L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink>
             </MudText>
             <MudTextField T="string"
-                          @bind-Value="_model.UserName" For="@(() => _model.UserName)"
+            @bind-Value="_model.UserName" For="@(() => _model.UserName)"
                           Label="@L["Username"]"
                           Variant="Variant.Outlined"
                           Required="true"
@@ -53,7 +53,7 @@
                        FullWidth="true">
                 @if (_loading)
                 {
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                     <MudText Class="ms-2"> @ConstantString.Loading</MudText>
                 }
                 else
@@ -81,10 +81,11 @@
 </AuthorizeView>
 
 @code {
-    [Inject]
-    private IApplicationDbContext context { get; set; } = default!;
+    
     private string _title = "Sign In";
     private CustomUserManager UserManager { get; set; } = default!;
+
+    private CustomRoleManager RoleManager { get; set; } = default!;
     private AccessTokenProvider AccessTokenProvider { get; set; } = default!;
 
     [Inject]
@@ -97,11 +98,11 @@
     protected NavigationManager NavigationManager { get; set; } = null!;
 
     private LoginFormModel _model = new()
-    {
-        UserName = "administrator",
-        Password = "Password123!",
-        RememberMe = true
-    };
+        {
+            UserName = "administrator",
+            Password = "Password123!",
+            RememberMe = true
+        };
 
     MudForm? _form;
     bool _success;
@@ -116,6 +117,7 @@
         await base.OnInitializedAsync();
         _title = L["Sign In"];
         UserManager = ScopedServices.GetRequiredService<CustomUserManager>();
+        RoleManager = ScopedServices.GetRequiredService<CustomRoleManager>();
         AccessTokenProvider = ScopedServices.GetRequiredService<AccessTokenProvider>();
     }
 
@@ -210,23 +212,22 @@
         {
             var admin = await UserManager.FindByNameAsync(UserName.Administrator) ?? throw new NotFoundException("Administrator's account Not Found.");
             user = new ApplicationUser
+                {
+                    EmailConfirmed = true,
+                    IsActive = true,
+                    IsLive = true,
+                    UserName = userName,
+                    Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
+                    Provider = provider,
+                    DisplayName = name,
+                    SuperiorId = admin.Id,
+                    TenantId = admin.TenantId,
+                    TenantName = admin.TenantName
+                };
+            var createResult = await UserManager.CreateAsync(user);//extension handlees default tenant & roles
+            if (!createResult.Succeeded)
             {
-                EmailConfirmed = true,
-                IsActive = true,
-                IsLive = true,
-                UserName = userName,
-                Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
-                Provider = provider,
-                DisplayName = name,
-                SuperiorId = admin.Id,
-                TenantId = admin.TenantId,
-                TenantName = admin.TenantName
-            };
-            var createResult = await UserManager.CreateAsync(user);
-            if (createResult.Succeeded)
-            {
-                var assignResult = await UserManagerExtensions.AddToRolesAsyncWithTenantId(user.Id, admin.TenantId, context, RoleName.Basic);
-                //var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
+                return null;
             }
             await UserManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
         }

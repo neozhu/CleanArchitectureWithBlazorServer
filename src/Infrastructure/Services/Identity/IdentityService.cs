@@ -10,6 +10,7 @@ using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using LazyCache;
 using Microsoft.AspNetCore.Authorization;
@@ -89,8 +90,10 @@ public class IdentityService : IIdentityService
     }
     public async Task<IDictionary<string, string?>> FetchUsers(string roleName, CancellationToken cancellation = default)
     {
+        if (string.IsNullOrEmpty(roleName)) return null;
+        roleName = roleName.ToUpperInvariant();
         var result = await _userManager.Users
-             .Where(x => x.UserRoles.Any(y => y.Role.Name == roleName))
+             .Where(x => x.UserRoles.Any(y => y.Role.NormalizedName == roleName))
              .Include(x => x.UserRoles)
              .ToDictionaryAsync(x => x.UserName!, y => y.DisplayName, cancellation);
         return result;
@@ -125,7 +128,7 @@ public class IdentityService : IIdentityService
         }
         user.RefreshTokenExpiryTime = tokenExpiryTime;
         await _userManager.UpdateAsync(user);
-        
+
         var token = await GenerateJwtAsync(user);
         var response = new TokenResponse { Token = token, RefreshTokenExpiryTime = tokenExpiryTime, RefreshToken = user.RefreshToken, ProfilePictureDataUrl = user.ProfilePictureDataUrl };
         return await Result<TokenResponse>.SuccessAsync(response);
@@ -158,19 +161,15 @@ public class IdentityService : IIdentityService
         {
             ValidateIssuerSigningKey = false,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appConfig.Secret)),
-            ValidateIssuer =false,
+            ValidateIssuer = false,
             ValidateAudience = false,
             RoleClaimType = ClaimTypes.Role,
             ClockSkew = TimeSpan.Zero,
             ValidateLifetime = true
         };
         var tokenHandler = new JwtSecurityTokenHandler();
-        var result =await tokenHandler.ValidateTokenAsync(token, tokenValidationParameters);
-        if (result.IsValid)
-        {
-           return new ClaimsPrincipal(result.ClaimsIdentity);
-        }
-        return new ClaimsPrincipal(new ClaimsIdentity());
+        var result = await tokenHandler.ValidateTokenAsync(token, tokenValidationParameters);
+        return result.IsValid ? new ClaimsPrincipal(result.ClaimsIdentity) : new ClaimsPrincipal(new ClaimsIdentity());
     }
     private string GenerateRefreshToken()
     {
@@ -229,7 +228,7 @@ public class IdentityService : IIdentityService
         if (user is not null)
         {
             user.IsLive = isLive;
-            var result= await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user);
         }
     }
     public async Task<ApplicationUserDto> GetApplicationUserDto(string userId, CancellationToken cancellation = default)
@@ -238,14 +237,16 @@ public class IdentityService : IIdentityService
         var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).FirstAsync(cancellation), Options);
         return result;
     }
+
     public async Task<List<ApplicationUserDto>?> GetUsers(string? tenantId, CancellationToken cancellation = default)
     {
+        //TODO add pagination
         var key = $"GetApplicationUserDtoListWithTenantId:{tenantId}";
         Func<string?, CancellationToken, Task<List<ApplicationUserDto>?>> getUsersByTenantId = async (tenantId, token) =>
         {
             if (string.IsNullOrEmpty(tenantId))
-            {
-                return await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role)
+            {//TODO this should not be in real time ,it explodes the system
+                return await _userManager.Users.Take(20).Include(x => x.UserRoles).ThenInclude(x => x.Role)
                        .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
             }
             else
@@ -253,10 +254,16 @@ public class IdentityService : IIdentityService
                 return await _userManager.Users.Where(x => x.TenantId == tenantId).Include(x => x.UserRoles).ThenInclude(x => x.Role)
                       .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
             }
-             
-
         };
-        var result = await _cache.GetOrAddAsync(key, () => getUsersByTenantId(tenantId,cancellation), Options);
+        var result = await _cache.GetOrAddAsync(key, () => getUsersByTenantId(tenantId, cancellation), Options);
+        return result;
+    }
+
+
+    public async Task<TenantDto> GetTenantsOfUser(string userId, CancellationToken cancellation = default)
+    {
+        var key = $"GetTenantsOfUser:{userId}";
+        var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Select(x => x.UserRoles.Select(ur => ur.Tenant)).ProjectTo<TenantDto>(_mapper.ConfigurationProvider).FirstAsync(cancellation), Options);
         return result;
     }
 }

@@ -43,8 +43,12 @@ public class UploadDocumentCommandHandler : IRequestHandler<UploadDocumentComman
             var url = await _uploadService.UploadAsync(uploadRequest);
             var document = new Document
             {
-                Title = fileName, URL = url, Status = JobStatus.Queueing, IsPublic = true,
-                DocumentType = DocumentType.Image
+                Title = fileName,
+                URL = url,
+                Status = JobStatus.Queueing,
+                IsPublic = true,
+                DocumentType = DocumentType.Image,
+
             };
             document.AddDomainEvent(new CreatedEvent<Document>(document));
             list.Add(document);
@@ -55,5 +59,6 @@ public class UploadDocumentCommandHandler : IRequestHandler<UploadDocumentComman
         await _context.Documents.AddRangeAsync(list, cancellationToken);
         var result = await _context.SaveChangesAsync(cancellationToken);
         return await Result<int>.SuccessAsync(result);
+
     }
 }

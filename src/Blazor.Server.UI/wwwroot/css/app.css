@@ -1,1 +1,14 @@
-﻿
+﻿.loadScreen-fade-in {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.loadScreen-fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.loadScreen-initial-hidden {
+    opacity: 0;
+    visibility: hidden;
+}

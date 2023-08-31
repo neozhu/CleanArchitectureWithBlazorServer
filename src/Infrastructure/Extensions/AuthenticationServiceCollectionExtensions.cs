@@ -13,7 +13,6 @@ public static class AuthenticationServiceCollectionExtensions
 {
     public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)
     {
-       
         services
             .AddIdentity<ApplicationUser, ApplicationRole>()
             .AddUserManager<CustomUserManager>().AddRoleManager<CustomRoleManager>()
@@ -86,8 +85,8 @@ public static class AuthenticationServiceCollectionExtensions
                              return Task.CompletedTask;
                          }
                      };
-                 }); 
-   
+                 });
+
         services.AddScoped<AccessTokenProvider>();
         services.AddScoped<UserDataProvider>();
         services.AddScoped<IUserDataProvider>(sp =>

@@ -24,8 +24,8 @@ public class HubClient : IAsyncDisposable
             })
             .Build();
         _hubConnection.ServerTimeout = TimeSpan.FromSeconds(30);
-        _hubConnection.On<string>(SignalR.OnConnect, userId => { Login?.Invoke(this, userId); });
-        _hubConnection.On<string>(SignalR.OnDisconnect, userId => { Logout?.Invoke(this, userId); });
+        _hubConnection.On<string,string>(SignalR.OnConnect, (connectionId, userName) => { Login?.Invoke(this, new UserStateChangeEventArgs(connectionId,userName)); });
+        _hubConnection.On<string, string>(SignalR.OnDisconnect, (connectionId, userName) => { Logout?.Invoke(this, new UserStateChangeEventArgs(connectionId, userName)); });
         _hubConnection.On<string>(SignalR.SendNotification,
             message => { NotificationReceived?.Invoke(this, message); });
         _hubConnection.On<string, string>(SignalR.SendMessage, HandleReceiveMessage);
@@ -39,6 +39,10 @@ public class HubClient : IAsyncDisposable
         try
         {
             await _hubConnection.StopAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Madhu-Error" + e.ToString());
         }
         finally
         {
@@ -77,22 +81,34 @@ public class HubClient : IAsyncDisposable
         await _hubConnection.SendAsync(SignalR.SendNotification, message);
     }
 
-    public event EventHandler<string>? Login;
+    public event EventHandler<UserStateChangeEventArgs>? Login;
     public event EventHandler<string>? JobStarted;
     public event EventHandler<string>? JobCompleted;
-    public event EventHandler<string>? Logout;
+    public event EventHandler<UserStateChangeEventArgs>? Logout;
     public event EventHandler<string>? NotificationReceived;
     public event MessageReceivedEventHandler? MessageReceived;
 
-    public class MessageReceivedEventArgs : EventArgs
+   
+}
+public class MessageReceivedEventArgs : EventArgs
+{
+    public MessageReceivedEventArgs(string userName, string message)
     {
-        public MessageReceivedEventArgs(string userId, string message)
-        {
-            UserId = userId;
-            Message = message;
-        }
-
-        public string UserId { get; set; }
-        public string Message { get; set; }
+        UserId = userName;
+        Message = message;
     }
+
+    public string UserId { get; set; }
+    public string Message { get; set; }
+}
+
+public class UserStateChangeEventArgs : EventArgs
+{
+    public UserStateChangeEventArgs(string connectionId, string userName)
+    {
+        ConnectionId = connectionId;
+        UserName = userName;
+    }
+    public string ConnectionId { get; set; }
+    public string UserName { get; set; }
 }
