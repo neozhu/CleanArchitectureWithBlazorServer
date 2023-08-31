@@ -484,11 +484,11 @@ namespace CleanArchitecture.Blazor.Application.Resources.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update successfully.
+        ///   Looks up a localized string similar to AddOrUpdate successfully.
         /// </summary>
         internal static string Update_successfully {
             get {
-                return ResourceManager.GetString("Update successfully", resourceCulture);
+                return ResourceManager.GetString("AddOrUpdate successfully", resourceCulture);
             }
         }
         
