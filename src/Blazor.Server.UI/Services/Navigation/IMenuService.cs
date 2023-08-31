@@ -1,4 +1,4 @@
-using Blazor.Server.UI.Models.SideMenu;
+using Blazor.Server.UI.Models.NavigationMenu;
 
 namespace Blazor.Server.UI.Services.Navigation;
 

@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Blazor.Server.UI.Models.SideMenu;
+namespace Blazor.Server.UI.Models.NavigationMenu;
 
 public enum PageStatus
 {

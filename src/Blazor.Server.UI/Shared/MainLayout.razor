@@ -20,18 +20,17 @@
             </MudContainer>
         </NotAuthorized>
         <Authorized>
-            
-            <NavMenu SideMenuDrawerOpen="_sideMenuDrawerOpen"
+
+                <HeaderMenu NavigationMenuDrawerOpen="_navigationMenuDrawerOpen"
                      OpenCommandPalette="OpenCommandPalette"
                      IsDarkMode="@LayoutService.IsDarkMode"
-                     ToggleSideMenuDrawer="ToggleSideMenuDrawer"
+                            ToggleNavigationMenuDrawer="ToggleNavigationMenuDrawer"
                      RightToLeft="@LayoutService.IsRTL"
                      RightToLeftToggle ="LayoutService.ToggleRightToLeft"
                      OnSettingClick="@(() => _themingDrawerOpen = true)"
                      />
-            <SideMenu SideMenuDrawerOpen="_sideMenuDrawerOpen"
-                      SideMenuDrawerOpenChanged="SideMenuDrawerOpenChangedHandler"
-                       />
+            <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen"
+                                DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler" />
             <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
                         ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
                         UserPreferences="_userPreferences"
