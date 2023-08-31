@@ -103,7 +103,7 @@
             {
                 System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
 
-                // Update the UI with the final progress
+                // AddOrUpdate the UI with the final progress
                 StateHasChanged();
             }
         }
