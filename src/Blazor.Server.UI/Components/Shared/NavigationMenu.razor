@@ -90,7 +90,7 @@
                     {
                         @if (sectionItem.IsParent && sectionItem.MenuItems is not null)
                         {
-                            <MudNavGroup Icon="@sectionItem.Icon" Title="@L[sectionItem.Title]">
+                            <MudNavGroup Icon="@sectionItem.Icon" Title="@L[sectionItem.Title]" Expanded="Expanded(sectionItem)">
                                 @foreach (var menuItem in sectionItem.MenuItems.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
                                 {
                                     @if (DrawerOpen)
