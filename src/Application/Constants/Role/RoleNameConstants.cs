@@ -27,7 +27,7 @@ public abstract class RoleName
 
     public const string Patient = nameof(Patient);
 
-    public const string Guest = nameof(Guest);//vmadhu2023 =>requesting for Hospital registration , vmadhu203=>patient   ,   vmadhu2022 =>req for doctor 
+   // public const string Guest = nameof(Guest);//vmadhu2023 =>requesting for Hospital registration , vmadhu203=>patient   ,   vmadhu2022 =>req for doctor 
     public const string DefaultRole1 = nameof(Patient);
     //public const string Basic =nameof(Basic);
     //public const string Users =nameof(Users);

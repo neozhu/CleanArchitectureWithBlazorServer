@@ -111,7 +111,7 @@ public class ApplicationDbContextInitializer
         await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacists), permissions);
 
         await AddRoleAndPermissions(new ApplicationRole(RoleName.Patient), permissions);
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.Guest), permissions);
+      //  await AddRoleAndPermissions(new ApplicationRole(RoleName.Guest), permissions);
 
         /*      var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
               if (_roleManager.Roles.All(r => r.Name != userRole.Name))

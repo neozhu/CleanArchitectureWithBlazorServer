@@ -1,4 +1,5 @@
-Users page, load tenants which are allowed to me ...
+DefaultTenantStructure created ,need to apply in db
+            Users page, load tenants which are allowed to me ...
 ---------------on change load based on UserRoles table,rather Users table
 
 -----------------role update-also make changes based on Active state.
