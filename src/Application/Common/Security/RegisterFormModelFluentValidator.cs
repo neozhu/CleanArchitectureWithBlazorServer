@@ -15,6 +15,7 @@ public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormMo
     {
         _localizer = localizer;
         _configuration = configuration;
+        
         var identitySettings = new IdentitySettings();
         configuration.GetSection(nameof(IdentitySettings)).Bind(identitySettings);
         RuleFor(x => x.UserName)
@@ -26,7 +27,7 @@ public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormMo
             .EmailAddress();
         RuleFor(p => p.Password).NotEmpty().WithMessage(_localizer["CannotBeEmpty"])
                   .MinimumLength(identitySettings.RequiredLength).WithMessage(string.Format(_localizer["MinLength"], identitySettings.RequiredLength))
-                  .MaximumLength(identitySettings.MaxLength).WithMessage(_localizer["MaxLength"])
+                  .MaximumLength(identitySettings.MaxLength).WithMessage(string.Format(_localizer["MaxLength"], identitySettings.MaxLength))
                   .Matches(identitySettings.RequireUpperCase ? @"[A-Z]+" : string.Empty).WithMessage(_localizer["MustContainUpperCase"])
                   .Matches(identitySettings.RequireLowerCase ? @"[a-z]+" : string.Empty).WithMessage(_localizer["MustContainLowerCase"])
                   .Matches(identitySettings.RequireDigit ? @"[0-9]+" : string.Empty).WithMessage(_localizer["MustContainDigit"])
