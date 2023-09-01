@@ -14,10 +14,11 @@ public enum TenantType : byte
     [Description("New Request for creating Hospital/Pharmacy/DiagnosticCenter")]
     NewTenant = 6,
 
-    Pharmacy = 11,
-    DiagnosticCenter = 14,
+    PharmacyAndStaff = 11,
+    DiagnosticsAndStaff = 14,
 
-    Hospital = 17,
+    [Description("Hospital And All Staff")]
+    HospitalAndStaff = 17,
 
     Internal = 20
 }

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using CleanArchitecture.Blazor.Application.Constants;
 using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Application.Constants.Permission;
 using CleanArchitecture.Blazor.Application.Constants.Role;
@@ -77,10 +78,10 @@ public class ApplicationDbContextInitializer
         // Default tenants
         if (!_context.Tenants.Any())
         {
-            _context.Tenants.Add(new Tenant { Name = "Patient", Description = "Patient" });
-            _context.Tenants.Add(new Tenant { Name = "NewRequestFor", Description = "New Requests for Role(Hospital,Doctor,Nurse...)" });
-            _context.Tenants.Add(new Tenant { Name = "Internal", Description = "Internal" });
-
+            TenantBase.GetDefaultTenantStructure().ForEach(t =>
+            {
+                _context.Tenants.Add(t.Tenant(t));
+            });
             /*
             _context.Tenants.Add(new Tenant { Name = "Nanjappa Hospital", Description = "Nanjappa Hospital" });
             _context.Tenants.Add(new Tenant { Name = "Sarji Hospital", Description = "Sarji Hospital" });
@@ -90,28 +91,38 @@ public class ApplicationDbContextInitializer
             await _context.SaveChangesAsync();
         }
 
-        // Default roles
+        // Default roles //todo change these roles permissions
         var permissions = GetAllPermissions();
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.RootAdmin), permissions);
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminGroup), permissions);
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminViewers), permissions);
+        foreach (var roles in TenantBase.GetDefaultTenantStructure().Select(t => t.Roles))
+        {
+            foreach (var role in roles)
+            {
+                await AddRoleAndPermissions(role, permissions);
+            }
 
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.Hospital), permissions);
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.HospitalAdmin), permissions);
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorHOD), permissions);
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.Doctor), permissions);
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorAssistant), permissions);
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.Nurse), permissions);
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.ViewerHospital), permissions);
+        }
+        /*
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.RootAdmin), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminGroup), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminViewers), permissions);
 
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.DiagnosticCenter), permissions);
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.Diagnostics), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.Hospital), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.HospitalAdmin), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorHOD), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.Doctor), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorAssistant), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.Nurse), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.ViewerHospital), permissions);
 
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacy), permissions);
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacists), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.DiagnosticCenter), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.Diagnostics), permissions);
 
-        await AddRoleAndPermissions(new ApplicationRole(RoleName.Patient), permissions);
-      //  await AddRoleAndPermissions(new ApplicationRole(RoleName.Guest), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacy), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacists), permissions);
+
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.Patient), permissions);
+          */
+        //  await AddRoleAndPermissions(new ApplicationRole(RoleName.Guest), permissions);
 
         /*      var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
               if (_roleManager.Roles.All(r => r.Name != userRole.Name))
@@ -148,7 +159,7 @@ public class ApplicationDbContextInitializer
                     EmailConfirmed = true
                     //    , ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" 
                 };
-                await _userManager.CreateAsync(newUser,roles:new List<string>() {role });//todo pass roles and tenantids  //, UserName.DefaultPassword);
+                await _userManager.CreateAsync(newUser, roles: new List<string>() { role });//todo pass roles and tenantids  //, UserName.DefaultPassword);
                 //await _context.UserTenant.AddAsync(new UserTenant() { UserId = newUser.Id, TenantId = _context.Tenants.First().Id });
                 //await _userManager.AddToRolesAsync(newUser, new[] { role! });
             }
@@ -203,6 +214,7 @@ public class ApplicationDbContextInitializer
         if (!_roleManager.Roles.Any(r => r.Name == role.Name))
         {
             await _roleManager.CreateAsync(role);
+            //todo AspNetRoles extend createasync to add Level parameter also
 
             foreach (var permission in permissions)
             {

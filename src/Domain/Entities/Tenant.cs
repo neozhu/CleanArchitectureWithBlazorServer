@@ -1,3 +1,5 @@
+using CleanArchitecture.Blazor.Domain.Enums;
+
 namespace CleanArchitecture.Blazor.Domain.Entities;
 public class Tenant : IEntity<string>
 {
@@ -5,9 +7,12 @@ public class Tenant : IEntity<string>
     {
 
     }
-    public Tenant(string name, string description)
+
+    public Tenant(string name, string description, TenantType type) : this(name, description, (byte)type)
+    { }
+    public Tenant(string name, string description, byte type)
     {
-        Name = name; Description = description;
+        Name = name; Description = description; Type = (byte)type;
     }
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string? Name { get; set; }
