@@ -1,4 +1,5 @@
 using CleanArchitecture.Blazor.Application.Common.Configurations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 
 namespace CleanArchitecture.Blazor.Application.Common.Security;
@@ -6,7 +7,6 @@ namespace CleanArchitecture.Blazor.Application.Common.Security;
 public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormModel>
 {
     private readonly IStringLocalizer<RegisterFormModelFluentValidator> _localizer;
-    private readonly IConfiguration _configuration;
 
     public RegisterFormModelFluentValidator(
         IStringLocalizer<RegisterFormModelFluentValidator> localizer,
@@ -14,10 +14,8 @@ public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormMo
         )
     {
         _localizer = localizer;
-        _configuration = configuration;
-        
-        var identitySettings = new IdentitySettings();
-        configuration.GetSection(nameof(IdentitySettings)).Bind(identitySettings);
+
+        var identitySettings = configuration.GetRequiredSection(IdentitySettings.Key).Get<IdentitySettings>();
         RuleFor(x => x.UserName)
             .NotEmpty()
             .Length(2, 100);

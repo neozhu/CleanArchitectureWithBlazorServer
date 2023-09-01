@@ -21,8 +21,7 @@ public static class AuthenticationServiceCollectionExtensions
             .AddDefaultTokenProviders();
         services.Configure<IdentityOptions>(options =>
         {
-            var identitySettings = new IdentitySettings();
-            configuration.GetSection(nameof(IdentitySettings)).Bind(identitySettings);
+            var identitySettings = configuration.GetRequiredSection(IdentitySettings.Key).Get<IdentitySettings>();
             // Password settings
             options.Password.RequireDigit = identitySettings.RequireDigit;
             options.Password.RequiredLength = identitySettings.RequiredLength;
