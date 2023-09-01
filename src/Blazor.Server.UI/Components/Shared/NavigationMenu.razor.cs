@@ -1,15 +1,14 @@
-using Blazor.Server.UI.Models.SideMenu;
-using Blazor.Server.UI.Services;
+using Blazor.Server.UI.Models.NavigationMenu;
 using Blazor.Server.UI.Services.Layout;
 using Blazor.Server.UI.Services.Navigation;
 using CleanArchitecture.Blazor.Application.Features.Fluxor;
-using Fluxor;
+
 
 namespace Blazor.Server.UI.Components.Shared;
 
-public partial class SideMenu: FluxorComponent
+public partial class NavigationMenu : FluxorComponent
 {
-    [EditorRequired] [Parameter] public bool SideMenuDrawerOpen { get; set; }
+    [EditorRequired] [Parameter] public bool DrawerOpen { get; set; }
     [Inject] private IMenuService MenuService { get; set; } = null!;
     [Inject]
     private IState<UserProfileState> UserProfileState { get; set; } = null!;
@@ -17,7 +16,7 @@ public partial class SideMenu: FluxorComponent
     private bool IsLoading   => UserProfileState.Value.IsLoading;
     
     [EditorRequired] [Parameter]
-    public EventCallback<bool> SideMenuDrawerOpenChanged { get; set; }
+    public EventCallback<bool> DrawerOpenChanged { get; set; }
 
     private IEnumerable<MenuSectionModel> MenuSections => MenuService.Features;
 
