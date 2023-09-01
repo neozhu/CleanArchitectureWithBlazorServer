@@ -4,7 +4,6 @@ using CleanArchitecture.Blazor.Application.Constants.Permission;
 using CleanArchitecture.Blazor.Application.Constants.Role;
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
-using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 public class ApplicationDbContextInitializer
@@ -78,56 +77,103 @@ public class ApplicationDbContextInitializer
         // Default tenants
         if (!_context.Tenants.Any())
         {
-            _context.Tenants.Add(new Tenant { Name = "Master", Description = "Master Site" });
-            _context.Tenants.Add(new Tenant { Name = "Slave", Description = "Slave Site" });
-            await _context.SaveChangesAsync();
+            _context.Tenants.Add(new Tenant { Name = "Patient", Description = "Patient" });
+            _context.Tenants.Add(new Tenant { Name = "NewRequestFor", Description = "New Requests for Role(Hospital,Doctor,Nurse...)" });
+            _context.Tenants.Add(new Tenant { Name = "Internal", Description = "Internal" });
 
+            /*
+            _context.Tenants.Add(new Tenant { Name = "Nanjappa Hospital", Description = "Nanjappa Hospital" });
+            _context.Tenants.Add(new Tenant { Name = "Sarji Hospital", Description = "Sarji Hospital" });
+            _context.Tenants.Add(new Tenant { Name = "Narayana Hospital", Description = "Narayana Hospital" });
+            */
+            //any more further basic
+            await _context.SaveChangesAsync();
         }
 
         // Default roles
-        var administratorRole = new ApplicationRole(RoleName.Admin) { Description = "Admin Group" };
-        var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
         var permissions = GetAllPermissions();
-        if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
-        {
-            await _roleManager.CreateAsync(administratorRole);
-           
-            foreach (var permission in permissions)
-            {
-                await _roleManager.AddClaimAsync(administratorRole, new Claim(ApplicationClaimTypes.Permission, permission));
-            }
-        }
-        if (_roleManager.Roles.All(r => r.Name != userRole.Name))
-        {
-            await _roleManager.CreateAsync(userRole);
-            foreach (var permission in permissions)
-            {
-                if (permission.StartsWith("Permissions.Products"))
-                    await _roleManager.AddClaimAsync(userRole, new Claim(ApplicationClaimTypes.Permission, permission));
-            }
-        }
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.RootAdmin), permissions);
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminGroup), permissions);
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminViewers), permissions);
+
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.Hospital), permissions);
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.HospitalAdmin), permissions);
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorHOD), permissions);
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.Doctor), permissions);
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorAssistant), permissions);
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.Nurse), permissions);
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.ViewerHospital), permissions);
+
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.DiagnosticCenter), permissions);
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.Diagnostics), permissions);
+
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacy), permissions);
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacists), permissions);
+
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.Patient), permissions);
+        await AddRoleAndPermissions(new ApplicationRole(RoleName.Guest), permissions);
+
+        /*      var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
+              if (_roleManager.Roles.All(r => r.Name != userRole.Name))
+              {
+                  await _roleManager.CreateAsync(userRole);
+                  foreach (var permission in permissions)
+                  {
+                      if (permission.StartsWith("Permissions.Products"))
+                          await _roleManager.AddClaimAsync(userRole, new Claim(ApplicationClaimTypes.Permission, permission));
+                  }
+              } */
+
         // Default users
-        var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
+        var defaultGoogleUsers = new List<(string email, string role)>()
+       {("madhusudhan.veerabhadrappa@gmail.com",RoleName.RootAdmin),("vmadhu203@gmail.com",RoleName.ElevateAdminGroup)
+       ,("vmadhu2023@gmail.com",RoleName.HospitalAdmin)
+       };
+
+        foreach (var (email, role) in defaultGoogleUsers)
+        {//need to verify
+            if (!_userManager.Users.Any(u => u.Email == email))
+            {
+                var newUser = new ApplicationUser
+                {
+                    UserName = email,
+                    Provider = "Google",
+                    IsActive = true,
+                    //TenantId = _context.Tenants.First().Id,//todo need to make change
+                    //todo need to change based on selection like whether Patient/Internal/any hospital
+                    TenantId = _context.Tenants.First().Id,//todo need to make change
+                    TenantName = _context.Tenants.First().Name,
+                    DisplayName = email,
+                    Email = email,
+                    EmailConfirmed = true
+                    //    , ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" 
+                };
+                await _userManager.CreateAsync(newUser,roles:new List<string>() {role });//todo pass roles and tenantids  //, UserName.DefaultPassword);
+                //await _context.UserTenant.AddAsync(new UserTenant() { UserId = newUser.Id, TenantId = _context.Tenants.First().Id });
+                //await _userManager.AddToRolesAsync(newUser, new[] { role! });
+            }
+        }
+
+        /*var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
         var demo = new ApplicationUser { UserName = UserName.Demo, IsActive = true, Provider = "Local", TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Demo, Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
-
-
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))
         {
             await _userManager.CreateAsync(administrator, UserName.DefaultPassword);
-            await UserManagerExtensions.AddToRolesAsyncWithTenantName(administrator.Id, "Master", _context, new[] { administratorRole.Name! });
+            await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name! });
         }
         if (_userManager.Users.All(u => u.UserName != demo.UserName))
         {
             await _userManager.CreateAsync(demo, UserName.DefaultPassword);
-            await UserManagerExtensions.AddToRolesAsyncWithTenantName(demo.Id, "Master", _context, new[] { userRole.Name! });
-            //await _userManager.AddToRolesAsync(demo, new[] { userRole.Name! });
+            await _userManager.AddToRolesAsync(demo, new[] { userRole.Name! });
         }
+        */
+
 
         // Default data
         // Seed, if necessary
         if (!_context.KeyValues.Any())
         {
-            _context.KeyValues.Add(new KeyValue { Name =  Picklist.Status, Value = "initialization", Text = "initialization", Description = "Status of workflow" });
+            _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "initialization", Text = "initialization", Description = "Status of workflow" });
             _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "processing", Text = "processing", Description = "Status of workflow" });
             _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "pending", Text = "pending", Description = "Status of workflow" });
             _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "finished", Text = "finished", Description = "Status of workflow" });
@@ -150,6 +196,18 @@ public class ApplicationDbContextInitializer
             _context.Products.Add(new Product { Brand = "MI", Name = "MI 12 Pro", Description = "Xiaomi 12 Pro Android smartphone. Announced Dec 2021. Features 6.73″ display, Snapdragon 8 Gen 1 chipset, 4600 mAh battery, 256 GB storage.", Unit = "EA", Price = 199.00m });
             _context.Products.Add(new Product { Brand = "Logitech", Name = "MX KEYS Mini", Description = "Logitech MX Keys Mini Introducing MX Keys Mini – a smaller, smarter, and mightier keyboard made for creators. Type with confidence on a keyboard crafted for efficiency, stability, and...", Unit = "PA", Price = 99.90m });
             await _context.SaveChangesAsync();
+        }
+    }
+    private async Task AddRoleAndPermissions(ApplicationRole role, IEnumerable<string> permissions)
+    {
+        if (!_roleManager.Roles.Any(r => r.Name == role.Name))
+        {
+            await _roleManager.CreateAsync(role);
+
+            foreach (var permission in permissions)
+            {
+                await _roleManager.AddClaimAsync(role, new Claim(ApplicationClaimTypes.Permission, permission));
+            }
         }
     }
 }

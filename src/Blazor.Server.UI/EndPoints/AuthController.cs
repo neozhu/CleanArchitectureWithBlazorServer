@@ -65,7 +65,7 @@ public class AuthController : Controller
         {
             var admin = await _userManager.FindByNameAsync("administrator") ?? throw new NotFoundException($"Application user administrator Not Found.");
             if (admin.TenantId == null) return null;
-            var rl = await _roleManager.FindByNameAsync(RoleName.Basic);
+            var rl = await _roleManager.FindByNameAsync(RoleName.DefaultRole1);
             if (rl == null) return null;
             var rolesToInsert = new List<ApplicationUserRole>() { new ApplicationUserRole() { TenantId = admin.TenantId, Role = rl } };
             user = new ApplicationUser

@@ -438,7 +438,7 @@
         }
     private async Task OnCreate()
         {
-        var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleName.Basic } };
+        var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleName.DefaultRole1 } };
         var parameters = new DialogParameters {
             { nameof(_UserFormDialog.Model),model }
            };
