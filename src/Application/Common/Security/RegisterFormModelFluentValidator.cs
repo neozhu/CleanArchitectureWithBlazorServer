@@ -24,13 +24,13 @@ public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormMo
             .NotEmpty()
             .MaximumLength(255)
             .EmailAddress();
-        RuleFor(p => p.Password).NotEmpty().WithMessage(_localizer["Your password cannot be empty"])
-                  .MinimumLength(identitySettings.RequiredLength).WithMessage(_localizer["Your password length must be at least 6."])
-                  .MaximumLength(identitySettings.MaxLength).WithMessage(_localizer["Your password length must not exceed 16."])
-                  .Matches(identitySettings.RequireUpperCase ? @"[A-Z]+" : string.Empty).WithMessage(_localizer["Your password must contain at least one uppercase letter."])
-                  .Matches(identitySettings.RequireLowerCase ? @"[a-z]+" : string.Empty).WithMessage(_localizer["Your password must contain at least one lowercase letter."])
-                  .Matches(identitySettings.RequireDigit ? @"[0-9]+" : string.Empty).WithMessage(_localizer["Your password must contain at least one number."])
-                  .Matches(identitySettings.RequireNonAlphanumeric ? @"[\@\!\?\*\.]+" : string.Empty).WithMessage(_localizer["Your password must contain at least one (@!? *.)."]);
+        RuleFor(p => p.Password).NotEmpty().WithMessage(_localizer["CannotBeEmpty"])
+                  .MinimumLength(identitySettings.RequiredLength).WithMessage(string.Format(_localizer["MinLength"], identitySettings.RequiredLength))
+                  .MaximumLength(identitySettings.MaxLength).WithMessage(_localizer["MaxLength"])
+                  .Matches(identitySettings.RequireUpperCase ? @"[A-Z]+" : string.Empty).WithMessage(_localizer["MustContainUpperCase"])
+                  .Matches(identitySettings.RequireLowerCase ? @"[a-z]+" : string.Empty).WithMessage(_localizer["MustContainLowerCase"])
+                  .Matches(identitySettings.RequireDigit ? @"[0-9]+" : string.Empty).WithMessage(_localizer["MustContainDigit"])
+                  .Matches(identitySettings.RequireNonAlphanumeric ? @"[\@\!\?\*\.]+" : string.Empty).WithMessage(_localizer["MustContainAlphanumericCharacter"]);
         RuleFor(x => x.ConfirmPassword)
              .Equal(x => x.Password);
         RuleFor(x => x.AgreeToTerms)
