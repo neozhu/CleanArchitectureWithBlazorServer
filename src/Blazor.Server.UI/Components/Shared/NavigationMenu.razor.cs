@@ -27,7 +27,7 @@ public partial class NavigationMenu : FluxorComponent
 
     private bool Expanded(MenuSectionItemModel menu)
     {
-        string href = NavigationManager.Uri.Substring(NavigationManager.BaseUri.Length);
+        string href = NavigationManager.Uri.Substring(NavigationManager.BaseUri.Length-1);
         if(menu.IsParent ==true && menu.MenuItems is not null && menu.MenuItems.Any(x => !string.IsNullOrEmpty(x.Href) && x.Href.Equals(href)))
         {
             return true;
