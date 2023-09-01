@@ -13,6 +13,7 @@ global using CleanArchitecture.Blazor.Application.Constants;
 global using Microsoft.AspNetCore.Components;
 global using Fluxor.Blazor.Web.Components;
 global using MudBlazor;
+global using Fluxor;
 global using Severity = MudBlazor.Severity;
 global using Color = MudBlazor.Color;
 global using CleanArchitecture.Blazor.Domain.Identity;
