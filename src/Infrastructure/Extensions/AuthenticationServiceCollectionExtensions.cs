@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Application.Constants.Permission;
 using CleanArchitecture.Blazor.Application.Constants.User;
@@ -20,15 +21,17 @@ public static class AuthenticationServiceCollectionExtensions
             .AddDefaultTokenProviders();
         services.Configure<IdentityOptions>(options =>
         {
+            var identitySettings = new IdentitySettings();
+            configuration.GetSection(nameof(IdentitySettings)).Bind(identitySettings);
             // Password settings
-            options.Password.RequireDigit = true;
-            options.Password.RequiredLength = 6;
-            options.Password.RequireNonAlphanumeric = true;
-            options.Password.RequireUppercase = true;
-            options.Password.RequireLowercase = false;
+            options.Password.RequireDigit = identitySettings.RequireDigit;
+            options.Password.RequiredLength = identitySettings.RequiredLength;
+            options.Password.RequireNonAlphanumeric = identitySettings.RequireNonAlphanumeric;
+            options.Password.RequireUppercase = identitySettings.RequireUpperCase;
+            options.Password.RequireLowercase = identitySettings.RequireLowerCase;
 
             // Lockout settings
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(identitySettings.DefaultLockoutTimeSpan);
             options.Lockout.MaxFailedAccessAttempts = 10;
             options.Lockout.AllowedForNewUsers = true;
 

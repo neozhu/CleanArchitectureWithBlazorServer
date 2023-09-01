@@ -1,14 +1,22 @@
+using CleanArchitecture.Blazor.Application.Common.Configurations;
+using Microsoft.Extensions.Configuration;
+
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormModel>
 {
     private readonly IStringLocalizer<RegisterFormModelFluentValidator> _localizer;
+    private readonly IConfiguration _configuration;
 
     public RegisterFormModelFluentValidator(
-        IStringLocalizer<RegisterFormModelFluentValidator> localizer
+        IStringLocalizer<RegisterFormModelFluentValidator> localizer,
+        IConfiguration configuration
         )
     {
         _localizer = localizer;
+        _configuration = configuration;
+        var identitySettings = new IdentitySettings();
+        configuration.GetSection(nameof(IdentitySettings)).Bind(identitySettings);
         RuleFor(x => x.UserName)
             .NotEmpty()
             .Length(2, 100);
@@ -17,12 +25,12 @@ public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormMo
             .MaximumLength(255)
             .EmailAddress();
         RuleFor(p => p.Password).NotEmpty().WithMessage(_localizer["Your password cannot be empty"])
-                  .MinimumLength(6).WithMessage(_localizer["Your password length must be at least 6."])
-                  .MaximumLength(16).WithMessage(_localizer["Your password length must not exceed 16."])
-                  .Matches(@"[A-Z]+").WithMessage(_localizer["Your password must contain at least one uppercase letter."])
-                  .Matches(@"[a-z]+").WithMessage(_localizer["Your password must contain at least one lowercase letter."])
-                  .Matches(@"[0-9]+").WithMessage(_localizer["Your password must contain at least one number."])
-                  .Matches(@"[\@\!\?\*\.]+").WithMessage(_localizer["Your password must contain at least one (@!? *.)."]);
+                  .MinimumLength(identitySettings.RequiredLength).WithMessage(_localizer["Your password length must be at least 6."])
+                  .MaximumLength(identitySettings.MaxLength).WithMessage(_localizer["Your password length must not exceed 16."])
+                  .Matches(identitySettings.RequireUpperCase ? @"[A-Z]+" : string.Empty).WithMessage(_localizer["Your password must contain at least one uppercase letter."])
+                  .Matches(identitySettings.RequireLowerCase ? @"[a-z]+" : string.Empty).WithMessage(_localizer["Your password must contain at least one lowercase letter."])
+                  .Matches(identitySettings.RequireDigit ? @"[0-9]+" : string.Empty).WithMessage(_localizer["Your password must contain at least one number."])
+                  .Matches(identitySettings.RequireNonAlphanumeric ? @"[\@\!\?\*\.]+" : string.Empty).WithMessage(_localizer["Your password must contain at least one (@!? *.)."]);
         RuleFor(x => x.ConfirmPassword)
              .Equal(x => x.Password);
         RuleFor(x => x.AgreeToTerms)
