@@ -192,6 +192,7 @@
 </ErrorBoundary>
 
 @code {
+    //DANGER todo need to add Level in all and also restrict from user to corrupt the system
     private bool _processing;
     private string _currentRoleName = string.Empty;
     private int _defaultPageSize = 15;
@@ -275,6 +276,7 @@
 
     private async Task OnCreate()
     {
+        //DANGER todo need to add Level in all and also restrict from user to corrupt the system
         var model = new ApplicationRoleDto { Name = "" };
         var parameters = new DialogParameters { ["model"] = model };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
@@ -285,7 +287,8 @@
             var applicationRole = new ApplicationRole
             {
                 Name = model.Name,
-                Description = model.Description
+                Description = model.Description,
+                Level=model.Level
             };
 
             var state = await RoleManager.CreateAsync(applicationRole);

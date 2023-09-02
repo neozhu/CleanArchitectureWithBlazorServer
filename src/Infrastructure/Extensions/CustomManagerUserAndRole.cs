@@ -13,9 +13,9 @@ namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 public class CustomUserManager : UserManager<ApplicationUser>
 {
-    public const string defaultTenantId = "";//todo make it loaded as per db
+    public const string DefaultTenantId = "";//todo make it loaded as per db
     private readonly CustomRoleManager _roleManager;
-    private readonly IServiceProvider _serviceProvider;
+    //  private readonly IServiceProvider _serviceProvider;
     private readonly ApplicationDbContext dbContext;
     public CustomUserManager(
          IUserStore<ApplicationUser> store,
@@ -30,8 +30,8 @@ public class CustomUserManager : UserManager<ApplicationUser>
          : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
     {
         _roleManager = roleManager;
-        _serviceProvider = services;
-        dbContext = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        // _serviceProvider = services;
+        dbContext = services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
     }
     public async Task<IdentityResult> CreateWithDefaultRolesAsync(ApplicationUser user, string tenantId = null, string password = null)
     {
@@ -53,12 +53,12 @@ public class CustomUserManager : UserManager<ApplicationUser>
             .Include(x => x.UserRoles).ThenInclude(x => x.Role)
             .Include(x => x.UserRoles).ThenInclude(x => x.Tenant)
             .Include(x => x.UserClaims)
-            .FirstOrDefaultAsync(x=>x.NormalizedUserName == userName);
+            .FirstOrDefaultAsync(x => x.NormalizedUserName == userName);
     }
 
     public async Task<IdentityResult> CreateAsync(ApplicationUser user, List<string> roles = null, string tenantId = null, string password = null)
     {
-        if (string.IsNullOrEmpty(tenantId)) tenantId = defaultTenantId;
+        if (string.IsNullOrEmpty(tenantId)) tenantId = DefaultTenantId;
         if (string.IsNullOrEmpty(user.TenantId)) user.TenantId = tenantId;//this overrides already assigned tenant,had to make sure
         if (roles == null || !roles.Any()) return await CreateWithDefaultRolesAsync(user, user.TenantId, password);
         user.UserRoles = new List<ApplicationUserRole>();//here it ignores already existing UserRoles //TODO need to tink of this
@@ -126,9 +126,6 @@ public class CustomUserManager : UserManager<ApplicationUser>
         if (string.IsNullOrEmpty(roleName) || user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
             || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
         roleName = roleName.ToUpperInvariant();
-        using var scope = _serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
-
         var existing = dbContext.UserRoles.Where(role => role.TenantId == user.TenantId && role.Role.Name == roleName);
         dbContext.UserRoles.RemoveRange(existing);
         return await dbContext.SaveChangesAsync() > 0 ? IdentityResult.Success : null;
@@ -139,9 +136,6 @@ public class CustomUserManager : UserManager<ApplicationUser>
         if (string.IsNullOrEmpty(roleName) || user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
              || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
         roleName = roleName.ToUpperInvariant();
-        using var scope = _serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
-
         var roleId = (await dbContext.Roles.FirstOrDefaultAsync(x => x.NormalizedName == roleName.ToUpper()))?.Id;
         if (string.IsNullOrEmpty(roleId)) return null;
         var newInserted = dbContext.UserRoles
@@ -151,9 +145,6 @@ public class CustomUserManager : UserManager<ApplicationUser>
 
     public async Task<IList<ApplicationUserRole>> GetUserRoleTenantIdsAsync(string userId, string roleId = null, string tenantId = null)
     {
-        using var scope = _serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>(); // Replace with your DbContext
-
         var query = dbContext.UserRoles.AsQueryable();
         if (!string.IsNullOrEmpty(tenantId))
             query = query.Where(role => role.TenantId == tenantId);
@@ -163,18 +154,21 @@ public class CustomUserManager : UserManager<ApplicationUser>
             query = query.Where(role => role.UserId == userId);
         return await query.ToListAsync();
     }
+
 }
 
 public class CustomRoleManager : RoleManager<ApplicationRole>
 {
+   // private readonly ApplicationDbContext _dbContext;
     public CustomRoleManager(
         IRoleStore<ApplicationRole> store,
         IEnumerable<IRoleValidator<ApplicationRole>> roleValidators,
         ILookupNormalizer keyNormalizer,
         IdentityErrorDescriber errors,
-        ILogger<CustomRoleManager> logger)
+        ILogger<CustomRoleManager> logger)//, IServiceProvider serviceProvider)
         : base(store, roleValidators, keyNormalizer, errors, logger)
     {
+       // _dbContext = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
     }
 
     public async Task<ApplicationRole> FindByNameAsync(string roleName, TenantType type)
@@ -190,6 +184,7 @@ public class CustomRoleManager : RoleManager<ApplicationRole>
         throw new NotImplementedException("Please use with tenantid");
     }
 
+   
     //public async Task<IdentityRole> FindByNameAsync(string roleName)
     //{
     //    return await Roles?.FirstOrDefaultAsync(r => r.Name == roleName);
