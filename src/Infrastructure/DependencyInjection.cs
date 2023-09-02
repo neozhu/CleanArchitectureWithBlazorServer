@@ -20,9 +20,11 @@ public static class DependencyInjection
         services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.Key));
         services.Configure<DatabaseSettings>(configuration.GetSection(DatabaseSettings.Key));
         services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.Key));
+        services.Configure<IdentitySettings>(configuration.GetSection(IdentitySettings.Key));
         services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
         services.AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);
         services.AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
+        services.AddSingleton(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value);
         services.AddScoped<AuthenticationStateProvider, BlazorAuthStateProvider>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ITenantProvider, TenantProvider>();

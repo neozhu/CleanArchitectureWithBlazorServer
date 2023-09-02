@@ -117,25 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Your password cannot be empty" xml:space="preserve">
-    <value>비밀번호는 비워둘 수 없습니다.</value>
+  <data name="CannotBeEmpty" xml:space="preserve">
+      <value>ពាក្យសម្ងាត់របស់អ្នកមិនអាចទទេបានទេ។</value>
   </data>
-  <data name="Your password length must be at least 6." xml:space="preserve">
-    <value>비밀번호 길이는 6 이상이어야 합니다.</value>
+  <data name="MaxLength" xml:space="preserve">
+      <value>ពាក្យសម្ងាត់របស់អ្នកមិនត្រូវលើសពី {0} តួអក្សរទេ។</value>
   </data>
-  <data name="Your password length must not exceed 16." xml:space="preserve">
-    <value>비밀번호 길이는 16을 초과할 수 없습니다.</value>
+  <data name="MinLength" xml:space="preserve">
+      <value>ពាក្យសម្ងាត់របស់អ្នកត្រូវតែមានយ៉ាងហោចណាស់ {0} តួអក្សរ</value>
   </data>
-  <data name="Your password must contain at least one (@!? *.)." xml:space="preserve">
-    <value>비밀번호에는 최소 하나(@!? *.)가 포함되어야 합니다.</value>
+  <data name="MustContainAlphanumericCharacter" xml:space="preserve">
+      <value>ពាក្យសម្ងាត់របស់អ្នកត្រូវតែមានតួអក្សរអក្សរក្រមលេខ</value>
   </data>
-  <data name="Your password must contain at least one lowercase letter." xml:space="preserve">
-    <value>비밀번호에는 소문자가 하나 이상 포함되어야 합니다.</value>
+  <data name="MustContainDigit" xml:space="preserve">
+      <value>ពាក្យសម្ងាត់របស់អ្នកត្រូវតែមានលេខ។</value>
   </data>
-  <data name="Your password must contain at least one number." xml:space="preserve">
-    <value>비밀번호에는 하나 이상의 숫자가 포함되어야 합니다.</value>
+  <data name="MustContainUpperCase" xml:space="preserve">
+      <value>ពាក្យសម្ងាត់របស់អ្នកត្រូវតែមានយ៉ាងហោចណាស់អក្សរធំមួយ។</value>
   </data>
-  <data name="Your password must contain at least one uppercase letter." xml:space="preserve">
-    <value>비밀번호는 적어도 하나의 대문자를 포함해야 합니다.</value>
+  <data name="MustContainLowerCase" xml:space="preserve">
+      <value>ពាក្យសម្ងាត់របស់អ្នកត្រូវតែមានយ៉ាងហោចណាស់អក្សរតូចមួយ។</value>
   </data>
 </root>
