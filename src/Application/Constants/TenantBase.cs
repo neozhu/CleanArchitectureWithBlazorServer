@@ -10,14 +10,14 @@ using DocumentFormat.OpenXml.Wordprocessing;
 namespace CleanArchitecture.Blazor.Application.Constants;
 public class TenantBase
 {
-   // public static List<string> DefaultTenantNames = DefaultTenantStructure.Select(t => t.Name).ToList();
+    // public static List<string> DefaultTenantNames = DefaultTenantStructure.Select(t => t.Name).ToList();
 
-   // public static List<TenantStructure> DefaultTenantStructure = GetDefaultTenantStructure();
+    // public static List<TenantStructure> DefaultTenantStructure = GetDefaultTenantStructure();
     public static List<TenantStructure> GetDefaultTenantStructure()
     {
         //if (DefaultTenantStructure == null || !DefaultTenantStructure.Any())
         //{
-            var DefaultTenantStructure1 = new List<TenantStructure>() {
+        var defaultTenantStructure1 = new List<TenantStructure>() {
      new(TenantType.Patient,new List<ApplicationRole>(){ new ApplicationRole(RoleName.Patient)}),
     new(TenantType.HospitalAndStaff,ApplicationRole.CreateRolesForTenantType( new List<string>(){RoleName.Hospital,RoleName.HospitalAdmin,
             RoleName.Doctor,RoleName.DoctorAssistant,RoleName.Nurse,RoleName.ViewerHospital },TenantType.HospitalAndStaff)),
@@ -25,7 +25,7 @@ public class TenantBase
     new(TenantType.DiagnosticsAndStaff, ApplicationRole.CreateRolesForTenantType( new List<string>(){RoleName.DiagnosticCenter,RoleName.Diagnostics},TenantType.DiagnosticsAndStaff)),
     new(TenantType.Internal, ApplicationRole.CreateRolesForTenantType(new List < string >() { RoleName.RootAdmin, RoleName.ElevateAdminGroup, RoleName.ElevateAdminViewers }, TenantType.Internal))
             };
-           return DefaultTenantStructure1;
+        return defaultTenantStructure1;
         //}
         //return DefaultTenantStructure;
     }
