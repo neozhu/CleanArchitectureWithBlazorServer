@@ -6,7 +6,7 @@ public class UsersStateContainer : IUsersStateContainer
     public ConcurrentDictionary<string, string> UsersByConnectionId { get; } = new ConcurrentDictionary<string, string>();
 
     public event Action? OnChange;
-    public void Update(string connectionId, string? name)
+    public void AddOrUpdate(string connectionId, string? name)
     {
         UsersByConnectionId.AddOrUpdate(connectionId, name??String.Empty, (key, oldValue) => name??String.Empty);
         NotifyStateChanged();

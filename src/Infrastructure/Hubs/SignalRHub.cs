@@ -14,8 +14,8 @@ public interface ISignalRHub
     Task Completed(string message);
     Task SendMessage(string from, string message);
     Task SendPrivateMessage(string from, string to, string message);
-    Task Disconnect(string userId);
-    Task Connect(string userId);
+    Task Disconnect(string connectionId, string userName);
+    Task Connect(string connectionId, string userName);
     Task SendNotification(string message);
 }
 
@@ -26,19 +26,19 @@ public class SignalRHub : Hub<ISignalRHub>
 
     public override async Task OnConnectedAsync()
     {
-        var id = Context.ConnectionId;
+        var connectionId = Context.ConnectionId;
         var username = Context.User?.Identity?.Name ?? string.Empty;
-        if (!OnlineUsers.ContainsKey(id)) OnlineUsers.TryAdd(id, username);
+        if (!OnlineUsers.ContainsKey(connectionId)) OnlineUsers.TryAdd(connectionId, username);
 
-        await Clients.All.Connect(username);
+        await Clients.All.Connect(connectionId,username);
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var id = Context.ConnectionId;
+        var connectionId = Context.ConnectionId;
         //try to remove key from dictionary
-        if (OnlineUsers.TryRemove(id, out var username)) await Clients.All.Disconnect(username);
+        if (OnlineUsers.TryRemove(connectionId, out var username)) await Clients.All.Disconnect(connectionId,username);
 
         await base.OnConnectedAsync();
     }

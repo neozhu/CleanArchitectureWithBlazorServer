@@ -9,7 +9,7 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
 {
     private bool _commandPaletteOpen;
     private HotKeysContext? _hotKeysContext;
-    private bool _sideMenuDrawerOpen = true;
+    private bool _navigationMenuDrawerOpen = true;
     private UserPreferences _userPreferences = new();
     [Inject]
     private LayoutService LayoutService { get; set; } = null!;
@@ -59,17 +59,17 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
 
 
 
-    protected void SideMenuDrawerOpenChangedHandler(bool state)
+    protected void NavigationMenuDrawerOpenChangedHandler(bool state)
     {
-        _sideMenuDrawerOpen = state;
+        _navigationMenuDrawerOpen = state;
     }
     protected void ThemingDrawerOpenChangedHandler(bool state)
     {
         _themingDrawerOpen = state;
     }
-    protected void ToggleSideMenuDrawer()
+    protected void ToggleNavigationMenuDrawer()
     {
-        _sideMenuDrawerOpen = !_sideMenuDrawerOpen;
+        _navigationMenuDrawerOpen = !_navigationMenuDrawerOpen;
     }
     private async Task OpenCommandPalette()
     {

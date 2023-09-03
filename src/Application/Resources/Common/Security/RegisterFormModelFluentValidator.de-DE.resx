@@ -117,25 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Your password cannot be empty" xml:space="preserve">
-    <value>Ihr Passwort darf nicht leer sein</value>
+  <data name="CannotBeEmpty" xml:space="preserve">
+      <value>Ihr Passwort darf nicht leer sein</value>
   </data>
-  <data name="Your password length must be at least 6." xml:space="preserve">
-    <value>Die Länge Ihres Passworts muss mindestens 6 betragen.</value>
+  <data name="MaxLength" xml:space="preserve">
+      <value>Ihr Passwort darf nicht länger als {0} Zeichen sein.</value>
   </data>
-  <data name="Your password length must not exceed 16." xml:space="preserve">
-    <value>Die Länge Ihres Passworts darf 16 nicht überschreiten.</value>
+  <data name="MinLength" xml:space="preserve">
+      <value>Ihr Passwort muss mindestens {0} Zeichen lang sein</value>
   </data>
-  <data name="Your password must contain at least one (@!? *.)." xml:space="preserve">
-    <value>Ihr Passwort muss mindestens ein (@!? *.) enthalten.</value>
+  <data name="MustContainAlphanumericCharacter" xml:space="preserve">
+      <value>Ihr Passwort muss ein alphanumerisches Zeichen enthalten</value>
   </data>
-  <data name="Your password must contain at least one lowercase letter." xml:space="preserve">
-    <value>Ihr Passwort muss mindestens einen Kleinbuchstaben enthalten.</value>
+  <data name="MustContainDigit" xml:space="preserve">
+      <value>Ihr Passwort muss eine Ziffer enthalten</value>
   </data>
-  <data name="Your password must contain at least one number." xml:space="preserve">
-    <value>Ihr Passwort muss mindestens eine Zahl enthalten.</value>
+  <data name="MustContainUpperCase" xml:space="preserve">
+      <value>Ihr Passwort muss mindestens einen Großbuchstaben enthalten.</value>
   </data>
-  <data name="Your password must contain at least one uppercase letter." xml:space="preserve">
-    <value>Ihr Passwort muss mindestens einen Großbuchstaben enthalten.</value>
+  <data name="MustContainLowerCase" xml:space="preserve">
+      <value>Ihr Passwort muss mindestens einen Kleinbuchstaben enthalten.</value>
   </data>
 </root>
