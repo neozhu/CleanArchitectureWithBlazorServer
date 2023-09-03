@@ -19,7 +19,7 @@ public class ApplicationRoleDto
 
     [Description("Description")] public string? Description { get; set; }
 
-    [Description("Tenant Type")] public byte TenantType { get; set; } = (byte)Domain.Enums.TenantType.Patient;
+    [Description("Tenant Type")] public byte TenantType { get; set; } = (byte)Domain.Enums.TenantTypeEnum.Patient;
     public byte Level { get; set; } = 1;
 
     private class Mapping : Profile

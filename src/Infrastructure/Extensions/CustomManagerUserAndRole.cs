@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Linq.Dynamic.Core;
-using CleanArchitecture.Blazor.Application.Constants.Role;
+ 
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -35,7 +35,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     }
     public async Task<IdentityResult> CreateWithDefaultRolesAsync(ApplicationUser user, string tenantId = null, string password = null)
     {
-        return await CreateAsync(user, new List<string> { RoleName.DefaultRole1 }, tenantId, password);
+        return await CreateAsync(user, new List<string> { RoleNamesEnum.DefaultRole1.ToString() }, tenantId, password);
     }
     public override async Task<ApplicationUser?> FindByIdAsync(string userId)
     {
@@ -171,7 +171,7 @@ public class CustomRoleManager : RoleManager<ApplicationRole>
        // _dbContext = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
     }
 
-    public async Task<ApplicationRole> FindByNameAsync(string roleName, TenantType type)
+    public async Task<ApplicationRole> FindByNameAsync(string roleName, TenantTypeEnum type)
     {
         return await FindByNameAsync(roleName, (byte)type);
     }

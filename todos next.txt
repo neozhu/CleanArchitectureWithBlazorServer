@@ -1,4 +1,3 @@
-replace RolesEnum by brolename 
 then permissions
 AspNetRoles extend createasync to add Level parameter also
 

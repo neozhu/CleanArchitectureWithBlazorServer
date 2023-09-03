@@ -1,5 +1,6 @@
 using Blazor.Server.UI.Models.NavigationMenu;
-using CleanArchitecture.Blazor.Application.Constants.Role;
+ 
+using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace Blazor.Server.UI.Services.Navigation;
 
@@ -38,7 +39,7 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Analytics",
-                    Roles = new[] { RoleName.RootAdmin, RoleName.HospitalAdmin,RoleName.ElevateAdminGroup,RoleName.ElevateAdminViewers },
+                    Roles = new[] { RoleNamesEnum.RootAdmin.ToString() , RoleNamesEnum.HospitalAdmin.ToString(), RoleNamesEnum.ElevateAdminGroup.ToString(), RoleNamesEnum.ElevateAdminViewers.ToString() },
                     Icon = Icons.Material.Filled.Analytics,
                     Href = "/analytics",
                     PageStatus = PageStatus.ComingSoon
@@ -46,7 +47,7 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Banking",
-                    Roles = new[] { RoleName.RootAdmin, RoleName.HospitalAdmin,RoleName.ElevateAdminGroup,RoleName.ElevateAdminViewers },
+                    Roles = new[] { RoleNamesEnum.RootAdmin.ToString() , RoleNamesEnum.HospitalAdmin.ToString(), RoleNamesEnum.ElevateAdminGroup.ToString(), RoleNamesEnum.ElevateAdminViewers.ToString() },
                     Icon = Icons.Material.Filled.Money,
                     Href = "/banking",
                     PageStatus = PageStatus.ComingSoon
@@ -54,7 +55,7 @@ public class MenuService : IMenuService
                 new()
                 {
                     Title = "Booking",
-                    Roles = new[] { RoleName.RootAdmin, RoleName.HospitalAdmin,RoleName.ElevateAdminGroup,RoleName.ElevateAdminViewers },
+                    Roles = new[] { RoleNamesEnum.RootAdmin.ToString() , RoleNamesEnum.HospitalAdmin.ToString(), RoleNamesEnum.ElevateAdminGroup.ToString(), RoleNamesEnum.ElevateAdminViewers.ToString() },
                     Icon = Icons.Material.Filled.CalendarToday,
                     Href = "/booking",
                     PageStatus = PageStatus.ComingSoon
@@ -64,7 +65,7 @@ public class MenuService : IMenuService
         new MenuSectionModel
         {
             Title = "MANAGEMENT",
-            Roles = new[] { RoleName.RootAdmin, RoleName.HospitalAdmin,RoleName.ElevateAdminGroup,RoleName.ElevateAdminViewers },
+            Roles = new[] { RoleNamesEnum.RootAdmin.ToString() , RoleNamesEnum.HospitalAdmin.ToString(), RoleNamesEnum.ElevateAdminGroup.ToString(), RoleNamesEnum.ElevateAdminViewers.ToString() },
             SectionItems = new List<MenuSectionItemModel>
             {
                 new()

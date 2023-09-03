@@ -2,7 +2,7 @@
 using CleanArchitecture.Blazor.Application.Constants;
 using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Application.Constants.Permission;
-using CleanArchitecture.Blazor.Application.Constants.Role;
+ 
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
 
@@ -137,8 +137,8 @@ public class ApplicationDbContextInitializer
 
         // Default users
         var defaultGoogleUsers = new List<(string email, string role)>()
-       {("madhusudhan.veerabhadrappa@gmail.com",RoleName.RootAdmin),("vmadhu203@gmail.com",RoleName.ElevateAdminGroup)
-       ,("vmadhu2023@gmail.com",RoleName.HospitalAdmin)
+       {("madhusudhan.veerabhadrappa@gmail.com",RoleNamesEnum.RootAdmin.ToString()),("vmadhu203@gmail.com",RoleNamesEnum.ElevateAdminGroup.ToString())
+       ,("vmadhu2023@gmail.com",RoleNamesEnum.HospitalAdmin.ToString())
        };
 
         foreach (var (email, role) in defaultGoogleUsers)

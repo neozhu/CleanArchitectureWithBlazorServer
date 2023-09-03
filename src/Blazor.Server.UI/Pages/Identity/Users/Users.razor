@@ -4,7 +4,7 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Constants.ClaimTypes
-@using CleanArchitecture.Blazor.Application.Constants.Role
+ 
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
 @using Blazor.Server.UI.Pages.Identity.Roles
 @using BlazorDownloadFile
@@ -438,7 +438,7 @@
         }
     private async Task OnCreate()
         {
-        var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleName.DefaultRole1 } };
+        var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleNamesEnum.DefaultRole1.ToString() } };
         var parameters = new DialogParameters {
             { nameof(_UserFormDialog.Model),model }
            };

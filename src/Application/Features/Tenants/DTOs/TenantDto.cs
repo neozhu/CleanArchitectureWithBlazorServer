@@ -13,7 +13,7 @@ public class TenantDto
     [Description("Tenant Name")] public string? Name { get; set; }
 
     [Description("Description")] public string? Description { get; set; }
-    [Description("Tenant Type")] public byte Type { get; set; } = (byte)TenantType.Patient;
+    [Description("Tenant Type")] public byte Type { get; set; } = (byte)TenantTypeEnum.Patient;
 
     private class Mapping : Profile
     {

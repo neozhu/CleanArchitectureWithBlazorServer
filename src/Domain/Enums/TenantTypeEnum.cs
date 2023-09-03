@@ -2,7 +2,7 @@
 
 namespace CleanArchitecture.Blazor.Domain.Enums;
 
-public enum TenantType : byte
+public enum TenantTypeEnum : byte
 {
     Rejected = 0,
     [Description(nameof(Guest))]
