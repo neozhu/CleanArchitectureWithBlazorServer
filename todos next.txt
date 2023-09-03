@@ -1,3 +1,4 @@
+think:::Its better parking permissions based for now and proceeding with role based
 then permissions
 AspNetRoles extend createasync to add Level parameter also
 
