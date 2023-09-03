@@ -117,25 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Your password cannot be empty" xml:space="preserve">
-    <value>La teva contrasenya no pot estar buida</value>
+  <data name="CannotBeEmpty" xml:space="preserve">
+      <value>La vostra contrasenya no pot estar buida</value>
   </data>
-  <data name="Your password length must be at least 6." xml:space="preserve">
-    <value>La longitud de la seva contrasenya ha de ser d'almenys 6.</value>
+  <data name="MaxLength" xml:space="preserve">
+      <value>La vostra contrasenya no ha de superar els {0} caràcters.</value>
   </data>
-  <data name="Your password length must not exceed 16." xml:space="preserve">
-    <value>La longitud de la seva contrasenya no pot ser superior a 16.</value>
+  <data name="MinLength" xml:space="preserve">
+      <value>La vostra contrasenya ha de tenir com a mínim {0} caràcters</value>
   </data>
-  <data name="Your password must contain at least one (@!? *.)." xml:space="preserve">
-    <value>La seva contrasenya ha de tenir almenys una (@!? *.).</value>
+  <data name="MustContainAlphanumericCharacter" xml:space="preserve">
+      <value>La vostra contrasenya ha de contenir un caràcter alfanumèric</value>
   </data>
-  <data name="Your password must contain at least one lowercase letter." xml:space="preserve">
-    <value>La seva contrasenya ha de tenir almenys una lletra minúscula.</value>
+  <data name="MustContainDigit" xml:space="preserve">
+      <value>La vostra contrasenya ha de contenir un dígit</value>
   </data>
-  <data name="Your password must contain at least one number." xml:space="preserve">
-    <value>La seva contrasenya ha de tenir almenys un número.</value>
+  <data name="MustContainUpperCase" xml:space="preserve">
+      <value>La vostra contrasenya ha de contenir almenys una lletra majúscula.</value>
   </data>
-  <data name="Your password must contain at least one uppercase letter." xml:space="preserve">
-    <value>La seva contrasenya ha de tenir almenys una lletra majúscula.</value>
+  <data name="MustContainLowerCase" xml:space="preserve">
+      <value>La vostra contrasenya ha de contenir almenys una lletra minúscula.</value>
   </data>
 </root>

@@ -1,5 +1,5 @@
-@using Blazor.Server.UI.Models.NavigationMenu;
 @inject IStringLocalizer<NavigationMenu> L
+@using Blazor.Server.UI.Models.NavigationMenu
 @inherits FluxorComponent
 <MudDrawer Breakpoint="Breakpoint.Md"
            Class="side-menu"
@@ -11,7 +11,7 @@
         <MudIcon Class="ml-6 mr-2"
                  Color="Color.Primary"
                  Icon="@Icons.Custom.Brands.MudBlazor"
-                 Size="Size.Large" />
+                 Size="Size.Large"/>
         <MudText Typo="Typo.subtitle2">
             <b>@L[Settings.AppName]</b>
         </MudText>
@@ -21,12 +21,12 @@
     {
         <div class="mx-3">
             <MudButton Class="d-flex justify-start my-3 user-button"
-                   FullWidth="true">
+                       FullWidth="true">
                 <ChildContent>
                     <MudStack Row="true">
                         @if (IsLoading)
                         {
-                            <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+                            <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true"/>
                         }
                         else
                         {
@@ -37,9 +37,9 @@
                                 }
                                 else
                                 {
-                                <MudImage Src="@UserProfile?.ProfilePictureDataUrl"></MudImage>
+                                    <MudImage Src="@UserProfile?.ProfilePictureDataUrl"></MudImage>
                                 }
-                                
+
                             </MudAvatar>
                         }
                         <MudStack Justify="Justify.SpaceBetween" Spacing="0">
@@ -71,11 +71,11 @@
     <MudNavMenu>
         @foreach (var section in MenuSections.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
         {
-            @if(section is not null)
+            @if (section is not null)
             {
                 @if (DrawerOpen)
                 {
-                    <div class="@(LayoutService.IsRTL? "mr-6":"ml-6") my-3">
+                    <div class="@(LayoutService.IsRTL ? "mr-6" : "ml-6") my-3">
                         <MudText Typo="Typo.caption">
                             <b>
                                 @(L[section.Title])
@@ -83,12 +83,12 @@
                         </MudText>
                     </div>
                 }
-                
+
                 @if (section.SectionItems is not null)
                 {
                     @foreach (var sectionItem in section.SectionItems.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
                     {
-                        @if (sectionItem.IsParent && sectionItem.MenuItems is not null)
+                        @if (sectionItem is { IsParent: true, MenuItems: not null })
                         {
                             <MudNavGroup Icon="@sectionItem.Icon" Title="@L[sectionItem.Title]" Expanded="Expanded(sectionItem)">
                                 @foreach (var menuItem in sectionItem.MenuItems.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
@@ -100,7 +100,7 @@
                                                 @(L[menuItem.Title])
                                                 @if (menuItem.PageStatus != PageStatus.Completed)
                                                 {
-                                                    <MudSpacer />
+                                                    <MudSpacer/>
                                                     <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
                                                         @(L[menuItem.PageStatus.GetDescription()])
                                                     </MudChip>
@@ -118,7 +118,7 @@
                                     @(L[sectionItem.Title])
                                     @if (sectionItem.PageStatus != PageStatus.Completed)
                                     {
-                                        <MudSpacer />
+                                        <MudSpacer/>
                                         <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
                                             @(L[sectionItem.PageStatus.GetDescription()])
                                         </MudChip>
@@ -167,7 +167,6 @@
             border-left: 1px solid var(--mud-palette-table-lines)
         }  
     </style>
-    
 }
 else
 {
@@ -181,4 +180,3 @@ else
         }
     </style>
 }
-
