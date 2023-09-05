@@ -1,8 +1,8 @@
-think:::Its better parking permissions based for now and proceeding with role based
-then permissions
-AspNetRoles extend createasync to add Level parameter also
+0>Permissions structure had to be added
+1>Users Edit page,fetch users based upon logged in user tenant & role
+2>Only root admin will have permission to add to add roles
+3>For patient/leaf level roles no separate claims stored,remaining all will be with asusual userclaims
 
-DefaultTenantStructure created ,need to apply in db
             Users page, load tenants which are allowed to me ...
 ---------------on change load based on UserRoles table,rather Users table
 
