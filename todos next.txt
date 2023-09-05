@@ -1,3 +1,9 @@
+Actions:
+Patient add,edit,delete,view,edit insurance,transactionofHospital
+Prescription add,edit,view
+All ROles Add,edit,view,delete
+
+
 0>Permissions structure had to be added
 1>Users Edit page,fetch users based upon logged in user tenant & role
 2>Only root admin will have permission to add to add roles
