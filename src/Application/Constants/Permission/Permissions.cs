@@ -5,6 +5,15 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission;
 
 public static class Permissions
 {
+    /*
+    public const string PatientView = "Permissions.Patient.View";
+    public const string PatientCreate = "Permissions.Patient.Create";
+    public const string PatientEdit = "Permissions.Patient.Edit";
+    public const string PatientDelete = "Permissions.Patient.Delete";
+    public const string PatientSearch = "Permissions.Patient.Search";
+    public const string PatientExport = "Permissions.Patient.Export";
+    public const string PatientImport = "Permissions.Patient.Import";*/
+
     [DisplayName("AuditTrails")]
     [Description("AuditTrails Permissions")]
     public static class AuditTrails
