@@ -8,6 +8,8 @@
 
 7>Prescription structure ,view rightsand all
 8>Insurance and other additional details
+9>Cost,initial 30days free, then 2 options like use ondemand or use subscription
+10>
 
             Users page, load tenants which are allowed to me ...
 ---------------on change load based on UserRoles table,rather Users table
