@@ -1,6 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Security;
+using Microsoft.IdentityModel.Tokens;
+
 namespace CleanArchitecture.Blazor.Application.Constants.Permission;
 
 public static class Permissions
@@ -31,7 +34,7 @@ public static class Permissions
         public const string Export = "Permissions.Logs.Export";
         public const string Purge = "Permissions.Logs.Purge";
     }
-    
+
 
     [DisplayName("Products")]
     [Description("Products Permissions")]
@@ -181,6 +184,100 @@ public static class Permissions
                 permissions.Add((string)propertyValue);
         }
         return permissions;
+    }
+
+    public class RootAdmin
+    {
+        public class ElevateAdminGroup
+        {
+            static RoleAndPermission patient = new(RoleNamesEnum.Patient);
+            static RoleAndPermission pharmacists = new(RoleNamesEnum.Pharmacists);
+            static RoleAndPermission pharmacy = new(RoleNamesEnum.Pharmacy);
+            static RoleAndPermission diagnostics = new(RoleNamesEnum.Diagnostics);
+            static RoleAndPermission diagnosticCenter = new(RoleNamesEnum.DiagnosticCenter);
+            static RoleAndPermission viewerHospital = new(RoleNamesEnum.ViewerHospital);
+            static RoleAndPermission nurse = new(RoleNamesEnum.Nurse);
+            static RoleAndPermission doctorAssistant = new(RoleNamesEnum.DoctorAssistant);
+            static RoleAndPermission doctor = new(RoleNamesEnum.Doctor);
+            static RoleAndPermission doctorHOD = new(RoleNamesEnum.DoctorHOD);
+            static RoleAndPermission hospitalAdmin = new(RoleNamesEnum.HospitalAdmin);
+            static RoleAndPermission hospital = new(RoleNamesEnum.Hospital);
+            static RoleAndPermission elevateAdminViewers = new(RoleNamesEnum.ElevateAdminViewers);
+            static RoleAndPermission elevateAdminGroup = new(RoleNamesEnum.ElevateAdminGroup);
+            static RoleAndPermission rootAdmin = new(RoleNamesEnum.RootAdmin);
+
+            public class ElevateAdminViewers
+            {
+                public class Hospital
+                {
+                    public class HospitalAdmin
+                    {
+                        public class DoctorHOD
+                        {
+                            public class Doctor
+                            {
+                                public class DoctorAssistant
+                                {
+                                    public class Nurse
+                                    {
+                                        public class ViewerHospital
+                                        {
+                                            public class DiagnosticCenter
+                                            {
+                                                public class Diagnostics
+                                                {
+                                                    public class Pharmacy
+                                                    {
+                                                        public const string PatientCreate = "Permissions.Patients.Create";
+                                                        public class Pharmacists
+                                                        {
+                                                            public const string PatientCreate = "Permissions.Patients.Create";
+                                                            public class Patient
+                                                            {
+                                                                public string PatientCreateLimited = patient.ToString(PermissionsEnum.Create);
+                                                                public string PatientEdit = patient.ToString(PermissionsEnum.Update);//allows upto base limit & only self created 
+                                                                public string PatientDelete = patient.ToString(PermissionsEnum.Delete);//allows upto base limit & only self created 
+                                                                                                                                       //bills,prescriptions,transactions +can see all doctors,hospitals,diagnostics,pharmacy
+                                                                public static class AllRegisteredUser
+                                                                {
+                                                                    //can see all doctors,hospitals,diagnostics,pharmacy
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public class RoleAndPermission
+    {
+        private RoleNamesEnum Role { get; set; }
+        private PermissionsEnum? Permission { get; set; } = null;
+        public RoleAndPermission(RoleNamesEnum _role)
+        {
+            Role = _role;
+        }
+        public RoleAndPermission(RoleNamesEnum _role, PermissionsEnum _permission)
+        {
+            Role = _role;
+            Permission = _permission;
+        }
+        public string ToString(PermissionsEnum permission)
+        {
+            return Role.ToString() + permission.ToString();
+        }
+        public override string? ToString()
+        {
+            return Permission == null ? null : Role.ToString() + Permission.ToString();
+        }
     }
 
 
