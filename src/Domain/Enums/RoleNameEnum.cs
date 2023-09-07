@@ -10,7 +10,7 @@ public enum RoleNamesEnum : byte
 {
     RootAdmin = 50,
     ElevateAdminGroup = 45,
-    ElevateAdminViewers = 41,
+    ElevateAdminViewer = 41,
 
     Hospital = 30,
     HospitalAdmin = 29,
@@ -21,10 +21,10 @@ public enum RoleNamesEnum : byte
     ViewerHospital = 21,
 
     DiagnosticCenter = 20,
-    Diagnostics = 16,
+    Diagnostic = 16,
 
     Pharmacy = 15,
-    Pharmacists = 11,
+    Pharmacist = 11,
 
     Patient = 4,
 
@@ -38,6 +38,8 @@ public enum RoleNamesEnum : byte
 }
 public enum PermissionsEnum : byte
 {
+    Assign,
+    UnAssign,
     Read,
     Create,
     Update,

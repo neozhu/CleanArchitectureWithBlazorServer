@@ -191,9 +191,9 @@ public static class Permissions
         public class ElevateAdminGroup
         {
             static RoleAndPermission patient = new(RoleNamesEnum.Patient);
-            static RoleAndPermission pharmacists = new(RoleNamesEnum.Pharmacists);
+            static RoleAndPermission pharmacist = new(RoleNamesEnum.Pharmacist);
             static RoleAndPermission pharmacy = new(RoleNamesEnum.Pharmacy);
-            static RoleAndPermission diagnostics = new(RoleNamesEnum.Diagnostics);
+            static RoleAndPermission diagnostic = new(RoleNamesEnum.Diagnostic);
             static RoleAndPermission diagnosticCenter = new(RoleNamesEnum.DiagnosticCenter);
             static RoleAndPermission viewerHospital = new(RoleNamesEnum.ViewerHospital);
             static RoleAndPermission nurse = new(RoleNamesEnum.Nurse);
@@ -202,7 +202,7 @@ public static class Permissions
             static RoleAndPermission doctorHOD = new(RoleNamesEnum.DoctorHOD);
             static RoleAndPermission hospitalAdmin = new(RoleNamesEnum.HospitalAdmin);
             static RoleAndPermission hospital = new(RoleNamesEnum.Hospital);
-            static RoleAndPermission elevateAdminViewers = new(RoleNamesEnum.ElevateAdminViewers);
+            static RoleAndPermission elevateAdminViewer = new(RoleNamesEnum.ElevateAdminViewer);
             static RoleAndPermission elevateAdminGroup = new(RoleNamesEnum.ElevateAdminGroup);
             static RoleAndPermission rootAdmin = new(RoleNamesEnum.RootAdmin);
 
@@ -228,13 +228,18 @@ public static class Permissions
                                                 {
                                                     public class PharmacyPermissions
                                                     {
+                                                        public string pharmacistUnAssign = pharmacist.ToString(PermissionsEnum.UnAssign);
+
+                                                        public string pharmacyAssign = pharmacy.ToString(PermissionsEnum.Assign);
+                                                        public string pharmacyCreate = pharmacy.ToString(PermissionsEnum.Create);
+                                                        public string pharmacyEdit = pharmacy.ToString(PermissionsEnum.Update);
                                                         public class PharmacistsPermissions //any more equivalent roles like attendants,operators all can be added here
                                                         {
                                                             //here almost all reading 
                                                             public string PatientRead = patient.ToString(PermissionsEnum.Read);
-                                                            public string PharmacistsRead = pharmacists.ToString(PermissionsEnum.Read);
+                                                            public string PharmacistsRead = pharmacist.ToString(PermissionsEnum.Read);
                                                             public string PharmacyRead = pharmacy.ToString(PermissionsEnum.Read);
-                                                            public string DiagnosticsRead = diagnostics.ToString(PermissionsEnum.Read);
+                                                            public string DiagnosticsRead = diagnostic.ToString(PermissionsEnum.Read);
                                                             public string DiagnosticCenterRead = diagnosticCenter.ToString(PermissionsEnum.Read);
                                                             public string ViewerHospitalRead = viewerHospital.ToString(PermissionsEnum.Read);
                                                             public string NurseRead = nurse.ToString(PermissionsEnum.Read);
@@ -247,18 +252,19 @@ public static class Permissions
                                                             public string PatientCreate = patient.ToString(PermissionsEnum.Create);
                                                             public string PatientUpdate = patient.ToString(PermissionsEnum.Update);
 
-                                                            public string PharmacistsCreate = pharmacists.ToString(PermissionsEnum.Create);
-                                                            public string PharmacistsEdit = pharmacists.ToString(PermissionsEnum.Update);
+                                                            public string PharmacistsAssign = pharmacist.ToString(PermissionsEnum.Assign);
+                                                            public string PharmacistsCreate = pharmacist.ToString(PermissionsEnum.Create);
+                                                            public string PharmacistsEdit = pharmacist.ToString(PermissionsEnum.Update);
                                                             public class PatientPermissions
                                                             {
                                                                 public string PatientReadRestricted = patient.ToString(PermissionsEnum.ReadRestricted);
                                                                 public string PatientCreateRestricted = patient.ToString(PermissionsEnum.CreateRestricted);
                                                                 public string PatientEditRestricted = patient.ToString(PermissionsEnum.UpdateRestricted);//allows upto base limit & only self created 
                                                                 public string PatientDeleteRestricted = patient.ToString(PermissionsEnum.DeleteRestricted);//allows upto base limit & only self created 
-                                                                                                                                                           //bills,prescriptions,transactions +can see all doctors,hospitals,diagnostics,pharmacy
+                                                                                                                                                           //bills,prescriptions,transactions +can see all doctors,hospitals,diagnostic,pharmacy
                                                                 public static class AllRegisteredUserPermissions
                                                                 {
-                                                                    //can see all doctors,hospitals,diagnostics,pharmacy
+                                                                    //can see all doctors,hospitals,diagnostic,pharmacy
                                                                 }
                                                             }
                                                         }

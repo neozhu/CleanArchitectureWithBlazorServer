@@ -104,7 +104,7 @@ public class ApplicationDbContextInitializer
         /*
           await AddRoleAndPermissions(new ApplicationRole(RoleName.RootAdmin), permissions);
           await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminGroup), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminViewers), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminViewer), permissions);
 
           await AddRoleAndPermissions(new ApplicationRole(RoleName.Hospital), permissions);
           await AddRoleAndPermissions(new ApplicationRole(RoleName.HospitalAdmin), permissions);
@@ -115,10 +115,10 @@ public class ApplicationDbContextInitializer
           await AddRoleAndPermissions(new ApplicationRole(RoleName.ViewerHospital), permissions);
 
           await AddRoleAndPermissions(new ApplicationRole(RoleName.DiagnosticCenter), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.Diagnostics), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.Diagnostic), permissions);
 
           await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacy), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacists), permissions);
+          await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacist), permissions);
 
           await AddRoleAndPermissions(new ApplicationRole(RoleName.Patient), permissions);
           */

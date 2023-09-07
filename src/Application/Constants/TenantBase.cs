@@ -20,9 +20,9 @@ public class TenantBase
      new(TenantTypeEnum.Patient,new List<ApplicationRole>(){ new ApplicationRole(RoleNamesEnum.Patient)}),
     new(TenantTypeEnum.HospitalAndStaff,ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.Hospital,RoleNamesEnum.HospitalAdmin,
             RoleNamesEnum.Doctor,RoleNamesEnum.DoctorAssistant,RoleNamesEnum.Nurse,RoleNamesEnum.ViewerHospital },TenantTypeEnum.HospitalAndStaff)),
-    new(TenantTypeEnum.PharmacyAndStaff,ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.Pharmacy,RoleNamesEnum.Pharmacists},TenantTypeEnum.PharmacyAndStaff)),
-    new(TenantTypeEnum.DiagnosticsAndStaff, ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.DiagnosticCenter,RoleNamesEnum.Diagnostics},TenantTypeEnum.DiagnosticsAndStaff)),
-    new(TenantTypeEnum.Internal, ApplicationRole.CreateRolesForTenantType(new List < RoleNamesEnum >() { RoleNamesEnum.RootAdmin, RoleNamesEnum.ElevateAdminGroup, RoleNamesEnum.ElevateAdminViewers }, TenantTypeEnum.Internal))
+    new(TenantTypeEnum.PharmacyAndStaff,ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.Pharmacy,RoleNamesEnum.Pharmacist},TenantTypeEnum.PharmacyAndStaff)),
+    new(TenantTypeEnum.DiagnosticsAndStaff, ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.DiagnosticCenter,RoleNamesEnum.Diagnostic},TenantTypeEnum.DiagnosticsAndStaff)),
+    new(TenantTypeEnum.Internal, ApplicationRole.CreateRolesForTenantType(new List < RoleNamesEnum >() { RoleNamesEnum.RootAdmin, RoleNamesEnum.ElevateAdminGroup, RoleNamesEnum.ElevateAdminViewer }, TenantTypeEnum.Internal))
             };
         return defaultTenantStructure1;
         //}
