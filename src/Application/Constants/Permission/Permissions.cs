@@ -306,3 +306,12 @@ public static class Permissions
 
 
 }
+
+public class RolePermissions
+{
+    public int Id { get; set; }
+    public RoleNamesEnum RoleNameEnum { get; set; }
+
+    public List<string>? Permissions { get; set; }
+    public RolePermissions? SubPermissions { get; set; }
+}
