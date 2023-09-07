@@ -36,10 +36,14 @@ public enum RoleNamesEnum : byte
     //public const string Basic =nameof(Basic);
     //public const string Users =nameof(Users);
 }
-public enum PermissionsEnum:byte
-{ 
-Read,
-Create,
-Update,
-Delete,
+public enum PermissionsEnum : byte
+{
+    Read,
+    Create,
+    Update,
+    Delete,
+    ReadRestricted,
+    CreateRestricted,
+    UpdateRestricted,
+    DeleteRestricted
 }

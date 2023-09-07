@@ -206,39 +206,57 @@ public static class Permissions
             static RoleAndPermission elevateAdminGroup = new(RoleNamesEnum.ElevateAdminGroup);
             static RoleAndPermission rootAdmin = new(RoleNamesEnum.RootAdmin);
 
-            public class ElevateAdminViewers
+            public class ElevateAdminViewersPermissions
             {
-                public class Hospital
+                public class HospitalPermissions
                 {
-                    public class HospitalAdmin
+                    public class HospitalAdminPermissions
                     {
-                        public class DoctorHOD
+                        public class DoctorHODPermissions
                         {
-                            public class Doctor
+                            public class DoctorPermissions
                             {
-                                public class DoctorAssistant
+                                public class DoctorAssistantPermissions
                                 {
-                                    public class Nurse
+                                    public class NursePermissions
                                     {
-                                        public class ViewerHospital
+                                        public class ViewerHospitalPermissions
                                         {
-                                            public class DiagnosticCenter
+                                            public class DiagnosticCenterPermissions
                                             {
-                                                public class Diagnostics
+                                                public class DiagnosticsPermissions
                                                 {
-                                                    public class Pharmacy
+                                                    public class PharmacyPermissions
                                                     {
-                                                        public const string PatientCreate = "Permissions.Patients.Create";
-                                                        public class Pharmacists
+                                                        public class PharmacistsPermissions //any more equivalent roles like attendants,operators all can be added here
                                                         {
-                                                            public const string PatientCreate = "Permissions.Patients.Create";
-                                                            public class Patient
+                                                            //here almost all reading 
+                                                            public string PatientRead = patient.ToString(PermissionsEnum.Read);
+                                                            public string PharmacistsRead = pharmacists.ToString(PermissionsEnum.Read);
+                                                            public string PharmacyRead = pharmacy.ToString(PermissionsEnum.Read);
+                                                            public string DiagnosticsRead = diagnostics.ToString(PermissionsEnum.Read);
+                                                            public string DiagnosticCenterRead = diagnosticCenter.ToString(PermissionsEnum.Read);
+                                                            public string ViewerHospitalRead = viewerHospital.ToString(PermissionsEnum.Read);
+                                                            public string NurseRead = nurse.ToString(PermissionsEnum.Read);
+                                                            public string DoctorAssistantRead = doctorAssistant.ToString(PermissionsEnum.Read);
+                                                            public string DoctorRead = doctor.ToString(PermissionsEnum.Read);
+                                                            public string DoctorHODRead = doctorHOD.ToString(PermissionsEnum.Read);
+                                                            public string HospitalAdminRead = hospitalAdmin.ToString(PermissionsEnum.Read);
+                                                            public string HospitalRead = hospital.ToString(PermissionsEnum.Read);
+
+                                                            public string PatientCreate = patient.ToString(PermissionsEnum.Create);
+                                                            public string PatientUpdate = patient.ToString(PermissionsEnum.Update);
+
+                                                            public string PharmacistsCreate = pharmacists.ToString(PermissionsEnum.Create);
+                                                            public string PharmacistsEdit = pharmacists.ToString(PermissionsEnum.Update);
+                                                            public class PatientPermissions
                                                             {
-                                                                public string PatientCreateLimited = patient.ToString(PermissionsEnum.Create);
-                                                                public string PatientEdit = patient.ToString(PermissionsEnum.Update);//allows upto base limit & only self created 
-                                                                public string PatientDelete = patient.ToString(PermissionsEnum.Delete);//allows upto base limit & only self created 
-                                                                                                                                       //bills,prescriptions,transactions +can see all doctors,hospitals,diagnostics,pharmacy
-                                                                public static class AllRegisteredUser
+                                                                public string PatientReadRestricted = patient.ToString(PermissionsEnum.ReadRestricted);
+                                                                public string PatientCreateRestricted = patient.ToString(PermissionsEnum.CreateRestricted);
+                                                                public string PatientEditRestricted = patient.ToString(PermissionsEnum.UpdateRestricted);//allows upto base limit & only self created 
+                                                                public string PatientDeleteRestricted = patient.ToString(PermissionsEnum.DeleteRestricted);//allows upto base limit & only self created 
+                                                                                                                                                           //bills,prescriptions,transactions +can see all doctors,hospitals,diagnostics,pharmacy
+                                                                public static class AllRegisteredUserPermissions
                                                                 {
                                                                     //can see all doctors,hospitals,diagnostics,pharmacy
                                                                 }
@@ -272,11 +290,11 @@ public static class Permissions
         }
         public string ToString(PermissionsEnum permission)
         {
-            return Role.ToString() + permission.ToString();
+            return permission == PermissionsEnum.Delete ? string.Empty : Role.ToString() + permission.ToString();
         }
-        public override string? ToString()
+        public override string ToString()
         {
-            return Permission == null ? null : Role.ToString() + Permission.ToString();
+            return (Permission == null || Permission == PermissionsEnum.Delete) ? string.Empty : Role.ToString() + Permission.ToString();
         }
     }
 
