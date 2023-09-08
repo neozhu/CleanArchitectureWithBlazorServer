@@ -1,3 +1,4 @@
+Each fetch should verify is approved/active otherwise no like dodctor
 Actions:
 Patient add,edit,delete,view,edit insurance,transactionofHospital
 Prescription add,edit,view

@@ -327,13 +327,15 @@ public class RolePermissions
     {
         SubRoles = subRoles;
     }
+    public RolePermissions(r roleNameEnum, List<p> permissions, params RolePermissions[] subRoles)
+    : this(roleNameEnum, permissions.Select(x => x.ToString()).ToList()) { SubRoles = subRoles.ToList(); }
     public RolePermissions(r roleNameEnum, params RolePermissions[] subRoles) : this(roleNameEnum, subRoles.ToList()) { }
 
-    //public RolePermissions(r roleNameEnum, List<string> permissions, List<RolePermissions> subRoles)
-    //    : this(roleNameEnum, permissions)
-    //{
-    //    SubRoles = subRoles;
-    //}
+    public RolePermissions(r roleNameEnum, List<string> permissions, List<RolePermissions> subRoles)
+        : this(roleNameEnum, permissions)
+    {
+        SubRoles = subRoles;
+    }
     public RolePermissions(r roleNameEnum, List<p>? permissions, List<RolePermissions> subRoles)
        : this(roleNameEnum, permissions?.Select(x => x.ToString()).ToList()) { SubRoles = subRoles; }
     public int Id { get; set; }
@@ -381,6 +383,18 @@ public class RolePermissions
 
 public class Perms
 {
-    public static RolePermissions HospitalRolePermissions = new(r.Hospital, new RolePermissions(r.HospitalAdmin, new RolePermissions(r.DoctorHOD)));
-    public RolePermissions RootRolePermissions = new(r.RootAdmin,new RolePermissions(r.ElevateAdminGroup,new RolePermissions(r.ElevateAdminViewer, HospitalRolePermissions!)));
+    internal static RoleNamesEnum[] AllRoles = (RoleNamesEnum[])Enum.GetValues(typeof(RoleNamesEnum));
+    public static List<RoleNamesEnum> CommonReadRoles = AllRoles.Where(e => (byte)e >= (byte)RoleNamesEnum.Patient && (int)e <= (byte)RoleNamesEnum.Hospital).ToList();
+    public static List<string> CommonReadPermissions = RP(CommonReadRoles, p.Read);
+    public static RolePermissions PharmacyPermissions = new(r.Pharmacy, CommonReadPermissions, new List<RolePermissions>() { new(r.Pharmacist) });
+    public static RolePermissions DiagnosticCenterPermissions = new(r.DiagnosticCenter, new RolePermissions(r.Diagnostic));
+    public static RolePermissions HospitalRolePermissions = new(r.Hospital, new RolePermissions(r.HospitalAdmin, new RolePermissions(r.DoctorHOD, new RolePermissions(r.Doctor, new RolePermissions(r.DoctorAssistant, new RolePermissions(r.Nurse, new RolePermissions(r.ViewerHospital)))))));
+    public RolePermissions RootRolePermissions = new(r.RootAdmin, new RolePermissions(r.ElevateAdminGroup, new RolePermissions(r.ElevateAdminViewer, HospitalRolePermissions!)));
+    public static string RP(r role, p perm = p.Read) { return role.ToString() + perm.ToString(); }
+    public static List<string> RP(List<r> roles, p perm = p.Read)
+    {
+        List<string> result = new();
+        roles.ForEach(role => result.Add(role.ToString() + perm.ToString()));
+        return result;
+    }
 }
