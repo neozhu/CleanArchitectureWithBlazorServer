@@ -387,11 +387,13 @@ public static class Perms
     internal static r[] AllRoles = (RoleNamesEnum[])Enum.GetValues(typeof(r));
     public static List<r> CommonReadRoles = AllRoles.Where(e => e >= r.Pharmacist && e <= r.Hospital).ToList();
     public static List<string> CommonReadPermissions = RP(CommonReadRoles, p.Read);
-    public static List<string> PatientPermissions =AddPermissions(r.Patient,CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted);
+    public static List<string> PatientPermissions = AddPermissions(r.Patient, CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted);
+    public static List<string> PharmacistPermissions = AddPermissions(r.Pharmacist, CommonReadPermissions, createRoles);
+    public static List<string> PharmacyPermissions = AddPermissions(r.Pharmacy, PharmacistPermissions, createRoles).Concat(RP(r.Pharmacist,p.Assign,p.UnAssign)).ToList();
     //public static RolePermissions PatientPermissions = new(r.Patient, AddPermissions(r.Patient, CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted));
-    
-    public static RolePermissions PharmacistPermissions = new(r.Pharmacist,
-        AddPermissions(r.Pharmacist, AddPermissions(r.Patient, CommonReadPermissions, createRoles), createRoles));
+
+    //  public static RolePermissions PharmacistPermissions = new(r.Pharmacist,
+    //AddPermissions(r.Pharmacist, AddPermissions(r.Patient, CommonReadPermissions, createRoles), createRoles));
     public static RolePermissions PharmacyPermissions = new(r.Pharmacy,
         AddPermissions(r.Pharmacist,
         AddPermissions(r.Pharmacy, RolePermissions.GetPermissions(PharmacistPermissions), createRoles),
@@ -413,18 +415,22 @@ public static class Perms
         roles.ForEach(role => result.Add(role.ToString() + perm.ToString()));
         return result;
     }
-    public static List<string> RP(r role, params p[] permissions)
+    public static List<string> RP(r role, params string[] permissions)
     {
         List<string> result = new();
-        permissions.ForEach(p => result.Add(role.ToString() + p.ToString()));
+        permissions.ForEach(p => result.Add(role.ToString() + p));
         return result;
     }
-    public static List<string> AddPermissions(r role, List<string> existingPermissions, params p[] permissions)
+    public static List<string> RP(r role, params p[] permissions)
     {
-        return existingPermissions.Concat(RP(role, permissions)).ToList();
+        return RP(role, permissions.Select(x => x.ToString()).ToArray());
     }
-    public static List<string> AddPermissions(r role, RolePermissions baseRolePermissions, params p[] permissions)
+    public static List<string> AddPermissions(r role, List<string> existingPermissions, params p[] newPermissions)
     {
-        return baseRolePermissions.Permissions.Concat(RP(role, permissions)).ToList();
+        return existingPermissions.Concat(RP(role, newPermissions)).ToList();
+    }
+    public static List<string> AddPermissions(r role, RolePermissions baseRolePermissions, params p[] newPermissions)
+    {
+        return baseRolePermissions.Permissions.Concat(RP(role, newPermissions)).ToList();
     }
 }
