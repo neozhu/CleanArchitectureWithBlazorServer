@@ -265,8 +265,8 @@ public static class Permissions
                                                                 public string PatientReadRestricted = patient.ToString(PermissionsEnum.ReadRestricted);
                                                                 public string PatientCreateRestricted = patient.ToString(PermissionsEnum.CreateRestricted);
                                                                 public string PatientEditRestricted = patient.ToString(PermissionsEnum.UpdateRestricted);//allows upto base limit & only self created 
-                                                                public string PatientDeleteRestricted = patient.ToString(PermissionsEnum.DeleteRestricted);//allows upto base limit & only self created 
-                                                                                                                                                           //bills,prescriptions,transactions +can see all doctors,hospitals,diagnostic,pharmacy
+                                                                                                                                                         //   public string PatientDeleteRestricted = patient.ToString(PermissionsEnum.DeleteRestricted);//allows upto base limit & only self created 
+                                                                                                                                                         //bills,prescriptions,transactions +can see all doctors,hospitals,diagnostic,pharmacy
                                                                 public static class AllRegisteredUserPermissions
                                                                 {
                                                                     //can see all doctors,hospitals,diagnostic,pharmacy
@@ -383,10 +383,18 @@ public class RolePermissions
 
 public class Perms
 {
-    internal static RoleNamesEnum[] AllRoles = (RoleNamesEnum[])Enum.GetValues(typeof(RoleNamesEnum));
-    public static List<RoleNamesEnum> CommonReadRoles = AllRoles.Where(e => (byte)e >= (byte)RoleNamesEnum.Patient && (int)e <= (byte)RoleNamesEnum.Hospital).ToList();
+    internal static r[] AllRoles = (RoleNamesEnum[])Enum.GetValues(typeof(r));
+    public static List<r> CommonReadRoles = AllRoles.Where(e => e >= r.Pharmacist && e <= r.Hospital).ToList();
     public static List<string> CommonReadPermissions = RP(CommonReadRoles, p.Read);
-    public static RolePermissions PharmacyPermissions = new(r.Pharmacy, CommonReadPermissions, new List<RolePermissions>() { new(r.Pharmacist) });
+    public static RolePermissions PatientPermissions = new(r.Patient, AddPermissions(r.Patient, CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted));
+    public static RolePermissions PharmacistPermissions = new(r.Pharmacist,
+        AddPermissions(r.Pharmacist, AddPermissions(r.Patient, CommonReadPermissions, p.Create, p.Update, p.Assign), p.Create, p.Update, p.Assign));
+    public static RolePermissions PharmacyPermissions = new(r.Pharmacy,
+        AddPermissions(r.Pharmacist,
+        AddPermissions(r.Pharmacy, RolePermissions.GetPermissions(PharmacistPermissions), p.Assign,p.Create,p.Update),
+        p.UnAssign));
+
+
     public static RolePermissions DiagnosticCenterPermissions = new(r.DiagnosticCenter, new RolePermissions(r.Diagnostic));
     public static RolePermissions HospitalRolePermissions = new(r.Hospital, new RolePermissions(r.HospitalAdmin, new RolePermissions(r.DoctorHOD, new RolePermissions(r.Doctor, new RolePermissions(r.DoctorAssistant, new RolePermissions(r.Nurse, new RolePermissions(r.ViewerHospital)))))));
     public RolePermissions RootRolePermissions = new(r.RootAdmin, new RolePermissions(r.ElevateAdminGroup, new RolePermissions(r.ElevateAdminViewer, HospitalRolePermissions!)));
@@ -396,5 +404,15 @@ public class Perms
         List<string> result = new();
         roles.ForEach(role => result.Add(role.ToString() + perm.ToString()));
         return result;
+    }
+    public static List<string> RP(r role, params p[] permissions)
+    {
+        List<string> result = new();
+        permissions.ForEach(p => result.Add(role.ToString() + p.ToString()));
+        return result;
+    }
+    public static List<string> AddPermissions(r role, List<string> existingPermissions, params p[] permissions)
+    {
+        return existingPermissions.Concat(RP(role, permissions)).ToList();
     }
 }
