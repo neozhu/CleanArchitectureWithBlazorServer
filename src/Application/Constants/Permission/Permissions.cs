@@ -312,21 +312,30 @@ public static class Permissions
 
 public class RolePermissions
 {
-    public RolePermissions(r roleNamesEnum, List<string>? permissions)
+    public RolePermissions(r roleNameEnum)
     {
-        RoleNameEnum = roleNamesEnum;
+        RoleNameEnum = roleNameEnum;
+    }
+
+    public RolePermissions(r roleNameEnum, List<string> permissions) : this(roleNameEnum)
+    {
         Permissions = permissions;
     }
-    public RolePermissions(r roleNamesEnum, List<p>? permissions) : this(roleNamesEnum, permissions?.Select(x => x.ToString()).ToList())
-    {
-    }
-    public RolePermissions(r roleNamesEnum, List<string>? permissions, List<RolePermissions>? subRoles)
-        : this(roleNamesEnum, permissions)
+    public RolePermissions(r roleNameEnum, List<p> permissions) : this(roleNameEnum, permissions.Select(x => x.ToString()).ToList()) { }
+    public RolePermissions(r roleNameEnum, params p[] permissions) : this(roleNameEnum, permissions.ToList()) { }
+    public RolePermissions(r roleNameEnum, List<RolePermissions> subRoles) : this(roleNameEnum)
     {
         SubRoles = subRoles;
     }
-    public RolePermissions(r roleNamesEnum, List<p>? permissions, List<RolePermissions>? subRoles)
-       : this(roleNamesEnum, permissions?.Select(x => x.ToString()).ToList(), subRoles) { }
+    public RolePermissions(r roleNameEnum, params RolePermissions[] subRoles) : this(roleNameEnum, subRoles.ToList()) { }
+
+    //public RolePermissions(r roleNameEnum, List<string> permissions, List<RolePermissions> subRoles)
+    //    : this(roleNameEnum, permissions)
+    //{
+    //    SubRoles = subRoles;
+    //}
+    public RolePermissions(r roleNameEnum, List<p>? permissions, List<RolePermissions> subRoles)
+       : this(roleNameEnum, permissions?.Select(x => x.ToString()).ToList()) { SubRoles = subRoles; }
     public int Id { get; set; }
     public r RoleNameEnum { get; set; }
 
@@ -366,10 +375,12 @@ public class RolePermissions
         }
         return allPermissions;
     }
+
 }
 
 
 public class Perms
 {
-    public RolePermissions RolePermissions = new RolePermissions(r.RootAdmin, null);
+    public static RolePermissions HospitalRolePermissions = new(r.Hospital, new RolePermissions(r.HospitalAdmin, new RolePermissions(r.DoctorHOD)));
+    public RolePermissions RootRolePermissions = new(r.RootAdmin,new RolePermissions(r.ElevateAdminGroup,new RolePermissions(r.ElevateAdminViewer, HospitalRolePermissions!)));
 }
