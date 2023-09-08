@@ -2,7 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Security;
+using CleanArchitecture.Blazor.Domain.Enums;
 using Microsoft.IdentityModel.Tokens;
+using r = CleanArchitecture.Blazor.Domain.Enums.RoleNamesEnum;
+using p = CleanArchitecture.Blazor.Domain.Enums.PermissionsEnum;
+using FluentEmail.Core;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace CleanArchitecture.Blazor.Application.Constants.Permission;
 
@@ -303,15 +308,68 @@ public static class Permissions
             return (Permission == null || Permission == PermissionsEnum.Delete) ? string.Empty : Role.ToString() + Permission.ToString();
         }
     }
-
-
 }
 
 public class RolePermissions
 {
+    public RolePermissions(r roleNamesEnum, List<string>? permissions)
+    {
+        RoleNameEnum = roleNamesEnum;
+        Permissions = permissions;
+    }
+    public RolePermissions(r roleNamesEnum, List<p>? permissions) : this(roleNamesEnum, permissions?.Select(x => x.ToString()).ToList())
+    {
+    }
+    public RolePermissions(r roleNamesEnum, List<string>? permissions, List<RolePermissions>? subRoles)
+        : this(roleNamesEnum, permissions)
+    {
+        SubRoles = subRoles;
+    }
+    public RolePermissions(r roleNamesEnum, List<p>? permissions, List<RolePermissions>? subRoles)
+       : this(roleNamesEnum, permissions?.Select(x => x.ToString()).ToList(), subRoles) { }
     public int Id { get; set; }
-    public RoleNamesEnum RoleNameEnum { get; set; }
+    public r RoleNameEnum { get; set; }
 
-    public List<string>? Permissions { get; set; }
-    public RolePermissions? SubPermissions { get; set; }
+    public List<string>? Permissions { get; set; } = new();
+    public List<RolePermissions>? SubRoles { get; set; } = new();
+
+    public static List<string>? GetPermissions(RolePermissions rootItem, r targetRole)
+    {
+        if (rootItem.RoleNameEnum == targetRole)
+        {
+            return GetPermissions(rootItem); // Found the item with the matching name
+        }
+
+        if (rootItem.SubRoles != null && rootItem.SubRoles.Any())
+            foreach (var subItem in rootItem.SubRoles)
+            {
+                var foundItem = GetPermissions(subItem, targetRole);
+                if (foundItem != null)
+                {
+                    return foundItem; // Found the item in a sub-item
+                }
+            }
+        return null; // Item not found in this branch
+    }
+    public static List<string>? GetPermissions(RolePermissions item)
+    {
+        var allPermissions = item.Permissions;
+        if (allPermissions == null) allPermissions = new List<string>();
+        if (item.SubRoles != null && item.SubRoles.Any())
+        {
+            foreach (var subRole in item.SubRoles)
+            {
+                var subRolePermissions = GetPermissions(subRole);
+                if (subRolePermissions != null && subRolePermissions.Any(p => !string.IsNullOrEmpty(p)))
+                    allPermissions.AddRange(subRolePermissions.Where(p => !string.IsNullOrEmpty(p)));
+            }
+        }
+        return allPermissions;
+    }
+}
+
+
+public class Perms
+{
+    public RolePermissions RolePermissions = new RolePermissions(r.RootAdmin, null);
 }
