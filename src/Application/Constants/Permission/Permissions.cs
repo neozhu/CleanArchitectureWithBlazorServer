@@ -387,7 +387,8 @@ public static class Perms
     internal static r[] AllRoles = (RoleNamesEnum[])Enum.GetValues(typeof(r));
     public static List<r> CommonReadRoles = AllRoles.Where(e => e >= r.Pharmacist && e <= r.Hospital).ToList();
     public static List<string> CommonReadPermissions = RP(CommonReadRoles, p.Read);
-    public static RolePermissions PatientPermissions = new(r.Patient, AddPermissions(r.Patient, CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted));
+    public static List<string> PatientPermissions =AddPermissions(r.Patient,CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted);
+    //public static RolePermissions PatientPermissions = new(r.Patient, AddPermissions(r.Patient, CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted));
     
     public static RolePermissions PharmacistPermissions = new(r.Pharmacist,
         AddPermissions(r.Pharmacist, AddPermissions(r.Patient, CommonReadPermissions, createRoles), createRoles));
@@ -421,5 +422,9 @@ public static class Perms
     public static List<string> AddPermissions(r role, List<string> existingPermissions, params p[] permissions)
     {
         return existingPermissions.Concat(RP(role, permissions)).ToList();
+    }
+    public static List<string> AddPermissions(r role, RolePermissions baseRolePermissions, params p[] permissions)
+    {
+        return baseRolePermissions.Permissions.Concat(RP(role, permissions)).ToList();
     }
 }
