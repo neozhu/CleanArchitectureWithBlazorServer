@@ -383,23 +383,24 @@ public class RolePermissions
 
 public static class Perms
 {
+    static p[] createRoles = { p.Assign, p.Create, p.Update };
     internal static r[] AllRoles = (RoleNamesEnum[])Enum.GetValues(typeof(r));
     public static List<r> CommonReadRoles = AllRoles.Where(e => e >= r.Pharmacist && e <= r.Hospital).ToList();
     public static List<string> CommonReadPermissions = RP(CommonReadRoles, p.Read);
     public static RolePermissions PatientPermissions = new(r.Patient, AddPermissions(r.Patient, CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted));
     
     public static RolePermissions PharmacistPermissions = new(r.Pharmacist,
-        AddPermissions(r.Pharmacist, AddPermissions(r.Patient, CommonReadPermissions, p.Create, p.Update, p.Assign), p.Create, p.Update, p.Assign));
+        AddPermissions(r.Pharmacist, AddPermissions(r.Patient, CommonReadPermissions, createRoles), createRoles));
     public static RolePermissions PharmacyPermissions = new(r.Pharmacy,
         AddPermissions(r.Pharmacist,
-        AddPermissions(r.Pharmacy, RolePermissions.GetPermissions(PharmacistPermissions), p.Assign,p.Create,p.Update),
+        AddPermissions(r.Pharmacy, RolePermissions.GetPermissions(PharmacistPermissions), createRoles),
         p.UnAssign));
 
     public static RolePermissions DiagnosticPermissions = new(r.Diagnostic,
-        AddPermissions(r.Diagnostic, AddPermissions(r.Patient, CommonReadPermissions, p.Create, p.Update, p.Assign), p.Create, p.Update, p.Assign));
+        AddPermissions(r.Diagnostic, AddPermissions(r.Patient, CommonReadPermissions, createRoles), createRoles));
     public static RolePermissions DiagnosticCenterPermissions = new(r.DiagnosticCenter,
         AddPermissions(r.Diagnostic,
-        AddPermissions(r.DiagnosticCenter, RolePermissions.GetPermissions(DiagnosticPermissions), p.Assign, p.Create, p.Update),
+        AddPermissions(r.DiagnosticCenter, RolePermissions.GetPermissions(DiagnosticPermissions), createRoles),
         p.UnAssign));
 
     public static RolePermissions HospitalRolePermissions = new(r.Hospital, new RolePermissions(r.HospitalAdmin, new RolePermissions(r.DoctorHOD, new RolePermissions(r.Doctor, new RolePermissions(r.DoctorAssistant, new RolePermissions(r.Nurse, new RolePermissions(r.ViewerHospital)))))));
