@@ -13,7 +13,6 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission;
 
 public static class Permissions
 {
-
     [DisplayName("AuditTrails")]
     [Description("AuditTrails Permissions")]
     public static class AuditTrails
@@ -182,9 +181,21 @@ public static class Permissions
         }
         return permissions;
     }
+    public static List<string> GetRegisteredPermissions(Type type )
+    {
+        var permissions = new List<string>();
+        foreach (var prop in type.GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+        {
+            var propertyValue = prop.GetValue(null);
+            if (propertyValue is not null)
+                permissions.Add((string)propertyValue);
+        }
+        return permissions;
+    }
 }
 public static class Perms
 {
+    static List<string> BasePermissionsAll= Permissions.GetRegisteredPermissions();
     static readonly p[] CreateRoles = { p.Assign, p.Create, p.Update };
     static readonly p[] SubRolesUpdates = { p.Assign, p.UnAssign };
     internal static r[] AllRoles = (r[])Enum.GetValues(typeof(r));
@@ -199,7 +210,8 @@ public static class Perms
     public static List<string> DiagnosticCenterPermissions = AddPermissions(r.DiagnosticCenter, DiagnosticPermissions, CreateRoles).Concat(RP(r.Diagnostic, p.Assign, p.UnAssign)).Distinct().ToList();
 
     public static List<string> ViewerHospitalPermissions = AddPermissions(r.ViewerHospital, CommonReadPermissions, CreateRoles);
-    public static List<string> NursePermissions = AddPermissions(r.Nurse, ViewerHospitalPermissions, CreateRoles).Concat(RP(r.ViewerHospital, SubRolesUpdates)).Distinct().ToList();
+    public static List<string> NursePermissions = AddPermissions(r.Nurse, ViewerHospitalPermissions, CreateRoles)
+        .Concat(RP(r.ViewerHospital, SubRolesUpdates)).Concat(BasePermissionsAll).Distinct().ToList();
     public static List<string> DoctorAssistantPermissions = AddPermissions(r.DoctorAssistant, NursePermissions, CreateRoles).Concat(RP(r.Nurse, SubRolesUpdates)).Distinct().ToList();
     public static List<string> DoctorPermissions = AddPermissions(r.Doctor, DoctorAssistantPermissions, CreateRoles).Concat(RP(r.DoctorAssistant, SubRolesUpdates)).Distinct().ToList();
     public static List<string> DoctorHODPermissions = AddPermissions(r.DoctorHOD, DoctorPermissions, CreateRoles).Concat(RP(r.Doctor, SubRolesUpdates)).Distinct().ToList();

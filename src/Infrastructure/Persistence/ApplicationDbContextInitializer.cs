@@ -97,7 +97,8 @@ public class ApplicationDbContextInitializer
         {
             foreach (var role in roles)
             {
-                await AddRoleAndPermissions(role, permissions);
+                var ps = permissions.Where(r => r.StartsWith($"Permissions.{r}")).ToList();
+                await AddRoleAndPermissions(role, ps);
             }
 
         }
@@ -136,9 +137,9 @@ public class ApplicationDbContextInitializer
               } */
 
         // Default users
-        var defaultGoogleUsers = new List<(string email, string role)>()
-       {("madhusudhan.veerabhadrappa@gmail.com",RoleNamesEnum.RootAdmin.ToString()),("vmadhu203@gmail.com",RoleNamesEnum.ElevateAdminGroup.ToString())
-       ,("vmadhu2023@gmail.com",RoleNamesEnum.HospitalAdmin.ToString())
+        var defaultGoogleUsers = new List<(string email, RoleNamesEnum role)>()
+       {("madhusudhan.veerabhadrappa@gmail.com",RoleNamesEnum.RootAdmin),("vmadhu203@gmail.com",RoleNamesEnum.ElevateAdminGroup)
+       ,("vmadhu2023@gmail.com",RoleNamesEnum.Patient)
        };
 
         foreach (var (email, role) in defaultGoogleUsers)
@@ -159,7 +160,7 @@ public class ApplicationDbContextInitializer
                     EmailConfirmed = true
                     //    , ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" 
                 };
-                await _userManager.CreateAsync(newUser, roles: new List<string>() { role });//todo pass roles and tenantids  //, UserName.DefaultPassword);
+                await _userManager.CreateAsync(newUser, roles: new List<string>() { role.ToString() });//todo pass roles and tenantids  //, UserName.DefaultPassword);
                 //await _context.UserTenant.AddAsync(new UserTenant() { UserId = newUser.Id, TenantId = _context.Tenants.First().Id });
                 //await _userManager.AddToRolesAsync(newUser, new[] { role! });
             }
