@@ -1,3 +1,5 @@
+remove DefaultRole1 from default roles ,make it only user frien dly
+
 Each fetch should verify is approved/active otherwise no like dodctor
 Actions:
 Patient add,edit,delete,view,edit insurance,transactionofHospital

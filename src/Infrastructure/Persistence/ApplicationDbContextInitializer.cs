@@ -2,7 +2,7 @@
 using CleanArchitecture.Blazor.Application.Constants;
 using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Application.Constants.Permission;
- 
+
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
 
@@ -82,7 +82,7 @@ public class ApplicationDbContextInitializer
             {
                 _context.Tenants.Add(t.Tenant(t));
             });
-           
+
             //any more further basic
             await _context.SaveChangesAsync();
         }
@@ -93,12 +93,14 @@ public class ApplicationDbContextInitializer
         {
             foreach (var role in roles)
             {
-                var ps = permissions.Where(r => r.StartsWith($"Permissions.{r}"));
+                //var ps = permissions.Where(r => r.StartsWith($"Permissions.{r}"));
+                var ps = Perms.PermissionsAll.Where(x => x.roleOrType.Equals(role.Name, StringComparison.InvariantCultureIgnoreCase))
+                    .FirstOrDefault().permissions;
                 await AddRoleAndPermissions(role, ps);
             }
 
         }
-       
+
         // Default users
         var defaultGoogleUsers = new List<(string email, RoleNamesEnum role)>()
        {("madhusudhan.veerabhadrappa@gmail.com",RoleNamesEnum.RootAdmin),("vmadhu203@gmail.com",RoleNamesEnum.ElevateAdminGroup)
@@ -124,7 +126,7 @@ public class ApplicationDbContextInitializer
                     //    , ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" 
                 };
                 await _userManager.CreateAsync(newUser, roles: new List<string>() { role.ToString() });//todo pass roles and tenantids  //, UserName.DefaultPassword);
-              
+
             }
         }
         // Default data
@@ -162,11 +164,11 @@ public class ApplicationDbContextInitializer
         {
             await _roleManager.CreateAsync(role);
             //todo AspNetRoles extend createasync to add Level parameter also
-
-            foreach (var permission in permissions)
-            {
-                await _roleManager.AddClaimAsync(role, new Claim(ApplicationClaimTypes.Permission, permission));
-            }
+            if (permissions != null && permissions.Any())
+                foreach (var permission in permissions)
+                {
+                    await _roleManager.AddClaimAsync(role, new Claim(ApplicationClaimTypes.Permission, permission));
+                }
         }
     }
 }

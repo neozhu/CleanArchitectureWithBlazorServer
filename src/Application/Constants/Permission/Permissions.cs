@@ -181,7 +181,7 @@ public static class Permissions
         }
         return permissions;
     }
-    public static List<string> GetRegisteredPermissions(Type type )
+    public static List<string> GetRegisteredPermissions(Type type)
     {
         var permissions = new List<string>();
         foreach (var prop in type.GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
@@ -195,11 +195,13 @@ public static class Permissions
 }
 public static class Perms
 {
-    static List<string> BasePermissionsAll= Permissions.GetRegisteredPermissions();
     static readonly p[] CreateRoles = { p.Assign, p.Create, p.Update };
     static readonly p[] SubRolesUpdates = { p.Assign, p.UnAssign };
     internal static r[] AllRoles = (r[])Enum.GetValues(typeof(r));
     public static List<r> CommonReadRoles = AllRoles.Where(e => e >= r.Pharmacist && e <= r.Hospital).ToList();
+
+    static readonly List<string> BasePermissionsAll = Permissions.GetRegisteredPermissions();
+
     public static List<string> CommonReadPermissions = RP(CommonReadRoles, p.Read);
     public static List<string> AllReadPermissions = RP(AllRoles.ToList(), p.Read);
     public static List<string> PatientPermissions = AddPermissions(r.Patient, CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted);
@@ -227,6 +229,22 @@ public static class Perms
         .Distinct().ToList();
     public static List<string> RootAdminPermissions = AddPermissions(r.RootAdmin, ElevateAdminGroupPermissions, CreateRoles)
         .Concat(RP(r.ElevateAdminGroup, SubRolesUpdates)).Distinct().ToList();
+
+    public static List<(string roleOrType, List<string> permissions)> PermissionsAll = new()
+    {
+        ("BasePermissionsAll", Permissions.GetRegisteredPermissions()),("AllReadPermissions",RP(AllRoles.ToList(), p.Read)),("CommonReadPermissions", RP(CommonReadRoles, p.Read))
+    ,(r.Patient.ToString(),PatientPermissions!)
+        ,(r.Pharmacist.ToString(),PharmacistPermissions!),(r.Pharmacy.ToString(), PharmacyPermissions!)
+        ,(r.DiagnosticCenter.ToString(),DiagnosticCenterPermissions!),(r.Diagnostic.ToString(), DiagnosticPermissions!)
+
+        ,(r.ViewerHospital.ToString(),ViewerHospitalPermissions!),(r.Nurse.ToString(), NursePermissions!)
+        ,(r.DoctorAssistant.ToString(),DoctorAssistantPermissions!),(r.Doctor.ToString(), DoctorPermissions!)
+        ,(r.DoctorHOD.ToString(),DoctorHODPermissions!),(r.HospitalAdmin.ToString(), HospitalAdminPermissions!)
+        ,(r.Hospital.ToString(), HospitalPermissions!)
+
+        ,(r.ElevateAdminViewer.ToString(),ElevateAdminViewerPermissions!),(r.ElevateAdminGroup.ToString(), ElevateAdminGroupPermissions!)
+        ,(r.RootAdmin.ToString(), RootAdminPermissions!)
+    };
     public static string RP(string role, string perm)
     {
         return $"Permissions.{role}.{perm}";
@@ -238,13 +256,13 @@ public static class Perms
     public static List<string> RP(List<r> roles, p perm = p.Read)
     {
         List<string> result = new();
-        roles.ForEach(role => result.Add(RP(role ,perm)));
+        roles.ForEach(role => result.Add(RP(role, perm)));
         return result.Distinct().ToList();
     }
     public static List<string> RP(r role, params p[] permissions)
     {
         List<string> result = new();
-        permissions.ForEach(p => result.Add(RP(role ,p)));
+        permissions.ForEach(p => result.Add(RP(role, p)));
         return result.Distinct().ToList();
     }
     public static List<string> AddPermissions(r role, List<string> existingPermissions, params p[] newPermissions)
