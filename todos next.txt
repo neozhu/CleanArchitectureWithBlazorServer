@@ -1,4 +1,6 @@
+Usermanager() createasync make it ready for Adding UserClaims line 65
 remove DefaultRole1 from default roles ,make it only user frien dly
+
 
 Each fetch should verify is approved/active otherwise no like dodctor
 Actions:
