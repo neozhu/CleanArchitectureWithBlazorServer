@@ -82,11 +82,7 @@ public class ApplicationDbContextInitializer
             {
                 _context.Tenants.Add(t.Tenant(t));
             });
-            /*
-            _context.Tenants.Add(new Tenant { Name = "Nanjappa Hospital", Description = "Nanjappa Hospital" });
-            _context.Tenants.Add(new Tenant { Name = "Sarji Hospital", Description = "Sarji Hospital" });
-            _context.Tenants.Add(new Tenant { Name = "Narayana Hospital", Description = "Narayana Hospital" });
-            */
+           
             //any more further basic
             await _context.SaveChangesAsync();
         }
@@ -97,45 +93,12 @@ public class ApplicationDbContextInitializer
         {
             foreach (var role in roles)
             {
-                var ps = permissions.Where(r => r.StartsWith($"Permissions.{r}")).ToList();
+                var ps = permissions.Where(r => r.StartsWith($"Permissions.{r}"));
                 await AddRoleAndPermissions(role, ps);
             }
 
         }
-        /*
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.RootAdmin), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminGroup), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminViewer), permissions);
-
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.Hospital), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.HospitalAdmin), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorHOD), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.Doctor), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorAssistant), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.Nurse), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.ViewerHospital), permissions);
-
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.DiagnosticCenter), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.Diagnostic), permissions);
-
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacy), permissions);
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacist), permissions);
-
-          await AddRoleAndPermissions(new ApplicationRole(RoleName.Patient), permissions);
-          */
-        //  await AddRoleAndPermissions(new ApplicationRole(RoleName.Guest), permissions);
-
-        /*      var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
-              if (_roleManager.Roles.All(r => r.Name != userRole.Name))
-              {
-                  await _roleManager.CreateAsync(userRole);
-                  foreach (var permission in permissions)
-                  {
-                      if (permission.StartsWith("Permissions.Products"))
-                          await _roleManager.AddClaimAsync(userRole, new Claim(ApplicationClaimTypes.Permission, permission));
-                  }
-              } */
-
+       
         // Default users
         var defaultGoogleUsers = new List<(string email, RoleNamesEnum role)>()
        {("madhusudhan.veerabhadrappa@gmail.com",RoleNamesEnum.RootAdmin),("vmadhu203@gmail.com",RoleNamesEnum.ElevateAdminGroup)
@@ -161,26 +124,9 @@ public class ApplicationDbContextInitializer
                     //    , ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" 
                 };
                 await _userManager.CreateAsync(newUser, roles: new List<string>() { role.ToString() });//todo pass roles and tenantids  //, UserName.DefaultPassword);
-                //await _context.UserTenant.AddAsync(new UserTenant() { UserId = newUser.Id, TenantId = _context.Tenants.First().Id });
-                //await _userManager.AddToRolesAsync(newUser, new[] { role! });
+              
             }
         }
-
-        /*var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
-        var demo = new ApplicationUser { UserName = UserName.Demo, IsActive = true, Provider = "Local", TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Demo, Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
-        if (_userManager.Users.All(u => u.UserName != administrator.UserName))
-        {
-            await _userManager.CreateAsync(administrator, UserName.DefaultPassword);
-            await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name! });
-        }
-        if (_userManager.Users.All(u => u.UserName != demo.UserName))
-        {
-            await _userManager.CreateAsync(demo, UserName.DefaultPassword);
-            await _userManager.AddToRolesAsync(demo, new[] { userRole.Name! });
-        }
-        */
-
-
         // Default data
         // Seed, if necessary
         if (!_context.KeyValues.Any())
@@ -224,3 +170,58 @@ public class ApplicationDbContextInitializer
         }
     }
 }
+
+/*
+         _context.Tenants.Add(new Tenant { Name = "Nanjappa Hospital", Description = "Nanjappa Hospital" });
+         _context.Tenants.Add(new Tenant { Name = "Sarji Hospital", Description = "Sarji Hospital" });
+         _context.Tenants.Add(new Tenant { Name = "Narayana Hospital", Description = "Narayana Hospital" });
+         */
+/*
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.RootAdmin), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminGroup), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminViewer), permissions);
+
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.Hospital), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.HospitalAdmin), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorHOD), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.Doctor), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorAssistant), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.Nurse), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.ViewerHospital), permissions);
+
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.DiagnosticCenter), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.Diagnostic), permissions);
+
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacy), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacist), permissions);
+
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.Patient), permissions);
+ */
+//  await AddRoleAndPermissions(new ApplicationRole(RoleName.Guest), permissions);
+
+/*      var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
+      if (_roleManager.Roles.All(r => r.Name != userRole.Name))
+      {
+          await _roleManager.CreateAsync(userRole);
+          foreach (var permission in permissions)
+          {
+              if (permission.StartsWith("Permissions.Products"))
+                  await _roleManager.AddClaimAsync(userRole, new Claim(ApplicationClaimTypes.Permission, permission));
+          }
+      } */
+
+/*var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
+var demo = new ApplicationUser { UserName = UserName.Demo, IsActive = true, Provider = "Local", TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Demo, Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
+if (_userManager.Users.All(u => u.UserName != administrator.UserName))
+{
+    await _userManager.CreateAsync(administrator, UserName.DefaultPassword);
+    await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name! });
+}
+if (_userManager.Users.All(u => u.UserName != demo.UserName))
+{
+    await _userManager.CreateAsync(demo, UserName.DefaultPassword);
+    await _userManager.AddToRolesAsync(demo, new[] { userRole.Name! });
+}
+*/
+//await _context.UserTenant.AddAsync(new UserTenant() { UserId = newUser.Id, TenantId = _context.Tenants.First().Id });
+//await _userManager.AddToRolesAsync(newUser, new[] { role! });
