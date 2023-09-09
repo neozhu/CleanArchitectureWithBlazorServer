@@ -190,7 +190,60 @@ public static class Permissions
         }
         return permissions;
     }
+}
+public static class Perms
+{
+    static readonly p[] CreateRoles = { p.Assign, p.Create, p.Update };
+    static readonly p[] SubRolesUpdates = { p.Assign, p.UnAssign };
+    internal static r[] AllRoles = (r[])Enum.GetValues(typeof(r));
+    public static List<r> CommonReadRoles = AllRoles.Where(e => e >= r.Pharmacist && e <= r.Hospital).ToList();
+    public static List<string> CommonReadPermissions = RP(CommonReadRoles, p.Read);
+    public static List<string> AllReadPermissions = RP(AllRoles.ToList(), p.Read);
+    public static List<string> PatientPermissions = AddPermissions(r.Patient, CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted);
+    public static List<string> PharmacistPermissions = AddPermissions(r.Pharmacist, CommonReadPermissions, CreateRoles);
+    public static List<string> PharmacyPermissions = AddPermissions(r.Pharmacy, PharmacistPermissions, CreateRoles).Concat(RP(r.Pharmacist, SubRolesUpdates)).ToList();
 
+    public static List<string> DiagnosticPermissions = AddPermissions(r.Diagnostic, CommonReadPermissions, CreateRoles);
+    public static List<string> DiagnosticCenterPermissions = AddPermissions(r.DiagnosticCenter, DiagnosticPermissions, CreateRoles).Concat(RP(r.Diagnostic, p.Assign, p.UnAssign)).ToList();
+
+    public static List<string> ViewerHospitalPermissions = AddPermissions(r.ViewerHospital, CommonReadPermissions, CreateRoles);
+    public static List<string> NursePermissions = AddPermissions(r.Nurse, ViewerHospitalPermissions, CreateRoles).Concat(RP(r.ViewerHospital, SubRolesUpdates)).ToList();
+    public static List<string> DoctorAssistantPermissions = AddPermissions(r.DoctorAssistant, NursePermissions, CreateRoles).Concat(RP(r.Nurse, SubRolesUpdates)).ToList();
+    public static List<string> DoctorPermissions = AddPermissions(r.Doctor, DoctorAssistantPermissions, CreateRoles).Concat(RP(r.DoctorAssistant, SubRolesUpdates)).ToList();
+    public static List<string> DoctorHODPermissions = AddPermissions(r.DoctorHOD, DoctorPermissions, CreateRoles).Concat(RP(r.Doctor, SubRolesUpdates)).ToList();
+    public static List<string> HospitalAdminPermissions = AddPermissions(r.HospitalAdmin, DoctorHODPermissions, CreateRoles).Concat(RP(r.DoctorHOD, SubRolesUpdates)).ToList();
+    public static List<string> HospitalPermissions = AddPermissions(r.Hospital, HospitalAdminPermissions, CreateRoles).Concat(RP(r.HospitalAdmin, SubRolesUpdates)).ToList();
+
+    public static List<string> ElevateAdminViewerPermissions = AddPermissions(r.ElevateAdminViewer, AllReadPermissions);
+    public static List<string> ElevateAdminGroupPermissions = AddPermissions(r.ElevateAdminGroup, ElevateAdminViewerPermissions, CreateRoles)
+        .Concat(RP(r.ElevateAdminViewer, SubRolesUpdates))
+        .Concat(HospitalPermissions)
+        .Concat(DiagnosticCenterPermissions)
+        .Concat(PharmacyPermissions)
+        .ToList();
+
+    public static List<string> RP(List<r> roles, p perm = p.Read)
+    {
+        List<string> result = new();
+        roles.ForEach(role => result.Add(role.ToString() + perm.ToString()));
+        return result;
+    }
+    public static List<string> RP(r role, params p[] permissions)
+    {
+        List<string> result = new();
+        permissions.ForEach(p => result.Add(role.ToString() + p));
+        return result;
+    }
+    public static List<string> AddPermissions(r role, List<string> existingPermissions, params p[] newPermissions)
+    {
+        return existingPermissions.Concat(RP(role, newPermissions)).ToList();
+    }
+    //    public static List<string> AddPermissions(r role, RolePermissions baseRolePermissions, params p[] newPermissions)
+    //    {
+    //        return baseRolePermissions.Permissions.Concat(RP(role, newPermissions)).ToList();
+    //    }
+}
+/*
     public class RootAdmin
     {
         public class ElevateAdminGroup
@@ -378,59 +431,24 @@ public class RolePermissions
         return allPermissions;
     }
 
-}
+}*/
 
 
-public static class Perms
-{
-    static p[] createRoles = { p.Assign, p.Create, p.Update };
-    internal static r[] AllRoles = (RoleNamesEnum[])Enum.GetValues(typeof(r));
-    public static List<r> CommonReadRoles = AllRoles.Where(e => e >= r.Pharmacist && e <= r.Hospital).ToList();
-    public static List<string> CommonReadPermissions = RP(CommonReadRoles, p.Read);
-    public static List<string> PatientPermissions = AddPermissions(r.Patient, CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted);
-    public static List<string> PharmacistPermissions = AddPermissions(r.Pharmacist, CommonReadPermissions, createRoles);
-    public static List<string> PharmacyPermissions = AddPermissions(r.Pharmacy, PharmacistPermissions, createRoles).Concat(RP(r.Pharmacist,p.Assign,p.UnAssign)).ToList();
-    //public static RolePermissions PatientPermissions = new(r.Patient, AddPermissions(r.Patient, CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted));
+
+/* 
+  //public static RolePermissions PatientPermissions = new(r.Patient, AddPermissions(r.Patient, CommonReadPermissions, p.CreateRestricted, p.UpdateRestricted, p.ReadRestricted));
 
     //  public static RolePermissions PharmacistPermissions = new(r.Pharmacist,
-    //AddPermissions(r.Pharmacist, AddPermissions(r.Patient, CommonReadPermissions, createRoles), createRoles));
-    public static RolePermissions PharmacyPermissions = new(r.Pharmacy,
-        AddPermissions(r.Pharmacist,
-        AddPermissions(r.Pharmacy, RolePermissions.GetPermissions(PharmacistPermissions), createRoles),
-        p.UnAssign));
+    //AddPermissions(r.Pharmacist, AddPermissions(r.Patient, CommonReadPermissions, CreateRoles), CreateRoles));
+    //public static RolePermissions PharmacyPermissions = new(r.Pharmacy,
+    //    AddPermissions(r.Pharmacist,
+    //    AddPermissions(r.Pharmacy, RolePermissions.GetPermissions(PharmacistPermissions), CreateRoles),
+    //    p.UnAssign));
 
-    public static RolePermissions DiagnosticPermissions = new(r.Diagnostic,
-        AddPermissions(r.Diagnostic, AddPermissions(r.Patient, CommonReadPermissions, createRoles), createRoles));
-    public static RolePermissions DiagnosticCenterPermissions = new(r.DiagnosticCenter,
-        AddPermissions(r.Diagnostic,
-        AddPermissions(r.DiagnosticCenter, RolePermissions.GetPermissions(DiagnosticPermissions), createRoles),
-        p.UnAssign));
-
-    public static RolePermissions HospitalRolePermissions = new(r.Hospital, new RolePermissions(r.HospitalAdmin, new RolePermissions(r.DoctorHOD, new RolePermissions(r.Doctor, new RolePermissions(r.DoctorAssistant, new RolePermissions(r.Nurse, new RolePermissions(r.ViewerHospital)))))));
-    public static RolePermissions RootRolePermissions = new(r.RootAdmin, new RolePermissions(r.ElevateAdminGroup, new RolePermissions(r.ElevateAdminViewer, HospitalRolePermissions!)));
-    public static string RP(r role, p perm = p.Read) { return role.ToString() + perm.ToString(); }
-    public static List<string> RP(List<r> roles, p perm = p.Read)
-    {
-        List<string> result = new();
-        roles.ForEach(role => result.Add(role.ToString() + perm.ToString()));
-        return result;
-    }
-    public static List<string> RP(r role, params string[] permissions)
-    {
-        List<string> result = new();
-        permissions.ForEach(p => result.Add(role.ToString() + p));
-        return result;
-    }
-    public static List<string> RP(r role, params p[] permissions)
-    {
-        return RP(role, permissions.Select(x => x.ToString()).ToArray());
-    }
-    public static List<string> AddPermissions(r role, List<string> existingPermissions, params p[] newPermissions)
-    {
-        return existingPermissions.Concat(RP(role, newPermissions)).ToList();
-    }
-    public static List<string> AddPermissions(r role, RolePermissions baseRolePermissions, params p[] newPermissions)
-    {
-        return baseRolePermissions.Permissions.Concat(RP(role, newPermissions)).ToList();
-    }
-}
+    //public static RolePermissions DiagnosticPermissions = new(r.Diagnostic,
+    //    AddPermissions(r.Diagnostic, AddPermissions(r.Patient, CommonReadPermissions, CreateRoles), CreateRoles));
+    //public static RolePermissions DiagnosticCenterPermissions = new(r.DiagnosticCenter,
+    //    AddPermissions(r.Diagnostic,
+    //    AddPermissions(r.DiagnosticCenter, RolePermissions.GetPermissions(DiagnosticPermissions), CreateRoles),
+    //    p.UnAssign));
+ */
