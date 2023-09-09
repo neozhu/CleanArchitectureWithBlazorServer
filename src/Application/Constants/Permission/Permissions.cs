@@ -221,7 +221,12 @@ public static class Perms
         .Concat(DiagnosticCenterPermissions)
         .Concat(PharmacyPermissions)
         .ToList();
-
+    public static List<string> RootAdminPermissions = AddPermissions(r.RootAdmin, ElevateAdminGroupPermissions, CreateRoles)
+        .Concat(RP(r.ElevateAdminGroup, SubRolesUpdates)).ToList();
+    public static string RP(r role, p perm)
+    {
+        return role.ToString() + perm.ToString();
+    }
     public static List<string> RP(List<r> roles, p perm = p.Read)
     {
         List<string> result = new();
