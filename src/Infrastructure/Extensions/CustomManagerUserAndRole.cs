@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Linq.Dynamic.Core;
- 
+using CleanArchitecture.Blazor.Application.Constants.Permission;
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -65,7 +65,17 @@ public class CustomUserManager : UserManager<ApplicationUser>
         roles.ForEach(c =>
         {
             var roleId = (_roleManager.FindByNameAsync(c).Result)?.Id;
-            if (roleId != null) user.UserRoles.Add(new ApplicationUserRole() { RoleId = roleId, TenantId = user.TenantId });
+            if (roleId != null)
+            {
+                user.UserRoles.Add(new ApplicationUserRole() { RoleId = roleId, TenantId = user.TenantId });
+                var scopes = Perms.PermissionsAll.Find(x => x.roleOrType.Equals(c, StringComparison.InvariantCultureIgnoreCase)).permissions;
+                if (scopes != null && scopes.Any())
+                    foreach (var scope in scopes)
+                    {
+                        base.AddClaimAsync(user, new Claim("Permissions", scope));
+                    }
+                
+            }
         });
 
         var result = string.IsNullOrEmpty(password) ? await base.CreateAsync(user) : await base.CreateAsync(user, password);
@@ -159,7 +169,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
 
 public class CustomRoleManager : RoleManager<ApplicationRole>
 {
-   // private readonly ApplicationDbContext _dbContext;
+    // private readonly ApplicationDbContext _dbContext;
     public CustomRoleManager(
         IRoleStore<ApplicationRole> store,
         IEnumerable<IRoleValidator<ApplicationRole>> roleValidators,
@@ -168,7 +178,7 @@ public class CustomRoleManager : RoleManager<ApplicationRole>
         ILogger<CustomRoleManager> logger)//, IServiceProvider serviceProvider)
         : base(store, roleValidators, keyNormalizer, errors, logger)
     {
-       // _dbContext = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        // _dbContext = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
     }
 
     public async Task<ApplicationRole> FindByNameAsync(string roleName, TenantTypeEnum type)
@@ -184,7 +194,7 @@ public class CustomRoleManager : RoleManager<ApplicationRole>
         throw new NotImplementedException("Please use with tenantid");
     }
 
-   
+
     //public async Task<IdentityRole> FindByNameAsync(string roleName)
     //{
     //    return await Roles?.FirstOrDefaultAsync(r => r.Name == roleName);
