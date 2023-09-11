@@ -68,13 +68,14 @@ public class CustomUserManager : UserManager<ApplicationUser>
             if (roleId != null)
             {
                 user.UserRoles.Add(new ApplicationUserRole() { RoleId = roleId, TenantId = user.TenantId });
+                /* This is required if default scopes for user level need to assign
                 var scopes = Perms.PermissionsAll.Find(x => x.roleOrType.Equals(c, StringComparison.InvariantCultureIgnoreCase)).permissions;
                 if (scopes != null && scopes.Any())
                     foreach (var scope in scopes)
                     {
                         base.AddClaimAsync(user, new Claim("Permissions", scope));
                     }
-                
+                */
             }
         });
 
