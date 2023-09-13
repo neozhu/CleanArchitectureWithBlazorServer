@@ -18,10 +18,10 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
         var principal = await base.CreateAsync(user);
-        if (user.TenantsActive!=null && user.TenantsActive.Any())
+        if (user.UserRoles != null && user.UserRoles.Any())
         {
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
-                new Claim(ApplicationClaimTypes.TenantsActive, String.Join(",",user.TenantsActive))
+                new Claim(ApplicationClaimTypes.UserRoles, String.Join(",",user.UserRoles.ToString()))
             });
         }
         if (!string.IsNullOrEmpty(user.TenantId))

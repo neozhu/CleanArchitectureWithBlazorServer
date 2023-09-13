@@ -14,8 +14,7 @@ public class ApplicationUserDto
     [Description("Display Name")] public string? DisplayName { get; set; }
 
     [Description("Provider")] public string? Provider { get; set; } = "Local";
-    [Description("Active Tenants")] public List<string>? TenantsActive { get; set; }
-
+    
     [Description("Tenant Id")] public string? TenantId { get; set; }
 
     [Description("Tenant Name")] public string? TenantName { get; set; }
@@ -32,6 +31,9 @@ public class ApplicationUserDto
     [Description("Superior Name")] public string? SuperiorName { get; set; }
 
     [Description("Assigned Roles")] public string[]? AssignedRoles { get; set; }
+
+    [Description("User Roles and Tenants")]
+    public  ICollection<ApplicationUserRoleDto> UserRoleTenants { get; set; }
 
     [Description("Default Role")] public string? DefaultRole => AssignedRoles?.FirstOrDefault();//todo take max permission role
 
@@ -61,7 +63,8 @@ public class ApplicationUserDto
             SuperiorId = SuperiorId,
             SuperiorName = SuperiorName,
             AssignedRoles = AssignedRoles,
-            DefaultRole = DefaultRole
+            DefaultRole = DefaultRole,
+            UserRoleTenants=UserRoleTenants
         };
     }
 
@@ -76,6 +79,8 @@ public class ApplicationUserDto
         {
             CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
                 .ForMember(x => x.SuperiorName, s => s.MapFrom(y => y.Superior!.UserName))
+                .ForMember(x=>x.UserRoleTenants,s=>s.MapFrom(c=>c.UserRoles))
+                
                 .ForMember(x => x.TenantId, s =>
                 s.MapFrom(y => y.UserRoles.Any(g => g.TenantId == y.TenantId) ? y.TenantId:y.UserRoles.FirstOrDefault().TenantId))
                 .ForMember(x => x.AssignedRoles, s =>

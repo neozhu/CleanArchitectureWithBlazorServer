@@ -7,7 +7,7 @@ public static class ApplicationClaimTypes
 {
     public const string Provider = "Provider";
     public const string TenantId = "TenantId";
-    public const string TenantsActive = "TenantsActive";
+    public const string UserRoles = "UserRoles";
     public const string SuperiorId = "SuperiorId";
     public const string SuperiorName = "SuperiorName";
     public const string Status = "Status";

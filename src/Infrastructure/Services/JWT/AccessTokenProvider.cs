@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
@@ -33,7 +34,7 @@ public class AccessTokenProvider
         _tenantProvider.TenantName = applicationUser.TenantName;
         _currentUser.UserId = applicationUser.Id;
         _currentUser.UserName = applicationUser.UserName;
-        _currentUser.TenantsActive=applicationUser.TenantsActive;
+        _currentUser.UserRoles= (ICollection<Application.Features.Identity.Dto.ApplicationUserRoleDto>?)applicationUser.UserRoles;
         _currentUser.TenantId = applicationUser.TenantId;
         _currentUser.TenantName = applicationUser.TenantName;
 
@@ -53,7 +54,7 @@ public class AccessTokenProvider
                     _tenantProvider.TenantName = principal?.GetTenantName();
                     _currentUser.UserId = principal?.GetUserId();
                     _currentUser.UserName = principal?.GetUserName();
-                    _currentUser.TenantsActive = principal?.GetTenantsActive()?.Split(',').ToList();
+                  //  _currentUser.UserRoles = principal?.GetTenantsActive()?.Split(',').ToList();
                     _currentUser.TenantId = principal?.GetTenantId();
                     _currentUser.TenantName = principal?.GetTenantId();
                     return principal!;

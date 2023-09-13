@@ -9,9 +9,8 @@ namespace CleanArchitecture.Blazor.Domain.Identity;
 public class ApplicationUser : IdentityUser
 {
     public string? DisplayName { get; set; }
-    public string? Provider { get; set; } = "Local";
+    public string? Provider { get; set; } = "Google";
     [NotMapped]
-    public List<string>? TenantsActive { get { return this.UserRoles?.Where(x => x.IsActive).Select(x => x.TenantId)?.Distinct().ToList(); } }
     public string? TenantId { get; set; }
     public string? TenantName { get; set; }
     [Column(TypeName = "text")]

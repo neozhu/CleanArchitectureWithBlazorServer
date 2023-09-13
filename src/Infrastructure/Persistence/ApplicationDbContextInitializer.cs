@@ -119,7 +119,7 @@ public class ApplicationDbContextInitializer
                     UserName = email,
                     Provider = "Google",
                     IsActive = true,
-                    //TenantId = _context.TenantsActive.First().Id,//todo need to make change
+                    //TenantId = _context.UserRoles.First().Id,//todo need to make change
                     //todo need to change based on selection like whether Patient/Internal/any hospital
                     TenantId = tenant1.Id,//todo need to make change
                     TenantName = tenant1.Name,
@@ -177,9 +177,9 @@ public class ApplicationDbContextInitializer
 }
 
 /*
-         _context.TenantsActive.Add(new Tenant { Name = "Nanjappa Hospital", Description = "Nanjappa Hospital" });
-         _context.TenantsActive.Add(new Tenant { Name = "Sarji Hospital", Description = "Sarji Hospital" });
-         _context.TenantsActive.Add(new Tenant { Name = "Narayana Hospital", Description = "Narayana Hospital" });
+         _context.UserRoles.Add(new Tenant { Name = "Nanjappa Hospital", Description = "Nanjappa Hospital" });
+         _context.UserRoles.Add(new Tenant { Name = "Sarji Hospital", Description = "Sarji Hospital" });
+         _context.UserRoles.Add(new Tenant { Name = "Narayana Hospital", Description = "Narayana Hospital" });
          */
 /*
  await AddRoleAndPermissions(new ApplicationRole(RoleName.RootAdmin), permissions);
@@ -215,8 +215,8 @@ public class ApplicationDbContextInitializer
           }
       } */
 
-/*var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.TenantsActive.First().Id, TenantName = _context.TenantsActive.First().Name, DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
-var demo = new ApplicationUser { UserName = UserName.Demo, IsActive = true, Provider = "Local", TenantId = _context.TenantsActive.First().Id, TenantName = _context.TenantsActive.First().Name, DisplayName = UserName.Demo, Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
+/*var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.UserRoles.First().Id, TenantName = _context.UserRoles.First().Name, DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
+var demo = new ApplicationUser { UserName = UserName.Demo, IsActive = true, Provider = "Local", TenantId = _context.UserRoles.First().Id, TenantName = _context.UserRoles.First().Name, DisplayName = UserName.Demo, Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
 if (_userManager.Users.All(u => u.UserName != administrator.UserName))
 {
     await _userManager.CreateAsync(administrator, UserName.DefaultPassword);
@@ -228,5 +228,5 @@ if (_userManager.Users.All(u => u.UserName != demo.UserName))
     await _userManager.AddToRolesAsync(demo, new[] { userRole.Name! });
 }
 */
-//await _context.UserTenant.AddAsync(new UserTenant() { UserId = newUser.Id, TenantId = _context.TenantsActive.First().Id });
+//await _context.UserTenant.AddAsync(new UserTenant() { UserId = newUser.Id, TenantId = _context.UserRoles.First().Id });
 //await _userManager.AddToRolesAsync(newUser, new[] { role! });
