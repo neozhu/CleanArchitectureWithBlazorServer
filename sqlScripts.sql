@@ -1,8 +1,8 @@
 use [9katthe]
 SELECT userid,RoleId,u.UserName,r.Name,ur.TenantId  FROM [AspNetUserRoles] ur left join AspNetUsers u on ur.UserId=u.Id left join AspNetRoles r on ur.RoleId=r.Id
---SELECT *  FROM [Tenants]
+SELECT *  FROM [Tenants]
 --SELECT *   FROM [AspNetRoles]
-SELECT *  FROM [AspNetUserRoles]
+--SELECT *  FROM [AspNetUserRoles]
 --select * from [AspNetUsers]
 
 --update [AspNetUsers]
