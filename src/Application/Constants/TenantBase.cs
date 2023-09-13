@@ -38,6 +38,7 @@ public class TenantBase
 
 public class TenantStructure
 {
+    public string? Id { get; set; }
     public byte Type { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }

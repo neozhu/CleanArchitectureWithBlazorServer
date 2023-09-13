@@ -35,7 +35,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     }
     public async Task<IdentityResult> CreateWithDefaultRolesAsync(ApplicationUser user, string tenantId = null, string password = null)
     {
-        return await CreateAsync(user, new List<string> { RoleNamesEnum.DefaultRole1.ToString() }, tenantId, password);
+        return await CreateAsync(user, new List<string> { RoleNamesEnum.Patient.ToString() }, tenantId, password);
     }
     public override async Task<ApplicationUser?> FindByIdAsync(string userId)
     {

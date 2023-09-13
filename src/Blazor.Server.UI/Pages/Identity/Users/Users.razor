@@ -438,7 +438,7 @@
         }
     private async Task OnCreate()
         {
-        var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleNamesEnum.DefaultRole1.ToString() } };
+        var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleNamesEnum.Patient.ToString() } };
         var parameters = new DialogParameters {
             { nameof(_UserFormDialog.Model),model }
            };

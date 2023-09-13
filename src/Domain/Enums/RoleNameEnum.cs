@@ -32,7 +32,7 @@ public enum RoleNamesEnum : byte
     Guest = 1,
     Rejected = 0,
     // public const string Guest = nameof(Guest);//vmadhu2023 =>requesting for Hospital registration , vmadhu203=>patient   ,   vmadhu2022 =>req for doctor 
-    DefaultRole1 = Patient
+   // DefaultRole1 = Patient
     //public const string Basic =nameof(Basic);
     //public const string Users =nameof(Users);
 }

@@ -80,7 +80,8 @@ public class ApplicationDbContextInitializer
         {
             TenantBase.GetDefaultTenantStructure().ForEach(t =>
             {
-                _context.Tenants.Add(t.Tenant(t));
+                var tenant = _context.Tenants.Add(t.Tenant(t));
+                t.Id = tenant.Entity.Id;
             });
 
             //any more further basic
@@ -102,15 +103,17 @@ public class ApplicationDbContextInitializer
         }
 
         // Default users
-        var defaultGoogleUsers = new List<(string email, RoleNamesEnum role)>()
-       {("madhusudhan.veerabhadrappa@gmail.com",RoleNamesEnum.RootAdmin),("vmadhu203@gmail.com",RoleNamesEnum.ElevateAdminGroup)
-       ,("vmadhu2023@gmail.com",RoleNamesEnum.Patient)
+        var defaultGoogleUsers = new List<(string email, RoleNamesEnum role, TenantTypeEnum tenantType)>()
+       {("madhusudhan.veerabhadrappa@gmail.com",RoleNamesEnum.RootAdmin,TenantTypeEnum.Internal)
+       ,("vmadhu203@gmail.com", RoleNamesEnum.ElevateAdminGroup, TenantTypeEnum.HospitalAndStaff)
+       ,("vmadhu2023@gmail.com", RoleNamesEnum.Patient, TenantTypeEnum.Patient)
        };
 
-        foreach (var (email, role) in defaultGoogleUsers)
+        foreach (var (email, role, tenantType) in defaultGoogleUsers)
         {//need to verify
             if (!_userManager.Users.Any(u => u.Email == email))
             {
+                var tenant1 = _context.Tenants.First(x => x.Type == (byte)tenantType);
                 var newUser = new ApplicationUser
                 {
                     UserName = email,
@@ -118,8 +121,8 @@ public class ApplicationDbContextInitializer
                     IsActive = true,
                     //TenantId = _context.Tenants.First().Id,//todo need to make change
                     //todo need to change based on selection like whether Patient/Internal/any hospital
-                    TenantId = _context.Tenants.First().Id,//todo need to make change
-                    TenantName = _context.Tenants.First().Name,
+                    TenantId = tenant1.Id,//todo need to make change
+                    TenantName = tenant1.Name,
                     DisplayName = email,
                     Email = email,
                     EmailConfirmed = true
