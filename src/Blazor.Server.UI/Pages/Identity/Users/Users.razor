@@ -371,7 +371,7 @@
         try
             {
             var userState = await AuthState;
-            var tenantId = userState.User.GetTenantId();
+            var tenantId = userState.User.GetTenantId();//had to get all active tenants and type
             var roles = userState.User.GetAssignRoles();
             _loading = true;
             Expression<Func<ApplicationUser, bool>> searchPredicate = x =>

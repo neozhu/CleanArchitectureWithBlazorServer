@@ -29,6 +29,8 @@ public static class ClaimsPrincipalExtensions
          => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.TenantName);
     public static string? GetTenantId(this ClaimsPrincipal claimsPrincipal)
         => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.TenantId);
+    public static string? GetTenantsActive(this ClaimsPrincipal claimsPrincipal)
+        => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.TenantsActive);
     public static bool GetStatus(this ClaimsPrincipal claimsPrincipal)
        => Convert.ToBoolean(claimsPrincipal.FindFirstValue(ApplicationClaimTypes.Status));
     public static string? GetAssignRoles(this ClaimsPrincipal claimsPrincipal)
