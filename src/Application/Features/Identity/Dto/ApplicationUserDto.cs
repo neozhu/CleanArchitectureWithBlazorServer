@@ -14,6 +14,7 @@ public class ApplicationUserDto
     [Description("Display Name")] public string? DisplayName { get; set; }
 
     [Description("Provider")] public string? Provider { get; set; } = "Local";
+    [Description("Active Tenants")] public List<string>? TenantsActive { get; set; }
 
     [Description("Tenant Id")] public string? TenantId { get; set; }
 
