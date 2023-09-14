@@ -1,7 +1,10 @@
 ﻿using System.Security.Cryptography;
+using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using DocumentFormat.OpenXml.InkML;
+using FluentEmail.Core;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
@@ -14,12 +17,14 @@ public class AccessTokenProvider
     private readonly IIdentityService _identityService;
     private readonly ITenantProvider _tenantProvider;
     private readonly ICurrentUserService _currentUser;
+    private readonly IMapper _mapper;
     public string? AccessToken { get; private set; }
 
     public AccessTokenProvider(ProtectedLocalStorage localStorage, NavigationManager navigation, IIdentityService identityService,
         ITenantProvider tenantProvider,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser, IMapper mapper)
     {
+        _mapper = mapper;
         _localStorage = localStorage;
         _navigation = navigation;
         _identityService = identityService;
@@ -34,7 +39,9 @@ public class AccessTokenProvider
         _tenantProvider.TenantName = applicationUser.TenantName;
         _currentUser.UserId = applicationUser.Id;
         _currentUser.UserName = applicationUser.UserName;
-        _currentUser.UserRoles= (ICollection<Application.Features.Identity.Dto.ApplicationUserRoleDto>?)applicationUser.UserRoles;
+
+        _currentUser.UserRoles ??= new List<ApplicationUserRoleDto>();
+        applicationUser.UserRoles.ForEach(x => _currentUser.UserRoles.Add(_mapper.Map<ApplicationUserRoleDto>(x)));
         _currentUser.TenantId = applicationUser.TenantId;
         _currentUser.TenantName = applicationUser.TenantName;
 
@@ -54,7 +61,7 @@ public class AccessTokenProvider
                     _tenantProvider.TenantName = principal?.GetTenantName();
                     _currentUser.UserId = principal?.GetUserId();
                     _currentUser.UserName = principal?.GetUserName();
-                  //  _currentUser.UserRoles = principal?.GetTenantsActive()?.Split(',').ToList();
+                    //  _currentUser.UserRoles = principal?.GetTenantsActive()?.Split(',').ToList();
                     _currentUser.TenantId = principal?.GetTenantId();
                     _currentUser.TenantName = principal?.GetTenantId();
                     return principal!;

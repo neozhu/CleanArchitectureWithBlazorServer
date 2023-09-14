@@ -10,7 +10,6 @@ public class ApplicationUser : IdentityUser
 {
     public string? DisplayName { get; set; }
     public string? Provider { get; set; } = "Google";
-    [NotMapped]
     public string? TenantId { get; set; }
     public string? TenantName { get; set; }
     [Column(TypeName = "text")]
