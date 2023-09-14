@@ -4,9 +4,15 @@ using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http.Connections;
+using Newtonsoft.Json;
 
 try
 {
+    JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+    {
+        Formatting = Newtonsoft.Json.Formatting.Indented,
+        ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    };
     var builder = WebApplication.CreateBuilder(args);
 
     builder.RegisterSerilog();

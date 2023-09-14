@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Text.Json;
 using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
@@ -7,6 +8,7 @@ using DocumentFormat.OpenXml.InkML;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Newtonsoft.Json;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public class AccessTokenProvider
@@ -61,7 +63,15 @@ public class AccessTokenProvider
                     _tenantProvider.TenantName = principal?.GetTenantName();
                     _currentUser.UserId = principal?.GetUserId();
                     _currentUser.UserName = principal?.GetUserName();
-                    //  _currentUser.UserRoles = principal?.GetTenantsActive()?.Split(',').ToList();
+
+                    var userRolesInString = principal?.GetUserTenantRoles();
+                    _currentUser.UserRoles ??= new List<ApplicationUserRoleDto>();
+                    if (!string.IsNullOrEmpty(userRolesInString))
+                    {
+                        var userRolesInList = JsonConvert.DeserializeObject<List<ApplicationUserRoleDto>>(userRolesInString);
+                        if (userRolesInList != null && userRolesInList.Any())
+                            userRolesInList.ForEach(x => _currentUser.UserRoles.Add(x));
+                    }
                     _currentUser.TenantId = principal?.GetTenantId();
                     _currentUser.TenantName = principal?.GetTenantId();
                     return principal!;

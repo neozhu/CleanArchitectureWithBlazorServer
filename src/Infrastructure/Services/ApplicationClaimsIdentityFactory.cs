@@ -1,7 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Text.Json;
 using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
+using Newtonsoft.Json;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 #nullable disable
@@ -21,7 +23,7 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
         if (user.UserRoles != null && user.UserRoles.Any())
         {
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
-                new Claim(ApplicationClaimTypes.UserRoles, String.Join(",",user.UserRoles.ToString()))
+                new Claim(ApplicationClaimTypes.UserRoles,JsonConvert.SerializeObject(user.UserRoles))
             });
         }
         if (!string.IsNullOrEmpty(user.TenantId))
