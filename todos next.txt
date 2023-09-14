@@ -1,3 +1,7 @@
+On user profile page, show all of his tenants and at first already choosed tenants lise active then incative then remaining
+
+
+
 once account verified,email edit disable or validate before assigning new account
 Login happens throgh, Infrashtructure=>BlazorAuthStateProvider then  AccessTokenProvider
 
