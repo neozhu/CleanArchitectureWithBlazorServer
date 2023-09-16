@@ -107,30 +107,30 @@
                        RequiredError="@L["Tenant is required."]"
                        Value="@Model.TenantId"
                        ValueChanged="TenantSelectChanged">
-                @* @foreach (var item in TenantsService.DataSource) *@
                 @foreach (var item in Model.UserRoleTenants)
                     {
-                    <MudSelectItem T="string" Value="@item.TenantId">@item.Tenant.Name</MudSelectItem>
+                    <MudSelectItem T="string" Value="@item.Tenant.Id">@item.Tenant.Name</MudSelectItem>
                     }
             </MudSelect>
         </MudItem>
-
-        <MudItem sm="6" xs="12">
-            <MudSelect For="@(() => Model.TenantId)"
-                       T="string"
-                       Label="@L["New Tenant"]"
-                       Text="@Model.TenantName"
-                       Required="false"
-                       Value="@Model.TenantId"
-                       ValueChanged="TenantSelectChanged">
-                @foreach (var item in TenantsService.DataSource.Select(x=>new { id = x.Id, name = x.Name })
-                .Except(Model.UserRoleTenants.Select(x => new { id = x.Tenant.Id, name = x.Tenant.Name })).ToList())
-                    {
-                    <MudSelectItem T="string" Value="@item.id">@item.name</MudSelectItem>
-                    }
-            </MudSelect>
-        </MudItem>
-
+        @if (Model.TenantId == "New Tenant")
+            {
+            <MudItem sm="6" xs="12">
+                <MudSelect For="@(() => Model.TenantId)"
+                           T="string"
+                           Label="@L["New Tenant"]"
+                           Text="@Model.TenantName"
+                           Required="false"
+                           Value="@Model.TenantId"
+                           ValueChanged="TenantSelectChanged">
+                    @foreach (var item in TenantsService.DataSource.Select(x => new { id = x.Id, name = x.Name })
+                   .Except(Model.UserRoleTenants.Select(x => new { id = x.Tenant.Id, name = x.Tenant.Name })).ToList())
+                        {
+                        <MudSelectItem T="string" Value="@item.id">@item.name</MudSelectItem>
+                        }
+                </MudSelect>
+            </MudItem>
+            }
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
             <div class="d-fex">
@@ -185,6 +185,12 @@
 
     protected override async Task OnInitializedAsync()
         {
+        Model.UserRoleTenants.Add(new ApplicationUserRoleDto()
+                {
+                Tenant = new CleanArchitecture.Blazor.Application.Features.Tenants.DTOs.TenantDto()
+                    { Id = "New Tenant", Name = "New Tenant" }
+                });
+
         //take all standard roles from default structure and then add more assigned from??????????????????? Userroles table
         //step1: load standard roles as per tenant
         //step2: update assigned roles
@@ -206,31 +212,34 @@
 
     private async Task<Task> TenantSelectChanged(string id)
         {
-        //based upon tenant, show roles
-        var tenant = TenantsService.DataSource.Find(x => x.Id == id);
-        if (tenant != null)
+        if (id != "New Tenant")
             {
-            Roles = new();
-            Model.TenantId = tenant?.Id;
-            Model.TenantName = tenant?.Name;
-            //todo 1 take all standard roles from default structure and then add more assigned from Userroles table
-            //step1: load standard roles as per tenant
-            //step2: update assigned roles
-            if (StaticData.Roles != null && StaticData.Roles.Any())
+            //based upon tenant, show roles
+            var tenant = TenantsService.DataSource.Find(x => x.Id == id);
+            if (tenant != null)
                 {
-                StaticData.RolesOfTenantType(tenant.Type).ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
-                var existingRoles = await RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id)).Select(x => x.Name).ToListAsync();
-                if (existingRoles != null && existingRoles.Any())
-                    Roles.ForEach(r => { if (existingRoles.Contains(r.Key)) r.Value = true; });
-                Roles = Roles.OrderByDescending(x => x.Value).ToList();
+                Roles = new();
+                Model.TenantId = tenant?.Id;
+                Model.TenantName = tenant?.Name;
+                //todo 1 take all standard roles from default structure and then add more assigned from Userroles table
+                //step1: load standard roles as per tenant
+                //step2: update assigned roles
+                if (StaticData.Roles != null && StaticData.Roles.Any())
+                    {
+                    StaticData.RolesOfTenantType(tenant.Type).ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
+                    var existingRoles = await RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id)).Select(x => x.Name).ToListAsync();
+                    if (existingRoles != null && existingRoles.Any())
+                        Roles.ForEach(r => { if (existingRoles.Contains(r.Key)) r.Value = true; });
+                    Roles = Roles.OrderByDescending(x => x.Value).ToList();
+                    }
                 }
-            }
-        else
-            {
+            else
+                {
 
-            Roles = new();
-            Model.TenantId = null;
-            Model.TenantName = null;
+                Roles = new();
+                Model.TenantId = null;
+                Model.TenantName = null;
+                }
             }
         return Task.CompletedTask;
         }
