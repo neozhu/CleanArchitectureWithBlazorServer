@@ -18,13 +18,13 @@
             <div class="d-flex justify-center">
 
                 @if (string.IsNullOrEmpty(Model.ProfilePictureDataUrl))
-                {
+                    {
                     <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@Model.UserName.ToUpper().FirstOrDefault()</MudAvatar>
-                }
+                    }
                 else
-                {
+                    {
                     <MudAvatar Image="@Model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;" />
-                }
+                    }
                 <MudTooltip Text="@L["Click upload a photo."]">
                     <MudIconButton HtmlTag="label"
                                    Color="Color.Info"
@@ -43,22 +43,22 @@
                                         OwnerName="@Model.UserName"
                                         Clearable="true"
                                         Label="@L["Select Superior"]"
-            @bind-Value="@Model.SuperiorId">
+                                        @bind-Value="@Model.SuperiorId">
             </PickSuperiorIdAutocomplete>
 
         </MudItem>
         @if (Model.Provider == "Local")
-        {
+            {
             <MudItem xs="12" sm="6">
                 <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
             </MudItem>
 
             @if (string.IsNullOrEmpty(Model.Id))
-            {
+                {
                 <MudItem xs="12" sm="6">
                     <MudPasswordField Immediate="true"
                                       Label="@L["Password"]"
-                    @bind-Value="Model.Password"
+                                      @bind-Value="Model.Password"
                                       For="@(() => Model.Password)"
                                       Variant="Variant.Text"
                                       PasswordMode="true"
@@ -69,17 +69,17 @@
                 <MudItem xs="12" sm="6">
                     <MudPasswordField Immediate="true"
                                       Label="@L["Confirm Password"]"
-                    @bind-Value="Model.ConfirmPassword"
+                                      @bind-Value="Model.ConfirmPassword"
                                       For="@(() => Model.ConfirmPassword)"
                                       Variant="Variant.Text"
                                       PasswordMode="true"
                                       Required="true"
-                                      RequiredError="@L["confrm password is required!"]"
+                                      RequiredError="@L["confirm password is required!"]"
                                       Class="mt-4" />
                 </MudItem>
-            }
+                }
 
-        }
+            }
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
@@ -107,12 +107,30 @@
                        RequiredError="@L["Tenant is required."]"
                        Value="@Model.TenantId"
                        ValueChanged="TenantSelectChanged">
-                @foreach (var item in TenantsService.DataSource)
-                {
-                    <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
-                }
+                @* @foreach (var item in TenantsService.DataSource) *@
+                @foreach (var item in Model.UserRoleTenants)
+                    {
+                    <MudSelectItem T="string" Value="@item.TenantId">@item.Tenant.Name</MudSelectItem>
+                    }
             </MudSelect>
         </MudItem>
+
+        <MudItem sm="6" xs="12">
+            <MudSelect For="@(() => Model.TenantId)"
+                       T="string"
+                       Label="@L["New Tenant"]"
+                       Text="@Model.TenantName"
+                       Required="false"
+                       Value="@Model.TenantId"
+                       ValueChanged="TenantSelectChanged">
+                @foreach (var item in TenantsService.DataSource.Select(x=>new { id = x.Id, name = x.Name })
+                .Except(Model.UserRoleTenants.Select(x => new { id = x.Tenant.Id, name = x.Tenant.Name })).ToList())
+                    {
+                    <MudSelectItem T="string" Value="@item.id">@item.name</MudSelectItem>
+                    }
+            </MudSelect>
+        </MudItem>
+
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
             <div class="d-fex">
@@ -123,12 +141,12 @@
             <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
             <MudGrid Class="mt-1">
                 @for (var i = 0; i < Roles.Count; i++)
-                {
+                    {
                     var x = i;
                     <MudItem xs="6" sm="6" Class="py-0 my=0">
                         <MudCheckBox T="bool" Checked="@Roles[x].Value" Label="@Roles[x].Key" CheckedChanged="@(s => Roles[x].Value = (bool)s)"></MudCheckBox>
                     </MudItem>
-                }
+                    }
             </MudGrid>
         </MudItem>
 
@@ -137,11 +155,11 @@
 
 @code {
     public class CheckItem
-    {
+        {
         public string Key { get; set; } = string.Empty;
         public bool Value { get; set; }
         public byte Level { get; set; }//for hierarchy order
-    }
+        }
 
     MudForm? _form = default!;
     private List<CheckItem> Roles { get; set; } = new();
@@ -166,28 +184,32 @@
     public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
 
     protected override async Task OnInitializedAsync()
-    {
+        {
         //take all standard roles from default structure and then add more assigned from??????????????????? Userroles table
         //step1: load standard roles as per tenant
         //step2: update assigned roles
         var tenant = TenantsService.DataSource.Find(x => x.Id == Model.TenantId);
         if (tenant != null)
-        {
-            StaticData.RolesOfTenantType(tenant.Type).ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
-            if (Model.AssignedRoles != null && Model.AssignedRoles.Intersect(Roles.Select(x => x.Key)).Count() > 0)
             {
-                Model.AssignedRoles.Intersect(Roles.Select(x => x.Key)).ToList().ForEach(a => { Roles.Find(r => r.Key == a).Value = true; });
+            if (StaticData.Roles != null && StaticData.Roles.Any())
+                {
+                StaticData.RolesOfTenantType(tenant.Type).ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
+                if (Model.AssignedRoles != null && Model.AssignedRoles.Intersect(Roles.Select(x => x.Key)).Count() > 0)
+                    {
+                    Model.AssignedRoles.Intersect(Roles.Select(x => x.Key)).ToList().ForEach(a => { Roles.Find(r => r.Key == a).Value = true; });
+                    Roles = Roles.OrderByDescending(x => x.Value).ToList();
+                    }
+                }
             }
+
         }
 
-    }
-
     private async Task<Task> TenantSelectChanged(string id)
-    {
+        {
         //based upon tenant, show roles
         var tenant = TenantsService.DataSource.Find(x => x.Id == id);
         if (tenant != null)
-        {
+            {
             Roles = new();
             Model.TenantId = tenant?.Id;
             Model.TenantName = tenant?.Name;
@@ -195,33 +217,34 @@
             //step1: load standard roles as per tenant
             //step2: update assigned roles
             if (StaticData.Roles != null && StaticData.Roles.Any())
-            {
+                {
                 StaticData.RolesOfTenantType(tenant.Type).ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
                 var existingRoles = await RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id)).Select(x => x.Name).ToListAsync();
                 if (existingRoles != null && existingRoles.Any())
                     Roles.ForEach(r => { if (existingRoles.Contains(r.Key)) r.Value = true; });
+                Roles = Roles.OrderByDescending(x => x.Value).ToList();
+                }
             }
-        }
         else
-        {
+            {
 
             Roles = new();
             Model.TenantId = null;
             Model.TenantName = null;
-        }
+            }
         return Task.CompletedTask;
-    }
+        }
 
     private async Task UploadPhoto(InputFileChangeEventArgs e)
-    {
+        {
         var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
         var imgStream = new MemoryStream();
         await filestream.CopyToAsync(imgStream);
         imgStream.Position = 0;
         using (var outStream = new MemoryStream())
-        {
-            using (var image = Image.Load(imgStream))
             {
+            using (var image = Image.Load(imgStream))
+                {
                 image.Mutate(
                     i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) }));
                 image.Save(outStream, PngFormat.Instance);
@@ -232,21 +255,21 @@
                 Model.ProfilePictureDataUrl = result;
                 //Do your validations here
                 Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
+                }
             }
         }
-    }
 
     public async Task Submit()
-    {
-        if (_form is not null)
         {
+        if (_form is not null)
+            {
             await _form.Validate();
             if (_form.IsValid)
-            {
+                {
                 Model.AssignedRoles = Roles.Where(x => x.Value).Select(x => x.Key).ToArray();
                 await OnFormSubmit.InvokeAsync(Model);
+                }
             }
         }
-    }
 
 }

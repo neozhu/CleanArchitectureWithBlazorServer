@@ -1,15 +1,18 @@
+Patient no need of separate role under patient tenant
+
+On users page,tenants should order by selected first and then others
+User self login,allow them to change tenants of choice and ask them to logout & login
+
 On user profile page, show all of his tenants and at first already choosed tenants lise active then incative then remaining
-
-
 
 once account verified,email edit disable or validate before assigning new account
 Login happens throgh, Infrashtructure=>BlazorAuthStateProvider then  AccessTokenProvider
 
 Usermanager() createasync make it ready for Adding UserClaims line 65
-remove DefaultRole1 from default roles ,make it only user frien dly
+remove DefaultRole1 from default roles ,make it only user friendly
 
 
-Each fetch should verify is approved/active otherwise no like dodctor
+Each fetch should verify is approved/active otherwise no like doctor
 Actions:
 Patient add,edit,delete,view,edit insurance,transactionofHospital
 Prescription add,edit,view
@@ -67,3 +70,5 @@ For both 1 & 2 make common function called load tenant based on user role/tenant
   //for internal load all tenants
   //any others ,load only of there tenants
   //user search separate page
+
+  Nuget package update to latest stable working set
