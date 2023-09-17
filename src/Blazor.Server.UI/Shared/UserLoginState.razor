@@ -14,64 +14,71 @@
     [Inject]
     public IDispatcher Dispatcher { get; set; } = null!;
     public void Dispose()
-    {
+        {
         Client.Login -= _client_Login;
         Client.Logout -= _client_Logout;
         AuthenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         GC.SuppressFinalize(this);
-    }
+        }
     [Inject]
     private HubClient Client { get; set; } = default!;
     [Inject]
     private IUsersStateContainer UsersStateContainer { get; set; } = default!;
     protected override async Task OnInitializedAsync()
-    {
-        Client.Login += _client_Login;
-        Client.Logout += _client_Logout;
-        await Client.StartAsync().ConfigureAwait(false);
-        AuthenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
-        var state = await AuthState;
-        if (state.User.Identity?.IsAuthenticated ?? false)
         {
-            var userId = state.User.GetUserId();
-            SetProfile(userId!);
+        try
+            {
+            Client.Login += _client_Login;
+            Client.Logout += _client_Logout;
+            await Client.StartAsync().ConfigureAwait(false);
+            AuthenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
+            var state = await AuthState;
+            if (state.User.Identity?.IsAuthenticated ?? false)
+                {
+                var userId = state.User.GetUserId();
+                SetProfile(userId!);
+                }
+            }
+        catch (Exception ex)
+            {
+            Console.WriteLine(ex.ToString());
+            }
         }
-    }
 
     private void _client_Login(object? sender, UserStateChangeEventArgs args)
-    {
+        {
         InvokeAsync(() =>
         {
             Snackbar.Add(string.Format(L["{0} has logged in."], args.UserName), MudBlazor.Severity.Info);
             UsersStateContainer.AddOrUpdate(args.ConnectionId, args.UserName);
         });
-    }
+        }
 
     private void _client_Logout(object? sender, UserStateChangeEventArgs args)
-    {
+        {
         InvokeAsync(() =>
         {
             Snackbar.Add(string.Format(L["{0} has logged out."], args.UserName), MudBlazor.Severity.Normal);
             UsersStateContainer.Remove(args.ConnectionId);
 
         });
-    }
+        }
     private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
-    {
+        {
         InvokeAsync(async () =>
         {
             var state = await authenticationState;
-            if (state.User.Identity?.IsAuthenticated??false)
-            {
+            if (state.User.Identity?.IsAuthenticated ?? false)
+                {
                 var userId = state.User.GetUserId();
                 SetProfile(userId!);
-            }
+                }
         });
-    }
+        }
     private void SetProfile(string userId)
-    {
+        {
         Dispatcher.Dispatch(new FetchUserDtoAction() { UserId = userId });
-    }
+        }
 }
 
 
