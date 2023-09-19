@@ -22,8 +22,7 @@
         height: 120px !important;
     }
 </style>
-<ErrorBoundary>
-    <ChildContent>
+
         <AdvancedSearchProductsComponent TRequest="Query" OnConditionChanged="ConditionChanged"></AdvancedSearchProductsComponent>
         <MudDataGrid ServerData="@(ServerReload)"
                      FixedHeader="true"
@@ -239,11 +238,8 @@
                 <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
             </PagerContent>
         </MudDataGrid>
-    </ChildContent>
-    <ErrorContent>
-        <CustomError Exception="context"></CustomError>
-    </ErrorContent>
-</ErrorBoundary>
+
+
 
 @code {
     public string? Title { get; private set; }
@@ -302,6 +298,7 @@
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
+
             return new GridData<ProductDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -322,6 +319,7 @@
 
     private async Task OnSearch(string text)
     {
+        throw new Exception("OnSearch error!");
         _selectedItems = new HashSet<ProductDto>();
         Query.Keyword = text;
         await _table.ReloadServerData();
