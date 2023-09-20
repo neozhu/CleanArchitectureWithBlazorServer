@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components;
@@ -8,12 +9,14 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public class AccessTokenProvider
 {
     private readonly string _tokenKey = nameof(_tokenKey);
+    private readonly string _refreshTokenKey = nameof(_refreshTokenKey);
     private readonly ProtectedLocalStorage _localStorage;
     private readonly NavigationManager _navigation;
     private readonly IIdentityService _identityService;
     private readonly ITenantProvider _tenantProvider;
     private readonly ICurrentUserService _currentUser;
     public string? AccessToken { get; private set; }
+    public string? RefreshToken { get; private set; }
 
     public AccessTokenProvider(ProtectedLocalStorage localStorage, NavigationManager navigation, IIdentityService identityService,
         ITenantProvider tenantProvider,
@@ -27,14 +30,33 @@ public class AccessTokenProvider
     }
     public async Task GenerateJwt(ApplicationUser applicationUser)
     {
-        AccessToken = await _identityService.GenerateJwtAsync(applicationUser);
-        await _localStorage.SetAsync(_tokenKey, AccessToken);
+        var token = await _identityService.GenerateJwtAsync(applicationUser,true);
+        await _localStorage.SetAsync(_tokenKey, token.Token);
+        await _localStorage.SetAsync(_refreshTokenKey, token.RefreshToken);
         _tenantProvider.TenantId = applicationUser.TenantId;
         _tenantProvider.TenantName = applicationUser.TenantName;
         _currentUser.UserId = applicationUser.Id;
         _currentUser.UserName = applicationUser.UserName;
         _currentUser.TenantId = applicationUser.TenantId;
         _currentUser.TenantName = applicationUser.TenantName;
+
+    }
+    public async Task SaveToken(TokenResponse token)
+    {
+        AccessToken = token.Token;
+        RefreshToken = token.RefreshToken;
+        await _localStorage.SetAsync(_tokenKey, AccessToken);
+        await _localStorage.SetAsync(_refreshTokenKey, RefreshToken);
+        var principal = await _identityService.GetClaimsPrincipal(token.Token);
+        if (principal?.Identity?.IsAuthenticated ?? false)
+        {
+            _tenantProvider.TenantId = principal?.GetTenantId();
+            _tenantProvider.TenantName = principal?.GetTenantName();
+            _currentUser.UserId = principal?.GetUserId();
+            _currentUser.UserName = principal?.GetUserName();
+            _currentUser.TenantId = principal?.GetTenantId();
+            _currentUser.TenantName = principal?.GetTenantId();
+        }
 
     }
     public async Task<ClaimsPrincipal> GetClaimsPrincipal()
@@ -45,6 +67,8 @@ public class AccessTokenProvider
             if (token.Success && !string.IsNullOrEmpty(token.Value))
             {
                 AccessToken = token.Value;
+                var refreshToken = await _localStorage.GetAsync<string>(_refreshTokenKey);
+                RefreshToken = refreshToken.Value;
                 var principal = await _identityService.GetClaimsPrincipal(token.Value);
                 if (principal?.Identity?.IsAuthenticated ?? false)
                 {
