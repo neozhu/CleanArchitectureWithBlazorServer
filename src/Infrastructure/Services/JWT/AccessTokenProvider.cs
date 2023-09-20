@@ -66,6 +66,8 @@ public class AccessTokenProvider
             if (token.Success && !string.IsNullOrEmpty(token.Value))
             {
                 AccessToken = token.Value;
+                var refreshToken = await _localStorage.GetAsync<string>(_refreshTokenKey);
+                RefreshToken = refreshToken.Value;
                 var principal = await _identityService.GetClaimsPrincipal(token.Value);
                 if (principal?.Identity?.IsAuthenticated ?? false)
                 {
