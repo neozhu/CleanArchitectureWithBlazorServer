@@ -30,8 +30,9 @@ public class AccessTokenProvider
     }
     public async Task GenerateJwt(ApplicationUser applicationUser)
     {
-        AccessToken = await _identityService.GenerateJwtAsync(applicationUser);
-        await _localStorage.SetAsync(_tokenKey, AccessToken);
+        var token = await _identityService.GenerateJwtAsync(applicationUser,true);
+        await _localStorage.SetAsync(_tokenKey, token.Token);
+        await _localStorage.SetAsync(_refreshTokenKey, token.RefreshToken);
         _tenantProvider.TenantId = applicationUser.TenantId;
         _tenantProvider.TenantName = applicationUser.TenantName;
         _currentUser.UserId = applicationUser.Id;

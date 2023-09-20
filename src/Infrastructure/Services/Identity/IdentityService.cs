@@ -173,7 +173,7 @@ public class IdentityService : IIdentityService
         rng.GetBytes(randomNumber);
         return Convert.ToBase64String(randomNumber);
     }
-    public async Task<string> GenerateJwtAsync(ApplicationUser user)
+    public async Task<TokenResponse> GenerateJwtAsync(ApplicationUser user)
     {
         var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
         var token = GenerateEncryptedToken(GetSigningCredentials(), principal.Claims);
