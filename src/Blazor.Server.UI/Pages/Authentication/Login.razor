@@ -2,6 +2,8 @@
 @inject AccessTokenProvider TokenProvider
 @inject IJSRuntime JS
 @inherits OwningComponentBase
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 @using CleanArchitecture.Blazor.Infrastructure.Services.JWT
 @using Microsoft.AspNetCore.DataProtection
 @using CleanArchitecture.Blazor.Application.Common.Security
@@ -95,6 +97,8 @@
 
     [Inject]
     protected NavigationManager NavigationManager { get; set; } = null!;
+    [Inject]
+    protected IIdentityService _identityService { get; set; } = null!;
 
     private LoginFormModel _model = new()
         {
@@ -150,9 +154,18 @@
                         }
                         else
                         {
-                            await TokenProvider.GenerateJwt(user);
-                            NavigationManager.NavigateTo(NavigationManager.Uri, true);
-                            Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
+                            var tokenresponse = await _identityService.LoginAsync(new TokenRequest() { UserName=_model.UserName,Password=_model.Password, RememberMe = _model.RememberMe });
+                            if (tokenresponse.Succeeded && tokenresponse.Data is not null)
+                            {
+                                await TokenProvider.SaveToken(tokenresponse.Data);
+                                NavigationManager.NavigateTo(NavigationManager.Uri, true);
+                                Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
+                            }
+                            else
+                            {
+                                Snackbar.Add(tokenresponse.ErrorMessage, Severity.Error);
+                            }
+                            
                         }
                     }
                 }

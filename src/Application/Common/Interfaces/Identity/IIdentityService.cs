@@ -14,7 +14,7 @@ public interface IIdentityService : IService
     Task<List<ApplicationRoleDto>> GetAllRoles();
 
     Task<Result<TokenResponse>> LoginAsync(TokenRequest request, CancellationToken cancellation = default);
-    Task<string> GenerateJwtAsync(ApplicationUser user);
+    Task<TokenResponse> GenerateJwtAsync(ApplicationUser user, bool rememberMe = false);
     Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellation = default);
     Task<ClaimsPrincipal> GetClaimsPrincipal(string token);
     Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default);

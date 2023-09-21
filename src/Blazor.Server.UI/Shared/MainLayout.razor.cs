@@ -1,6 +1,7 @@
 using Blazor.Server.UI.Components.Shared;
 using Blazor.Server.UI.Services.Layout;
 using Blazor.Server.UI.Services.UserPreferences;
+using Microsoft.AspNetCore.Components.Web;
 using Toolbelt.Blazor.HotKeys2;
 
 namespace Blazor.Server.UI.Shared;
@@ -17,10 +18,19 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
     private bool _themingDrawerOpen;
     private bool _defaultDarkMode;
     [Inject] private HotKeys HotKeys { get; set; } = default!;
-    
-    
-    
-   
+
+    private ErrorBoundary? _errorBoundary { set; get; } = null!;
+
+    protected override void OnParametersSet()
+    {
+        ResetBoundary();
+    }
+
+    private void ResetBoundary()
+    {
+        // On each page navigation, reset any error state
+        _errorBoundary?.Recover();
+    }
     public void Dispose()
     {
         LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
