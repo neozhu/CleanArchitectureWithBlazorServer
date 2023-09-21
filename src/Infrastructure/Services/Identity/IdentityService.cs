@@ -110,19 +110,10 @@ public class IdentityService : IIdentityService
         {
             return await Result<TokenResponse>.FailureAsync(new string[] { _localizer["Invalid Credentials."] });
         }
-        user.RefreshToken = GenerateRefreshToken();
-        var tokenExpiryTime = DateTime.Now.AddDays(7);
-
-        if (request.RememberMe)
-        {
-            tokenExpiryTime = DateTime.Now.AddYears(1);
-        }
-        user.RefreshTokenExpiryTime = tokenExpiryTime;
-        await _userManager.UpdateAsync(user);
         
-        var token = await GenerateJwtAsync(user);
-        var response = new TokenResponse { Token = token, RefreshTokenExpiryTime = tokenExpiryTime, RefreshToken = user.RefreshToken, ProfilePictureDataUrl = user.ProfilePictureDataUrl };
-        return await Result<TokenResponse>.SuccessAsync(response);
+        
+        var token = await GenerateJwtAsync(user,request.RememberMe);
+        return await Result<TokenResponse>.SuccessAsync(token);
     }
 
     public async Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellation = default)
@@ -173,11 +164,19 @@ public class IdentityService : IIdentityService
         rng.GetBytes(randomNumber);
         return Convert.ToBase64String(randomNumber);
     }
-    public async Task<string> GenerateJwtAsync(ApplicationUser user)
+    public async Task<TokenResponse> GenerateJwtAsync(ApplicationUser user,bool rememberMe=false)
     {
+        user.RefreshToken = GenerateRefreshToken();
         var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+        var tokenExpiryTime = DateTime.Now.AddDays(7);
+        if (rememberMe)
+        {
+            tokenExpiryTime = DateTime.Now.AddYears(1);
+        }
+        user.RefreshTokenExpiryTime = tokenExpiryTime;
+        await _userManager.UpdateAsync(user);
         var token = GenerateEncryptedToken(GetSigningCredentials(), principal.Claims);
-        return token;
+        return new TokenResponse { Token = token, RefreshTokenExpiryTime = tokenExpiryTime, RefreshToken = user.RefreshToken, ProfilePictureDataUrl = user.ProfilePictureDataUrl };
     }
     private string GenerateEncryptedToken(SigningCredentials signingCredentials, IEnumerable<Claim> claims)
     {
