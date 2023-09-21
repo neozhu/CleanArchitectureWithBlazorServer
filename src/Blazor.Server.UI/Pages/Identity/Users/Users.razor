@@ -287,10 +287,7 @@
  </ErrorBoundary>
 
  @code {
-
-    // [Inject]
-    // private IApplicationDbContext context { get; set; } = default!;
-    [Inject]
+  [Inject]
     private IUsersStateContainer UsersStateContainer { get; set; } = default!;
     private int _defaultPageSize = 15;
     private HashSet<ApplicationUserDto> _selectedItems = new();
