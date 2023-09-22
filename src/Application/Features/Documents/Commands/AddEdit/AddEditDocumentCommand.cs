@@ -36,7 +36,7 @@ public class AddEditDocumentCommand : ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<AddEditDocumentCommand, DocumentDto>(MemberList.None).ReverseMap();
+            CreateMap<AddEditDocumentCommand, Document>(MemberList.None);
         }
     }
 }
@@ -60,7 +60,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
 
     public async Task<Result<int>> Handle(AddEditDocumentCommand request, CancellationToken cancellationToken)
     {
-        var dto = _mapper.Map<DocumentDto>(request);
+
         if (request.Id > 0)
         {
             var document = await _context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);
@@ -76,9 +76,8 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
         }
         else
         {
-            var document = _mapper.Map<Document>(dto);
+            var document = _mapper.Map<Document>(request);
             if (request.UploadRequest != null) document.URL = await _uploadService.UploadAsync(request.UploadRequest);
-
             document.AddDomainEvent(new CreatedEvent<Document>(document));
             _context.Documents.Add(document);
             await _context.SaveChangesAsync(cancellationToken);
