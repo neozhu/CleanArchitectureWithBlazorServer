@@ -22,7 +22,8 @@ public class AddEditCustomerCommand: ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<CustomerDto, AddEditCustomerCommand>().ReverseMap();
+            CreateMap<CustomerDto,AddEditCustomerCommand>(MemberList.None);
+            CreateMap<AddEditCustomerCommand, Customer>(MemberList.None);
         }
     }
 }
@@ -44,12 +45,11 @@ public class AddEditCustomerCommand: ICacheInvalidatorRequest<Result<int>>
         }
         public async Task<Result<int>> Handle(AddEditCustomerCommand request, CancellationToken cancellationToken)
         {
-            // TODO: Implement AddEditCustomerCommandHandler method 
-            var dto = _mapper.Map<CustomerDto>(request);
+
             if (request.Id > 0)
             {
                 var item = await _context.Customers.FindAsync(new object[] { request.Id }, cancellationToken) ?? throw new NotFoundException($"Customer with id: [{request.Id}] not found.");
-                item = _mapper.Map(dto, item);
+                item = _mapper.Map(request, item);
 				// raise a update domain event
 				item.AddDomainEvent(new CustomerUpdatedEvent(item));
                 await _context.SaveChangesAsync(cancellationToken);
@@ -57,7 +57,7 @@ public class AddEditCustomerCommand: ICacheInvalidatorRequest<Result<int>>
             }
             else
             {
-                var item = _mapper.Map<Customer>(dto);
+                var item = _mapper.Map<Customer>(request);
                 // raise a create domain event
 				item.AddDomainEvent(new CustomerCreatedEvent(item));
                 _context.Customers.Add(item);

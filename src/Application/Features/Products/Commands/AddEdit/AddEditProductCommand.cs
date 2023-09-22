@@ -26,7 +26,8 @@ public class AddEditProductCommand : ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<AddEditProductCommand, ProductDto>().ReverseMap();
+            CreateMap<ProductDto,AddEditProductCommand>(MemberList.None);
+            CreateMap<AddEditProductCommand, Product>(MemberList.None);
         }
     }
 }
@@ -47,19 +48,18 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
 
     public async Task<Result<int>> Handle(AddEditProductCommand request, CancellationToken cancellationToken)
     {
-        var dto = _mapper.Map<ProductDto>(request);
         if (request.Id > 0)
         {
             var item = await _context.Products.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken) ??
                        throw new NotFoundException($"Product with id: {request.Id} not found.");
-            item = _mapper.Map(dto, item);
+            item = _mapper.Map(request, item);
             item.AddDomainEvent(new UpdatedEvent<Product>(item));
             await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {
-            var item = _mapper.Map<Product>(dto);
+            var item = _mapper.Map<Product>(request);
             item.AddDomainEvent(new CreatedEvent<Product>(item));
             _context.Products.Add(item);
             await _context.SaveChangesAsync(cancellationToken);
