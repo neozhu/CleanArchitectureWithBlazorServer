@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Text.Json.Serialization;
 using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
@@ -28,7 +29,7 @@ public static class DependencyInjection
         services.AddScoped<AuthenticationStateProvider, BlazorAuthStateProvider>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ITenantProvider, TenantProvider>();
-        services.AddScoped<ISaveChangesInterceptor,AuditableEntityInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
         {
@@ -48,7 +49,7 @@ public static class DependencyInjection
              });
         }
 
-       
+
         services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
         services.AddTransient<IApplicationDbContext>(provider =>
             provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
@@ -64,7 +65,7 @@ public static class DependencyInjection
             .AddSignalRServices();
         services.AddAuthenticationService(configuration);
         services.AddHttpClientService();
-        services.AddControllers();
+        services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
         return services;
     }
 }

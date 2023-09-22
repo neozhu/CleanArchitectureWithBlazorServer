@@ -15,7 +15,8 @@ internal static class DbContextOptionsBuilderExtensions
                     e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.PostgreSQL"));
             case DbProviderKeys.SqlServer:
                 return builder.UseSqlServer(connectionString,
-                    e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.MSSQL"));
+                    e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.MSSQL"))
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);//verify this necessary
             case DbProviderKeys.SqLite:
                 return builder.UseSqlite(connectionString,
                     e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.SqLite"));

@@ -20,7 +20,7 @@ public class ApplicationDbContext : IdentityDbContext<
     {
 
     }
-   // public DbSet<ApplicationUserRole> ApplicationUserRoles { get; set; }
+    // public DbSet<ApplicationUserRole> ApplicationUserRoles { get; set; }
 
 
     public DbSet<Tenant> Tenants { get; set; }
@@ -59,6 +59,8 @@ public class ApplicationDbContext : IdentityDbContext<
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        optionsBuilder.EnableSensitiveDataLogging();
+        optionsBuilder.LogTo(Console.WriteLine);
         if (!optionsBuilder.IsConfigured)
         {
 

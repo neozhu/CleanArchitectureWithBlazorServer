@@ -10,6 +10,7 @@ using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using LazyCache;
@@ -169,17 +170,25 @@ public class IdentityService : IIdentityService
     }
     public async Task<TokenResponse> GenerateJwtAsync(ApplicationUser user, bool rememberMe = false)
     {
-        user.RefreshToken = GenerateRefreshToken();
-        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
-        var tokenExpiryTime = DateTime.Now.AddDays(7);
-        if (rememberMe)
+        try
         {
-            tokenExpiryTime = DateTime.Now.AddYears(1);
+            user.RefreshToken = GenerateRefreshToken();
+            var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+            var tokenExpiryTime = DateTime.Now.AddDays(7);
+            if (rememberMe)
+            {
+                tokenExpiryTime = DateTime.Now.AddYears(1);
+            }
+            user.RefreshTokenExpiryTime = tokenExpiryTime;
+            await _userManager.UpdateAsync(user);
+            var token = GenerateEncryptedToken(GetSigningCredentials(), principal.Claims);
+            return new TokenResponse { Token = token, RefreshTokenExpiryTime = tokenExpiryTime, RefreshToken = user.RefreshToken, ProfilePictureDataUrl = user.ProfilePictureDataUrl };
         }
-        user.RefreshTokenExpiryTime = tokenExpiryTime;
-        await _userManager.UpdateAsync(user);
-        var token = GenerateEncryptedToken(GetSigningCredentials(), principal.Claims);
-        return new TokenResponse { Token = token, RefreshTokenExpiryTime = tokenExpiryTime, RefreshToken = user.RefreshToken, ProfilePictureDataUrl = user.ProfilePictureDataUrl };
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
+        return null;
     }
     private string GenerateEncryptedToken(SigningCredentials signingCredentials, IEnumerable<Claim> claims)
     {

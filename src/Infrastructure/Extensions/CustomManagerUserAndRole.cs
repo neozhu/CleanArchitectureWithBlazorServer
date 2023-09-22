@@ -45,17 +45,42 @@ public class CustomUserManager : UserManager<ApplicationUser>
             .Include(x => x.UserClaims)
             .FirstOrDefaultAsync(x => x.Id == userId);
     }
+    public async Task<ApplicationUser?> FindByIdAsyncNoTracking(string userId)
+    {
+        return await Users.AsNoTracking()
+            .Include(x => x.UserRoles).ThenInclude(x => x.Role)
+            .Include(x => x.UserRoles).ThenInclude(x => x.Tenant)
+            .Include(x => x.UserClaims)
+            .FirstOrDefaultAsync(x => x.Id == userId);
+    }
+    public async Task<List<ApplicationUserRole>> GetUserRoles(string userId)
+    {
+        return await dbContext.UserRoles.AsNoTracking()
+            .Include(x => x.Role)
+            .Include(x => x.Tenant)
+            .Where(x => x.UserId == userId)
+            .ToListAsync();
+    }
     public override async Task<ApplicationUser?> FindByNameAsync(string userName)
     {
         if (string.IsNullOrEmpty(userName)) return null;
         userName = userName.Trim().TrimEnd().TrimStart().ToUpperInvariant();
-        return await Users
+        // var user = await base.FindByNameAsync(userName);
+        return await Users.AsNoTracking()
             .Include(x => x.UserRoles).ThenInclude(x => x.Role)
             .Include(x => x.UserRoles).ThenInclude(x => x.Tenant)
             .Include(x => x.UserClaims)
             .FirstOrDefaultAsync(x => x.NormalizedUserName == userName);
     }
-
+    public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
+    {
+        // Add your custom logic here before calling the base method
+        // For example, you can validate user data or perform additional tasks.
+        dbContext.Attach(user);
+        var result = await base.UpdateAsync(user);
+        var r = await dbContext.SaveChangesAsync();
+        return result;
+    }
     public async Task<IdentityResult> CreateAsync(ApplicationUser user, List<string> roles = null, string tenantId = null, string password = null)
     {
         if (string.IsNullOrEmpty(tenantId)) tenantId = DefaultTenantId;
