@@ -20,7 +20,7 @@ public class UpdateCustomerCommand: ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<CustomerDto, UpdateCustomerCommand>().ReverseMap();
+            CreateMap<UpdateCustomerCommand, Customer>(MemberList.None);
         }
     }
 }
@@ -42,10 +42,9 @@ public class UpdateCustomerCommand: ICacheInvalidatorRequest<Result<int>>
         }
         public async Task<Result<int>> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
-           // TODO: Implement UpdateCustomerCommandHandler method 
+
            var item =await _context.Customers.FindAsync( new object[] { request.Id }, cancellationToken)?? throw new NotFoundException($"Customer with id: [{request.Id}] not found.");;
-           var dto = _mapper.Map<CustomerDto>(request);
-           item = _mapper.Map(dto, item);
+           item = _mapper.Map(request, item);
 		    // raise a update domain event
 		   item.AddDomainEvent(new CustomerUpdatedEvent(item));
            await _context.SaveChangesAsync(cancellationToken);
