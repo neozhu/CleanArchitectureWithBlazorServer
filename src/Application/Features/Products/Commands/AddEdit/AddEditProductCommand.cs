@@ -26,6 +26,7 @@ public class AddEditProductCommand : ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
+            CreateMap<ProductDto,AddEditProductCommand>(MemberList.None);
             CreateMap<AddEditProductCommand, Product>(MemberList.None);
         }
     }

@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
+using CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEdit;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Create;
 
@@ -20,7 +21,8 @@ public class CreateCustomerCommand: ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<CreateCustomerCommand, Customer>(MemberList.None);
+            CreateMap<CustomerDto, AddEditCustomerCommand>(MemberList.None);
+            CreateMap<AddEditCustomerCommand, Customer>(MemberList.None);
         }
     }
 }
