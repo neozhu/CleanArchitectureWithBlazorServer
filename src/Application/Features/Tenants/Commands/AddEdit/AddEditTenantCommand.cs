@@ -22,6 +22,7 @@ public class AddEditTenantCommand : ICacheInvalidatorRequest<Result<string>>
     {
         public Mapping()
         {
+            CreateMap<TenantDto,AddEditTenantCommand>(MemberList.None);
             CreateMap<AddEditTenantCommand, Tenant>(MemberList.None);
         }
     }

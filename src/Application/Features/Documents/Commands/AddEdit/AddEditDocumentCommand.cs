@@ -36,6 +36,7 @@ public class AddEditDocumentCommand : ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
+            CreateMap<DocumentDto,AddEditDocumentCommand>(MemberList.None);
             CreateMap<AddEditDocumentCommand, Document>(MemberList.None);
         }
     }
