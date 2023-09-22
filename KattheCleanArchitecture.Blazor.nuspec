@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>CleanArchitecture.Blazor.Solution.Template</id>
-    <version>1.0.0-preview.14</version>
+    <version>1.0.0-preview.15</version>
     <title>Clean Architecture Blazor Solution Template</title>
     <authors>hl.z</authors>
     <description>Clean Architecture Blazor Solution Template for .NET 7.</description>
@@ -10,8 +10,8 @@
       A Clean Architecture Blazor Server Solution Template for creating a Single-Page Application (SPA) with ASP.NET Core.
     </summary>
     <releaseNotes>
-      1.0.0-preview.14
-      -  Added a toggelable loadingscreen
+      1.0.0-preview.15
+      -  ✨ Improve Command Mapping Configuration
      </releaseNotes>
 
     <projectUrl>https://github.com/neozhu/CleanArchitectureWithBlazorServer</projectUrl>
