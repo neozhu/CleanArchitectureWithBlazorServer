@@ -1,3 +1,11 @@
+Someone registers first as a User of Patient/Guest
+then let them add request for new tenant as H/P/D
+
+FOr new tenant creation request,lets make other page by user home screen
+Request for New Hospital/P/Dia
+For internal admin,one page already exists...need to modify with type of tenant and more details like default admin account...
+with same layout by other users lets add option like add new tenant but it goes for admin approval
+
 On Users page, allow only to make existing tenants operation + Existing all base tenants type excluding (existing+Internal)
 ex1: Patient+ Existing other Hospital+Existing Pharmacy+Existing DiagCenter
 ex2: Internal+ Patient+ Existing Hospital+Existing Pharmacy+Existing DiagCenter
@@ -6,9 +14,7 @@ ex3: Nanjappa hospital+Sarji hospital+ Patient+ Existing Hospital+Existing Pharm
     if existing Pharmacy choosen then list all existing Pharmacies in new dropdown & roles common for all 
 
 
-FOr new tenant creation request,lets make other page by user home screen
-Request for New Hospital/P/Dia
-Also for internal admin,one page
+
 
 Patient no need of separate role under patient tenant
 
