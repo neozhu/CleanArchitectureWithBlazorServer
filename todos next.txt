@@ -1,3 +1,6 @@
+On Users page, allow only to make existing tenants operation
+FOr new tenant creation,lets make other page
+
 Patient no need of separate role under patient tenant
 
 On users page,tenants should order by selected first and then others
