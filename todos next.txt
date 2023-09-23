@@ -1,4 +1,11 @@
-On Users page, allow only to make existing tenants operation
+On Users page, allow only to make existing tenants operation + Existing all base tenants type excluding (existing+Internal)
+ex1: Patient+ Existing other Hospital+Existing Pharmacy+Existing DiagCenter
+ex2: Internal+ Patient+ Existing Hospital+Existing Pharmacy+Existing DiagCenter
+ex3: Nanjappa hospital+Sarji hospital+ Patient+ Existing Hospital+Existing Pharmacy+Existing DiagCenter
+    if existing Hospital choosen then list all existing hospital in new dropdown & roles common for all 
+    if existing Pharmacy choosen then list all existing Pharmacies in new dropdown & roles common for all 
+
+
 FOr new tenant creation,lets make other page
 Request for New Hospital/P/Dia
 
