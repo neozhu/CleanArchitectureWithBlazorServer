@@ -1,5 +1,6 @@
 On Users page, allow only to make existing tenants operation
 FOr new tenant creation,lets make other page
+Request for New Hospital/P/Dia
 
 Patient no need of separate role under patient tenant
 
