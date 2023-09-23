@@ -6,8 +6,9 @@ ex3: Nanjappa hospital+Sarji hospital+ Patient+ Existing Hospital+Existing Pharm
     if existing Pharmacy choosen then list all existing Pharmacies in new dropdown & roles common for all 
 
 
-FOr new tenant creation,lets make other page
+FOr new tenant creation request,lets make other page by user home screen
 Request for New Hospital/P/Dia
+Also for internal admin,one page
 
 Patient no need of separate role under patient tenant
 
