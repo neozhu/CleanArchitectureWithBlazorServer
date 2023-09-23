@@ -76,10 +76,17 @@ public class CustomUserManager : UserManager<ApplicationUser>
     {
         // Add your custom logic here before calling the base method
         // For example, you can validate user data or perform additional tasks.
-        dbContext.Attach(user);
-        var result = await base.UpdateAsync(user);
-        var r = await dbContext.SaveChangesAsync();
-        return result;
+        try
+        {
+            var result = await base.UpdateAsync(user);
+            var r = await dbContext.SaveChangesAsync();
+            return result;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+            return null;
+        }
     }
     public async Task<IdentityResult> CreateAsync(ApplicationUser user, List<string> roles = null, string tenantId = null, string password = null)
     {
