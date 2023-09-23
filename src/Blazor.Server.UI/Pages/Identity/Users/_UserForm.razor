@@ -22,7 +22,9 @@
                 }
                 else
                 {
-                    <MudAvatar Image="@Model.ProfilePictureDataUrl" Style="height:128px; width:128px; font-size:2rem;"/>
+                    <MudAvatar Style="height:128px; width:128px; font-size:2rem;">
+                        <MudImage Src="@Model.ProfilePictureDataUrl"></MudImage>
+                    </MudAvatar>
                 }
                 <MudTooltip Text="@L["Click upload a photo."]">
                     <MudIconButton HtmlTag="label"
