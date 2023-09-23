@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
@@ -30,16 +31,19 @@ public class AddEditTenantCommand : ICacheInvalidatorRequest<Result<string>>
 
 public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand, Result<string>>
 {
+    private readonly ITenantService _tenantsService;
     private readonly IApplicationDbContext _context;
     private readonly IStringLocalizer<AddEditTenantCommandHandler> _localizer;
     private readonly IMapper _mapper;
 
     public AddEditTenantCommandHandler(
+        ITenantService tenantsService,
         IApplicationDbContext context,
         IStringLocalizer<AddEditTenantCommandHandler> localizer,
         IMapper mapper
     )
     {
+        _tenantsService = tenantsService;
         _context = context;
         _localizer = localizer;
         _mapper = mapper;
@@ -59,6 +63,7 @@ public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand,
             item = _mapper.Map(request, item);
         }
         await _context.SaveChangesAsync(cancellationToken);
+        await _tenantsService.Refresh();
         return await Result<string>.SuccessAsync(item.Id);
     }
 }
