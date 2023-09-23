@@ -22,7 +22,8 @@ public class AddEditTenantCommand : ICacheInvalidatorRequest<Result<string>>
     {
         public Mapping()
         {
-            CreateMap<TenantDto, AddEditTenantCommand>().ReverseMap();
+            CreateMap<TenantDto,AddEditTenantCommand>(MemberList.None);
+            CreateMap<AddEditTenantCommand, Tenant>(MemberList.None);
         }
     }
 }
@@ -46,16 +47,16 @@ public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand,
 
     public async Task<Result<string>> Handle(AddEditTenantCommand request, CancellationToken cancellationToken)
     {
-        var dto = _mapper.Map<TenantDto>(request);
+    
         var item = await _context.Tenants.FindAsync(new object[] { request.Id }, cancellationToken);
         if (item is null)
         {
-            item = _mapper.Map<Tenant>(dto);
+            item = _mapper.Map<Tenant>(request);
             await _context.Tenants.AddAsync(item, cancellationToken);
         }
         else
         {
-            item = _mapper.Map(dto, item);
+            item = _mapper.Map(request, item);
         }
         await _context.SaveChangesAsync(cancellationToken);
         return await Result<string>.SuccessAsync(item.Id);

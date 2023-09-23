@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
+using CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEdit;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Create;
 
@@ -20,7 +21,8 @@ public class CreateCustomerCommand: ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<CustomerDto, CreateCustomerCommand>().ReverseMap();
+            CreateMap<CustomerDto, AddEditCustomerCommand>(MemberList.None);
+            CreateMap<AddEditCustomerCommand, Customer>(MemberList.None);
         }
     }
 }
@@ -42,9 +44,8 @@ public class CreateCustomerCommand: ICacheInvalidatorRequest<Result<int>>
         }
         public async Task<Result<int>> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
-           // TODO: Implement CreateCustomerCommandHandler method 
-           var dto = _mapper.Map<CustomerDto>(request);
-           var item = _mapper.Map<Customer>(dto);
+  
+           var item = _mapper.Map<Customer>(request);
            // raise a create domain event
 	       item.AddDomainEvent(new CustomerCreatedEvent(item));
            _context.Customers.Add(item);
