@@ -31,21 +31,20 @@
         }
     </DialogContent>
     <DialogActions>
-        <InputFile id="fileInput" OnChange="(async (e) =>await LoadFiles(e))" hidden multiple AllowedExtensions=".jpg;.png;"
-                   CustomExtensionMessage="@L["Only .jpg and .png files are allowed."]" />
-        <MudButton Color="MudBlazor.Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!_uploadedFiles.Any())" OnClick="Clear">@ConstantString.Clear</MudButton>
-        <MudButton Color="MudBlazor.Color.Info" StartIcon="@Icons.Material.Filled.AttachFile" HtmlTag="label" for="fileInput">@L["Choose files"]</MudButton>
-        <MudButton Color="MudBlazor.Color.Primary" Variant="Variant.Filled" OnClick="Submit" Disabled="@(_processing || _uploading || !_uploadedFiles.Any())">
-            @if (_processing)
-            {
-                <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
-                <MudText Class="ms-2">Processing</MudText>
-            }
-            else
-            {
-                <MudText>@ConstantString.Submit</MudText>
-            }
-        </MudButton>
+ 
+        <MudButton Variant="Variant.Filled" Color="MudBlazor.Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!_uploadedFiles.Any())" OnClick="Clear">@ConstantString.Clear</MudButton>
+        <MudFileUpload T="IReadOnlyList<IBrowserFile>" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="LoadFiles" Style="margin-top:0px" >
+            <ButtonTemplate>
+                <MudButton Variant="Variant.Filled" HtmlTag="label"
+                               Icon="@Icons.Material.Filled.AttachFile"
+                               for="@context">
+                    @L["Choose files"]
+                </MudButton>
+            </ButtonTemplate>
+        </MudFileUpload>
+
+        <MudLoadingButton Loading="@_processing" Disabled="@(!_uploadedFiles.Any())" Variant="Variant.Filled" OnClick="Submit">@ConstantString.Submit</MudLoadingButton>
+        
     </DialogActions>
 </MudDialog>
 
@@ -61,19 +60,15 @@
     private ISender Mediator { get; set; } = default!;
     [Inject] private IUploadService UploadService { get; set; } = default!;
     List<FileUploadProgress> _uploadedFiles = new();
-    private async ValueTask LoadFiles(InputFileChangeEventArgs e)
+    private async void LoadFiles(IReadOnlyList<IBrowserFile> files)
     {
         try
         {
             _uploading = true;
-            var files = e.GetMultipleFiles(maximumFileCount: 100);
             var startIndex = _uploadedFiles.Count;
             // Add all files to the UI
-            foreach (var file in files)
-            {
-                var progress = new FileUploadProgress(file.Name, file.Size, file);
-                _uploadedFiles.Add(progress);
-            }
+             _uploadedFiles.AddRange(files.Select(file => new FileUploadProgress(file.Name, file.Size, file)).ToList());
+            
 
             // We don't want to refresh the UI too frequently,
             // So, we use a timer to update the UI every few hundred milliseconds
@@ -86,14 +81,22 @@
             {
                 foreach (var file in files)
                 {
-                    using var stream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
-                    while (await stream.ReadAsync(buffer) is int read && read > 0)
+                    using (var stream = file.OpenReadStream(GlobalVariable.MaxAllowedSize))
                     {
-                        _uploadedFiles[startIndex].UploadedBytes += read;
+                        while (true)
+                        {
+                            var read = await stream.ReadAsync(buffer);
+                            if (read == 0)
+                            {
+                                break; // Exit loop if no more data to read
+                            }
 
-                        // TODO Do something with the file chunk, such as save it
-                        // to a database or a local file system
-                        var readData = buffer.AsMemory().Slice(0, read);
+                            _uploadedFiles[startIndex].UploadedBytes += read;
+
+                            // TODO Do something with the file chunk, such as save it
+                            // to a database or a local file system
+                            var readData = buffer.AsMemory().Slice(0, read);
+                        }
                     }
 
                     startIndex++;
@@ -110,6 +113,7 @@
         finally
         {
             _uploading = false;
+            StateHasChanged();
         }
     }
     // Use the Meziantou.Framework.ByteSize NuGet package.
