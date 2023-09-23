@@ -1,4 +1,5 @@
 All place permissions,had to do additional validation with tenantid,as current is common role for all tenant
+extend AuthrizeAsync
 
 Someone registers first as a User of Patient/Guest
 then let them add request for new tenant as H/P/D
