@@ -1,3 +1,13 @@
+Had to make logic of each tenantwise role finding and get permission and modify authorizeasync all place
+
+State object holding full info of User,Tenant & role...which is waste...remove it
+User.claims => UserRoles having full info...extra waste remove it
+
+Better to remove tenantid?
+
+On Tenants page should list only if he has the tenantid mapping,currently its listing all tenants
+
+
 All place permissions,had to do additional validation with tenantid,as current is common role for all tenant
 extend AuthrizeAsync
 
