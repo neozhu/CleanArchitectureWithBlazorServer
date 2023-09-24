@@ -90,8 +90,8 @@ public static class AuthenticationServiceCollectionExtensions
                  }); 
    
         services.AddScoped<AccessTokenProvider>();
-        services.AddScoped<UserDataProvider>();
-        services.AddScoped<IUserDataProvider>(sp =>
+        services.AddSingleton<UserDataProvider>();
+        services.AddSingleton<IUserDataProvider>(sp =>
         {
             var service = sp.GetRequiredService<UserDataProvider>();
             service.Initialize();

@@ -319,6 +319,8 @@
     [Inject]
     private ITenantService TenantsService { get; set; } = null!;
     [Inject]
+    private IUserDataProvider UserDataProvider { get; set; } = null!;
+    [Inject]
     private IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     [Inject]
     private IExcelService ExcelService { get; set; } = null!;
@@ -453,6 +455,7 @@
                     await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
                 }
                 Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
+                await  UserDataProvider.Refresh();
                 await OnRefresh();
             }
             else
@@ -502,6 +505,7 @@
                 }
                 Snackbar.Add($"{ConstantString.UpdateSuccess}", Severity.Info);
                 await OnRefresh();
+                await UserDataProvider.Refresh();
             }
             else
             {
@@ -551,6 +555,7 @@
 
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
+            await UserDataProvider.Refresh();
         }
     }
 
@@ -592,6 +597,7 @@
             }
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
+            await  UserDataProvider.Refresh();
         }
 
     }

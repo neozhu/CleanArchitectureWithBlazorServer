@@ -1,6 +1,7 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application.Services.MultiTenant;
 
@@ -12,10 +13,12 @@ public class TenantService : ITenantService
 
     public TenantService(
         IAppCache cache,
-        IApplicationDbContext context, IMapper mapper)
+        IServiceScopeFactory scopeFactory, 
+        IMapper mapper)
     {
         _cache = cache;
-        _context = context;
+        var scope = scopeFactory.CreateScope();
+        _context = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
         _mapper = mapper;
     }
 
