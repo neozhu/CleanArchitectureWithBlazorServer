@@ -1,3 +1,9 @@
+Every Internal admin,Hospital-Admin can Create New other Hospital,same for P/D with U-DOwn hierarcy
+    if Existing Hospital-admin registers as Introducer/Guarantor/Approver then no separate approval from Internal team...so instant activated by sending notification to internal team
+if self registered patient/Guest/DOctor/H/D Request to create new hospital then had to provide Some introducer/Validator other existing H/Admin for quick validation,otherwise by default Internal admin validates...it might take more time...in this case once request created existing Hospital can see pending requests for approval...here requests will be in table dbo.TenantsPending
+
+Tenants table add more columns like CretedOn CreatedBy ApprovedOn ApprovedBy status
+
 Had to make logic of each tenantwise role finding and get permission and modify authorizeasync all place
 so @inject IAuthorizationService AuthService instead of this,replace with extended class where based on tenantid & role passing validation could be done
 with all logic of internal,admin and all
