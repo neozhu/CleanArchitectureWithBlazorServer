@@ -1,5 +1,6 @@
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application.Services.Picklist;
 
@@ -11,10 +12,12 @@ public class PicklistService : IPicklistService
 
     public PicklistService(
         IAppCache cache,
-        IApplicationDbContext context, IMapper mapper)
+        IServiceScopeFactory scopeFactory,
+        IMapper mapper)
     {
         _cache = cache;
-        _context = context;
+        var scope = scopeFactory.CreateScope();
+        _context = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
         _mapper = mapper;
     }
 
