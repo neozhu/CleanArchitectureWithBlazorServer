@@ -79,7 +79,6 @@ public class CustomUserManager : UserManager<ApplicationUser>
         try
         {
             var result = await base.UpdateAsync(user);
-            var r = await dbContext.SaveChangesAsync();
             return result;
         }
         catch (Exception e)
