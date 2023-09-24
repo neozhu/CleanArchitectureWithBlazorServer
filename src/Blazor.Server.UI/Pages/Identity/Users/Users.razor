@@ -304,6 +304,8 @@
     [Inject]
     private ITenantService TenantsService { get; set; } = null!;
     [Inject]
+    private IUserDataProvider UserDataProvider { get; set; } = null!;
+    [Inject]
     private IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
     [Inject]
     private IExcelService ExcelService { get; set; } = null!;
@@ -470,6 +472,7 @@
                 }
                 */
                 Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
+                await  UserDataProvider.Refresh();
                 await OnRefresh();
                 }
             else
@@ -526,7 +529,8 @@
                 //todo had to make which tenant,like other than default tenant
                 Snackbar.Add($"Role update:{modifyCount ?? 0} {ConstantString.UpdateSuccess}", Severity.Info);
                 await OnRefresh();
-                }
+                await UserDataProvider.Refresh();
+            }
             else
                 {
                 Snackbar.Add($"{string.Join(",", (identityResult.Errors.Select(x => x.Description).ToArray()))}", Severity.Error);
@@ -575,8 +579,9 @@
 
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
-            }
+            await UserDataProvider.Refresh();
         }
+    }
 
     private async Task OnDeleteChecked()
         {
@@ -616,7 +621,8 @@
                 }
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
-            }
+            await  UserDataProvider.Refresh();
+        }
 
         }
 

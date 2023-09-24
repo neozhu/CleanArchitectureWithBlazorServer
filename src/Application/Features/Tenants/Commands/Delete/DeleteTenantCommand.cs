@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Commands.Delete;
@@ -21,16 +22,19 @@ public class DeleteTenantCommandHandler :
     IRequestHandler<DeleteTenantCommand, Result<int>>
 
 {
+    private readonly ITenantService _tenantsService;
     private readonly IApplicationDbContext _context;
     private readonly IStringLocalizer<DeleteTenantCommandHandler> _localizer;
     private readonly IMapper _mapper;
 
     public DeleteTenantCommandHandler(
+        ITenantService tenantsService,
         IApplicationDbContext context,
         IStringLocalizer<DeleteTenantCommandHandler> localizer,
         IMapper mapper
     )
     {
+        _tenantsService = tenantsService;
         _context = context;
         _localizer = localizer;
         _mapper = mapper;
@@ -45,6 +49,7 @@ public class DeleteTenantCommandHandler :
         }
 
         var result = await _context.SaveChangesAsync(cancellationToken);
+        await _tenantsService.Refresh();
         return await Result<int>.SuccessAsync(result);
     }
 }

@@ -35,14 +35,14 @@ public static class DependencyInjection
             options.UseReduxDevTools();
         });
         services.AddLazyCache();
-        services.AddScoped<PicklistService>();
-        services.AddScoped<IPicklistService>(sp => {
+        services.AddSingleton<PicklistService>();
+        services.AddSingleton<IPicklistService>(sp => {
             var service = sp.GetRequiredService<PicklistService>();
             service.Initialize();
             return service;
             });
-        services.AddScoped<TenantService>();
-        services.AddScoped<ITenantService>(sp => {
+        services.AddSingleton<TenantService>();
+        services.AddSingleton<ITenantService>(sp => {
             var service = sp.GetRequiredService<TenantService>();
             service.Initialize();
             return service;
