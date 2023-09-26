@@ -26,7 +26,11 @@
                     <MudStack Row="true">
                         @if (IsLoading)
                         {
-                            <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true"/>
+                           <MudSkeleton SkeletonType="SkeletonType.Circle" Width="40px" Height="40px"   />
+                           <MudStack Justify="Justify.Center" Spacing="0">
+                                 <MudSkeleton Width="120px" Height="12px"  />
+                                 <MudSkeleton Width="120px" Height="12px"   />
+                           </MudStack>
                         }
                         else
                         {
