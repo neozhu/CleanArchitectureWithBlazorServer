@@ -5,6 +5,9 @@ using System;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
+public class TenantPendingDto : TenantDto
+{ }
+
 [Description("Tenants")]
 public class TenantDto
 {
@@ -14,6 +17,13 @@ public class TenantDto
 
     [Description("Description")] public string? Description { get; set; }
     [Description("Tenant Type")] public byte Type { get; set; } = (byte)TenantTypeEnum.Patient;
+
+    public DateTime CreatedDate { get; set; } = DateTime.Today;
+    public DateTime? ModifiedLastDate { get; set; }
+    public DateTime? ApprovedDate { get; set; }
+    public string? CreatedByUser { get; set; }//TODO make it non nullable,as always someone exists
+    public string? ModifiedLastByUser { get; set; }
+    public string? ApprovedByUser { get; set; }
 
     private class Mapping : Profile
     {

@@ -52,7 +52,7 @@ public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand,
     public async Task<Result<string>> Handle(AddEditTenantCommand request, CancellationToken cancellationToken)
     {
     
-        var item = await _context.Tenants.FindAsync(new object[] { request.Id }, cancellationToken);
+        var item = await _context. Tenants.FindAsync(new object[] { request.Id }, cancellationToken);
         if (item is null)
         {
             item = _mapper.Map<Tenant>(request);
