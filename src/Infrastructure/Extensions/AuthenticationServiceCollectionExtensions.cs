@@ -65,7 +65,7 @@ public static class AuthenticationServiceCollectionExtensions
                      options.TokenValidationParameters = new TokenValidationParameters()
                      {
                          ValidateIssuerSigningKey = false,
-                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["AppConfigurationSettings:Secret"]!)),
+                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yn4$#cr=+i@eljzlhhr2xlgf98aud&(3&!po3r60wlm^3*huh#")),
                          ValidateIssuer = false,
                          ValidateAudience = false,
                          RoleClaimType = ClaimTypes.Role,
