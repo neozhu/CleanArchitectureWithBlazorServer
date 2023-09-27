@@ -151,17 +151,11 @@
                         }
                         else
                         {
-                            var tokenresponse = await _identityService.LoginAsync(new TokenRequest() { UserName=_model.UserName,Password=_model.Password, RememberMe = _model.RememberMe });
-                            if (tokenresponse.Succeeded && tokenresponse.Data is not null)
-                            {
-                                await TokenProvider.SaveToken(tokenresponse.Data);
+                           
+                                await TokenProvider.Login(user);
                                 NavigationManager.NavigateTo(NavigationManager.Uri, true);
                                 Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
-                            }
-                            else
-                            {
-                                Snackbar.Add(tokenresponse.ErrorMessage, Severity.Error);
-                            }
+                          
                             
                         }
                     }
@@ -209,7 +203,7 @@
     public async Task ConfirmExternal(string provider, string userName, string name, string accessToken)
     {
         var user = await CreateUserWithExternalProvider(provider, userName, name, accessToken);
-        await TokenProvider.GenerateJwt(user);
+        await TokenProvider.Login(user);
         NavigationManager.NavigateTo(NavigationManager.Uri, true);
         Logger.LogInformation("{@UserName:l} has successfully logged in", userName);
     }
