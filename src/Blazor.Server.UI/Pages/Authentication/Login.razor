@@ -1,5 +1,5 @@
 @page "/pages/authentication/login"
-@inject AccessTokenProvider TokenProvider
+@inject IAccessTokenProvider TokenProvider
 @inject IJSRuntime JS
 @inherits OwningComponentBase
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
@@ -85,7 +85,7 @@
 @code {
     private string _title = "Sign In";
     private UserManager<ApplicationUser> UserManager { get; set; } = default!;
-    private AccessTokenProvider AccessTokenProvider { get; set; } = default!;
+    private IAccessTokenProvider AccessTokenProvider { get; set; } = default!;
 
     [Inject]
     private ILogger<Login> Logger { get; set; } = default!;
@@ -118,7 +118,7 @@
         await base.OnInitializedAsync();
         _title = L["Sign In"];
         UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        AccessTokenProvider = ScopedServices.GetRequiredService<AccessTokenProvider>();
+        AccessTokenProvider = ScopedServices.GetRequiredService<IAccessTokenProvider>();
     }
 
     private async Task OnSubmit()

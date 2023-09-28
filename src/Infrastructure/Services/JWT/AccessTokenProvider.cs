@@ -4,7 +4,7 @@ using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
-public class AccessTokenProvider
+public class AccessTokenProvider : IAccessTokenProvider
 {
     private readonly string _tokenKey = nameof(_tokenKey);
     private readonly string _refreshTokenKey = nameof(_refreshTokenKey);
@@ -29,8 +29,8 @@ public class AccessTokenProvider
     public async Task Login(ApplicationUser applicationUser)
     {
         var token = await _loginService.LoginAsync(applicationUser);
-        await _localStorage.SetAsync(_tokenKey, token.AccessToken??"");
-        await _localStorage.SetAsync(_refreshTokenKey, token.RefreshToken??"");
+        await _localStorage.SetAsync(_tokenKey, token.AccessToken ?? "");
+        await _localStorage.SetAsync(_refreshTokenKey, token.RefreshToken ?? "");
         AccessToken = token.AccessToken;
         RefreshToken = token.RefreshToken;
         _tenantProvider.TenantId = applicationUser.TenantId;
@@ -54,7 +54,7 @@ public class AccessTokenProvider
                 var result = await _tokenValidator.ValidateTokenAsync(token.Value);
                 if (result.IsValid)
                 {
-                    var principal=new ClaimsPrincipal(result.ClaimsIdentity);
+                    var principal = new ClaimsPrincipal(result.ClaimsIdentity);
                     _tenantProvider.TenantId = principal.GetTenantId();
                     _tenantProvider.TenantName = principal.GetTenantName();
                     _currentUser.UserId = principal.GetUserId();
