@@ -20,6 +20,7 @@ public static class JWTServicesCollectionExtensions
             options.Invoke(sjOptions);
         }
         services.AddSingleton(typeof(IOptions<SimpleJwtOptions>), Options.Create(sjOptions));
+        services.AddScoped<IAccessTokenProvider,AccessTokenProvider>();
         services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
         services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
         services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();

@@ -12,7 +12,7 @@ public class HubClient : IAsyncDisposable
     private readonly HubConnection _hubConnection;
     private bool _started;
 
-    public HubClient(NavigationManager navigationManager, AccessTokenProvider authProvider)
+    public HubClient(NavigationManager navigationManager, IAccessTokenProvider authProvider)
     {
         var token = authProvider.AccessToken;
         var hubUrl = navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
