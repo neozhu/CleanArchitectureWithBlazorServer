@@ -1,9 +1,9 @@
 ﻿namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public  class BlazorAuthStateProvider : AuthenticationStateProvider
 {
-    private readonly AccessTokenProvider _tokenProvider;
+    private readonly IAccessTokenProvider _tokenProvider;
 
-    public BlazorAuthStateProvider(AccessTokenProvider  tokenProvider)
+    public BlazorAuthStateProvider(IAccessTokenProvider  tokenProvider)
     {
         _tokenProvider = tokenProvider;
     }
