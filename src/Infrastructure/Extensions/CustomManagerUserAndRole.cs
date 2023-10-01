@@ -45,14 +45,14 @@ public class CustomUserManager : UserManager<ApplicationUser>
             .Include(x => x.UserClaims).AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == userId);
     }
-    public async Task<ApplicationUser?> FindByIdAsyncNoTracking(string userId)
-    {
-        return await Users.AsNoTracking()
-            .Include(x => x.UserRoles).ThenInclude(x => x.Role)
-            .Include(x => x.UserRoles).ThenInclude(x => x.Tenant)
-            .Include(x => x.UserClaims)
-            .FirstOrDefaultAsync(x => x.Id == userId);
-    }
+    //public async Task<ApplicationUser?> FindByIdAsyncNoTracking(string userId)
+    //{
+    //    return await Users.AsNoTracking()
+    //        .Include(x => x.UserRoles).ThenInclude(x => x.Role)
+    //        .Include(x => x.UserRoles).ThenInclude(x => x.Tenant)
+    //        .Include(x => x.UserClaims)
+    //        .FirstOrDefaultAsync(x => x.Id == userId);
+    //}
     public async Task<List<ApplicationUserRole>> GetUserRoles(string userId)
     {
         return await dbContext.UserRoles.AsNoTracking()
