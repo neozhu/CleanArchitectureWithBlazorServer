@@ -52,10 +52,17 @@ public class HubClient : IAsyncDisposable
 
     public async Task StartAsync(CancellationToken cancellation = default)
     {
-        if (_started) return;
+        try
+        {
+            if (_started) return;
 
-        _started = true;
-        await _hubConnection.StartAsync(cancellation);
+            _started = true;
+            await _hubConnection.StartAsync(cancellation);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
     }
 
 
