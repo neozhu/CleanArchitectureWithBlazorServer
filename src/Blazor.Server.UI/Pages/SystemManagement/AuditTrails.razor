@@ -60,7 +60,7 @@
              <CellTemplate>
                  <div class="d-flex flex-column">
                      <MudText Typo="Typo.body2">@context.Item.Owner?.UserName</MudText>
-                     <MudText Typo="Typo.body2">@context.Item.UserId</MudText>
+                     <MudText Typo="Typo.body2" Style="@($"color:{Theme.Theme.ApplicationTheme().Palette.TextSecondary}")">@context.Item.UserId</MudText>
                  </div>
              </CellTemplate>
          </PropertyColumn>
@@ -94,7 +94,7 @@
                         {
                             <tr>
                                 <td>@field.Key</td>
-                                <td>@(context.Item.OldValues?.ContainsKey(field.Key) ?? false ? context.Item.OldValues[field.Key] : string.Empty)</td>
+                                <td style="@($"color:{Theme.Theme.ApplicationTheme().Palette.TextSecondary}")">@(context.Item.OldValues?.ContainsKey(field.Key) ?? false ? context.Item.OldValues[field.Key] : string.Empty)</td>
                                 <td>@(context.Item.NewValues?.ContainsKey(field.Key) ?? false ? context.Item.NewValues[field.Key] : string.Empty)</td>
                             </tr>
                         }
