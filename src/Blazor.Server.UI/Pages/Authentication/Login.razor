@@ -87,7 +87,7 @@
     private CustomUserManager UserManager { get; set; } = default!;
 
     private CustomRoleManager RoleManager { get; set; } = default!;
-    private AccessTokenProvider AccessTokenProvider { get; set; } = default!;
+    private IAccessTokenProvider AccessTokenProvider { get; set; } = default!;
 
     [Inject]
     private ILogger<Login> Logger { get; set; } = default!;
@@ -121,7 +121,7 @@
         _title = L["Sign In"];
         UserManager = ScopedServices.GetRequiredService<CustomUserManager>();
         RoleManager = ScopedServices.GetRequiredService<CustomRoleManager>();
-        AccessTokenProvider = ScopedServices.GetRequiredService<AccessTokenProvider>();
+        AccessTokenProvider = ScopedServices.GetRequiredService<IAccessTokenProvider>();
     }
 
     private async Task OnSubmit()
