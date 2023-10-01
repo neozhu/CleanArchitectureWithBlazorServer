@@ -199,7 +199,7 @@
             <CellTemplate>
                 <div>
                     <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
-                    <MudText Typo="Typo.body2">@context.Item.TenantId</MudText>
+                    <MudText Typo="Typo.body2" Style="@($"color:{Theme.Theme.ApplicationTheme().Palette.TextSecondary}")">@context.Item.TenantId</MudText>
                 </div>
             </CellTemplate>
             <FooterTemplate>
@@ -223,7 +223,7 @@
                 </MudBadge>
                 <div class="pl-3">
                     <MudText Class="ml-2 align-self-center">@context.Item.UserName</MudText>
-                    <MudText Typo="Typo.body2" Class="ml-2 align-self-center">@context.Item.Email</MudText>
+                    <MudText Typo="Typo.body2" Class="ml-2 align-self-center" Style="@($"color:{Theme.Theme.ApplicationTheme().Palette.TextSecondary}")">@context.Item.Email</MudText>
                 </div>
 
             </CellTemplate>
@@ -232,7 +232,7 @@
             <CellTemplate>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.body2">@context.Item.DisplayName</MudText>
-                    <MudText Typo="Typo.body2">@context.Item.PhoneNumber</MudText>
+                    <MudText Typo="Typo.body2" Style="@($"color:{Theme.Theme.ApplicationTheme().Palette.TextSecondary}")">@context.Item.PhoneNumber</MudText>
                 </div>
             </CellTemplate>
         </PropertyColumn>

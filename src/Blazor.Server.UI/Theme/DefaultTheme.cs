@@ -16,7 +16,7 @@ public class Theme
                 AppbarBackground = "rgba(255,255,255,0.8)",
                 AppbarText = "#424242",
                 BackgroundGrey = "#F9FAFC",
-                TextSecondary = "#425466",
+                TextSecondary = "#99a0b0",
                 Dark = "#110E2D",
                 DarkLighten = "#1A1643",
                 GrayDefault = "#4B5563",
