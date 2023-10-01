@@ -42,7 +42,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
         return await Users
             .Include(x => x.UserRoles).ThenInclude(x => x.Role)
             .Include(x => x.UserRoles).ThenInclude(x => x.Tenant)
-            .Include(x => x.UserClaims)
+            .Include(x => x.UserClaims).AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == userId);
     }
     public async Task<ApplicationUser?> FindByIdAsyncNoTracking(string userId)
