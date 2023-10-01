@@ -39,7 +39,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     }
     public override async Task<ApplicationUser?> FindByIdAsync(string userId)
     {
-        return await Users
+        return await dbContext.Users
             .Include(x => x.UserRoles).ThenInclude(x => x.Role)
             .Include(x => x.UserRoles).ThenInclude(x => x.Tenant)
             .Include(x => x.UserClaims).AsNoTracking()
@@ -78,13 +78,17 @@ public class CustomUserManager : UserManager<ApplicationUser>
         // For example, you can validate user data or perform additional tasks.
         try
         {
-            var result = await base.UpdateAsync(user);
-            return result;
+            //dbContext.Users.Attach(user);
+            //var result = dbContext.Users.Update(user);
+            //await dbContext.SaveChangesAsync();
+            //return Result;
+            var result2 = await base.UpdateAsync(user);
+            return result2; ;
         }
         catch (Exception e)
         {
             Console.WriteLine(e.ToString());
-            return null;
+            return IdentityResult.Failed(new IdentityError() { Description = e.ToString() });
         }
     }
     public async Task<IdentityResult> CreateAsync(ApplicationUser user, List<string> roles = null, string tenantId = null, string password = null)
