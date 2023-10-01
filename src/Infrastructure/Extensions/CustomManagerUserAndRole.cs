@@ -82,6 +82,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
             //var result = dbContext.Users.Update(user);
             //await dbContext.SaveChangesAsync();
             //return Result;
+            user.UserRoles = null;//temporary fix to avoid The instance of entity type 'Tenant' cannot be tracked because another instance with the key value '{Id: 3b8ec9a3-04b3-4585-8796-99f44dd64ed9}' is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached
             var result2 = await base.UpdateAsync(user);
             return result2; ;
         }
