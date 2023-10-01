@@ -3,8 +3,6 @@
 
 using System.Diagnostics;
 using System.Drawing;
-using System.Net.Http.Json;
-using System.Runtime.Versioning;
 using System.Text.Json;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
@@ -14,7 +12,6 @@ using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
-[SupportedOSPlatform("windows")]
 public class DocumentOcrJob : IDocumentOcrJob
 {
     private readonly IHubContext<SignalRHub, ISignalRHub> _hubContext;
