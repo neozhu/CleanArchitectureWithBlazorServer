@@ -25,6 +25,11 @@
                                   For="@(() => Model.Description)">
                     </MudTextField>
                 </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L[Model.GetMemberDescription(x=>x.Type)]" @bind-Value="Model.Type"
+                                  For="@(() => Model.Type)">
+                    </MudTextField>
+                </MudItem>
 
             </MudGrid>
         </MudForm>
