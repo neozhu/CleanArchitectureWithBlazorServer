@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using System;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
@@ -15,6 +16,12 @@ public class AddEditTenantCommand : ICacheInvalidatorRequest<Result<string>>
     [Description("Tenant Name")] public string? Name { get; set; }
 
     [Description("Description")] public string? Description { get; set; }
+
+    public byte Type { get; set; } = (byte)Domain.Enums.TenantTypeEnum.HospitalAndStaff;
+    public bool Active { get; set; } = true;
+
+    public DateTime? ApprovedDate { get; set; }
+    public string? ApprovedByUser { get; set; }
 
     public string CacheKey => TenantCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => TenantCacheKey.SharedExpiryTokenSource();
