@@ -8,5 +8,5 @@ using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public interface IAuthenticator
 {
-    Task<ApplicationUserDto?> Authenticate(string username, string password);
+    Task<ApplicationUser?> Authenticate(string username, string password);
 }
