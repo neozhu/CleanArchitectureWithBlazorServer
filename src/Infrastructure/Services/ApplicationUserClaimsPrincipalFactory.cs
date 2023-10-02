@@ -5,15 +5,15 @@ using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 #nullable disable
-public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
+public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
 {
-    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ApplicationClaimsIdentityFactory(UserManager<ApplicationUser> userManager,
+
+    public ApplicationUserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
         IOptions<IdentityOptions> optionsAccessor) : base(userManager, roleManager, optionsAccessor)
     {
-        _userManager = userManager;
+
     }
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
@@ -48,8 +48,8 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
                 new Claim(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl)
             });
         }
-        var appuser = await _userManager.FindByIdAsync(user.Id);
-        var roles = await _userManager.GetRolesAsync(appuser);
+        var appuser = await UserManager.FindByIdAsync(user.Id);
+        var roles = await UserManager.GetRolesAsync(appuser);
         if (roles != null && roles.Count > 0)
         {
             var rolesStr = string.Join(",", roles);
