@@ -15,14 +15,10 @@ public class TenantPending : BaseAuditableEntity, IEntity<string>
     public new string Id { get; set; } = Guid.NewGuid().ToString();
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public byte Type { get; set; } = (byte)Enums.TenantTypeEnum.Patient;
+    public byte Type { get; set; } = (byte)Enums.TenantTypeEnum.HospitalAndStaff;
     public bool Active { get; set; } = true;
 
-    public DateTime CreatedDate { get; set; } = DateTime.Today;
-    public DateTime? ModifiedLastDate { get; set; }
     public DateTime? ApprovedDate { get; set; }
-    public string? CreatedByUser { get; set; }//TODO make it non nullable,as always someone exists
-    public string? ModifiedLastByUser { get; set; }
     public string? ApprovedByUser { get; set; }
 }
 public class Tenant : BaseAuditableEntity, IEntity<string>
@@ -41,14 +37,10 @@ public class Tenant : BaseAuditableEntity, IEntity<string>
     public new string Id { get; set; } = Guid.NewGuid().ToString();
     public string? Name { get; set; }
     public string? Description { get; set; }
-    public byte Type { get; set; } = (byte)Enums.TenantTypeEnum.Patient;
+    public byte Type { get; set; } = (byte)Enums.TenantTypeEnum.HospitalAndStaff;
     public bool Active { get; set; } = true;
 
-    public DateTime CreatedDate { get; set; } = DateTime.Today;
-    public DateTime? ModifiedLastDate { get; set; }
     public DateTime? ApprovedDate { get; set; }
-    public string? CreatedByUser { get; set; }//TODO make it non nullable,as always someone exists
-    public string? ModifiedLastByUser { get; set; }
     public string? ApprovedByUser { get; set; }
 
 }

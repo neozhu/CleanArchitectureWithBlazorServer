@@ -61,8 +61,10 @@ public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand,
         else
         {
             item = _mapper.Map(request, item);
+            _context.Tenants.Update(item);//Need to verify the right way
+           // item.AddDomainEvent(new UpdatedEvent<Tenant>(item));
         }
-        await _context.SaveChangesAsync(cancellationToken);
+        var result=await _context.SaveChangesAsync(cancellationToken);
         await _tenantsService.Refresh();
         return await Result<string>.SuccessAsync(item.Id);
     }
