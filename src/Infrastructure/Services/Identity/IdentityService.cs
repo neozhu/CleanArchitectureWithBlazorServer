@@ -10,8 +10,6 @@ using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
-using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
-using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using LazyCache;
 using Microsoft.AspNetCore.Authorization;
@@ -22,8 +20,8 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 public class IdentityService : IIdentityService
 {
-    private readonly CustomUserManager _userManager;
-    private readonly CustomRoleManager _roleManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly AppConfigurationSettings _appConfig;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
@@ -40,8 +38,8 @@ public class IdentityService : IIdentityService
         IStringLocalizer<IdentityService> localizer)
     {
         var scope = scopeFactory.CreateScope();
-        _userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>();
-        _roleManager = scope.ServiceProvider.GetRequiredService<CustomRoleManager>();
+        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         _userClaimsPrincipalFactory = scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _authorizationService = scope.ServiceProvider.GetRequiredService<IAuthorizationService>();
         _appConfig = appConfig;
@@ -50,12 +48,6 @@ public class IdentityService : IIdentityService
         _localizer = localizer;
     }
 
-    public async Task<List<ApplicationRoleDto>> GetAllRoles()
-    {
-        var key = $"GetAllRoles";
-        var roles = await _cache.GetOrAddAsync(key, async () => await _roleManager.Roles.ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider).ToListAsync());
-        return roles;
-    }
     public async Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default)
     {
         var key = $"GetUserNameAsync:{userId}";
@@ -66,7 +58,7 @@ public class IdentityService : IIdentityService
     {
         var key = $"GetUserName-byId:{userId}";
         var user = _cache.GetOrAdd(key, () => _userManager.Users.SingleOrDefault(u => u.Id == userId), Options);
-        return user?.UserName ?? string.Empty;
+        return user?.UserName??string.Empty;
     }
     public async Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default)
     {
@@ -91,10 +83,8 @@ public class IdentityService : IIdentityService
     }
     public async Task<IDictionary<string, string?>> FetchUsers(string roleName, CancellationToken cancellation = default)
     {
-        if (string.IsNullOrEmpty(roleName)) return null;
-        roleName = roleName.ToUpperInvariant();
         var result = await _userManager.Users
-             .Where(x => x.UserRoles.Any(y => y.Role.NormalizedName == roleName))
+             .Where(x => x.UserRoles.Any(y => y.Role.Name == roleName))
              .Include(x => x.UserRoles)
              .ToDictionaryAsync(x => x.UserName!, y => y.DisplayName, cancellation);
         return result;
@@ -105,7 +95,7 @@ public class IdentityService : IIdentityService
         if (user is not null)
         {
             user.IsLive = isLive;
-            var result = await _userManager.UpdateAsync(user);
+            var result= await _userManager.UpdateAsync(user);
         }
     }
     public async Task<ApplicationUserDto> GetApplicationUserDto(string userId, CancellationToken cancellation = default)
@@ -114,16 +104,14 @@ public class IdentityService : IIdentityService
         var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).FirstAsync(cancellation), Options);
         return result;
     }
-
     public async Task<List<ApplicationUserDto>?> GetUsers(string? tenantId, CancellationToken cancellation = default)
     {
-        //TODO add pagination
         var key = $"GetApplicationUserDtoListWithTenantId:{tenantId}";
         Func<string?, CancellationToken, Task<List<ApplicationUserDto>?>> getUsersByTenantId = async (tenantId, token) =>
         {
             if (string.IsNullOrEmpty(tenantId))
-            {//TODO this should not be in real time ,it explodes the system
-                return await _userManager.Users.Take(20).Include(x => x.UserRoles).ThenInclude(x => x.Role)
+            {
+                return await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role)
                        .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
             }
             else
@@ -131,16 +119,10 @@ public class IdentityService : IIdentityService
                 return await _userManager.Users.Where(x => x.TenantId == tenantId).Include(x => x.UserRoles).ThenInclude(x => x.Role)
                       .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
             }
+             
+
         };
-        var result = await _cache.GetOrAddAsync(key, () => getUsersByTenantId(tenantId, cancellation), Options);
-        return result;
-    }
-
-
-    public async Task<TenantDto> GetTenantsOfUser(string userId, CancellationToken cancellation = default)
-    {
-        var key = $"GetTenantsOfUser:{userId}";
-        var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Select(x => x.UserRoles.Select(ur => ur.Tenant)).ProjectTo<TenantDto>(_mapper.ConfigurationProvider).FirstAsync(cancellation), Options);
+        var result = await _cache.GetOrAddAsync(key, () => getUsersByTenantId(tenantId,cancellation), Options);
         return result;
     }
 }
