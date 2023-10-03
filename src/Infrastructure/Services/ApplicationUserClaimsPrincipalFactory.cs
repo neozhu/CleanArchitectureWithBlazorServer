@@ -1,23 +1,31 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Text.Json;
 using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
+using Newtonsoft.Json;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 #nullable disable
 public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
 {
+    private readonly CustomUserManager _userManager;
 
-
-    public ApplicationUserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager,
-        RoleManager<ApplicationRole> roleManager,
+    public ApplicationUserClaimsPrincipalFactory(CustomUserManager userManager,
+        CustomRoleManager roleManager,
         IOptions<IdentityOptions> optionsAccessor) : base(userManager, roleManager, optionsAccessor)
     {
-
+        _userManager = userManager;
     }
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
         var principal = await base.CreateAsync(user);
+        if (user.UserRoles != null && user.UserRoles.Any())
+        {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+                new Claim(ApplicationClaimTypes.UserRoles,JsonConvert.SerializeObject(user.UserRoles))
+            });
+        }
         if (!string.IsNullOrEmpty(user.TenantId))
         {
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
@@ -49,10 +57,10 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
             });
         }
         var appuser = await UserManager.FindByIdAsync(user.Id);
-        var roles = await UserManager.GetRolesAsync(appuser);
+        var roles = await _userManager.GetUserRoles(appuser.Id);
         if (roles != null && roles.Count > 0)
         {
-            var rolesStr = string.Join(",", roles);
+            var rolesStr = string.Join(",", roles.Select(x => x.Role.Name));
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
                 new Claim(ApplicationClaimTypes.AssignedRoles, rolesStr)
             });
