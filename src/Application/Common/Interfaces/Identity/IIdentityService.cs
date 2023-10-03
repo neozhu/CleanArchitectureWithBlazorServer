@@ -13,10 +13,10 @@ public interface IIdentityService : IService
 {
     Task<List<ApplicationRoleDto>> GetAllRoles();
 
-    Task<Result<TokenResponse>> LoginAsync(TokenRequest request, CancellationToken cancellation = default);
-    Task<TokenResponse> GenerateJwtAsync(ApplicationUser user, bool rememberMe = false);
-    Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellation = default);
-    Task<ClaimsPrincipal> GetClaimsPrincipal(string token);
+    //Task<Result<TokenResponse>> LoginAsync(TokenRequest request, CancellationToken cancellation = default);
+    //Task<TokenResponse> GenerateJwtAsync(ApplicationUser user, bool rememberMe = false);
+    //Task<Result<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellation = default);
+    //Task<ClaimsPrincipal> GetClaimsPrincipal(string token);
     Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default);
     Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default);
     Task<bool> AuthorizeAsync(string userId, string policyName, CancellationToken cancellation = default);

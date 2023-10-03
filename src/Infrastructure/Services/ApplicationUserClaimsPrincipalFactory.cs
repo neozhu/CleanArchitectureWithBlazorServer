@@ -11,11 +11,11 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
 {
     private readonly CustomUserManager _userManager;
 
-    public ApplicationClaimsIdentityFactory(CustomUserManager userManager,
+    public ApplicationUserClaimsPrincipalFactory(CustomUserManager userManager,
         CustomRoleManager roleManager,
         IOptions<IdentityOptions> optionsAccessor) : base(userManager, roleManager, optionsAccessor)
     {
-
+        _userManager = userManager;
     }
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
@@ -60,7 +60,7 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
         var roles = await _userManager.GetUserRoles(appuser.Id);
         if (roles != null && roles.Count > 0)
         {
-            var rolesStr = string.Join(",", roles.Select(x=>x.Role.Name));
+            var rolesStr = string.Join(",", roles.Select(x => x.Role.Name));
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
                 new Claim(ApplicationClaimTypes.AssignedRoles, rolesStr)
             });
