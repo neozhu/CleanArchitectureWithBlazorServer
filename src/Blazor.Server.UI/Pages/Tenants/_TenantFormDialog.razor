@@ -26,7 +26,7 @@
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudSelect T="byte" Placeholder="Type" Value="@Model.Type" Clearable="true" >
+                    <MudSelect T="byte" Placeholder="Type" @bind-Value="@Model.Type" Clearable="true">
                         <MudSelectItem Value="@((byte) CleanArchitecture.Blazor.Domain.Enums.TenantTypeEnum.HospitalAndStaff)">@(CleanArchitecture.Blazor.Domain.Enums.TenantTypeEnum.HospitalAndStaff.ToString())</MudSelectItem>
                         <MudSelectItem Value="@((byte) CleanArchitecture.Blazor.Domain.Enums.TenantTypeEnum.DiagnosticsAndStaff)">@(CleanArchitecture.Blazor.Domain.Enums.TenantTypeEnum.DiagnosticsAndStaff.ToString())</MudSelectItem>
                         <MudSelectItem Value="@((byte) CleanArchitecture.Blazor.Domain.Enums.TenantTypeEnum.PharmacyAndStaff)">@(CleanArchitecture.Blazor.Domain.Enums.TenantTypeEnum.PharmacyAndStaff.ToString())</MudSelectItem>

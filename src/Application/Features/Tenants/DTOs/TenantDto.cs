@@ -16,7 +16,7 @@ public class TenantDto
     [Description("Tenant Name")] public string? Name { get; set; }
 
     [Description("Description")] public string? Description { get; set; }
-    [Description("Tenant Type")] public byte Type { get; set; } = (byte)TenantTypeEnum.Patient;
+    [Description("Tenant Type")] public byte Type { get; set; } = (byte)TenantTypeEnum.HospitalAndStaff;
 
     public DateTime CreatedDate { get; set; } = DateTime.Today;
     public DateTime? ModifiedLastDate { get; set; }
