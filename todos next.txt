@@ -1,3 +1,4 @@
+on users creation page,tenants dropdown not behaving properly
 remove roles adding features...atleast untill full ready
 System/tenants page   add more fields like tenant type...
 Every Internal admin,Hospital-Admin can Create New other Hospital,same for P/D with U-DOwn hierarcy

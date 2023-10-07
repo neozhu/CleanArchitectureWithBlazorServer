@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Linq.Dynamic.Core;
+using CleanArchitecture.Blazor.Application.Common.Extensions;
 using CleanArchitecture.Blazor.Application.Constants.Permission;
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
@@ -7,12 +8,15 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using static CleanArchitecture.Blazor.Application.Constants.Permission.Permissions;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 public class CustomUserManager : UserManager<ApplicationUser>
 {
+    readonly List<string> defaultRoles = new() { RoleNamesEnum.Patient.ToString() };
+
     public const string DefaultTenantId = "";//todo make it loaded as per db
     private readonly CustomRoleManager _roleManager;
     //  private readonly IServiceProvider _serviceProvider;
@@ -33,9 +37,9 @@ public class CustomUserManager : UserManager<ApplicationUser>
         // _serviceProvider = services;
         dbContext = services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
     }
-    public async Task<IdentityResult> CreateWithDefaultRolesAsync(ApplicationUser user, string tenantId = null, string password = null)
+    public async Task<IdentityResult> CreateWithDefaultRolesAsync(ApplicationUser user, string? tenantId = null, string? password = null)
     {
-        return await CreateAsync(user, new List<string> { RoleNamesEnum.Patient.ToString() }, tenantId, password);
+        return await CreateAsync(user, defaultRoles, tenantId, password);
     }
     public override async Task<ApplicationUser?> FindByIdAsync(string userId)
     {
@@ -63,10 +67,10 @@ public class CustomUserManager : UserManager<ApplicationUser>
     }
     public override async Task<ApplicationUser?> FindByNameAsync(string userName)
     {
-        if (string.IsNullOrEmpty(userName)) return null;
-        userName = userName.Trim().TrimEnd().TrimStart().ToUpperInvariant();
+        if (userName.IsNullOrEmptyAndTrimSelf()) return null;
+        userName = userName.ToUpperInvariant();
         // var user = await base.FindByNameAsync(userName);
-        return await Users.AsNoTracking()
+        return await dbContext.Users.AsNoTracking()
             .Include(x => x.UserRoles).ThenInclude(x => x.Role)
             .Include(x => x.UserRoles).ThenInclude(x => x.Tenant)
             .Include(x => x.UserClaims)
@@ -78,6 +82,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
         // For example, you can validate user data or perform additional tasks.
         try
         {
+            //next madhu
             //dbContext.Users.Attach(user);
             //var result = dbContext.Users.Update(user);
             //await dbContext.SaveChangesAsync();
@@ -92,18 +97,18 @@ public class CustomUserManager : UserManager<ApplicationUser>
             return IdentityResult.Failed(new IdentityError() { Description = e.ToString() });
         }
     }
-    public async Task<IdentityResult> CreateAsync(ApplicationUser user, List<string> roles = null, string tenantId = null, string password = null)
+    public async Task<IdentityResult> CreateAsync(ApplicationUser user, List<string>? roles = null, string? tenantId = null, string? password = null)
     {
-        if (string.IsNullOrEmpty(tenantId)) tenantId = DefaultTenantId;
-        if (string.IsNullOrEmpty(user.TenantId)) user.TenantId = tenantId;//this overrides already assigned tenant,had to make sure
+        if (tenantId.IsNullOrEmptyAndTrimSelf()) tenantId = DefaultTenantId;
+        if (user.TenantId.IsNullOrEmptyAndTrimSelf()) user.TenantId = tenantId;//this overrides already assigned tenant,had to make sure
         if (roles == null || !roles.Any()) return await CreateWithDefaultRolesAsync(user, user.TenantId, password);
-        user.UserRoles = new List<ApplicationUserRole>();//here it ignores already existing UserRoles //TODO need to tink of this
+        user.UserRoles = new List<ApplicationUserRole>();//here it ignores already existing UserRoles //TODO need to think of this
         roles.ForEach(c =>
         {
             var roleId = (_roleManager.FindByNameAsync(c).Result)?.Id;
             if (roleId != null)
             {
-                user.UserRoles.Add(new ApplicationUserRole() { RoleId = roleId, TenantId = user.TenantId });
+                user.UserRoles.Add(new ApplicationUserRole() { RoleId = roleId, TenantId = user.TenantId! });
                 /* This is required if default scopes for user level need to assign
                 var scopes = Perms.PermissionsAll.Find(x => x.roleOrType.Equals(c, StringComparison.InvariantCultureIgnoreCase)).permissions;
                 if (scopes != null && scopes.Any())
@@ -115,17 +120,17 @@ public class CustomUserManager : UserManager<ApplicationUser>
             }
         });
 
-        var result = string.IsNullOrEmpty(password) ? await base.CreateAsync(user) : await base.CreateAsync(user, password);
+        var result = password.IsNullOrEmptyAndTrimSelf() ? await base.CreateAsync(user) : await base.CreateAsync(user, password!);
         return result;
     }
 
     public async Task<int?> RolesUpdateInsert(ApplicationUser user, IEnumerable<string> roleNames)
     {
-        if (user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
-            || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
+        if (user == null || user.TenantId.IsNullOrEmptyAndTrimSelf() || !Guid.TryParse(user.TenantId, out Guid id1)
+            ||user.Id.IsNullOrEmptyAndTrimSelf() || !Guid.TryParse(user.Id, out Guid id)) return null;
 
         roleNames = roleNames.Select(x => x.Trim().TrimStart().TrimEnd().ToUpper())
-            .Where(str => !string.IsNullOrEmpty(str)).Distinct()
+            .Where(str => !str.IsNullOrEmpty()).Distinct()
             .GroupBy(i => i).Select(x => x.Key).ToList();
         if (roleNames.Any())
         {
@@ -152,7 +157,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
                 var toAdd = new List<ApplicationUserRole>();
                 toInsert.ForEach(x =>
                 {
-                    var roleId = (dbContext.Roles.FirstOrDefault(r => r.NormalizedName == x.ToUpper()))?.Id;
+                    var roleId = (dbContext.Roles.FirstOrDefault(r => r.NormalizedName == x!.ToUpper()))?.Id;
                     if (string.IsNullOrEmpty(roleId)) return;
                     toAdd.Add(new ApplicationUserRole() { UserId = user.Id, TenantId = user.TenantId, RoleId = roleId });
                 });
@@ -171,26 +176,26 @@ public class CustomUserManager : UserManager<ApplicationUser>
     public override async Task<IdentityResult> RemoveFromRoleAsync(ApplicationUser user, string roleName)
     {
         if (string.IsNullOrEmpty(roleName) || user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
-            || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
+            || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return IdentityResult.Failed();
         roleName = roleName.ToUpperInvariant();
         var existing = dbContext.UserRoles.Where(role => role.TenantId == user.TenantId && role.Role.Name == roleName);
         dbContext.UserRoles.RemoveRange(existing);
-        return await dbContext.SaveChangesAsync() > 0 ? IdentityResult.Success : null;
+        return await dbContext.SaveChangesAsync() > 0 ? IdentityResult.Success : IdentityResult.Failed();
     }
 
     public override async Task<IdentityResult> AddToRoleAsync(ApplicationUser user, string roleName)
     {
         if (string.IsNullOrEmpty(roleName) || user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
-             || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return null;
+             || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return IdentityResult.Failed();
         roleName = roleName.ToUpperInvariant();
         var roleId = (await dbContext.Roles.FirstOrDefaultAsync(x => x.NormalizedName == roleName.ToUpper()))?.Id;
-        if (string.IsNullOrEmpty(roleId)) return null;
+        if (string.IsNullOrEmpty(roleId)) return IdentityResult.Failed();
         var newInserted = dbContext.UserRoles
             .AddAsync(new ApplicationUserRole() { UserId = user.Id, TenantId = user.TenantId, RoleId = roleId });
-        return await dbContext.SaveChangesAsync() > 0 ? IdentityResult.Success : null;
+        return await dbContext.SaveChangesAsync() > 0 ? IdentityResult.Success : IdentityResult.Failed();
     }
 
-    public async Task<IList<ApplicationUserRole>> GetUserRoleTenantIdsAsync(string userId, string roleId = null, string tenantId = null)
+    public async Task<IList<ApplicationUserRole>> GetUserRoleTenantIdsAsync(string userId, string? roleId = null, string? tenantId = null)
     {
         var query = dbContext.UserRoles.AsQueryable();
         if (!string.IsNullOrEmpty(tenantId))
@@ -218,18 +223,20 @@ public class CustomRoleManager : RoleManager<ApplicationRole>
         // _dbContext = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
     }
 
-    public async Task<ApplicationRole> FindByNameAsync(string roleName, TenantTypeEnum type)
+    public async Task<ApplicationRole?> FindByNameAsync(string roleName, TenantTypeEnum type)
     {
         return await FindByNameAsync(roleName, (byte)type);
     }
-    public async Task<ApplicationRole> FindByNameAsync(string roleName, byte tenantType)
+    public async Task<ApplicationRole?> FindByNameAsync(string roleName, byte tenantType)
     {
-        return await Roles?.FirstOrDefaultAsync(r => r.Name == roleName && r.TenantType == tenantType);
+        return roleName.IsNullOrEmptyAndTrimSelf()
+            ? null
+            : await Roles?.FirstOrDefaultAsync(r => r!=null && r.Name! == roleName! && r.TenantType == tenantType);
     }
-    public async Task<ApplicationRole> AddToRoleAsync(ApplicationUser user, string roleName)
-    {
-        throw new NotImplementedException("Please use with tenantid");
-    }
+    //public async Task<ApplicationRole> AddToRoleAsync(ApplicationUser user, string roleName)
+    //{
+    //    throw new NotImplementedException("Please use with tenantId");
+    //}
 
 
     //public async Task<IdentityRole> FindByNameAsync(string roleName)
