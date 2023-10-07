@@ -440,7 +440,11 @@
         }
     private async Task OnCreate()
         {
-        var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleNamesEnum.Patient.ToString() } };
+        var userState = await AuthState;
+        var model = new ApplicationUserDto { Provider = "Local", Email = "",TenantId= userState.User.GetTenantId()
+        ,TenantName=userState.User.GetTenantName() ,
+        UserRoleTenants=userState.User.GetUserRoleTenants()
+        ,UserName = "", AssignedRoles = new[] { RoleNamesEnum.Patient.ToString() } };
         var parameters = new DialogParameters {
             { nameof(_UserFormDialog.Model),model }
            };

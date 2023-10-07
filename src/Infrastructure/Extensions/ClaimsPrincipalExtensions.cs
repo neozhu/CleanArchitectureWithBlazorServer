@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
@@ -29,8 +32,13 @@ public static class ClaimsPrincipalExtensions
          => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.TenantName);
     public static string? GetTenantId(this ClaimsPrincipal claimsPrincipal)
         => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.TenantId);
-    public static string? GetUserTenantRoles(this ClaimsPrincipal claimsPrincipal)
-        => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.UserRoles);
+    //public static string? GetUserTenantRoles(this ClaimsPrincipal claimsPrincipal)
+    //    => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.UserRoles);
+    public static ICollection<ApplicationUserRoleDto>? GetUserRoleTenants(this ClaimsPrincipal claimsPrincipal)
+    {
+        var ex = claimsPrincipal.FindFirstValue(ApplicationClaimTypes.UserRoles);
+        return string.IsNullOrEmpty(ex) ? null : JsonConvert.DeserializeObject<ICollection<ApplicationUserRoleDto>>(ex);
+    }
     public static bool GetStatus(this ClaimsPrincipal claimsPrincipal)
        => Convert.ToBoolean(claimsPrincipal.FindFirstValue(ApplicationClaimTypes.Status));
     public static string? GetAssignRoles(this ClaimsPrincipal claimsPrincipal)
