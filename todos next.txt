@@ -1,3 +1,4 @@
+remove roles adding features...atleast untill full ready
 System/tenants page   add more fields like tenant type...
 Every Internal admin,Hospital-Admin can Create New other Hospital,same for P/D with U-DOwn hierarcy
     if Existing Hospital-admin registers as Introducer/Guarantor/Approver then no separate approval from Internal team...so instant activated by sending notification to internal team  
