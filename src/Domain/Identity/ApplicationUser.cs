@@ -35,18 +35,26 @@ public class ApplicationUser : IdentityUser
         Logins = new HashSet<ApplicationUserLogin>();
         Tokens = new HashSet<ApplicationUserToken>();
     }
-    public ApplicationUser(ApplicationUser source)//
-    {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
+    //public ApplicationUser(ApplicationUser source)
+    //{
+    //    if (source == null)
+    //       throw new ArgumentNullException(nameof(source));
+    //    DisplayName
+    //}
 
-        Type type = typeof(ApplicationUser);
-        PropertyInfo[] properties = type.GetProperties();
+    //below is not working, need to check...taking long time and then become stuck
+    //public ApplicationUser(ApplicationUser source)//
+    //{
+    //    if (source == null)
+    //        throw new ArgumentNullException(nameof(source));
 
-        foreach (PropertyInfo property in properties)
-        {
-            property.SetValue(this, property.GetValue(source));
-        }
-    }
+    //    Type type = typeof(ApplicationUser);
+    //    PropertyInfo[] properties = type.GetProperties();
+
+    //    foreach (PropertyInfo property in properties)
+    //    {
+    //        property.SetValue(this, property.GetValue(source));
+    //    }
+    //}
 
 }

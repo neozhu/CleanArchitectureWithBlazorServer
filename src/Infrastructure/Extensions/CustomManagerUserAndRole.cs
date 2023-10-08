@@ -73,18 +73,20 @@ public class CustomUserManager : UserManager<ApplicationUser>
         var result = await dbContext.Users.AsNoTracking()
             .Include(x => x.UserRoleTenants)//.ThenInclude(x => x.Role).Include(x => x.UserRoleTenants).ThenInclude(x => x.Tenant)
             .Include(x => x.UserClaims)
-            //.Select(x => new ApplicationUser(x)
+            //.Select(x =>  new ApplicationUser()
             //{
-            //    UserClaims=x.UserClaims,
+
+            //    UserClaims = x.UserClaims,
             //    UserRoleTenants = x.UserRoleTenants
             //    .Select(urt => new ApplicationUserRoleTenant()
             //    { UserId = urt.UserId, TenantId = urt.TenantId, RoleId = urt.RoleId, UserName = x.UserName, RoleName = urt.Role.Name, TenantName = urt.Tenant.Name }).ToList()
-            //})
+            //}
+            //)
             .FirstOrDefaultAsync(x => x.NormalizedUserName == userName);
         if (result != null && result.UserRoleTenants != null && result.UserRoleTenants.Any())
             foreach (var item in result.UserRoleTenants)
             {
-              //  item.UserName = item.User?.UserName;//this is also redundant info but still somewhere else might needed so kept it
+                //  item.UserName = item.User?.UserName;//this is also redundant info but still somewhere else might needed so kept it
                 item.User = null;
                 //item.RoleName = item.Role.Name;//these are null bcz not included
                 //item.TenantName = item.Tenant.Name;
