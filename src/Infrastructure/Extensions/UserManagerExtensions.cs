@@ -39,8 +39,8 @@ public static class UserManagerExtensions
         var rolesList = await context.Roles.Where(x => roles.Contains(x.Name)).ToListAsync();
         if (rolesList != null && rolesList.Any())
         {
-            var rolesToInsert = new List<ApplicationUserRole>();
-            rolesList.ForEach(r => rolesToInsert.Add(new ApplicationUserRole() { UserId = userId, TenantId = tenantId, Role = r }));
+            var rolesToInsert = new List<ApplicationUserRoleTenant>();
+            rolesList.ForEach(r => rolesToInsert.Add(new ApplicationUserRoleTenant() { UserId = userId, TenantId = tenantId, Role = r }));
             await context.UserRoles.AddRangeAsync(rolesToInsert);
             var resultCount = await context.SaveChangesAsync();
             return resultCount;

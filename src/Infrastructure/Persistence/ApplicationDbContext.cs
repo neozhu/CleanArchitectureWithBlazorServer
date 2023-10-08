@@ -11,7 +11,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 #nullable disable
 public class ApplicationDbContext : IdentityDbContext<
     ApplicationUser, ApplicationRole, string,
-    ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin,
+    ApplicationUserClaim, ApplicationUserRoleTenant, ApplicationUserLogin,
     ApplicationRoleClaim, ApplicationUserToken>, IApplicationDbContext
 {
     public ApplicationDbContext(
@@ -20,7 +20,7 @@ public class ApplicationDbContext : IdentityDbContext<
     {
 
     }
-    // public DbSet<ApplicationUserRole> ApplicationUserRoles { get; set; }
+    // public DbSet<ApplicationUserRoleTenant> ApplicationUserRoles { get; set; }
 
 
     public DbSet<Tenant> Tenants { get; set; }
@@ -44,7 +44,7 @@ public class ApplicationDbContext : IdentityDbContext<
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         builder.ApplyGlobalFilters<ISoftDelete>(s => s.Deleted == null);
 
-        builder.Entity<ApplicationUserRole>()
+        builder.Entity<ApplicationUserRoleTenant>()
             .HasKey(ur => new { ur.UserId, ur.RoleId, ur.TenantId });
 
         /*

@@ -33,7 +33,7 @@ public class ApplicationUserDto
     [Description("Assigned Roles")] public string[]? AssignedRoles { get; set; }
 
     [Description("User Roles and Tenants")]
-    public  ICollection<ApplicationUserRoleDto> UserRoleTenants { get; set; }
+    public  ICollection<ApplicationUserRoleTenantDto> UserRoleTenants { get; set; }
 
     [Description("Default Role")] public string? DefaultRole => AssignedRoles?.FirstOrDefault();//todo take max permission role
 
@@ -79,14 +79,14 @@ public class ApplicationUserDto
         {
             CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
                 .ForMember(x => x.SuperiorName, s => s.MapFrom(y => y.Superior!.UserName))
-                .ForMember(x=>x.UserRoleTenants,s=>s.MapFrom(c=>c.UserRoles))
+                .ForMember(x=>x.UserRoleTenants,s=>s.MapFrom(c=>c.UserRoleTenants))
                 
                 .ForMember(x => x.TenantId, s =>
-                s.MapFrom(y => y.UserRoles.Any(g => g.TenantId == y.TenantId) ? y.TenantId:y.UserRoles.FirstOrDefault().TenantId))
+                s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ? y.TenantId:y.UserRoleTenants.FirstOrDefault().TenantId))
                 .ForMember(x => x.AssignedRoles, s =>
-                s.MapFrom(y => y.UserRoles.Any(g => g.TenantId == y.TenantId) ?
-                y.UserRoles.Where(g => g.TenantId == y.TenantId).Select(r => r.Role.Name) : y.UserRoles.Select(r => r.Role.Name)))
-                .ForMember(x => x.IsUserTenantRolesActive, s => s.MapFrom(y => y.UserRoles.Any(r => r.IsActive)))
+                s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ?
+                y.UserRoleTenants.Where(g => g.TenantId == y.TenantId).Select(r => r.Role.Name) : y.UserRoleTenants.Select(r => r.Role.Name)))
+                .ForMember(x => x.IsUserTenantRolesActive, s => s.MapFrom(y => y.UserRoleTenants.Any(r => r.IsActive)))
                 ;
         }
     }

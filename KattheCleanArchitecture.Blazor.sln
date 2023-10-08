@@ -42,6 +42,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Migrators.PostgreSQL", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Migrators.SqLite", "src\Migrators\Migrators.SqLite\Migrators.SqLite.csproj", "{469D68F1-379E-46A6-AAC3-CD1E4C0E7D77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "src\Common\Common.csproj", "{C8F0E463-9876-470E-BFBF-A4A7452F57AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{469D68F1-379E-46A6-AAC3-CD1E4C0E7D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{469D68F1-379E-46A6-AAC3-CD1E4C0E7D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{469D68F1-379E-46A6-AAC3-CD1E4C0E7D77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8F0E463-9876-470E-BFBF-A4A7452F57AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8F0E463-9876-470E-BFBF-A4A7452F57AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8F0E463-9876-470E-BFBF-A4A7452F57AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8F0E463-9876-470E-BFBF-A4A7452F57AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +114,7 @@ Global
 		{910C5689-CC8A-4E5B-8894-B00515C90466} = {5C45543E-B3FA-4C1F-9D7D-DA2E6654BD61}
 		{08778353-0814-41BB-B49E-36BBA8D7751D} = {5C45543E-B3FA-4C1F-9D7D-DA2E6654BD61}
 		{469D68F1-379E-46A6-AAC3-CD1E4C0E7D77} = {5C45543E-B3FA-4C1F-9D7D-DA2E6654BD61}
+		{C8F0E463-9876-470E-BFBF-A4A7452F57AC} = {21DC0B96-ED87-4130-BA8D-E8CF73903344}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {384CDE06-46A5-4FC5-AED4-7B23339EA56F}

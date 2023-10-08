@@ -388,15 +388,15 @@
 
             if (!string.IsNullOrEmpty(_searchRole))
                 {
-                query = query.Where(x => x.UserRoles.Any(y => y.Role.Name == _searchRole));
+                query = query.Where(x => x.UserRoleTenants.Any(y => y.Role.Name == _searchRole));
                 }
             if (!string.IsNullOrEmpty(_searchTenant))
                 {
                 //todo change this to tenantId
-                query = query.Where(x => x.UserRoles.Any(y => y.Tenant.Name == _searchTenant));
+                query = query.Where(x => x.UserRoleTenants.Any(y => y.Tenant.Name == _searchTenant));
                 }
             var items = await query
-                 .Include(x => x.UserRoles)
+                 .Include(x => x.UserRoleTenants)
                  .Include(x => x.Superior)
                  .EfOrderBySortDefinitions(state)
                  .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
@@ -522,7 +522,7 @@
                 }
             else
                 {
-                user.TenantId = user.UserRoles.OrderBy(x => x.Role.Level).FirstOrDefault(ur => ur.UserId == user.Id && ur.TenantId != item.TenantId & ur.IsActive == true)?.TenantId;
+                user.TenantId = user.UserRoleTenants.OrderBy(x => x.Role.Level).FirstOrDefault(ur => ur.UserId == user.Id && ur.TenantId != item.TenantId & ur.IsActive == true)?.TenantId;
                 user.TenantName = string.IsNullOrEmpty(user.TenantId) ? string.Empty : TenantsService.DataSource.Find(x => x.Id == user.TenantId)?.Name;
 
                 }
@@ -816,7 +816,7 @@
             x.PhoneNumber!.Contains(_searchString) ||
             x.TenantName!.Contains(_searchString) ||
             x.Provider!.Contains(_searchString)) &&
-            (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole)));
+            (_searchRole == null || (_searchRole != null && x.UserRoleTenants.Any(x => x.Role.Name == _searchRole)));
             var items = await UserManager.Users.Where(searchPredicate)
                  .Select(x => new ApplicationUserDto
                          {

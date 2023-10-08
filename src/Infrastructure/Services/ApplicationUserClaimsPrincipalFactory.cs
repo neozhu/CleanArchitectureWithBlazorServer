@@ -20,10 +20,10 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
         var principal = await base.CreateAsync(user);
-        if (user.UserRoles != null && user.UserRoles.Any())
+        if (user.UserRoleTenants != null && user.UserRoleTenants.Any())
         {
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
-                new Claim(ApplicationClaimTypes.UserRoles,JsonConvert.SerializeObject(user.UserRoles))
+                new Claim(ApplicationClaimTypes.UserRoles,JsonConvert.SerializeObject(user.UserRoleTenants))
             });
         }
         if (!string.IsNullOrEmpty(user.TenantId))

@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace CleanArchitecture.Blazor.Domain.Identity;
 
-public class ApplicationUserRole : IdentityUserRole<string>
+public class ApplicationUserRoleTenant : IdentityUserRole<string>
 {
     public virtual ApplicationUser User { get; set; } = default!;
     public virtual ApplicationRole Role { get; set; } = default!;
@@ -16,6 +16,10 @@ public class ApplicationUserRole : IdentityUserRole<string>
     public virtual Tenant Tenant { get; set; } = default!;
     public string TenantId { get; set; } = default!;
     public bool IsActive { get; set; } = true;
+
+    [NotMapped] public string? UserName { get; set; }
+    [NotMapped] public string? RoleName { get; set; }
+    [NotMapped]public string? TenantName { get; set; }
 
     public override string ToString()
     {

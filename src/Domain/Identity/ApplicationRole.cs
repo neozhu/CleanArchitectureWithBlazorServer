@@ -16,12 +16,12 @@ public class ApplicationRole : IdentityRole
     public byte TenantType { get; set; } = (byte)Enums.TenantTypeEnum.Patient;
     public byte Level { get; set; } = 1;
     public virtual ICollection<ApplicationRoleClaim> RoleClaims { get; set; }
-    public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
+    public virtual ICollection<ApplicationUserRoleTenant> UserRoles { get; set; }
     //add isActive,activatedBy,deactivatedBy
     public ApplicationRole() : base()
     {
         RoleClaims = new HashSet<ApplicationRoleClaim>();
-        UserRoles = new HashSet<ApplicationUserRole>();
+        UserRoles = new HashSet<ApplicationUserRoleTenant>();
     }
 
     public ApplicationRole(RoleNamesEnum roleName, TenantTypeEnum tenantType = Enums.TenantTypeEnum.Patient)
@@ -31,14 +31,14 @@ public class ApplicationRole : IdentityRole
     {
         TenantType = (byte)tenantType;
         RoleClaims = new HashSet<ApplicationRoleClaim>();
-        UserRoles = new HashSet<ApplicationUserRole>();
+        UserRoles = new HashSet<ApplicationUserRoleTenant>();
         Description = roleName;
     }
     public ApplicationRole(string roleName, byte tenantType) : base(roleName)
     {
         TenantType = tenantType;
         RoleClaims = new HashSet<ApplicationRoleClaim>();
-        UserRoles = new HashSet<ApplicationUserRole>();
+        UserRoles = new HashSet<ApplicationUserRoleTenant>();
         Description = roleName;
     }
 

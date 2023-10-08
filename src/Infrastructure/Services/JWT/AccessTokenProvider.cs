@@ -48,8 +48,8 @@ public class AccessTokenProvider : IAccessTokenProvider
         _currentUser.UserId = applicationUser.Id;
         _currentUser.UserName = applicationUser.UserName;
 
-        _currentUser.UserRoles ??= new List<ApplicationUserRoleDto>();
-        applicationUser.UserRoles.ForEach(x => _currentUser.UserRoles.Add(_mapper.Map<ApplicationUserRoleDto>(x)));
+        _currentUser.UserRoles ??= new List<ApplicationUserRoleTenantDto>();
+        applicationUser.UserRoleTenants.ForEach(x => _currentUser.UserRoles.Add(_mapper.Map<ApplicationUserRoleTenantDto>(x)));
         _currentUser.TenantId = applicationUser.TenantId;
         _currentUser.TenantName = applicationUser.TenantName;
 

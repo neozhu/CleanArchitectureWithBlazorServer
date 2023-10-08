@@ -477,7 +477,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUserRole", b =>
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUserRoleTenant", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
@@ -586,16 +586,16 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUserRole", b =>
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUserRoleTenant", b =>
                 {
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationRole", "Role")
-                        .WithMany("UserRoles")
+                        .WithMany("UserRoleTenants")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "User")
-                        .WithMany("UserRoles")
+                        .WithMany("UserRoleTenants")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -620,7 +620,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 {
                     b.Navigation("RoleClaims");
 
-                    b.Navigation("UserRoles");
+                    b.Navigation("UserRoleTenants");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", b =>
@@ -631,7 +631,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 
                     b.Navigation("UserClaims");
 
-                    b.Navigation("UserRoles");
+                    b.Navigation("UserRoleTenants");
                 });
 #pragma warning restore 612, 618
         }

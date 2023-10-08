@@ -13,7 +13,7 @@ public class UserProfile
     public required string Email { get; set; }  
     public string? PhoneNumber { get; set; }
     public string? DefaultRole { get; set; }
-    public ICollection<ApplicationUserRoleDto> UserRoleTenants { get; set; }
+    public ICollection<ApplicationUserRoleTenantDto> UserRoleTenants { get; set; }
     public string[]? AssignedRoles { get; set; }
     public required string UserId { get; set; }=Guid.NewGuid().ToString();
     public bool IsActive { get; set; }

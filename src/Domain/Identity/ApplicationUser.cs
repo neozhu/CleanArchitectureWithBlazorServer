@@ -3,6 +3,7 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection;
 
 namespace CleanArchitecture.Blazor.Domain.Identity;
 
@@ -19,7 +20,7 @@ public class ApplicationUser : IdentityUser
     public string? RefreshToken { get; set; }
     public DateTime RefreshTokenExpiryTime { get; set; }
     public virtual ICollection<ApplicationUserClaim> UserClaims { get; set; }
-    public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
+    public virtual ICollection<ApplicationUserRoleTenant> UserRoleTenants { get; set; } = new List<ApplicationUserRoleTenant> ();
     [Description("Is User-Tenant Roles Active")][NotMapped] public bool IsUserTenantRolesActive { get; set; } = true;
     public virtual ICollection<ApplicationUserLogin> Logins { get; set; }
     public virtual ICollection<ApplicationUserToken> Tokens { get; set; }
@@ -30,10 +31,22 @@ public class ApplicationUser : IdentityUser
     public ApplicationUser() : base()
     {
         UserClaims = new HashSet<ApplicationUserClaim>();
-        UserRoles = new HashSet<ApplicationUserRole>();
+        UserRoleTenants = new HashSet<ApplicationUserRoleTenant>();
         Logins = new HashSet<ApplicationUserLogin>();
         Tokens = new HashSet<ApplicationUserToken>();
     }
+    public ApplicationUser(ApplicationUser source)//
+    {
+        if (source == null)
+            throw new ArgumentNullException(nameof(source));
 
+        Type type = typeof(ApplicationUser);
+        PropertyInfo[] properties = type.GetProperties();
+
+        foreach (PropertyInfo property in properties)
+        {
+            property.SetValue(this, property.GetValue(source));
+        }
+    }
 
 }

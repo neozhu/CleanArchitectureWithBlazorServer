@@ -10,7 +10,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
-    DbSet<ApplicationUserRole> UserRoles { get; set; }
+    DbSet<ApplicationUserRoleTenant> UserRoles { get; set; }
     DbSet<ApplicationRole> Roles { get; set; }
     DbSet<Logger> Loggers { get; set; }
     DbSet<AuditTrail> AuditTrails { get; set; }

@@ -33,11 +33,11 @@ public static class ClaimsPrincipalExtensions
     public static string? GetTenantId(this ClaimsPrincipal claimsPrincipal)
         => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.TenantId);
     //public static string? GetUserTenantRoles(this ClaimsPrincipal claimsPrincipal)
-    //    => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.UserRoles);
-    public static ICollection<ApplicationUserRoleDto>? GetUserRoleTenants(this ClaimsPrincipal claimsPrincipal)
+    //    => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.UserRoleTenants);
+    public static ICollection<ApplicationUserRoleTenantDto>? GetUserRoleTenants(this ClaimsPrincipal claimsPrincipal)
     {
         var ex = claimsPrincipal.FindFirstValue(ApplicationClaimTypes.UserRoles);
-        return string.IsNullOrEmpty(ex) ? null : JsonConvert.DeserializeObject<ICollection<ApplicationUserRoleDto>>(ex);
+        return string.IsNullOrEmpty(ex) ? null : JsonConvert.DeserializeObject<ICollection<ApplicationUserRoleTenantDto>>(ex);
     }
     public static bool GetStatus(this ClaimsPrincipal claimsPrincipal)
        => Convert.ToBoolean(claimsPrincipal.FindFirstValue(ApplicationClaimTypes.Status));

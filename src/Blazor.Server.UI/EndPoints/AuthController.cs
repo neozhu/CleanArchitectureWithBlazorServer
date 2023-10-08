@@ -67,7 +67,7 @@ public class AuthController : Controller
             if (admin.TenantId == null) return null;
             var rl = await _roleManager.FindByNameAsync(RoleNamesEnum.Patient.ToString());
             if (rl == null) return null;
-            var rolesToInsert = new List<ApplicationUserRole>() { new ApplicationUserRole() { TenantId = admin.TenantId, Role = rl } };
+            var rolesToInsert = new List<ApplicationUserRoleTenant>() { new ApplicationUserRoleTenant() { TenantId = admin.TenantId, Role = rl } };
             user = new ApplicationUser
             {
                 EmailConfirmed = true,
@@ -80,7 +80,7 @@ public class AuthController : Controller
                 SuperiorId = admin.Id,
                 TenantId = admin.TenantId,
                 TenantName = admin.TenantName,
-                UserRoles = rolesToInsert
+                UserRoleTenants = rolesToInsert
             };
             var createResult = await _userManager.CreateAsync(user);
             if (!createResult.Succeeded)

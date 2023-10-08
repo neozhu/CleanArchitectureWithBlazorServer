@@ -29,7 +29,7 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
             .IsRequired();
 
         // Each User can have many entries in the UserRole join table
-        builder.HasMany(e => e.UserRoles)
+        builder.HasMany(e => e.UserRoleTenants)
             .WithOne()
             .HasForeignKey(ur => ur.UserId)
             .IsRequired();
@@ -47,16 +47,16 @@ public class ApplicationRoleClaimConfiguration : IEntityTypeConfiguration<Applic
               .OnDelete(DeleteBehavior.Cascade);
     }
 }
-public class ApplicationUserRoleConfiguration : IEntityTypeConfiguration<ApplicationUserRole>
+public class ApplicationUserRoleConfiguration : IEntityTypeConfiguration<ApplicationUserRoleTenant>
 {
-    public void Configure(EntityTypeBuilder<ApplicationUserRole> builder)
+    public void Configure(EntityTypeBuilder<ApplicationUserRoleTenant> builder)
     {
         builder.HasOne(d => d.Role)
               .WithMany(p => p.UserRoles)
               .HasForeignKey(d => d.RoleId)
               .OnDelete(DeleteBehavior.Cascade);
         builder.HasOne(d => d.User)
-              .WithMany(p => p.UserRoles)
+              .WithMany(p => p.UserRoleTenants)
               .HasForeignKey(d => d.UserId)
               .OnDelete(DeleteBehavior.Cascade);
     }

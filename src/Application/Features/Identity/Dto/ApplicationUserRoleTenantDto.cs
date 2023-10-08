@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Dto;
-public class ApplicationUserRoleDto
+public class ApplicationUserRoleTenantDto
 {
     public virtual ApplicationUserDto User { get; set; } = default!;
     public virtual ApplicationRoleDto Role { get; set; } = default!;
@@ -19,7 +19,7 @@ public class ApplicationUserRoleDto
     {
         public Mapping()
         {
-            CreateMap<ApplicationUserRole, ApplicationUserRoleDto>(MemberList.None);
+            CreateMap<ApplicationUserRoleTenant, ApplicationUserRoleTenantDto>(MemberList.None);
         }
     }
 }
