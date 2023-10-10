@@ -111,7 +111,7 @@
                        ValueChanged="TenantSelectChanged">
                 @foreach (var item in Model.UserRoleTenants)
                     {
-                    <MudSelectItem T="string" Value="@item.Tenant.Id">@item.Tenant.Name</MudSelectItem>
+                    <MudSelectItem T="string" Value="@item.TenantId">@item.TenantName</MudSelectItem>
                     }
             </MudSelect>
         </MudItem>

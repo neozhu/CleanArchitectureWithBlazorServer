@@ -9,8 +9,10 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using FluentEmail.Core;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
 using static CleanArchitecture.Blazor.Application.Constants.Permission.Permissions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
@@ -42,13 +44,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     {
         return await CreateAsync(user, defaultRoles, tenantId, password);
     }
-    public override async Task<ApplicationUser?> FindByIdAsync(string userId)
-    {
-        return await dbContext.Users
-            .Include(x => x.UserRoleTenants)//.ThenInclude(x =>  x.Role).Include(x => x.UserRoleTenants).ThenInclude(x => x.Tenant)
-            .Include(x => x.UserClaims).AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == userId);
-    }
+   
     //public async Task<ApplicationUser?> FindByIdAsyncNoTracking(string userId)
     //{
     //    return await Users.AsNoTracking()
@@ -65,33 +61,59 @@ public class CustomUserManager : UserManager<ApplicationUser>
             .Where(x => x.UserId == userId)
             .ToListAsync();
     }
+    public override async Task<ApplicationUser?> FindByIdAsync(string userId)
+    {
+        return await FindByNameOrId(userId: Guid.Parse(userId.TrimSelf()));
+    }
     public override async Task<ApplicationUser?> FindByNameAsync(string userName)
     {
-        if (userName.IsNullOrEmptyAndTrimSelf()) return null;
-        userName = userName.ToUpperInvariant();
-        // var user = await base.FindByNameAsync(userName);
-        var result = await dbContext.Users.AsNoTracking()
-            .Include(x => x.UserRoleTenants)//.ThenInclude(x => x.Role).Include(x => x.UserRoleTenants).ThenInclude(x => x.Tenant)
-            .Include(x => x.UserClaims)
-            //.Select(x =>  new ApplicationUser()
-            //{
+        return await FindByNameOrId(userName: userName);
+    }
+    public async Task<ApplicationUser?> FindByNameOrId(string userName = "", Guid? userId = null)
+    {
+        if (userName.IsNullOrEmptyAndTrimSelf() && !userId.HasValue) return null;
 
-            //    UserClaims = x.UserClaims,
-            //    UserRoleTenants = x.UserRoleTenants
-            //    .Select(urt => new ApplicationUserRoleTenant()
-            //    { UserId = urt.UserId, TenantId = urt.TenantId, RoleId = urt.RoleId, UserName = x.UserName, RoleName = urt.Role.Name, TenantName = urt.Tenant.Name }).ToList()
-            //}
-            //)
-            .FirstOrDefaultAsync(x => x.NormalizedUserName == userName);
-        if (result != null && result.UserRoleTenants != null && result.UserRoleTenants.Any())
-            foreach (var item in result.UserRoleTenants)
-            {
-                //  item.UserName = item.User?.UserName;//this is also redundant info but still somewhere else might needed so kept it
-                item.User = null;
-                //item.RoleName = item.Role.Name;//these are null bcz not included
-                //item.TenantName = item.Tenant.Name;
-            };
-        return result;
+        string searchCriteria = userName; // Replace with your search criteria
+        bool searchById = false; // Set to true if searching by Id, false if searching by UserName
+
+
+        if (userName.IsNullOrEmptyAndTrimSelf() && userId.HasValue) { searchById = true; searchCriteria = userId.ToString(); }
+
+        using (dbContext)
+        {
+            var query = dbContext.Users
+                .Where(user => (searchById && user.Id == searchCriteria) || (!searchById && user.UserName == searchCriteria))
+                .Select(user => new ApplicationUser
+                {
+                    UserName = user.UserName,
+                    UserClaims = dbContext.UserClaims.Where(uc => uc.UserId == user.Id).ToList(),
+                    UserRoleTenants = dbContext.UserRoles.Where(urt => urt.UserId == user.Id).Select(u => new ApplicationUserRoleTenant
+                    {
+                        TenantId = u.TenantId,
+                        TenantName = u.Tenant.Name,
+                        RoleId = u.RoleId,
+                        RoleName = u.Role.Name
+                    }).ToList(),
+                    Id = user.Id,
+                    SecurityStamp = user.SecurityStamp,
+                    DisplayName = user.DisplayName,
+                    Provider = user.Provider,
+                    TenantId = user.TenantId,
+                    TenantName = user.TenantName,
+                    ProfilePictureDataUrl = user.ProfilePictureDataUrl,
+                    IsActive = user.IsActive,
+                    IsLive = user.IsLive,
+                    RefreshToken = user.RefreshToken,
+                    RefreshTokenExpiryTime = user.RefreshTokenExpiryTime,
+                    Logins = user.Logins,
+                    Tokens = user.Tokens,
+                    SuperiorId = user.SuperiorId,
+                    Superior = user.Superior//this also can be replaced by superior name kind of
+                });
+
+            var applicationUser = await query.FirstOrDefaultAsync();
+            return applicationUser;
+        }
     }
     public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
     {

@@ -56,11 +56,11 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
                 new Claim(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl)
             });
         }
-        var appuser = await UserManager.FindByIdAsync(user.Id);
-        var roles = await _userManager.GetUserRoles(appuser.Id);
-        if (roles != null && roles.Count > 0)
+
+        //  var appUser = await UserManager.FindByIdAsync(user.Id);//this can be redundant
+        if (user.UserRoleTenants != null && user.UserRoleTenants.Any())
         {
-            var rolesStr = string.Join(",", roles.Select(x => x.Role.Name));
+            var rolesStr = string.Join(",", user.UserRoleTenants.Select(x => x.RoleName));
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
                 new Claim(ApplicationClaimTypes.AssignedRoles, rolesStr)
             });

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,9 @@ public class ApplicationUserRoleTenantDto
     public virtual TenantDto Tenant { get; set; } = default!;
     public string TenantId { get; set; } = default!;
     public bool IsActive { get; set; } = true;
-
+    [NotMapped] public string? UserName { get; set; }
+    [NotMapped] public string? RoleName { get; set; }
+    [NotMapped] public string? TenantName { get; set; }
     private class Mapping : Profile
     {
         public Mapping()
