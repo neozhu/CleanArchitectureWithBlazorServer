@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CleanArchitecture.Blazor.Domain.Enums;
+
 public enum RoleNamesEnum : byte
 {
     RootAdmin = 50,

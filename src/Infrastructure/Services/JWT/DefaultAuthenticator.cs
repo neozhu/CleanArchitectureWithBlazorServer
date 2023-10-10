@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Identity;
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public class DefaultAuthenticator : IAuthenticator
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly CustomUserManager _userManager;
     public DefaultAuthenticator(IServiceScopeFactory scopeFactory)
     {
         var scope = scopeFactory.CreateScope();
-        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>();
     }
     public async Task<ApplicationUser?> Authenticate(string username, string password)
     {

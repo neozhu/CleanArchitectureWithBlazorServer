@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.Tracing;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 using CleanArchitecture.Blazor.Application.Common.Extensions;
 using CleanArchitecture.Blazor.Application.Constants.Permission;
@@ -18,6 +19,10 @@ namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 public class CustomUserManager : UserManager<ApplicationUser>
 {
+    internal static List<RoleNamesEnum> AllRoleNameEnums = Enum.GetValues(typeof(RoleNamesEnum))
+            .Cast<RoleNamesEnum>()
+            .ToList();
+   
     readonly List<string> defaultRoles = new() { RoleNamesEnum.Patient.ToString() };
 
     public const string DefaultTenantId = "";//todo make it loaded as per db
@@ -45,22 +50,14 @@ public class CustomUserManager : UserManager<ApplicationUser>
         return await CreateAsync(user, defaultRoles, tenantId, password);
     }
    
-    //public async Task<ApplicationUser?> FindByIdAsyncNoTracking(string userId)
+    //public async Task<List<ApplicationUserRoleTenant>> GetUserRoles(string userId)
     //{
-    //    return await Users.AsNoTracking()
-    //        .Include(x => x.UserRoleTenants).ThenInclude(x => x.Role)
-    //        .Include(x => x.UserRoleTenants).ThenInclude(x => x.Tenant)
-    //        .Include(x => x.UserClaims)
-    //        .FirstOrDefaultAsync(x => x.Id == userId);
+    //    return await dbContext.UserRoles.AsNoTracking()
+    //        .Include(x => x.Role)
+    //        .Include(x => x.Tenant)
+    //        .Where(x => x.UserId == userId)
+    //        .ToListAsync();
     //}
-    public async Task<List<ApplicationUserRoleTenant>> GetUserRoles(string userId)
-    {
-        return await dbContext.UserRoles.AsNoTracking()
-            .Include(x => x.Role)
-            .Include(x => x.Tenant)
-            .Where(x => x.UserId == userId)
-            .ToListAsync();
-    }
     public override async Task<ApplicationUser?> FindByIdAsync(string userId)
     {
         return await FindByNameOrId(userId: Guid.Parse(userId.TrimSelf()));

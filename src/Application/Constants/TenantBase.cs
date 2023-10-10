@@ -17,12 +17,17 @@ public class TenantBase
         //if (DefaultTenantStructure == null || !DefaultTenantStructure.Any())
         //{
         var defaultTenantStructure1 = new List<TenantStructure>() {
-     new(TenantTypeEnum.Patient,new List<ApplicationRole>(){ new ApplicationRole(RoleNamesEnum.Patient)}),
-    new(TenantTypeEnum.HospitalAndStaff,ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.Hospital,RoleNamesEnum.HospitalAdmin,
+     new(TenantTypeEnum.Patient.ToString(),TenantTypeEnum.Patient,new List<ApplicationRole>(){ new ApplicationRole(RoleNamesEnum.Patient)}),
+    new(TenantTypeEnum.Internal, ApplicationRole.CreateRolesForTenantType(new List < RoleNamesEnum >() { RoleNamesEnum.RootAdmin, RoleNamesEnum.ElevateAdminGroup, RoleNamesEnum.ElevateAdminViewer }, TenantTypeEnum.Internal)),
+
+    //below are test data only
+            new("Nanjappa Hospital,Shimoga", TenantTypeEnum.HospitalAndStaff,ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.Hospital,RoleNamesEnum.HospitalAdmin,
             RoleNamesEnum.Doctor,RoleNamesEnum.DoctorAssistant,RoleNamesEnum.Nurse,RoleNamesEnum.ViewerHospital },TenantTypeEnum.HospitalAndStaff)),
-    new(TenantTypeEnum.PharmacyAndStaff,ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.Pharmacy,RoleNamesEnum.Pharmacist},TenantTypeEnum.PharmacyAndStaff)),
-    new(TenantTypeEnum.DiagnosticsAndStaff, ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.DiagnosticCenter,RoleNamesEnum.Diagnostic},TenantTypeEnum.DiagnosticsAndStaff)),
-    new(TenantTypeEnum.Internal, ApplicationRole.CreateRolesForTenantType(new List < RoleNamesEnum >() { RoleNamesEnum.RootAdmin, RoleNamesEnum.ElevateAdminGroup, RoleNamesEnum.ElevateAdminViewer }, TenantTypeEnum.Internal))
+              new("Sarji Hospital,Shimogga", TenantTypeEnum.HospitalAndStaff,ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.Hospital,RoleNamesEnum.HospitalAdmin,
+            RoleNamesEnum.Doctor,RoleNamesEnum.DoctorAssistant,RoleNamesEnum.Nurse,RoleNamesEnum.ViewerHospital },TenantTypeEnum.HospitalAndStaff)),
+    new("Sarji Pharmacy,Shivamogga",TenantTypeEnum.PharmacyAndStaff,ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.Pharmacy,RoleNamesEnum.Pharmacist},TenantTypeEnum.PharmacyAndStaff)),
+    new("Malnad Diagnostic Center,Bhadravathi", TenantTypeEnum.DiagnosticsAndStaff, ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.DiagnosticCenter,RoleNamesEnum.Diagnostic},TenantTypeEnum.DiagnosticsAndStaff))
+
             };
         return defaultTenantStructure1;
         //}
@@ -48,26 +53,18 @@ public class TenantStructure
 
     //}
     public TenantStructure(TenantTypeEnum type, List<ApplicationRole> roles)
-        : this((byte)type, type.ToString(), type.GetEnumDescription(), roles)
+        : this(type.ToString(), type, roles, type.GetEnumDescription())
     {
 
     }
-    public TenantStructure(TenantTypeEnum type, string name, string description, List<ApplicationRole> roles) : this((byte)type, name, description, roles)
-    { }
-    public TenantStructure(byte type, string name, string description, List<ApplicationRole> roles)
+    public TenantStructure(string name, TenantTypeEnum type, List<ApplicationRole> roles, string? description = null)
     {
-        Type = type;
+        Type = (byte)type;
         Name = name;
-        Description = description;
+        Description = string.IsNullOrEmpty(description) ? name : description;
         Roles = roles;
     }
-    public TenantStructure(string name, List<ApplicationRole> roles)
-    {
-        Name = name;
-        Description = name;
-        Roles = roles;
-    }
-    public Tenant Tenant(TenantStructure tenant)
+    public static Tenant Tenant(TenantStructure tenant)
     {
         return new Tenant(tenant.Name, tenant.Description, tenant.Type);
     }
