@@ -9,21 +9,6 @@ using CleanArchitecture.Blazor.Domain.Enums;
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 public class ApplicationDbContextInitializer
 {
-    private List<RoleNamesEnum> InternalRoles = CustomUserManager.AllRoleNameEnums
-           .Where(e => e > RoleNamesEnum.Hospital)
-           .ToList();
-
-    private List<RoleNamesEnum> HospitalRoles = CustomUserManager.AllRoleNameEnums
-            .Where(e => e <= RoleNamesEnum.Hospital && e > RoleNamesEnum.DiagnosticCenter)
-            .ToList();
-
-    private List<RoleNamesEnum> DiagnosticCenterRoles = CustomUserManager.AllRoleNameEnums
-            .Where(e => e <= RoleNamesEnum.DiagnosticCenter && e > RoleNamesEnum.Pharmacy)
-            .ToList();
-
-    private List<RoleNamesEnum> PharmacyRoles = CustomUserManager.AllRoleNameEnums
-            .Where(e => e <= RoleNamesEnum.Pharmacy && e > RoleNamesEnum.Patient)
-            .ToList();
     private readonly ILogger<ApplicationDbContextInitializer> _logger;
     private readonly ApplicationDbContext _context;
     private readonly CustomUserManager _userManager;
@@ -119,9 +104,9 @@ public class ApplicationDbContextInitializer
 
         // Default users
         var defaultGoogleUsers = new List<(string email, RoleNamesEnum role, TenantTypeEnum tenantType)>()
-       {("madhusudhan.veerabhadrappa@gmail.com",InternalRoles.FirstOrDefault() ,TenantTypeEnum.Internal)
-       ,("vmadhu203@gmail.com", HospitalRoles.FirstOrDefault(), TenantTypeEnum.HospitalAndStaff)
-       ,("vmadhu2023@gmail.com", RoleNamesEnum.Patient, TenantTypeEnum.Patient)
+       {("madhusudhan.veerabhadrappa@gmail.com",RoleNamesEnum.RootAdmin ,TenantTypeEnum.Internal)
+       ,("vmadhu203@gmail.com", RoleNamesEnum.HospitalAdmin, TenantTypeEnum.HospitalAndStaff)
+       ,("vmadhu2023@gmail.com", RoleNamesEnum.ViewerHospital, TenantTypeEnum.HospitalAndStaff)
        };
 
         foreach (var (email, role, tenantType) in defaultGoogleUsers)

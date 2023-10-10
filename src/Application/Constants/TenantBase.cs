@@ -9,6 +9,24 @@ using DocumentFormat.OpenXml.Wordprocessing;
 namespace CleanArchitecture.Blazor.Application.Constants;
 public class TenantBase
 {
+    internal static List<RoleNamesEnum> AllRoleNameEnums = Enum.GetValues(typeof(RoleNamesEnum))
+        .Cast<RoleNamesEnum>()
+        .ToList();
+    public static List<RoleNamesEnum> InternalRoles = AllRoleNameEnums
+       .Where(e => e > RoleNamesEnum.Hospital)
+       .ToList();
+
+    public static List<RoleNamesEnum> HospitalRoles = AllRoleNameEnums
+            .Where(e => e <= RoleNamesEnum.Hospital && e > RoleNamesEnum.DiagnosticCenter)
+            .ToList();
+
+    public static List<RoleNamesEnum> DiagnosticCenterRoles = AllRoleNameEnums
+            .Where(e => e <= RoleNamesEnum.DiagnosticCenter && e > RoleNamesEnum.Pharmacy)
+            .ToList();
+
+    public static List<RoleNamesEnum> PharmacyRoles = AllRoleNameEnums
+            .Where(e => e <= RoleNamesEnum.Pharmacy && e > RoleNamesEnum.Patient)
+            .ToList();
     // public static List<string> DefaultTenantNames = DefaultTenantStructure.Select(t => t.Name).ToList();
 
     // public static List<TenantStructure> DefaultTenantStructure = GetDefaultTenantStructure();
@@ -18,15 +36,13 @@ public class TenantBase
         //{
         var defaultTenantStructure1 = new List<TenantStructure>() {
      new(TenantTypeEnum.Patient.ToString(),TenantTypeEnum.Patient,new List<ApplicationRole>(){ new ApplicationRole(RoleNamesEnum.Patient)}),
-    new(TenantTypeEnum.Internal, ApplicationRole.CreateRolesForTenantType(new List < RoleNamesEnum >() { RoleNamesEnum.RootAdmin, RoleNamesEnum.ElevateAdminGroup, RoleNamesEnum.ElevateAdminViewer }, TenantTypeEnum.Internal)),
+    new(TenantTypeEnum.Internal, ApplicationRole.CreateRolesForTenantType(InternalRoles, TenantTypeEnum.Internal)),
 
     //below are test data only
-            new("Nanjappa Hospital,Shimoga", TenantTypeEnum.HospitalAndStaff,ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.Hospital,RoleNamesEnum.HospitalAdmin,
-            RoleNamesEnum.Doctor,RoleNamesEnum.DoctorAssistant,RoleNamesEnum.Nurse,RoleNamesEnum.ViewerHospital },TenantTypeEnum.HospitalAndStaff)),
-              new("Sarji Hospital,Shimogga", TenantTypeEnum.HospitalAndStaff,ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.Hospital,RoleNamesEnum.HospitalAdmin,
-            RoleNamesEnum.Doctor,RoleNamesEnum.DoctorAssistant,RoleNamesEnum.Nurse,RoleNamesEnum.ViewerHospital },TenantTypeEnum.HospitalAndStaff)),
-    new("Sarji Pharmacy,Shivamogga",TenantTypeEnum.PharmacyAndStaff,ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.Pharmacy,RoleNamesEnum.Pharmacist},TenantTypeEnum.PharmacyAndStaff)),
-    new("Malnad Diagnostic Center,Bhadravathi", TenantTypeEnum.DiagnosticsAndStaff, ApplicationRole.CreateRolesForTenantType( new List<RoleNamesEnum>(){RoleNamesEnum.DiagnosticCenter,RoleNamesEnum.Diagnostic},TenantTypeEnum.DiagnosticsAndStaff))
+            new("Nanjappa Hospital,Shimoga", TenantTypeEnum.HospitalAndStaff,ApplicationRole.CreateRolesForTenantType( HospitalRoles,TenantTypeEnum.HospitalAndStaff)),
+              new("Sarji Hospital,Shimogga", TenantTypeEnum.HospitalAndStaff,ApplicationRole.CreateRolesForTenantType(HospitalRoles,TenantTypeEnum.HospitalAndStaff)),
+    new("Sarji Pharmacy,Shivamogga",TenantTypeEnum.PharmacyAndStaff,ApplicationRole.CreateRolesForTenantType(PharmacyRoles,TenantTypeEnum.PharmacyAndStaff)),
+    new("Malnad Diagnostic Center,Bhadravathi", TenantTypeEnum.DiagnosticsAndStaff, ApplicationRole.CreateRolesForTenantType( DiagnosticCenterRoles,TenantTypeEnum.DiagnosticsAndStaff))
 
             };
         return defaultTenantStructure1;

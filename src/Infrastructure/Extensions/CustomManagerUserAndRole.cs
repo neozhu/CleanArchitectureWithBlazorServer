@@ -19,10 +19,6 @@ namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 public class CustomUserManager : UserManager<ApplicationUser>
 {
-    internal static List<RoleNamesEnum> AllRoleNameEnums = Enum.GetValues(typeof(RoleNamesEnum))
-            .Cast<RoleNamesEnum>()
-            .ToList();
-   
     readonly List<string> defaultRoles = new() { RoleNamesEnum.Patient.ToString() };
 
     public const string DefaultTenantId = "";//todo make it loaded as per db
@@ -74,7 +70,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
         bool searchById = false; // Set to true if searching by Id, false if searching by UserName
 
 
-        if (userName.IsNullOrEmptyAndTrimSelf() && userId.HasValue) { searchById = true; searchCriteria = userId.ToString(); }
+        if (userName.IsNullOrEmptyAndTrimSelf() && userId.HasValue) { searchById = true; searchCriteria = userId?.ToString(); }
 
         using (dbContext)
         {
@@ -155,7 +151,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
                 */
             }
         });
-
+        //here its failing madhu continue here
         var result = password.IsNullOrEmptyAndTrimSelf() ? await base.CreateAsync(user) : await base.CreateAsync(user, password!);
         return result;
     }
