@@ -22,12 +22,12 @@
       <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.1" />
     <PackageReference Include="LazyCache" Version="2.4.0" />
     <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.12" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="7.0.11" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.4" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="7.0.12" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.5" />
     <PackageReference Include="Hangfire.Core" Version="1.8.5" />
   </ItemGroup>
   <ItemGroup>
