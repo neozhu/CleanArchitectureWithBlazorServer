@@ -12,7 +12,7 @@ public static class MessageServiceCollectionExtensions
         services.AddSingleton(smtpClientOptions);
         services.AddScoped<IMailService, MailService>();
         // configure your sender and template choices with dependency injection.
-        services.AddFluentEmail(smtpClientOptions.User)
+        services.AddFluentEmail("support@blazorserver.com")
                 .AddRazorRenderer(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates"))
                 .AddMailKitSender(smtpClientOptions);
         return services;
