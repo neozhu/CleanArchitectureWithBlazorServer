@@ -235,9 +235,9 @@
 
     private async Task OnPurge()
     {
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<ConfirmationDialog>
         {
-            { nameof(ConfirmationDialog.ContentText), $"{L["Are you sure you want to erase all the logs?"]}" }
+            { x=>x.ContentText, $"{L["Are you sure you want to erase all the logs?"]}" }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>

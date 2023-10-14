@@ -133,9 +133,9 @@
     {
         if (Model.Pictures != null)
         {
-            var parameters = new DialogParameters
+            var parameters = new DialogParameters<ConfirmationDialog>
             {
-                { nameof(ConfirmationDialog.ContentText), $"{L["Are you sure you want to erase this image?"]}" }
+                { x=>x.ContentText, $"{L["Are you sure you want to erase this image?"]}" }
             };
             var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
             var dialog = DialogService.Show<ConfirmationDialog>($"{L["Erase imatge"]}", parameters, options);
