@@ -271,7 +271,9 @@
     {
         //DANGER todo need to add Level in all and also restrict from user to corrupt the system
         var model = new ApplicationRoleDto { Name = "" };
-        var parameters = new DialogParameters { ["model"] = model };
+        var parameters = new DialogParameters<_RoleFormDialog> {
+            { x=>x.Model, model}
+        };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_RoleFormDialog>(L["Create a new role"], parameters, options);
         var result = await dialog.Result;
@@ -299,7 +301,9 @@
 
     private async Task OnEdit(ApplicationRoleDto item)
     {
-        var parameters = new DialogParameters { ["model"] = item };
+        var parameters = new DialogParameters<_RoleFormDialog> {
+            { x=>x.Model, item}
+        };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_RoleFormDialog>(L["Edit the role"], parameters, options);
         var result = await dialog.Result;
@@ -453,9 +457,9 @@
     private async Task OnDelete(ApplicationRoleDto dto)
     {
         var deleteContent = ConstantString.DeleteConfirmation;
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<ConfirmationDialog>
         {
-            { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, dto.Name) }
+            { x=>x.ContentText, string.Format(deleteContent, dto.Name) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DeleteConfirmationTitle, parameters, options);
@@ -480,9 +484,9 @@
     private async Task OnDeleteChecked()
     {
         var deleteContent = ConstantString.DeleteConfirmation;
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<ConfirmationDialog>
         {
-            { nameof(ConfirmationDialog.ContentText), string.Format(deleteContent, _selectedItems.Count) }
+            {x=> x.ContentText, string.Format(deleteContent, _selectedItems.Count) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DeleteConfirmationTitle, parameters, options);

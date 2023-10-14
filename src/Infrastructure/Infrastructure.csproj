@@ -8,6 +8,8 @@
     </PropertyGroup>
     <ItemGroup>
         
+        <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
+        
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.5" />
  
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.12" />

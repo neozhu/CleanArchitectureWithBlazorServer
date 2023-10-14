@@ -1,6 +1,7 @@
 using Blazor.Server.UI.Components.Dialogs;
 using CleanArchitecture.Blazor.Application.Features.Fluxor;
 using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Fluxor;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -17,10 +18,10 @@ public partial class UserMenu: FluxorComponent
     protected NavigationManager NavigationManager { get; set; } = null!;
     private async Task OnLogout()
     {
-        var parameters = new DialogParameters
-            {
-                { nameof(LogoutConfirmation.ContentText), $"{ConstantString.LogoutConfirmation}"},
-                { nameof(LogoutConfirmation.Color), Color.Error}
+        var parameters = new DialogParameters<LogoutConfirmation>
+        {
+                { x=>x.ContentText, $"{ConstantString.LogoutConfirmation}"},
+                { x=>x.Color,  Color.Error}
             };
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };

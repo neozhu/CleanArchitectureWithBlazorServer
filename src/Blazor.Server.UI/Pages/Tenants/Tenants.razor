@@ -210,9 +210,9 @@
     private async Task OnCreate()
     {
         var command = new AddEditTenantCommand();
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<_TenantFormDialog>
             {
-        { nameof(_TenantFormDialog.Model),command },
+                { x=>x.Model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_TenantFormDialog>
@@ -226,10 +226,10 @@
     private async Task OnEdit(TenantDto dto)
     {
         var command = Mapper.Map<AddEditTenantCommand>(dto);
-        var parameters = new DialogParameters
-                {
-            { nameof(_TenantFormDialog.Model),command },
-                };
+        var parameters = new DialogParameters<_TenantFormDialog>
+            {
+                { x=>x.Model,command },
+            };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_TenantFormDialog>
         (L["Edit the Tenant"], parameters, options);
@@ -244,10 +244,10 @@
     {
         var deleteContent = ConstantString.DeleteConfirmationWithId;
         var command = new DeleteTenantCommand(new string[] { dto.Id });
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<DeleteConfirmation>
                     {
-                        { nameof(DeleteConfirmation.Command),  command },
-                        { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.Id) }
+                        { x=>x.Command,  command },
+                        { x=>x.ContentText, string.Format(deleteContent, dto.Id) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(L["Delete the Tenant"], parameters, options);
@@ -262,10 +262,10 @@
     {
         var command = new DeleteTenantCommand(_selectedItems.Select(x => x.Id).ToArray());
         var deleteContent = ConstantString.DeleteConfirmation;
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<DeleteConfirmation>
                         {
-                            { nameof(DeleteConfirmation.Command),  command },
-                            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,_selectedItems.Count) }
+                            { x=>x.Command,  command },
+                            { x=>x.ContentText, string.Format(deleteContent,_selectedItems.Count) }
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(L["Delete Selected Tenants"], parameters, options);
