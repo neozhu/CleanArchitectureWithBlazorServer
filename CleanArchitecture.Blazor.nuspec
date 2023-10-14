@@ -11,7 +11,7 @@
     </summary>
     <releaseNotes>
       1.0.0-preview.16
-      -  ✨ refactoring code for DialogParameters<T>
+      -  ✨ refactoring code for DialogParameters
       -  ✨ add UseSnakeCaseNamingConvention for Npgsql
      </releaseNotes>
 
