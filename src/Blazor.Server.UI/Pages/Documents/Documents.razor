@@ -345,9 +345,9 @@
     private async Task OnCreate()
     {
         var command = new AddEditDocumentCommand() { DocumentType = DocumentType.Document };
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<_UploadFilesFormDialog>
             {
-        { nameof(_DocumentFormDialog.Model),command },
+                 { x=>x.Model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UploadFilesFormDialog>
@@ -362,9 +362,8 @@
     private async Task OnEdit(DocumentDto dto)
     {
         var command = Mapper.Map<AddEditDocumentCommand>(dto);
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<_DocumentFormDialog>
                 {
-                    { nameof(DeleteConfirmation.Command),  command },
                     { nameof(_DocumentFormDialog.Model),command },
                 };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
@@ -382,10 +381,10 @@
     private async Task OnDelete(DocumentDto dto)
     {
         var command = new DeleteDocumentCommand(new int[] { dto.Id });
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<DeleteConfirmation>
                             {
-                            { nameof(DeleteConfirmation.Command),  command },
-                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmation, dto.Title) }
+                            { x=>x.Command,  command },
+                            { x=>x.ContentText, string.Format(ConstantString.DeleteConfirmation, dto.Title) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
@@ -399,10 +398,10 @@
     private async Task OnDeleteChecked()
     {
         var command = new DeleteDocumentCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<DeleteConfirmation>
                             {
-                            { nameof(DeleteConfirmation.Command),  command },
-                            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmWithSelected,_selectedItems.Count) }
+                            { x=>x.Command,  command },
+                            { x=>x.ContentText, string.Format(ConstantString.DeleteConfirmWithSelected,_selectedItems.Count) }
                     };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>

@@ -342,10 +342,10 @@
     private async Task OnCreate()
     {
         var command = new AddEditProductCommand { Pictures = new List<ProductImage>() };
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<_ProductFormDialog>
         {
-            { nameof(_ProductFormDialog.Refresh), new Action(() => _table.ReloadServerData()) },
-            { nameof(_ProductFormDialog.Model), command }
+            { x=>x.Refresh , new Action(() => _table.ReloadServerData()) },
+            { x=>x.Model, command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
@@ -367,10 +367,10 @@
                 Name = copy.Name,
                 Pictures = copy.Pictures
             };
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<_ProductFormDialog>
         {
-            { nameof(_ProductFormDialog.Refresh), new Action(() => _table.ReloadServerData()) },
-            { nameof(_ProductFormDialog.Model), command }
+            { x=>x.Refresh , new Action(() => _table.ReloadServerData()) },
+            { x=>x.Model, command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
@@ -383,10 +383,10 @@
     private async Task OnEdit(ProductDto dto)
     {
         var command = Mapper.Map<AddEditProductCommand>(dto);
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<_ProductFormDialog>
         {
-            { nameof(_ProductFormDialog.Refresh), new Action(() => _table.ReloadServerData()) },
-            { nameof(_ProductFormDialog.Model), command }
+            { x=>x.Refresh , new Action(() => _table.ReloadServerData()) },
+            { x=>x.Model, command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_ProductFormDialog>
@@ -399,10 +399,10 @@
     private async Task OnDelete(ProductDto dto)
     {
         var command = new DeleteProductCommand(new[] { dto.Id });
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<DeleteConfirmation>
         {
-            { nameof(DeleteConfirmation.Command), command },
-            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmation, dto.Name) }
+            { x=>x.Command ,command },
+            { x=>x.ContentText, string.Format(ConstantString.DeleteConfirmation, dto.Name) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EditTheItem, L["Product"]), parameters, options);
@@ -416,10 +416,10 @@
     private async Task OnDeleteChecked()
     {
         var command = new DeleteProductCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<DeleteConfirmation>
         {
-            { nameof(DeleteConfirmation.Command), command },
-            { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count) }
+            { x=>x.Command, command },
+            { x=>x.ContentText, string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>
