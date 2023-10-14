@@ -214,7 +214,6 @@
     private CustomerDto _currentDto = new();
     private bool _loading;
     private bool _uploading;
-    private bool _downloading;
     private bool _exporting;
     [Inject]
     private IState<UserProfileState> UserProfileState { get; set; } = null!;
@@ -289,9 +288,9 @@
     private async Task OnCreate()
     {
         var command = new AddEditCustomerCommand();
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<_CustomerFormDialog>
             {
-                { nameof(_CustomerFormDialog.model),command },
+                { x=>x.model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_CustomerFormDialog>
@@ -309,9 +308,9 @@
             Name = copyitem.Name,
             Description = copyitem.Description,    
         };
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<_CustomerFormDialog>
             {
-                { nameof(_CustomerFormDialog.model),command },
+                { x=>x.model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_CustomerFormDialog>
@@ -326,9 +325,9 @@
     private async Task OnEdit(CustomerDto dto)
     {
         var command = Mapper.Map<AddEditCustomerCommand>(dto);
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<_CustomerFormDialog>
             {
-                { nameof(_CustomerFormDialog.model),command },
+                { x=>x.model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<_CustomerFormDialog>
@@ -343,10 +342,10 @@
     private async Task OnDelete(CustomerDto dto)
     {
         var command = new DeleteCustomerCommand(new int[] { dto.Id });
-        var parameters = new DialogParameters 
+        var parameters = new DialogParameters<DeleteConfirmation>
            {
-             { nameof(DeleteConfirmation.Command),  command },
-             { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmation, dto.Name) }
+             { x=>x.Command,  command },
+             { x=>x.ContentText, string.Format(ConstantString.DeleteConfirmation, dto.Name) }
            };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DeleteConfirmationTitle, parameters, options);
@@ -361,10 +360,10 @@
     private async Task OnDeleteChecked()
     {
         var command = new DeleteCustomerCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<DeleteConfirmation>
                         {
-                             { nameof(DeleteConfirmation.Command),  command },
-                             { nameof(DeleteConfirmation.ContentText), string.Format(ConstantString.DeleteConfirmWithSelected,_selectedItems.Count) }
+                             { x=>x.Command,  command },
+                             { x=>x.ContentText, string.Format(ConstantString.DeleteConfirmWithSelected,_selectedItems.Count) }
                         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DeleteConfirmationTitle, parameters, options);

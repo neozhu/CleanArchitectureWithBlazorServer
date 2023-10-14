@@ -271,10 +271,10 @@
     {
         var deleteContent = ConstantString.DeleteConfirmation;
         var command = new DeleteKeyValueCommand(new int[] { item.Id });
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<DeleteConfirmation>
         {
-            { nameof(DeleteConfirmation.Command),  command },
-            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,item.Name) }
+            { x=>x.Command,  command },
+            { x=>x.ContentText, string.Format(deleteContent,item.Name) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DeleteConfirmationTitle, parameters, options);
@@ -287,9 +287,9 @@
     private async Task OnDeleteChecked()
     {
         var deleteContent = ConstantString.DeleteConfirmation;
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<DeleteConfirmation>
         {
-            { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,_selectedItems.Count) }
+            { x=>x.ContentText, string.Format(deleteContent,_selectedItems.Count) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DeleteConfirmationTitle, parameters, options);
@@ -309,9 +309,9 @@
                 Name = SelectedItem.Name,
                 Description = SelectedItem?.Description,
             };
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<_CreatePicklistDialog>
             {
-              { nameof(_CreatePicklistDialog.model),command },
+              { x=>x.model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_CreatePicklistDialog>
