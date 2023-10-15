@@ -1,25 +1,28 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using CleanArchitecture.Blazor.Application.Constants;
 using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Application.Constants.Permission;
 
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 public class ApplicationDbContextInitializer
 {
     private readonly ILogger<ApplicationDbContextInitializer> _logger;
     private readonly ApplicationDbContext _context;
-    private readonly CustomUserManager _userManager;
+    private  CustomUserManager _userManager;
     private readonly CustomRoleManager _roleManager;
-
-    public ApplicationDbContextInitializer(ILogger<ApplicationDbContextInitializer> logger, ApplicationDbContext context, CustomUserManager userManager, CustomRoleManager roleManager)
+    private readonly IServiceProvider _serviceProvider;
+    public ApplicationDbContextInitializer(ILogger<ApplicationDbContextInitializer> logger, ApplicationDbContext context, CustomUserManager userManager, CustomRoleManager roleManager, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
+        _serviceProvider = serviceProvider;
     }
     public async Task InitialiseAsync()
     {
@@ -111,25 +114,31 @@ public class ApplicationDbContextInitializer
 
         foreach (var (email, role, tenantType) in defaultGoogleUsers)
         {//need to verify
-            if (!_userManager.Users.Any(u => u.Email == email))
+            using (var scope = _serviceProvider.CreateScope())
             {
-                var tenant1 = _context.Tenants.First(x => x.Type == (byte)tenantType);
-                var newUser = new ApplicationUser
-                {
-                    UserName = email,
-                    Provider = "Google",
-                    IsActive = true,
-                    //TenantId = _context.UserRoleTenants.First().Id,//todo need to make change
-                    //todo need to change based on selection like whether Patient/Internal/any hospital
-                    TenantId = tenant1.Id,//todo need to make change
-                    TenantName = tenant1.Name,
-                    DisplayName = email,
-                    Email = email,
-                    EmailConfirmed = true
-                    //    , ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" 
-                };
-                await _userManager.CreateAsync(newUser, roles: new List<string>() { role.ToString() });//todo pass roles and tenantids  //, UserName.DefaultPassword);
+                //var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                _userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>();
 
+                if (!_userManager.Users.Any(u => u.Email == email))
+                {
+                    var tenant1 = _context.Tenants.First(x => x.Type == (byte)tenantType);
+                    var newUser = new ApplicationUser
+                    {
+                        UserName = email,
+                        Provider = "Google",
+                        IsActive = true,
+                        //TenantId = _context.UserRoleTenants.First().Id,//todo need to make change
+                        //todo need to change based on selection like whether Patient/Internal/any hospital
+                        TenantId = tenant1.Id,//todo need to make change
+                        TenantName = tenant1.Name,
+                        DisplayName = email,
+                        Email = email,
+                        EmailConfirmed = true
+                        //    , ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" 
+                    };
+                    await _userManager.CreateAsync(newUser, roles: new List<string>() { role.ToString() });//todo pass roles and tenantids  //, UserName.DefaultPassword);
+
+                }
             }
         }
         // Default data

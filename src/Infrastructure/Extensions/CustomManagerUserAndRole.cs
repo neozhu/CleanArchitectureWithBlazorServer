@@ -25,6 +25,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     private readonly CustomRoleManager _roleManager;
     //  private readonly IServiceProvider _serviceProvider;
     private readonly ApplicationDbContext dbContext;
+    private readonly IServiceScopeFactory _scopeFactory;
     public CustomUserManager(
          IUserStore<ApplicationUser> store,
          IOptions<IdentityOptions> optionsAccessor,
@@ -34,9 +35,10 @@ public class CustomUserManager : UserManager<ApplicationUser>
          ILookupNormalizer keyNormalizer,
          IdentityErrorDescriber errors,
          IServiceProvider services,
-         ILogger<UserManager<ApplicationUser>> logger, CustomRoleManager roleManager)
+         ILogger<UserManager<ApplicationUser>> logger, CustomRoleManager roleManager, IServiceScopeFactory scopeFactory)
          : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
     {
+        _scopeFactory = scopeFactory;
         _roleManager = roleManager;
         // _serviceProvider = services;
         dbContext = services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -45,7 +47,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     {
         return await CreateAsync(user, defaultRoles, tenantId, password);
     }
-   
+
     //public async Task<List<ApplicationUserRoleTenant>> GetUserRoles(string userId)
     //{
     //    return await dbContext.UserRoles.AsNoTracking()
@@ -120,8 +122,14 @@ public class CustomUserManager : UserManager<ApplicationUser>
             //await dbContext.SaveChangesAsync();
             //return Result;
             user.UserRoleTenants = null;//temporary fix to avoid The instance of entity type 'Tenant' cannot be tracked because another instance with the key value '{Id: 3b8ec9a3-04b3-4585-8796-99f44dd64ed9}' is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached
-            var result2 = await base.UpdateAsync(user);
-            return result2; ;
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                //here its failing madhu continue here
+
+                var result2 = await userManager.UpdateAsync(user);
+                return result2; ;
+            }
         }
         catch (Exception e)
         {
@@ -131,29 +139,40 @@ public class CustomUserManager : UserManager<ApplicationUser>
     }
     public async Task<IdentityResult> CreateAsync(ApplicationUser user, List<string>? roles = null, string? tenantId = null, string? password = null)
     {
-        if (tenantId.IsNullOrEmptyAndTrimSelf()) tenantId = DefaultTenantId;
-        if (user.TenantId.IsNullOrEmptyAndTrimSelf()) user.TenantId = tenantId;//this overrides already assigned tenant,had to make sure
-        if (roles == null || !roles.Any()) return await CreateWithDefaultRolesAsync(user, user.TenantId, password);
-        user.UserRoleTenants = new List<ApplicationUserRoleTenant>();//here it ignores already existing UserRoleTenants //TODO need to think of this
-        roles.ForEach(c =>
+        try
         {
-            var roleId = (_roleManager.FindByNameAsync(c).Result)?.Id;
-            if (roleId != null)
+            if (tenantId.IsNullOrEmptyAndTrimSelf()) tenantId = DefaultTenantId;
+            if (user.TenantId.IsNullOrEmptyAndTrimSelf()) user.TenantId = tenantId;//this overrides already assigned tenant,had to make sure
+            if (roles == null || !roles.Any()) return await CreateWithDefaultRolesAsync(user, user.TenantId, password);
+            user.UserRoleTenants = new List<ApplicationUserRoleTenant>();//here it ignores already existing UserRoleTenants //TODO need to think of this
+            roles.ForEach(c =>
             {
-                user.UserRoleTenants.Add(new ApplicationUserRoleTenant() { RoleId = roleId, TenantId = user.TenantId! });
-                /* This is required if default scopes for user level need to assign
-                var scopes = Perms.PermissionsAll.Find(x => x.roleOrType.Equals(c, StringComparison.InvariantCultureIgnoreCase)).permissions;
-                if (scopes != null && scopes.Any())
-                    foreach (var scope in scopes)
-                    {
-                        base.AddClaimAsync(user, new Claim("Permissions", scope));
-                    }
-                */
+                var roleId = (_roleManager.FindByNameAsync(c).Result)?.Id;
+                if (roleId != null)
+                {
+                    user.UserRoleTenants.Add(new ApplicationUserRoleTenant() { RoleId = roleId, TenantId = user.TenantId! });
+                    /* This is required if default scopes for user level need to assign
+                    var scopes = Perms.PermissionsAll.Find(x => x.roleOrType.Equals(c, StringComparison.InvariantCultureIgnoreCase)).permissions;
+                    if (scopes != null && scopes.Any())
+                        foreach (var scope in scopes)
+                        {
+                            base.AddClaimAsync(user, new Claim("Permissions", scope));
+                        }
+                    */
+                }
+            });
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                //here its failing madhu continue here
+
+                var result = password.IsNullOrEmptyAndTrimSelf() ? await userManager.CreateAsync(user) : await userManager.CreateAsync(user, password!);
+                return result;
             }
-        });
-        //here its failing madhu continue here
-        var result = password.IsNullOrEmptyAndTrimSelf() ? await base.CreateAsync(user) : await base.CreateAsync(user, password!);
-        return result;
+        }
+        catch (Exception e) { 
+            Console.WriteLine(e.ToString()); throw;
+        }
     }
 
     public async Task<int?> RolesUpdateInsert(ApplicationUser user, IEnumerable<string> roleNames)
