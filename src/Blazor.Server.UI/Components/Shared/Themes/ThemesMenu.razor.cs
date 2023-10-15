@@ -23,7 +23,7 @@ public partial class ThemesMenu
     private readonly List<string> _primaryDarkColors = new()
     {
         "#8b9ac6",
-        "#98d89b",
+        "#6c9f77",
         "#79a5d1",
         "#b194d7",
         "#ffc27f",
