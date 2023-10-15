@@ -26,7 +26,7 @@ public partial class ThemesMenu
         "#6c9f77",
         "#79a5d1",
         "#b194d7",
-        "#ffc27f",
+        "#d0882c",
         "#f88989",
     };
     private List<string> GetColorDefinition()
