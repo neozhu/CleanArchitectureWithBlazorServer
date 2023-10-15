@@ -1,5 +1,6 @@
 email verified only allowed to be owner of tenant or any main things
 
+
 user login will get his tenants...
 then on new tenant page, make allwed tenants to create...
     by default all has permission to create new any1 type...which goes to temp or ?
