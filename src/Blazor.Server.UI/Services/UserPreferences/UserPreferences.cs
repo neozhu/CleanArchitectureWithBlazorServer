@@ -17,7 +17,7 @@ public class UserPreferences
     public bool IsDarkMode { get; set; }
     public string PrimaryColor { get; set; } = "#2d4275";
     public string PrimaryDarken => AdjustBrightness(PrimaryColor,0.8);
-    public string PrimaryLighten => AdjustBrightness(PrimaryColor, 0.8);
+    public string PrimaryLighten => AdjustBrightness(PrimaryColor, 0.7);
     public string SecondaryColor { get; set; } = "#ff4081ff";
     public double BorderRadius { get; set; } = 4;
     public double DefaultFontSize { get; set; } = 0.8125;
