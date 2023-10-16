@@ -24,7 +24,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     public const string DefaultTenantId = "";//todo make it loaded as per db
     private readonly CustomRoleManager _roleManager;
     //  private readonly IServiceProvider _serviceProvider;
-    private readonly ApplicationDbContext dbContext;
+    private ApplicationDbContext dbContext;
     private readonly IServiceScopeFactory _scopeFactory;
     public CustomUserManager(
          IUserStore<ApplicationUser> store,
@@ -122,6 +122,16 @@ public class CustomUserManager : UserManager<ApplicationUser>
             //await dbContext.SaveChangesAsync();
             //return Result;
             user.UserRoleTenants = null;//temporary fix to avoid The instance of entity type 'Tenant' cannot be tracked because another instance with the key value '{Id: 3b8ec9a3-04b3-4585-8796-99f44dd64ed9}' is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached
+
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var t5 = dbContext.Update(user);
+                var t5result = await dbContext.SaveChangesAsync();
+            }
+            return await base.UpdateAsync(user);
+
+
             using (var scope = _scopeFactory.CreateScope())
             {
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -161,16 +171,13 @@ public class CustomUserManager : UserManager<ApplicationUser>
                     */
                 }
             });
-            using (var scope = _scopeFactory.CreateScope())
-            {
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-                //here its failing madhu continue here
-
-                var result = password.IsNullOrEmptyAndTrimSelf() ? await userManager.CreateAsync(user) : await userManager.CreateAsync(user, password!);
-                return result;
-            }
+            using var scope = _scopeFactory.CreateScope();
+            dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var result = password.IsNullOrEmptyAndTrimSelf() ? await base.CreateAsync(user) : await base.CreateAsync(user, password!);
+            return result;
         }
-        catch (Exception e) { 
+        catch (Exception e)
+        {
             Console.WriteLine(e.ToString()); throw;
         }
     }
