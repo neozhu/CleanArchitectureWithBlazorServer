@@ -1,5 +1,6 @@
 @page "/pages/authentication/register"
 @inject IStringLocalizer<Register> L
+@inject IValidationService Validator
 @attribute [AllowAnonymous]
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Application.Constants.Role
@@ -8,7 +9,7 @@
 <PageTitle>@Title</PageTitle>
 <AuthorizeView>
     <NotAuthorized Context="Auth">
-        <MudForm Model="@_model" @ref="@_form" Validation="@(RegisterValidator.ValidateValue)">
+            <MudForm Model="@_model" @ref="@_form" Validation="@(Validator.ValidateValue(_model))">
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
             <MudText>@L["have an account?"] <MudLink Href="/pages/authentication/login">@L["Sign In"]</MudLink></MudText>
 
@@ -84,7 +85,6 @@
     MudForm? _form;
     bool _loading;
     readonly RegisterFormModel _model = new();
-    [Inject] private RegisterFormModelFluentValidator RegisterValidator { get; set; } = default!;
     [Inject]
     private IMailService MailService { get; set; } = null!;
 
