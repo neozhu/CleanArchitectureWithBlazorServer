@@ -32,11 +32,4 @@ public class UserProfileEditValidator : AbstractValidator<UserProfile>
         RuleFor(x => x.PhoneNumber)
             .MaximumLength(128);
     }
-    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-    {
-        var result = await ValidateAsync(ValidationContext<UserProfile>.CreateWithOptions((UserProfile)model, x => x.IncludeProperties(propertyName)));
-        if (result.IsValid)
-            return Array.Empty<string>();
-        return result.Errors.Select(e => e.ErrorMessage);
-    };
 }
