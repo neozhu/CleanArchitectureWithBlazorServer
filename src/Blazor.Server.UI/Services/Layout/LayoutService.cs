@@ -47,6 +47,10 @@ public class LayoutService
             DefaultFontSize = _userPreferences.DefaultFontSize;
             CurrentTheme.Palette.Primary = PrimaryColor;
             CurrentTheme.PaletteDark.Primary = PrimaryColor;
+            CurrentTheme.Palette.PrimaryDarken = _userPreferences.PrimaryDarken;
+            CurrentTheme.Palette.PrimaryLighten = _userPreferences.PrimaryLighten;
+            CurrentTheme.PaletteDark.PrimaryDarken = _userPreferences.PrimaryDarken;
+            CurrentTheme.PaletteDark.PrimaryLighten = _userPreferences.PrimaryLighten;
             CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
             CurrentTheme.Typography.Default.FontSize = DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         }
