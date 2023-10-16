@@ -6,9 +6,11 @@
 @inherits MudComponentBase
 @inject IJSRuntime JS
 @inject IStringLocalizer<Products> L
+@inject IValidationService Validator
+
 <MudDialog>
     <DialogContent>
-        <MudForm Model="@Model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)">
+        <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
             <MudGrid>
                 <MudItem xs="12">
                     <MudTextField Label="@L["Product Name"]" @bind-Value="Model.Name"
@@ -116,8 +118,6 @@
 
     [Inject]
     private IMediator Mediator { get; set; } = default!;
-
-    readonly AddEditProductCommandValidator _modelValidator = new();
 
     [EditorRequired]
     [Parameter]

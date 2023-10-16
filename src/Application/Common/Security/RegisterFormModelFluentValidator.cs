@@ -24,7 +24,7 @@ public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormMo
             .MaximumLength(255)
             .EmailAddress();
         RuleFor(p => p.Password).NotEmpty().WithMessage(_localizer["CannotBeEmpty"])
-                  .MinimumLength(identitySettings.RequiredLength).WithMessage(string.Format(_localizer["MinLength"], identitySettings.RequiredLength))
+                  .MinimumLength(identitySettings!.RequiredLength).WithMessage(string.Format(_localizer["MinLength"], identitySettings.RequiredLength))
                   .MaximumLength(identitySettings.MaxLength).WithMessage(string.Format(_localizer["MaxLength"], identitySettings.MaxLength))
                   .Matches(identitySettings.RequireUpperCase ? @"[A-Z]+" : string.Empty).WithMessage(_localizer["MustContainUpperCase"])
                   .Matches(identitySettings.RequireLowerCase ? @"[a-z]+" : string.Empty).WithMessage(_localizer["MustContainLowerCase"])
@@ -34,15 +34,7 @@ public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormMo
              .Equal(x => x.Password);
         RuleFor(x => x.AgreeToTerms)
             .Equal(true);
-        
-    }
 
-    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-    {
-        var result = await ValidateAsync(ValidationContext<RegisterFormModel>.CreateWithOptions((RegisterFormModel)model, x => x.IncludeProperties(propertyName)));
-        if (result.IsValid)
-            return Array.Empty<string>();
-        return result.Errors.Select(e => e.ErrorMessage);
-    };
+    }
 }
 
