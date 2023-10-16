@@ -13,12 +13,13 @@
 @using Blazor.Server.UI.Pages.Identity.Users
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
 @implements IDisposable
+@inject IValidationService Validator
 @inject IStringLocalizer<Login> L
 
 <PageTitle>@_title</PageTitle>
 <AuthorizeView>
     <NotAuthorized Context="auth">
-        <MudForm Model="@_model" @ref="@_form" @bind-IsValid="@_success" ValidationDelay="0" Validation="@(LoginValidator.ValidateValue)">
+        <MudForm Model="@_model" @ref="@_form" @bind-IsValid="@_success" ValidationDelay="0" Validation="@(Validator.ValidateValue(_model))">
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
             <MudText>
                 @L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink>
