@@ -24,12 +24,4 @@ public class AddEditProductCommandValidator : AbstractValidator<AddEditProductCo
         RuleFor(v => v.UploadPictures).NotEmpty().When(x => x.Pictures == null || !x.Pictures.Any())
             .WithMessage("Please upload product pictures.");
     }
-
-    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-    {
-        var result =
-            await ValidateAsync(ValidationContext<AddEditProductCommand>.CreateWithOptions((AddEditProductCommand)model,
-                x => x.IncludeProperties(propertyName)));
-        return result.IsValid ? Array.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
-    };
 }

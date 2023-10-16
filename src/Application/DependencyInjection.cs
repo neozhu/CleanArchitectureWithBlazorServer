@@ -7,6 +7,7 @@ using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Application.Services.MultiTenant;
 using CleanArchitecture.Blazor.Application.Services.Picklist;
+using CleanArchitecture.Blazor.Application.Services.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application;
@@ -27,8 +28,8 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(MemoryCacheBehaviour<,>));
             config.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
             config.AddOpenBehavior(typeof(CacheInvalidationBehaviour<,>));
-         
-            
+
+
         });
         services.AddFluxor(options => {
             options.ScanAssemblies(Assembly.GetExecutingAssembly());
@@ -40,15 +41,15 @@ public static class DependencyInjection
             var service = sp.GetRequiredService<PicklistService>();
             service.Initialize();
             return service;
-            });
+        });
         services.AddSingleton<TenantService>();
         services.AddSingleton<ITenantService>(sp => {
             var service = sp.GetRequiredService<TenantService>();
             service.Initialize();
             return service;
         });
-        services.AddScoped<RegisterFormModelFluentValidator>();
+        services.AddScoped<IValidationService, ValidationService>();
         return services;
     }
-   
+
 }

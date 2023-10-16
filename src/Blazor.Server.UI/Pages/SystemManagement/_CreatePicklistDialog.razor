@@ -1,9 +1,10 @@
 @using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit
 @inherits MudComponentBase
+@inject IValidationService Validator
 @inject IStringLocalizer<Dictionaries> L
 <MudDialog>
     <DialogContent>
-        <MudForm Model="model" @ref="_form" Validation="@(modelValidator.ValidateValue)">
+        <MudForm Model="model" @ref="_form" Validation="@(Validator.ValidateValue(model))">
             <MudGrid>
                 <MudItem xs="12" md="6">
                     <MudEnumSelect Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name"

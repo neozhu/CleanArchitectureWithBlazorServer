@@ -20,12 +20,5 @@ public class AddEditDocumentCommandValidator : AbstractValidator<AddEditDocument
             .When(x => x.Id <= 0);
     }
 
-    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-    {
-        var result =
-            await ValidateAsync(
-                ValidationContext<AddEditDocumentCommand>.CreateWithOptions((AddEditDocumentCommand)model,
-                    x => x.IncludeProperties(propertyName)));
-        return result.IsValid ? Array.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
-    };
+    
 }

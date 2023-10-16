@@ -25,11 +25,5 @@ public class LoginFormModelFluentValidator : AbstractValidator<LoginFormModel>
             .MaximumLength(16).WithMessage(_localizer["Your password length must not exceed 16 characters."]);
     }
 
-    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-    {
-        ValidationResult? result =
-            await ValidateAsync(ValidationContext<LoginFormModel>.CreateWithOptions((LoginFormModel)model,
-                x => x.IncludeProperties(propertyName)));
-        return result.IsValid ? Array.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
-    };
+   
 }
