@@ -1,11 +1,12 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEdit
 
 @inherits MudComponentBase
+@inject IValidationService Validator
 @inject IStringLocalizer<Customers> L
 
 <MudDialog>
     <DialogContent>
-        <MudForm Model="@model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)">
+        <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
             <MudGrid>
                 @*TODO: define mudform that should be edit fields, for example:*@
                 <MudItem xs="12" md="6"> 

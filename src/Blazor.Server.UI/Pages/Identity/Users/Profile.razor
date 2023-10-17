@@ -6,6 +6,7 @@
 @using SixLabors.ImageSharp.Processing
 
 @inherits OwningComponentBase
+@inject IValidationService Validator
 @inject IStringLocalizer<Profile> L
 @inject IJSRuntime JS
 <PageTitle>@Title</PageTitle>
@@ -20,7 +21,7 @@
             <MudTabs Outlined="true" Position="Position.Top" Rounded="true" Border="true" Elevation="6" ActivePanelIndexChanged="ActivePanelIndexChanged"
                      ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
                 <MudTabPanel Text="@L["Profile"]">
-                    <MudForm Model="@model" @ref="@_form" Validation="@(_userValidator.ValidateValue)" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
+                    <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
                         <MudGrid Justify="Justify.Center" Style="max-width:600px;display:flex;">
                             <MudItem sm="12" xs="12">
                                 <div class="d-flex justify-center">
