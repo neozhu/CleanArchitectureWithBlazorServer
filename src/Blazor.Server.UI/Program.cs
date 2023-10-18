@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.RegisterSerilog();
 builder.AddBlazorUiServices();
 builder.Services.AddInfrastructureServices(builder.Configuration)
-    .AddApplicationServices();
+    .AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 
