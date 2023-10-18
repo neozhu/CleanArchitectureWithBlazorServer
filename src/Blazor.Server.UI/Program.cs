@@ -1,46 +1,21 @@
 using Blazor.Server.UI;
-using Blazor.Server.UI.Middlewares;
 using Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure;
-using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
-using CleanArchitecture.Blazor.UI.Middlewares;
-using Hangfire;
-using Microsoft.AspNetCore.Http.Connections;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.RegisterSerilog();
-builder.AddBlazorUiServices();
-builder.Services.AddInfrastructureServices(builder.Configuration)
-    .AddApplicationServices();
+
+builder.Services
+    .AddApplicationServices()
+    .AddInfrastructureServices(builder.Configuration)
+    .AddServerServices(builder.Configuration);
 
 var app = builder.Build();
 
-app.MapHealthChecks("/health");
-app.UseExceptionHandler("/Error");
-app.MapFallbackToPage("/_Host");
-app.UseInfrastructure(builder.Configuration);
-app.UseMiddleware<LocalizationCookiesMiddleware>();
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseHangfireDashboard("/jobs", new DashboardOptions
-{
-    Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
-    AsyncAuthorization = new[] { new HangfireDashboardAsyncAuthorizationFilter() }
-});
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapRazorPages();
-    endpoints.MapControllers();
-    endpoints.MapHub<SignalRHub>(SignalR.HubUrl);
-});
-app.UseWebSockets();
-app.MapBlazorHub(options => options.Transports = HttpTransportType.WebSockets);
+app.ConfigureServer(builder.Configuration);
 
 if (app.Environment.IsDevelopment())
 {
@@ -56,11 +31,6 @@ if (app.Environment.IsDevelopment())
             inMemoryNotificationService.Preload();
         }
     }
-}
-else
-{
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
 }
 
 await app.RunAsync();
