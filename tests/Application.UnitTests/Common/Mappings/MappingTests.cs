@@ -29,17 +29,20 @@ public class MappingTests
     }
 
     [Test]
-    [TestCase(typeof(Document), typeof(DocumentDto))]
-    [TestCase(typeof(KeyValue), typeof(KeyValueDto))]
-    [TestCase(typeof(Product), typeof(ProductDto))]
-    [TestCase(typeof(ProductDto), typeof(Product))]
-    [TestCase(typeof(KeyValueDto), typeof(KeyValue))]
-    [TestCase(typeof(DocumentDto), typeof(Document))]
-    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
+    [TestCase(typeof(Document), typeof(DocumentDto), true)]
+    [TestCase(typeof(KeyValue), typeof(KeyValueDto), true)]
+    [TestCase(typeof(Product), typeof(ProductDto), true)]
+
+    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination, bool inverseMap = false)
     {
         var instance = GetInstanceOf(source);
 
         _mapper.Map(instance, source, destination);
+
+        if (inverseMap)
+        {
+            ShouldSupportMappingFromSourceToDestination(destination, source, false);
+        }
     }
 
     private object GetInstanceOf(Type type)
