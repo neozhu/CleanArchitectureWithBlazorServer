@@ -1,6 +1,6 @@
 ﻿using Hangfire.Dashboard;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
+namespace CleanArchitecture.Blazor.UI.Middlewares;
 public class HangfireDashboardAsyncAuthorizationFilter : IDashboardAsyncAuthorizationFilter
 {
 

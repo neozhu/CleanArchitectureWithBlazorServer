@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
+namespace Blazor.Server.UI.Middlewares;
 #nullable disable
-public class LocalizationCookiesMiddleware : IMiddleware
+public class LocalizationCookiesMiddleware : Microsoft.AspNetCore.Http.IMiddleware
 {
     public CookieRequestCultureProvider Provider { get; }
 

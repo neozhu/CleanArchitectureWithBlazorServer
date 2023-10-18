@@ -1,8 +1,12 @@
 using Blazor.Server.UI;
+using Blazor.Server.UI.Middlewares;
 using Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure;
+using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
+using CleanArchitecture.Blazor.UI.Middlewares;
+using Hangfire;
 using Microsoft.AspNetCore.Http.Connections;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +22,23 @@ app.MapHealthChecks("/health");
 app.UseExceptionHandler("/Error");
 app.MapFallbackToPage("/_Host");
 app.UseInfrastructure(builder.Configuration);
+app.UseMiddleware<LocalizationCookiesMiddleware>();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseHangfireDashboard("/jobs", new DashboardOptions
+{
+    Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
+    AsyncAuthorization = new[] { new HangfireDashboardAsyncAuthorizationFilter() }
+});
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRazorPages();
+    endpoints.MapControllers();
+    endpoints.MapHub<SignalRHub>(SignalR.HubUrl);
+});
 app.UseWebSockets();
 app.MapBlazorHub(options => options.Transports = HttpTransportType.WebSockets);
 

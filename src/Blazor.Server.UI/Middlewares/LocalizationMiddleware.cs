@@ -1,9 +1,8 @@
 using System.Globalization;
-using Microsoft.AspNetCore.Http;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
+namespace Blazor.Server.UI.Middlewares;
 
-public class LocalizationMiddleware : IMiddleware
+public class LocalizationMiddleware : Microsoft.AspNetCore.Http.IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {

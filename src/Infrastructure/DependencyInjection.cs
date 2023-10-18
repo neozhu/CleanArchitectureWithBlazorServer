@@ -58,7 +58,7 @@ public static class DependencyInjection
         services.AddScoped<ApplicationDbContextInitializer>();
 
 
-        services.AddLocalizationServices();
+
         services.AddServices()
             .AddHangfireService()
             .AddSerialization()

@@ -27,7 +27,6 @@ public static class ServicesCollectionExtensions
         services.AddScoped<IValidationService, ValidationService>();
 
         return services
-            .AddScoped<ExceptionHandlingMiddleware>()
             .AddScoped<IDateTime, DateTimeService>()
             .AddScoped<IExcelService, ExcelService>()
             .AddScoped<IUploadService, UploadService>()

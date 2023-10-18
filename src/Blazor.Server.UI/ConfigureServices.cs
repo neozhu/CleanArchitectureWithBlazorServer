@@ -1,11 +1,13 @@
 using System.Reflection;
 using Blazor.Analytics;
+using Blazor.Server.UI.Middlewares;
 using Blazor.Server.UI.Services.Layout;
 using Blazor.Server.UI.Services.Navigation;
 using Blazor.Server.UI.Services.Notifications;
 using Blazor.Server.UI.Services.UserPreferences;
 using BlazorDownloadFile;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using MudBlazor.Services;
 using MudExtensions.Services;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
@@ -57,9 +59,19 @@ public static class ConfigureServices
             options.UseReduxDevTools();
         });
 
+        builder.Services.AddScoped<LocalizationCookiesMiddleware>()
+            .Configure<RequestLocalizationOptions>(options =>
+            {
+                options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
+                options.AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
+                options.FallBackToParentUICultures = true;
+            })
+            .AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
+
         builder.Services.AddMudExtensions();
         builder.Services.AddScoped<LayoutService>();
         builder.Services.AddBlazorDownloadFile();
+        builder.Services.AddScoped<ExceptionHandlingMiddleware>();
         builder.Services.AddScoped<IUserPreferencesService, UserPreferencesService>();
         builder.Services.AddScoped<IMenuService, MenuService>();
         builder.Services.AddScoped<INotificationService, InMemoryNotificationService>();

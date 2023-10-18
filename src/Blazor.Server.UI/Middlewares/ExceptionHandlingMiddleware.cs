@@ -1,11 +1,10 @@
 using System.Net;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
+namespace Blazor.Server.UI.Middlewares;
 
-internal class ExceptionHandlingMiddleware : IMiddleware
+internal class ExceptionHandlingMiddleware : Microsoft.AspNetCore.Http.IMiddleware
 {
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
     private readonly IStringLocalizer<ExceptionHandlingMiddleware> _localizer;
@@ -38,7 +37,7 @@ internal class ExceptionHandlingMiddleware : IMiddleware
             }
             if (!string.IsNullOrEmpty(exception.Message))
             {
-                responseModel= await Result.FailureAsync(new string[] { exception.Message });
+                responseModel = await Result.FailureAsync(new string[] { exception.Message });
             }
             switch (exception)
             {
