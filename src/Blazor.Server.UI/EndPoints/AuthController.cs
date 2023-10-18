@@ -1,5 +1,5 @@
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
-using CleanArchitecture.Blazor.Application.Constants.Role;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;

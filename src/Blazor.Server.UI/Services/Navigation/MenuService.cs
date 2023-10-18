@@ -1,5 +1,5 @@
 using Blazor.Server.UI.Models.NavigationMenu;
-using CleanArchitecture.Blazor.Application.Constants.Role;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 
 namespace Blazor.Server.UI.Services.Navigation;
 

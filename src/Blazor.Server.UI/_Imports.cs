@@ -9,7 +9,7 @@ global using CleanArchitecture.Blazor.Domain.Identity;
 global using CleanArchitecture.Blazor.Application.Common.Models;
 global using CleanArchitecture.Blazor.Application.Common.Interfaces;
 global using CleanArchitecture.Blazor.Infrastructure.Extensions;
-global using CleanArchitecture.Blazor.Application.Constants;
+global using CleanArchitecture.Blazor.Infrastructure.Constants;
 global using Microsoft.AspNetCore.Components;
 global using Fluxor.Blazor.Web.Components;
 global using MudBlazor;

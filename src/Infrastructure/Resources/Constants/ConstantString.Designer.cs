@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CleanArchitecture.Blazor.Application.Resources.Constants {
+namespace CleanArchitecture.Blazor.Infrastructure.Resources.Constants {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace CleanArchitecture.Blazor.Application.Resources.Constants {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Application.Resources.Constants.ConstantString", typeof(ConstantString).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CleanArchitecture.Blazor.Infrastructure.Resources.Constants.ConstantString", typeof(ConstantString).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

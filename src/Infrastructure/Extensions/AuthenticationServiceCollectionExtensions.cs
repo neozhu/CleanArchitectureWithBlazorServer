@@ -1,8 +1,8 @@
 using System.Reflection;
 using System.Text;
-using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Application.Constants.Permission;
-using CleanArchitecture.Blazor.Application.Constants.User;
+using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;

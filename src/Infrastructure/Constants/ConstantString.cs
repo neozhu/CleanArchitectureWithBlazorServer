@@ -1,6 +1,22 @@
-﻿namespace CleanArchitecture.Blazor.Application.Constants;
+﻿using System.Globalization;
+using System.Resources;
+
+namespace CleanArchitecture.Blazor.Infrastructure.Constants;
 public static class ConstantString
 {
+    public const string CONSTANTSTRINGRESOURCEID = "CleanArchitecture.Blazor.Infrastructure.Resources.Constants.ConstantString";
+    private static readonly ResourceManager rm;
+
+    static ConstantString()
+    {
+        rm = new ResourceManager(CONSTANTSTRINGRESOURCEID, typeof(ConstantString).Assembly);
+    }
+
+    public static string Localize(string key)
+    {
+        return rm.GetString(key, CultureInfo.CurrentCulture) ?? key;
+    }
+
     //==========================================================//
     //for button text
     public static string Refresh => Localize("Refresh");
@@ -59,7 +75,7 @@ public static class ConstantString
 
     //========================================================
 
-    public static string Selected=> Localize("Selected");
+    public static string Selected => Localize("Selected");
     public static string SelectedTotal => Localize("Selected Total");
     public static string AdvancedSearch => Localize("Advanced Search");
     public static string OrderBy => Localize("Order By");
