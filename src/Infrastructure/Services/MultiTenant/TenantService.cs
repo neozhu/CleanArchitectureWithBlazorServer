@@ -1,9 +1,11 @@
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
-using Microsoft.Extensions.DependencyInjection;
+using LazyCache;
 
-namespace CleanArchitecture.Blazor.Application.Services.MultiTenant;
+namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 
 public class TenantService : ITenantService
 {
@@ -13,7 +15,7 @@ public class TenantService : ITenantService
 
     public TenantService(
         IAppCache cache,
-        IServiceScopeFactory scopeFactory, 
+        IServiceScopeFactory scopeFactory,
         IMapper mapper)
     {
         _cache = cache;

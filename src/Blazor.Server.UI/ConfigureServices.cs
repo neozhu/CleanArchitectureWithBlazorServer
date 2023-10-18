@@ -1,3 +1,4 @@
+using System.Reflection;
 using Blazor.Analytics;
 using Blazor.Server.UI.Services.Layout;
 using Blazor.Server.UI.Services.Navigation;
@@ -48,6 +49,12 @@ public static class ConfigureServices
             config.SnackbarConfiguration.HideTransitionDuration = 500;
             config.SnackbarConfiguration.ShowTransitionDuration = 500;
             config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+        });
+
+        builder.Services.AddFluxor(options =>
+        {
+            options.ScanAssemblies(Assembly.GetExecutingAssembly());
+            options.UseReduxDevTools();
         });
 
         builder.Services.AddMudExtensions();

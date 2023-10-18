@@ -1,8 +1,8 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Helper;
+using FluentValidation;
 using FluentValidation.Internal;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace CleanArchitecture.Blazor.Application.Services.Validation;
+namespace CleanArchitecture.Blazor.Infrastructure.Services;
 public class ValidationService : IValidationService
 {
     private readonly IServiceProvider _serviceProvider;
@@ -23,7 +23,7 @@ public class ValidationService : IValidationService
         => await ValidatePropertyAsync((TRequest)model, propertyName);
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue<TRequest>(TRequest _)
-        => this.ValidateValue<TRequest>();
+        => ValidateValue<TRequest>();
 
     public async Task<IDictionary<string, string[]>> ValidateAsync<TRequest>(TRequest model, CancellationToken cancellationToken = default)
     {

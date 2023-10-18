@@ -2,12 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Behaviours;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
-using CleanArchitecture.Blazor.Application.Common.Security;
-using CleanArchitecture.Blazor.Application.Services.MultiTenant;
-using CleanArchitecture.Blazor.Application.Services.Picklist;
-using CleanArchitecture.Blazor.Application.Services.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application;
@@ -18,7 +13,8 @@ public static class DependencyInjection
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddMediatR(config=> {
+        services.AddMediatR(config =>
+        {
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             config.NotificationPublisher = new ParallelNoWaitPublisher();
             config.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
@@ -31,24 +27,9 @@ public static class DependencyInjection
 
 
         });
-        services.AddFluxor(options => {
-            options.ScanAssemblies(Assembly.GetExecutingAssembly());
-            options.UseReduxDevTools();
-        });
+
         services.AddLazyCache();
-        services.AddSingleton<PicklistService>();
-        services.AddSingleton<IPicklistService>(sp => {
-            var service = sp.GetRequiredService<PicklistService>();
-            service.Initialize();
-            return service;
-        });
-        services.AddSingleton<TenantService>();
-        services.AddSingleton<ITenantService>(sp => {
-            var service = sp.GetRequiredService<TenantService>();
-            service.Initialize();
-            return service;
-        });
-        services.AddScoped<IValidationService, ValidationService>();
+
         return services;
     }
 

@@ -1,11 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.Versioning;
-using CleanArchitecture.Blazor.Application.Common.Configurations;
-using CleanArchitecture.Blazor.Application.Services.PaddleOCR;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
-using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
@@ -20,7 +14,7 @@ public static class JWTServicesCollectionExtensions
             options.Invoke(sjOptions);
         }
         services.AddSingleton(typeof(IOptions<SimpleJwtOptions>), Options.Create(sjOptions));
-        services.AddScoped<IAccessTokenProvider,AccessTokenProvider>();
+        services.AddScoped<IAccessTokenProvider, AccessTokenProvider>();
         services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
         services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
         services.AddScoped<ITokenGeneratorService, TokenGeneratorService>();

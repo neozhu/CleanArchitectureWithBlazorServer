@@ -7,16 +7,18 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <PreserveCompilationContext>true</PreserveCompilationContext>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-      <UserSecretsId>8118d19e-a6db-4446-bdb6-fa62b17f843d</UserSecretsId>
-  </PropertyGroup>
-  <ItemGroup>
+        <UserSecretsId>8118d19e-a6db-4446-bdb6-fa62b17f843d</UserSecretsId>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Fluxor.Blazor.Web" Version="5.9.1" />
+        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.1" />
         <PackageReference Include="Blazor-Analytics" Version="3.12.0" />
         <PackageReference Include="Blazor-ApexCharts" Version="1.2.1" />
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="BlazorTime" Version="1.0.3" />
-       <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.6.0" />
-       <PackageReference Include="MudBlazor" Version="6.11.0" />
-       <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
+        <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.6.0" />
+        <PackageReference Include="MudBlazor" Version="6.11.0" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.12">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

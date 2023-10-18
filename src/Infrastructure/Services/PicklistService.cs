@@ -1,8 +1,10 @@
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
-using Microsoft.Extensions.DependencyInjection;
+using LazyCache;
 
-namespace CleanArchitecture.Blazor.Application.Services.Picklist;
+namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class PicklistService : IPicklistService
 {

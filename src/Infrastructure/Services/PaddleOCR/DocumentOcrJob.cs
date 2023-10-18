@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Text.Json;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
-using CleanArchitecture.Blazor.Application.Services.PaddleOCR;
 using CleanArchitecture.Blazor.Domain.Enums;
 using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
