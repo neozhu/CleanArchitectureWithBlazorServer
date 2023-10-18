@@ -8,6 +8,7 @@ using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
+using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -19,45 +20,9 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<IdentitySettings>(configuration.GetSection(IdentitySettings.Key));
-        services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.Key));
-        services.Configure<DatabaseSettings>(configuration.GetSection(DatabaseSettings.Key));
-        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.Key));
-        services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
-        services.AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);
-        services.AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
-        services.AddSingleton(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value);
-        services.AddSingleton<IIdentitySettings>(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value);
+        services.AddSettings(configuration);
 
-        services.AddScoped<ICurrentUserService, CurrentUserService>();
-        services.AddScoped<ITenantProvider, TenantProvider>();
-        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
-        services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
-        if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-        {
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseInMemoryDatabase("BlazorDashboardDb");
-                options.EnableSensitiveDataLogging();
-            });
-        }
-        else
-        {
-            services.AddDbContext<ApplicationDbContext>((p, m) =>
-             {
-                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
-                 m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
-                 m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
-             });
-        }
-
-
-        services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
-        services.AddTransient<IApplicationDbContext>(provider =>
-            provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
-        services.AddScoped<ApplicationDbContextInitializer>();
-
-
+        services.AddDatabase(configuration);
 
         services.AddServices()
             .AddHangfireService()
@@ -104,5 +69,88 @@ public static class DependencyInjection
         services.AddHttpClientService();
         services.AddControllers();
         return services;
+    }
+
+    private static IServiceCollection AddSettings(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<IdentitySettings>(configuration.GetSection(IdentitySettings.Key));
+        services.AddSingleton(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value);
+        services.AddSingleton<IIdentitySettings>(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value);
+
+        services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.Key));
+        services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
+
+        services.Configure<DatabaseSettings>(configuration.GetSection(DatabaseSettings.Key));
+        services.AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+
+        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.Key));
+        services.AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
+
+        services.Configure<PrivacySettings>(configuration.GetSection(PrivacySettings.Key));
+        services.AddSingleton(s => s.GetRequiredService<IOptions<PrivacySettings>>().Value);
+
+        return services;
+    }
+
+    private static IServiceCollection AddDatabase(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+
+        if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+        {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseInMemoryDatabase("BlazorDashboardDb");
+                options.EnableSensitiveDataLogging();
+            });
+        }
+        else
+        {
+            services.AddDbContext<ApplicationDbContext>((p, m) =>
+            {
+                var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+                m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
+                m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
+            });
+        }
+
+        services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
+        services.AddTransient<IApplicationDbContext>(provider =>
+            provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
+        services.AddScoped<ApplicationDbContextInitializer>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddSingleton<PicklistService>();
+        services.AddSingleton<IPicklistService>(sp =>
+        {
+            var service = sp.GetRequiredService<PicklistService>();
+            service.Initialize();
+            return service;
+        });
+
+        services.AddSingleton<TenantService>();
+        services.AddSingleton<ITenantService>(sp =>
+        {
+            var service = sp.GetRequiredService<TenantService>();
+            service.Initialize();
+            return service;
+        });
+
+        return services
+            .AddScoped<ICurrentUserService, CurrentUserService>()
+            .AddScoped<ITenantProvider, TenantProvider>()
+            .AddScoped<IValidationService, ValidationService>()
+            .AddScoped<IDateTime, DateTimeService>()
+            .AddScoped<IExcelService, ExcelService>()
+            .AddScoped<IUploadService, UploadService>()
+            .AddTransient<IDocumentOcrJob, DocumentOcrJob>()
+            .AddScoped<IPDFService, PDFService>();
     }
 }
