@@ -21,6 +21,14 @@ public class UserPreferences
     public string SecondaryColor { get; set; } = "#ff4081ff";
     public double BorderRadius { get; set; } = 4;
     public double DefaultFontSize { get; set; } = 0.8125;
+
+    public double Body1FontSize => DefaultFontSize;
+    public double Body2FontSize => DefaultFontSize - 0.125;
+    public double ButtonFontSize => DefaultFontSize;
+    public double CaptionFontSize => DefaultFontSize - 0.125;
+    public double OverlineFontSize=> DefaultFontSize - 0.125;
+    public double Subtitle1FontSize => DefaultFontSize + 0.125;
+    public double Subtitle2FontSize => DefaultFontSize;
     public DarkLightMode DarkLightTheme { get; set; }
 
 

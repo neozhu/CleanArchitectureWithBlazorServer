@@ -53,6 +53,13 @@ public class LayoutService
             CurrentTheme.PaletteDark.PrimaryLighten = _userPreferences.PrimaryLighten;
             CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
             CurrentTheme.Typography.Default.FontSize = DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+            CurrentTheme.Typography.Button.FontSize = _userPreferences.ButtonFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+            CurrentTheme.Typography.Body1.FontSize = _userPreferences.Body1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+            CurrentTheme.Typography.Body2.FontSize = _userPreferences.Body2FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+            CurrentTheme.Typography.Caption.FontSize = _userPreferences.CaptionFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+            CurrentTheme.Typography.Overline.FontSize = _userPreferences.OverlineFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+            CurrentTheme.Typography.Subtitle1.FontSize = _userPreferences.Subtitle1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+            CurrentTheme.Typography.Subtitle2.FontSize = _userPreferences.Subtitle1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         }
         else
         {
@@ -174,9 +181,26 @@ public class LayoutService
         PrimaryColor = _userPreferences.PrimaryColor;
         BorderRadius = _userPreferences.BorderRadius;
         DefaultFontSize = _userPreferences.DefaultFontSize;
-        DarkModeToggle = _userPreferences.DarkLightTheme;
+        CurrentTheme.Palette.Primary = PrimaryColor;
+        CurrentTheme.PaletteDark.Primary = PrimaryColor;
+        CurrentTheme.Palette.PrimaryDarken = _userPreferences.PrimaryDarken;
+        CurrentTheme.Palette.PrimaryLighten = _userPreferences.PrimaryLighten;
+        CurrentTheme.PaletteDark.PrimaryDarken = _userPreferences.PrimaryDarken;
+        CurrentTheme.PaletteDark.PrimaryLighten = _userPreferences.PrimaryLighten;
+        CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
+        CurrentTheme.Typography.Default.FontSize = DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Button.FontSize = _userPreferences.ButtonFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Body1.FontSize = _userPreferences.Body1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Body2.FontSize = _userPreferences.Body2FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Caption.FontSize = _userPreferences.CaptionFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Overline.FontSize = _userPreferences.OverlineFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Subtitle1.FontSize = _userPreferences.Subtitle1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Subtitle2.FontSize = _userPreferences.Subtitle1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+
+
+
         await _userPreferencesService.SaveUserPreferences(_userPreferences);
-        SetBaseTheme(Theme.Theme.ApplicationTheme());
+     
    
     }
 }
