@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Reflection;
 using Blazor.Analytics;
 using Blazor.Server.UI.Middlewares;
@@ -12,8 +13,10 @@ using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using CleanArchitecture.Blazor.UI.Middlewares;
 using Hangfire;
 using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using MudExtensions.Services;
+using Polly;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace Blazor.Server.UI;
@@ -40,19 +43,19 @@ public static class ConfigureServices
             options.MaximumReceiveMessageSize = 64 * 1024;
             options.StreamBufferCapacity = 10;
         }).AddCircuitOptions(option => { option.DetailedErrors = true; });
-        services.AddMudBlazorDialog();
-        services.AddHotKeys2();
-        services.AddMudServices(config =>
-        {
-            config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
-            config.SnackbarConfiguration.PreventDuplicates = false;
-            config.SnackbarConfiguration.NewestOnTop = true;
-            config.SnackbarConfiguration.ShowCloseIcon = true;
-            config.SnackbarConfiguration.VisibleStateDuration = 4000;
-            config.SnackbarConfiguration.HideTransitionDuration = 500;
-            config.SnackbarConfiguration.ShowTransitionDuration = 500;
-            config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
-        });
+
+        services.AddMudBlazorDialog()
+            .AddMudServices(config =>
+            {
+                config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
+                config.SnackbarConfiguration.PreventDuplicates = false;
+                config.SnackbarConfiguration.NewestOnTop = true;
+                config.SnackbarConfiguration.ShowCloseIcon = true;
+                config.SnackbarConfiguration.VisibleStateDuration = 4000;
+                config.SnackbarConfiguration.HideTransitionDuration = 500;
+                config.SnackbarConfiguration.ShowTransitionDuration = 500;
+                config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+            }).AddHotKeys2();
 
         services.AddFluxor(options =>
         {
@@ -69,14 +72,29 @@ public static class ConfigureServices
             })
             .AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
 
-        services.AddMudExtensions();
-        services.AddScoped<LayoutService>();
-        services.AddBlazorDownloadFile();
-        services.AddScoped<ExceptionHandlingMiddleware>();
-        services.AddScoped<IUserPreferencesService, UserPreferencesService>();
-        services.AddScoped<IMenuService, MenuService>();
-        services.AddScoped<INotificationService, InMemoryNotificationService>();
-        services.AddHealthChecks();
+        services.AddHangfire(configuration => configuration
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseInMemoryStorage())
+            .AddHangfireServer()
+            .AddMvc();
+
+        services.AddHttpClient("ocr", c =>
+        {
+            c.BaseAddress = new Uri("https://paddleocr.blazorserver.com/uploadocr");
+            c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
+        }).AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(30)));
+        services.AddControllers();
+
+        services.AddMudExtensions()
+            .AddScoped<LayoutService>()
+            .AddBlazorDownloadFile()
+            .AddScoped<ExceptionHandlingMiddleware>()
+            .AddScoped<IUserPreferencesService, UserPreferencesService>()
+            .AddScoped<IMenuService, MenuService>()
+            .AddScoped<INotificationService, InMemoryNotificationService>()
+            .AddHealthChecks();
 
         var privacySettings = config.GetRequiredSection(PrivacySettings.Key).Get<PrivacySettings>();
         if (privacySettings!.UseGoogleAnalytics)
@@ -103,7 +121,28 @@ public static class ConfigureServices
         app.MapHealthChecks("/health");
         app.UseExceptionHandler("/Error");
         app.MapFallbackToPage("/_Host");
-        app.UseInfrastructure(config);
+        app.UseHttpsRedirection();
+        app.UseExceptionHandler("/Error");
+
+        app.UseStaticFiles();
+
+        if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
+        {
+            Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
+        }
+
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Files")),
+            RequestPath = new PathString("/Files")
+        });
+
+        var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(LocalizationConstants.SupportedLanguages.Select(x => x.Code).First())
+                  .AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray())
+                  .AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
+
+        app.UseRequestLocalization(localizationOptions);
+
         app.UseMiddleware<LocalizationCookiesMiddleware>();
         app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseHangfireDashboard("/jobs", new DashboardOptions
