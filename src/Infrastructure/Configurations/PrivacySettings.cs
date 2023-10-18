@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Application.Common.Configurations;
+namespace CleanArchitecture.Blazor.Infrastructure.Configurations;
 
 /// <summary>
 ///     Represents the privacy settings for the application.

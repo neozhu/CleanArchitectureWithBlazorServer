@@ -1,15 +1,15 @@
-using CleanArchitecture.Blazor.Application.Common.Configurations;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormModel>
 {
     private readonly IStringLocalizer<RegisterFormModelFluentValidator> _localizer;
-    private readonly IdentitySettings _identitySettings;
+    private readonly IIdentitySettings _identitySettings;
 
     public RegisterFormModelFluentValidator(
         IStringLocalizer<RegisterFormModelFluentValidator> localizer,
-        IdentitySettings identitySettings)
+        IIdentitySettings identitySettings)
     {
         _localizer = localizer;
         _identitySettings = identitySettings;

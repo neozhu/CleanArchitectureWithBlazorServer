@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CleanArchitecture.Blazor.Application.Common.Configurations;
+﻿using System.IdentityModel.Tokens.Jwt;
+
 using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;

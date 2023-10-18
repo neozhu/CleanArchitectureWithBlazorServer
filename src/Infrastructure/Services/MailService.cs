@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
-using CleanArchitecture.Blazor.Application.Common.Configurations;
+using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using FluentEmail.Core;
 using FluentEmail.Core.Models;
 using Polly;
@@ -34,7 +34,7 @@ public class MailService : IMailService
         {
             if (_appConfig.Resilience)
             {
-                return _policy.ExecuteAsync( () => _fluentEmail
+                return _policy.ExecuteAsync(() => _fluentEmail
                 .To(to)
                 .Subject(subject)
                 .Body(body, true)
@@ -48,7 +48,7 @@ public class MailService : IMailService
                .Body(body, true)
                .SendAsync();
             }
-           
+
         }
         catch (Exception e)
         {
@@ -79,7 +79,7 @@ public class MailService : IMailService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error sending an email to {Unknown} with subject {Subject} and template {Template}", to, subject,template);
+            _logger.LogError(e, "Error sending an email to {Unknown} with subject {Subject} and template {Template}", to, subject, template);
             throw;
         }
     }

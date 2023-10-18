@@ -2,8 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Text;
-using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
@@ -19,6 +19,16 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.Configure<IdentitySettings>(configuration.GetSection(IdentitySettings.Key));
+        services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.Key));
+        services.Configure<DatabaseSettings>(configuration.GetSection(DatabaseSettings.Key));
+        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.Key));
+        services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
+        services.AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+        services.AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
+        services.AddSingleton(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value);
+        services.AddSingleton<IIdentitySettings>(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value);
+
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ITenantProvider, TenantProvider>();
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();

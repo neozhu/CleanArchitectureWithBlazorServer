@@ -1,10 +1,9 @@
 using System.Reflection;
 using System.Text;
-using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Application.Constants.Permission;
 using CleanArchitecture.Blazor.Application.Constants.User;
-using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
+using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -14,7 +13,6 @@ public static class AuthenticationServiceCollectionExtensions
 {
     public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)
     {
-       
         services
             .AddIdentity<ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -24,7 +22,7 @@ public static class AuthenticationServiceCollectionExtensions
         {
             var identitySettings = configuration.GetRequiredSection(IdentitySettings.Key).Get<IdentitySettings>();
             // Password settings
-            options.Password.RequireDigit = identitySettings.RequireDigit;
+            options.Password.RequireDigit = identitySettings!.RequireDigit;
             options.Password.RequiredLength = identitySettings.RequiredLength;
             options.Password.RequireNonAlphanumeric = identitySettings.RequireNonAlphanumeric;
             options.Password.RequireUppercase = identitySettings.RequireUpperCase;
@@ -46,18 +44,18 @@ public static class AuthenticationServiceCollectionExtensions
         services
                 .AddScoped<IIdentityService, IdentityService>()
                 .AddAuthorization(options =>
-                 {
-                     options.AddPolicy("CanPurge", policy => policy.RequireUserName(UserName.Administrator));
-                     // Here I stored necessary permissions/roles in a constant
-                     foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
-                     {
-                         var propertyValue = prop.GetValue(null);
-                         if (propertyValue is not null)
-                         {
-                             options.AddPolicy((string)propertyValue, policy => policy.RequireClaim(ApplicationClaimTypes.Permission, (string)propertyValue));
-                         }
-                     }
-                 })
+                {
+                    options.AddPolicy("CanPurge", policy => policy.RequireUserName(UserName.Administrator));
+                    // Here I stored necessary permissions/roles in a constant
+                    foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+                    {
+                        var propertyValue = prop.GetValue(null);
+                        if (propertyValue is not null)
+                        {
+                            options.AddPolicy((string)propertyValue, policy => policy.RequireClaim(ApplicationClaimTypes.Permission, (string)propertyValue));
+                        }
+                    }
+                })
                  .AddAuthentication()
                  .AddJwtBearer(options =>
                  {
@@ -81,16 +79,16 @@ public static class AuthenticationServiceCollectionExtensions
                              var accessToken = context.Request.Headers.Authorization;
                              var path = context.HttpContext.Request.Path;
                              if (!string.IsNullOrEmpty(accessToken) &&
-                                 (path.StartsWithSegments("/signalRHub")))
+                                 path.StartsWithSegments("/signalRHub"))
                              {
                                  context.Token = accessToken.ToString().Substring(7);
                              }
                              return Task.CompletedTask;
                          }
                      };
-                 }); 
-   
-        
+                 });
+
+
         services.AddSingleton<UserDataProvider>();
         services.AddSingleton<IUserDataProvider>(sp =>
         {

@@ -1,6 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using CleanArchitecture.Blazor.Application.Common.Configurations;
-using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;

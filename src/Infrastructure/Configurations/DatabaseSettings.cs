@@ -1,22 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CleanArchitecture.Blazor.Application.Common.Configurations;
+namespace CleanArchitecture.Blazor.Infrastructure.Configurations;
 
 /// <summary>
 ///     Configuration wrapper for the database section
 /// </summary>
-public class DatabaseSettings: IValidatableObject
+public class DatabaseSettings : IValidatableObject
 {
     /// <summary>
     ///     Database key constraint
     /// </summary>
     public const string Key = nameof(DatabaseSettings);
-    
+
     /// <summary>
     ///     Represents the database provider, which to connect to
     /// </summary>
     public string DBProvider { get; set; } = string.Empty;
-    
+
     /// <summary>
     ///     The connection string being used to connect with the given database provider
     /// </summary>

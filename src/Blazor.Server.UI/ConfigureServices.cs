@@ -5,7 +5,7 @@ using Blazor.Server.UI.Services.Navigation;
 using Blazor.Server.UI.Services.Notifications;
 using Blazor.Server.UI.Services.UserPreferences;
 using BlazorDownloadFile;
-using CleanArchitecture.Blazor.Application.Common.Configurations;
+using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using MudBlazor.Services;
 using MudExtensions.Services;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
