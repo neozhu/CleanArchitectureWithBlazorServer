@@ -34,18 +34,18 @@ Blazor technology.
 
 ### How to select a specific Database?
 
-1. Open the `appsettings.json` file located in the src directory of the `Blazor.Server.UI` project.
+1. Open the `appsettings.json` file located in the src directory of the `Server.UI` project.
 2. Change the setting `DBProvider` to the desired provider name (See Supported Databases).
 3. Change the `ConnectionString` to a connection string, which works for your selected database provider.
 
 ## Docker compose https deployment
 
 - Create self-signed development certificates for the project
-    - cmd: `dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\Blazor.Server.UI.pfx -p Password@123`
+    - cmd: `dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\CleanArchitecture.Blazor.Server.UI.pfx -p Password@123`
     - cmd: `dotnet dev-certs https --trust`
 - Manage User secrets to save the password
     - cmd: `dotnet user-secrets init`
-    - cmd: `dotnet user-secrets -p Blazor.Server.UI.csproj set "Kestrel:Certificates:Development:Password" "Password@123"`
+    - cmd: `dotnet user-secrets -p Server.UI.csproj set "Kestrel:Certificates:Development:Password" "Password@123"`
 
 ## Code Generator Extension for visual studio.net 2022
 

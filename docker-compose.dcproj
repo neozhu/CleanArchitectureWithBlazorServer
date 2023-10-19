@@ -12,8 +12,8 @@
     <None Include="docker-compose.yml" />
     <None Include="docker-compose.override.yml" />
     <None Include=".dockerignore" />
-    <None Include="src\Blazor.Server.UI\Pages\Identity\Users\Users.razor.cs" />
-    <None Include="src\Blazor.Server.UI\Shared\UserLoginState.razor.cs" />
+    <None Include="src\Server.UI\Pages\Identity\Users\Users.razor.cs" />
+    <None Include="src\Server.UI\Shared\UserLoginState.razor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="launchSettings.json" />
@@ -28,6 +28,6 @@
     <None Remove="src\**" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\Blazor.Server.UI\Pages\Identity\Users\Profile.razor.cs" />
+    <None Include="src\Server.UI\Pages\Identity\Users\Profile.razor.cs" />
   </ItemGroup>
 </Project>

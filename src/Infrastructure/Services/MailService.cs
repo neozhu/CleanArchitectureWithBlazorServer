@@ -16,7 +16,7 @@ public class MailService : IMailService
     private readonly IFluentEmail _fluentEmail;
     private readonly ILogger<MailService> _logger;
     private readonly AsyncRetryPolicy _policy;
-    private const string TemplatePath = "Blazor.Server.UI.Resources.EmailTemplates.{0}.cshtml";
+    private const string TemplatePath = "Server.UI.Resources.EmailTemplates.{0}.cshtml";
     public MailService(
         AppConfigurationSettings appConfig,
         IFluentEmail fluentEmail,

@@ -47,7 +47,7 @@ public class Testing
 
         services.AddSingleton(Mock.Of<IWebHostEnvironment>(w =>
             w.EnvironmentName == "Development" &&
-            w.ApplicationName == "Blazor.Server.UI"));
+            w.ApplicationName == "Server.UI"));
 
         services.AddInfrastructureServices(_configuration)
             .AddApplicationServices();
@@ -65,13 +65,13 @@ public class Testing
 
         // Register testing version
         services.AddScoped(provider =>
-            Mock.Of<ICurrentUserService>(s =>  s.UserId == _currentUserId));
+            Mock.Of<ICurrentUserService>(s => s.UserId == _currentUserId));
         services.AddScoped(provider =>
             Mock.Of<ITenantProvider>(s => s.TenantId == _currentTenantId));
 
         _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
 
-        _checkpoint =await Respawner.CreateAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"), new RespawnerOptions
+        _checkpoint = await Respawner.CreateAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"), new RespawnerOptions
         {
             TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
         });
