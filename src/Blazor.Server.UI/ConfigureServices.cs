@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Reflection;
 using Blazor.Analytics;
+using Blazor.Server.UI.Hubs;
 using Blazor.Server.UI.Middlewares;
 using Blazor.Server.UI.Services.Layout;
 using Blazor.Server.UI.Services.Navigation;
@@ -9,7 +10,6 @@ using Blazor.Server.UI.Services.UserPreferences;
 using BlazorDownloadFile;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
-using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using CleanArchitecture.Blazor.UI.Middlewares;
 using Hangfire;
 using Microsoft.AspNetCore.Http.Connections;
@@ -87,6 +87,10 @@ public static class ConfigureServices
         }).AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(30)));
         services.AddControllers();
 
+        services.AddScoped<HubClient>()
+            .AddScoped<IApplicationHubWrapper, ServerHubWrapper>()
+            .AddSignalR();
+
         services.AddMudExtensions()
             .AddScoped<LayoutService>()
             .AddBlazorDownloadFile()
@@ -159,7 +163,7 @@ public static class ConfigureServices
         {
             endpoints.MapRazorPages();
             endpoints.MapControllers();
-            endpoints.MapHub<SignalRHub>(SignalR.HubUrl);
+            endpoints.MapHub<ServerHub>(ISignalRHub.Url);
         });
 
         app.UseWebSockets();

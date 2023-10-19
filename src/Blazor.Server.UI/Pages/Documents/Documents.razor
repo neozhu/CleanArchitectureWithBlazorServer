@@ -1,6 +1,7 @@
 @page "/pages/documents"
 
 @using AutoMapper;
+@using Blazor.Server.UI.Hubs
 @using Blazor.Server.UI.Services.JsInterop;
 @using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
@@ -13,7 +14,6 @@
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.Documents.Specifications;
 @using CleanArchitecture.Blazor.Application.Features.Fluxor;
-@using CleanArchitecture.Blazor.Infrastructure.Hubs
 
 @inject IJSRuntime JS
 @inject IStringLocalizer<Documents> L
@@ -260,8 +260,8 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
-        Client.JobCompleted += _client_JobCompleted;
-        Client.JobStarted += _client_JobStarted;
+        Client.JobCompletedEvent += _client_JobCompleted;
+        Client.JobStartedEvent += _client_JobStarted;
         UserProfileState.StateChanged += StateOnStateChanged;
         await Client.StartAsync();
         Query = new DocumentsWithPaginationQuery() { CurrentUser = UserProfile };
@@ -292,8 +292,8 @@
     public new void Dispose()
     {
         UserProfileState.StateChanged -= StateOnStateChanged;
-        Client.JobCompleted -= _client_JobCompleted;
-        Client.JobStarted -= _client_JobStarted;
+        Client.JobCompletedEvent -= _client_JobCompleted;
+        Client.JobStartedEvent -= _client_JobStarted;
         base.Dispose();
     }
     private async Task<GridData<DocumentDto>> ServerReload(GridState<DocumentDto> state)

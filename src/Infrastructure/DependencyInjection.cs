@@ -11,7 +11,6 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
-using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
@@ -73,7 +72,7 @@ public static class DependencyInjection
             });
 
         services.AddScoped<AuthenticationStateProvider, BlazorAuthStateProvider>();
-        services.AddSignalRServices();
+        services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
 
         return services;
     }

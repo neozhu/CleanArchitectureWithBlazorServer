@@ -6,21 +6,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Hubs;
-
-public interface ISignalRHub
-{
-    Task Start(string message);
-    Task Completed(string message);
-    Task SendMessage(string from, string message);
-    Task SendPrivateMessage(string from, string to, string message);
-    Task Disconnect(string connectionId, string userName);
-    Task Connect(string connectionId, string userName);
-    Task SendNotification(string message);
-}
+namespace Blazor.Server.UI.Hubs;
 
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class SignalRHub : Hub<ISignalRHub>
+public class ServerHub : Hub<ISignalRHub>
 {
     private static readonly ConcurrentDictionary<string, string> OnlineUsers = new();
 
@@ -30,7 +19,7 @@ public class SignalRHub : Hub<ISignalRHub>
         var username = Context.User?.Identity?.Name ?? string.Empty;
         if (!OnlineUsers.ContainsKey(connectionId)) OnlineUsers.TryAdd(connectionId, username);
 
-        await Clients.All.Connect(connectionId,username);
+        await Clients.All.Connect(connectionId, username);
         await base.OnConnectedAsync();
     }
 
@@ -38,7 +27,7 @@ public class SignalRHub : Hub<ISignalRHub>
     {
         var connectionId = Context.ConnectionId;
         //try to remove key from dictionary
-        if (OnlineUsers.TryRemove(connectionId, out var username)) await Clients.All.Disconnect(connectionId,username);
+        if (OnlineUsers.TryRemove(connectionId, out var username)) await Clients.All.Disconnect(connectionId, username);
 
         await base.OnConnectedAsync();
     }

@@ -1,9 +1,10 @@
+@using Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Fluxor
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notification
-@using CleanArchitecture.Blazor.Infrastructure.Hubs
+
 @inject IStringLocalizer<SharedResource> L
 @implements IDisposable
 @code {
@@ -15,8 +16,8 @@
     public IDispatcher Dispatcher { get; set; } = null!;
     public void Dispose()
     {
-        Client.Login -= _client_Login;
-        Client.Logout -= _client_Logout;
+        Client.LoginEvent -= _client_Login;
+        Client.LogoutEvent -= _client_Logout;
         AuthenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         GC.SuppressFinalize(this);
     }
@@ -26,8 +27,8 @@
     private IUsersStateContainer UsersStateContainer { get; set; } = default!;
     protected override async Task OnInitializedAsync()
     {
-        Client.Login += _client_Login;
-        Client.Logout += _client_Logout;
+        Client.LoginEvent += _client_Login;
+        Client.LogoutEvent += _client_Logout;
         await Client.StartAsync().ConfigureAwait(false);
         AuthenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
         var state = await AuthState;
