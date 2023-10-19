@@ -9,7 +9,6 @@
     <ItemGroup>
         
         <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.12" />
         <PackageReference Include="jcamp.FluentEmail.MailKit" Version="3.2.0" />
         <PackageReference Include="jcamp.FluentEmail.Razor" Version="3.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.12" />

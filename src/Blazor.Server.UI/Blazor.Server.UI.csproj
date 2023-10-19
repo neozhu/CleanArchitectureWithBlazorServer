@@ -21,6 +21,7 @@
         <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.6.0" />
         <PackageReference Include="MudBlazor" Version="6.11.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.12" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.12">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
