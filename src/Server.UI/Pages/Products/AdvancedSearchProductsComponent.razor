@@ -42,16 +42,4 @@
     </MudGrid>
 </MudExpansionPanel>
 
-@code {
-    [EditorRequired][Parameter] public ProductsWithPaginationQuery TRequest { get; set; } = default!;
-    [EditorRequired][Parameter] public EventCallback<string> OnConditionChanged { get; set; }
-    private bool _advancedSearchExpanded;
-    private async Task TextChanged(string str)
-    {
-        if (_advancedSearchExpanded)
-        {
-            await OnConditionChanged.InvokeAsync(str);
-        }
-    }
-     
-}
+

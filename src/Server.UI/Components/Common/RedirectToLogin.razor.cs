@@ -1,6 +1,9 @@
-@inherits ComponentBase
+﻿using Microsoft.AspNetCore.Components.Authorization;
 
-@code {
+namespace CleanArchitecture.Blazor.Server.UI.Components.Common;
+
+public class RedirectToLogin : ComponentBase
+{
     [CascadingParameter]
     private Task<AuthenticationState> AuthStateTask { get; set; } = null!;
     [Inject]
@@ -18,7 +21,6 @@
             else
                 NavigationManager.NavigateTo($"/pages/authentication/login?returnUrl={returnUrl}");
         }
-      
-    }
 
+    }
 }

@@ -1,10 +1,9 @@
-using CleanArchitecture.Blazor.Server.UI.Components.Shared;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Microsoft.AspNetCore.Components.Web;
 using Toolbelt.Blazor.HotKeys2;
 
-namespace CleanArchitecture.Blazor.Server.UI.Shared;
+namespace CleanArchitecture.Blazor.Server.UI.Components.Shared;
 
 public partial class MainLayout : LayoutComponentBase, IDisposable
 {

@@ -28,29 +28,3 @@
     </DialogActions>
 </MudDialog>
 
-@code {
-    MudForm? _form;
-    readonly RoleDtoValidator _modelValidator = new();
-
-    [EditorRequired]
-    [Parameter]
-    public ApplicationRoleDto Model { get; set; } = default!;
-
-    [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; } = default!;
-
-    async Task Submit()
-    {
-        await _form!.Validate();
-        if (_form!.IsValid)
-        {
-            MudDialog.Close(DialogResult.Ok(true));
-        }
-    }
-
-    void Cancel()
-    {
-        MudDialog.Cancel();
-    }
-
-}

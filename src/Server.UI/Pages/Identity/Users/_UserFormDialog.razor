@@ -11,21 +11,4 @@
     </DialogActions>
 </MudDialog>
 
-@code {
-    private _UserForm? _userForm=default!;
-    [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; } = default!;
-    [Parameter]
-    public ApplicationUserDto Model { get; set; } = default!;
 
-    protected async Task Submit() {
-        await  _userForm!.Submit();
-    }
-    void Cancel() => MudDialog.Cancel();
-
-    protected  Task OnFormSubmitHandler(ApplicationUserDto model)
-    {
-        MudDialog.Close(DialogResult.Ok(model));
-        return Task.CompletedTask;
-    }
-}

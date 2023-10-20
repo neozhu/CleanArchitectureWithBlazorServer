@@ -14,29 +14,3 @@
         <MudAlert Severity="MudBlazor.Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
     </Authorized>
 </AuthorizeView>
-
-
-
-@code {
-    string Password { get; set; } = string.Empty;
-
-    bool _passwordVisibility;
-    InputType _passwordInput = InputType.Password;
-    string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
-
-    void TogglePasswordVisibility()
-    {
-        @if (_passwordVisibility)
-        {
-            _passwordVisibility = false;
-            _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
-            _passwordInput = InputType.Password;
-        }
-        else
-        {
-            _passwordVisibility = true;
-            _passwordInputIcon = Icons.Material.Filled.Visibility;
-            _passwordInput = InputType.Text;
-        }
-    }
-}

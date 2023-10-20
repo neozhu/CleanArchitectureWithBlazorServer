@@ -1,18 +1,23 @@
-@using CleanArchitecture.Blazor.Server.UI.Hubs
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
-@using CleanArchitecture.Blazor.Application.Features.Identity.Dto
-@using CleanArchitecture.Blazor.Application.Features.Identity.Notification
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Server.UI.Hubs;
+using CleanArchitecture.Blazor.Server.UI.Shared;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Localization;
 
-@inject IStringLocalizer<SharedResource> L
-@implements IDisposable
-@code {
+namespace CleanArchitecture.Blazor.Server.UI.Components.Shared;
+public class UserLoginState : ComponentBase, IDisposable
+{
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
     [Inject]
     public IDispatcher Dispatcher { get; set; } = null!;
+    [Inject]
+    public ISnackbar Snackbar { get; set; } = null!;
+    [Inject]
+    public IStringLocalizer<SharedResource> L { get; set; } = null!;
+
     public void Dispose()
     {
         Client.LoginEvent -= _client_Login;
@@ -61,7 +66,7 @@
         InvokeAsync(async () =>
         {
             var state = await authenticationState;
-            if (state.User.Identity?.IsAuthenticated??false)
+            if (state.User.Identity?.IsAuthenticated ?? false)
             {
                 var userId = state.User.GetUserId();
                 SetProfile(userId!);
@@ -73,5 +78,3 @@
         Dispatcher.Dispatch(new FetchUserDtoAction() { UserId = userId });
     }
 }
-
-

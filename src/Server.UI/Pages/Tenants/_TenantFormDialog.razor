@@ -36,41 +36,4 @@
     </DialogActions>
 </MudDialog>
 
-@code {
-    MudForm? _form = default!;
-    bool _saving = false;
-    [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; } = default!;
 
-    readonly AddEditTenantCommandValidator _modelValidator = new AddEditTenantCommandValidator();
-    [EditorRequired][Parameter] public AddEditTenantCommand Model { get; set; } = default!;
-    [Inject]
-    private IMediator _mediator { get; set; } = default!;
-    async Task Submit()
-    {
-        try
-        {
-            _saving = true;
-            await _form!.Validate().ConfigureAwait(false);
-
-            if (!_form!.IsValid)
-                return;
-            var result = await _mediator.Send(Model);
-
-            if (result.Succeeded)
-            {
-                MudDialog.Close(DialogResult.Ok(true));
-                Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
-            }
-            else
-            {
-                Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
-            }
-        }
-        finally
-        {
-            _saving = false;
-        }
-    }
-    void Cancel() => MudDialog.Cancel();
-}

@@ -1,5 +1,8 @@
-@inherits ComponentBase
-@code {
+﻿using Microsoft.AspNetCore.Components.Authorization;
+
+namespace CleanArchitecture.Blazor.Server.UI.Components.Common;
+public class RedirectToHome : ComponentBase
+{
     [CascadingParameter]
     private Task<AuthenticationState> _authStateTask { get; set; } = null!;
     [Inject]
@@ -14,5 +17,4 @@
             NavigationManager.NavigateTo("/");
         }
     }
-
 }

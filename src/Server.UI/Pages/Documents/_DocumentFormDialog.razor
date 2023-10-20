@@ -64,25 +64,4 @@
     </DialogActions>
 </MudDialog>
 
-@code {
-    MudForm? _form = default!;
-    [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; } = default!;
 
-    readonly AddEditDocumentCommandValidator _modelValidator = new AddEditDocumentCommandValidator();
-    [EditorRequired][Parameter] public AddEditDocumentCommand Model { get; set; } = default!;
-    const long MaxAllowedSize = 3145728;
-
-    async Task Submit()
-    {
-           await _form!.Validate();
-            if (_form!.IsValid)
-            {
-                MudDialog.Close(DialogResult.Ok(true));
-            }
-
-    }
-    void Cancel() => MudDialog.Cancel();
-
- 
-}

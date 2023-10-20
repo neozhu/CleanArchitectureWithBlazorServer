@@ -15,29 +15,4 @@
     </DialogActions>
 </MudDialog>
 
-@code {
-    [CascadingParameter]
-    MudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired]
-    [Parameter]
-    public string? ContentText { get; set; }
-    [EditorRequired]
-    [Parameter]
-    public IRequest<Result<int>> Command { get; set; } = default!;
-    [Inject]
-    private IMediator Mediator { get; set; } = default!;
-    async Task Submit()
-    {
-        var result = await Mediator.Send(Command);
-        if (result.Succeeded) {
-            Snackbar.Add($"{ConstantString.DeleteSuccess}", MudBlazor.Severity.Info);
-            MudDialog.Close(DialogResult.Ok(true));
-        }
-        else {
-            Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
-        }
-        
-    }
-    void Cancel() => MudDialog.Cancel();
-}
