@@ -1,5 +1,5 @@
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
- 
+using CleanArchitecture.Blazor.Application.Common.Extensions;
 using CleanArchitecture.Blazor.Domain.Enums;
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +34,7 @@ public class AuthController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Login(string token, string returnUrl)
     {
+        //TODO need to change the extraction of roles & tenants
         var dataProtector = _dataProtectionProvider.CreateProtector("Login");
         var data = dataProtector.Unprotect(token);
         var parts = data.Split('|');
@@ -49,7 +50,8 @@ public class AuthController : Controller
             await _userManager.ResetAccessFailedCountAsync(identityUser);
             await _signInManager.SignInAsync(identityUser, isPersistent);
             identityUser.IsLive = true;
-            await _userManager.UpdateAsync(identityUser);
+            await _userManager.UpdateIsLive(identityUser.Id, true);
+            //await _userManager.UpdateAsync(identityUser);
             _logger.LogInformation("{@UserName} has successfully logged in", identityUser.UserName);
             return Redirect($"/{returnUrl}");
         }
@@ -103,10 +105,15 @@ public class AuthController : Controller
     public async Task<IActionResult> Logout()
     {
         var userId = _signInManager.Context.User.GetUserId();
-        var identityUser = await _userManager.FindByIdAsync(userId!) ?? throw new NotFoundException($"Application user not found.");
-        identityUser.IsLive = false;
-        await _userManager.UpdateAsync(identityUser);
-        _logger.LogInformation("{@UserName} logout successful", identityUser.UserName);
+        if (!userId.IsNullOrEmptyAndTrimSelf())
+        {
+            var result = await _userManager.UpdateIsLive(userId, false);
+            _logger.LogInformation($"User logout successful({(result ? "Successful" : "Failed")})");
+        }
+        //var identityUser = await _userManager.FindByIdAsync(userId!) ?? throw new NotFoundException($"Application user not found.");
+        //identityUser.IsLive = false;
+        //await _userManager.UpdateAsync(identityUser);
+
         await _signInManager.SignOutAsync();
         return Redirect("/");
     }
