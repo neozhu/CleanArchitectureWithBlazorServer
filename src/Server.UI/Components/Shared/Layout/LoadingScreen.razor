@@ -1,0 +1,140 @@
+﻿@using CleanArchitecture.Blazor.Server.UI.Services.Layout
+@inherits LayoutComponentBase
+
+@if (IsLoaded)
+{
+    @ChildContent
+}
+else
+{
+    var randomNumber = new Random().Next(-45, -15) + "%";
+    var randomNumber2 = new Random().Next(10, 30) + "%";
+    <div id="app">
+        <style>
+            @@keyframes slide {
+                0% {
+                    transform: translateX(@randomNumber);
+                }
+                100% {
+                    transform: translateY(@randomNumber2);
+                }
+            }
+
+            .loadScreen-animation {
+                animation: slide 3s ease-in-out infinite alternate;
+                bottom: 0;
+                left: -50%;
+                opacity: .5;
+                position: fixed;
+                right: -50%;
+                top: 0;
+                z-index: -1;
+            }
+
+            .loadScreen-animation-cont {
+                left: 50%;
+                padding: 10vmin;
+                position: fixed;
+                text-align: center;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+            
+            svg {
+            	position: fixed;
+            	top: 50%;
+            	left: 50%;
+            	transform: translate(-50%, -50%);
+            	height: 150px;
+            	width: 150px;
+            }
+        </style>
+
+        <div style="height:100%;width:100%;margin:0;position:fixed;background-color:@(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Background : LayoutService.CurrentTheme.Palette.Background)">
+            <div class="loadScreen-animation"></div>
+            <div class="loadScreen-animation" style="@Gradient animation-direction:alternate-reverse;animation-duration:2s;"></div>
+            <div class="loadScreen-animation" style="@Gradient animation-duration:5s;"></div>
+            <div class="loadScreen-animation-cont">
+                <svg viewBox="0 0 100 100">
+                    <g fill="none" stroke="@(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Primary : LayoutService.CurrentTheme.Palette.Primary)" stroke-linecap="round" stroke-linejoin="round" stroke-width="6">
+                        <!-- left line -->
+                        <path d="M 21 40 V 59">
+                            <animateTransform
+                                attributeName="transform"
+                                attributeType="XML"
+                                type="rotate"
+                                values="0 21 59; 180 21 59"
+                                dur="2s"
+                                repeatCount="indefinite"/>
+                        </path>
+                        <!-- right line -->
+                        <path d="M 79 40 V 59">
+                            <animateTransform
+                                attributeName="transform"
+                                attributeType="XML"
+                                type="rotate"
+                                values="0 79 59; -180 79 59"
+                                dur="2s"
+                                repeatCount="indefinite"/>
+                        </path>
+                        <!-- top line -->
+                        <path d="M 50 21 V 40">
+                            <animate
+                                attributeName="d"
+                                values="M 50 21 V 40; M 50 59 V 40"
+                                dur="2s"
+                                repeatCount="indefinite"/>
+                        </path>
+                        <!-- btm line -->
+                        <path d="M 50 60 V 79">
+                            <animate
+                                attributeName="d"
+                                values="M 50 60 V 79; M 50 98 V 79"
+                                dur="2s"
+                                repeatCount="indefinite"/>
+                        </path>
+                        <!-- top box -->
+                        <path d="M 50 21 L 79 40 L 50 60 L 21 40 Z">
+                            <animate
+                                attributeName="stroke"
+                                values="rgba(255,255,255,1); rgba(100,100,100,0)"
+                                dur="2s"
+                                repeatCount="indefinite"/>
+                        </path>
+                        <!-- mid box -->
+                        <path d="M 50 40 L 79 59 L 50 79 L 21 59 Z"/>
+                        <!-- btm box -->
+                        <path d="M 50 59 L 79 78 L 50 98 L 21 78 Z">
+                            <animate
+                                attributeName="stroke"
+                                values="rgba(100,100,100,0); rgba(255,255,255,1)"
+                                dur="2s"
+                                repeatCount="indefinite"/>
+                        </path>
+                        <animateTransform
+                            attributeName="transform"
+                            attributeType="XML"
+                            type="translate"
+                            values="0 0; 0 -19"
+                            dur="2s"
+                            repeatCount="indefinite"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </div>
+}
+
+@code
+{
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
+
+    [Parameter]
+    public LayoutService LayoutService { get; set; } = null!;
+
+    [Parameter]
+    public bool IsLoaded { get; set; }
+
+    private string Gradient => $"background-image: linear-gradient(-120deg, {(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Background : LayoutService.CurrentTheme.Palette.Background)} 50%, {(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Surface : LayoutService.CurrentTheme.Palette.Surface)} 50%);";
+}

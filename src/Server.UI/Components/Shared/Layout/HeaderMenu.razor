@@ -1,0 +1,67 @@
+@using CleanArchitecture.Blazor.Server.UI.Components.Localization
+<MudAppBar Class=""
+           Elevation="0"
+           Style="background: --mud-palette-appbar-background">
+    <MudTooltip Arrow="true" Text="Toggle menu">
+        <MudToggleIconButton Class="mr-3"
+                             Color="@Color.Default"
+                             Icon="@Icons.Material.Filled.MenuOpen"
+                             Size="Size.Medium"
+                             Toggled="NavigationMenuDrawerOpen"
+                             ToggledChanged="ToggleNavigationMenuDrawer"
+                             ToggledColor="@Color.Default"
+                             ToggledIcon="@Icons.Material.Filled.Close" />
+
+    </MudTooltip>
+    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+        <MudTooltip Arrow="true"
+                    Text="Search (Cmd + K)">
+            <MudIconButton Color="Color.Default"
+                           Edge="Edge.Start"
+                           Icon="@Icons.Material.Filled.Search"
+                           OnClick="OpenSearchDialog" />
+        </MudTooltip>
+        <MudSpacer />
+        <MudTooltip Arrow="true"
+                    Text="Navigate to GitHub">
+            <MudIconButton Class="mx-1"
+                           Color="Color.Default"
+                           Icon="@Icons.Custom.Brands.GitHub"
+                           Link="https://github.com/neozhu/CleanArchitectureWithBlazorServer"
+                           Target="_blank" />
+        </MudTooltip>
+        <LanguageSelector />
+        <NotificationMenu />
+        <MudTooltip Text="@(RightToLeft?"Toggle right-to-left":"Toggle left-to-right")">
+            <MudIconButton Class="mx-1"
+                           Icon="@(RightToLeft?Icons.Material.Filled.FormatTextdirectionLToR:Icons.Material.Filled.FormatTextdirectionRToL)"
+                           Color="Color.Default"
+                           OnClick="@((e) => RightToLeftToggle.InvokeAsync())" />
+        </MudTooltip>
+    </MudHidden>
+    <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+        <MudTooltip Arrow="true"
+                    Text="Search (Cmd + K)">
+            <MudIconButton Color="Color.Default"
+                           Edge="Edge.Start"
+                           Icon="@Icons.Material.Filled.Search"
+                           OnClick="OpenSearchDialog" />
+        </MudTooltip>
+        <MudSpacer />
+        <NotificationMenu />
+    </MudHidden>
+    <UserMenu OnSettingClick="OnSettingClick" />
+    <MudDivider Class="mx-3 my-5" DividerType="DividerType.Middle" Vertical="true" FlexItem="true"></MudDivider>
+    <MudText Color="@Color.Primary" Typo="Typo.h6"><b>@Settings.Company</b></MudText>
+</MudAppBar>
+
+@code 
+{
+    [EditorRequired][Parameter] public bool IsDarkMode { get; set; }
+    [EditorRequired][Parameter] public bool NavigationMenuDrawerOpen { get; set; }
+    [EditorRequired][Parameter] public EventCallback ToggleNavigationMenuDrawer { get; set; }
+    [EditorRequired][Parameter] public EventCallback OpenSearchDialog { get; set; }
+    [EditorRequired][Parameter] public bool RightToLeft { get; set; }
+    [EditorRequired][Parameter] public EventCallback RightToLeftToggle { get; set; }
+    [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
+}

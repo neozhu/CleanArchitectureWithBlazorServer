@@ -1,3 +1,5 @@
+@inject LayoutService LayoutService
+
 <div class="px-4 py-2 theme-button"
      @onclick="OnClick">
     <MudTooltip Arrow="true"
@@ -48,3 +50,7 @@ else
 
 }
 
+@code
+{
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+}

@@ -6,13 +6,12 @@
 
 @inherits FluxorComponent
 @attribute [Authorize(Policy = Permissions.AuditTrails.View)]
+
 @inject IStringLocalizer<AuditTrails> L
+@inject             IState<Fluxor.UserProfileState> UserProfileState
+@inject IMediator Mediator
+
 <PageTitle>@L[Title]</PageTitle>
-<style>
-    .mud-table-toolbar {
-        height: 120px !important;
-    }
-</style>
 
 <MudDataGrid ServerData="@(ServerReload)"
              T="AuditTrailDto"
@@ -114,4 +113,81 @@
     </PagerContent>
 </MudDataGrid>
 
+<style>
+    .mud-table-toolbar {
+        height: 120px !important;
+    }
+</style>
 
+@code
+{
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
+
+    public string Title { get; private set; } = "Audit Trails";
+    private MudDataGrid<AuditTrailDto> _table = null!;
+    private bool _loading;
+    private int _defaultPageSize = 15;
+
+    private readonly AuditTrailDto _currentDto = new();
+
+    private AuditTrailsWithPaginationQuery Query { get; set; } = new();
+    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L[_currentDto.GetClassDescription()];
+        var state = await AuthState;
+    }
+
+    private async Task<GridData<AuditTrailDto>> ServerReload(GridState<AuditTrailDto> state)
+    {
+        try
+        {
+            _loading = true;
+            Query.CurrentUser = UserProfile;
+            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
+            Query.PageNumber = state.Page + 1;
+            Query.PageSize = state.PageSize;
+
+            var result = await Mediator.Send(Query).ConfigureAwait(false);
+            return new GridData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task OnChangedListView(AuditTrailListView listview)
+    {
+        Query.ListView = listview;
+        await _table.ReloadServerData();
+    }
+
+    private async Task OnSearch(string text)
+    {
+        Query.Keyword = text;
+        await _table.ReloadServerData();
+    }
+
+    private async Task OnSearch(AuditType? val)
+    {
+        Query.AuditType = val;
+        await _table.ReloadServerData();
+    }
+
+    private async Task OnRefresh()
+    {
+        AuditTrailsCacheKey.Refresh();
+        Query.Keyword = string.Empty;
+        await _table.ReloadServerData();
+    }
+
+    private Task OnShowDetail(AuditTrailDto dto)
+    {
+        dto.ShowDetails = !dto.ShowDetails;
+        return Task.CompletedTask;
+    }
+}

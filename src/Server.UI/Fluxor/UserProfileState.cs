@@ -15,7 +15,6 @@ public class UserProfileState
     {
         IsLoading = loading;
         UserProfile = userProfile ?? new UserProfile { Email = "", UserId = "", UserName = "" };
-        ;
     }
 
     public UserProfileState(ApplicationUserDto dto)

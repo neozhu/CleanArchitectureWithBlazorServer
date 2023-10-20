@@ -1,8 +1,7 @@
-﻿using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users;
+﻿using CleanArchitecture.Blazor.Server.UI.Models.Identity;
 using Microsoft.JSInterop;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
-
 
 public partial class OrgChart
 {
@@ -16,6 +15,4 @@ public partial class OrgChart
     {
         return _jsRuntime.InvokeVoidAsync(JSInteropConstants.CreateOrgChart, data);
     }
-
-
 }

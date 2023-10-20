@@ -2,7 +2,7 @@ namespace CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
 
 public class MenuSectionItemModel
 {
-    public string Title { get; set; }=string.Empty;
+    public string Title { get; set; } = string.Empty;
     public string? Icon { get; set; }
     public string? Href { get; set; }
     public string? Target { get; set; }
