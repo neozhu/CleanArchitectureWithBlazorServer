@@ -8,7 +8,7 @@
 @attribute [Authorize(Policy = Permissions.AuditTrails.View)]
 
 @inject IStringLocalizer<AuditTrails> L
-@inject             IState<Fluxor.UserProfileState> UserProfileState
+@inject IState<Fluxor.UserProfileState> UserProfileState
 @inject IMediator Mediator
 
 <PageTitle>@L[Title]</PageTitle>
