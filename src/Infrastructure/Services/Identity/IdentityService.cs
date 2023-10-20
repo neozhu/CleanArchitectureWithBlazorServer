@@ -16,8 +16,6 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly AppConfigurationSettings _appConfig;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
     private readonly IAppCache _cache;
@@ -34,10 +32,8 @@ public class IdentityService : IIdentityService
     {
         var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         _userClaimsPrincipalFactory = scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _authorizationService = scope.ServiceProvider.GetRequiredService<IAuthorizationService>();
-        _appConfig = appConfig;
         _cache = cache;
         _mapper = mapper;
         _localizer = localizer;

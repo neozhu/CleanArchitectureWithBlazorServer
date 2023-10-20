@@ -206,26 +206,26 @@
                 @L["Selected"]: @_selectedItems.Count
             </FooterTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x=>x.UserName)]" CellClass="d-flex align-items-center">
+        <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x=>x.UserName)]">
             <CellTemplate>
-
-                <MudBadge Color="@(isOnline(context.Item.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
-                    <MudAvatar>
-                        @if (string.IsNullOrEmpty(context.Item.ProfilePictureDataUrl))
-                        {
-                            @context.Item.UserName.First()
-                        }
-                        else
-                        {
-                            <MudImage Src="@context.Item.ProfilePictureDataUrl"></MudImage>
-                        }
-                    </MudAvatar>
-                </MudBadge>
-                <div class="pl-3">
-                    <MudText Class="ml-2 align-self-center">@context.Item.UserName</MudText>
-                    <MudText Typo="Typo.body2" Class="ml-2 align-self-center mud-text-secondary" >@context.Item.Email</MudText>
+                <div class="d-flex align-center">
+                    <MudBadge Color="@(isOnline(context.Item.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
+                        <MudAvatar>
+                            @if (string.IsNullOrEmpty(context.Item.ProfilePictureDataUrl))
+                            {
+                                @context.Item.UserName.First()
+                            }
+                            else
+                            {
+                                <MudImage Src="@context.Item.ProfilePictureDataUrl"></MudImage>
+                            }
+                        </MudAvatar>
+                    </MudBadge>
+                    <div class="pl-3">
+                        <MudText Class="ml-2 align-self-center">@context.Item.UserName</MudText>
+                        <MudText Typo="Typo.body2" Class="ml-2 align-self-center mud-text-secondary">@context.Item.Email</MudText>
+                    </div>
                 </div>
-
             </CellTemplate>
         </PropertyColumn>
         <PropertyColumn Property="x => x.Email" Title="@L["Display Name / PhoneNumber"]">
@@ -455,7 +455,7 @@
                     await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
                 }
                 Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
-                await  UserDataProvider.Refresh();
+                await UserDataProvider.Refresh();
                 await OnRefresh();
             }
             else
@@ -577,8 +577,8 @@
 
         string deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters<ConfirmationDialog> {
-            { 
-                x=>x.ContentText, string.Format(deleteContent, _selectedItems.Count) } 
+            {
+                x=>x.ContentText, string.Format(deleteContent, _selectedItems.Count) }
            };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>(L["Delete"], parameters, options);
@@ -600,7 +600,7 @@
             }
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
-            await  UserDataProvider.Refresh();
+            await UserDataProvider.Refresh();
         }
 
     }
@@ -799,7 +799,7 @@
                      }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                     new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                {
+                                    {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
@@ -807,7 +807,7 @@
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                                                                        }
+                                                                            }
                     , L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
