@@ -1,7 +1,7 @@
 using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
-using CleanArchitecture.Blazor.Application.Features.Fluxor;
+using CleanArchitecture.Blazor.Server.UI.Fluxor;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Shared;
 

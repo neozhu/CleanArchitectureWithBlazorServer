@@ -26,7 +26,7 @@ namespace CleanArchitecture.Blazor.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services,
         IConfiguration configuration)
     {
         services.AddSettings(configuration)
@@ -271,7 +271,7 @@ public static class DependencyInjection
                         var accessToken = context.Request.Headers.Authorization;
                         var path = context.HttpContext.Request.Path;
                         if (!string.IsNullOrEmpty(accessToken) &&
-                            path.StartsWithSegments("/signalRHub"))
+                            path.StartsWithSegments("/signalRHub")) // TODO: move in server?
                         {
                             context.Token = accessToken.ToString().Substring(7);
                         }

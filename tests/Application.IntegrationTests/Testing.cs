@@ -49,8 +49,8 @@ public class Testing
             w.EnvironmentName == "Development" &&
             w.ApplicationName == "Server.UI"));
 
-        services.AddInfrastructureServices(_configuration)
-            .AddApplicationServices();
+        services.AddInfrastructure(_configuration)
+            .AddApplication();
 
         //services.AddLogging();
 

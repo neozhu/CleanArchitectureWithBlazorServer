@@ -6,6 +6,8 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.DependencyInjection
+@using Microsoft.Extensions.Configuration
 @using Microsoft.Extensions.Localization
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Identity
@@ -21,7 +23,6 @@
 @using CleanArchitecture.Blazor.Domain
 @using CleanArchitecture.Blazor.Domain.Enums;
 @using CleanArchitecture.Blazor.Domain.Identity
-@using CleanArchitecture.Blazor.Application.Features.Fluxor;
 @using CleanArchitecture.Blazor.Application.Common.Extensions
 @using CleanArchitecture.Blazor.Application.Common.Interfaces
 @using CleanArchitecture.Blazor.Application.Common.Models
@@ -38,6 +39,7 @@
 @using CleanArchitecture.Blazor.Server.UI.Pages.Authentication
 @using CleanArchitecture.Blazor.Server.UI.Services.Layout
 @using CleanArchitecture.Blazor.Server.UI.Models.Localization
+
 
 @inject DashboardSettings Settings
 @inject ISnackbar Snackbar

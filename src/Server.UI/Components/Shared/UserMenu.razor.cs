@@ -1,9 +1,9 @@
 using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
-using CleanArchitecture.Blazor.Application.Features.Fluxor;
 using CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Fluxor;
 using Microsoft.AspNetCore.Components.Web;
+using CleanArchitecture.Blazor.Server.UI.Fluxor;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Shared;
 

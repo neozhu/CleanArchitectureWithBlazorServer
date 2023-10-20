@@ -1,6 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
-namespace CleanArchitecture.Blazor.Application.Features.Fluxor;
+namespace CleanArchitecture.Blazor.Server.UI.Fluxor;
 
 public class FetchUserDtoResultAction
 {

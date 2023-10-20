@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace CleanArchitecture.Blazor.Server.UI.Middlewares;
+namespace CleanArchitecture.Blazor.Server.Middlewares;
 
 public class LocalizationMiddleware : Microsoft.AspNetCore.Http.IMiddleware
 {

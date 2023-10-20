@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Fluxor;
+﻿namespace CleanArchitecture.Blazor.Server.UI.Fluxor;
 
 public class FetchUserDtoAction
 {

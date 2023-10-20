@@ -2,9 +2,9 @@ using System.Net;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using Microsoft.Extensions.Localization;
 
-namespace CleanArchitecture.Blazor.Server.UI.Middlewares;
+namespace CleanArchitecture.Blazor.Server.Middlewares;
 
-internal class ExceptionHandlingMiddleware : Microsoft.AspNetCore.Http.IMiddleware
+public class ExceptionHandlingMiddleware : Microsoft.AspNetCore.Http.IMiddleware
 {
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
     private readonly IStringLocalizer<ExceptionHandlingMiddleware> _localizer;

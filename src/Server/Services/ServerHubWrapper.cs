@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using CleanArchitecture.Blazor.Server.Common.Interfaces;
+using CleanArchitecture.Blazor.Server.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
-namespace CleanArchitecture.Blazor.Server.UI.Hubs;
+namespace CleanArchitecture.Blazor.Server.Services;
 public class ServerHubWrapper : IApplicationHubWrapper
 {
     private readonly IHubContext<ServerHub, ISignalRHub> _hubContext;

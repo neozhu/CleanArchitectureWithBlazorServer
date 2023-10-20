@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArchitecture.Blazor.Server.UI.EndPoints;
+namespace CleanArchitecture.Blazor.Server.EndPoints;
 public class AuthController : Controller
 {
     private readonly ILogger<AuthController> _logger;
@@ -27,7 +27,7 @@ public class AuthController : Controller
     }
     [HttpGet("/auth/login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(string token,string returnUrl)
+    public async Task<IActionResult> Login(string token, string returnUrl)
     {
         var dataProtector = _dataProtectionProvider.CreateProtector("Login");
         var data = dataProtector.Unprotect(token);
@@ -43,7 +43,7 @@ public class AuthController : Controller
             var isPersistent = true;
             await _userManager.ResetAccessFailedCountAsync(identityUser);
             await _signInManager.SignInAsync(identityUser, isPersistent);
-            identityUser.IsLive= true;
+            identityUser.IsLive = true;
             await _userManager.UpdateAsync(identityUser);
             _logger.LogInformation("{@UserName} has successfully logged in", identityUser.UserName);
             return Redirect($"/{returnUrl}");

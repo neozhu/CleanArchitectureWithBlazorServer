@@ -1,7 +1,7 @@
 @inject IStringLocalizer<SharedResource> L
 @inject NavigationManager NavManager
 @implements IDisposable
-<Fluxor.Blazor.Web.StoreInitializer/>
+<Fluxor.Blazor.Web.StoreInitializer />
 
 <LoadingScreen IsLoaded="@_isLoaded" LayoutService="LayoutService">
     <div class="page-transition @_transitionClass">
@@ -19,7 +19,7 @@
                             }
                             else
                             {
-                                <Login/>
+                                <Login />
                             }
                         </NotAuthorized>
                     </AuthorizeRouteView>
@@ -31,16 +31,16 @@
                         <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex">
                             <p role="alert">
                                 @L["Sorry, there's nothing at this address."] <MudButton Variant="Variant.Filled" Size="Size.Small" Link="/">@L["Go Home"]</MudButton>
-                            </p>
-                        </MudContainer>
-                    </LayoutView>
-                </NotFound>
-            </Router>
-        </CascadingAuthenticationState>
-    </div>
-</LoadingScreen>
+                                </p>
+                            </MudContainer>
+                        </LayoutView>
+                    </NotFound>
+                </Router>
+            </CascadingAuthenticationState>
+        </div>
+    </LoadingScreen>
 
-@code{
+    @code {
 
     [Inject]
     private LayoutService LayoutService { get; set; } = null!;

@@ -1,16 +1,15 @@
 using System.Net.Http.Headers;
 using System.Reflection;
-using Blazor.Analytics;
+using BlazorDownloadFile;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
+using CleanArchitecture.Blazor.Server.Common.Interfaces;
+using CleanArchitecture.Blazor.Server.Hubs;
+using CleanArchitecture.Blazor.Server.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
-using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
 using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
-using BlazorDownloadFile;
-using CleanArchitecture.Blazor.Infrastructure.Configurations;
-using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
-using CleanArchitecture.Blazor.UI.Middlewares;
 using Hangfire;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.Extensions.FileProviders;
@@ -21,11 +20,14 @@ using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Server.UI;
 
-public static class ConfigureServices
+public static class DependencyInjection
 {
-    public static IServiceCollection AddServerServices(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddServerUI(this IServiceCollection services, IConfiguration config)
     {
-        services.AddRazorPages();
+        services.AddRazorPages(options =>
+        {
+            options.RootDirectory = "/Pages";
+        });
         services.AddServerSideBlazor(options =>
         {
             options.DetailedErrors = true;
@@ -63,53 +65,20 @@ public static class ConfigureServices
             options.UseReduxDevTools();
         });
 
-        services.AddScoped<LocalizationCookiesMiddleware>()
-            .Configure<RequestLocalizationOptions>(options =>
-            {
-                options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
-                options.AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
-                options.FallBackToParentUICultures = true;
-            })
-            .AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
-
-        services.AddHangfire(configuration => configuration
-            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UseInMemoryStorage())
-            .AddHangfireServer()
-            .AddMvc();
-
         services.AddHttpClient("ocr", c =>
         {
             c.BaseAddress = new Uri("https://paddleocr.blazorserver.com/uploadocr");
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
         }).AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(30)));
-        services.AddControllers();
 
-        services.AddScoped<HubClient>()
-            .AddScoped<IApplicationHubWrapper, ServerHubWrapper>()
-            .AddSignalR();
+        services.AddScoped<HubClient>();
 
         services.AddMudExtensions()
             .AddScoped<LayoutService>()
             .AddBlazorDownloadFile()
-            .AddScoped<ExceptionHandlingMiddleware>()
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
             .AddScoped<IMenuService, MenuService>()
-            .AddScoped<INotificationService, InMemoryNotificationService>()
-            .AddHealthChecks();
-
-        var privacySettings = config.GetRequiredSection(PrivacySettings.Key).Get<PrivacySettings>();
-        if (privacySettings!.UseGoogleAnalytics)
-        {
-            if (privacySettings.GoogleAnalyticsKey is null or "")
-            {
-                throw new ArgumentNullException(nameof(privacySettings.GoogleAnalyticsKey));
-            }
-
-            services.AddGoogleAnalytics(privacySettings.GoogleAnalyticsKey);
-        }
+            .AddScoped<INotificationService, InMemoryNotificationService>();
 
         return services;
     }

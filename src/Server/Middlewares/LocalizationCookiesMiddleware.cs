@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 
-namespace CleanArchitecture.Blazor.Server.UI.Middlewares;
+namespace CleanArchitecture.Blazor.Server.Middlewares;
 #nullable disable
 public class LocalizationCookiesMiddleware : Microsoft.AspNetCore.Http.IMiddleware
 {

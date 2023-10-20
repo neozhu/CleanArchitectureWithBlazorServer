@@ -1,17 +1,19 @@
-using CleanArchitecture.Blazor.Server.UI;
-using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
+using CleanArchitecture.Blazor.Server;
+using CleanArchitecture.Blazor.Server.UI;
+using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.RegisterSerilog();
 
 builder.Services
-    .AddApplicationServices()
-    .AddInfrastructureServices(builder.Configuration)
-    .AddServerServices(builder.Configuration);
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration)
+    .AddServer(builder.Configuration)
+    .AddServerUI(builder.Configuration);
 
 var app = builder.Build();
 

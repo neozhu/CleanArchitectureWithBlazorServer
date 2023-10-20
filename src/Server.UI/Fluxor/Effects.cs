@@ -1,6 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
-namespace CleanArchitecture.Blazor.Application.Features.Fluxor;
+namespace CleanArchitecture.Blazor.Server.UI.Fluxor;
 
 public class Effects
 {
