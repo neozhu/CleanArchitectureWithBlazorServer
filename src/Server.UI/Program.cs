@@ -8,6 +8,7 @@ using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.RegisterSerilog();
+builder.WebHost.UseStaticWebAssets();
 
 builder.Services
     .AddApplication()

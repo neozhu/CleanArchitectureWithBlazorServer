@@ -1,3 +1,4 @@
+@using Blazor.Server.UI.Services.JsInterop;
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Severity = MudBlazor.Severity
@@ -152,7 +153,7 @@
 
     private async Task PreviewImage(string url, IEnumerable<ProductImage> images)
     {
-        await JS.InvokeVoidAsync("previewImage", url, images.Select(x => x.Url).ToArray());
+        await new Fancybox(JS).Preview(url, images);
     }
 
     private async Task UploadFiles(InputFileChangeEventArgs e)

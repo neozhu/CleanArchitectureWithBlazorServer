@@ -219,23 +219,23 @@
         </PropertyColumn>
         <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x=>x.UserName)]">
             <CellTemplate>
-                <div class="d-flex align-center">
-                    <MudBadge Color="@(IsOnline(context.Item.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
-                        <MudAvatar>
-                            @if (string.IsNullOrEmpty(context.Item.ProfilePictureDataUrl))
-                            {
-                                @context.Item.UserName.First()
-                            }
-                            else
-                            {
-                                <MudImage Src="@context.Item.ProfilePictureDataUrl"></MudImage>
-                            }
-                        </MudAvatar>
-                    </MudBadge>
-                    <div class="pl-3">
-                        <MudText Class="ml-2 align-self-center">@context.Item.UserName</MudText>
-                        <MudText Typo="Typo.body2" Class="ml-2 align-self-center mud-text-secondary">@context.Item.Email</MudText>
-                    </div>
+                <div class="d-flex align-items-center">
+                <MudBadge Color="@(isOnline(context.Item.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
+                    <MudAvatar>
+                        @if (string.IsNullOrEmpty(context.Item.ProfilePictureDataUrl))
+                        {
+                            @context.Item.UserName.First()
+                        }
+                        else
+                        {
+                            <MudImage Src="@context.Item.ProfilePictureDataUrl"></MudImage>
+                        }
+                    </MudAvatar>
+                </MudBadge>
+                <div class="pl-3">
+                    <MudText Class="ml-2 align-self-center">@context.Item.UserName</MudText>
+                    <MudText Typo="Typo.body2" Class="ml-2 align-self-center mud-text-secondary" >@context.Item.Email</MudText>
+                </div>
                 </div>
             </CellTemplate>
         </PropertyColumn>

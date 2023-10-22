@@ -10,10 +10,11 @@ public partial class OpenSeadragon
     {
         _jsRuntime = jsRuntime;
     }
-    public ValueTask Open(string url)
+    public async Task<ValueTask> Open(string url)
     {
         var target = "openseadragon";
-        return _jsRuntime.InvokeVoidAsync(JSInteropConstants.ShowOpenSeadragon, target, url);
+        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/openseadragon.js");
+        return jsmodule.InvokeVoidAsync(JSInteropConstants.ShowOpenSeadragon, target, url);
     }
 
 

@@ -11,8 +11,9 @@ public partial class OrgChart
     {
         _jsRuntime = jsRuntime;
     }
-    public ValueTask Create(List<OrgItem> data)
+    public async Task<ValueTask> Create(List<OrgItem> data)
     {
-        return _jsRuntime.InvokeVoidAsync(JSInteropConstants.CreateOrgChart, data);
+        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/orgchart.js");
+        return jsmodule.InvokeVoidAsync("createOrgChart", data);
     }
 }

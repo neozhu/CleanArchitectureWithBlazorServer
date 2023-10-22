@@ -25,6 +25,7 @@
 
 <PageTitle>@Title</PageTitle>
 
+<h1 class="color">test</h1>
 <AdvancedSearchProducts TRequest="Query" OnConditionChanged="ConditionChanged"></AdvancedSearchProducts>
 <MudDataGrid ServerData="@(ServerReload)"
                 FixedHeader="true"
@@ -242,6 +243,13 @@
 </MudDataGrid>
 
 <style>
+    @@import url("https://cdn.jsdelivr.net/npm/@@fancyapps/ui@5.0/dist/fancybox/fancybox.css");
+
+    .fancybox__container {
+        --fancybox-bg: rgba(24, 24, 27, 0.85);
+        z-index: 9999;
+    }
+
     .mud-table-toolbar {
         height: 120px !important;
     }
