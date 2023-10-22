@@ -220,7 +220,7 @@
         <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x=>x.UserName)]">
             <CellTemplate>
                 <div class="d-flex align-items-center">
-                <MudBadge Color="@(isOnline(context.Item.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
+                    <MudBadge Color="@(IsOnline(context.Item.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
                     <MudAvatar>
                         @if (string.IsNullOrEmpty(context.Item.ProfilePictureDataUrl))
                         {

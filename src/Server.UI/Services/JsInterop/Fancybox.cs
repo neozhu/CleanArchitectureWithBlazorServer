@@ -1,7 +1,6 @@
-﻿using System.Security.Policy;
-using Microsoft.JSInterop;
+﻿using Microsoft.JSInterop;
 
-namespace Blazor.Server.UI.Services.JsInterop;
+namespace CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 
 public sealed class Fancybox
 {
@@ -13,7 +12,7 @@ public sealed class Fancybox
     }
     public async Task<ValueTask> Preview(string defaultUrl, IEnumerable<ProductImage> images)
     {
-        var jsmodule =await  _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/fancybox.js");
-        return  jsmodule.InvokeVoidAsync(JSInteropConstants.PreviewImage, defaultUrl, images.Select(x => x.Url).ToArray());
+        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/fancybox.js");
+        return jsmodule.InvokeVoidAsync(JSInteropConstants.PreviewImage, defaultUrl, images.Select(x => x.Url).ToArray());
     }
 }
