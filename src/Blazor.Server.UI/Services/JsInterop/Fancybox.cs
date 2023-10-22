@@ -14,6 +14,6 @@ public sealed class Fancybox
     public async Task<ValueTask> Preview(string defaultUrl, IEnumerable<ProductImage> images)
     {
         var jsmodule =await  _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/fancybox.js");
-        return  jsmodule.InvokeVoidAsync("previewImage", defaultUrl, images.Select(x => x.Url).ToArray());
+        return  jsmodule.InvokeVoidAsync(JSInteropConstants.PreviewImage, defaultUrl, images.Select(x => x.Url).ToArray());
     }
 }

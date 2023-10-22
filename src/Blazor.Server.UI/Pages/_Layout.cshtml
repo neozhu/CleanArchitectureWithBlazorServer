@@ -103,7 +103,7 @@
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"></script>
     <script src="_content/BlazorTime/blazorTime.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/openseadragon.min.js"></script>
+
 
     <script type="text/javascript">
 
@@ -160,34 +160,9 @@
         }
 
 
-        async function showOpenSeadragon(element, url) {
-            console.log('showOpenSeadragon');
-            var viewer = OpenSeadragon({
-                id: element,
-                showNavigator: false,
-                showZoomControl: false,
-                showHomeControl: false,
-                showFullPageControl: false,
-                showSequenceControl: false,
-                maxZoomPixelRatio: 3,
-                minZoomImageRatio: 0.3,
-                tileSources: {
-                    xmlns: "http://schemas.microsoft.com/deepzoom/2008",
-                    type: 'image',
-                    url: url,
-                }
-            });
-            console.log(viewer);
-        }
+       
 
-        function clearInput(inputId) {
-            setTimeout(function () {
-                var input = document.querySelector("#" + inputId);
-                if (input) {
-                    input.value = "";
-                }
-            }, 30);
-        }
+       
        
 
     </script>
