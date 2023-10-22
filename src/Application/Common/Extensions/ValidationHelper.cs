@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Helper;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 public static class ValidationHelper
 {
     public static async Task<IDictionary<string, string[]>> ValidateAsync<TRequest>(IEnumerable<IValidator<TRequest>> validators, ValidationContext<TRequest> validationContext, CancellationToken cancellationToken = default)

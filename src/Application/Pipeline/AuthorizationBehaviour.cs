@@ -4,7 +4,7 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Common.Security;
 
-namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
+namespace CleanArchitecture.Blazor.Application.Pipeline;
 
 public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
@@ -19,7 +19,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
         _identityService = identityService;
     }
 
-    public async Task<TResponse> Handle(TRequest request,  RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var authorizeAttributes = request.GetType().GetCustomAttributes<RequestAuthorizeAttribute>();
         if (authorizeAttributes.Any())

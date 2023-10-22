@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Common.Helper;
+﻿using CleanArchitecture.Blazor.Application.Common.Extensions;
 using FluentValidation;
 using FluentValidation.Internal;
 

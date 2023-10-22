@@ -1,7 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
+namespace CleanArchitecture.Blazor.Application.Pipeline;
 
 public class MemoryCacheBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : ICacheableRequest<TResponse>
@@ -19,13 +19,13 @@ public class MemoryCacheBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
     }
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        _logger.LogTrace("{Name} is caching with {@Request}", nameof(request),request);
+        _logger.LogTrace("{Name} is caching with {@Request}", nameof(request), request);
         var response = await _cache.GetOrAddAsync(
             request.CacheKey,
             async () =>
             await next(),
-            request.Options).ConfigureAwait(false); 
-     
+            request.Options).ConfigureAwait(false);
+
         return response;
     }
 }

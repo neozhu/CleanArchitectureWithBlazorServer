@@ -27,7 +27,7 @@ public class RequestLoggerTests
     public async Task ShouldCallGetUserNameAsyncOnceIfAuthenticated()
     {
         _currentUserService.Setup(x => x.UserId).Returns("Administrator");
-        var requestLogger = new LoggingBehaviour<AddEditProductCommand>(_logger.Object, _currentUserService.Object);
+        var requestLogger = new LoggingPreProcessor<AddEditProductCommand>(_logger.Object, _currentUserService.Object);
         await requestLogger.Process(new AddEditProductCommand {  Brand= "Brand", Name= "Brand", Price=1.0m, Unit="EA" }, new CancellationToken());
         _currentUserService.Verify(i => i.UserName, Times.Once);
      
@@ -36,7 +36,7 @@ public class RequestLoggerTests
     [Test]
     public async Task ShouldNotCallGetUserNameAsyncOnceIfUnauthenticated()
     {
-        var requestLogger = new LoggingBehaviour<AddEditProductCommand>(_logger.Object, _currentUserService.Object);
+        var requestLogger = new LoggingPreProcessor<AddEditProductCommand>(_logger.Object, _currentUserService.Object);
         await requestLogger.Process(new AddEditProductCommand { Brand = "Brand", Name = "Brand", Price = 1.0m, Unit = "EA" }, new CancellationToken());
         _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>(), CancellationToken.None), Times.Never);
  

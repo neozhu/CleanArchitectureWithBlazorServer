@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
+﻿namespace CleanArchitecture.Blazor.Application.Pipeline.PreProcessors;
 public sealed class ValidationPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
     private readonly IReadOnlyCollection<IValidator<TRequest>> _validators;

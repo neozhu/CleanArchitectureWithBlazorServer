@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
+namespace CleanArchitecture.Blazor.Application.Pipeline;
 
 /// <summary>
 ///     This class is a behavior pipeline in MediatR. It is used to monitor performance
