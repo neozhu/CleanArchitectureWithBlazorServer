@@ -17,15 +17,6 @@
     <None Remove="launchSettings.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="launchSettings.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="launchSettings.json" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="src\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\Server.UI\Pages\Identity\Users\Profile.razor.cs" />
   </ItemGroup>
 </Project>
