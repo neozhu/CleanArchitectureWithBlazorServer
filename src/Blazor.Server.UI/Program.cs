@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.RegisterSerilog();
 builder.AddBlazorUiServices();
+builder.WebHost.UseStaticWebAssets();
 builder.Services.AddInfrastructureServices(builder.Configuration)
     .AddApplicationServices();
 

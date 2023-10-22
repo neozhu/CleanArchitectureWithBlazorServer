@@ -11,9 +11,10 @@ public partial class InputClear
     {
         _jsRuntime = jsRuntime;
     }
-    public ValueTask Clear(string targetId)
+    public async Task<ValueTask> Clear(string targetId)
     {
-        return _jsRuntime.InvokeVoidAsync(JSInteropConstants.ClearInput, targetId);
+        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/clearinput.js");
+        return jsmodule.InvokeVoidAsync(JSInteropConstants.ClearInput, targetId);
     }
 
 
