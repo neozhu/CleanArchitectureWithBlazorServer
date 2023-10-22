@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
+using CleanArchitecture.Blazor.Domain.Features.Customers;
+using CleanArchitecture.Blazor.Domain.Features.Customers.Events;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Update;
 

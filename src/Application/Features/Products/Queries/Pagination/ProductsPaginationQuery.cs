@@ -5,6 +5,7 @@
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.Specifications;
+using CleanArchitecture.Blazor.Domain.Features.Products;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 

@@ -6,7 +6,9 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
-using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Features.Documents;
+using CleanArchitecture.Blazor.Domain.Features.KeyValues;
+using CleanArchitecture.Blazor.Domain.Features.Products;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Mappings;

@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
-using CleanArchitecture.Blazor.Domain.Entities;
-using CleanArchitecture.Blazor.Domain.Enums;
+using CleanArchitecture.Blazor.Domain.Features.KeyValues;
 using FluentAssertions;
 using NUnit.Framework;
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+using CleanArchitecture.Blazor.Domain.Features.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;

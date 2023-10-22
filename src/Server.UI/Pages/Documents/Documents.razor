@@ -1,6 +1,8 @@
 @page "/pages/documents"
 
 @using AutoMapper;
+@using CleanArchitecture.Blazor.Domain.Common.Enums
+@using CleanArchitecture.Blazor.Domain.Features.Documents
 @using CleanArchitecture.Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Server.UI.Pages.Documents.Components
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
@@ -14,6 +16,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.GetFileStream
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.Documents.Specifications;
+    using CleanArchitecture.Blazor.Domain.Features.Documents;
 
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 @inherits FluxorComponent

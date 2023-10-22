@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete;
-using CleanArchitecture.Blazor.Domain.Entities;
-using CleanArchitecture.Blazor.Domain.Enums;
+using CleanArchitecture.Blazor.Domain.Features.Documents;
+using CleanArchitecture.Blazor.Domain.Features.KeyValues;
 using FluentAssertions;
 using NUnit.Framework;
 

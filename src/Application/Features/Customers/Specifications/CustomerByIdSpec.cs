@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Customers.Specifications;
+﻿using CleanArchitecture.Blazor.Domain.Features.Customers;
+
+namespace CleanArchitecture.Blazor.Application.Features.Customers.Specifications;
 
 public class CustomerByIdSpec : Specification<Customer>
 {

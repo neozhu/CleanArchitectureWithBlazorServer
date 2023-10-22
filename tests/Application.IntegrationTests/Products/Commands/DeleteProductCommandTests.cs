@@ -4,7 +4,7 @@ using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll;
-using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Features.Products;
 using FluentAssertions;
 using NUnit.Framework;
 

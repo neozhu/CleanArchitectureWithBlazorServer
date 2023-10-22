@@ -1,4 +1,5 @@
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
+using CleanArchitecture.Blazor.Domain.Features.KeyValues;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 

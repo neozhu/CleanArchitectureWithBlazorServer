@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text.Json;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
-using CleanArchitecture.Blazor.Domain.Enums;
+using CleanArchitecture.Blazor.Domain.Common.Enums;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
 public class DocumentOcrJob : IDocumentOcrJob

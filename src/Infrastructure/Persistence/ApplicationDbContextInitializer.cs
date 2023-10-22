@@ -1,9 +1,12 @@
 ﻿using System.Reflection;
+using CleanArchitecture.Blazor.Domain.Features.Identity;
+using CleanArchitecture.Blazor.Domain.Features.KeyValues;
+using CleanArchitecture.Blazor.Domain.Features.Products;
+using CleanArchitecture.Blazor.Domain.Features.Tenants;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
-using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 public class ApplicationDbContextInitializer
@@ -90,7 +93,7 @@ public class ApplicationDbContextInitializer
         if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
         {
             await _roleManager.CreateAsync(administratorRole);
-           
+
             foreach (var permission in permissions)
             {
                 await _roleManager.AddClaimAsync(administratorRole, new Claim(ApplicationClaimTypes.Permission, permission));
@@ -125,7 +128,7 @@ public class ApplicationDbContextInitializer
         // Seed, if necessary
         if (!_context.KeyValues.Any())
         {
-            _context.KeyValues.Add(new KeyValue { Name =  Picklist.Status, Value = "initialization", Text = "initialization", Description = "Status of workflow" });
+            _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "initialization", Text = "initialization", Description = "Status of workflow" });
             _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "processing", Text = "processing", Description = "Status of workflow" });
             _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "pending", Text = "pending", Description = "Status of workflow" });
             _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "finished", Text = "finished", Description = "Status of workflow" });

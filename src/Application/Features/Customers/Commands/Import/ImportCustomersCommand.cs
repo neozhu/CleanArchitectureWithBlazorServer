@@ -3,10 +3,11 @@
 
 using CleanArchitecture.Blazor.Application.Features.Customers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Customers.Caching;
+using CleanArchitecture.Blazor.Domain.Features.Customers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Import;
 
-    public class ImportCustomersCommand: ICacheInvalidatorRequest<Result<int>>
+public class ImportCustomersCommand: ICacheInvalidatorRequest<Result<int>>
     {
         public string FileName { get; set; }
         public byte[] Data { get; set; }

@@ -3,6 +3,7 @@
 
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
+using CleanArchitecture.Blazor.Domain.Features.Documents;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit;
 
@@ -36,7 +37,7 @@ public class AddEditDocumentCommand : ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<DocumentDto,AddEditDocumentCommand>(MemberList.None);
+            CreateMap<DocumentDto, AddEditDocumentCommand>(MemberList.None);
             CreateMap<AddEditDocumentCommand, Document>(MemberList.None);
         }
     }

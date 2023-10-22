@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using CleanArchitecture.Blazor.Domain.Common.Events;
+using CleanArchitecture.Blazor.Domain.Features.Documents;
 using Hangfire;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Domain.Features.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;

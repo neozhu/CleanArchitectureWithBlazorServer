@@ -1,4 +1,6 @@
 
+using CleanArchitecture.Blazor.Domain.Features.Products;
+
 namespace CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 #nullable disable warnings
 public class ProductAdvancedSpecification : Specification<Product>
