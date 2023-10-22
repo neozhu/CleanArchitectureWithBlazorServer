@@ -12,13 +12,11 @@
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
     <link href="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.css" rel="stylesheet" />
     <link href="_content/Blazor-ApexCharts/css/apexcharts.css" rel="stylesheet" />
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+
+    <link href="Blazor.Server.UI.styles.css" rel="stylesheet">
     <style>
-        .fancybox__container {
-            --fancybox-bg: rgba(24, 24, 27, 0.85);
-            z-index: 9999;
-        }
+        
+
         .mud-input {
             font-size: var(--mud-typography-default-size);
         }
@@ -111,7 +109,7 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@3.0.1-next.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+
 
     <script type="text/javascript">
 
@@ -235,37 +233,6 @@
             }, 50);
         }
 
-        function previewImage(url, gallery) {
- 
-            if (url ==null) return;
-            console.log(url, gallery);
-            if (isImageUrl(url)) {
-                let images = [];
-                if (gallery != null) {
-                    images = gallery.filter(l => isImageUrl(l)).map(x => ({ src: x, caption: x.split("/").pop() }));
-                } else {
-                    images = [{ src: url, caption: url.split("/").pop() }];
-                }
-                const fancybox = new Fancybox(images);
-            } else {
-                const anchorElement = document.createElement('a');
-                anchorElement.href = url;
-                anchorElement.download = fileName ?? '';
-                anchorElement.click();
-                anchorElement.remove();
-            }
-        }
-        function isImageUrl(url) {
-            const imageExtensions = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i;
-            return imageExtensions.test(url);
-        }
-       function isValidUrl(str) {
-            if (str == null) {
-                return false;
-            }
-            const urlRegex  =/^([a-zA-Z]:)?(\\[a-zA-Z0-9\s_@@-~]+)+\.[a-zA-Z]{2,6}$/;
-            return urlRegex.test(str);
-        }
     </script>
 
 </body>
