@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Features.Tenants;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.IntegrationTests.Services;
