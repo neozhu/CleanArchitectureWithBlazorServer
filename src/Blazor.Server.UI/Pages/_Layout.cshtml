@@ -11,24 +11,23 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
     <link href="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.css" rel="stylesheet" />
-    <link href="_content/Blazor-ApexCharts/css/apexcharts.css" rel="stylesheet" />
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+    <link href="Blazor.Server.UI.styles.css" rel="stylesheet">
     <style>
-        .fancybox__container {
-            --fancybox-bg: rgba(24, 24, 27, 0.85);
-            z-index: 9999;
-        }
+        
+
         .mud-input {
-            font-size: 0.8125rem;
+            font-size: var(--mud-typography-default-size);
         }
 
         .mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
-            font-size: 0.8125rem;
+            font-size: var(--mud-typography-default-size);
         }
 
+        .mud-expand-panel .mud-expand-panel-header{
+            font-size: var(--mud-typography-subtitle1-size);
+        }
         .mud-button-year {
-            font-size: 0.8125rem;
+            font-size: var(--mud-typography-default-size);
         }
 
         .mud-table-cell {
@@ -36,11 +35,14 @@
         }
 
         .mud-typography-body1{
-            font-size: var(--mud-typography-default-size);
+            font-size: var(--mud-typography-body1-size);
         }
 
+        .mud-typography-body2 {
+            font-size: var(--mud-typography-body2-size);
+        }
         .mud-button-outlined-size-small{
-            font-size: var(--mud-typography-default-size);
+            font-size: var(--mud-typography-body2-size);
         }
         #blazor-error-ui {
             background: lightyellow;
@@ -101,11 +103,7 @@
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"></script>
     <script src="_content/BlazorTime/blazorTime.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/openseadragon.min.js"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@3.0.1-next.1"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+
 
     <script type="text/javascript">
 
@@ -162,104 +160,11 @@
         }
 
 
-        async function showOpenSeadragon(element, url) {
-            console.log('showOpenSeadragon');
-            var viewer = OpenSeadragon({
-                id: element,
-                showNavigator: false,
-                showZoomControl: false,
-                showHomeControl: false,
-                showFullPageControl: false,
-                showSequenceControl: false,
-                maxZoomPixelRatio: 3,
-                minZoomImageRatio: 0.3,
-                tileSources: {
-                    xmlns: "http://schemas.microsoft.com/deepzoom/2008",
-                    type: 'image',
-                    url: url,
-                }
-            });
-            console.log(viewer);
-        }
+       
 
-        function clearInput(inputId) {
-            setTimeout(function () {
-                var input = document.querySelector("#" + inputId);
-                if (input) {
-                    input.value = "";
-                }
-            }, 30);
-        }
-        var chart;
-        async function createOrgChart(orgdata) {
-            setTimeout(function () {
-                //console.log(orgdata)
-                const activeid = orgdata.find(x => x.isLoggedUser == true);
-                chart = new d3.OrgChart()
-                    .nodeHeight((d) => 85 + 25)
-                    .nodeWidth((d) => 220 + 2)
-                    .childrenMargin((d) => 50)
-                    .compactMarginBetween((d) => 35)
-                    .compactMarginPair((d) => 30)
-                    .neighbourMargin((a, b) => 20)
-                    .nodeContent(function (d, i, arr, state) {
-                        const color = '#FFFFFF';
-                        const imageDiffVert = 25 + 2;
-                        return `
-                        <div style='width:${d.width }px;height:${d.height}px;padding-top:${imageDiffVert - 2}px;padding-left:1px;padding-right:1px'>
-                                <div style="font-family: 'Inter', sans-serif;background-color:${color};  margin-left:-1px;width:${d.width - 2}px;height:${d.height - imageDiffVert}px;border-radius:10px;border: 1px solid #E4E2E9">
-                                            <div style="display:flex;justify-content:flex-end;margin-top:5px;margin-right:8px">#${d.data.id.slice(-3)}</div>
-                                    <div style="background-color:${color};margin-top:${-imageDiffVert - 20}px;margin-left:${15}px;border-radius:100px;width:50px;height:50px;" ></div>
-                                    <div style="margin-top:${-imageDiffVert - 20}px;">   <img src=" ${d.data.profileUrl}" style="margin-left:${20}px;border-radius:100px;width:40px;height:40px;" /></div>
-                                    <div style="font-size:15px;color:#08011E;margin-left:20px;margin-top:10px">  ${d.data.name} </div>
-                                            <div style="color:#716E7B;margin-left:20px;margin-top:3px;font-size:10px;"> ${d.data.positionName } </div>
+       
+       
 
-                                </div>
-                            </div>
-                                    `;
-                    })
-                    .container('.chart-container')
-                    .data(orgdata)
-                    .render();
-
-                if (activeid != null) {
-                    //console.log(activeid)
-                    chart.setHighlighted(activeid.id).render();
-                }
-            }, 50);
-        }
-
-        function previewImage(url, gallery) {
- 
-            if (url ==null) return;
-            console.log(url, gallery);
-            if (isImageUrl(url)) {
-                let images = [];
-                if (gallery != null) {
-                    images = gallery.filter(l => isImageUrl(l)).map(x => ({ src: x, caption: x.split("/").pop() }));
-                } else {
-                    images = [{ src: url, caption: url.split("/").pop() }];
-                }
-                const fancybox = new Fancybox(images);
-            } else {
-                const anchorElement = document.createElement('a');
-                anchorElement.href = url;
-                anchorElement.download = fileName ?? '';
-                anchorElement.click();
-                anchorElement.remove();
-            }
-        }
-        function isImageUrl(url) {
-            const imageExtensions = /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i;
-            return imageExtensions.test(url);
-        }
-       function isValidUrl(str) {
-            if (str == null) {
-                return false;
-            }
-            const urlRegex  =/^([a-zA-Z]:)?(\\[a-zA-Z0-9\s_@@-~]+)+\.[a-zA-Z]{2,6}$/;
-            return urlRegex.test(str);
-        }
     </script>
 
 </body>

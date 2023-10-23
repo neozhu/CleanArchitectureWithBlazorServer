@@ -1,4 +1,5 @@
 @page "/user/profile"
+@using Blazor.Server.UI.Services.JsInterop;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Features.Fluxor;
 @using SixLabors.ImageSharp
@@ -201,7 +202,6 @@
         if (index == 2)
         {
             await LoadOrgData();
-            await JS.InvokeVoidAsync("createOrgChart", this._orgData);
         }
     }
     private async Task LoadOrgData()
@@ -229,7 +229,7 @@
             orgitem._directSubordinates = count;
             this._orgData.Add(orgitem);
         }
-
+        await (new OrgChart(JS)).Create(this._orgData);
     }
 
     protected override async Task OnInitializedAsync()

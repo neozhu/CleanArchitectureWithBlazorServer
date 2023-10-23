@@ -15,10 +15,11 @@ try
     };
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.RegisterSerilog();
-    builder.AddBlazorUiServices();
-    builder.Services.AddInfrastructureServices(builder.Configuration)
-        .AddApplicationServices();
+builder.RegisterSerilog();
+builder.AddBlazorUiServices();
+builder.WebHost.UseStaticWebAssets();
+builder.Services.AddInfrastructureServices(builder.Configuration)
+    .AddApplicationServices();
 
     var app = builder.Build();
 
