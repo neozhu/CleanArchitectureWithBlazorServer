@@ -7,11 +7,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Remove="Common\Specification\**" />
-        <EmbeddedResource Remove="Common\Specification\**" />
-        <None Remove="Common\Specification\**" />
-    </ItemGroup>
-    <ItemGroup>
         <PackageReference Include="Ardalis.Specification" Version="7.0.0" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="7.0.0" />
         <PackageReference Include="ClosedXML" Version="0.102.1" />

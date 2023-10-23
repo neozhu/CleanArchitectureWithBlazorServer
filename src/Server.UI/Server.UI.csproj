@@ -16,25 +16,6 @@
     <ItemGroup>
         <EmbeddedResource Include="Resources\EmailTemplates\*" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Content Remove="appsettings.json" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="..\..\..\..\..\Users\Matteo\.nuget\packages\blazor-analytics\3.12.0\contentFiles\any\netstandard2.0\wwwroot\blazor-analytics.js" Link="wwwroot\blazor-analytics.js">
-        <Private>False</Private>
-        <NuGetPackageVersion>3.12.0</NuGetPackageVersion>
-        <NuGetItemType>Content</NuGetItemType>
-        <NuGetPackageId>Blazor-Analytics</NuGetPackageId>
-        <Pack>false</Pack>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Include="appsettings.json" />
-    </ItemGroup>
-    
     <ItemGroup>
         <ProjectReference Include="..\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj" />
         <ProjectReference Include="..\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj" />
