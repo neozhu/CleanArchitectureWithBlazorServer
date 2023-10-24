@@ -30,8 +30,9 @@ public class AccessTokenProvider : IAccessTokenProvider
     public async Task Login(ApplicationUser applicationUser)
     {
         var token = await _loginService.LoginAsync(applicationUser);
-        await _localStorage.SetAsync(_tokenKey, token.AccessToken ?? "");
-        await _localStorage.SetAsync(_refreshTokenKey, token.RefreshToken ?? "");
+        await Task.WhenAll(_localStorage.SetAsync(_tokenKey, token.AccessToken ?? "").AsTask(),
+                    _localStorage.SetAsync(_refreshTokenKey, token.RefreshToken ?? "").AsTask()
+                    );
         AccessToken = token.AccessToken;
         RefreshToken = token.RefreshToken;
         _tenantProvider.TenantId = applicationUser.TenantId;
@@ -46,13 +47,16 @@ public class AccessTokenProvider : IAccessTokenProvider
     {
         try
         {
-            var token = await _localStorage.GetAsync<string>(_tokenKey);
-            if (token.Success && !string.IsNullOrEmpty(token.Value))
+            var results = await Task.WhenAll(_localStorage.GetAsync<string>(_tokenKey).AsTask(),
+                                             _localStorage.GetAsync<string>(_refreshTokenKey).AsTask()
+                                            );
+
+            if (results[0].Success && !string.IsNullOrEmpty(results[0].Value))
             {
-                AccessToken = token.Value;
+                AccessToken = results[0].Value;
                 var refreshToken = await _localStorage.GetAsync<string>(_refreshTokenKey);
-                RefreshToken = refreshToken.Value;
-                var result = await _tokenValidator.ValidateTokenAsync(token.Value);
+                RefreshToken = results[1].Value;
+                var result = await _tokenValidator.ValidateTokenAsync(AccessToken!);
                 if (result.IsValid)
                 {
                     var principal = new ClaimsPrincipal(result.ClaimsIdentity);
@@ -78,8 +82,7 @@ public class AccessTokenProvider : IAccessTokenProvider
     }
 
 
-    public async Task RemoveAuthDataFromStorage()
-    {
-        await _localStorage.DeleteAsync(_tokenKey);
-    }
+    public Task RemoveAuthDataFromStorage() => Task.WhenAll(_localStorage.DeleteAsync(_tokenKey).AsTask(),
+                  _localStorage.DeleteAsync(_refreshTokenKey).AsTask());
+     
 }
