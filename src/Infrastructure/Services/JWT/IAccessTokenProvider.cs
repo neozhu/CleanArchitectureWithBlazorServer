@@ -9,5 +9,5 @@ public interface IAccessTokenProvider
 
     Task<ClaimsPrincipal> GetClaimsPrincipal();
     Task Login(ApplicationUser applicationUser);
-    Task RemoveAuthDataFromStorage();
+    ValueTask RemoveAuthDataFromStorage();
 }

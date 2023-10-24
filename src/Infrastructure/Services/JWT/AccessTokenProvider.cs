@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Features.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Constants.LocalStorage;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
@@ -30,43 +31,24 @@ public class AccessTokenProvider : IAccessTokenProvider
     public async Task Login(ApplicationUser applicationUser)
     {
         var token = await _loginService.LoginAsync(applicationUser);
-        await Task.WhenAll(_localStorage.SetAsync(_tokenKey, token.AccessToken ?? "").AsTask(),
-                    _localStorage.SetAsync(_refreshTokenKey, token.RefreshToken ?? "").AsTask()
-                    );
+        await  _localStorage.SetAsync(_tokenKey, token);
         AccessToken = token.AccessToken;
         RefreshToken = token.RefreshToken;
-        _tenantProvider.TenantId = applicationUser.TenantId;
-        _tenantProvider.TenantName = applicationUser.TenantName;
-        _currentUser.UserId = applicationUser.Id;
-        _currentUser.UserName = applicationUser.UserName;
-        _currentUser.TenantId = applicationUser.TenantId;
-        _currentUser.TenantName = applicationUser.TenantName;
-
+        SetUserPropertiesFromApplicationUser(applicationUser);
     }
     public async Task<ClaimsPrincipal> GetClaimsPrincipal()
     {
         try
         {
-            var results = await Task.WhenAll(_localStorage.GetAsync<string>(_tokenKey).AsTask(),
-                                             _localStorage.GetAsync<string>(_refreshTokenKey).AsTask()
-                                            );
-
-            if (results[0].Success && !string.IsNullOrEmpty(results[0].Value))
+            var token = await _localStorage.GetAsync<AuthenticatedUserResponse>(_tokenKey);
+            if (token.Success && token.Value is not null)
             {
-                AccessToken = results[0].Value;
-                var refreshToken = await _localStorage.GetAsync<string>(_refreshTokenKey);
-                RefreshToken = results[1].Value;
-                var result = await _tokenValidator.ValidateTokenAsync(AccessToken!);
-                if (result.IsValid)
+                AccessToken = token.Value.AccessToken;
+                RefreshToken = token.Value.RefreshToken;
+                var validationResult = await _tokenValidator.ValidateTokenAsync(AccessToken!);
+                if (validationResult.IsValid)
                 {
-                    var principal = new ClaimsPrincipal(result.ClaimsIdentity);
-                    _tenantProvider.TenantId = principal.GetTenantId();
-                    _tenantProvider.TenantName = principal.GetTenantName();
-                    _currentUser.UserId = principal.GetUserId();
-                    _currentUser.UserName = principal.GetUserName();
-                    _currentUser.TenantId = principal.GetTenantId();
-                    _currentUser.TenantName = principal.GetTenantId();
-                    return principal!;
+                    return SetUserPropertiesFromClaims(validationResult.ClaimsIdentity);
                 }
             }
         }
@@ -81,8 +63,28 @@ public class AccessTokenProvider : IAccessTokenProvider
         return new ClaimsPrincipal(new ClaimsIdentity());
     }
 
+    private ClaimsPrincipal SetUserPropertiesFromClaims(ClaimsIdentity identity)
+    {
+        var principal = new ClaimsPrincipal(identity);
+        _tenantProvider.TenantId = principal.GetTenantId();
+        _tenantProvider.TenantName = principal.GetTenantName();
+        _currentUser.UserId = principal.GetUserId();
+        _currentUser.UserName = principal.GetUserName();
+        _currentUser.TenantId = principal.GetTenantId();
+        _currentUser.TenantName = principal.GetTenantName();  // This seems to be an error in original code. Fixing it here.
+        return principal;
+    }
 
-    public Task RemoveAuthDataFromStorage() => Task.WhenAll(_localStorage.DeleteAsync(_tokenKey).AsTask(),
-                  _localStorage.DeleteAsync(_refreshTokenKey).AsTask());
+    private void SetUserPropertiesFromApplicationUser(ApplicationUser user)
+    {
+        _tenantProvider.TenantId = user.TenantId;
+        _tenantProvider.TenantName = user.TenantName;
+        _currentUser.UserId = user.Id;
+        _currentUser.UserName = user.UserName;
+        _currentUser.TenantId = user.TenantId;
+        _currentUser.TenantName = user.TenantName;
+    }
+    public ValueTask RemoveAuthDataFromStorage() => _localStorage.DeleteAsync(_tokenKey);
+               
      
 }
