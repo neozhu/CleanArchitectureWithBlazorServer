@@ -31,9 +31,7 @@ public class ValidationService : IValidationService
 
         var context = new ValidationContext<TRequest>(model);
 
-        return validators != null
-            ? await ValidationHelper.ValidateAsync(validators, context, cancellationToken)
-            : new Dictionary<string, string[]>();
+        return (await validators.ValidateAsync(context, cancellationToken)).ToDictionary();
     }
 
     public async Task<IDictionary<string, string[]>> ValidateAsync<TRequest>(TRequest model, Action<ValidationStrategy<TRequest>> options, CancellationToken cancellationToken = default)
@@ -43,9 +41,7 @@ public class ValidationService : IValidationService
         var context = ValidationContext<TRequest>
             .CreateWithOptions(model, options);
 
-        return validators != null
-            ? await ValidationHelper.ValidateAsync(validators, context, cancellationToken)
-            : new Dictionary<string, string[]>();
+        return (await validators.ValidateAsync(context, cancellationToken)).ToDictionary();
     }
 
     public async Task<IEnumerable<string>> ValidatePropertyAsync<TRequest>(TRequest model, string propertyName, CancellationToken cancellationToken = default)

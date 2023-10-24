@@ -11,13 +11,9 @@ public sealed class ValidationPreProcessor<TRequest> : IRequestPreProcessor<TReq
         if (!_validators.Any()) return;
 
         var validationContext = new ValidationContext<TRequest>(request);
-        var failures = await Task
-            .WhenAll(_validators.Select(v => v.ValidateAsync(validationContext, cancellationToken)))
-            .ConfigureAwait(false);
 
-        var validationFailures =
-            failures.SelectMany(result => result.Errors).Where(failure => failure != null).ToList();
+        var failures = await _validators.ValidateAsync(validationContext, cancellationToken);
 
-        if (validationFailures.Any()) throw new ValidationException(validationFailures);
+        if (failures.Any()) throw new ValidationException(failures);
     }
 }
