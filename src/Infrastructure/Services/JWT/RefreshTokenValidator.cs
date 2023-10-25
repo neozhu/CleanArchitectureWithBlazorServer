@@ -6,15 +6,15 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 /// <summary>
 /// Use this class to validate refresh tokens
 /// </summary>
-public class TokenValidator : ITokenValidator
+public class RefreshTokenValidator : IRefreshTokenValidator
 {
     private readonly JwtSecurityTokenHandler _tokenHandler;
     private readonly TokenValidationParameters _validationParameters;
 
-    public TokenValidator(JwtSecurityTokenHandler tokenHandler, IOptions<SimpleJwtOptions> options)
+    public RefreshTokenValidator(JwtSecurityTokenHandler tokenHandler, IOptions<SimpleJwtOptions> options)
     {
         _tokenHandler = tokenHandler;
-        _validationParameters = options.Value.AccessValidationParameters!;
+        _validationParameters = options.Value.RefreshValidationParameters!;
 
     }
 

@@ -64,7 +64,7 @@ public static class DependencyInjection
                 };
                 options.RefreshValidationParameters = new TokenValidationParameters()
                 {
-                    IssuerSigningKey = options.AccessSigningOptions.SigningKey,
+                    IssuerSigningKey = options.RefreshSigningOptions.SigningKey,
                     ValidIssuer = options.Issuer,
                     ValidAudience = options.Audience,
                     ValidateIssuerSigningKey = true,
@@ -304,7 +304,8 @@ public static class DependencyInjection
             .AddScoped<IAccessTokenGenerator, AccessTokenGenerator>()
             .AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>()
             .AddScoped<ITokenGeneratorService, TokenGeneratorService>()
-            .AddScoped<ITokenValidator, TokenValidator>()
+            .AddScoped<IAccessTokenValidator, AccessTokenValidator>()
+            .AddScoped<IRefreshTokenValidator, RefreshTokenValidator>()
             .AddScoped<ILoginService, JwtLoginService>()
             .AddScoped<JwtSecurityTokenHandler>();
 

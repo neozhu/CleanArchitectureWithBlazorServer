@@ -14,10 +14,10 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public class DefaultAuthenticator : IAuthenticator
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ITokenValidator _tokenValidator;
+    private readonly IAccessTokenValidator _tokenValidator;
     private readonly IAccessTokenGenerator _tokenGenerator;
 
-    public DefaultAuthenticator(IServiceScopeFactory scopeFactory, ITokenValidator tokenValidator, IAccessTokenGenerator tokenGenerator)
+    public DefaultAuthenticator(IServiceScopeFactory scopeFactory, IAccessTokenValidator tokenValidator, IAccessTokenGenerator tokenGenerator)
     {
         var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
