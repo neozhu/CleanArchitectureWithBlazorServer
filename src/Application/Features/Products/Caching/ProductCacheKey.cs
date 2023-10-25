@@ -8,7 +8,7 @@ public static class ProductCacheKey
     public const string GetAllCacheKey = "all-Products";
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromHours(1);
     private static CancellationTokenSource _tokenSource;
-
+    private static readonly object _tokenLock = new object();
     public static string GetProductByIdCacheKey(int id)
     {
         return $"GetProductById,{id}";
@@ -29,12 +29,26 @@ public static class ProductCacheKey
 
     public static CancellationTokenSource SharedExpiryTokenSource()
     {
-        if (_tokenSource.IsCancellationRequested) _tokenSource = new CancellationTokenSource(RefreshInterval);
-        return _tokenSource;
+        lock (_tokenLock)
+        {
+            if (_tokenSource.IsCancellationRequested)
+            {
+                _tokenSource = new CancellationTokenSource(RefreshInterval);
+            }
+
+            return _tokenSource;
+        }
     }
 
     public static void Refresh()
     {
-        SharedExpiryTokenSource().Cancel();
+        lock (_tokenLock)
+        {
+            if (!_tokenSource.IsCancellationRequested)
+            {
+                _tokenSource.Cancel();
+                _tokenSource = new CancellationTokenSource(RefreshInterval);
+            }
+        }
     }
 }
