@@ -50,7 +50,7 @@ public class AccessTokenProvider : IAccessTokenProvider
         await  _localStorage.SetAsync(_tokenKey, token);
         AccessToken = token.AccessToken;
         RefreshToken = token.RefreshToken;
-        SetUserPropertiesFromClaims((principal.Identity as ClaimsIdentity)!);
+        SetUserPropertiesFromClaimsPrincipal(principal);
     }
     public async Task<ClaimsPrincipal> GetClaimsPrincipal()
     {
@@ -65,7 +65,7 @@ public class AccessTokenProvider : IAccessTokenProvider
                 if (validationResult.IsValid)
                 {
                     
-                    return SetUserPropertiesFromClaims(validationResult.ClaimsIdentity);
+                    return SetUserPropertiesFromClaimsPrincipal(new ClaimsPrincipal(validationResult.ClaimsIdentity));
                 }
                 else
                 {
@@ -73,7 +73,7 @@ public class AccessTokenProvider : IAccessTokenProvider
                     if (validationRefreshResult.IsValid)
                     {
 
-                        return SetUserPropertiesFromClaims(validationRefreshResult.ClaimsIdentity);
+                        return SetUserPropertiesFromClaimsPrincipal(new ClaimsPrincipal(validationRefreshResult.ClaimsIdentity));
                     }
 
                 }
@@ -90,9 +90,8 @@ public class AccessTokenProvider : IAccessTokenProvider
         return new ClaimsPrincipal(new ClaimsIdentity());
     }
 
-    private ClaimsPrincipal SetUserPropertiesFromClaims(ClaimsIdentity identity)
+    private ClaimsPrincipal SetUserPropertiesFromClaimsPrincipal(ClaimsPrincipal principal)
     {
-        var principal = new ClaimsPrincipal(identity);
         _tenantProvider.TenantId = principal.GetTenantId();
         _tenantProvider.TenantName = principal.GetTenantName();
         _currentUser.UserId = principal.GetUserId();

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
+﻿namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 /// <summary>
 /// Use <see cref="DefaultClaimsProvider"/> to get access token claims and refresh token claims
 /// </summary>
