@@ -121,6 +121,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
                 {
                     var convertedValue = Convert.ChangeType(newValue, propertyInfo.PropertyType);
                     propertyInfo.SetValue(entity, convertedValue);
+                    _dbContext.Entry(entity).State = EntityState.Modified;
                     return _dbContext.SaveChanges();
                 }
                 else

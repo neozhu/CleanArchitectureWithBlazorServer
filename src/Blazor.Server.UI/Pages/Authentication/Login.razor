@@ -211,6 +211,7 @@
     {
         var user = await CreateUserWithExternalProvider(provider, userName, name, accessToken);
         await TokenProvider.Login(user);
+        var res=UserManager.UpdateIsLive(userId: user.Id,  true);
         NavigationManager.NavigateTo(NavigationManager.Uri, true);
         Logger.LogInformation("{@UserName:l} has successfully logged in", userName);
     }
