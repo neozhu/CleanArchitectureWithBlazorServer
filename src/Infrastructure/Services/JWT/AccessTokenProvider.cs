@@ -19,6 +19,7 @@ public class AccessTokenProvider : IAccessTokenProvider
     private readonly ITenantProvider _tenantProvider;
     private readonly ICurrentUserService _currentUser;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     public string? AccessToken { get; private set; }
     public string? RefreshToken { get; private set; }
 
@@ -33,6 +34,7 @@ public class AccessTokenProvider : IAccessTokenProvider
     {
         var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _userClaimsPrincipalFactory = scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _localStorage = localStorage;
         _loginService = loginService;
         _tokenValidator = tokenValidator;
@@ -43,11 +45,12 @@ public class AccessTokenProvider : IAccessTokenProvider
     }
     public async Task Login(ApplicationUser applicationUser)
     {
-        var token = await _loginService.LoginAsync(applicationUser);
+        var principal = await _userClaimsPrincipalFactory.CreateAsync(applicationUser);
+        var token = await _loginService.LoginAsync(principal);
         await  _localStorage.SetAsync(_tokenKey, token);
         AccessToken = token.AccessToken;
         RefreshToken = token.RefreshToken;
-        SetUserPropertiesFromApplicationUser(applicationUser);
+        SetUserPropertiesFromClaims((principal.Identity as ClaimsIdentity)!);
     }
     public async Task<ClaimsPrincipal> GetClaimsPrincipal()
     {
@@ -99,15 +102,7 @@ public class AccessTokenProvider : IAccessTokenProvider
         return principal;
     }
 
-    private void SetUserPropertiesFromApplicationUser(ApplicationUser user)
-    {
-        _tenantProvider.TenantId = user.TenantId;
-        _tenantProvider.TenantName = user.TenantName;
-        _currentUser.UserId = user.Id;
-        _currentUser.UserName = user.UserName;
-        _currentUser.TenantId = user.TenantId;
-        _currentUser.TenantName = user.TenantName;
-    }
+     
     public ValueTask RemoveAuthDataFromStorage() => _localStorage.DeleteAsync(_tokenKey);
 
     public async Task<string> Refresh(string refreshToken)
@@ -124,7 +119,8 @@ public class AccessTokenProvider : IAccessTokenProvider
         {
             throw new Exception($"no found user by userId:{userId}");
         }
-        string accessToken = await _tokenGenerator.GenerateAccessToken(user);
+        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+        string accessToken = _tokenGenerator.GenerateAccessToken(principal);
         return accessToken;
     }
 }

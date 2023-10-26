@@ -8,5 +8,5 @@ using CleanArchitecture.Blazor.Domain.Features.Identity;
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public interface ILoginService
 {
-    Task<AuthenticatedUserResponse> LoginAsync(ApplicationUser user);
+    Task<AuthenticatedUserResponse> LoginAsync(ClaimsPrincipal user);
 }

@@ -25,16 +25,15 @@ public class JwtLoginService : ILoginService
     /// </summary>
     /// <param name="user"></param>
     /// <returns>An instance of <see cref="AuthenticatedUserResponse"/>, containing an access Token and a refresh Token</returns>
-    public async Task<AuthenticatedUserResponse> LoginAsync(ApplicationUser user)
+    public Task<AuthenticatedUserResponse> LoginAsync(ClaimsPrincipal user)
     {
-        var accessToken =await tokenGenerator.GenerateAccessToken(user);
-        var refreshToken = await tokenGenerator.GenerateRefreshToken(user);
-        
-        return new AuthenticatedUserResponse()
+        var accessToken = tokenGenerator.GenerateAccessToken(user);
+        var refreshToken = tokenGenerator.GenerateRefreshToken(user);
+        return Task.FromResult(new AuthenticatedUserResponse()
         {
             AccessToken = accessToken,
             RefreshToken = refreshToken,
-        };
+        });
     }
 }
 

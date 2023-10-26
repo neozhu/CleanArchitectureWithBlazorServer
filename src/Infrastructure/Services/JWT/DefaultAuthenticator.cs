@@ -14,6 +14,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 public class DefaultAuthenticator : IAuthenticator
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAccessTokenValidator _tokenValidator;
     private readonly IAccessTokenGenerator _tokenGenerator;
 
@@ -21,6 +22,7 @@ public class DefaultAuthenticator : IAuthenticator
     {
         var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _userClaimsPrincipalFactory = scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _tokenValidator = tokenValidator;
         _tokenGenerator = tokenGenerator;
     }
@@ -43,7 +45,7 @@ public class DefaultAuthenticator : IAuthenticator
         return user;
     }
 
-    public async Task<string> RefreshToken(string refreshToken)
+    public async Task<string> Refresh(string refreshToken)
     {
         TokenValidationResult validationResult = await _tokenValidator.ValidateTokenAsync(refreshToken!);
         if (!validationResult.IsValid)
@@ -57,7 +59,8 @@ public class DefaultAuthenticator : IAuthenticator
         {
             return string.Empty;
         }
-        string accessToken =await _tokenGenerator.GenerateAccessToken(user);
+        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+        string accessToken =_tokenGenerator.GenerateAccessToken(principal);
         return accessToken;
     }
 }
