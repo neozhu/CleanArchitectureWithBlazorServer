@@ -263,10 +263,11 @@
                 image.Mutate(i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(128, 128) }));
                 image.Save(outStream, SixLabors.ImageSharp.Formats.Png.PngFormat.Instance);
                 var result = await _uploadService.UploadAsync(new UploadRequest(Guid.NewGuid().ToString() + ".png", UploadType.ProfilePicture, outStream.ToArray()));
-                model.ProfilePictureDataUrl = result;
-                var user = await _userManager.FindByIdAsync(model.UserId!);
-                user!.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
-                await _userManager.UpdateAsync(user);
+                // model.ProfilePictureDataUrl = result;
+                // var user = await _userManager.FindByIdAsync(model.UserId!);
+                // user!.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
+                // await _userManager.UpdateAsync(user);
+                _userManager.UpdateColumn(model.UserId, nameof(model.ProfilePictureDataUrl), result);
                 Snackbar.Add(L["The avatar has been updated."], MudBlazor.Severity.Info);
                 Dispatcher.Dispatch(new UserProfileUpdateAction() { UserProfile = model });
             }

@@ -82,8 +82,8 @@
     </Authorized>
 </AuthorizeView>
 
-@code {
-    
+    @code {
+
     private string _title = "Sign In";
     private CustomUserManager UserManager { get; set; } = default!;
 
@@ -155,12 +155,12 @@
                         }
                         else
                         {
-                           
-                                await TokenProvider.Login(user);
-                                NavigationManager.NavigateTo(NavigationManager.Uri, true);
-                                Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
-                          
-                            
+
+                            await TokenProvider.Login(user);
+                            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+                            Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
+
+
                         }
                     }
                 }
@@ -187,8 +187,9 @@
             var state = await UserManager.ResetPasswordAsync(item, token, model.Password!);
             if (state.Succeeded)
             {
-                item.IsActive = true;
-                await UserManager.UpdateAsync(item);
+                UserManager.UpdateIsLive(item.Id, true);
+                // item.IsActive = true;
+                // await UserManager.UpdateAsync(item);//TODO need to change for update whole entity by replacing withspecific column alone
                 Snackbar.Add($"{L["Password update successfuly"]}", Severity.Info);
                 Logger.LogInformation("{@UserName:l} has set a new password", item.UserName);
                 _model.Password = "";

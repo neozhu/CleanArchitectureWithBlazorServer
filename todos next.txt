@@ -1,3 +1,5 @@
+islive is not updating for logged in user...need to do
+
 email verified only allowed to be owner of tenant or any main things
 
 

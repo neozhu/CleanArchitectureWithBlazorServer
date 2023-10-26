@@ -147,8 +147,9 @@
                 var state = await UserManager.ResetPasswordAsync(_user, _inputToken, model.Password!);
                 if (state.Succeeded)
                 {
-                    _user.IsActive = true;
-                    await UserManager.UpdateAsync(_user);
+                    UserManager.UpdateIsLive(_user.Id, true);
+                    // _user.IsActive = true;
+                    // await UserManager.UpdateAsync(_user);
                     Snackbar.Add($"{L["The new password has been set successfully, please login again"]}", MudBlazor.Severity.Info);
                     Logger.LogInformation("{@UserName:l} has set a new password", model.UserName);
                     Navigation.NavigateTo("/");

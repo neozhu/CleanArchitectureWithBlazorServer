@@ -53,10 +53,10 @@ public class CustomUserManager : UserManager<ApplicationUser>
     private Repository<ApplicationUser> _repository;
     public const string DefaultTenantId = "";//todo make it loaded as per db
     private readonly CustomRoleManager _roleManager;
-    //  private readonly IServiceProvider _serviceProvider;
+    private readonly IServiceProvider _serviceProvider;
     private ApplicationDbContext _dbContext;
     private readonly IServiceScopeFactory _scopeFactory;
-    public CustomUserManager(
+    public CustomUserManager(ApplicationDbContext context,
          IUserStore<ApplicationUser> store,
          IOptions<IdentityOptions> optionsAccessor,
          IPasswordHasher<ApplicationUser> passwordHasher,
@@ -70,7 +70,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
     {
         _scopeFactory = scopeFactory;
         _roleManager = roleManager;
-        // _serviceProvider = services;
+        _serviceProvider = services;
         _dbContext = services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
         _repository = new Repository<ApplicationUser>(_dbContext);
     }
@@ -79,28 +79,59 @@ public class CustomUserManager : UserManager<ApplicationUser>
         return await CreateAsync(user, _defaultRoles, tenantId, password);
     }
 
-    public async Task<bool> UpdateIsLive(string userId, bool isLive = false)
+    public int UpdateIsLive(string userId, bool isLive = false)
     {
-        using (_dbContext)
+        return UpdateColumn(userId, nameof(ApplicationUser.IsLive), isLive);
+        //using (_dbContext)
+        //{
+        //    var user = _dbContext.Users.Where(u => u.Id == userId).Select(u => new ApplicationUser { IsLive = u.IsLive }).FirstOrDefault();
+        //    if (user != null)
+        //    {
+        //        // Update the specific column
+        //        user.IsLive = isLive; // Replace with the new value for the specific column
+
+        //        // Save changes
+        //        _dbContext.Entry(user).Property(u => u.IsLive).IsModified = true;
+        //        var res = await _dbContext.SaveChangesAsync();
+        //        return res > 0;
+        //    }
+
+        //    if (user != null)
+        //    {
+        //        var result = await _repository.UpdateColumnAsync(user, u => u.IsLive, isLive);
+        //        return result > 0;
+        //    }
+        //    return false;
+        //}
+    }
+
+    //TODO change it to async
+    public int UpdateColumn(string userId, string columnName, object newValue)
+    {
+        using (_dbContext = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>())
         {
-            var user = _dbContext.Users.Where(u => u.Id == userId).Select(u => new ApplicationUser { IsLive = u.IsLive }).FirstOrDefault();
-            if (user != null)
-            {
-                // Update the specific column
-                user.IsLive = isLive; // Replace with the new value for the specific column
+            var entity = _dbContext.Users.Find(userId);
 
-                // Save changes
-                _dbContext.Entry(user).Property(u => u.IsLive).IsModified = true;
-                var res = await _dbContext.SaveChangesAsync();
-                return res > 0;
-            }
-
-            if (user != null)
+            if (entity != null)
             {
-                var result = await _repository.UpdateColumnAsync(user, u => u.IsLive, isLive);
-                return result > 0;
+                // Use reflection to set the property value based on the column name
+                var propertyInfo = entity.GetType().GetProperty(columnName);
+
+                if (propertyInfo != null)
+                {
+                    var convertedValue = Convert.ChangeType(newValue, propertyInfo.PropertyType);
+                    propertyInfo.SetValue(entity, convertedValue);
+                    return _dbContext.SaveChanges();
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid column name.");
+                }
             }
-            return false;
+            else
+            {
+                throw new ArgumentException("Entity not found.");
+            }
         }
     }
 
@@ -158,6 +189,29 @@ public class CustomUserManager : UserManager<ApplicationUser>
             return applicationUser;
         }
     }
+
+    public async Task<ApplicationUser?> FindByNameOrIdFullUserObject(string userName = "", Guid? userId = null)
+    {
+        if (userName.IsNullOrEmptyAndTrimSelf() && !userId.HasValue) return null;
+
+        string searchCriteria = userName; // Replace with your search criteria
+        bool searchById = false; // Set to true if searching by Id, false if searching by UserName
+
+        if (userName.IsNullOrEmptyAndTrimSelf() && userId.HasValue) { searchById = true; searchCriteria = userId?.ToString(); }
+
+        using (_dbContext)
+        {
+            var applicationUser = await _dbContext.Users
+                .Include(x => x.UserClaims)
+                .Include(x => x.UserRoleTenants).ThenInclude(x => x.Role)
+                .Include(x => x.UserRoleTenants).ThenInclude(x => x.Tenant)
+                .Where(user => (searchById && user.Id == searchCriteria) || (!searchById && user.UserName == searchCriteria))
+                .FirstOrDefaultAsync()
+                ;
+
+            return applicationUser;
+        }
+    }
     public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
     {
         // Add your custom logic here before calling the base method
@@ -165,41 +219,14 @@ public class CustomUserManager : UserManager<ApplicationUser>
         try
         {
             //next madhu
-            //_dbContext.Users.Attach(user);
-            //var result = _dbContext.Users.Update(user);
-            //await _dbContext.SaveChangesAsync();
-            //return Result;
-            user.UserRoleTenants = null;//temporary fix to avoid The instance of entity type 'Tenant' cannot be tracked because another instance with the key value '{Id: 3b8ec9a3-04b3-4585-8796-99f44dd64ed9}' is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached
-
-            using (var scope = _scopeFactory.CreateScope())
+            using (_dbContext = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>())
             {
-           //     using (var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
-           //     {
-           //         var entity = await context.Users
-           //.Include(e => e.UserRoleTenants) // Include the dependent entity
-           //.FirstOrDefaultAsync(e => e.Id == entityId);
-
-           //     }
-                //var result = await base.UpdateAsync(user);//this is not working
-                // Attach the user to the context
-                _dbContext.Attach(user);
-
-                // Set the concurrency token property to its current value (when retrieved from the database)
-                // _dbContext.Entry(user).Property("RowVersion").OriginalValue = user.RowVersion;
-
-                _dbContext.Entry(user).State = EntityState.Modified;
-                try
-                {
-                    // Save changes to the database
-                    var res = await _dbContext.SaveChangesAsync();
-                    return IdentityResult.Success;
-                }
-                catch (DbUpdateConcurrencyException ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    throw;
-                }
+                _dbContext.Users.Attach(user);
+                var result = _dbContext.Users.Update(user);
+                var rrr = await _dbContext.SaveChangesAsync();
+                return IdentityResult.Success;
             }
+
         }
         catch (Exception e)
         {
@@ -231,10 +258,16 @@ public class CustomUserManager : UserManager<ApplicationUser>
                     */
                 }
             });
-            using var scope = _scopeFactory.CreateScope();
-            _dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            var result = password.IsNullOrEmptyAndTrimSelf() ? await base.CreateAsync(user) : await base.CreateAsync(user, password!);
-            return result;
+            using (_dbContext = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>())
+            {
+                var result = password.IsNullOrEmptyAndTrimSelf() ? await base.CreateAsync(user) : await base.CreateAsync(user, password!);
+                return result;
+            }
+            //TODO verify this works or not
+            //    using var scope = _scopeFactory.CreateScope();
+            //_dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            //var result = password.IsNullOrEmptyAndTrimSelf() ? await base.CreateAsync(user) : await base.CreateAsync(user, password!);
+            //return result;
         }
         catch (Exception e)
         {
@@ -250,44 +283,47 @@ public class CustomUserManager : UserManager<ApplicationUser>
         roleNames = roleNames.Select(x => x.Trim().TrimStart().TrimEnd().ToUpper())
             .Where(str => !str.IsNullOrEmpty()).Distinct()
             .GroupBy(i => i).Select(x => x.Key).ToList();
-        if (roleNames.Any())
+        using (_dbContext = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>())
         {
-            var existingAll = _dbContext.UserRoles.Where(role => role.UserId == user.Id && role.TenantId == user.TenantId);
-            //todo might need to include Role also to get name
-            var existing = existingAll.Where(x => roleNames.Contains(x.Role.NormalizedName!));
-            var changesTriggered = false;
-            if (existing.All(x => x.IsActive != user.IsUserTenantRolesActive))//existing update
+            if (roleNames.Any())
             {
-                existing.ForEach(x =>
+                var existingAll = _dbContext.UserRoles.Where(role => role.UserId == user.Id && role.TenantId == user.TenantId);
+                //todo might need to include Role also to get name
+                var existing = existingAll.Where(x => roleNames.Contains(x.Role.NormalizedName!));
+                var changesTriggered = false;
+                if (existing.All(x => x.IsActive != user.IsUserTenantRolesActive))//existing update
                 {
-                    x.IsActive = user.IsUserTenantRolesActive;
-                    _dbContext.UserRoles.Attach(x);
-                    _dbContext.Entry(x).State = EntityState.Modified;
-                });
-                changesTriggered = true;
-            }
+                    existing.ForEach(x =>
+                    {
+                        x.IsActive = user.IsUserTenantRolesActive;
+                        _dbContext.UserRoles.Attach(x);
+                        _dbContext.Entry(x).State = EntityState.Modified;
+                    });
+                    changesTriggered = true;
+                }
 
-            var toInsert = roleNames.Except(existingAll.Select(x => x.Role.NormalizedName));
-            var toRemove = existingAll.Select(x => x.Role.NormalizedName).ToList().Except(roleNames);
+                var toInsert = roleNames.Except(existingAll.Select(x => x.Role.NormalizedName));
+                var toRemove = existingAll.Select(x => x.Role.NormalizedName).ToList().Except(roleNames);
 
-            if (toInsert.Any())
-            {
-                var toAdd = new List<ApplicationUserRoleTenant>();
-                toInsert.ForEach(x =>
+                if (toInsert.Any())
                 {
-                    var roleId = (_dbContext.Roles.FirstOrDefault(r => r.NormalizedName == x!.ToUpper()))?.Id;
-                    if (string.IsNullOrEmpty(roleId)) return;
-                    toAdd.Add(new ApplicationUserRoleTenant() { UserId = user.Id, TenantId = user.TenantId, RoleId = roleId });
-                });
-                await _dbContext.UserRoles.AddRangeAsync(toAdd);
-                changesTriggered = true;
+                    var toAdd = new List<ApplicationUserRoleTenant>();
+                    toInsert.ForEach(x =>
+                    {
+                        var roleId = (_dbContext.Roles.FirstOrDefault(r => r.NormalizedName == x!.ToUpper()))?.Id;
+                        if (string.IsNullOrEmpty(roleId)) return;
+                        toAdd.Add(new ApplicationUserRoleTenant() { UserId = user.Id, TenantId = user.TenantId, RoleId = roleId });
+                    });
+                    await _dbContext.UserRoles.AddRangeAsync(toAdd);
+                    changesTriggered = true;
+                }
+                if (toRemove.Any())
+                {
+                    _dbContext.UserRoles.RemoveRange(existingAll.Where(x => toRemove.Contains(x.Role.NormalizedName)));
+                    changesTriggered = true;
+                }
+                return changesTriggered ? await _dbContext.SaveChangesAsync() : 0;
             }
-            if (toRemove.Any())
-            {
-                _dbContext.UserRoles.RemoveRange(existingAll.Where(x => toRemove.Contains(x.Role.NormalizedName)));
-                changesTriggered = true;
-            }
-            return changesTriggered ? await _dbContext.SaveChangesAsync() : 0;
         }
         return 0;
     }
@@ -296,9 +332,12 @@ public class CustomUserManager : UserManager<ApplicationUser>
         if (string.IsNullOrEmpty(roleName) || user == null || string.IsNullOrEmpty(user.TenantId) || !Guid.TryParse(user.TenantId, out Guid id1)
             || string.IsNullOrEmpty(user.Id) || !Guid.TryParse(user.Id, out Guid id)) return IdentityResult.Failed();
         roleName = roleName.ToUpperInvariant();
-        var existing = _dbContext.UserRoles.Where(role => role.TenantId == user.TenantId && role.Role.Name == roleName);
-        _dbContext.UserRoles.RemoveRange(existing);
-        return await _dbContext.SaveChangesAsync() > 0 ? IdentityResult.Success : IdentityResult.Failed();
+        using (_dbContext = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>())
+        {
+            var existing = _dbContext.UserRoles.Where(role => role.TenantId == user.TenantId && role.Role.Name == roleName);
+            _dbContext.UserRoles.RemoveRange(existing);
+            return await _dbContext.SaveChangesAsync() > 0 ? IdentityResult.Success : IdentityResult.Failed();
+        }
     }
 
     public override async Task<IdentityResult> AddToRoleAsync(ApplicationUser user, string roleName)

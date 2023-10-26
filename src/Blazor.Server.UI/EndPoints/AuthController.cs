@@ -50,7 +50,7 @@ public class AuthController : Controller
             await _userManager.ResetAccessFailedCountAsync(identityUser);
             await _signInManager.SignInAsync(identityUser, isPersistent);
             identityUser.IsLive = true;
-            await _userManager.UpdateIsLive(identityUser.Id, true);
+            var resLive= _userManager.UpdateIsLive(identityUser.Id, true);
             //await _userManager.UpdateAsync(identityUser);
             _logger.LogInformation("{@UserName} has successfully logged in", identityUser.UserName);
             return Redirect($"/{returnUrl}");
@@ -107,8 +107,8 @@ public class AuthController : Controller
         var userId = _signInManager.Context.User.GetUserId();
         if (!userId.IsNullOrEmptyAndTrimSelf())
         {
-            var result = await _userManager.UpdateIsLive(userId, false);
-            _logger.LogInformation($"User logout successful({(result ? "Successful" : "Failed")})");
+            var resultLive =  _userManager.UpdateIsLive(userId, false);
+            _logger.LogInformation($"User logout successful({(resultLive>0 ? "Successful" : "Failed")})");
         }
         //var identityUser = await _userManager.FindByIdAsync(userId!) ?? throw new NotFoundException($"Application user not found.");
         //identityUser.IsLive = false;

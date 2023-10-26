@@ -101,12 +101,13 @@ public class IdentityService : IIdentityService
     }
     public async Task UpdateLiveStatus(string userId, bool isLive, CancellationToken cancellation = default)
     {
-        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId && x.IsLive != isLive);
-        if (user is not null)
-        {
-            user.IsLive = isLive;
-            var result = await _userManager.UpdateAsync(user);
-        }
+        var res=_userManager.UpdateIsLive(userId, isLive);
+        //var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId && x.IsLive != isLive);
+        //if (user is not null)
+        //{
+        //    user.IsLive = isLive;
+        //    var result = await _userManager.UpdateAsync(user);
+        //}
     }
     public async Task<ApplicationUserDto> GetApplicationUserDto(string userId, CancellationToken cancellation = default)
     {
