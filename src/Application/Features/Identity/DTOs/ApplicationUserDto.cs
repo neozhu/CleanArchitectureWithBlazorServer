@@ -1,6 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Domain.Features.Identity;
 
-namespace CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 [Description("Users")]
 public class ApplicationUserDto

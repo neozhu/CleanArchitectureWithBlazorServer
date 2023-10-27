@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
-using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Domain.Features.AuditTrails;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
