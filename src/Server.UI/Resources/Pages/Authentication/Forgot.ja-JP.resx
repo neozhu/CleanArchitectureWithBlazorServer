@@ -131,6 +131,7 @@
   </data>
   <data name="{0}, please contact the administrator" xml:space="preserve">
     <value>{0}, 管理者に連絡してください。</value>
+    <comment>moved to ResetPasswordCommandHandler</comment>
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>電子メール</value>
@@ -140,9 +141,6 @@
   </data>
   <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
     <value>パスワード再設定用メールに記載されているトークン文字列を入力し、新しいパスワードを設定してください。</value>
-  </data>
-  <data name="No user found by email, please contact the administrator" xml:space="preserve">
-    <value>メールに記載されたユーザーが見つかりません。管理者にお問い合わせください。</value>
   </data>
   <data name="Set a new password" xml:space="preserve">
     <value>新しいパスワードの設定</value>
@@ -158,9 +156,6 @@
   </data>
   <data name="Token String" xml:space="preserve">
     <value>トークン文字列</value>
-  </data>
-  <data name="Verify your recovery email" xml:space="preserve">
-    <value>リカバリーメールを確認する</value>
   </data>
   <data name="Waiting" xml:space="preserve">
     <value>待機中</value>

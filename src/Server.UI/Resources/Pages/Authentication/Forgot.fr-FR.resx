@@ -131,6 +131,7 @@
   </data>
   <data name="{0}, please contact the administrator" xml:space="preserve">
     <value>{0}, veuillez contacter l'administrateur</value>
+    <comment>moved to ResetPasswordCommandHandler</comment>
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>E-mail</value>
@@ -140,9 +141,6 @@
   </data>
   <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
     <value>Saisissez la chaîne de caractères du courriel de récupération pour définir votre nouveau mot de passe.</value>
-  </data>
-  <data name="No user found by email, please contact the administrator" xml:space="preserve">
-    <value>Aucun utilisateur trouvé par email, veuillez contacter l'administrateur.</value>
   </data>
   <data name="Set a new password" xml:space="preserve">
     <value>Définir un nouveau mot de passe</value>
@@ -158,9 +156,6 @@
   </data>
   <data name="Token String" xml:space="preserve">
     <value>Chaîne du jeton</value>
-  </data>
-  <data name="Verify your recovery email" xml:space="preserve">
-    <value>Vérifiez l'e-mail de récupération</value>
   </data>
   <data name="Waiting" xml:space="preserve">
     <value>En attente de</value>

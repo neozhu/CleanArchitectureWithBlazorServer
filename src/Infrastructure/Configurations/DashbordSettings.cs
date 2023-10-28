@@ -6,7 +6,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Configurations;
 /// <summary>
 ///     Configuration wrapper for the dashboard section
 /// </summary>
-public class DashboardSettings
+public class DashboardSettings : IApplicationSettings
 {
     /// <summary>
     ///     Dashboard key constraint

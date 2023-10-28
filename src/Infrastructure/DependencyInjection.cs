@@ -86,7 +86,8 @@ public static class DependencyInjection
             .AddSingleton<IIdentitySettings>(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value);
 
         services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.Key))
-            .AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
+            .AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value)
+            .AddSingleton<IApplicationSettings>(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
 
         services.Configure<DatabaseSettings>(configuration.GetSection(DatabaseSettings.Key))
             .AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);

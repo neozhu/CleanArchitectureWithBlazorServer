@@ -131,6 +131,7 @@
   </data>
   <data name="{0}, please contact the administrator" xml:space="preserve">
     <value>{0}, per favor, possis en contacte amb l'administrador</value>
+    <comment>moved to ResetPasswordCommandHandler</comment>
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>Correu electrònic</value>
@@ -140,9 +141,6 @@
   </data>
   <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
     <value>Introdueïxi la clau del correu electrònico de recuperació per a establir la nova contrasenya.</value>
-  </data>
-  <data name="No user found by email, please contact the administrator" xml:space="preserve">
-    <value>No s'ha trobat cap usuari per aquest correu electrònic, possis en contacte amb l'administrador</value>
   </data>
   <data name="Set a new password" xml:space="preserve">
     <value>Establir una nova contrasenya</value>
@@ -158,9 +156,6 @@
   </data>
   <data name="Token String" xml:space="preserve">
     <value>Clau</value>
-  </data>
-  <data name="Verify your recovery email" xml:space="preserve">
-    <value>Verifiqui el seu correu electrònic de recuperació</value>
   </data>
   <data name="Waiting" xml:space="preserve">
     <value>Esperant</value>

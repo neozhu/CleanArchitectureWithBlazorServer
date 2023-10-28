@@ -131,6 +131,7 @@
   </data>
   <data name="{0}, please contact the administrator" xml:space="preserve">
     <value>{0}，请联系管理员</value>
+    <comment>moved to ResetPasswordCommandHandler</comment>
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>电子邮件</value>
@@ -140,9 +141,6 @@
   </data>
   <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
     <value>输入恢复邮件中的令牌字符串来设置你的新密码。</value>
-  </data>
-  <data name="No user found by email, please contact the administrator" xml:space="preserve">
-    <value>通过电子邮件没有找到用户，请联系管理员</value>
   </data>
   <data name="Set a new password" xml:space="preserve">
     <value>设置一个新的密码</value>
@@ -158,9 +156,6 @@
   </data>
   <data name="Token String" xml:space="preserve">
     <value>代币字符串</value>
-  </data>
-  <data name="Verify your recovery email" xml:space="preserve">
-    <value>验证您的恢复邮件</value>
   </data>
   <data name="Waiting" xml:space="preserve">
     <value>正在等待</value>

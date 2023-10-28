@@ -131,6 +131,7 @@
   </data>
   <data name="{0}, please contact the administrator" xml:space="preserve">
     <value>{0}, пожалуйста, свяжитесь с администратором</value>
+    <comment>moved to ResetPasswordCommandHandler</comment>
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>Электронная почта</value>
@@ -140,9 +141,6 @@
   </data>
   <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
     <value>Введите маркерную строку из письма для восстановления, чтобы установить новый пароль.</value>
-  </data>
-  <data name="No user found by email, please contact the administrator" xml:space="preserve">
-    <value>Пользователь не найден по электронной почте, обратитесь к администратору</value>
   </data>
   <data name="Set a new password" xml:space="preserve">
     <value>Установить новый пароль</value>
@@ -158,9 +156,6 @@
   </data>
   <data name="Token String" xml:space="preserve">
     <value>Строка маркера</value>
-  </data>
-  <data name="Verify your recovery email" xml:space="preserve">
-    <value>Проверьте письмо о восстановлении</value>
   </data>
   <data name="Waiting" xml:space="preserve">
     <value>Ожидание</value>

@@ -132,9 +132,6 @@
   <data name="Forgot Password?" xml:space="preserve">
     <value>هل نسيت كلمة المرور؟</value>
   </data>
-  <data name="No user found by email, please contact the administrator" xml:space="preserve">
-    <value>لم يتم العثور على أي مستخدم عن طريق البريد الإلكتروني ، يرجى الاتصال بالمسؤول</value>
-  </data>
   <data name="Reset Password" xml:space="preserve">
     <value>إعادة تعيين كلمة المرور</value>
   </data>
@@ -153,9 +150,6 @@
   <data name="Token String" xml:space="preserve">
     <value>سلسلة الرمز المميز</value>
   </data>
-  <data name="Verify your recovery email" xml:space="preserve">
-    <value>التحقق من البريد الإلكتروني المخصص للطوارئ</value>
-  </data>
   <data name="Waiting" xml:space="preserve">
     <value>انتظار</value>
   </data>
@@ -167,5 +161,6 @@
   </data>
   <data name="{0}, please contact the administrator" xml:space="preserve">
     <value>{0}، يرجى الاتصال بالمسؤول</value>
+    <comment>moved to ResetPasswordCommandHandler</comment>
   </data>
 </root>

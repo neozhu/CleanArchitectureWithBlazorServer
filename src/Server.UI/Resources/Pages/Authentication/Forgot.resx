@@ -132,9 +132,6 @@
   <data name="Forgot Password?" xml:space="preserve">
     <value>Forgot Password?</value>
   </data>
-  <data name="No user found by email, please contact the administrator" xml:space="preserve">
-      <value>No user found by email, please contact an administrator</value>
-  </data>
   <data name="Reset Password" xml:space="preserve">
     <value>Reset Password</value>
   </data>
@@ -153,9 +150,6 @@
   <data name="Token String" xml:space="preserve">
     <value>Token String</value>
   </data>
-  <data name="Verify your recovery email" xml:space="preserve">
-    <value>Verify your recovery email</value>
-  </data>
   <data name="Waiting" xml:space="preserve">
     <value>Waiting</value>
   </data>
@@ -166,6 +160,7 @@
     <value>{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password.</value>
   </data>
   <data name="{0}, please contact the administrator" xml:space="preserve">
-      <value>{0}, please contact an administrator</value>
+    <value>{0}, please contact an administrator</value>
+    <comment>moved to ResetPasswordCommandHandler</comment>
   </data>
 </root>

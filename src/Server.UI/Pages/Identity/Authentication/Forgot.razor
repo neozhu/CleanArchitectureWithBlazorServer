@@ -1,5 +1,6 @@
 @page "/pages/authentication/forgot-password"
 
+@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.ResetPassword
 @using CleanArchitecture.Blazor.Domain.Features.Identity
 @using CleanArchitecture.Blazor.Server.UI.Models.Identity
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
@@ -11,6 +12,7 @@
 
 @inject IStringLocalizer<Forgot> L
 @inject IMailService MailService
+@inject ISender Sender
 @inject ILogger<Forgot> Logger
 @inject NavigationManager Navigation
 
@@ -63,7 +65,7 @@
     </Authorized>
 </AuthorizeView>
 
-@code{
+    @code{
     public string Title = "Forgot Password";
     private int _step = 1;
     private string _emailAddress = string.Empty;
@@ -83,53 +85,24 @@
 
     private async Task ResetPassword()
     {
-        try
+        _sending = true;
+
+        var response = await Sender.Send(new ResetPasswordCommand(_emailAddress));
+
+        if (response.Succeeded)
         {
-            _sending = true;
-            _user = await UserManager.FindByEmailAsync(_emailAddress) ?? throw new NotFoundException($"Application user {_emailAddress} Not Found.");
-            ;
-            if (_user is null)
-            {
-                Snackbar.Add(L["No user found by email, please contact the administrator"], MudBlazor.Severity.Error);
-                return;
-            }
-            _resetPasswordToken = await UserManager.GeneratePasswordResetTokenAsync(_user);
-            var response = await SendResetPasswordToken(_emailAddress, _user.UserName!, _resetPasswordToken);
-            if (response.Successful)
-            {
-                _step = 2;
-                Snackbar.Clear();
-                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-                Snackbar.Add(string.Format(L["The email has been sent, please check the email:{0} "], _emailAddress), MudBlazor.Severity.Success, config => { config.ShowCloseIcon = false; config.HideTransitionDuration = 5000; });
-                Logger.LogInformation("{@UserName:l}'s password reset token: {@Token} has been sent", _user.UserName, "******");
-            }
-            else
-            {
-                Snackbar.Add(string.Format(L["{0}, please contact the administrator"], response.ErrorMessages.FirstOrDefault()), MudBlazor.Severity.Error);
-            }
-
-            // The following code is just for testing
-            // prompt token string
-            //Snackbar.Add(_resetpasswordToken, MudBlazor.Severity.Warning);
-            //_step = 2;
-
+            _step = 2;
+            Snackbar.Clear();
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+            Snackbar.Add(string.Format(L["The email has been sent, please check the email:{0} "], _emailAddress), MudBlazor.Severity.Success, config => { config.ShowCloseIcon = false; config.HideTransitionDuration = 5000; });
+            Logger.LogInformation("Password reset token sent to {0}.", _emailAddress);
         }
-        catch (Exception e)
+        else
         {
-            Snackbar.Add(string.Format(L["{0}, please contact the administrator"], e.Message), MudBlazor.Severity.Error);
+            Snackbar.Add(response.ErrorMessage, MudBlazor.Severity.Error);
         }
-        finally
-        {
-            _sending = false;
-        }
-    }
 
-    private Task<SendResponse> SendResetPasswordToken(string toEmail, string userName, string token)
-    {
-
-        var subject = L["Verify your recovery email"];
-        //var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_recoverypassword.txt");
-        return MailService.SendAsync(toEmail, subject, "_recoverypassword", new { AppName = Settings.AppName, Email = toEmail, Token = token });
+        _sending = false;
     }
 
     private async Task SetNewPassword()

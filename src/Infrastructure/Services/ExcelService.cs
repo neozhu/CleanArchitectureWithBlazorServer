@@ -87,7 +87,7 @@ public class ExcelService : IExcelService
 
                 foreach (var value in result)
                 {
-                    ws.Cell(rowIndex, colIndex++).Value = value==null?Blank.Value:value.ToString();
+                    ws.Cell(rowIndex, colIndex++).Value = value == null ? Blank.Value : value.ToString();
                 }
             }
             using (var stream = new MemoryStream())
@@ -129,7 +129,7 @@ public class ExcelService : IExcelService
             }
             if (errors.Any())
             {
-                return await Result<IEnumerable<TEntity>>.FailureAsync(errors);
+                return await Result<IEnumerable<TEntity>>.FailureAsync(errors.ToArray());
             }
             var lastRow = ws.LastRowUsed();
             var list = new List<TEntity>();
@@ -138,7 +138,7 @@ public class ExcelService : IExcelService
                 try
                 {
                     DataRow dataRow = dt.Rows.Add();
-                    var item = (TEntity?)Activator.CreateInstance(typeof(TEntity))??throw new NullReferenceException($"{nameof(TEntity)}");
+                    var item = (TEntity?)Activator.CreateInstance(typeof(TEntity)) ?? throw new NullReferenceException($"{nameof(TEntity)}");
                     foreach (IXLCell cell in row.Cells())
                     {
                         if (cell.DataType == XLDataType.DateTime)
