@@ -82,27 +82,6 @@ public class CustomUserManager : UserManager<ApplicationUser>
     public int UpdateIsLive(string userId, bool isLive = false)
     {
         return UpdateColumn(userId, nameof(ApplicationUser.IsLive), isLive);
-        //using (_dbContext)
-        //{
-        //    var user = _dbContext.Users.Where(u => u.Id == userId).Select(u => new ApplicationUser { IsLive = u.IsLive }).FirstOrDefault();
-        //    if (user != null)
-        //    {
-        //        // Update the specific column
-        //        user.IsLive = isLive; // Replace with the new value for the specific column
-
-        //        // Save changes
-        //        _dbContext.Entry(user).Property(u => u.IsLive).IsModified = true;
-        //        var res = await _dbContext.SaveChangesAsync();
-        //        return res > 0;
-        //    }
-
-        //    if (user != null)
-        //    {
-        //        var result = await _repository.UpdateColumnAsync(user, u => u.IsLive, isLive);
-        //        return result > 0;
-        //    }
-        //    return false;
-        //}
     }
 
     //TODO change it to async

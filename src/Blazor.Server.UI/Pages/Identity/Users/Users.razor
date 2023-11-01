@@ -385,7 +385,7 @@
             x.Provider!.ToLower().Contains(_searchString));
             var query = UserManager.Users.Where(searchPredicate);
 
-
+            //TODO nxt Instead of writing logic here ,do in backend & use here
             if (!string.IsNullOrEmpty(_searchRole))
             {
                 query = query.Where(x => x.UserRoleTenants.Any(y => y.Role.Name == _searchRole));
