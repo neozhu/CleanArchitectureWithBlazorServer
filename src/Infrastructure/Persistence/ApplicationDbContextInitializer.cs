@@ -153,7 +153,7 @@ public class ApplicationDbContextInitializer
             {
                 if (_userManager.Users.All(u => u.UserName != administrator.UserName))
                 {
-                    await _userManager.CreateAsync(administrator, UserName.DefaultPassword);
+                    await _userManager.CreateAsync(administrator, roles: new List<string> { RoleNamesEnum.RootAdmin.ToString() }, password: UserName.DefaultPassword);
                 }
             }
         }
@@ -163,7 +163,7 @@ public class ApplicationDbContextInitializer
 
                 if (_userManager.Users.All(u => u.UserName != patient.UserName))
                 {
-                    await _userManager.CreateAsync(patient, UserName.DefaultPassword);
+                    await _userManager.CreateAsync(patient, roles: new List<string> { RoleNamesEnum.Patient.ToString() }, password: UserName.DefaultPassword);
                 }
         }
         #endregion mustRemove
