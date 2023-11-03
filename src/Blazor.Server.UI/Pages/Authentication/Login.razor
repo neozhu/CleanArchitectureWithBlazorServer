@@ -133,7 +133,7 @@
             await _form!.Validate();
             if (_form!.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(_model.UserName!);
+                var user = await UserManager.FindByNameForLocalAccountAsync(_model.UserName!);
                 if (user is null)
                 {
                     Logger.LogWarning("Someone tried to login to the user {@UserName:l}, however this account does not exist", _model.UserName);
