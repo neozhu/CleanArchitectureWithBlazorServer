@@ -103,8 +103,8 @@
 
     private LoginFormModel _model = new()
         {
-            UserName = "administrator",
-            Password = "Password123!",
+            UserName = UserName.Administrator,// "administrator",
+            Password = UserName.DefaultPassword,//"Password123!",
             RememberMe = true
         };
 
@@ -221,6 +221,7 @@
         var user = await UserManager.FindByNameAsync(userName);
         if (user is null)
         {
+            //TODO change this below logic of admin referring
             var admin = await UserManager.FindByNameAsync(UserName.Administrator) ?? throw new NotFoundException("Administrator's account Not Found.");
             user = new ApplicationUser
                 {

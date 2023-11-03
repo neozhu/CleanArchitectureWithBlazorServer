@@ -13,7 +13,7 @@ public class ApplicationDbContextInitializer
 {
     private readonly ILogger<ApplicationDbContextInitializer> _logger;
     private readonly ApplicationDbContext _context;
-    private  CustomUserManager _userManager;
+    private CustomUserManager _userManager;
     private readonly CustomRoleManager _roleManager;
     private readonly IServiceProvider _serviceProvider;
     public ApplicationDbContextInitializer(ILogger<ApplicationDbContextInitializer> logger, ApplicationDbContext context, CustomUserManager userManager, CustomRoleManager roleManager, IServiceProvider serviceProvider)
@@ -111,36 +111,62 @@ public class ApplicationDbContextInitializer
        ,("vmadhu203@gmail.com", RoleNamesEnum.HospitalAdmin, TenantTypeEnum.HospitalAndStaff)
        ,("vmadhu2023@gmail.com", RoleNamesEnum.ViewerHospital, TenantTypeEnum.HospitalAndStaff)
        };
+        //TODO change this logic hospital admin/viewer should be only under specific hospital tenant rather general
 
         foreach (var (email, role, tenantType) in defaultGoogleUsers)
         {//need to verify
             using (var scope = _serviceProvider.CreateScope())
             {
                 //var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-                _userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>();
-
-                if (!_userManager.Users.Any(u => u.Email == email))
+                using (_userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>())
                 {
-                    var tenant1 = _context.Tenants.First(x => x.Type == (byte)tenantType);
-                    var newUser = new ApplicationUser
+                    if (!_userManager.Users.Any(u => u.Email == email))
                     {
-                        UserName = email,
-                        Provider = "Google",
-                        IsActive = true,
-                        //TenantId = _context.UserRoleTenants.First().Id,//todo need to make change
-                        //todo need to change based on selection like whether Patient/Internal/any hospital
-                        TenantId = tenant1.Id,//todo need to make change
-                        TenantName = tenant1.Name,
-                        DisplayName = email,
-                        Email = email,
-                        EmailConfirmed = true
-                        //    , ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" 
-                    };
-                    await _userManager.CreateAsync(newUser, roles: new List<string>() { role.ToString() });//todo pass roles and tenantids  //, UserName.DefaultPassword);
+                        var tenant1 = _context.Tenants.First(x => x.Type == (byte)tenantType);
+                        var newUser = new ApplicationUser
+                        {
+                            UserName = email,
+                            Provider = "Google",
+                            IsActive = true,
+                            //TenantId = _context.UserRoleTenants.First().Id,//todo need to make change
+                            //todo need to change based on selection like whether Patient/Internal/any hospital
+                            TenantId = tenant1.Id,//todo need to make change
+                            TenantName = tenant1.Name,
+                            DisplayName = email,
+                            Email = email,
+                            EmailConfirmed = true
+                            //    , ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" 
+                        };
+                        await _userManager.CreateAsync(newUser, roles: new List<string>() { role.ToString() });//todo pass roles and tenantids  //, UserName.DefaultPassword);
 
+                    }
                 }
             }
         }
+        #region mustRemove
+        var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Administrator, Email = "admin@mail.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
+        var patient = new ApplicationUser { UserName = UserName.Patient, IsActive = true, Provider = "Local", TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Patient, Email = "patient@mail.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
+
+        using (var scope = _serviceProvider.CreateScope())
+        {
+            using (_userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>())
+            {
+                if (_userManager.Users.All(u => u.UserName != administrator.UserName))
+                {
+                    await _userManager.CreateAsync(administrator, UserName.DefaultPassword);
+                }
+            }
+        }
+        using (var scope = _serviceProvider.CreateScope())
+        {
+            using (_userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>())
+
+                if (_userManager.Users.All(u => u.UserName != patient.UserName))
+                {
+                    await _userManager.CreateAsync(patient, UserName.DefaultPassword);
+                }
+        }
+        #endregion mustRemove
         // Default data
         // Seed, if necessary
         if (!_context.KeyValues.Any())
