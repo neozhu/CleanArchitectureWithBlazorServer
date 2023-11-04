@@ -1,4 +1,7 @@
-islive is not updating for logged in user...need to do
+Tenants for user user edit page to add other new tenant....more logic improve
+
+
+mostly done verify??????????islive is not updating for logged in user...need to do
 
 email verified only allowed to be owner of tenant or any main things
 
