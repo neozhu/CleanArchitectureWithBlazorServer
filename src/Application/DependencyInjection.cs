@@ -42,8 +42,8 @@ public static class DependencyInjection
             service.Initialize();
             return service;
         });
-        services.AddSingleton<TenantService>();
-        services.AddSingleton<ITenantService>(sp => {
+        services.AddScoped<TenantService>();
+        services.AddScoped<ITenantService>(sp => {
             var service = sp.GetRequiredService<TenantService>();
             service.Initialize();
             return service;

@@ -140,10 +140,12 @@ public class CustomUserManager : UserManager<ApplicationUser>
         {
             var query = _dbContext.Users
                 .Where(user => (searchById && user.Id == searchCriteria) || (!searchById && user.UserName == searchCriteria))
+                .AsNoTracking()
                 .Select(user => new ApplicationUser
                 {
                     UserName = user.UserName,
                     UserClaims = _dbContext.UserClaims.Where(uc => uc.UserId == user.Id).ToList(),
+                    //TODO change below as join operator
                     UserRoleTenants = _dbContext.UserRoles.Where(urt => urt.UserId == user.Id).Select(u => new ApplicationUserRoleTenant
                     {
                         TenantId = u.TenantId,
@@ -182,16 +184,14 @@ public class CustomUserManager : UserManager<ApplicationUser>
 
         if (userName.IsNullOrEmptyAndTrimSelf() && userId.HasValue) { searchById = true; searchCriteria = userId?.ToString(); }
 
-        using (_dbContext)
+        using (_dbContext = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>())
         {
             var applicationUser = await _dbContext.Users
                 .Include(x => x.UserClaims)
                 .Include(x => x.UserRoleTenants).ThenInclude(x => x.Role)
                 .Include(x => x.UserRoleTenants).ThenInclude(x => x.Tenant)
                 .Where(user => (searchById && user.Id == searchCriteria) || (!searchById && user.UserName == searchCriteria))
-                .FirstOrDefaultAsync()
-                ;
-
+                .FirstOrDefaultAsync();
             return applicationUser;
         }
     }
@@ -201,10 +201,11 @@ public class CustomUserManager : UserManager<ApplicationUser>
         // For example, you can validate user data or perform additional tasks.
         try
         {
-            //next madhu
+
+            //todo need to verify the perfection
+            user.UserRoleTenants = null;//if this not done then tracking issue will block,so this is improtant to keep
             using (_dbContext = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>())
             {
-                _dbContext.Users.Attach(user);
                 var result = _dbContext.Users.Update(user);
                 var rrr = await _dbContext.SaveChangesAsync();
                 return IdentityResult.Success;
