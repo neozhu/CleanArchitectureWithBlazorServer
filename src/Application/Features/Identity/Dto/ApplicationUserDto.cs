@@ -14,7 +14,7 @@ public class ApplicationUserDto
     [Description("Display Name")] public string? DisplayName { get; set; }
 
     [Description("Provider")] public string? Provider { get; set; } = "Local";
-    
+
     [Description("Tenant Id")] public string? TenantId { get; set; }
 
     [Description("Tenant Name")] public string? TenantName { get; set; }
@@ -33,7 +33,7 @@ public class ApplicationUserDto
     [Description("Assigned Roles")] public string[]? AssignedRoles { get; set; }
 
     [Description("User Roles and Tenants")]
-    public  ICollection<ApplicationUserRoleTenantDto> UserRoleTenants { get; set; }
+    public ICollection<ApplicationUserRoleTenantDto> UserRoleTenants { get; set; }
 
     [Description("Default Role")] public string? DefaultRole => AssignedRoles?.FirstOrDefault();//todo take max permission role
 
@@ -64,7 +64,7 @@ public class ApplicationUserDto
             SuperiorName = SuperiorName,
             AssignedRoles = AssignedRoles,
             DefaultRole = DefaultRole,
-            UserRoleTenants=UserRoleTenants
+            UserRoleTenants = UserRoleTenants
         };
     }
 
@@ -79,10 +79,12 @@ public class ApplicationUserDto
         {
             CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
                 .ForMember(x => x.SuperiorName, s => s.MapFrom(y => y.Superior!.UserName))
-                .ForMember(x=>x.UserRoleTenants,s=>s.MapFrom(c=>c.UserRoleTenants))
-                
+                .ForMember(x => x.UserRoleTenants, s => s.MapFrom(c => c.UserRoleTenants))
+                //todo need to make sure of this 
+                .ForMember(x=>x.TenantName, s =>
+                s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ? y.TenantName : y.UserRoleTenants.FirstOrDefault().TenantName))
                 .ForMember(x => x.TenantId, s =>
-                s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ? y.TenantId:y.UserRoleTenants.FirstOrDefault().TenantId))
+                s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ? y.TenantId : y.UserRoleTenants.FirstOrDefault().TenantId))
                 .ForMember(x => x.AssignedRoles, s =>
                 s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ?
                 y.UserRoleTenants.Where(g => g.TenantId == y.TenantId).Select(r => r.Role.Name) : y.UserRoleTenants.Select(r => r.Role.Name)))

@@ -22,7 +22,11 @@ public class ApplicationUserRoleTenantDto
     {
         public Mapping()
         {
-            CreateMap<ApplicationUserRoleTenant, ApplicationUserRoleTenantDto>(MemberList.None);
+            CreateMap<ApplicationUserRoleTenant, ApplicationUserRoleTenantDto>(MemberList.None)
+                .ForMember(x => x.TenantName, s => s.MapFrom(y => (y.Tenant != null) ? y.Tenant.Name : null))
+                .ForMember(x => x.RoleName, s => s.MapFrom(y => (y.Role != null) ? y.Role.Name : null))
+                .ForMember(x => x.UserName, s => s.MapFrom(y => (y.User != null) ? y.User.UserName : null))
+                ;
         }
     }
 }
