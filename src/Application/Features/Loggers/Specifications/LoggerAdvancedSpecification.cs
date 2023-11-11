@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Domain.Features.Loggers;
+﻿using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Specifications;
 #nullable disable warnings

@@ -3,7 +3,7 @@
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
-using CleanArchitecture.Blazor.Domain.Features.AuditTrails;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 

@@ -1,6 +1,4 @@
-﻿using CleanArchitecture.Blazor.Domain.Features.KeyValues;
-
-namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Specifications;
+﻿namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Specifications;
 #nullable disable warnings
 public class KeyValueAdvancedSpecification : Specification<KeyValue>
 {

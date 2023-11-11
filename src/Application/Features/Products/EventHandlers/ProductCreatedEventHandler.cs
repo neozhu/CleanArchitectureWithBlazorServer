@@ -3,8 +3,6 @@
 
 
 using System.Diagnostics;
-using CleanArchitecture.Blazor.Domain.Common.Events;
-using CleanArchitecture.Blazor.Domain.Features.Products;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.EventHandlers;
 

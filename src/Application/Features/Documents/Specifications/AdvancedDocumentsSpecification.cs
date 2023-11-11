@@ -1,7 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.Customers.Specifications;
-using CleanArchitecture.Blazor.Domain.Features.Documents;
-
-namespace CleanArchitecture.Blazor.Application.Features.Documents.Specifications;
+﻿namespace CleanArchitecture.Blazor.Application.Features.Documents.Specifications;
 #nullable disable warnings
 public class AdvancedDocumentsSpecification : Specification<Document>
 {

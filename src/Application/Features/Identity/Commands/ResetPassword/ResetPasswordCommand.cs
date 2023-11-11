@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Domain.Features.Identity;
+﻿using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Commands.ResetPassword;

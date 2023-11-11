@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.PaginationQuery;
-using CleanArchitecture.Blazor.Domain.Features.KeyValues;
+using CleanArchitecture.Blazor.Domain.Entities;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.IntegrationTests.KeyValues.Queries;

@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Domain.Features.AuditTrails;
+﻿using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
 #nullable disable warnings

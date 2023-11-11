@@ -3,7 +3,6 @@
 
 
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
-using CleanArchitecture.Blazor.Domain.Features.Products;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete;
 

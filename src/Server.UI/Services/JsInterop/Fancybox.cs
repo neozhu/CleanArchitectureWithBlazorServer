@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Domain.Features.Products;
+﻿
 using Microsoft.JSInterop;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.JsInterop;

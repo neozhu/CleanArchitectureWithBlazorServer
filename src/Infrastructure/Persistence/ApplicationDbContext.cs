@@ -3,14 +3,8 @@
 
 using System.Reflection;
 using CleanArchitecture.Blazor.Domain.Common.Entities;
-using CleanArchitecture.Blazor.Domain.Features.AuditTrails;
-using CleanArchitecture.Blazor.Domain.Features.Customers;
-using CleanArchitecture.Blazor.Domain.Features.Documents;
-using CleanArchitecture.Blazor.Domain.Features.Identity;
-using CleanArchitecture.Blazor.Domain.Features.KeyValues;
-using CleanArchitecture.Blazor.Domain.Features.Loggers;
-using CleanArchitecture.Blazor.Domain.Features.Products;
-using CleanArchitecture.Blazor.Domain.Features.Tenants;
+using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 

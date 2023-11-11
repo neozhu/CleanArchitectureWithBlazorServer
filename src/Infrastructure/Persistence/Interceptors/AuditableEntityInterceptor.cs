@@ -1,6 +1,6 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Common.Entities;
-using CleanArchitecture.Blazor.Domain.Features.AuditTrails;
+using CleanArchitecture.Blazor.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;

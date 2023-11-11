@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
-using CleanArchitecture.Blazor.Domain.Features.Identity;
-using CleanArchitecture.Blazor.Domain.Features.KeyValues;
-using CleanArchitecture.Blazor.Domain.Features.Products;
-using CleanArchitecture.Blazor.Domain.Features.Tenants;
+using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
