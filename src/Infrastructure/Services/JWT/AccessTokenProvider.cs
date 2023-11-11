@@ -43,7 +43,7 @@ public class AccessTokenProvider : IAccessTokenProvider
         _tenantProvider = tenantProvider;
         _currentUser = currentUser;
     }
-    public async Task Login(ApplicationUser applicationUser)
+    public async Task<string?> Login(ApplicationUser applicationUser)
     {
         var principal = await _userClaimsPrincipalFactory.CreateAsync(applicationUser);
         var token = await _loginService.LoginAsync(principal);
@@ -51,6 +51,17 @@ public class AccessTokenProvider : IAccessTokenProvider
         AccessToken = token.AccessToken;
         RefreshToken = token.RefreshToken;
         SetUserPropertiesFromClaimsPrincipal(principal);
+        return AccessToken;
+    }
+    public async Task<ClaimsPrincipal> ParseClaimsFromJwt(string? accessToken)
+    {
+        if(string.IsNullOrEmpty(accessToken)) return  new ClaimsPrincipal(new ClaimsIdentity());
+        var validationResult = await _tokenValidator.ValidateTokenAsync(accessToken);
+        if (validationResult.IsValid)
+        {
+            return SetUserPropertiesFromClaimsPrincipal(new ClaimsPrincipal(validationResult.ClaimsIdentity));
+        }
+        return new ClaimsPrincipal(new ClaimsIdentity());
     }
     public async Task<ClaimsPrincipal> GetClaimsPrincipal()
     {

@@ -8,6 +8,7 @@ public interface IAccessTokenProvider
     string? RefreshToken { get; }
 
     Task<ClaimsPrincipal> GetClaimsPrincipal();
-    Task Login(ApplicationUser applicationUser);
+    Task<ClaimsPrincipal> ParseClaimsFromJwt(string? accessToken);
+    Task<string?> Login(ApplicationUser applicationUser);
     ValueTask RemoveAuthDataFromStorage();
 }

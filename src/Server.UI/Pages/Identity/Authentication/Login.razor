@@ -98,7 +98,8 @@
     private MudForm? _form;
     private bool _success;
     private bool _loading;
-
+    [Inject]
+    public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
     private LoginFormModel _model = new()
     {
         UserName = "administrator",
@@ -144,8 +145,9 @@
                         else
                         {
 
-                            await TokenProvider.Login(user);
-                            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+                            var accessToken = await TokenProvider.Login(user);
+                            var claims =await TokenProvider.ParseClaimsFromJwt(accessToken);
+                            ((BlazorAuthStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(claims);
                             Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
 
 
