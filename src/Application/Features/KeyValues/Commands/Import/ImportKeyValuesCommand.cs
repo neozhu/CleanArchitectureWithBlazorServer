@@ -88,7 +88,7 @@ public class ImportKeyValuesCommandHandler :
             {
                 var validationResult = await _addValidator.ValidateAsync(
                     new AddEditKeyValueCommand
-                        { Name = item.Name, Value = item.Value, Description = item.Description, Text = item.Text },
+                    { Name = item.Name, Value = item.Value, Description = item.Description, Text = item.Text },
                     cancellationToken);
                 if (validationResult.IsValid)
                 {
@@ -107,7 +107,7 @@ public class ImportKeyValuesCommandHandler :
                 }
             }
 
-            if (errorsOccurred) return await Result.FailureAsync(errors);
+            if (errorsOccurred) return await Result.FailureAsync(errors.ToArray());
 
             await _context.SaveChangesAsync(cancellationToken);
             return await Result.SuccessAsync();

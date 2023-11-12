@@ -1,0 +1,91 @@
+@using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
+
+@inherits MudComponentBase
+
+@inject IValidationService Validator
+@inject IStringLocalizer<Documents> L
+
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="Model" @ref="_form" Validation="@(Validator.ValidateValue(Model))">
+            <MudGrid>
+                <MudItem xs="12" sm="6">
+                    <MudTextField Label="@L["Title"]" @bind-Value="Model.Title"
+                                  For="@(() => Model.Title)"
+                                  Required="true"
+                                  RequiredError="@L["Title is required!"]">
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudSelect Label="@L["Select Document Type"]"
+                               For="@(() => Model.DocumentType)"
+                               Required="true"
+                               RequiredError="@L["Document type is required!"]"
+                               @bind-Value="Model.DocumentType">
+                        @foreach (var doctype in Enum.GetValues<DocumentType>())
+                        {
+                            <MudSelectItem Value="@doctype">@doctype</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Description"]"
+                                  For="@(() => Model.Description)"
+                                  @bind-Value="Model.Description"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Content"]"
+                                  Lines="3" ReadOnly
+                                  For="@(() => Model.Content)"
+                                  @bind-Value="Model.Content"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                   <MudTextField Label="@L["Job Status"]"
+                                For="@(() => Model.Status)"
+                                @bind-Value="Model.Status"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                   <MudCheckBox Label="@L["Is Public"]"
+                                For="@(() => Model.IsPublic)"
+                                @bind-Checked="Model.IsPublic"></MudCheckBox>
+                </MudItem>
+
+                <MudItem>
+                    <MudPaper Elevation="3">
+                        <div id="openseadragon" style="width: 600px; height: 300px;"></div>
+                    </MudPaper>
+                   
+                </MudItem>
+
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="Submit">@ConstantString.Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code{
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; } = default!;
+
+    [EditorRequired][Parameter]
+    public AddEditDocumentCommand Model { get; set; } = default!;
+
+    private MudForm? _form = default!;
+
+    private const long MaxAllowedSize = 3145728;
+
+    private async Task Submit()
+    {
+        await _form!.Validate();
+        if (_form!.IsValid)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

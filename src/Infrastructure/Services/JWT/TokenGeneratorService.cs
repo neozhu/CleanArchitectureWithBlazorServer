@@ -11,12 +11,12 @@ public class TokenGeneratorService : ITokenGeneratorService
         _refreshTokenGenerator = refreshTokenGenerator;
     }
 
-    public Task<string> GenerateAccessToken(ApplicationUser user)
+    public string GenerateAccessToken(ClaimsPrincipal user)
     {
         return _accessTokenGenerator.GenerateAccessToken(user);
     }
 
-    public Task<string> GenerateRefreshToken(ApplicationUser user)
+    public string GenerateRefreshToken(ClaimsPrincipal user)
     {
         return _refreshTokenGenerator.GenerateRefreshToken(user);
     }

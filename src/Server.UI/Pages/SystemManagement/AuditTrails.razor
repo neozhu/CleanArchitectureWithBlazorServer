@@ -1,0 +1,194 @@
+@page "/system/audittrails"
+@using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs
+@using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery
+@using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching
+@using CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
+
+
+@inherits FluxorComponent
+@attribute [Authorize(Policy = Permissions.AuditTrails.View)]
+
+@inject IStringLocalizer<AuditTrails> L
+@inject IState<Fluxor.UserProfileState> UserProfileState
+@inject IMediator Mediator
+
+<PageTitle>@L[Title]</PageTitle>
+
+<MudDataGrid ServerData="@(ServerReload)"
+             T="AuditTrailDto"
+             FixedHeader="true"
+             FixedFooter="true"
+             Virtualize="true"
+             @bind-RowsPerPage="_defaultPageSize"
+             Height="calc(100vh - 300px)"
+             Loading="@_loading"
+             Hover="true" @ref="_table">
+    <ToolBarContent>
+        <div class="d-flex align-start flex-grow-1">
+            <div class="d-flex gap-4">
+                <MudIcon Icon="@Icons.Material.Filled.ReceiptLong" Size="Size.Large" />
+                <div class="d-flex flex-column">
+                    <MudText Typo="Typo.caption">@L[Title]</MudText>
+                    <MudEnumSelect Style="min-width:220px" TEnum="AuditTrailListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
+                    </MudEnumSelect>
+                </div>
+            </div>
+            <div class="flex-grow-1" />
+
+            <div class="d-flex flex-column justify-end">
+                <div class="d-flex">
+                    <MudButton DisableElevation Variant="Variant.Outlined"
+                                Size="Size.Small"
+                                OnClick="@(()=>OnRefresh())"
+                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                                Style="margin-right: 5px;">@ConstantString.Refresh</MudButton>
+                 </div>
+
+                 <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                     <MudEnumSelect TEnum="AuditType?" Placeholder="Search for audit type" Value="@Query.AuditType" Clearable="true" ValueChanged="@(s=>OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
+                     <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End" Style="width:260px" FullWidth="true"
+                                   AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
+                 </MudStack>
+
+
+             </div>
+         </div>
+     </ToolBarContent>
+     <Columns>
+         <HierarchyColumn T="AuditTrailDto" ButtonDisabledFunc="@(x => x.AuditType== AuditType.None)" />
+         <PropertyColumn Property="x => x.UserId" Title="@L[_currentDto.GetMemberDescription(x=>x.UserId)]">
+             <CellTemplate>
+                 <div class="d-flex flex-column">
+                     <MudText Typo="Typo.body2">@context.Item.Owner?.UserName</MudText>
+                     <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.UserId</MudText>
+                 </div>
+             </CellTemplate>
+         </PropertyColumn>
+         <PropertyColumn Property="x => x.AuditType" Title="@L[_currentDto.GetMemberDescription(x=>x.AuditType)]" />
+         <PropertyColumn Property="x => x.TableName" Title="@L[_currentDto.GetMemberDescription(x=>x.TableName)]" />
+         <PropertyColumn Property="x => x.PrimaryKey" Title="@L[_currentDto.GetMemberDescription(x=>x.PrimaryKey)]" />
+         <PropertyColumn Property="x => x.DateTime" Title="@L[_currentDto.GetMemberDescription(x=>x.DateTime)]">
+             <CellTemplate>
+                 <ToLocal DateTime="@context.Item.DateTime.ToLocalTime()" Format="dd/mm/yyyy HH:MM:ss"></ToLocal>
+             </CellTemplate>
+         </PropertyColumn>
+     </Columns>
+     <ChildRowContent>
+         <MudCard Elevation="0" Class="d-flex flex-grow-0">
+             <MudCardHeader>
+                 <CardHeaderContent>
+                     <MudText Typo="Typo.body1"><strong>@context.Item.TableName</strong></MudText>
+                 </CardHeaderContent>
+             </MudCardHeader>
+             <MudCardContent Class="py-3">
+                 <MudSimpleTable Hover="true" Bordered="true">
+                     <thead>
+                         <tr>
+                             <th>@L["Field Name"]</th>
+                             <th>@L[_currentDto.GetMemberDescription(x=>x.OldValues)]</th>
+                             <th>@L[_currentDto.GetMemberDescription(x=>x.NewValues)]</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         @foreach (var field in ((context.Item.NewValues?.Any() ?? false) ? context.Item.NewValues : (context.Item.OldValues?.Any() ?? false) ? context.Item.OldValues : new Dictionary<string, object?>()))
+                        {
+                            <tr>
+                                <td>@field.Key</td>
+                                <td class="mud-text-secondary">@(context.Item.OldValues?.ContainsKey(field.Key) ?? false ? context.Item.OldValues[field.Key] : string.Empty)</td>
+                                <td>@(context.Item.NewValues?.ContainsKey(field.Key) ?? false ? context.Item.NewValues[field.Key] : string.Empty)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            </MudCardContent>
+        </MudCard>
+    </ChildRowContent>
+    <NoRecordsContent>
+        <MudText>@ConstantString.NoRecords</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>@ConstantString.Loading</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
+    </PagerContent>
+</MudDataGrid>
+
+<style>
+    .mud-table-toolbar {
+        height: 120px !important;
+    }
+</style>
+
+@code
+{
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
+
+    public string Title { get; private set; } = "Audit Trails";
+    private MudDataGrid<AuditTrailDto> _table = null!;
+    private bool _loading;
+    private int _defaultPageSize = 15;
+
+    private readonly AuditTrailDto _currentDto = new();
+
+    private AuditTrailsWithPaginationQuery Query { get; set; } = new();
+    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L[_currentDto.GetClassDescription()];
+        var state = await AuthState;
+    }
+
+    private async Task<GridData<AuditTrailDto>> ServerReload(GridState<AuditTrailDto> state)
+    {
+        try
+        {
+            _loading = true;
+            Query.CurrentUser = UserProfile;
+            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
+            Query.PageNumber = state.Page + 1;
+            Query.PageSize = state.PageSize;
+
+            var result = await Mediator.Send(Query).ConfigureAwait(false);
+            return new GridData<AuditTrailDto>() { TotalItems = result.TotalItems, Items = result.Items };
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task OnChangedListView(AuditTrailListView listview)
+    {
+        Query.ListView = listview;
+        await _table.ReloadServerData();
+    }
+
+    private async Task OnSearch(string text)
+    {
+        Query.Keyword = text;
+        await _table.ReloadServerData();
+    }
+
+    private async Task OnSearch(AuditType? val)
+    {
+        Query.AuditType = val;
+        await _table.ReloadServerData();
+    }
+
+    private async Task OnRefresh()
+    {
+        AuditTrailsCacheKey.Refresh();
+        Query.Keyword = string.Empty;
+        await _table.ReloadServerData();
+    }
+
+    private Task OnShowDetail(AuditTrailDto dto)
+    {
+        dto.ShowDetails = !dto.ShowDetails;
+        return Task.CompletedTask;
+    }
+}

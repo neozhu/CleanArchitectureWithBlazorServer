@@ -33,5 +33,5 @@ public class ApplicationUser : IdentityUser
         Tokens = new HashSet<ApplicationUserToken>();
     }
 
-    
+
 }

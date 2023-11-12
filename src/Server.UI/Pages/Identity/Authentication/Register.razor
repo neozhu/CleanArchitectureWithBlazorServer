@@ -1,0 +1,146 @@
+@page "/pages/authentication/register"
+
+@using CleanArchitecture.Blazor.Application.Common.Security
+@using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Infrastructure.Constants.Role
+@using FluentEmail.Core.Models
+
+@attribute [AllowAnonymous]
+@inherits OwningComponentBase
+
+@inject NavigationManager Navigation
+@inject UserManager<ApplicationUser> UserManager
+@inject IMailService MailService
+@inject IStringLocalizer<Register> L
+@inject IValidationService Validator
+
+<PageTitle>@Title</PageTitle>
+
+<AuthorizeView>
+    <NotAuthorized Context="Auth">
+            <MudForm Model="@_model" @ref="@_form" Validation="@(Validator.ValidateValue(_model))">
+            <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
+            <MudText>@L["have an account?"] <MudLink Href="/pages/authentication/login">@L["Sign In"]</MudLink></MudText>
+
+            <MudTextField T="string"
+                          Immediate="true"
+                          Label="@L["User Name"]"
+                          @bind-Value="_model.UserName"
+                          For="@(() => _model.UserName)"
+                          Variant="Variant.Outlined"
+                          Required="true"
+                          RequiredError="@L["user name is required!"]"
+                          Class="my-4"></MudTextField>
+
+            <MudTextField T="string"
+                          Immediate="true"
+                          Label="@L["E-mail"]"
+                          @bind-Value="_model.Email"
+                          For="@(() => _model.Email)"
+                          Required="true"
+                          RequiredError="@L["e-mail is required!"]"
+                          Variant="Variant.Outlined"></MudTextField>
+
+            <MudPasswordField Immediate="true"
+                          Label="@L["Password"]"
+                          @bind-Value="_model.Password"
+                          For="@(() => _model.Password)"
+                          PasswordMode="true"
+                          Variant="Variant.Outlined"
+                          Required="true"
+                          RequiredError="@L["password is required!"]"
+                          Class="mt-4" />
+            <MudPasswordField Immediate="true"
+                          Label="@L["Confirm Password"]"
+                          @bind-Value="_model.ConfirmPassword"
+                          For="@(() => _model.ConfirmPassword)"
+                          Variant="Variant.Outlined"
+                              PasswordMode="true"
+                          Required="true"
+                          RequiredError="@L["password is required!"]"
+                         Class="mt-4" />
+
+            <MudCheckBox For="@(() => _model.AgreeToTerms)" @bind-Checked="@_model.AgreeToTerms" Label="@L["I agree to the terms and privacy"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Disabled="@(!_model.AgreeToTerms || _loading)"
+                       Size="Size.Large"
+                       OnClick="@(async () => await Submit())"
+                       FullWidth="true">
+                @if (_loading)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2"> @ConstantString.Loading</MudText>
+                }
+                else
+                {
+                    <MudText>@L["Register"]</MudText>
+                }
+            </MudButton>
+        </MudForm>
+    </NotAuthorized>
+    <Authorized>
+        <RedirectToHome></RedirectToHome>
+        <MudAlert Severity="MudBlazor.Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
+    </Authorized>
+</AuthorizeView>
+
+@code{
+    private string Title = "Sign Up";
+    private MudForm? _form;
+    private bool _loading;
+    private readonly RegisterFormModel _model = new();
+
+    private async Task Submit()
+    {
+        try
+        {
+            _loading = true;
+            await _form!.Validate();
+            if (_form!.IsValid)
+            {
+                var user = new ApplicationUser
+                    {
+                        UserName = _model.UserName,
+                        Email = _model.Email
+                    };
+                var result = await UserManager.CreateAsync(user, _model.Password!);
+                if (result.Succeeded)
+                {
+                    var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
+                    if (assignResult.Succeeded && !string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.UserName))
+                    {
+                        var response = await SendWelcome(user.Email!, user.UserName!);
+                        if (response.Successful == false)
+                        {
+                            Snackbar.Add(string.Format(L["{0}"], response.ErrorMessages.FirstOrDefault()), MudBlazor.Severity.Warning);
+                        }
+                        Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
+                        Navigation.NavigateTo("/");
+                    }
+                    else
+                    {
+                        Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
+                }
+            }
+
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private Task<SendResponse> SendWelcome(string toEmail, string userName)
+    {
+        var subject = string.Format(L["Welcome to {0}"], Settings.AppName);
+        var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates", "_welcome.txt");
+        return MailService.SendAsync(toEmail, subject, "_welcome", new { AppName = Settings.AppName, Email = toEmail, UserName = userName });
+    }
+}

@@ -7,9 +7,9 @@ public class DeleteCustomerCommandValidator : AbstractValidator<DeleteCustomerCo
 {
         public DeleteCustomerCommandValidator()
         {
-           // TODO: Implement DeleteCustomerCommandValidator method, for example: 
-           // RuleFor(v => v.Id).NotNull().ForEach(v=>v.GreaterThan(0));
-           throw new System.NotImplementedException();
+          
+            RuleFor(v => v.Id).NotNull().ForEach(v=>v.GreaterThan(0));
+          
         }
 }
     

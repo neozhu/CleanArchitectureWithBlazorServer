@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using Ardalis.Specification.EntityFrameworkCore;
-using CleanArchitecture.Blazor.Domain.Common;
+using CleanArchitecture.Blazor.Domain.Common.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 

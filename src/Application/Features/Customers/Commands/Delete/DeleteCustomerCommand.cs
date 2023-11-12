@@ -36,7 +36,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delet
         }
         public async Task<Result<int>> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
-            // TODO: Implement DeleteCheckedCustomersCommandHandler method 
             var items = await _context.Customers.Where(x=>request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {

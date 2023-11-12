@@ -1,0 +1,103 @@
+@using CleanArchitecture.Blazor.Server.UI.Models.Identity;
+    using CleanArchitecture.Blazor.Server.UI.Pages._Models.Identity
+@inherits MudComponentBase
+
+@inject IStringLocalizer<Roles> L
+
+<MudDrawer Open="@Open"
+           Width="400px"
+           Height="100vh"
+           OpenChanged="@(s => OnOpenChanged.InvokeAsync(s))"
+           Anchor="Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+    <MudDrawerHeader>
+        <MudText Typo="Typo.h6">Set Permissions</MudText>
+    </MudDrawerHeader>
+    <MudStack AlignItems="AlignItems.Stretch" Class="px-5">
+        <MudTextField @bind-Value="Keyword" Label="Search"
+                      Margin="Margin.Dense"
+                      Variant="Variant.Text"
+                      Adornment="Adornment.End"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      AdornmentColor="Color.Secondary"/>
+    </MudStack>
+    @if (Permissions.Any())
+    {
+        @foreach (var group in Permissions.Where(x => x.Group!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase) || x.Description!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Group).Distinct().ToList())
+        {
+            <MudCard class="ma-4">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudStack Spacing="1">
+                            <MudText Typo="Typo.body1">
+                                @group
+                            </MudText>
+                            <MudText Typo="Typo.body2">
+                                @(Permissions.FirstOrDefault(x => x.Group == group)?.Description)
+                            </MudText>
+                        </MudStack>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudTooltip Text="@L["Assign or Unassign all"]">
+                            <MudIconButton Disabled="@Waiting" Icon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Default" OnClick="@(() => OnAssignAll(group))"/>
+                        </MudTooltip>
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    @for (var i = 0; i < Permissions.Count; i++)
+                    {
+                        var x = i;
+                        if (Permissions[x].Group == group)
+                        {
+                            <MudCheckBox Dense="true"
+                                         T="bool"
+                                         Size="Size.Small"
+                                         Checked="@Permissions[x].Assigned"
+                                         Label="@Permissions[x].ClaimValue"
+                                         CheckedChanged="@(s => OnAssignChanged.InvokeAsync(Permissions[x]))"
+                                         Color="Color.Primary">
+                            </MudCheckBox>
+                        }
+                    }
+                </MudCardContent>
+
+            </MudCard>
+        }
+    }
+    else
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"/>
+    }
+</MudDrawer>
+
+@code{
+    [EditorRequired][Parameter]
+    public List<PermissionModel> Permissions { get; set; } = new()!;
+
+    [EditorRequired][Parameter]
+    public bool Open { get; set; } = default!;
+
+    [EditorRequired][Parameter]
+    public EventCallback<PermissionModel> OnAssignChanged { get; set; }
+
+    [EditorRequired][Parameter]
+    public EventCallback<List<PermissionModel>> OnAssignAllChanged { get; set; }
+
+    [EditorRequired][Parameter]
+    public EventCallback<bool> OnOpenChanged { get; set; }
+
+    [Parameter]
+    public bool Waiting { get; set; }
+
+    private string Keyword { get; set; } = string.Empty;
+
+    private async Task OnAssignAll(string? groupName)
+    {
+        var list = new List<PermissionModel>();
+        foreach (var t in Permissions.Where(t => t.Group == groupName))
+        {
+            t.Assigned = !t.Assigned;
+            list.Add(t);
+        }
+        await OnAssignAllChanged.InvokeAsync(list);
+    }
+}

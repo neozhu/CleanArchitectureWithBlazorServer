@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Blazor.Server.UI/bin/Debug/net6.0/Blazor.Server.UI.dll",
+            "program": "${workspaceFolder}/src/Server.UI/bin/Debug/net6.0/CleanArchitecture.Blazor.Server.UI.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/Blazor.Server.UI",
+            "cwd": "${workspaceFolder}/src/Server.UI",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {

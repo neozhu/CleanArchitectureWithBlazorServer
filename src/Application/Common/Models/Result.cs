@@ -19,7 +19,7 @@ public class Result : IResult
 
     public string[] Errors { get; init; }
 
-    public string ErrorMessage => string.Join(", ", Errors??new string[] { });
+    public string ErrorMessage => string.Join(", ", Errors ?? new string[] { });
 
     public static Result Success()
     {
@@ -29,11 +29,11 @@ public class Result : IResult
     {
         return Task.FromResult(new Result(true, Array.Empty<string>()));
     }
-    public static Result Failure(IEnumerable<string> errors)
+    public static Result Failure(params string[] errors)
     {
         return new Result(false, errors);
     }
-    public static Task<Result> FailureAsync(IEnumerable<string> errors)
+    public static Task<Result> FailureAsync(params string[] errors)
     {
         return Task.FromResult(new Result(false, errors));
     }
@@ -41,13 +41,13 @@ public class Result : IResult
 public class Result<T> : Result, IResult<T>
 {
 
-    public T? Data { get; set; } 
+    public T? Data { get; set; }
 
-    public static new Result<T> Failure(IEnumerable<string> errors)
+    public static new Result<T> Failure(params string[] errors)
     {
         return new Result<T> { Succeeded = false, Errors = errors.ToArray() };
     }
-    public static new async Task<Result<T>> FailureAsync(IEnumerable<string> errors)
+    public static new async Task<Result<T>> FailureAsync(params string[] errors)
     {
         return await Task.FromResult(Failure(errors));
     }

@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
+﻿using CleanArchitecture.Blazor.Domain.Entities;
+
+namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
 #nullable disable warnings
 public class AuditTrailAdvancedSpecification : Specification<AuditTrail>
 {

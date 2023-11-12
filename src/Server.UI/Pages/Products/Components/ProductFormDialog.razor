@@ -1,0 +1,265 @@
+@using Blazor.Server.UI.Services.JsInterop;
+@using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
+@using CleanArchitecture.Blazor.Domain.Common.Enums
+@using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
+@using Severity = MudBlazor.Severity
+@using Size = SixLabors.ImageSharp.Size
+@using Color = MudBlazor.Color
+@using SixLabors.ImageSharp
+@using SixLabors.ImageSharp.Formats.Png
+@using SixLabors.ImageSharp.Processing
+@using Image = SixLabors.ImageSharp.Image
+
+@inherits MudComponentBase
+
+@inject IJSRuntime JS
+@inject IStringLocalizer<Products> L
+@inject IValidationService Validator
+@inject IUploadService UploadService
+@inject IMediator Mediator
+
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Product Name"]" @bind-Value="Model.Name"
+                                  For="@(() => Model.Name)"
+                                  Required="true"
+                                  RequiredError="@L["product name is required!"]">
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L["Description"]"
+                                  Lines="3"
+                                  For="@(() => Model.Description)"
+                                  @bind-Value="Model.Description">
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <PicklistAutocomplete Picklist="Picklist.Brand"
+                                          Label="@L["Brand Name"]"
+                                          For="@(() => Model.Brand)"
+                                          ResetValueOnEmptyText="true"
+                                          ShowProgressIndicator="true"
+                                          @bind-Value="Model.Brand">
+                        <ProgressIndicatorTemplate>
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                        </ProgressIndicatorTemplate>
+                    </PicklistAutocomplete>
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <MudNumericField Label="@L["Price"]"
+                                     T="decimal"
+                                     Format="N2"
+                                     For="@(() => Model.Price)"
+                                     Min="0.00m"
+                                     @bind-Value="Model.Price">
+                    </MudNumericField>
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <PicklistAutocomplete Picklist="Picklist.Unit"
+                                          Label="@L["Unit"]"
+                                          For="@(() => Model.Unit)"
+                                          ResetValueOnEmptyText="true"
+                                          ShowProgressIndicator="true"
+                                          @bind-Value="Model.Unit">
+                        <ProgressIndicatorTemplate>
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                        </ProgressIndicatorTemplate>
+                    </PicklistAutocomplete>
+                </MudItem>
+                <MudItem>
+                    <div class="d-flex flex-row gap-4 mb-2">
+                        <MudFileUpload T="IReadOnlyList<IBrowserFile>" Multiple
+                                       SuppressOnChangeWhenInvalid="true"
+                                       @bind-Files="Model.UploadPictures" OnFilesChanged="UploadFiles" For="@(() => Model.UploadPictures)">
+                            <ButtonTemplate>
+                                <MudLoadingButton Loading="@_uploading" HtmlTag="label" Disabled="_uploading"
+                                                  Variant="Variant.Filled"
+                                                  Color="Color.Primary"
+                                                  for="@context">
+                                    @(L["Upload picture"])
+                                </MudLoadingButton>
+                            </ButtonTemplate>
+                        </MudFileUpload>
+                    </div>
+                    <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
+                        <div class="d-fex">
+                            @if (Model.Pictures is not null)
+                        {
+                            foreach (var img in Model.Pictures)
+                            {
+                                <div style="float:left; position: relative; width: 160px; height: 80px; margin: 10px;">
+                                    <MudTooltip Delay="500" Text="@img.Name">
+                                        <MudImage ObjectFit="ObjectFit.Cover" Height="80" Width="160" Src="@img.Url" Alt="@img.Name" Elevation="25" Class="mr-2 rounded-lg" />
+                                    </MudTooltip>
+                                    <div style="position: absolute;top: 0px;left: 0px; z-index: 2990;">
+                                        <MudIconButton OnClick="@(() => PreviewImage(img.Url, Model.Pictures))" Icon="@Icons.Material.Filled.Image" aria-label="preview" Color="Color.Info" Size="MudBlazor.Size.Small"></MudIconButton>
+                                    </div>
+                                    <div style="position: absolute;top: 0px;right: 0px; z-index: 2990;">
+                                        <MudIconButton OnClick="@(() => DeleteImage(img))" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Color="Color.Error" Size="MudBlazor.Size.Small"></MudIconButton>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
+            <MudLoadingButton Loading="@_saveingnew" OnClick="SaveAndNew">@ConstantString.SaveAndNew</MudLoadingButton>
+            <MudLoadingButton Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        </DialogActions>
+    </MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; } = default!;
+
+    [EditorRequired]
+    [Parameter]
+    public AddEditProductCommand Model { get; set; } = default!;
+
+    [Parameter]
+    public Action? Refresh { get; set; }
+
+    private MudForm? _form;
+    private bool _saving;
+    private bool _saveingnew;
+    private bool _uploading;
+
+    private const long MaxAllowedSize = 3145728;
+
+    private async Task DeleteImage(ProductImage picture)
+    {
+        if (Model.Pictures != null)
+        {
+            var parameters = new DialogParameters<ConfirmationDialog>
+            {
+                { x=>x.ContentText, $"{L["Are you sure you want to erase this image?"]}" }
+            };
+            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+            var dialog = DialogService.Show<ConfirmationDialog>($"{L["Erase imatge"]}", parameters, options);
+            var state = await dialog.Result;
+
+            if (!state.Canceled)
+            {
+                Model.Pictures.Remove(picture);
+            }
+        }
+    }
+
+    private async Task PreviewImage(string url, IEnumerable<ProductImage> images)
+    {
+        await new Fancybox(JS).Preview(url, images);
+    }
+
+    private async Task UploadFiles(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            _uploading = true;
+            var list = new List<ProductImage>();
+            foreach (var file in e.GetMultipleFiles())
+            {
+                try
+                {
+                    var filestream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
+                    var imgStream = new MemoryStream();
+                    await filestream.CopyToAsync(imgStream);
+                    imgStream.Position = 0;
+                    using (var outStream = new MemoryStream())
+                    {
+                        using (var image = Image.Load(imgStream))
+                        {
+                            image.Mutate(
+                                i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(640, 320) }));
+                            image.Save(outStream, PngFormat.Instance);
+                            var filename = file.Name;
+                            var fi = new FileInfo(filename);
+                            var ext = fi.Extension;
+                            var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.Product, outStream.ToArray()));
+                            list.Add(new ProductImage { Name = filename, Size = outStream.Length, Url = result });
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Snackbar.Add($"{ex.Message}", Severity.Error);
+                }
+            }
+            Snackbar.Add(L["Upload pictures successfully"], Severity.Info);
+
+            if (Model.Pictures is null)
+                Model.Pictures = list;
+            else
+                Model.Pictures.AddRange(list);
+        }
+        finally
+        {
+            _uploading = false;
+        }
+    }
+
+    private async Task Submit()
+    {
+        try
+        {
+            _saving = true;
+            await _form!.Validate().ConfigureAwait(false);
+
+            if (!_form!.IsValid)
+                return;
+
+            var result = await Mediator.Send(Model);
+
+            if (result.Succeeded)
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+                Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add(result.ErrorMessage, Severity.Error);
+            }
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+    private async Task SaveAndNew()
+    {
+        try
+        {
+            _saveingnew = true;
+            await _form!.Validate().ConfigureAwait(false);
+            if (!_form!.IsValid)
+                return;
+            var result = await Mediator.Send(Model);
+            if (result.Succeeded)
+            {
+                Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
+                Refresh?.Invoke();
+                Model = new AddEditProductCommand();
+            }
+            else
+            {
+                Snackbar.Add(result.ErrorMessage, Severity.Error);
+            }
+        }
+        finally
+        {
+            _saveingnew = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

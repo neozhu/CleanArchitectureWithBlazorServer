@@ -1,0 +1,258 @@
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+@using CleanArchitecture.Blazor.Domain.Common.Enums
+@using CleanArchitecture.Blazor.Domain.Identity
+@using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
+@using Severity = MudBlazor.Severity
+@using Size = SixLabors.ImageSharp.Size
+@using SixLabors.ImageSharp.Formats.Png
+@using SixLabors.ImageSharp.Processing
+@using Image = SixLabors.ImageSharp.Image
+@using Color = MudBlazor.Color
+@using SixLabors.ImageSharp;
+    using CleanArchitecture.Blazor.Domain.Identity;
+
+@inherits MudComponentBase
+
+@inject IUploadService UploadService
+@inject ITenantService TenantsService
+@inject RoleManager<ApplicationRole> RoleManager
+@inject IStringLocalizer<Users> L
+
+<MudForm Model="@Model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)">
+    <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden"/>
+    <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden"/>
+    <InputFile id="UploadPhoto" OnChange="UploadPhoto" hidden accept=".jpg, .jpeg, .png"/>
+    <MudGrid>
+        <MudItem sm="12">
+            <div class="d-flex justify-center">
+
+                @if (string.IsNullOrEmpty(Model.ProfilePictureDataUrl))
+                {
+                    <MudAvatar Style="height:128px; width:128px; font-size:2rem;">@Model.UserName.ToUpper().FirstOrDefault()</MudAvatar>
+                }
+                else
+                {
+                    <MudAvatar Style="height:128px; width:128px; font-size:2rem;">
+                        <MudImage Src="@Model.ProfilePictureDataUrl"></MudImage>
+                    </MudAvatar>
+                }
+                <MudTooltip Text="@L["Click upload a photo."]">
+                    <MudIconButton HtmlTag="label"
+                                   Color="Color.Info"
+                                   Icon="@Icons.Material.Filled.PhotoCamera"
+                                   for="UploadPhoto">
+                    </MudIconButton>
+                </MudTooltip>
+            </div>
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudSelect For="@(() => Model.TenantId)"
+                       T="string"
+                       Label="@L["Select Tenant"]"
+                       Text="@Model.TenantName"
+                       Required="true"
+                       RequiredError="@L["Tenant is required."]"
+                       Value="@Model.TenantId"
+                       ValueChanged="TenantSelectChanged">
+                @foreach (var item in TenantsService.DataSource)
+                {
+                    <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L["Provider"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <PickSuperiorIdAutocomplete For="@(() => Model.SuperiorId)"
+                                        OwnerName="@Model.UserName"
+                                        Clearable="true"
+                                        Label="@L["Select Superior"]"
+                                        @bind-Value="@Model.SuperiorId">
+            </PickSuperiorIdAutocomplete>
+
+        </MudItem>
+        @if (string.IsNullOrEmpty(Model.Id))
+        {
+            <MudItem xs="12" sm="6">
+                <MudPasswordField Immediate="true"
+                                  Label="@L["Password"]"
+                                  @bind-Value="Model.Password"
+                                  For="@(() => Model.Password)"
+                                  Variant="Variant.Text"
+                                  PasswordMode="true"
+                                  Required="true"
+                                  RequiredError="@L["password is required!"]"
+                                  Class="mt-4"/>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudPasswordField Immediate="true"
+                                  Label="@L["Confirm Password"]"
+                                  @bind-Value="Model.ConfirmPassword"
+                                  For="@(() => Model.ConfirmPassword)"
+                                  Variant="Variant.Text"
+                                  PasswordMode="true"
+                                  Required="true"
+                                  RequiredError="@L["confrm password is required!"]"
+                                  Class="mt-4"/>
+            </MudItem>
+        }
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+
+
+        <MudItem xs="12" sm="6">
+            <MudText Typo="Typo.caption">@L["Status"]</MudText>
+            <div class="d-fex">
+                <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
+            </div>
+        </MudItem>
+        <MudItem xs="12" sm="12">
+            <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
+            <MudGrid Class="mt-1">
+                @for (var i = 0; i < Roles.Count; i++)
+                {
+                    var x = i;
+                    <MudItem xs="6" sm="6" Class="py-0 my=0">
+                        <MudCheckBox T="bool" Checked="@Roles[x].Value" Label="@Roles[x].Key" CheckedChanged="@(s => Roles[x].Value = (bool)s)"></MudCheckBox>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudItem>
+    </MudGrid>
+</MudForm>
+
+@code{
+    public class CheckItem
+    {
+        public string Key { get; set; } = string.Empty;
+        public bool Value { get; set; }
+    }
+
+    [EditorRequired]
+    [Parameter]
+    public ApplicationUserDto Model { get; set; } = default!;
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
+
+
+    private MudForm? _form = default!;
+    private readonly ApplicationUserDtoValidator _modelValidator = new();
+    private List<CheckItem> Roles { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var array = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
+        foreach (var role in array)
+        {
+            if (Model.AssignedRoles != null && Model.AssignedRoles.Contains(role))
+            {
+                Roles.Add(new CheckItem { Key = role!, Value = true });
+            }
+            else
+            {
+                Roles.Add(new CheckItem { Key = role!, Value = false });
+            }
+        }
+    }
+
+    private Task TenantSelectChanged(string id)
+    {
+        var tenant = TenantsService.DataSource.Find(x => x.Id == id);
+        Model.TenantId = tenant?.Id;
+        Model.TenantName = tenant?.Name;
+        return Task.CompletedTask;
+    }
+
+    private async Task UploadPhoto(InputFileChangeEventArgs e)
+    {
+        var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
+        var imgStream = new MemoryStream();
+        await filestream.CopyToAsync(imgStream);
+        imgStream.Position = 0;
+        using (var outStream = new MemoryStream())
+        {
+            using (var image = Image.Load(imgStream))
+            {
+                image.Mutate(
+                    i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) }));
+                image.Save(outStream, PngFormat.Instance);
+                var filename = e.File.Name;
+                var fi = new FileInfo(filename);
+                var ext = fi.Extension;
+                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.ProfilePicture, outStream.ToArray()));
+                Model.ProfilePictureDataUrl = result;
+                //Do your validations here
+                Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
+            }
+        }
+    }
+
+    public async Task Submit()
+    {
+        if (_form is not null)
+        {
+            await _form.Validate();
+            if (_form.IsValid)
+            {
+                Model.AssignedRoles = Roles.Where(x => x.Value).Select(x => x.Key).ToArray();
+                await OnFormSubmit.InvokeAsync(Model);
+            }
+        }
+    }
+
+    // TODO: probably this will be moved as feature in the application layer
+    public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>
+    {
+        public ApplicationUserDtoValidator()
+        {
+            RuleFor(v => v.TenantId)
+                 .MaximumLength(256)
+                 .NotEmpty();
+            //RuleFor(v => v.SuperiorId)
+            //     .MaximumLength(256)
+            //     .NotEmpty().When(x=>!x.UserName.Equals("Administrator", StringComparison.CurrentCultureIgnoreCase));
+            RuleFor(v => v.Provider)
+                 .MaximumLength(256)
+                 .NotEmpty();
+            RuleFor(v => v.UserName)
+                 .MaximumLength(256)
+                 .NotEmpty();
+            RuleFor(v => v.Email)
+                 .MaximumLength(256)
+                 .NotEmpty()
+                 .EmailAddress();
+            RuleFor(p => p.Password).NotEmpty().WithMessage("Your password cannot be empty")
+                     .MinimumLength(6).WithMessage("Your password length must be at least 6.")
+                     .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
+                     .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
+                     .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
+                     .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
+                     .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
+            RuleFor(x => x.ConfirmPassword)
+                 .Equal(x => x.Password);
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<ApplicationUserDto>.CreateWithOptions((ApplicationUserDto)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+}

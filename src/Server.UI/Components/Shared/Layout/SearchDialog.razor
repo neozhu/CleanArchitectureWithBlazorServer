@@ -1,0 +1,67 @@
+@using Toolbelt.Blazor.HotKeys2
+
+@inject IStringLocalizer<SharedResource> L
+@inject HotKeys HotKeys
+@inject NavigationManager Navigation
+
+<MudDialog DisableSidePadding="true">
+    <DialogContent>
+        <MudContainer>
+            <MudTextField @bind-Value="@_search"
+                          Class="mb-3"
+                          Clearable="true"
+                          Placeholder="@L["Search..."]"
+                          TextChanged="@(SearchPages)" 
+                          Immediate="true"/>
+            <MudList Clickable="true"
+                     Style="height: 300px; overflow-y: auto">
+                @foreach (var (key, value) in _pagesFiltered)
+                {
+                    <MudListItem OnClick="@(() => Navigation.NavigateTo(value))">
+                        <MudHighlighter HighlightedText="@_search"
+                                        Text="@key" />
+                    </MudListItem>
+                }
+            </MudList>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
+
+@code
+{
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; } = default!;
+
+    private readonly Dictionary<string, string> _pages = new();
+    private HotKeysContext? _hotKeysContext;
+    private Dictionary<string, string> _pagesFiltered = new();
+    private string _search = string.Empty;
+
+    public void Dispose()
+    {
+        _hotKeysContext?.Dispose();
+    }
+
+    protected override void OnInitialized()
+    {
+        _pages.Add("App", "/");
+
+        _pagesFiltered = _pages;
+
+        _hotKeysContext = HotKeys.CreateContext()
+            .Add(Key.Escape, () => MudDialog.Close(), "Close command palette.");
+    }
+
+    private void SearchPages(string value)
+    {
+        _pagesFiltered = new Dictionary<string, string>();
+
+        if (!string.IsNullOrWhiteSpace(value))
+            _pagesFiltered = _pages
+                .Where(x => x.Key
+                    .Contains(value, StringComparison.InvariantCultureIgnoreCase))
+                .ToDictionary(x => x.Key, x => x.Value);
+        else
+            _pagesFiltered = _pages;
+    }
+}

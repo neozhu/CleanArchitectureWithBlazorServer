@@ -13,5 +13,10 @@ public  class BlazorAuthStateProvider : AuthenticationStateProvider
         var claimsPrincipal =await _tokenProvider.GetClaimsPrincipal();
         return new AuthenticationState(claimsPrincipal);
     }
+    public void MarkUserAsAuthenticated(ClaimsPrincipal authenticatedUser)
+    {
+        var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
+        NotifyAuthenticationStateChanged(authState);
+    }
 }
 

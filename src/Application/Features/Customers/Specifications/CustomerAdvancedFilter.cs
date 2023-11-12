@@ -1,5 +1,5 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Features.Customers.Specifications;
-
+#nullable disable warnings
 public enum CustomerListView
 {
     [Description("All")]

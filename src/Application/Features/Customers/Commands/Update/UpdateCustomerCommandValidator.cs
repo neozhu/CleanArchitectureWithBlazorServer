@@ -7,11 +7,9 @@ public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCo
 {
         public UpdateCustomerCommandValidator()
         {
-           // TODO: Implement UpdateCustomerCommandValidator method, for example: 
-           // RuleFor(v => v.Name)
-           //      .MaximumLength(256)
-           //      .NotEmpty();
-           throw new System.NotImplementedException();
+           RuleFor(v => v.Id).NotNull();
+           RuleFor(v => v.Name).MaximumLength(256).NotEmpty();
+          
         }
     
 }
