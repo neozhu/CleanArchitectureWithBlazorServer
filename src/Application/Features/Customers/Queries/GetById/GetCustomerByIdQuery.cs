@@ -34,10 +34,9 @@ public class GetCustomerByIdQueryHandler :
 
     public async Task<CustomerDto> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
     {
-        // TODO: Implement GetCustomerByIdQueryHandler method 
-        var data = await _context.Customers.ApplySpecification(new CustomerByIdSpec(request.Id))
+        var data = await _context.Customers.ApplySpecification(new CustomerByIdSpecification(request.Id))
                      .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
-                     .FirstAsync(cancellationToken) ?? throw new NotFoundException($"Customer with id: [{request.Id}] not found.");;
+                     .FirstAsync(cancellationToken) ?? throw new NotFoundException($"Customer with id: [{request.Id}] not found.");
         return data;
     }
 }

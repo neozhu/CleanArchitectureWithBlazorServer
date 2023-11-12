@@ -1,28 +1,22 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
-using System.Text;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+using CleanArchitecture.Blazor.Domain.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using LazyCache;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly AppConfigurationSettings _appConfig;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
     private readonly IAppCache _cache;
@@ -39,10 +33,8 @@ public class IdentityService : IIdentityService
     {
         var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         _userClaimsPrincipalFactory = scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _authorizationService = scope.ServiceProvider.GetRequiredService<IAuthorizationService>();
-        _appConfig = appConfig;
         _cache = cache;
         _mapper = mapper;
         _localizer = localizer;
@@ -58,7 +50,7 @@ public class IdentityService : IIdentityService
     {
         var key = $"GetUserName-byId:{userId}";
         var user = _cache.GetOrAdd(key, () => _userManager.Users.SingleOrDefault(u => u.Id == userId), Options);
-        return user?.UserName??string.Empty;
+        return user?.UserName ?? string.Empty;
     }
     public async Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default)
     {
@@ -95,7 +87,7 @@ public class IdentityService : IIdentityService
         if (user is not null)
         {
             user.IsLive = isLive;
-            var result= await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user);
         }
     }
     public async Task<ApplicationUserDto> GetApplicationUserDto(string userId, CancellationToken cancellation = default)
@@ -119,10 +111,10 @@ public class IdentityService : IIdentityService
                 return await _userManager.Users.Where(x => x.TenantId == tenantId).Include(x => x.UserRoles).ThenInclude(x => x.Role)
                       .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
             }
-             
+
 
         };
-        var result = await _cache.GetOrAddAsync(key, () => getUsersByTenantId(tenantId,cancellation), Options);
+        var result = await _cache.GetOrAddAsync(key, () => getUsersByTenantId(tenantId, cancellation), Options);
         return result;
     }
 }

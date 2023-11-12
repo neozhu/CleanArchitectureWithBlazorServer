@@ -15,7 +15,7 @@ public class CustomersWithPaginationQuery : CustomerAdvancedFilter, ICacheableRe
     }
     public string CacheKey => CustomerCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => CustomerCacheKey.MemoryCacheEntryOptions;
-    public CustomerAdvancedPaginationSpec Specification => new CustomerAdvancedPaginationSpec(this);
+    public CustomerAdvancedSpecification Specification => new CustomerAdvancedSpecification(this);
 }
     
 public class CustomersWithPaginationQueryHandler :
@@ -38,7 +38,6 @@ public class CustomersWithPaginationQueryHandler :
 
         public async Task<PaginatedData<CustomerDto>> Handle(CustomersWithPaginationQuery request, CancellationToken cancellationToken)
         {
-           // TODO: Implement CustomersWithPaginationQueryHandler method 
            var data = await _context.Customers.OrderBy($"{request.OrderBy} {request.SortDirection}")
                                     .ProjectToPaginatedDataAsync<Customer, CustomerDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
             return data;

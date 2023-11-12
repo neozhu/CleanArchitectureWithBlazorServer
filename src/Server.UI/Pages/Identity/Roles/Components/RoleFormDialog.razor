@@ -1,0 +1,73 @@
+@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+
+@inherits MudComponentBase
+@inject IStringLocalizer<Roles> L
+
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="Model" @ref="_form">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Name)]" @bind-Value="Model.Name"
+                                  Required="true"
+                                  For="@(() => Model.Name)"
+                                  RequiredError="@L["DefaultRole name is required!"]"
+                                  Validation="@(_modelValidator.ValidateValue)">
+                    </MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Description)]"
+                                  For="@(() => Model.Description)"
+                                  @bind-Value="Model.Description">
+                    </MudTextField>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">@ConstantString.Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; } = default!;
+
+    [EditorRequired][Parameter]
+    public ApplicationRoleDto Model { get; set; } = default!;
+
+    private MudForm? _form;
+    private readonly RoleDtoValidator _modelValidator = new();
+
+    private async Task Submit()
+    {
+        await _form!.Validate();
+        if (_form!.IsValid)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    // TODO: probably this will be moved as feature in the application layer
+    public class RoleDtoValidator : AbstractValidator<ApplicationRoleDto>
+    {
+        public RoleDtoValidator()
+        {
+            RuleFor(v => v.Name)
+                 .MaximumLength(256)
+                 .NotEmpty();
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<ApplicationRoleDto>.CreateWithOptions((ApplicationRoleDto)model, x => x.IncludeProperties(propertyName)));
+            return result.IsValid ? (IEnumerable<string>)Array.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+}

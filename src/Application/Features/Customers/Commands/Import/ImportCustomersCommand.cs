@@ -45,13 +45,12 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Impor
             _excelService = excelService;
             _mapper = mapper;
         }
-#nullable disable warnings
-    public async Task<Result<int>> Handle(ImportCustomersCommand request, CancellationToken cancellationToken)
+        #nullable disable warnings
+        public async Task<Result<int>> Handle(ImportCustomersCommand request, CancellationToken cancellationToken)
         {
-           // TODO: Implement ImportCustomersCommandHandler method
+
            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, CustomerDto, object?>>
             {
-                // TODO: Define the fields that should be read from Excel, for example:
                 { _localizer[_dto.GetMemberDescription(x=>x.Name)], (row, item) => item.Name = row[_localizer[_dto.GetMemberDescription(x=>x.Name)]].ToString() }, 
 { _localizer[_dto.GetMemberDescription(x=>x.Description)], (row, item) => item.Description = row[_localizer[_dto.GetMemberDescription(x=>x.Description)]].ToString() }, 
 

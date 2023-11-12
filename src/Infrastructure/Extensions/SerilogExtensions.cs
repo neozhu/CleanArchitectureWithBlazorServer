@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Data;
-using CleanArchitecture.Blazor.Application.Common.Configurations;
+using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

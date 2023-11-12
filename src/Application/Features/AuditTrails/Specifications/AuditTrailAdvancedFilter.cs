@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
+﻿using CleanArchitecture.Blazor.Domain.Entities;
+
+namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
 public enum AuditTrailListView
 {
     [Description("All")] All,

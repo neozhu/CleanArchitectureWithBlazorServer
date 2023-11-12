@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Constants;
+﻿using CleanArchitecture.Blazor.Infrastructure.Constants;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Constants;

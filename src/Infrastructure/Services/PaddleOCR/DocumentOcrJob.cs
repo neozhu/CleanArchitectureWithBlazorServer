@@ -6,34 +6,31 @@ using System.Drawing;
 using System.Text.Json;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
-using CleanArchitecture.Blazor.Application.Services.PaddleOCR;
-using CleanArchitecture.Blazor.Domain.Enums;
-using CleanArchitecture.Blazor.Infrastructure.Hubs;
-using Microsoft.AspNetCore.SignalR;
+using CleanArchitecture.Blazor.Domain.Common.Enums;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
 public class DocumentOcrJob : IDocumentOcrJob
 {
-    private readonly IHubContext<SignalRHub, ISignalRHub> _hubContext;
+    private readonly IApplicationHubWrapper _notificationService;
     private readonly IApplicationDbContext _context;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ISerializer _serializer;
     private readonly ILogger<DocumentOcrJob> _logger;
     private readonly Stopwatch _timer;
+
     public DocumentOcrJob(
-        IHubContext<SignalRHub, ISignalRHub> hubContext,
+        IApplicationHubWrapper appNotificationService,
         IApplicationDbContext context,
         IHttpClientFactory httpClientFactory,
         ISerializer serializer,
-        ILogger<DocumentOcrJob> logger
-        )
+        ILogger<DocumentOcrJob> logger)
     {
-        _hubContext = hubContext;
+        _notificationService = appNotificationService;
         _context = context;
         _httpClientFactory = httpClientFactory;
         _serializer = serializer;
         _logger = logger;
-        _timer=new Stopwatch();
+        _timer = new Stopwatch();
     }
     private string ReadBase64String(string path)
     {
@@ -62,9 +59,9 @@ public class DocumentOcrJob : IDocumentOcrJob
             using (var client = _httpClientFactory.CreateClient("ocr"))
             {
                 _timer.Start();
-                var doc =await _context.Documents.FindAsync(id);
+                var doc = await _context.Documents.FindAsync(id);
                 if (doc == null) return;
-                await _hubContext.Clients.All.Start(doc.Title!);
+                await _notificationService.JobStarted(doc.Title!);
                 DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                 if (string.IsNullOrEmpty(doc.URL)) return;
                 var imgFile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
@@ -82,7 +79,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                     var result = await response.Content.ReadAsStringAsync();
                     var ocrResult = JsonSerializer.Deserialize<OcrResult>(result);
                     doc.Status = JobStatus.Done;
-                   
+
                     if (ocrResult is not null)
                     {
                         var content = string.Join(',', ocrResult.data);
@@ -90,7 +87,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                         doc.Content = content;
                     }
                     await _context.SaveChangesAsync(cancellationToken);
-                    await _hubContext.Clients.All.Completed(doc.Title!);
+                    await _notificationService.JobCompleted(doc.Title!);
                     DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                     _timer.Stop();
                     var elapsedMilliseconds = _timer.ElapsedMilliseconds;
@@ -109,7 +106,7 @@ public class DocumentOcrJob : IDocumentOcrJob
 
 }
 #pragma warning disable CS8981
-class OcrResult
+internal class OcrResult
 {
     public string[] data { get; set; } = Array.Empty<string>();
 }

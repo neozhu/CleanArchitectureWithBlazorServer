@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using CleanArchitecture.Blazor.Application.Common.Configurations;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
@@ -8,26 +7,22 @@ public class RefreshTokenGenerator : IRefreshTokenGenerator
 {
     private readonly JwtSecurityTokenHandler _tokenHandler;
     private readonly SimpleJwtOptions _options;
-    private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
 
-    public RefreshTokenGenerator(JwtSecurityTokenHandler tokenHandler, IOptions<SimpleJwtOptions> options, IServiceScopeFactory scopeFactory)
+    public RefreshTokenGenerator(JwtSecurityTokenHandler tokenHandler, IOptions<SimpleJwtOptions> options)
     {
         _tokenHandler = tokenHandler;
         _options = options.Value;
-        var scope = scopeFactory.CreateScope();
-        _userClaimsPrincipalFactory = scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
     }
 
-    public async Task<string> GenerateRefreshToken(ApplicationUser user)
+    public string GenerateRefreshToken(ClaimsPrincipal user)
     {
-        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
         var signingOptions = _options.RefreshSigningOptions!;
         var credentials = new SigningCredentials(signingOptions.SigningKey, signingOptions.Algorithm);
         var header = new JwtHeader(credentials);
         var payload = new JwtPayload(
             _options.Issuer!,
             _options.Audience!,
-            principal.Claims,
+            user.Claims,
             DateTime.UtcNow,
             DateTime.UtcNow.AddMinutes(signingOptions.ExpirationMinutes)
         );

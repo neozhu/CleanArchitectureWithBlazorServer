@@ -32,7 +32,6 @@ public class GetAllCustomersQueryHandler :
 
     public async Task<IEnumerable<CustomerDto>> Handle(GetAllCustomersQuery request, CancellationToken cancellationToken)
     {
-        // TODO: Implement GetAllCustomersQueryHandler method 
         var data = await _context.Customers
                      .ProjectTo<CustomerDto>(_mapper.ConfigurationProvider)
                      .AsNoTracking()

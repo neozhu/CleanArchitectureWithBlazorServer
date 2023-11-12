@@ -1,9 +1,10 @@
 ﻿using System.Reflection;
-using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Application.Constants.Permission;
-using CleanArchitecture.Blazor.Application.Constants.Role;
-using CleanArchitecture.Blazor.Application.Constants.User;
-using CleanArchitecture.Blazor.Domain.Enums;
+using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Permission;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
+using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 public class ApplicationDbContextInitializer
@@ -90,7 +91,7 @@ public class ApplicationDbContextInitializer
         if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
         {
             await _roleManager.CreateAsync(administratorRole);
-           
+
             foreach (var permission in permissions)
             {
                 await _roleManager.AddClaimAsync(administratorRole, new Claim(ApplicationClaimTypes.Permission, permission));
@@ -125,7 +126,7 @@ public class ApplicationDbContextInitializer
         // Seed, if necessary
         if (!_context.KeyValues.Any())
         {
-            _context.KeyValues.Add(new KeyValue { Name =  Picklist.Status, Value = "initialization", Text = "initialization", Description = "Status of workflow" });
+            _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "initialization", Text = "initialization", Description = "Status of workflow" });
             _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "processing", Text = "processing", Description = "Status of workflow" });
             _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "pending", Text = "pending", Description = "Status of workflow" });
             _context.KeyValues.Add(new KeyValue { Name = Picklist.Status, Value = "finished", Text = "finished", Description = "Status of workflow" });

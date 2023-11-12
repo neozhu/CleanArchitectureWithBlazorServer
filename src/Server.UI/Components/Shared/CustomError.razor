@@ -1,0 +1,81 @@
+@using System.Net
+@using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
+
+@inject NavigationManager Navigation
+@inject ILogger<CustomError> Logger
+
+<MudDialog IsVisible="true">
+    <TitleContent>
+        <MudText Typo="Typo.h6" Color="Color.Error"> @StatusCode </MudText>
+    </TitleContent>
+    <DialogContent>
+        <div Class="px-6 rounded-lg d-flex flex-column">
+            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Class="pb-4" Style="height:100px;width:100px;margin:auto" Color="Color.Warning" />
+
+            <div class="d-flex align-center gap-4">
+                <MudText Typo="Typo.subtitle2">@Message</MudText>
+                <MudText Typo="Typo.subtitle2">@DateTime.Now</MudText>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(()=>ShowStackTrace=!ShowStackTrace)">More</MudButton>
+            </div>
+            <MudText>@Message For more information, contact your system administrator</MudText>
+            @if (ShowStackTrace)
+            {
+                <MudText Typo="Typo.body2" Class="mt-2">@StackTrace</MudText>
+            }
+            <MudDivider Class="my-3" />
+    
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="OnRefresh">@ConstantString.Refresh</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code
+{
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
+
+    [EditorRequired][Parameter]
+    public Exception Exception { get; set; } = default!;
+
+    private string? Message { get; set; }
+    private bool ShowStackTrace { get; set; }
+    private string? StackTrace { get; set; }
+    private string? StatusCode { get; set; } = HttpStatusCode.InternalServerError.ToString();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState;
+        var userName = state.User.GetUserName();
+
+        switch (Exception)
+        {
+            case ServerException e:
+                StatusCode = e.StatusCode.ToString();
+                if (e.ErrorMessages is not null)
+                {
+                    Message = string.Join(", ", e.ErrorMessages.ToArray());
+                }
+                break;
+            default:
+                if (Exception.InnerException != null)
+                {
+                    while (Exception.InnerException != null)
+                    {
+                        Exception = Exception.InnerException;
+                    }
+                }
+                Message = Exception.Message;
+                break;
+        }
+
+        StackTrace = Exception.StackTrace;
+        Logger.LogError(Exception, "{Message}. request url: {@url} {@UserName}", Message, Navigation.Uri, userName);
+    }
+
+    private void OnRefresh()
+    {
+        Navigation.NavigateTo(Navigation.Uri, true);
+    }
+}

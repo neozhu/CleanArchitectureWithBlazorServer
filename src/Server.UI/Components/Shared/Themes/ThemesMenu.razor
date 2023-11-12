@@ -1,0 +1,249 @@
+@using CleanArchitecture.Blazor.Server.UI.Services
+@using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences
+@using System.Globalization
+
+@inject LayoutService LayoutService
+@inject IStringLocalizer<SharedResource> L
+
+<MudDrawer Anchor="LayoutService.IsRTL?Anchor.Left:Anchor.Right"
+           @bind-Open="ThemingDrawerOpen"
+           Elevation="1"
+           Variant="@DrawerVariant.Temporary"
+           Width="260px">
+    <MudDrawerHeader Class="align-center">
+        <MudText Typo="Typo.body1">
+            <b>@L["Themes"]</b>
+        </MudText>
+        <MudSpacer />
+        <MudIconButton Color="Color.Default"
+                       Icon="@Icons.Material.Filled.Close"
+                       OnClick="@(() => ThemingDrawerOpenChanged.InvokeAsync(false))"
+                       Size="Size.Small" />
+    </MudDrawerHeader>
+    <MudDivider />
+    <div class="ma-6">
+        <MudText Typo="Typo.body2">
+            <b>@L["Mode"]</b>
+        </MudText>
+        <MudGrid Class="my-3"
+                 Spacing="3">
+            <MudItem xs="4">
+                 <MudTooltip Duration="1000" Text="@L["Switch to system"]">
+                <MudButton Class="mode-button"
+                           FullWidth="true"
+                           OnClick="@(() => ToggleDarkLightMode(DarkLightMode.System))"
+                           Style="background: white;">
+                    <ChildContent>
+                        <MudIcon Color="Color.Primary"
+                                 Icon="@Icons.Material.Filled.AutoMode" />
+                    </ChildContent>
+                </MudButton>
+                </MudTooltip>
+            </MudItem>
+            <MudItem xs="4">
+                <MudTooltip Duration="1000" Text="@L["Switch to Light Theme"]">
+                <MudButton Class="mode-button"
+                           FullWidth="true"
+                           OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Light))"
+                           Style="background: white;">
+                    <ChildContent>
+                        <MudIcon Color="Color.Primary"
+                                 Icon="@Icons.Material.Filled.WbSunny" />
+                    </ChildContent>
+                </MudButton>
+                </MudTooltip>
+            </MudItem>
+            <MudItem xs="4">
+                <MudTooltip Duration="1000" Text="@L["Switch to Dark Theme"]">
+                <MudButton Class="mode-button"
+                           FullWidth="true"
+                           OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Dark))"
+                           Style="background: #333333;">
+                    <ChildContent>
+                        <MudIcon Icon="@Icons.Material.Filled.DarkMode"
+                                 Style="color: #c9c9c9" />
+                    </ChildContent>
+                </MudButton>
+                </MudTooltip>
+            </MudItem>
+        </MudGrid>
+
+        <MudText Typo="Typo.body2">
+            <b>@L["Color"]</b>
+        </MudText>
+        <MudGrid Class="my-3"
+                 Spacing="3">
+            @foreach (var color in GetColorDefinition())
+            {
+                <MudItem xs="4">
+                    <MudButton Class="@(color == UserPreferences.PrimaryColor ? "color-button color-button-selected" : "color-button")"
+                           FullWidth="true"
+                           OnClick="@(() => UpdateThemePrimaryColor(color))">
+                        <ChildContent>
+                            <div class="@(color == UserPreferences.PrimaryColor ? "oval oval-selected" : "oval")"
+                             style="@($"background: {color};")">
+                            </div>
+                        </ChildContent>
+                    </MudButton>
+                </MudItem>
+            }
+        </MudGrid>
+        <MudText Typo="Typo.body2">
+            <b>Border Radius</b>
+        </MudText>
+        <MudGrid Class="my-3"
+                 Spacing="3">
+
+            <MudItem xs="12">
+                <MudSlider Value="@UserPreferences.BorderRadius" Min="0" Max="@MaxValue" Immediate="false" Step="1" Color="Color.Primary"
+                           @oninput="@((e) => ChangedSelection(e))">
+                    @UserPreferences.BorderRadius.ToString()
+                </MudSlider>
+            </MudItem>
+
+        </MudGrid>
+        <MudText Typo="Typo.body2">
+            <b>Default Font Size</b>
+        </MudText>
+        <MudGrid Class="my-3"
+                 Spacing="3">
+
+            <MudItem xs="12">
+                <MudSlider Value="@UserPreferences.DefaultFontSize" Min="0.75" Max="1.125" Immediate="false" Step="0.0625" Color="Color.Primary"
+                           @oninput="@((e) => ChangedFontSize(e))">
+                    @($"{UserPreferences.DefaultFontSize.ToString()} rem")
+                </MudSlider>
+            </MudItem>
+
+        </MudGrid>
+    </div>
+</MudDrawer>
+
+<MudOverlay DarkBackground="false"
+            OnClick="@(() => ThemingDrawerOpenChanged.InvokeAsync(false))"
+            Visible="ThemingDrawerOpen"
+            VisibleChanged="ThemingDrawerOpenChanged" />
+
+
+<style>
+
+    .mode-button {
+        border: 1px solid var(--mud-palette-table-lines);
+        height: 64px;
+    }
+
+    .oval {
+        width: 25px;
+        height: 15px;
+        border-radius: 50%;
+        transform: rotate(120deg);
+    }
+
+    .oval-selected {
+        transform: rotate(0deg);
+    }
+
+    .color-button {
+        height: 50px;
+        border: 1px solid var(--mud-palette-table-lines);
+    }
+
+    .color-button-selected {
+        border: 2px solid var(--mud-palette-primary);
+    }
+</style>
+
+@code
+{
+    // TODO: The razor file could probably be cleaner..
+    // TODO: Find why MudOverlay does not work..
+    // TODO: Better CSS..
+
+    private readonly List<string> _primaryColors = new()
+    {
+        "#2d4275",
+        Colors.Green.Default,
+        "#0576b9",
+        "#8421d1",
+        "#FF7F00",
+        Colors.Red.Default
+    };
+    private readonly List<string> _primaryDarkColors = new()
+    {
+        "#8b9ac6",
+        "#6c9f77",
+        "#79a5d1",
+        "#b194d7",
+        "#d0882c",
+        "#f88989",
+    };
+    private List<string> GetColorDefinition()
+    {
+        return UserPreferences.DarkLightTheme switch
+        {
+            DarkLightMode.Dark => _primaryDarkColors,
+            DarkLightMode.Light => _primaryColors,
+            DarkLightMode.System => UserPreferences.IsDarkMode ? _primaryDarkColors : _primaryColors,
+            _ => UserPreferences.IsDarkMode ? _primaryDarkColors : _primaryColors
+        };
+    }
+
+    [EditorRequired]
+    [Parameter]
+    public bool ThemingDrawerOpen { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback<bool> ThemingDrawerOpenChanged { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public UserPreferences UserPreferences { get; set; } = new();
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback<UserPreferences> UserPreferencesChanged { get; set; }
+
+    [Parameter]
+    public double Radius { get; set; }
+
+    [Parameter]
+    public double MaxValue { get; set; } = 32;
+
+    private async Task UpdateThemePrimaryColor(string color)
+    {
+        UserPreferences.PrimaryColor = color;
+        await UserPreferencesChanged.InvokeAsync(UserPreferences);
+    }
+
+    private async Task ChangedSelection(ChangeEventArgs args)
+    {
+        UserPreferences.BorderRadius = double.Parse(args?.Value?.ToString() ?? "0");
+        await UserPreferencesChanged.InvokeAsync(UserPreferences);
+    }
+
+    public async Task ToggleDarkLightMode(DarkLightMode mode)
+    {
+        UserPreferences.DarkLightTheme = mode;
+        if (mode == DarkLightMode.Dark)
+        {
+            if (_primaryColors.IndexOf(UserPreferences.PrimaryColor) >= 0)
+            {
+                UserPreferences.PrimaryColor = _primaryDarkColors[_primaryColors.IndexOf(UserPreferences.PrimaryColor)];
+            }
+        }
+        else if (mode == DarkLightMode.Light)
+        {
+            if (_primaryDarkColors.IndexOf(UserPreferences.PrimaryColor) >= 0)
+            {
+                UserPreferences.PrimaryColor = _primaryColors[_primaryDarkColors.IndexOf(UserPreferences.PrimaryColor)];
+            }
+        }
+        await UserPreferencesChanged.InvokeAsync(UserPreferences);
+    }
+    private async Task ChangedFontSize(ChangeEventArgs args)
+    {
+        UserPreferences.DefaultFontSize = double.Parse(args?.Value?.ToString() ?? "0", NumberStyles.Float, CultureInfo.InvariantCulture);
+        await UserPreferencesChanged.InvokeAsync(UserPreferences);
+    }
+}

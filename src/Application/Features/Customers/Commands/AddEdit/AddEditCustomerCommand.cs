@@ -7,9 +7,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEd
 
 public class AddEditCustomerCommand: ICacheInvalidatorRequest<Result<int>>
 {
-          [Description("Id")]
-    public int Id {get;set;} 
-    [Description("Name")]
+      [Description("Id")]
+      public int Id { get; set; }
+          [Description("Name")]
     public string Name {get;set;} = String.Empty; 
     [Description("Description")]
     public string? Description {get;set;} 
@@ -23,7 +23,8 @@ public class AddEditCustomerCommand: ICacheInvalidatorRequest<Result<int>>
         public Mapping()
         {
             CreateMap<CustomerDto,AddEditCustomerCommand>(MemberList.None);
-            CreateMap<AddEditCustomerCommand, Customer>(MemberList.None);
+            CreateMap<AddEditCustomerCommand,Customer>(MemberList.None);
+         
         }
     }
 }
@@ -45,7 +46,6 @@ public class AddEditCustomerCommand: ICacheInvalidatorRequest<Result<int>>
         }
         public async Task<Result<int>> Handle(AddEditCustomerCommand request, CancellationToken cancellationToken)
         {
-
             if (request.Id > 0)
             {
                 var item = await _context.Customers.FindAsync(new object[] { request.Id }, cancellationToken) ?? throw new NotFoundException($"Customer with id: [{request.Id}] not found.");
