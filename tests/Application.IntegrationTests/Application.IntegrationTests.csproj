@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>CleanArchitecture.Blazor.Application.IntegrationTests</RootNamespace>
     <AssemblyName>CleanArchitecture.Blazor.Application.IntegrationTests</AssemblyName>
     
     <IsPackable>false</IsPackable>
+    
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

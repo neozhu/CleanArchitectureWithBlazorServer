@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>CleanArchitecture.Blazor.Server</RootNamespace>
         <AssemblyName>CleanArchitecture.Blazor.Server</AssemblyName>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Fluxor.Blazor.Web" Version="5.9.1" />
@@ -19,9 +20,9 @@
         <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.6.2" />
         <PackageReference Include="MudBlazor" Version="6.11.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.13" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.13" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.13">
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
