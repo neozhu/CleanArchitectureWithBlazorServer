@@ -60,7 +60,7 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore  CleanArchitecture.Blazor.sln
 
     - name: Build
       run: dotnet build --configuration Debug --no-restore
