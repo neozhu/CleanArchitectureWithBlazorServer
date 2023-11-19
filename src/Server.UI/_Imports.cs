@@ -6,6 +6,7 @@ global using CleanArchitecture.Blazor.Infrastructure.Extensions;
 global using CleanArchitecture.Blazor.Domain.Entities;
 global using CleanArchitecture.Blazor.Server.Common.Interfaces;
 global using CleanArchitecture.Blazor.Server.UI.Fluxor;
+global using CleanArchitecture.Blazor.Server.UI.Components;
 global using FluentValidation;
 global using Fluxor;
 global using Fluxor.Blazor.Web.Components;

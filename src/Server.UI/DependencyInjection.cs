@@ -24,28 +24,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddServerUI(this IServiceCollection services, IConfiguration config)
     {
-        services.AddRazorPages(options =>
-        {
-            options.RootDirectory = "/Pages";
-        });
-        services.AddServerSideBlazor(options =>
-        {
-            options.DetailedErrors = true;
-            options.DisconnectedCircuitMaxRetained = 100;
-            options.DisconnectedCircuitRetentionPeriod = TimeSpan.FromMinutes(3);
-            options.JSInteropDefaultCallTimeout = TimeSpan.FromMinutes(1);
-            options.MaxBufferedUnacknowledgedRenderBatches = 10;
-        }).AddHubOptions(options =>
-        {
-            options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
-            options.EnableDetailedErrors = false;
-            options.HandshakeTimeout = TimeSpan.FromSeconds(15);
-            options.KeepAliveInterval = TimeSpan.FromSeconds(15);
-            options.MaximumParallelInvocationsPerClient = 100;
-            options.MaximumReceiveMessageSize = 64 * 1024;
-            options.StreamBufferCapacity = 10;
-        }).AddCircuitOptions(option => { option.DetailedErrors = true; });
-
+        services.AddRazorComponents().AddInteractiveServerComponents();
+        services.AddCascadingAuthenticationState();
         services.AddMudBlazorDialog()
             .AddMudServices(config =>
             {
@@ -87,18 +67,15 @@ public static class DependencyInjection
     {
         if (!app.Environment.IsDevelopment())
         {
+            app.UseExceptionHandler("/Error", createScopeForErrors: true);
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 
         app.MapHealthChecks("/health");
-        app.UseExceptionHandler("/Error");
-        app.MapFallbackToPage("/_Host");
         app.UseHttpsRedirection();
-        app.UseExceptionHandler("/Error");
-
         app.UseStaticFiles();
-
+        app.UseAntiforgery();
         if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
         {
             Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
@@ -124,19 +101,12 @@ public static class DependencyInjection
             AsyncAuthorization = new[] { new HangfireDashboardAsyncAuthorizationFilter() }
         });
 
-        app.UseRouting();
-        app.UseAuthentication();
-        app.UseAuthorization();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapRazorPages();
-            endpoints.MapControllers();
-            endpoints.MapHub<ServerHub>(ISignalRHub.Url);
-        });
 
-        app.UseWebSockets();
-        app.MapBlazorHub(options => options.Transports = HttpTransportType.WebSockets);
+
+
+        app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
+        app.MapHub<ServerHub>(ISignalRHub.Url);
 
         return app;
     }

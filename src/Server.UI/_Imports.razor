@@ -32,9 +32,11 @@
 @using CleanArchitecture.Blazor.Server.UI.Models
 @using CleanArchitecture.Blazor.Server.UI
 @using CleanArchitecture.Blazor.Server.UI.Shared
+@using CleanArchitecture.Blazor.Server.UI.Components
 @using CleanArchitecture.Blazor.Server.UI.Components.Autocompletes
 @using CleanArchitecture.Blazor.Server.UI.Components.Dialogs
 @using CleanArchitecture.Blazor.Server.UI.Components.Identity
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication
 @using CleanArchitecture.Blazor.Server.UI.Components.Localization
 @using CleanArchitecture.Blazor.Server.UI.Components.OptionSelect
 @using CleanArchitecture.Blazor.Server.UI.Components.Redirections
@@ -50,4 +52,3 @@
 @inject IConfiguration Config
 @inject IAuthorizationService AuthService 
 
-@attribute [Authorize]

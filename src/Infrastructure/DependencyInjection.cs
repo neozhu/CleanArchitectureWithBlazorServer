@@ -217,6 +217,8 @@ public static class DependencyInjection
         services.Configure<IdentityOptions>(options =>
         {
             var identitySettings = configuration.GetRequiredSection(IdentitySettings.Key).Get<IdentitySettings>();
+
+            
             // Password settings
             options.Password.RequireDigit = identitySettings!.RequireDigit;
             options.Password.RequiredLength = identitySettings.RequiredLength;
@@ -255,6 +257,7 @@ public static class DependencyInjection
             .AddAuthentication()
             .AddJwtBearer(options =>
             {
+                 
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
@@ -283,7 +286,10 @@ public static class DependencyInjection
                     }
                 };
             });
-
+        services.ConfigureApplicationCookie(options =>
+  {
+      options.LoginPath = "/pages/authentication/login";
+  });
         services.AddSingleton<UserDataProvider>()
             .AddSingleton<IUserDataProvider>(sp =>
             {

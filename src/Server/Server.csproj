@@ -14,7 +14,7 @@
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.6" />
         <PackageReference Include="Hangfire.InMemory" Version="0.6.0" />
         <PackageReference Include="Blazor-Analytics" Version="3.12.0" />
-        <PackageReference Include="Blazor-ApexCharts" Version="2.0.0" />
+        
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="BlazorTime" Version="1.0.3" />
         <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.6.2" />
@@ -26,7 +26,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="3.1.0" />
+        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="3.2.0" />
     </ItemGroup>
     
     <ItemGroup>
