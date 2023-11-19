@@ -18,5 +18,11 @@ public  class BlazorAuthStateProvider : AuthenticationStateProvider
         var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
         NotifyAuthenticationStateChanged(authState);
     }
+    public void MarkUserAsLoggedOut()
+    {
+        var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
+        var authState = Task.FromResult(new AuthenticationState(anonymousUser));
+        NotifyAuthenticationStateChanged(authState);
+    }
 }
 
