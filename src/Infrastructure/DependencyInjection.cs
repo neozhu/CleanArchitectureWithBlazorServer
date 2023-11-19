@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -37,6 +38,7 @@ public static class DependencyInjection
 
         services
             .AddAuthenticationService(configuration)
+            .AddFusionCacheService()
             .AddSimpleJwtService(options =>
             {
                 options.UseCookie = false;
@@ -237,7 +239,7 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IIdentityService, IdentityService>()
-            .AddAuthorization(options =>
+            .AddAuthorizationCore(options =>
             {
                 options.AddPolicy("CanPurge", policy => policy.RequireUserName(UserName.Administrator));
                 // Here I stored necessary permissions/roles in a constant
@@ -293,6 +295,24 @@ public static class DependencyInjection
         return services;
     }
 
+    private static IServiceCollection AddFusionCacheService(this IServiceCollection services)
+    {
+        services.AddMemoryCache();
+        services.AddFusionCache().WithDefaultEntryOptions(new FusionCacheEntryOptions
+        {
+            // CACHE DURATION
+            Duration = TimeSpan.FromMinutes(30),
+             // FAIL-SAFE OPTIONS
+            IsFailSafeEnabled = true,
+            FailSafeMaxDuration = TimeSpan.FromHours(2),
+            FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
+            // FACTORY TIMEOUTS
+            FactorySoftTimeout = TimeSpan.FromMilliseconds(100),
+            FactoryHardTimeout = TimeSpan.FromMilliseconds(1500)
+        });
+        return services;
+    }
+
     private static IServiceCollection AddSimpleJwtService(this IServiceCollection services,
         Action<SimpleJwtOptions> options)
     {
@@ -312,4 +332,6 @@ public static class DependencyInjection
 
         return services;
     }
+
+
 }
