@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Blazor-ApexCharts" Version="2.0.0" />
+      <PackageReference Include="Blazor-ApexCharts" Version="2.1.0" />
       <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
     </ItemGroup>
     <ItemGroup>

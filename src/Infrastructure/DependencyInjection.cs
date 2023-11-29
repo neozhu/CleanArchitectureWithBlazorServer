@@ -74,7 +74,7 @@ public static class DependencyInjection
                 };
             });
 
-        services.AddScoped<AuthenticationStateProvider, BlazorAuthStateProvider>();
+        
         services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
 
         return services;
@@ -287,9 +287,9 @@ public static class DependencyInjection
                 };
             });
         services.ConfigureApplicationCookie(options =>
-  {
-      options.LoginPath = "/pages/authentication/login";
-  });
+        {
+            options.LoginPath = "/pages/authentication/login";
+        });
         services.AddSingleton<UserDataProvider>()
             .AddSingleton<IUserDataProvider>(sp =>
             {

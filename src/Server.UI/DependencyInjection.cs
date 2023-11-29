@@ -6,11 +6,13 @@ using CleanArchitecture.Blazor.Server.Common.Interfaces;
 using CleanArchitecture.Blazor.Server.Hubs;
 using CleanArchitecture.Blazor.Server.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
+using CleanArchitecture.Blazor.Server.UI.Services;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
 using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
@@ -54,6 +56,7 @@ public static class DependencyInjection
         services.AddScoped<HubClient>();
 
         services.AddMudExtensions()
+            .AddScoped<AuthenticationStateProvider, BlazorAuthenticationStateProvider>()
             .AddScoped<LayoutService>()
             .AddBlazorDownloadFile()
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
