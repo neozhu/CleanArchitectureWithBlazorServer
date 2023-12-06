@@ -21,7 +21,7 @@ Blazor technology.
 
 - Microsoft Visual Studio Community 2022 (64-bit)
 - Docker
-- .NET 7.0
+- .NET 8.0
 - Unit Test
 
 ![image](https://user-images.githubusercontent.com/1549611/183799080-380e1f01-ef80-4568-80d2-517514aa59e5.png)
