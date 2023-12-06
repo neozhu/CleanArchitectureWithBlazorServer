@@ -21,7 +21,7 @@ public class PicklistServiceTests : TestBase
         var picklist = CreatePicklistService();
         await picklist.InitializeAsync();
         var count = picklist.DataSource.Count();
-        Assert.AreEqual(4, count);
+        Assert.Equals(4, count);
 
     }
     [Test]
@@ -31,7 +31,7 @@ public class PicklistServiceTests : TestBase
         var picklist = CreatePicklistService();
         await picklist.Refresh();
         var count = picklist.DataSource.Count();
-        Assert.AreEqual(5, count);
+        Assert.Equals(5, count);
 
     }
 }

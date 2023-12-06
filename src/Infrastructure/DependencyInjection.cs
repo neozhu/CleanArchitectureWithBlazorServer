@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -37,6 +38,7 @@ public static class DependencyInjection
 
         services
             .AddAuthenticationService(configuration)
+            .AddFusionCacheService()
             .AddSimpleJwtService(options =>
             {
                 options.UseCookie = false;
@@ -72,7 +74,7 @@ public static class DependencyInjection
                 };
             });
 
-        services.AddScoped<AuthenticationStateProvider, BlazorAuthStateProvider>();
+        
         services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
 
         return services;
@@ -215,6 +217,8 @@ public static class DependencyInjection
         services.Configure<IdentityOptions>(options =>
         {
             var identitySettings = configuration.GetRequiredSection(IdentitySettings.Key).Get<IdentitySettings>();
+
+            
             // Password settings
             options.Password.RequireDigit = identitySettings!.RequireDigit;
             options.Password.RequiredLength = identitySettings.RequiredLength;
@@ -237,7 +241,7 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IIdentityService, IdentityService>()
-            .AddAuthorization(options =>
+            .AddAuthorizationCore(options =>
             {
                 options.AddPolicy("CanPurge", policy => policy.RequireUserName(UserName.Administrator));
                 // Here I stored necessary permissions/roles in a constant
@@ -253,6 +257,7 @@ public static class DependencyInjection
             .AddAuthentication()
             .AddJwtBearer(options =>
             {
+                 
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
@@ -281,7 +286,10 @@ public static class DependencyInjection
                     }
                 };
             });
-
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = "/pages/authentication/login";
+        });
         services.AddSingleton<UserDataProvider>()
             .AddSingleton<IUserDataProvider>(sp =>
             {
@@ -290,6 +298,24 @@ public static class DependencyInjection
                 return service;
             });
 
+        return services;
+    }
+
+    private static IServiceCollection AddFusionCacheService(this IServiceCollection services)
+    {
+        services.AddMemoryCache();
+        services.AddFusionCache().WithDefaultEntryOptions(new FusionCacheEntryOptions
+        {
+            // CACHE DURATION
+            Duration = TimeSpan.FromMinutes(30),
+             // FAIL-SAFE OPTIONS
+            IsFailSafeEnabled = true,
+            FailSafeMaxDuration = TimeSpan.FromHours(2),
+            FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
+            // FACTORY TIMEOUTS
+            FactorySoftTimeout = TimeSpan.FromMilliseconds(100),
+            FactoryHardTimeout = TimeSpan.FromMilliseconds(1500)
+        });
         return services;
     }
 
@@ -312,4 +338,6 @@ public static class DependencyInjection
 
         return services;
     }
+
+
 }

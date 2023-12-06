@@ -22,13 +22,13 @@ internal class KeyValuesWithPaginationQueryTests: TestBase
     {
         var query = new KeyValuesWithPaginationQuery();
         var result = await SendAsync(query);
-        Assert.AreEqual(5, result.TotalItems);
+        Assert.Equals(5, result.TotalItems);
     }
     [Test]
     public async Task ShouldNotEmptyKeywordQuery()
     {
         var query = new KeyValuesWithPaginationQuery() { Keyword="1"};
         var result = await SendAsync(query);
-        Assert.AreEqual(1, result.TotalItems);
+        Assert.Equals(1, result.TotalItems);
     }
 }

@@ -1,4 +1,4 @@
-@page "/pages/authentication/login"
+@page "/pages/authentication/login" 
 
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
@@ -6,6 +6,7 @@
 @using CleanArchitecture.Blazor.Infrastructure.Services.JWT
 @using CleanArchitecture.Blazor.Server.UI.Models.Identity
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
+@using CleanArchitecture.Blazor.Server.UI.Services
 @using Microsoft.AspNetCore.DataProtection
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
@@ -147,7 +148,7 @@
 
                             var accessToken = await TokenProvider.Login(user);
                             var claims =await TokenProvider.ParseClaimsFromJwt(accessToken);
-                            ((BlazorAuthStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(claims);
+                            ((BlazorAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(claims);
                             Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
 
 

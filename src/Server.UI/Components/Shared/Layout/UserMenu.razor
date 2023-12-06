@@ -1,4 +1,5 @@
 @using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
+@using CleanArchitecture.Blazor.Server.UI.Services
 
 @inherits FluxorComponent
 
@@ -42,7 +43,7 @@
                 </MudStack>
 
                 <MudDivider Class="my-2" />
-                <MudMenuItem Link="/user/profile">
+                <MudMenuItem Href="/user/profile">
                     <div class="d-flex">
                         <MudIcon Class="mx-2"
                                  Icon="@Icons.Material.Filled.Person" />
@@ -74,7 +75,8 @@
 {
     [Parameter]
     public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
-
+    [Inject]
+    public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
     private bool IsLoading => UserProfileState.Value.IsLoading;
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
 
@@ -93,7 +95,7 @@
         if (!result.Canceled)
         {
             await TokenProvider.RemoveAuthDataFromStorage();
-            NavigationManager.NavigateTo("/", true);
+            ((BlazorAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
         }
     }
 }

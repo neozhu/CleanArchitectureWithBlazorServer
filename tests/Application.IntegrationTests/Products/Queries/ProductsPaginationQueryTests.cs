@@ -21,14 +21,14 @@ internal class ProductsPaginationQueryTests : TestBase
     {
         var query = new ProductsWithPaginationQuery();
         var result = await SendAsync(query);
-        Assert.AreEqual(5, result.TotalItems);
+        Assert.Equals(5, result.TotalItems);
     }
     [Test]
     public async Task ShouldNotEmptyKeywordQuery()
     {
         var query = new ProductsWithPaginationQuery() { Keyword = "1" };
         var result = await SendAsync(query);
-        Assert.AreEqual(5, result.TotalItems);
+        Assert.Equals(5, result.TotalItems);
     }
 
     [Test]
@@ -36,6 +36,6 @@ internal class ProductsPaginationQueryTests : TestBase
     {
         var query = new ProductsWithPaginationQuery() { Keyword = "1", Brand= "Test1",  Unit="EA", Name= "Test1" };
         var result = await SendAsync(query);
-        Assert.AreEqual(1, result.TotalItems);
+        Assert.Equals(1, result.TotalItems);
     }
 }

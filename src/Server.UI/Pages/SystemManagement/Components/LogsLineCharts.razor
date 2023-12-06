@@ -1,5 +1,6 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
 @using ApexCharts
+@using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
 @using CleanArchitecture.Blazor.Server.UI.Services
 @using CleanArchitecture.Blazor.Server.UI.Services.Layout
 
@@ -26,17 +27,16 @@
 </div>
 
 @code
-{
-    [EditorRequired]
-    [Parameter]
+ {
     public List<LogTimeLineDto> Data { get; set; } = new();
-
-    private ApexChart<LogTimeLineDto>? Chart { get; set; }
+    [Inject]
+    private IMediator Mediator { get; set; } = default!;
+    private ApexChart<LogTimeLineDto> Chart { get; set; } = null!;
     private ApexChartOptions<LogTimeLineDto> Options { get; set; } = new();
 
     private string _backgroundColor = "background:#fff";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         var isDarkMode = LayoutService.IsDarkMode;
         var colors = isDarkMode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
@@ -97,6 +97,8 @@
             };
 
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
+
+        Data = await Mediator.Send(new LogsTimeLineChatDataQuery());
     }
 
     private async void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
@@ -106,16 +108,12 @@
         _backgroundColor = isDarkMode ? "background:rgb(66, 66, 66)" : "background:#fff";
         Options.Theme.Mode = isDarkMode ? Mode.Dark : Mode.Light;
         Options.Fill.Gradient.GradientToColors = colors;
-        await Chart!.UpdateOptionsAsync(true, true, false);
-        await Chart!.RenderAsync();
+        await Chart.UpdateOptionsAsync(true, true, false);
+        await Chart.RenderAsync();
         StateHasChanged();
     }
 
-    public async Task RenderChart()
-    {
-        await Chart!.UpdateSeriesAsync(true);
-        await Chart!.RenderAsync();
-    }
+   
 
     public void Dispose()
     {

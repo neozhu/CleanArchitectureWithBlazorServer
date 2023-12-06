@@ -10,13 +10,11 @@
 @using Severity = MudBlazor.Severity
 
 @attribute [Authorize(Policy = Permissions.Logs.View)]
-
-@inject IMediator Mediator
 @inject IStringLocalizer<Logs> L
 
 <PageTitle>@L[Title]</PageTitle>
 
-<LogsLineCharts @ref="_chartComponent" Data="Data"></LogsLineCharts>
+<LogsLineCharts></LogsLineCharts>
 <MudDataGrid T="LogDto"
                 ServerData="@(ServerReload)"
                 FixedHeader="true"
@@ -157,17 +155,18 @@
 </style>
 
 @code 
-{
+    {
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
 
-    private LogsLineCharts? _chartComponent;
+    [Inject]
+    private IMediator Mediator { get; set; } = default!;
     private string Title { get; set; } = "Logs";
     private string _searchString = string.Empty;
     private MudDataGrid<LogDto> _table = default!;
     private readonly LogDto _currentDto = new();
     private int _defaultPageSize = 15;
-    private List<LogTimeLineDto> Data { get; set; } = new();
+
 
     private bool _loading;
     private bool _clearing;
@@ -175,22 +174,15 @@
 
     private LogsWithPaginationQuery Query { get; } = new();
 
-    protected override async void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Title = L["Logs"];
         var state = await AuthState;
         _canPurge = (await AuthService.AuthorizeAsync(state.User, Permissions.Logs.Purge)).Succeeded;
     }
+     
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            Data = await Mediator.Send(new LogsTimeLineChatDataQuery());
-            StateHasChanged();
-            await _chartComponent!.RenderChart();
-        }
-    }
+ 
 
     private async Task<GridData<LogDto>> ServerReload(GridState<LogDto> state)
     {

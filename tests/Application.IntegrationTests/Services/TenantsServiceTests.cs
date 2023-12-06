@@ -20,7 +20,7 @@ public class TenantsServiceTests : TestBase
         var tenantsService = CreateTenantsService();
         tenantsService.Initialize();
         var count = tenantsService.DataSource.Count();
-        Assert.AreEqual(2, count);
+        Assert.Equals(2, count);
 
     }
     [Test]
@@ -30,7 +30,7 @@ public class TenantsServiceTests : TestBase
         var tenantsService = CreateTenantsService();
         await tenantsService.Refresh();
         var count = tenantsService.DataSource.Count();
-        Assert.AreEqual(3, count);
+        Assert.Equals(3, count);
 
     }
 }
