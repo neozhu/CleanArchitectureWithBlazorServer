@@ -36,7 +36,7 @@ public class LocalizationCookiesMiddleware : Microsoft.AspNetCore.Http.IMiddlewa
                     );
             }
         }
-
-        await next(context);
+ 
+            await next(context);
     }
 }

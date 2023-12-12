@@ -26,7 +26,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddServerUI(this IServiceCollection services, IConfiguration config)
     {
-        services.AddRazorComponents().AddInteractiveServerComponents();
+        services.AddRazorComponents().AddInteractiveServerComponents().AddInteractiveWebAssemblyComponents();
         services.AddCascadingAuthenticationState();
         services.AddMudBlazorDialog()
             .AddMudServices(config =>
@@ -56,7 +56,8 @@ public static class DependencyInjection
         services.AddScoped<HubClient>();
 
         services.AddMudExtensions()
-            .AddScoped<AuthenticationStateProvider, BlazorAuthenticationStateProvider>()
+            .AddScoped<IdentityRedirectManager>()
+            .AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()
             .AddBlazorDownloadFile()
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
@@ -75,7 +76,7 @@ public static class DependencyInjection
             app.UseHsts();
         }
 
-        app.MapHealthChecks("/health");
+
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         app.UseAntiforgery();
@@ -96,8 +97,7 @@ public static class DependencyInjection
 
         app.UseRequestLocalization(localizationOptions);
 
-        app.UseMiddleware<LocalizationCookiesMiddleware>();
-        app.UseMiddleware<ExceptionHandlingMiddleware>();
+
         app.UseHangfireDashboard("/jobs", new DashboardOptions
         {
             Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
@@ -108,7 +108,7 @@ public static class DependencyInjection
 
 
 
-        app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
+        app.MapRazorComponents<App>().AddInteractiveServerRenderMode().AddInteractiveWebAssemblyRenderMode();
         app.MapHub<ServerHub>(ISignalRHub.Url);
 
         return app;

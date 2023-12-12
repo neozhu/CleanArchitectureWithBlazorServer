@@ -1,5 +1,5 @@
 @page "/pages/authentication/login" 
-
+@attribute [RenderModeInteractiveAuto]
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -7,6 +7,7 @@
 @using CleanArchitecture.Blazor.Server.UI.Models.Identity
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
 @using CleanArchitecture.Blazor.Server.UI.Services
+@using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.DataProtection
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
@@ -17,7 +18,8 @@
 
 @inherits OwningComponentBase
 @implements IDisposable
-
+@inject IdentityRedirectManager RedirectManager
+@inject SignInManager<ApplicationUser> SignInManager
 @inject IAccessTokenProvider TokenProvider
 @inject IJSRuntime JS
 @inject ILogger<Login> Logger
@@ -94,7 +96,11 @@
     </Authorized>
 </AuthorizeView>
 
-@code {
+    @code {
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+    [SupplyParameterFromQuery]
+    public string ReturnUrl { get; set; } = "";
     private string _title = "Sign In";
     private MudForm? _form;
     private bool _success;
@@ -112,6 +118,12 @@
     {
         await base.OnInitializedAsync();
         _title = L["Sign In"];
+        ReturnUrl ??= "/";
+        // if (HttpMethods.IsGet(HttpContext.Request.Method))
+        // {
+        //     // Clear the existing external cookie to ensure a clean login process
+        //     await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        // }
     }
 
     private async Task OnSubmit()
@@ -137,8 +149,9 @@
                     }
                     else
                     {
-                        var result = await UserManager.CheckPasswordAsync(user, _model.Password!);
-                        if (!result)
+                        var cansign =await SignInManager.CanSignInAsync(user);
+                        var result = await SignInManager.PasswordSignInAsync(user, _model.Password, _model.RememberMe, lockoutOnFailure: false);
+                        if (!result.Succeeded)
                         {
                             Logger.LogWarning("{@UserName:l} failed authentication", user.UserName);
                             Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact an administrator."], Severity.Error);
@@ -146,9 +159,9 @@
                         else
                         {
 
-                            var accessToken = await TokenProvider.Login(user);
-                            var claims =await TokenProvider.ParseClaimsFromJwt(accessToken);
-                            ((BlazorAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(claims);
+                            // var accessToken = await TokenProvider.Login(user);
+                            // var claims =await TokenProvider.ParseClaimsFromJwt(accessToken);
+                            RedirectManager.RedirectTo(ReturnUrl);
                             Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
 
 
@@ -156,6 +169,9 @@
                     }
                 }
             }
+        }catch(Exception e)
+        {
+            throw e;
         }
         finally
         {

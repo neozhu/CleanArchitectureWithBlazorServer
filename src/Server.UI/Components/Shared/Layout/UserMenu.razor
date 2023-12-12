@@ -1,8 +1,10 @@
+@using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 @using CleanArchitecture.Blazor.Server.UI.Services
 
 @inherits FluxorComponent
-
+@inject SignInManager<ApplicationUser> SignInManager;
+@inject IdentityRedirectManager RedirectManager
 @inject NavigationManager NavigationManager
 @inject IState<Fluxor.UserProfileState> UserProfileState
 @inject IStringLocalizer<SharedResource> L
@@ -71,8 +73,10 @@
     </MudMenu>
 </MudTooltip>
 
-@code 
+@code
 {
+    [SupplyParameterFromForm]
+    private string? ReturnUrl { get; set; }
     [Parameter]
     public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     [Inject]
@@ -95,7 +99,8 @@
         if (!result.Canceled)
         {
             await TokenProvider.RemoveAuthDataFromStorage();
-            ((BlazorAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
+            await  SignInManager.SignOutAsync();
+            RedirectManager.RedirectTo(ReturnUrl ?? "/");
         }
     }
 }

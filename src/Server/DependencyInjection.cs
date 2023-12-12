@@ -35,8 +35,7 @@ public static class DependencyInjection
         services.AddScoped<IApplicationHubWrapper, ServerHubWrapper>()
             .AddSignalR();
 
-        services.AddScoped<ExceptionHandlingMiddleware>()
-            .AddHealthChecks();
+ 
 
         var privacySettings = config.GetRequiredSection(PrivacySettings.Key).Get<PrivacySettings>();
         if (privacySettings!.UseGoogleAnalytics)
