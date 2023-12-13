@@ -159,7 +159,7 @@
   <data name="Reset password successfully" xml:space="preserve">
     <value>パスワードの再設定に成功しました。</value>
   </data>
-  <data name="Rest Password" xml:space="preserve">
+  <data name="Reset Password" xml:space="preserve">
     <value>パスワードの再入力</value>
   </data>
   <data name="Search for user name" xml:space="preserve">

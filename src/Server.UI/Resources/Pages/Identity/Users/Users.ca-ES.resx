@@ -222,8 +222,8 @@
   <data name="Superior Name" xml:space="preserve">
     <value>Nom superior</value>
   </data>
-  <data name="Rest Password" xml:space="preserve">
-    <value>Rest Password</value>
+  <data name="Reset Password" xml:space="preserve">
+    <value>Reset Password</value>
   </data>
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>Correu electrònic/Número de telèfon</value>

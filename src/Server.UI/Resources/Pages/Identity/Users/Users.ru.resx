@@ -159,7 +159,7 @@
   <data name="Reset password successfully" xml:space="preserve">
     <value>Пароль успешно восстановлен</value>
   </data>
-  <data name="Rest Password" xml:space="preserve">
+  <data name="Reset Password" xml:space="preserve">
     <value>Восстановить пароль</value>
   </data>
   <data name="Search for user name" xml:space="preserve">

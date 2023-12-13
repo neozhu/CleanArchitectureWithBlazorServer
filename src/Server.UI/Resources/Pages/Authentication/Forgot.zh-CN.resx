@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Enter the email address linked to your account and you will recieve an email containing a link to reset your password." xml:space="preserve">
+  <data name="Enter the email address linked to your account and you will receive an email containing a link to reset your password." xml:space="preserve">
     <value>输入与您的账户相连的电子邮件地址，您将收到一封包含重置密码链接的电子邮件。</value>
   </data>
   <data name="Forgot Password?" xml:space="preserve">
@@ -136,7 +136,7 @@
   <data name="E-mail" xml:space="preserve">
     <value>电子邮件</value>
   </data>
-  <data name="Enter the email address linked to your account and you will recieve an email containing a token string to reset your password." xml:space="preserve">
+  <data name="Enter the email address linked to your account and you will receive an email containing a token string to reset your password." xml:space="preserve">
     <value>输入与您的账户相关联的电子邮件地址，您将收到一封包含令牌字符串的电子邮件来重置您的密码。</value>
   </data>
   <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">

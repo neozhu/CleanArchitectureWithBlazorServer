@@ -120,11 +120,8 @@
   <data name="E-mail" xml:space="preserve">
     <value>البريد الالكترونى</value>
   </data>
-  <data name="Enter the email address linked to your account and you will recieve an email containing a link to reset your password." xml:space="preserve">
+  <data name="Enter the email address linked to your account and you will receive an email containing a link to reset your password." xml:space="preserve">
     <value>أدخل عنوان البريد الإلكتروني المرتبط بحسابك وستتلقى رسالة بريد إلكتروني تحتوي على رابط لإعادة تعيين كلمة المرور الخاصة بك.</value>
-  </data>
-  <data name="Enter the email address linked to your account and you will recieve an email containing a token string to reset your password." xml:space="preserve">
-    <value>أدخل عنوان البريد الإلكتروني المرتبط بحسابك وستتلقى رسالة بريد إلكتروني تحتوي على سلسلة رمزية لإعادة تعيين كلمة المرور الخاصة بك.</value>
   </data>
   <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
     <value>أدخل سلسلة الرمز المميز من البريد الإلكتروني المخصص للطوارئ لتعيين كلمة المرور الجديدة.</value>
