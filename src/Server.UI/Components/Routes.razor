@@ -12,13 +12,7 @@
                     <text>@L["Please wait, we are authorizing you..."]</text>
                 </Authorizing>
                 <NotAuthorized>
-
-                    @if (context.User.Identity?.IsAuthenticated ?? false)
-                    {
-                        <p>@L["You are not authorized to be here. For more information, contact your system administrator."]</p>
-                    }
-                    
-
+                   <RedirectToLogin />
                 </NotAuthorized>
             </AuthorizeRouteView>
         </Found>

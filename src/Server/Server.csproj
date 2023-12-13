@@ -19,14 +19,14 @@
         <PackageReference Include="BlazorTime" Version="1.0.3" />
         <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.6.3" />
         <PackageReference Include="MudBlazor" Version="6.11.1" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="3.2.0" />
+        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="3.2.1" />
     </ItemGroup>
     
     <ItemGroup>

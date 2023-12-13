@@ -1,5 +1,4 @@
 @page "/pages/authentication/login" 
-@attribute [RenderModeInteractiveAuto]
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -16,8 +15,8 @@
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
 
-@inherits OwningComponentBase
-@implements IDisposable
+
+
 @inject IdentityRedirectManager RedirectManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IAccessTokenProvider TokenProvider
@@ -32,9 +31,8 @@
 
 <PageTitle>@_title</PageTitle>
 
-<AuthorizeView>
-    <NotAuthorized Context="auth">
-        <MudForm Model="@_model" @ref="@_form" @bind-IsValid="@_success" ValidationDelay="0" Validation="@(Validator.ValidateValue(_model))">
+
+        <EditForm Model="@_model"   method="post" OnValidSubmit="OnSubmit" FormName="login">
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
             <MudText>@L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink></MudText>
             <MudTextField T="string"
@@ -64,8 +62,8 @@
                 Color="Color.Primary"
                 Size="Size.Large"
                 Disabled="@(_loading)"
-                ButtonType="ButtonType.Button"
-                OnClick="@(OnSubmit)"
+                ButtonType="ButtonType.Submit"
+                
                 FullWidth="true">
                 @if (_loading)
                 {
@@ -88,13 +86,8 @@
                     @ConstantString.Google
                 </MudButton>
             </div>
-        </MudForm>
-    </NotAuthorized>
-    <Authorized>
-        <RedirectToHome></RedirectToHome>
-        <MudAlert Severity="Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
-    </Authorized>
-</AuthorizeView>
+        </EditForm>
+  
 
     @code {
     [CascadingParameter]
@@ -119,11 +112,11 @@
         await base.OnInitializedAsync();
         _title = L["Sign In"];
         ReturnUrl ??= "/";
-        // if (HttpMethods.IsGet(HttpContext.Request.Method))
-        // {
-        //     // Clear the existing external cookie to ensure a clean login process
-        //     await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-        // }
+        if (HttpMethods.IsGet(HttpContext.Request.Method))
+        {
+            // Clear the existing external cookie to ensure a clean login process
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        }
     }
 
     private async Task OnSubmit()
@@ -131,9 +124,9 @@
         try
         {
             _loading = true;
-            await _form!.Validate();
+            //await _form!.Validate();
 
-            if (_form!.IsValid)
+            if (true)
             {
                 var user = await UserManager.FindByNameAsync(_model.UserName!);
                 if (user is null)
