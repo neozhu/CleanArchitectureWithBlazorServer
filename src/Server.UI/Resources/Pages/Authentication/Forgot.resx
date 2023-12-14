@@ -120,12 +120,10 @@
   <data name="E-mail" xml:space="preserve">
     <value>E-mail</value>
   </data>
-  <data name="Enter the email address linked to your account and you will recieve an email containing a link to reset your password." xml:space="preserve">
-    <value>Enter the email address linked to your account and you will recieve an email containing a link to reset your password.</value>
+  <data name="Enter the email address linked to your account and you will receive an email containing a link to reset your password." xml:space="preserve">
+    <value>Enter the email address linked to your account and you will receive an email containing a link to reset your password.</value>
   </data>
-  <data name="Enter the email address linked to your account and you will recieve an email containing a token string to reset your password." xml:space="preserve">
-    <value>Enter the email address linked to your account and you will recieve an email containing a token string to reset your password.</value>
-  </data>
+ 
   <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">
     <value>Enter the token string from the recovery email to set your new password.</value>
   </data>

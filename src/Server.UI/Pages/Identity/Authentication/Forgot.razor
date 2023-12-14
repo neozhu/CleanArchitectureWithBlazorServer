@@ -22,7 +22,7 @@
         <MudText Typo="Typo.h4" GutterBottom="true">@L["Forgot Password?"]</MudText>
         @if (_step == 1)
         {
-            <MudText Typo="Typo.subtitle2">@L["Enter the email address linked to your account and you will recieve an email containing a token string to reset your password."]</MudText>
+            <MudText Typo="Typo.subtitle2">@L["Enter the email address linked to your account and you will receive an email containing a token string to reset your password."]</MudText>
             <MudTextField T="string" @bind-Value="@_emailAddress" Label="@L["E-mail"]" Variant="Variant.Outlined" Class="my-4"></MudTextField>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="mt-3" Disabled="@(string.IsNullOrEmpty(_emailAddress) || _sending )" OnClick="@(()=>ResetPassword())">
                 @if (_sending)
