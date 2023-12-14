@@ -14,7 +14,7 @@
 @using CleanArchitecture.Blazor.Server.UI.Pages.Products.Components
 @using Severity = MudBlazor.Severity
 @rendermode InteractiveServer
-@attribute [Authorize]
+@attribute [Authorize(Policy = Permissions.Products.View)]
 @inherits FluxorComponent
 
 @inject IJSRuntime JS
