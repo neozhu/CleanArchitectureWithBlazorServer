@@ -136,8 +136,7 @@
       <value>Your password must contain a digit.</value>
   </data>
   <data name="MustContainUpperCase" xml:space="preserve">
-      <value>Your password must contain at least one uppercase letter.
-</value>
+      <value>Your password must contain at least one uppercase letter.</value>
   </data>
   <data name="Your password must contain at least one uppercase letter." xml:space="preserve">
     <value>Your password must contain at least one uppercase letter.</value>
