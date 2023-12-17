@@ -76,11 +76,11 @@
             z-index: 9999;
         }
     </style>
-    <HeadOutlet  />
+    <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: false)" />
 </head>
 
 <body>
-    <Routes @rendermode="@RenderMode.InteractiveServer" />
+    <Routes @rendermode="new InteractiveServerRenderMode(prerender: false)" />
     <script src="_framework/blazor.web.js"></script>
     <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
     <script src="js/msal/authConfig.js"></script>
