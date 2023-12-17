@@ -153,9 +153,6 @@
   <data name="Reset password successfully" xml:space="preserve">
     <value>重置密码成功</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>重置密码</value>
-  </data>
   <data name="Search for user name" xml:space="preserve">
     <value>搜索</value>
   </data>
@@ -216,9 +213,6 @@
   <data name="Set Permissions" xml:space="preserve">
     <value>设置权限</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>重置密码</value>
-  </data>
   <data name="Assigned Roles" xml:space="preserve">
     <value>分配角色</value>
   </data>
@@ -230,5 +224,8 @@
   </data>
   <data name="Permission added successfully!" xml:space="preserve">
     <value>授权成功</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>重置密码</value>
   </data>
 </root>
