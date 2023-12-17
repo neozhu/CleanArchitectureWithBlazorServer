@@ -1,9 +1,12 @@
 @page "/"
 @using MudBlazor.Utilities
 @using CleanArchitecture.Blazor.Server.UI.Models
-@attribute [Authorize]
 <PageTitle>@Title</PageTitle>
-
+<AuthorizeView>
+    <NotAuthorized>
+       <RedirectToLogin/>
+    </NotAuthorized>
+  <Authorized>
 <MudContainer MaxWidth="MaxWidth.Large">
 <div class="@ContentClassNames">
         <div class="lp-app-grid">
@@ -268,7 +271,8 @@
         grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
     }
 </style>
-
+</Authorized>
+</AuthorizeView>
 @code 
 {
     private readonly bool IsMobile = false;
