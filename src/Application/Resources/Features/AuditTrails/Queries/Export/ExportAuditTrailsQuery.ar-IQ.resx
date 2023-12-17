@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,47 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CannotBeEmpty" xml:space="preserve">
-      <value>Your password cannot be empty</value>
+  <data name="Table Name" xml:space="preserve">
+    <value>اسم الطاولة</value>
   </data>
-  <data name="MinLength" xml:space="preserve">
-      <value>Your password must be at least {0} characters long</value>
+  <data name="Primary Key" xml:space="preserve">
+    <value>المفتاح الأساسي</value>
   </data>
-  <data name="MaxLength" xml:space="preserve">
-      <value>Your password must not exceed {0} characters.</value>
+  <data name="Old Values" xml:space="preserve">
+    <value>القيم القديمة</value>
   </data>
-  <data name="MustContainAlphanumericCharacter" xml:space="preserve">
-    <value>MustContainAlphanumericCharacter</value>
+  <data name="New Values" xml:space="preserve">
+    <value>قيم جديدة</value>
   </data>
-  <data name="MustContainLowerCase" xml:space="preserve">
-      <value>Your password must contain at least one lowercase letter.</value>
+  <data name="Date Time" xml:space="preserve">
+    <value>التاريخ والوقت</value>
   </data>
-  <data name="MustContainDigit" xml:space="preserve">
-      <value>Your password must contain a digit.</value>
-  </data>
-  <data name="MustContainUpperCase" xml:space="preserve">
-      <value>Your password must contain at least one uppercase letter.
-</value>
-  </data>
-  <data name="Your password must contain at least one uppercase letter." xml:space="preserve">
-    <value>Your password must contain at least one uppercase letter.</value>
-  </data>
-  <data name="Your password must contain at least one number." xml:space="preserve">
-    <value>Your password must contain at least one number.</value>
-  </data>
-  <data name="Your password must contain at least one lowercase letter." xml:space="preserve">
-    <value>Your password must contain at least one lowercase letter.</value>
-  </data>
-  <data name="Your password must contain at least one (@!? *.)." xml:space="preserve">
-    <value>Your password must contain at least one (@!? *.).</value>
-  </data>
-  <data name="Your password length must not exceed 16." xml:space="preserve">
-    <value>Your password length must not exceed 16.</value>
-  </data>
-  <data name="Your password length must be at least 6." xml:space="preserve">
-    <value>Your password length must be at least 6.</value>
-  </data>
-  <data name="Your password cannot be empty" xml:space="preserve">
-    <value>Your password cannot be empty</value>
+  <data name="AuditTrails" xml:space="preserve">
+    <value>AuditTrails</value>
   </data>
 </root>
