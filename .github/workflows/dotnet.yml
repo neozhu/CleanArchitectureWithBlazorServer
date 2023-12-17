@@ -31,6 +31,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore CleanArchitecture.Blazor.sln
     - name: Build
+      run: dotnet clean CleanArchitecture.Blazor.sln
       run: dotnet build CleanArchitecture.Blazor.sln --no-restore --configuration Release
     # - name: Test
     #   run: dotnet test CleanArchitecture.Blazor.sln --no-build --configuration Release --filter "FullyQualifiedName!~AcceptanceTests"
