@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,19 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Value" xml:space="preserve">
-    <value>Value</value>
+  <data name="Table Name" xml:space="preserve">
+    <value>اسم الطاولة</value>
   </data>
-  <data name="Text" xml:space="preserve">
-    <value>Text</value>
+  <data name="Primary Key" xml:space="preserve">
+    <value>المفتاح الأساسي</value>
   </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
+  <data name="Old Values" xml:space="preserve">
+    <value>القيم القديمة</value>
   </data>
-  <data name="KeyValues" xml:space="preserve">
-    <value>KeyValues</value>
+  <data name="New Values" xml:space="preserve">
+    <value>قيم جديدة</value>
   </data>
-  <data name="Description" xml:space="preserve">
-    <value>Description</value>
+  <data name="Date Time" xml:space="preserve">
+    <value>التاريخ والوقت</value>
+  </data>
+  <data name="AuditTrails" xml:space="preserve">
+    <value>AuditTrails</value>
   </data>
 </root>

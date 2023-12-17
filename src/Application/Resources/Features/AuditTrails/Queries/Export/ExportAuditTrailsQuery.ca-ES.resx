@@ -117,4 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Table Name" xml:space="preserve">
+    <value>Nom de la taula</value>
+  </data>
+  <data name="Primary Key" xml:space="preserve">
+    <value>Clau principal</value>
+  </data>
+  <data name="Old Values" xml:space="preserve">
+    <value>Valors antics</value>
+  </data>
+  <data name="New Values" xml:space="preserve">
+    <value>Nous valors</value>
+  </data>
+  <data name="Date Time" xml:space="preserve">
+    <value>Data i hora</value>
+  </data>
+  <data name="AuditTrails" xml:space="preserve">
+    <value>Traces d'auditoria</value>
+  </data>
 </root>

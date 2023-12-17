@@ -117,4 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="User Name" xml:space="preserve">
+    <value>ユーザー名</value>
+  </data>
+  <data name="Time Stamp" xml:space="preserve">
+    <value>タイムスタンプ</value>
+  </data>
+  <data name="Properties" xml:space="preserve">
+    <value>特性</value>
+  </data>
+  <data name="Message Template" xml:space="preserve">
+    <value>メッセージテンプレート</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>メッセージ</value>
+  </data>
+  <data name="Logs" xml:space="preserve">
+    <value>ログ</value>
+  </data>
+  <data name="Level" xml:space="preserve">
+    <value>レベル</value>
+  </data>
+  <data name="Exception" xml:space="preserve">
+    <value>例外</value>
+  </data>
 </root>

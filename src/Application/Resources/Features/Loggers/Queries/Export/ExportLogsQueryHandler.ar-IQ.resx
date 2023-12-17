@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,19 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Value" xml:space="preserve">
-    <value>Value</value>
+  <data name="User Name" xml:space="preserve">
+    <value>اسم المستخدم</value>
   </data>
-  <data name="Text" xml:space="preserve">
-    <value>Text</value>
+  <data name="Time Stamp" xml:space="preserve">
+    <value>الطابع الزمني</value>
   </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
+  <data name="Properties" xml:space="preserve">
+    <value>ملكيات</value>
   </data>
-  <data name="KeyValues" xml:space="preserve">
-    <value>KeyValues</value>
+  <data name="Message Template" xml:space="preserve">
+    <value>قالب الرسالة</value>
   </data>
-  <data name="Description" xml:space="preserve">
-    <value>Description</value>
+  <data name="Message" xml:space="preserve">
+    <value>رسالة</value>
+  </data>
+  <data name="Logs" xml:space="preserve">
+    <value>السجلات</value>
+  </data>
+  <data name="Level" xml:space="preserve">
+    <value>مستوى</value>
+  </data>
+  <data name="Exception" xml:space="preserve">
+    <value>استثناء</value>
   </data>
 </root>
