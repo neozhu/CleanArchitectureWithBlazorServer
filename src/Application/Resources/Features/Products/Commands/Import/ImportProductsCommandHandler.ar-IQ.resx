@@ -117,25 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Unit" xml:space="preserve">
-    <value>وحدة</value>
-  </data>
-  <data name="Products" xml:space="preserve">
-    <value>منتجات</value>
-  </data>
-  <data name="Product Name" xml:space="preserve">
-    <value>اسم المنتج</value>
-  </data>
-  <data name="Price of unit" xml:space="preserve">
-    <value>سعر الوحدة</value>
-  </data>
-  <data name="Pictures" xml:space="preserve">
-    <value>الصور</value>
-  </data>
-  <data name="Description" xml:space="preserve">
-    <value>وصف</value>
-  </data>
-  <data name="Brand Name" xml:space="preserve">
-    <value>اسم العلامة التجارية</value>
-  </data>
 </root>

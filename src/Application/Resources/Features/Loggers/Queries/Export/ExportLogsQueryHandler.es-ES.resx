@@ -117,28 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Exception" xml:space="preserve">
-    <value>Excepción</value>
-  </data>
-  <data name="Level" xml:space="preserve">
-    <value>Nivel</value>
-  </data>
-  <data name="Logs" xml:space="preserve">
-    <value>Registros</value>
-  </data>
-  <data name="Message" xml:space="preserve">
-    <value>Mensaje</value>
-  </data>
-  <data name="Message Template" xml:space="preserve">
-    <value>Plantilla de mensajes</value>
-  </data>
-  <data name="Properties" xml:space="preserve">
-    <value>Propiedades</value>
-  </data>
-  <data name="Time Stamp" xml:space="preserve">
-    <value>Sello de tiempo</value>
-  </data>
-  <data name="User Name" xml:space="preserve">
-    <value>Nombre de usuario</value>
-  </data>
 </root>

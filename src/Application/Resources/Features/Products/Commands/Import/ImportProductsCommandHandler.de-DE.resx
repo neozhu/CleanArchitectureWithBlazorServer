@@ -117,25 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Brand Name" xml:space="preserve">
-    <value>Markenname</value>
-  </data>
-  <data name="Description" xml:space="preserve">
-    <value>Beschreibung</value>
-  </data>
-  <data name="Pictures" xml:space="preserve">
-    <value>Bilder</value>
-  </data>
-  <data name="Price of unit" xml:space="preserve">
-    <value>Preis der Einheit</value>
-  </data>
-  <data name="Product Name" xml:space="preserve">
-    <value>Produktname</value>
-  </data>
-  <data name="Products" xml:space="preserve">
-    <value>Produkte</value>
-  </data>
-  <data name="Unit" xml:space="preserve">
-    <value>Einheit</value>
-  </data>
 </root>

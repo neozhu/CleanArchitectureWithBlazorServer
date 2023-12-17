@@ -117,22 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AuditTrails" xml:space="preserve">
-    <value>AuditTrails</value>
-  </data>
-  <data name="Date Time" xml:space="preserve">
-    <value>Дата Время</value>
-  </data>
-  <data name="New Values" xml:space="preserve">
-    <value>Новые ценности</value>
-  </data>
-  <data name="Old Values" xml:space="preserve">
-    <value>Старые ценности</value>
-  </data>
-  <data name="Primary Key" xml:space="preserve">
-    <value>Основной ключ</value>
-  </data>
-  <data name="Table Name" xml:space="preserve">
-    <value>Имя таблицы</value>
-  </data>
 </root>

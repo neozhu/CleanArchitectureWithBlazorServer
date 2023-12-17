@@ -117,25 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Your password cannot be empty" xml:space="preserve">
-    <value>您的密码不能是空的</value>
-  </data>
-  <data name="Your password length must be at least 6." xml:space="preserve">
-    <value>您的密码长度必须至少为6。</value>
-  </data>
-  <data name="Your password length must not exceed 16." xml:space="preserve">
-    <value>您的密码长度不能超过16。</value>
-  </data>
-  <data name="Your password must contain at least one (@!? *.)." xml:space="preserve">
-    <value>您的密码必须至少包含一个(@! ? *.)。</value>
-  </data>
-  <data name="Your password must contain at least one lowercase letter." xml:space="preserve">
-    <value>您的密码必须至少包含一个小写字母。</value>
-  </data>
-  <data name="Your password must contain at least one number." xml:space="preserve">
-    <value>您的密码必须至少包含一个数字。</value>
-  </data>
-  <data name="Your password must contain at least one uppercase letter." xml:space="preserve">
-    <value>您的密码必须至少包含一个大写字母。</value>
-  </data>
 </root>

@@ -117,25 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CannotBeEmpty" xml:space="preserve">
-      <value>Votre mot de passe ne peut pas être vide</value>
-  </data>
-  <data name="MaxLength" xml:space="preserve">
-      <value>Votre mot de passe ne doit pas dépasser {0} caractères.</value>
-  </data>
-  <data name="MinLength" xml:space="preserve">
-      <value>Votre mot de passe doit comporter au moins {0} caractères</value>
-  </data>
-  <data name="MustContainAlphanumericCharacter" xml:space="preserve">
-      <value>Votre mot de passe doit contenir un caractère alphanumérique</value>
-  </data>
-  <data name="MustContainDigit" xml:space="preserve">
-      <value>Votre mot de passe doit contenir un chiffre.</value>
-  </data>
-  <data name="MustContainUpperCase" xml:space="preserve">
-      <value>Votre mot de passe doit contenir au moins une lettre majuscule.</value>
-  </data>
-  <data name="MustContainLowerCase" xml:space="preserve">
-      <value>Votre mot de passe doit contenir au moins une lettre minuscule.</value>
-  </data>
 </root>
