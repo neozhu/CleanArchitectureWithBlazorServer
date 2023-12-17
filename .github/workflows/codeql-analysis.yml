@@ -61,9 +61,9 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore  CleanArchitecture.Blazor.sln
-
-    - name: Build
+    - name: Clean
       run: dotnet clean CleanArchitecture.Blazor.sln
+    - name: Build
       run: dotnet build CleanArchitecture.Blazor.sln --configuration Debug --no-restore
    
     - name: Perform CodeQL Analysis
