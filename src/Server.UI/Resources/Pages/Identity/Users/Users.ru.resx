@@ -159,9 +159,6 @@
   <data name="Reset password successfully" xml:space="preserve">
     <value>Пароль успешно восстановлен</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>Восстановить пароль</value>
-  </data>
   <data name="Search for user name" xml:space="preserve">
     <value>Поиск имени пользователя</value>
   </data>
@@ -216,9 +213,6 @@
   <data name="Set Permissions" xml:space="preserve">
     <value>Установить разрешения</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>Сброс пароля</value>
-  </data>
   <data name="Assigned Roles" xml:space="preserve">
     <value>Назначенные роли</value>
   </data>
@@ -230,5 +224,8 @@
   </data>
   <data name="Permission added successfully!" xml:space="preserve">
     <value>Разрешение успешно добавлено!</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>Сброс пароля</value>
   </data>
 </root>

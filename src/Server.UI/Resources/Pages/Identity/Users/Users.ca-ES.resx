@@ -159,9 +159,6 @@
   <data name="Reset password successfully" xml:space="preserve">
     <value>Restablerta la contrasenya correctament</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>Restablir la contrasenya</value>
-  </data>
   <data name="Search for user name" xml:space="preserve">
     <value>Buscar per nom de l'usuari</value>
   </data>
@@ -222,13 +219,13 @@
   <data name="Superior Name" xml:space="preserve">
     <value>Nom superior</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>Reset Password</value>
-  </data>
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>Correu electrònic/Número de telèfon</value>
   </data>
   <data name="Assigned Roles" xml:space="preserve">
     <value>Rols assignats</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>Reset Password</value>
   </data>
 </root>

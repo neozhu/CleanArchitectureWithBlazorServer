@@ -159,9 +159,6 @@
   <data name="Reset password successfully" xml:space="preserve">
     <value>パスワードの再設定に成功しました。</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>パスワードの再入力</value>
-  </data>
   <data name="Search for user name" xml:space="preserve">
     <value>ユーザー名で検索</value>
   </data>
@@ -216,9 +213,6 @@
   <data name="Set Permissions" xml:space="preserve">
     <value>権限を設定する</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>パスワードを再設定する</value>
-  </data>
   <data name="Assigned Roles" xml:space="preserve">
     <value>割り当てられた役割</value>
   </data>
@@ -230,5 +224,8 @@
   </data>
   <data name="Permission added successfully!" xml:space="preserve">
     <value>権限が正常に追加されました。</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>パスワードを再設定する</value>
   </data>
 </root>

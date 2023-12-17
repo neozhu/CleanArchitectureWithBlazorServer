@@ -156,9 +156,6 @@
   <data name="Reset password successfully" xml:space="preserve">
     <value>إعادة تعيين كلمة المرور بنجاح</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>كلمة مرور الراحة</value>
-  </data>
   <data name="Search for user name" xml:space="preserve">
     <value>البحث عن اسم المستخدم</value>
   </data>
@@ -216,9 +213,6 @@
   <data name="Set Permissions" xml:space="preserve">
     <value>تعيين أذونات</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>إعادة تعيين كلمة المرور</value>
-  </data>
   <data name="Assigned Roles" xml:space="preserve">
     <value>الأدوار المعينة</value>
   </data>
@@ -230,5 +224,8 @@
   </data>
   <data name="Permission added successfully!" xml:space="preserve">
     <value>تمت إضافة الإذن بنجاح!</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>إعادة تعيين كلمة المرور</value>
   </data>
 </root>

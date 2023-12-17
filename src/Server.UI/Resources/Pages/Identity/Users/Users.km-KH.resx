@@ -159,9 +159,6 @@
   <data name="Reset password successfully" xml:space="preserve">
     <value>비밀번호 재설정 성공</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>나머지 비밀번호</value>
-  </data>
   <data name="Search for user name" xml:space="preserve">
     <value>사용자 이름 검색</value>
   </data>
@@ -216,9 +213,6 @@
   <data name="Set Permissions" xml:space="preserve">
     <value>권한 설정</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>암호를 재설정</value>
-  </data>
   <data name="Assigned Roles" xml:space="preserve">
     <value>할당된 역할</value>
   </data>
@@ -230,5 +224,8 @@
   </data>
   <data name="Permission added successfully!" xml:space="preserve">
     <value>권한이 성공적으로 추가되었습니다!</value>
+  </data>
+  <data name="Reset Password" xml:space="preserve">
+    <value>암호를 재설정</value>
   </data>
 </root>
