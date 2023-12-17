@@ -145,13 +145,10 @@
                         }
                         else
                         {
-
                             var accessToken = await TokenProvider.Login(user);
                             var claims =await TokenProvider.ParseClaimsFromJwt(accessToken);
                             ((BlazorAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(claims);
                             Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
-
-
                         }
                     }
                 }
