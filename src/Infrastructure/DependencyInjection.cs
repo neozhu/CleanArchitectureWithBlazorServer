@@ -268,9 +268,8 @@ public static class DependencyInjection
                     ValidateAudience = false,
                     RoleClaimType = ClaimTypes.Role,
                     ClockSkew = TimeSpan.Zero,
-                    ValidateLifetime = true
+                    ValidateLifetime = false, 
                 };
-
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
