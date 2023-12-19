@@ -8,7 +8,8 @@ using NUnit.Framework;
 namespace CleanArchitecture.Blazor.Application.IntegrationTests.Products.Commands;
 
 using static Testing;
-internal class ImportProductsCommandTests: TestBase
+
+internal class ImportProductsCommandTests : TestBase
 {
     [Test]
     public async Task DownloadTemplate()
@@ -22,7 +23,7 @@ internal class ImportProductsCommandTests: TestBase
     public async Task ImportDataFromExcel()
     {
         var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        var excelFile = Path.Combine(dir,"../../../", "Products", "ImportExcel", "Products.xlsx");
+        var excelFile = Path.Combine(dir, "../../../", "Products", "ImportExcel", "Products.xlsx");
         var data = File.ReadAllBytes(excelFile);
         var cmd = new ImportProductsCommand("Products.xlsx", data);
         var result = await SendAsync(cmd);

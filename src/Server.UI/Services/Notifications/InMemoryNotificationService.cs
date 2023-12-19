@@ -19,27 +19,6 @@ public class InMemoryNotificationService : INotificationService
         _messages = new List<NotificationMessage>();
     }
 
-    private async Task<DateTime> GetLastReadTimestamp()
-    {
-        try
-        {
-            if ((await _localStorageService.GetAsync<DateTime>(LocalStorageKey)).Success == false)
-            {
-                return DateTime.MinValue;
-            }
-            else
-            {
-                var timestamp = await _localStorageService.GetAsync<DateTime>(LocalStorageKey);
-                return timestamp.Value;
-            }
-        }
-        catch (CryptographicException)
-        {
-            await _localStorageService.DeleteAsync(LocalStorageKey);
-            return DateTime.MinValue;
-        }
-    }
-
     public async Task<bool> AreNewNotificationsAvailable()
     {
         var timestamp = await GetLastReadTimestamp();
@@ -56,18 +35,16 @@ public class InMemoryNotificationService : INotificationService
     public async Task MarkNotificationsAsRead(string id)
     {
         var message = await GetMessageById(id);
-        if (message == null) { return; }
+        if (message == null) return;
 
         var timestamp = await _localStorageService.GetAsync<DateTime>(LocalStorageKey);
-        if (timestamp.Success)
-        {
-            await _localStorageService.SetAsync(LocalStorageKey, message.PublishDate);
-        }
-
+        if (timestamp.Success) await _localStorageService.SetAsync(LocalStorageKey, message.PublishDate);
     }
 
-    public Task<NotificationMessage> GetMessageById(string id) =>
-        Task.FromResult(_messages.First((x => x.Id == id)));
+    public Task<NotificationMessage> GetMessageById(string id)
+    {
+        return Task.FromResult(_messages.First(x => x.Id == id));
+    }
 
     public async Task<IDictionary<NotificationMessage, bool>> GetNotifications()
     {
@@ -80,6 +57,25 @@ public class InMemoryNotificationService : INotificationService
     {
         _messages.Add(message);
         return Task.CompletedTask;
+    }
+
+    private async Task<DateTime> GetLastReadTimestamp()
+    {
+        try
+        {
+            if ((await _localStorageService.GetAsync<DateTime>(LocalStorageKey)).Success == false)
+            {
+                return DateTime.MinValue;
+            }
+
+            var timestamp = await _localStorageService.GetAsync<DateTime>(LocalStorageKey);
+            return timestamp.Value;
+        }
+        catch (CryptographicException)
+        {
+            await _localStorageService.DeleteAsync(LocalStorageKey);
+            return DateTime.MinValue;
+        }
     }
 
 

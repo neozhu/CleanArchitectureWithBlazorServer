@@ -10,13 +10,13 @@ namespace CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 public interface IUserPreferencesService
 {
     /// <summary>
-    /// Saves UserPreferences in local storage
+    ///     Saves UserPreferences in local storage
     /// </summary>
     /// <param name="userPreferences">The userPreferences to save in the local storage</param>
     public Task SaveUserPreferences(UserPreferences userPreferences);
 
     /// <summary>
-    /// Loads UserPreferences in local storage
+    ///     Loads UserPreferences in local storage
     /// </summary>
     /// <returns>UserPreferences object. Null when no settings were found.</returns>
     public Task<UserPreferences> LoadUserPreferences();
@@ -24,8 +24,8 @@ public interface IUserPreferencesService
 
 public class UserPreferencesService : IUserPreferencesService
 {
-    private readonly ProtectedLocalStorage _localStorage;
     private const string Key = "userPreferences";
+    private readonly ProtectedLocalStorage _localStorage;
 
     public UserPreferencesService(ProtectedLocalStorage localStorage)
     {
@@ -42,10 +42,7 @@ public class UserPreferencesService : IUserPreferencesService
         try
         {
             var result = await _localStorage.GetAsync<UserPreferences>(Key);
-            if (result.Success && result.Value is not null)
-            {
-                return result.Value;
-            }
+            if (result.Success && result.Value is not null) return result.Value;
             return new UserPreferences();
         }
         catch (CryptographicException)
@@ -53,7 +50,5 @@ public class UserPreferencesService : IUserPreferencesService
             await _localStorage.DeleteAsync(Key);
             return new UserPreferences();
         }
-
     }
 }
-

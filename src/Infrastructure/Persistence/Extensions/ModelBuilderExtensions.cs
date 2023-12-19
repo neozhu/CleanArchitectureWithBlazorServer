@@ -8,7 +8,8 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Extensions;
 
 public static class ModelBuilderExtensions
 {
-    public static void ApplyGlobalFilters<TInterface>(this ModelBuilder modelBuilder, Expression<Func<TInterface, bool>> expression)
+    public static void ApplyGlobalFilters<TInterface>(this ModelBuilder modelBuilder,
+        Expression<Func<TInterface, bool>> expression)
     {
         var entities = modelBuilder.Model
             .GetEntityTypes()

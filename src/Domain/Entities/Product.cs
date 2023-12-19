@@ -13,8 +13,8 @@ public class Product : BaseAuditableEntity
     public string? Unit { get; set; }
     public decimal Price { get; set; }
     public List<ProductImage>? Pictures { get; set; }
-
 }
+
 public class ProductImage
 {
     public required string Name { get; set; }

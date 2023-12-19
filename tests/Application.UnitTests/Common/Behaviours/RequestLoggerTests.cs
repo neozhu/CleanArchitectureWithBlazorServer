@@ -28,17 +28,19 @@ public class RequestLoggerTests
     {
         _currentUserService.Setup(x => x.UserId).Returns("Administrator");
         var requestLogger = new LoggingPreProcessor<AddEditProductCommand>(_logger.Object, _currentUserService.Object);
-        await requestLogger.Process(new AddEditProductCommand {  Brand= "Brand", Name= "Brand", Price=1.0m, Unit="EA" }, new CancellationToken());
+        await requestLogger.Process(
+            new AddEditProductCommand { Brand = "Brand", Name = "Brand", Price = 1.0m, Unit = "EA" },
+            new CancellationToken());
         _currentUserService.Verify(i => i.UserName, Times.Once);
-     
     }
 
     [Test]
     public async Task ShouldNotCallGetUserNameAsyncOnceIfUnauthenticated()
     {
         var requestLogger = new LoggingPreProcessor<AddEditProductCommand>(_logger.Object, _currentUserService.Object);
-        await requestLogger.Process(new AddEditProductCommand { Brand = "Brand", Name = "Brand", Price = 1.0m, Unit = "EA" }, new CancellationToken());
+        await requestLogger.Process(
+            new AddEditProductCommand { Brand = "Brand", Name = "Brand", Price = 1.0m, Unit = "EA" },
+            new CancellationToken());
         _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>(), CancellationToken.None), Times.Never);
- 
     }
 }

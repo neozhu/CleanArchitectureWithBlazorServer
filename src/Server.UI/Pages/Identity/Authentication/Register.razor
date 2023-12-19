@@ -1,11 +1,11 @@
 @page "/pages/authentication/register"
 
+@attribute [AllowAnonymous]
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Domain.Identity
-@using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @using FluentEmail.Core.Models
-
-@attribute [AllowAnonymous]
+@using Severity = MudBlazor.Severity
+@using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @inherits OwningComponentBase
 
 @inject NavigationManager Navigation
@@ -18,9 +18,11 @@
 
 <AuthorizeView>
     <NotAuthorized Context="Auth">
-            <MudForm Model="@_model" @ref="@_form" Validation="@(Validator.ValidateValue(_model))">
+        <MudForm Model="@_model" @ref="@_form" Validation="@(Validator.ValidateValue(_model))">
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
-            <MudText>@L["have an account?"] <MudLink Href="/pages/authentication/login">@L["Sign In"]</MudLink></MudText>
+            <MudText>
+                @L["have an account?"] <MudLink Href="/pages/authentication/login">@L["Sign In"]</MudLink>
+            </MudText>
 
             <MudTextField T="string"
                           Immediate="true"
@@ -30,7 +32,8 @@
                           Variant="Variant.Outlined"
                           Required="true"
                           RequiredError="@L["user name is required!"]"
-                          Class="my-4"></MudTextField>
+                          Class="my-4">
+            </MudTextField>
 
             <MudTextField T="string"
                           Immediate="true"
@@ -39,26 +42,27 @@
                           For="@(() => _model.Email)"
                           Required="true"
                           RequiredError="@L["e-mail is required!"]"
-                          Variant="Variant.Outlined"></MudTextField>
+                          Variant="Variant.Outlined">
+            </MudTextField>
 
             <MudPasswordField Immediate="true"
-                          Label="@L["Password"]"
-                          @bind-Value="_model.Password"
-                          For="@(() => _model.Password)"
-                          PasswordMode="true"
-                          Variant="Variant.Outlined"
-                          Required="true"
-                          RequiredError="@L["password is required!"]"
-                          Class="mt-4" />
-            <MudPasswordField Immediate="true"
-                          Label="@L["Confirm Password"]"
-                          @bind-Value="_model.ConfirmPassword"
-                          For="@(() => _model.ConfirmPassword)"
-                          Variant="Variant.Outlined"
+                              Label="@L["Password"]"
+                              @bind-Value="_model.Password"
+                              For="@(() => _model.Password)"
                               PasswordMode="true"
-                          Required="true"
-                          RequiredError="@L["password is required!"]"
-                         Class="mt-4" />
+                              Variant="Variant.Outlined"
+                              Required="true"
+                              RequiredError="@L["password is required!"]"
+                              Class="mt-4"/>
+            <MudPasswordField Immediate="true"
+                              Label="@L["Confirm Password"]"
+                              @bind-Value="_model.ConfirmPassword"
+                              For="@(() => _model.ConfirmPassword)"
+                              Variant="Variant.Outlined"
+                              PasswordMode="true"
+                              Required="true"
+                              RequiredError="@L["password is required!"]"
+                              Class="mt-4"/>
 
             <MudCheckBox For="@(() => _model.AgreeToTerms)" @bind-Checked="@_model.AgreeToTerms" Label="@L["I agree to the terms and privacy"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
 
@@ -70,7 +74,7 @@
                        FullWidth="true">
                 @if (_loading)
                 {
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
                     <MudText Class="ms-2"> @ConstantString.Loading</MudText>
                 }
                 else
@@ -82,12 +86,12 @@
     </NotAuthorized>
     <Authorized>
         <RedirectToHome></RedirectToHome>
-        <MudAlert Severity="MudBlazor.Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
+        <MudAlert Severity="Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
     </Authorized>
 </AuthorizeView>
 
 @code{
-    private string Title = "Sign Up";
+    private readonly string Title = "Sign Up";
     private MudForm? _form;
     private bool _loading;
     private readonly RegisterFormModel _model = new();
@@ -101,10 +105,10 @@
             if (_form!.IsValid)
             {
                 var user = new ApplicationUser
-                    {
-                        UserName = _model.UserName,
-                        Email = _model.Email
-                    };
+                {
+                    UserName = _model.UserName,
+                    Email = _model.Email
+                };
                 var result = await UserManager.CreateAsync(user, _model.Password!);
                 if (result.Succeeded)
                 {
@@ -114,22 +118,22 @@
                         var response = await SendWelcome(user.Email!, user.UserName!);
                         if (response.Successful == false)
                         {
-                            Snackbar.Add(string.Format(L["{0}"], response.ErrorMessages.FirstOrDefault()), MudBlazor.Severity.Warning);
+                            Snackbar.Add(string.Format(L["{0}"], response.ErrorMessages.FirstOrDefault()), Severity.Warning);
                         }
-                        Snackbar.Add(L["Register successfully!"], MudBlazor.Severity.Info);
+
+                        Snackbar.Add(L["Register successfully!"], Severity.Info);
                         Navigation.NavigateTo("/");
                     }
                     else
                     {
-                        Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
+                        Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", Severity.Error);
                     }
                 }
                 else
                 {
-                    Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", MudBlazor.Severity.Error);
+                    Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", Severity.Error);
                 }
             }
-
         }
         finally
         {
@@ -141,6 +145,7 @@
     {
         var subject = string.Format(L["Welcome to {0}"], Settings.AppName);
         var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates", "_welcome.txt");
-        return MailService.SendAsync(toEmail, subject, "_welcome", new { AppName = Settings.AppName, Email = toEmail, UserName = userName });
+        return MailService.SendAsync(toEmail, subject, "_welcome", new { Settings.AppName, Email = toEmail, UserName = userName });
     }
+
 }

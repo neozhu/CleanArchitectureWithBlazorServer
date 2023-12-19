@@ -1,16 +1,16 @@
-import { OrgChart } from 'https://cdn.jsdelivr.net/npm/d3-org-chart@3.1.1/+esm'
+import {OrgChart} from 'https://cdn.jsdelivr.net/npm/d3-org-chart@3.1.1/+esm'
 
 export function createOrgChart(orgdata) {
-    let chart
+    let chart;
     setTimeout(function () {
         //console.log(orgdata)
         const activeid = orgdata.find(x => x.isLoggedUser == true);
         chart = new OrgChart()
-            .nodeHeight((d) => 85 + 25)
-            .nodeWidth((d) => 220 + 2)
-            .childrenMargin((d) => 50)
-            .compactMarginBetween((d) => 35)
-            .compactMarginPair((d) => 30)
+            .nodeHeight(d => 85 + 25)
+            .nodeWidth(d => 220 + 2)
+            .childrenMargin(d => 50)
+            .compactMarginBetween(d => 35)
+            .compactMarginPair(d => 30)
             .neighbourMargin((a, b) => 20)
             .nodeContent(function (d, i, arr, state) {
                 const color = '#FFFFFF';

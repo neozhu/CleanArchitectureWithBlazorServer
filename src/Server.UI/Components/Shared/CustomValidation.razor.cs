@@ -5,23 +5,20 @@ namespace CleanArchitecture.Blazor.Server.UI.Components.Shared;
 // See https://docs.microsoft.com/en-us/aspnet/core/blazor/forms-validation?view=aspnetcore-6.0#server-validation-with-a-validator-component
 public class CustomModelValidation : ComponentBase
 {
-    [CascadingParameter]
-    private EditContext? CurrentEditContext { get; set; }
-
     private ValidationMessageStore? _messageStore;
+
+    [CascadingParameter] private EditContext? CurrentEditContext { get; set; }
 
     protected override void OnInitialized()
     {
         if (CurrentEditContext is null)
-        {
             throw new InvalidOperationException(
                 $"{nameof(CustomModelValidation)} requires a cascading " +
                 $"parameter of type {nameof(EditContext)}. " +
                 $"For example, you can use {nameof(CustomModelValidation)} " +
                 $"inside an {nameof(EditForm)}.");
-        }
 
-        _messageStore = new(CurrentEditContext);
+        _messageStore = new ValidationMessageStore(CurrentEditContext);
 
         CurrentEditContext.OnValidationRequested += (s, e) =>
             _messageStore?.Clear();
@@ -33,10 +30,7 @@ public class CustomModelValidation : ComponentBase
     {
         if (CurrentEditContext is not null && errors is not null)
         {
-            foreach (var err in errors)
-            {
-                _messageStore?.Add(CurrentEditContext.Field(err.Key), err.Value);
-            }
+            foreach (var err in errors) _messageStore?.Add(CurrentEditContext.Field(err.Key), err.Value);
 
             CurrentEditContext.NotifyValidationStateChanged();
         }

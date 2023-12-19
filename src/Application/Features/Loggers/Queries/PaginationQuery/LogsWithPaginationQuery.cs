@@ -4,20 +4,21 @@
 using CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
 using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Loggers.Specifications;
-using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery;
 
 public class LogsWithPaginationQuery : LoggerAdvancedFilter, ICacheableRequest<PaginatedData<LogDto>>
 {
-    
+    public LoggerAdvancedSpecification Specification => new(this);
+
     public string CacheKey => LogsCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => LogsCacheKey.MemoryCacheEntryOptions;
+
     public override string ToString()
     {
-        return $"Listview:{ListView},{Level},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
+        return
+            $"Listview:{ListView},{Level},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
-    public LoggerAdvancedSpecification Specification => new LoggerAdvancedSpecification(this);
 }
 
 public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, PaginatedData<LogDto>>
@@ -38,10 +39,8 @@ public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, Paginat
         CancellationToken cancellationToken)
     {
         var data = await _context.Loggers.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                        .ProjectToPaginatedDataAsync<Logger, LogDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
+            .ProjectToPaginatedDataAsync<Logger, LogDto>(request.Specification, request.PageNumber, request.PageSize,
+                _mapper.ConfigurationProvider, cancellationToken);
         return data;
     }
 }
-
-
-

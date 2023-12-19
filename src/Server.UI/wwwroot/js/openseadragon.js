@@ -13,7 +13,7 @@ export function showOpenSeadragon(element, url) {
         tileSources: {
             xmlns: "http://schemas.microsoft.com/deepzoom/2008",
             type: 'image',
-            url: url,
+            url,
         }
     });
     console.log(viewer)

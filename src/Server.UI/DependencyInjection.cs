@@ -2,7 +2,6 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using BlazorDownloadFile;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
-using CleanArchitecture.Blazor.Server.Common.Interfaces;
 using CleanArchitecture.Blazor.Server.Hubs;
 using CleanArchitecture.Blazor.Server.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
@@ -13,7 +12,6 @@ using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using MudExtensions.Services;
@@ -70,7 +68,7 @@ public static class DependencyInjection
     {
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Error", createScopeForErrors: true);
+            app.UseExceptionHandler("/Error", true);
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
@@ -80,9 +78,7 @@ public static class DependencyInjection
         app.UseStaticFiles();
         app.UseAntiforgery();
         if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
-        {
             Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
-        }
 
         app.UseStaticFiles(new StaticFileOptions
         {
@@ -90,9 +86,10 @@ public static class DependencyInjection
             RequestPath = new PathString("/Files")
         });
 
-        var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(LocalizationConstants.SupportedLanguages.Select(x => x.Code).First())
-                  .AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray())
-                  .AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
+        var localizationOptions = new RequestLocalizationOptions()
+            .SetDefaultCulture(LocalizationConstants.SupportedLanguages.Select(x => x.Code).First())
+            .AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray())
+            .AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
 
         app.UseRequestLocalization(localizationOptions);
 
@@ -103,9 +100,6 @@ public static class DependencyInjection
             Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
             AsyncAuthorization = new[] { new HangfireDashboardAsyncAuthorizationFilter() }
         });
-
-
-
 
 
         app.MapRazorComponents<App>().AddInteractiveServerRenderMode();

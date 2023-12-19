@@ -1,6 +1,4 @@
-﻿using CleanArchitecture.Blazor.Domain.Entities;
-
-namespace CleanArchitecture.Blazor.Application.Features.Loggers.Specifications;
+﻿namespace CleanArchitecture.Blazor.Application.Features.Loggers.Specifications;
 #nullable disable warnings
 public class LoggerAdvancedSpecification : Specification<Logger>
 {
@@ -15,8 +13,10 @@ public class LoggerAdvancedSpecification : Specification<Logger>
             Convert.ToDateTime(today.AddDays(-30).ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
                 CultureInfo.CurrentCulture);
         Query.Where(p => p.TimeStamp.Date == DateTime.Now.Date, filter.ListView == LogListView.CreatedToday)
-             .Where(p => p.TimeStamp >= last30days, filter.ListView == LogListView.Last30days)
-             .Where(p => p.Level == filter.Level.ToString(), filter.Level is not null)
-             .Where(x => x.Message.Contains(filter.Keyword) || x.Exception.Contains(filter.Keyword) || x.UserName.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword));
+            .Where(p => p.TimeStamp >= last30days, filter.ListView == LogListView.Last30days)
+            .Where(p => p.Level == filter.Level.ToString(), filter.Level is not null)
+            .Where(
+                x => x.Message.Contains(filter.Keyword) || x.Exception.Contains(filter.Keyword) ||
+                     x.UserName.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword));
     }
 }

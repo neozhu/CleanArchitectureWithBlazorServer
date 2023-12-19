@@ -1,9 +1,10 @@
-﻿﻿
-@inject NavigationManager NavigationManager
+﻿@inject NavigationManager NavigationManager
 
 @code {
+
     protected override void OnInitialized()
     {
-        NavigationManager.NavigateTo($"/", forceLoad: false);
+        NavigationManager.NavigateTo("/", false);
     }
+
 }

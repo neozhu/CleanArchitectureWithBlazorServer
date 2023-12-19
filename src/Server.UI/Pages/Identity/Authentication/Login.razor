@@ -1,19 +1,15 @@
 @page "/pages/authentication/login" 
-
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs;
+@using Severity = Severity
+@using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Infrastructure.Services.JWT
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using Microsoft.AspNetCore.DataProtection
+@using CleanArchitecture.Blazor.Server.UI.Services
 @using CleanArchitecture.Blazor.Server.UI.Models.Identity
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
-@using CleanArchitecture.Blazor.Server.UI.Services
-@using Microsoft.AspNetCore.DataProtection
-@using CleanArchitecture.Blazor.Application.Common.Security
-@using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @using CleanArchitecture.Blazor.Infrastructure.Constants.User
-@using Severity = MudBlazor.Severity
-@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users
-@using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
+@using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 
 @inherits OwningComponentBase
 @implements IDisposable
@@ -34,23 +30,25 @@
     <NotAuthorized Context="auth">
         <MudForm Model="@_model" @ref="@_form" @bind-IsValid="@_success" ValidationDelay="0" Validation="@(Validator.ValidateValue(_model))">
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
-            <MudText>@L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink></MudText>
+            <MudText>
+                @L["Don't have an account?"] <MudLink Href="/pages/authentication/register">@L["Sign Up"]</MudLink>
+            </MudText>
             <MudTextField T="string"
-                @bind-Value="_model.UserName" For="@(() => _model.UserName)"
-                Label="@L["Username"]"
-                Variant="Variant.Outlined"
-                Required="true"
-                OnlyValidateIfDirty="true"
-                Immediate="true"
-                Class="my-6">
+                          @bind-Value="_model.UserName" For="@(() => _model.UserName)"
+                          Label="@L["Username"]"
+                          Variant="Variant.Outlined"
+                          Required="true"
+                          OnlyValidateIfDirty="true"
+                          Immediate="true"
+                          Class="my-6">
             </MudTextField>
 
             <MudPasswordField @bind-Value="_model.Password"
-                For="@(() => _model.Password)"
-                Label="@L["Password"]"
-                PasswordMode="true"
-                Variant="Variant.Outlined"
-                Required="true">
+                              For="@(() => _model.Password)"
+                              Label="@L["Password"]"
+                              PasswordMode="true"
+                              Variant="Variant.Outlined"
+                              Required="true">
             </MudPasswordField>
 
             <div Class="d-flex justify-space-between align-center">
@@ -59,15 +57,15 @@
             </div>
 
             <MudButton Variant="Variant.Filled"
-                Color="Color.Primary"
-                Size="Size.Large"
-                Disabled="@(_loading)"
-                ButtonType="ButtonType.Button"
-                OnClick="@(OnSubmit)"
-                FullWidth="true">
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       Disabled="@(_loading)"
+                       ButtonType="ButtonType.Button"
+                       OnClick="@(OnSubmit)"
+                       FullWidth="true">
                 @if (_loading)
                 {
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
                     <MudText Class="ms-2"> @ConstantString.Loading</MudText>
                 }
                 else
@@ -78,11 +76,11 @@
             </MudButton>
             <div class="d-flex justify-space-around flex-grow-1 my-4 gap-4">
                 <MudButton Class="flex-grow-1" OnClick="@(() => SignInExternal("Microsoft"))" Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.Microsoft" ButtonType="ButtonType.Button"
-                    title="Sign in with Microsoft">
+                           title="Sign in with Microsoft">
                     @ConstantString.Microsoft
                 </MudButton>
                 <MudButton Class="flex-grow-1" OnClick="@(() => SignInExternal("Google"))" Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.Google" ButtonType="ButtonType.Button"
-                    title="Sign in with Google">
+                           title="Sign in with Google">
                     @ConstantString.Google
                 </MudButton>
             </div>
@@ -99,9 +97,9 @@
     private MudForm? _form;
     private bool _success;
     private bool _loading;
-    [Inject]
-    public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
-    private LoginFormModel _model = new()
+    [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+
+    private readonly LoginFormModel _model = new()
     {
         UserName = "administrator",
         Password = "Password123!",
@@ -146,7 +144,7 @@
                         else
                         {
                             var accessToken = await TokenProvider.Login(user);
-                            var claims =await TokenProvider.ParseClaimsFromJwt(accessToken);
+                            var claims = await TokenProvider.ParseClaimsFromJwt(accessToken);
                             ((BlazorAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(claims);
                             Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
                         }
@@ -165,7 +163,7 @@
         var model = new ResetPasswordFormModel { Id = item.Id, DisplayName = item.DisplayName, UserName = item.UserName, ProfilePictureDataUrl = item.ProfilePictureDataUrl };
         var parameters = new DialogParameters<ResetPasswordDialog>
         {
-            { x=>x.Model, model}
+            { x => x.Model, model }
         };
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall };
         var dialog = DialogService.Show<ResetPasswordDialog>(L["Set new password"], parameters, options);
@@ -210,25 +208,28 @@
         {
             var admin = await UserManager.FindByNameAsync(UserName.Administrator) ?? throw new NotFoundException("Administrator's account Not Found.");
             user = new ApplicationUser
-                {
-                    EmailConfirmed = true,
-                    IsActive = true,
-                    IsLive = true,
-                    UserName = userName,
-                    Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
-                    Provider = provider,
-                    DisplayName = name,
-                    SuperiorId = admin.Id,
-                    TenantId = admin.TenantId,
-                    TenantName = admin.TenantName
-                };
+            {
+                EmailConfirmed = true,
+                IsActive = true,
+                IsLive = true,
+                UserName = userName,
+                Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
+                Provider = provider,
+                DisplayName = name,
+                SuperiorId = admin.Id,
+                TenantId = admin.TenantId,
+                TenantName = admin.TenantName
+            };
             var createResult = await UserManager.CreateAsync(user);
             if (createResult.Succeeded)
             {
                 var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
             }
+
             await UserManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
         }
+
         return user;
     }
+
 }

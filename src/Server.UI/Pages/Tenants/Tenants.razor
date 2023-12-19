@@ -4,7 +4,6 @@
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Caching
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.Delete
-@using CleanArchitecture.Blazor.Infrastructure.Constants.Permission
 
 @attribute [Authorize(Policy = Permissions.Tenants.View)]
 
@@ -28,46 +27,52 @@
     <ToolBarContent>
         <div class="d-flex align-start flex-grow-1">
             <div class="d-flex gap-4">
-                <MudIcon Icon="@Icons.Material.Filled.Domain" Size="Size.Large" />
+                <MudIcon Icon="@Icons.Material.Filled.Domain" Size="Size.Large"/>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption">@Title</MudText>
                 </div>
             </div>
-            <div class="flex-grow-1" />
+            <div class="flex-grow-1"/>
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton DisableElevation Variant="Variant.Outlined"
-                                    Size="Size.Small"
-                                    Disabled="@_loading"
-                                    OnClick="@(()=>OnRefresh())"
-                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                    Style="margin-right: 4px; margin-bottom:4px">@ConstantString.Refresh</MudButton>
-                         @if (_canCreate)
+                                   Size="Size.Small"
+                                   Disabled="@_loading"
+                                   OnClick="@(() => OnRefresh())"
+                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                                   Style="margin-right: 4px; margin-bottom:4px">
+                            @ConstantString.Refresh
+                        </MudButton>
+                        @if (_canCreate)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                        StartIcon="@Icons.Material.Filled.Add"
-                                        Disabled="@_loading"
-                                        Size="Size.Small"
-                                        OnClick="OnCreate"
-                                        Style="margin-right: 4px; margin-bottom:4px"
-                                        IconColor="Color.Surface">@ConstantString.New</MudButton>
+                                       StartIcon="@Icons.Material.Filled.Add"
+                                       Disabled="@_loading"
+                                       Size="Size.Small"
+                                       OnClick="OnCreate"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       IconColor="Color.Surface">
+                                @ConstantString.New
+                            </MudButton>
                         }
                         @if (_canDelete)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                        StartIcon="@Icons.Material.Filled.Delete"
-                                        Disabled="@(!(_selectedItems.Count>0))"
-                                        Size="Size.Small"
-                                        Style="margin-right: 4px; margin-bottom:4px"
-                                        OnClick="OnDeleteChecked"
-                                        IconColor="Color.Surface">@ConstantString.Delete</MudButton>
+                                       StartIcon="@Icons.Material.Filled.Delete"
+                                       Disabled="@(!(_selectedItems.Count > 0))"
+                                       Size="Size.Small"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       OnClick="OnDeleteChecked"
+                                       IconColor="Color.Surface">
+                                @ConstantString.Delete
+                            </MudButton>
                         }
 
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@ConstantString.Refresh</MudMenuItem>
+                            <MudMenuItem Disabled="@_loading" OnClick="@(() => OnRefresh())">@ConstantString.Refresh</MudMenuItem>
                             @if (_canCreate)
                             {
                                 <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@ConstantString.New</MudMenuItem>
@@ -82,15 +87,16 @@
                 </div>
                 @if (_canSearch)
                 {
-                    <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
+                    <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0">
+                    </MudTextField>
                 }
 
             </div>
         </div>
     </ToolBarContent>
     <Columns>
-        <SelectColumn ShowInFooter="false">                 </SelectColumn>
+        <SelectColumn ShowInFooter="false"> </SelectColumn>
         <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
             <CellTemplate>
                 @if (_canEdit || _canDelete)
@@ -100,11 +106,11 @@
                              EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
-                            <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                         }
                         @if (_canDelete)
                         {
-                            <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
                     </MudMenu>
                 }
@@ -118,12 +124,12 @@
                 }
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn CellStyle="width:300px" Property="x => x.Id" Title="@L[_currentDto.GetMemberDescription(x=>x.Id)]">
+        <PropertyColumn CellStyle="width:300px" Property="x => x.Id" Title="@L[_currentDto.GetMemberDescription(x => x.Id)]">
             <FooterTemplate>
-                @L["Selected"]: @(this._selectedItems.Count)
+                @L["Selected"]: @_selectedItems.Count
             </FooterTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
+        <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x => x.Name)]">
             <CellTemplate>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.body2">@context.Item.Name</MudText>
@@ -135,7 +141,7 @@
     </Columns>
 
     <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
+        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"/>
     </PagerContent>
 </MudDataGrid>
 
@@ -147,12 +153,11 @@
 
 @code
 {
-    [CascadingParameter]
-    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
 
     public string? Title { get; private set; }
     private int _defaultPageSize = 15;
-    private HashSet<TenantDto> _selectedItems = new HashSet<TenantDto>();
+    private HashSet<TenantDto> _selectedItems = new();
     private MudDataGrid<TenantDto> _table = default!;
     private TenantDto _currentDto = new();
     private string _searchString = string.Empty;
@@ -162,7 +167,7 @@
     private bool _canEdit;
     private bool _canDelete;
 
-    private TenantsWithPaginationQuery Query { get; set; } = new();
+    private TenantsWithPaginationQuery Query { get; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -185,7 +190,7 @@
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
             var result = await Mediator.Send(Query);
-            return new GridData<TenantDto>() { TotalItems = result.TotalItems, Items = result.Items };
+            return new GridData<TenantDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
         {
@@ -195,7 +200,7 @@
 
     private async Task OnSearch(string text)
     {
-        _selectedItems = new();
+        _selectedItems = new HashSet<TenantDto>();
         _searchString = text;
         await _table.ReloadServerData();
     }
@@ -203,7 +208,7 @@
     private async Task OnRefresh()
     {
         TenantCacheKey.Refresh();
-        _selectedItems = new();
+        _selectedItems = new HashSet<TenantDto>();
         _searchString = string.Empty;
         await _table.ReloadServerData();
     }
@@ -213,11 +218,11 @@
         var command = new AddEditTenantCommand();
         var parameters = new DialogParameters<TenantFormDialog>
         {
-            { x=>x.Model,command },
+            { x => x.Model, command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<TenantFormDialog>
-        (L["Create a new Tenant"], parameters, options);
+            (L["Create a new Tenant"], parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -230,11 +235,11 @@
         var command = Mapper.Map<AddEditTenantCommand>(dto);
         var parameters = new DialogParameters<TenantFormDialog>
         {
-            { x=>x.Model,command },
+            { x => x.Model, command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<TenantFormDialog>
-        (L["Edit the Tenant"], parameters, options);
+            (L["Edit the Tenant"], parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
@@ -245,11 +250,11 @@
     private async Task OnDelete(TenantDto dto)
     {
         var deleteContent = ConstantString.DeleteConfirmationWithId;
-        var command = new DeleteTenantCommand(new string[] { dto.Id });
+        var command = new DeleteTenantCommand(new[] { dto.Id });
         var parameters = new DialogParameters<DeleteConfirmation>
         {
-            { x=>x.Command,  command },
-            { x=>x.ContentText, string.Format(deleteContent, dto.Id) }
+            { x => x.Command, command },
+            { x => x.ContentText, string.Format(deleteContent, dto.Id) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(L["Delete the Tenant"], parameters, options);
@@ -266,8 +271,8 @@
         var deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters<DeleteConfirmation>
         {
-            { x=>x.Command,  command },
-            { x=>x.ContentText, string.Format(deleteContent,_selectedItems.Count) }
+            { x => x.Command, command },
+            { x => x.ContentText, string.Format(deleteContent, _selectedItems.Count) }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(L["Delete Selected Tenants"], parameters, options);

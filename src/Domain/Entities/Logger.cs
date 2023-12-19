@@ -11,7 +11,6 @@ namespace CleanArchitecture.Blazor.Domain.Entities;
 
 public class Logger : IEntity<int>
 {
-    public int Id { get; set; }
     public string? Message { get; set; }
     public string? MessageTemplate { get; set; }
     public string Level { get; set; } = default!;
@@ -23,4 +22,5 @@ public class Logger : IEntity<int>
     public string? ClientAgent { get; set; }
     public string? Properties { get; set; }
     public string? LogEvent { get; set; }
+    public int Id { get; set; }
 }

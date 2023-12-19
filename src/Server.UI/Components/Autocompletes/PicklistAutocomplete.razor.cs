@@ -1,16 +1,12 @@
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 
-
-
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
 public class PicklistAutocomplete : MudAutocomplete<string>
 {
-    [Parameter]
-    public Picklist Picklist { get; set; }
+    [Parameter] public Picklist Picklist { get; set; }
 
-    [Inject]
-    private IPicklistService PicklistService { get; set; } = default!;
+    [Inject] private IPicklistService PicklistService { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,6 +49,6 @@ public class PicklistAutocomplete : MudAutocomplete<string>
     private static bool Contains(KeyValueDto model, string value)
     {
         return (model.Value != null && model.Value.Contains(value, StringComparison.InvariantCultureIgnoreCase))
-            || (model.Text != null && model.Text.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+               || (model.Text != null && model.Text.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
 }

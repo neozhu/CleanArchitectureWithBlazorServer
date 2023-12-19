@@ -1,9 +1,6 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
-@using ApexCharts
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
-@using CleanArchitecture.Blazor.Server.UI.Services
-@using CleanArchitecture.Blazor.Server.UI.Services.Layout
-
+@using ApexCharts
 @implements IDisposable
 
 @inject LayoutService LayoutService
@@ -12,25 +9,24 @@
 <div class="d-flex flex-grow-1 mb-2">
     <MudPaper Class="pa-5 flex-grow-1" Elevation="3" Style="@_backgroundColor">
         <ApexChart @ref="Chart" Options="Options" TItem="LogTimeLineDto" Height="180"
-                      Debug
+                   Debug
                    Title="@L["Collect logs by day"]">
 
             <ApexPointSeries TItem="LogTimeLineDto"
                              Items="Data"
                              Name="Count"
                              XValue="@(e => e.dt.ToString("MMM-d"))"
-                             YValue="@(e=>e.total)"
+                             YValue="@(e => e.total)"
                              YAggregate="@(e => e.Sum(e => e.total))"
-                             SeriesType="SeriesType.Bar" />
+                             SeriesType="SeriesType.Bar"/>
         </ApexChart>
     </MudPaper>
 </div>
 
 @code
- {
+{
     public List<LogTimeLineDto> Data { get; set; } = new();
-    [Inject]
-    private IMediator Mediator { get; set; } = default!;
+    [Inject] private IMediator Mediator { get; set; } = default!;
     private ApexChart<LogTimeLineDto> Chart { get; set; } = null!;
     private ApexChartOptions<LogTimeLineDto> Options { get; set; } = new();
 
@@ -39,28 +35,27 @@
     protected override async Task OnInitializedAsync()
     {
         var isDarkMode = LayoutService.IsDarkMode;
-        var colors = isDarkMode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
+        var colors = isDarkMode ? new List<string> { "#0277BD", "#039BE5" } : new List<string> { "#1976D2", "#90CAF9" };
         _backgroundColor = isDarkMode ? "background:rgb(66, 66, 66)" : "background:#fff";
 
-        Options.Theme = new ApexCharts.Theme()
-            {
-                Mode = isDarkMode ? Mode.Dark : Mode.Light,
-            };
+        Options.Theme = new Theme
+        {
+            Mode = isDarkMode ? Mode.Dark : Mode.Light
+        };
 
         Options.Fill = new Fill
+        {
+            Type = new List<FillType> { FillType.Gradient },
+            Gradient = new FillGradient
             {
-                Type = new List<FillType> { FillType.Gradient },
-                Gradient = new FillGradient
-                {
-                    Type = GradientType.Vertical,
-                    ShadeIntensity = 1,
-                    OpacityFrom = 1,
-                    OpacityTo = 0.7,
-                    GradientToColors = colors,
-                    Stops = new List<double>() { 0, 100 }
-                },
-
-            };
+                Type = GradientType.Vertical,
+                ShadeIntensity = 1,
+                OpacityFrom = 1,
+                OpacityTo = 0.7,
+                GradientToColors = colors,
+                Stops = new List<double> { 0, 100 }
+            }
+        };
         Options.Yaxis = new List<YAxis>();
         Options.Yaxis.Add(new YAxis
             {
@@ -71,30 +66,30 @@
             }
         );
         Options.Xaxis = new XAxis
+        {
+            Labels = new XAxisLabels
             {
-                Labels = new XAxisLabels
-                {
-                    Formatter = @"function (value) {
+                Formatter = @"function (value) {
                     if (value === undefined) {return '';}
                     return '';}"
-                }
-            };
+            }
+        };
 
         Options.DataLabels = new DataLabels
+        {
+            Formatter = @"function(value, opts) {
+                   return  Number(value).toLocaleString();}"
+        };
+
+        Options.Tooltip = new Tooltip
+        {
+            X = new TooltipX
             {
                 Formatter = @"function(value, opts) {
-                   return  Number(value).toLocaleString();}"
-            };
-
-        Options.Tooltip = new ApexCharts.Tooltip
-            {
-                X = new TooltipX
-                {
-                    Formatter = @"function(value, opts) {
                     if (value === undefined) {return '';}
                     return  value}"
-                }
-            };
+            }
+        };
 
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
 
@@ -104,7 +99,7 @@
     private async void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
     {
         var isDarkMode = LayoutService.IsDarkMode;
-        var colors = isDarkMode ? new List<string>() { "#0277BD", "#039BE5" } : new List<string>() { "#1976D2", "#90CAF9" };
+        var colors = isDarkMode ? new List<string> { "#0277BD", "#039BE5" } : new List<string> { "#1976D2", "#90CAF9" };
         _backgroundColor = isDarkMode ? "background:rgb(66, 66, 66)" : "background:#fff";
         Options.Theme.Mode = isDarkMode ? Mode.Dark : Mode.Light;
         Options.Fill.Gradient.GradientToColors = colors;
@@ -113,7 +108,6 @@
         StateHasChanged();
     }
 
-   
 
     public void Dispose()
     {

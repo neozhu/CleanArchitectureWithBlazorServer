@@ -51,9 +51,10 @@ public class GetAllProductsQueryHandler :
 
     public async Task<ProductDto> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Products.Where(x=>x.Id==request.Id)
-            .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync(cancellationToken)??throw new NotFoundException($"Product with id: {request.Id} not found.");
+        var data = await _context.Products.Where(x => x.Id == request.Id)
+                       .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+                       .FirstOrDefaultAsync(cancellationToken) ??
+                   throw new NotFoundException($"Product with id: {request.Id} not found.");
         return data;
     }
 }

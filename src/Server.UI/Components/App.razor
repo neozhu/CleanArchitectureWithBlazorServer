@@ -2,14 +2,14 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
-    <link href="css/app.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
-    <link href="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.css" rel="stylesheet" />
- 
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <base href="/"/>
+    <link href="css/app.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet"/>
+    <link href="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.css" rel="stylesheet"/>
+
     <style>
 
 
@@ -76,21 +76,21 @@
             z-index: 9999;
         }
     </style>
-    <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: false)" />
+    <HeadOutlet @rendermode="new InteractiveServerRenderMode(false)"/>
 </head>
 
 <body>
-    <Routes @rendermode="new InteractiveServerRenderMode(prerender: false)" />
-    <script src="_framework/blazor.web.js"></script>
-    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
-    <script src="js/msal/authConfig.js"></script>
+<Routes @rendermode="new InteractiveServerRenderMode(false)"/>
+<script src="_framework/blazor.web.js"></script>
+<script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
+<script src="js/msal/authConfig.js"></script>
 
-    <script src="https://accounts.google.com/gsi/client"></script>
-    <script src="js/gapi/auth2config.js"></script>
-    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-    <script src="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"></script>
-    <script src="_content/BlazorTime/blazorTime.js"></script>
-    <script type="text/javascript">
+<script src="https://accounts.google.com/gsi/client"></script>
+<script src="js/gapi/auth2config.js"></script>
+<script src="_content/MudBlazor/MudBlazor.min.js"></script>
+<script src="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"></script>
+<script src="_content/BlazorTime/blazorTime.js"></script>
+<script type="text/javascript">
 
         async function externalLogin(provider, dotNetHelper) {
             if (provider == 'Microsoft') {
@@ -113,10 +113,10 @@
                 client_id: auth2Config.clientId,
                 scope: auth2Config.scope,
                 ux_mode: 'popup',
-                callback: async (response) => {
+                callback: async response => {
                     const access_token = response.access_token;
                     const url = `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`;
-                    const data = await fetch(url).then((response) => response.json());
+                    const data = await fetch(url).then(response => response.json());
                     await dotNetHelper.invokeMethodAsync('ConfirmExternal', provider, data.email, data.name, access_token);
                     console.log('login with microsoft success');
                     localStorage.setItem('google_client_token', access_token);
@@ -131,7 +131,7 @@
                 const client = new msal.PublicClientApplication(msalConfig);
                 const logoutRequest = {
                     account: client.getAccountByHomeId(client_token)
-                }
+                };
 
                 await client.logoutPopup(logoutRequest);
                 localStorage.removeItem('microsoft_client_token');

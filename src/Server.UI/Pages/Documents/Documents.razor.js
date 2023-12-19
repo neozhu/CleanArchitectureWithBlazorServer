@@ -12,6 +12,7 @@
     };
     document.head.appendChild(script);
 }
+
 export function destroyscript() {
     var tags = document.head.getElementsByTagName('script'), index;
     for (index = tags.length - 1; index >= 0; index--) {

@@ -7,6 +7,8 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class UploadService : IUploadService
 {
+    private static readonly string NumberPattern = " ({0})";
+
     public async Task<string> UploadAsync(UploadRequest request)
     {
         if (request.Data == null) return string.Empty;
@@ -16,7 +18,7 @@ public class UploadService : IUploadService
             var folder = request.UploadType.GetDescription();
             var folderName = Path.Combine("Files", folder);
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-            bool exists = Directory.Exists(pathToSave);
+            var exists = Directory.Exists(pathToSave);
             if (!exists) Directory.CreateDirectory(pathToSave);
             var fileName = request.FileName.Trim('"');
             var fullPath = Path.Combine(pathToSave, fileName);
@@ -26,19 +28,17 @@ public class UploadService : IUploadService
                 dbPath = NextAvailableFilename(dbPath);
                 fullPath = NextAvailableFilename(fullPath);
             }
+
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
                 await streamData.CopyToAsync(stream);
             }
+
             return dbPath;
         }
-        else
-        {
-            return string.Empty;
-        }
-    }
 
-    private static readonly string NumberPattern = " ({0})";
+        return string.Empty;
+    }
 
     public static string NextAvailableFilename(string path)
     {
@@ -56,7 +56,7 @@ public class UploadService : IUploadService
 
     private static string GetNextFilename(string pattern)
     {
-        string tmp = string.Format(pattern, 1);
+        var tmp = string.Format(pattern, 1);
         //if (tmp == pattern)
         //throw new ArgumentException("The pattern must include an index place-holder", "pattern");
 
@@ -73,7 +73,7 @@ public class UploadService : IUploadService
 
         while (max != min + 1)
         {
-            int pivot = (max + min) / 2;
+            var pivot = (max + min) / 2;
             if (File.Exists(string.Format(pattern, pivot)))
                 min = pivot;
             else

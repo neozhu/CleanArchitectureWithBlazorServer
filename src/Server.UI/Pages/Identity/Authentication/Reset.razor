@@ -1,4 +1,5 @@
 @page "/pages/authentication/reset-password"
+@using Severity = MudBlazor.Severity
 
 @attribute [AllowAnonymous]
 
@@ -7,12 +8,12 @@
 <AuthorizeView>
     <NotAuthorized Context="Auth">
         <MudText Typo="Typo.h4" GutterBottom="true">@L["Set new password"]</MudText>
-        <MudTextField @bind-Value="@Password" Label="@L["New password"]" Variant="Variant.Outlined" InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" Class="my-4" />
+        <MudTextField @bind-Value="@Password" Label="@L["New password"]" Variant="Variant.Outlined" InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="TogglePasswordVisibility" Class="my-4"/>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="mt-2">@L["Set new password"]</MudButton>
     </NotAuthorized>
     <Authorized>
         <RedirectToHome></RedirectToHome>
-        <MudAlert Severity="MudBlazor.Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
+        <MudAlert Severity="Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
     </Authorized>
 </AuthorizeView>
 
@@ -38,4 +39,5 @@
             _passwordInput = InputType.Text;
         }
     }
+
 }

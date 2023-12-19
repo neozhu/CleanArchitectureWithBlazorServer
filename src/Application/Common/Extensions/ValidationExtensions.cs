@@ -1,9 +1,12 @@
 ﻿using FluentValidation.Results;
 
 namespace CleanArchitecture.Blazor.Application.Common.Extensions;
+
 public static class ValidationExtensions
 {
-    public static async Task<List<ValidationFailure>> ValidateAsync<TRequest>(this IEnumerable<IValidator<TRequest>> validators, ValidationContext<TRequest> validationContext, CancellationToken cancellationToken = default)
+    public static async Task<List<ValidationFailure>> ValidateAsync<TRequest>(
+        this IEnumerable<IValidator<TRequest>> validators, ValidationContext<TRequest> validationContext,
+        CancellationToken cancellationToken = default)
     {
         if (!validators.Any()) return new List<ValidationFailure>();
 

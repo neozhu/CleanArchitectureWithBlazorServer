@@ -1,9 +1,5 @@
 @using System.Globalization
-@using Microsoft.AspNetCore.Builder
 @using Microsoft.Extensions.Options
-@using CleanArchitecture.Blazor.Server.UI.Services
-@using CleanArchitecture.Blazor.Server.UI.Services.Layout
-
 @inject NavigationManager Navigation
 @inject IOptions<RequestLocalizationOptions> LocalizationOptions
 @inject LayoutService LayoutService
@@ -20,7 +16,7 @@
                 }
                 else
                 {
-                    <MudMenuItem OnClick="(()=> ChangeLanguageAsync(language.Name))">@language.DisplayName</MudMenuItem>
+                    <MudMenuItem OnClick="() => ChangeLanguageAsync(language.Name)">@language.DisplayName</MudMenuItem>
                 }
             }
         }
@@ -42,7 +38,7 @@
     private async Task ChangeLanguageAsync(string languageCode)
     {
         CurrentLanguage = languageCode;
-        Navigation.NavigateTo(Navigation.BaseUri + "?culture=" + languageCode, forceLoad: true);
+        Navigation.NavigateTo(Navigation.BaseUri + "?culture=" + languageCode, true);
 
         if (new CultureInfo(languageCode).TextInfo.IsRightToLeft)
             await LayoutService.SetRightToLeft();

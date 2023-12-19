@@ -3,7 +3,7 @@
 @inherits FluxorComponent
 
 @inject IMenuService MenuService
-@inject IState<Fluxor.UserProfileState> UserProfileState
+@inject IState<UserProfileState> UserProfileState
 @inject LayoutService LayoutService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<NavigationMenu> L
@@ -33,11 +33,11 @@
                     <MudStack Row="true">
                         @if (IsLoading)
                         {
-                           <MudSkeleton SkeletonType="SkeletonType.Circle" Width="40px" Height="40px"   />
-                           <MudStack Justify="Justify.Center" Spacing="0">
-                                 <MudSkeleton Width="120px" Height="12px"  />
-                                 <MudSkeleton Width="120px" Height="12px"   />
-                           </MudStack>
+                            <MudSkeleton SkeletonType="SkeletonType.Circle" Width="40px" Height="40px"/>
+                            <MudStack Justify="Justify.Center" Spacing="0">
+                                <MudSkeleton Width="120px" Height="12px"/>
+                                <MudSkeleton Width="120px" Height="12px"/>
+                            </MudStack>
                         }
                         else
                         {
@@ -194,11 +194,9 @@ else
 
 @code
 {
-    [EditorRequired][Parameter]
-    public EventCallback<bool> DrawerOpenChanged { get; set; }
+    [EditorRequired] [Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
 
-    [EditorRequired][Parameter]
-    public bool DrawerOpen { get; set; }
+    [EditorRequired] [Parameter] public bool DrawerOpen { get; set; }
 
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     private bool IsLoading => UserProfileState.Value.IsLoading;
@@ -207,7 +205,7 @@ else
 
     private bool Expanded(MenuSectionItemModel menu)
     {
-        string href = NavigationManager.Uri[(NavigationManager.BaseUri.Length - 1)..];
+        var href = NavigationManager.Uri[(NavigationManager.BaseUri.Length - 1)..];
         return menu is { IsParent: true, MenuItems: not null } &&
                menu.MenuItems.Any(x => !string.IsNullOrEmpty(x.Href) && x.Href.Equals(href));
     }

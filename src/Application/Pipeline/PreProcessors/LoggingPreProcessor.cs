@@ -5,15 +5,14 @@ namespace CleanArchitecture.Blazor.Application.Pipeline.PreProcessors;
 
 public class LoggingPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
-    private readonly ILogger _logger;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ILogger _logger;
 
 
     public LoggingPreProcessor(ILogger<TRequest> logger, ICurrentUserService currentUserService)
     {
         _logger = logger;
         _currentUserService = currentUserService;
-
     }
 
     public Task Process(TRequest request, CancellationToken cancellationToken)

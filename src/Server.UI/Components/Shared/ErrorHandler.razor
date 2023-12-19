@@ -1,7 +1,8 @@
-﻿@inherits ErrorBoundary
+﻿@using Severity = MudBlazor.Severity
+@inherits ErrorBoundary
 @ChildContent
 
-@code 
+@code
 {
     public List<Exception> ReceivedExceptions = new();
 
@@ -11,9 +12,10 @@
         switch (exception)
         {
             case UnauthorizedAccessException:
-                Snackbar.Add("Authentication Failed", MudBlazor.Severity.Error);
+                Snackbar.Add("Authentication Failed", Severity.Error);
                 break;
         }
+
         return Task.CompletedTask;
     }
 

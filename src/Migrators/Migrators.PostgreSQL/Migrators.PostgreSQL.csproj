@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AssemblyName>CleanArchitecture.Blazor.Migrators.PostgreSQL</AssemblyName>
-    <RootNamespace>CleanArchitecture.Blazor.Migrators.PostgreSQL</RootNamespace>
-    <LangVersion>default</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>CleanArchitecture.Blazor.Migrators.PostgreSQL</AssemblyName>
+        <RootNamespace>CleanArchitecture.Blazor.Migrators.PostgreSQL</RootNamespace>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj"/>
+    </ItemGroup>
 
 </Project>

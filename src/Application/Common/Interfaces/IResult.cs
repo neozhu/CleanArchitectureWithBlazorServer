@@ -9,6 +9,7 @@ public interface IResult
 
     bool Succeeded { get; init; }
 }
+
 public interface IResult<out T> : IResult
 {
     T? Data { get; }

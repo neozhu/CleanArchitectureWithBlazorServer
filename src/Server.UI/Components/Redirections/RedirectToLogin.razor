@@ -1,9 +1,10 @@
-﻿﻿
-@inject NavigationManager NavigationManager
+﻿@inject NavigationManager NavigationManager
 
 @code {
+
     protected override void OnInitialized()
     {
-        NavigationManager.NavigateTo($"/pages/authentication/login", forceLoad: false);
+        NavigationManager.NavigateTo("/pages/authentication/login", false);
     }
+
 }

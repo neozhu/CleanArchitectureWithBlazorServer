@@ -23,10 +23,10 @@ public static class DependencyInjection
             .AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
 
         services.AddHangfire(configuration => configuration
-            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UseInMemoryStorage())
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseInMemoryStorage())
             .AddHangfireServer()
             .AddMvc();
 
@@ -42,9 +42,7 @@ public static class DependencyInjection
         if (privacySettings!.UseGoogleAnalytics)
         {
             if (privacySettings.GoogleAnalyticsKey is null or "")
-            {
                 throw new ArgumentNullException(nameof(privacySettings.GoogleAnalyticsKey));
-            }
 
             services.AddGoogleAnalytics(privacySettings.GoogleAnalyticsKey);
         }

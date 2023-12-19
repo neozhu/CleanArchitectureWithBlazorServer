@@ -5,8 +5,8 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 
 public class RefreshTokenGenerator : IRefreshTokenGenerator
 {
-    private readonly JwtSecurityTokenHandler _tokenHandler;
     private readonly SimpleJwtOptions _options;
+    private readonly JwtSecurityTokenHandler _tokenHandler;
 
     public RefreshTokenGenerator(JwtSecurityTokenHandler tokenHandler, IOptions<SimpleJwtOptions> options)
     {

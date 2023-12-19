@@ -3,19 +3,21 @@
 
 using System.Diagnostics;
 using System.Drawing;
+using System.Net;
 using System.Text.Json;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 using CleanArchitecture.Blazor.Domain.Common.Enums;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
+
 public class DocumentOcrJob : IDocumentOcrJob
 {
-    private readonly IApplicationHubWrapper _notificationService;
     private readonly IApplicationDbContext _context;
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ISerializer _serializer;
     private readonly ILogger<DocumentOcrJob> _logger;
+    private readonly IApplicationHubWrapper _notificationService;
+    private readonly ISerializer _serializer;
     private readonly Stopwatch _timer;
 
     public DocumentOcrJob(
@@ -32,26 +34,12 @@ public class DocumentOcrJob : IDocumentOcrJob
         _logger = logger;
         _timer = new Stopwatch();
     }
-    private string ReadBase64String(string path)
-    {
-        using (Image image = Image.FromFile(path))
-        {
-            using (MemoryStream m = new MemoryStream())
-            {
-                image.Save(m, image.RawFormat);
-                byte[] imageBytes = m.ToArray();
 
-                // Convert byte[] to Base64 String
-                string base64String = Convert.ToBase64String(imageBytes);
-                return base64String;
-            }
-        }
-
-    }
     public void Do(int id)
     {
         Recognition(id, CancellationToken.None).Wait();
     }
+
     public async Task Recognition(int id, CancellationToken cancellationToken)
     {
         try
@@ -71,10 +59,11 @@ public class DocumentOcrJob : IDocumentOcrJob
                 using var fileStream = new FileStream(imgFile, FileMode.Open);
                 using var fileContent = new StreamContent(fileStream);
 
-                form.Add(fileContent, "file", Path.GetFileName(imgFile));  // "image" is the form parameter name for the file
+                form.Add(fileContent, "file",
+                    Path.GetFileName(imgFile)); // "image" is the form parameter name for the file
 
                 var response = await client.PostAsync("", form);
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
                     var result = await response.Content.ReadAsStringAsync();
                     var ocrResult = JsonSerializer.Deserialize<OcrResult>(result);
@@ -83,27 +72,42 @@ public class DocumentOcrJob : IDocumentOcrJob
                     if (ocrResult is not null)
                     {
                         var content = string.Join(',', ocrResult.data);
-                        doc.Description = $"recognize the result: success";
+                        doc.Description = "recognize the result: success";
                         doc.Content = content;
                     }
+
                     await _context.SaveChangesAsync(cancellationToken);
                     await _notificationService.JobCompleted(doc.Title!);
                     DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                     _timer.Stop();
                     var elapsedMilliseconds = _timer.ElapsedMilliseconds;
-                    _logger.LogInformation("Id: {Id}, elapsed: {ElapsedMilliseconds}, recognize the result: {@Result},{@Content}", id, elapsedMilliseconds, ocrResult, doc.Content);
-
+                    _logger.LogInformation(
+                        "Id: {Id}, elapsed: {ElapsedMilliseconds}, recognize the result: {@Result},{@Content}", id,
+                        elapsedMilliseconds, ocrResult, doc.Content);
                 }
-
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "{Id}: recognize error {ExMessage}", id, ex.Message);
         }
-
     }
 
+    private string ReadBase64String(string path)
+    {
+        using (var image = Image.FromFile(path))
+        {
+            using (var m = new MemoryStream())
+            {
+                image.Save(m, image.RawFormat);
+                var imageBytes = m.ToArray();
+
+                // Convert byte[] to Base64 String
+                var base64String = Convert.ToBase64String(imageBytes);
+                return base64String;
+            }
+        }
+    }
 }
 #pragma warning disable CS8981
 internal class OcrResult
@@ -111,4 +115,3 @@ internal class OcrResult
     public string[] data { get; set; } = Array.Empty<string>();
 }
 #pragma warning restore CS8981
-

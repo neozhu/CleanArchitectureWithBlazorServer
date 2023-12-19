@@ -38,7 +38,7 @@ public class DocumentDto
                 .ForMember(x => x.TenantName, s => s.MapFrom(y => y.Tenant!.Name));
             CreateMap<DocumentDto, Document>(MemberList.None)
                 .ForMember(x => x.Tenant, s => s.Ignore())
-                .ForMember(x=>x.Owner, s=>s.Ignore());
+                .ForMember(x => x.Owner, s => s.Ignore());
         }
     }
 }

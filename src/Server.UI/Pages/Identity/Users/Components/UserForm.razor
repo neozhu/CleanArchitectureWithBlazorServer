@@ -1,16 +1,16 @@
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+@using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
+@using Severity = Severity
+@using Size = SixLabors.ImageSharp.Size
+@using Image = SixLabors.ImageSharp.Image
+@using Color = Color
+@using SixLabors.ImageSharp.Processing
+@using SixLabors.ImageSharp
+@using SixLabors.ImageSharp.Formats.Png
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @using CleanArchitecture.Blazor.Domain.Identity
-@using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
-@using Severity = MudBlazor.Severity
-@using Size = SixLabors.ImageSharp.Size
-@using SixLabors.ImageSharp.Formats.Png
-@using SixLabors.ImageSharp.Processing
-@using Image = SixLabors.ImageSharp.Image
-@using Color = MudBlazor.Color
-@using SixLabors.ImageSharp;
-    using CleanArchitecture.Blazor.Domain.Identity;
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+using CleanArchitecture.Blazor.Domain.Identity;
 
 @inherits MudComponentBase
 
@@ -126,7 +126,7 @@
                 {
                     var x = i;
                     <MudItem xs="6" sm="6" Class="py-0 my=0">
-                        <MudCheckBox T="bool" Checked="@Roles[x].Value" Label="@Roles[x].Key" CheckedChanged="@(s => Roles[x].Value = (bool)s)"></MudCheckBox>
+                        <MudCheckBox T="bool" Checked="@Roles[x].Value" Label="@Roles[x].Key" CheckedChanged="@(s => Roles[x].Value = s)"></MudCheckBox>
                     </MudItem>
                 }
             </MudGrid>
@@ -135,19 +135,16 @@
 </MudForm>
 
 @code{
+
     public class CheckItem
     {
         public string Key { get; set; } = string.Empty;
         public bool Value { get; set; }
     }
 
-    [EditorRequired]
-    [Parameter]
-    public ApplicationUserDto Model { get; set; } = default!;
+    [EditorRequired] [Parameter] public ApplicationUserDto Model { get; set; } = default!;
 
-    [EditorRequired]
-    [Parameter]
-    public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
+    [EditorRequired] [Parameter] public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
 
 
     private MudForm? _form = default!;
@@ -221,30 +218,30 @@
         public ApplicationUserDtoValidator()
         {
             RuleFor(v => v.TenantId)
-                 .MaximumLength(256)
-                 .NotEmpty();
+                .MaximumLength(256)
+                .NotEmpty();
             //RuleFor(v => v.SuperiorId)
             //     .MaximumLength(256)
             //     .NotEmpty().When(x=>!x.UserName.Equals("Administrator", StringComparison.CurrentCultureIgnoreCase));
             RuleFor(v => v.Provider)
-                 .MaximumLength(256)
-                 .NotEmpty();
+                .MaximumLength(256)
+                .NotEmpty();
             RuleFor(v => v.UserName)
-                 .MaximumLength(256)
-                 .NotEmpty();
+                .MaximumLength(256)
+                .NotEmpty();
             RuleFor(v => v.Email)
-                 .MaximumLength(256)
-                 .NotEmpty()
-                 .EmailAddress();
+                .MaximumLength(256)
+                .NotEmpty()
+                .EmailAddress();
             RuleFor(p => p.Password).NotEmpty().WithMessage("Your password cannot be empty")
-                     .MinimumLength(6).WithMessage("Your password length must be at least 6.")
-                     .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
-                     .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
-                     .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
-                     .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
-                     .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
+                .MinimumLength(6).WithMessage("Your password length must be at least 6.")
+                .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
+                .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
+                .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
+                .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
+                .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
             RuleFor(x => x.ConfirmPassword)
-                 .Equal(x => x.Password);
+                .Equal(x => x.Password);
         }
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
@@ -255,4 +252,5 @@
             return result.Errors.Select(e => e.ErrorMessage);
         };
     }
+
 }

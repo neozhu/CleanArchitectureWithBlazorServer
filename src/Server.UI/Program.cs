@@ -21,7 +21,6 @@ var app = builder.Build();
 app.ConfigureServer(builder.Configuration);
 
 if (app.Environment.IsDevelopment())
-{
     // Initialise and seed database
     using (var scope = app.Services.CreateScope())
     {
@@ -30,10 +29,7 @@ if (app.Environment.IsDevelopment())
         await initializer.SeedAsync();
         var notificationService = scope.ServiceProvider.GetService<INotificationService>();
         if (notificationService is InMemoryNotificationService inMemoryNotificationService)
-        {
             inMemoryNotificationService.Preload();
-        }
     }
-}
 
 await app.RunAsync();

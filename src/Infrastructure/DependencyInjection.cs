@@ -43,38 +43,42 @@ public static class DependencyInjection
             {
                 options.UseCookie = false;
 
-                options.AccessSigningOptions = new JwtSigningOptions()
+                options.AccessSigningOptions = new JwtSigningOptions
                 {
-                    SigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yn4$#cr=+i@eljzlhhr2xlgf98aud&(3&!po3r60wlm^3*huh#")),
+                    SigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes("yn4$#cr=+i@eljzlhhr2xlgf98aud&(3&!po3r60wlm^3*huh#")),
                     Algorithm = SecurityAlgorithms.HmacSha256,
-                    ExpirationMinutes = 120,
+                    ExpirationMinutes = 120
                 };
 
-                options.RefreshSigningOptions = new JwtSigningOptions()
+                options.RefreshSigningOptions = new JwtSigningOptions
                 {
-                    SigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("e_qmg*)=vr9yxpp^g^#((wkwk7fh#+3qy!zzq+r-hifw2(_u+=")),
+                    SigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes("e_qmg*)=vr9yxpp^g^#((wkwk7fh#+3qy!zzq+r-hifw2(_u+=")),
                     Algorithm = SecurityAlgorithms.HmacSha256,
-                    ExpirationMinutes = 2880,
+                    ExpirationMinutes = 2880
                 };
-                options.AccessValidationParameters = new TokenValidationParameters()
+                options.AccessValidationParameters = new TokenValidationParameters
                 {
                     IssuerSigningKey = options.AccessSigningOptions.SigningKey,
                     ValidIssuer = options.Issuer,
                     ValidAudience = options.Audience,
                     ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero,
+                    ClockSkew = TimeSpan.Zero
                 };
-                options.RefreshValidationParameters = new TokenValidationParameters()
+                options.RefreshValidationParameters = new TokenValidationParameters
                 {
                     IssuerSigningKey = options.RefreshSigningOptions.SigningKey,
                     ValidIssuer = options.Issuer,
                     ValidAudience = options.Audience,
                     ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 
-        
+
         services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
 
         return services;
@@ -110,22 +114,18 @@ public static class DependencyInjection
             .AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
         if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-        {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseInMemoryDatabase("BlazorDashboardDb");
                 options.EnableSensitiveDataLogging();
             });
-        }
         else
-        {
             services.AddDbContext<ApplicationDbContext>((p, m) =>
             {
                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
                 m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
                 m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
             });
-        }
 
         services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
         services.AddTransient<IApplicationDbContext>(provider =>
@@ -143,7 +143,7 @@ public static class DependencyInjection
             case DbProviderKeys.Npgsql:
                 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
                 return builder.UseNpgsql(connectionString,
-                    e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.PostgreSQL"))
+                        e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.PostgreSQL"))
                     .UseSnakeCaseNamingConvention();
 
             case DbProviderKeys.SqlServer:
@@ -200,8 +200,8 @@ public static class DependencyInjection
 
         // configure your sender and template choices with dependency injection.
         services.AddFluentEmail("support@blazorserver.com")
-                .AddRazorRenderer(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates"))
-                .AddMailKitSender(smtpClientOptions);
+            .AddRazorRenderer(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates"))
+            .AddMailKitSender(smtpClientOptions);
 
         return services;
     }
@@ -218,7 +218,7 @@ public static class DependencyInjection
         {
             var identitySettings = configuration.GetRequiredSection(IdentitySettings.Key).Get<IdentitySettings>();
 
-            
+
             // Password settings
             options.Password.RequireDigit = identitySettings!.RequireDigit;
             options.Password.RequiredLength = identitySettings.RequiredLength;
@@ -237,7 +237,6 @@ public static class DependencyInjection
 
             // User settings
             options.User.RequireUniqueEmail = true;
-
         });
 
         services.AddScoped<IIdentityService, IdentityService>()
@@ -245,30 +244,31 @@ public static class DependencyInjection
             {
                 options.AddPolicy("CanPurge", policy => policy.RequireUserName(UserName.Administrator));
                 // Here I stored necessary permissions/roles in a constant
-                foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+                foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c =>
+                             c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
                 {
                     var propertyValue = prop.GetValue(null);
                     if (propertyValue is not null)
-                    {
-                        options.AddPolicy((string)propertyValue, policy => policy.RequireClaim(ApplicationClaimTypes.Permission, (string)propertyValue));
-                    }
+                        options.AddPolicy((string)propertyValue,
+                            policy => policy.RequireClaim(ApplicationClaimTypes.Permission, (string)propertyValue));
                 }
             })
             .AddAuthentication()
             .AddJwtBearer(options =>
             {
-                 
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters()
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("yn4$#cr=+i@eljzlhhr2xlgf98aud&(3&!po3r60wlm^3*huh#")),
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes("yn4$#cr=+i@eljzlhhr2xlgf98aud&(3&!po3r60wlm^3*huh#")),
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     RoleClaimType = ClaimTypes.Role,
                     ClockSkew = TimeSpan.Zero,
-                    ValidateLifetime = false, 
+                    ValidateLifetime = false
                 };
                 options.Events = new JwtBearerEvents
                 {
@@ -278,17 +278,12 @@ public static class DependencyInjection
                         var path = context.HttpContext.Request.Path;
                         if (!string.IsNullOrEmpty(accessToken) &&
                             path.StartsWithSegments("/signalRHub")) // TODO: move in server?
-                        {
                             context.Token = accessToken.ToString().Substring(7);
-                        }
                         return Task.CompletedTask;
                     }
                 };
             });
-        services.ConfigureApplicationCookie(options =>
-        {
-            options.LoginPath = "/pages/authentication/login";
-        });
+        services.ConfigureApplicationCookie(options => { options.LoginPath = "/pages/authentication/login"; });
         services.AddSingleton<UserDataProvider>()
             .AddSingleton<IUserDataProvider>(sp =>
             {
@@ -307,7 +302,7 @@ public static class DependencyInjection
         {
             // CACHE DURATION
             Duration = TimeSpan.FromMinutes(30),
-             // FAIL-SAFE OPTIONS
+            // FAIL-SAFE OPTIONS
             IsFailSafeEnabled = true,
             FailSafeMaxDuration = TimeSpan.FromHours(2),
             FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
@@ -337,6 +332,4 @@ public static class DependencyInjection
 
         return services;
     }
-
-
 }

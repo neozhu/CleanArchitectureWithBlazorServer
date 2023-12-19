@@ -2,14 +2,15 @@
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Commands.ResetPassword;
+
 public record ResetPasswordCommand(string Email) : IRequest<Result>;
 
 public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, Result>
 {
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly IStringLocalizer<ResetPasswordCommandHandler> _localizer;
     private readonly IMailService _mailService;
     private readonly IApplicationSettings _settings;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public ResetPasswordCommandHandler(UserManager<ApplicationUser> userManager,
         IStringLocalizer<ResetPasswordCommandHandler> localizer,
@@ -27,10 +28,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
-        if (user == null)
-        {
-            return Result.Failure(_localizer["No user found by email, please contact the administrator"]);
-        }
+        if (user == null) return Result.Failure(_localizer["No user found by email, please contact the administrator"]);
 
         var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -41,8 +39,8 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
             "_recoverypassword",
             new
             {
-                AppName = _settings.AppName,
-                Email = request.Email,
+                _settings.AppName,
+                request.Email,
                 Token = resetPasswordToken
             });
 

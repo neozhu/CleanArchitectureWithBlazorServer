@@ -3,6 +3,7 @@ using FluentValidation;
 using FluentValidation.Internal;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
+
 public class ValidationService : IValidationService
 {
     private readonly IServiceProvider _serviceProvider;
@@ -19,13 +20,18 @@ public class ValidationService : IValidationService
     }
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue<TRequest>()
-        => async (model, propertyName)
-        => await ValidatePropertyAsync((TRequest)model, propertyName);
+    {
+        return async (model, propertyName)
+            => await ValidatePropertyAsync((TRequest)model, propertyName);
+    }
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue<TRequest>(TRequest _)
-        => ValidateValue<TRequest>();
+    {
+        return ValidateValue<TRequest>();
+    }
 
-    public async Task<IDictionary<string, string[]>> ValidateAsync<TRequest>(TRequest model, CancellationToken cancellationToken = default)
+    public async Task<IDictionary<string, string[]>> ValidateAsync<TRequest>(TRequest model,
+        CancellationToken cancellationToken = default)
     {
         var validators = _serviceProvider.GetServices<IValidator<TRequest>>();
 
@@ -34,7 +40,8 @@ public class ValidationService : IValidationService
         return (await validators.ValidateAsync(context, cancellationToken)).ToDictionary();
     }
 
-    public async Task<IDictionary<string, string[]>> ValidateAsync<TRequest>(TRequest model, Action<ValidationStrategy<TRequest>> options, CancellationToken cancellationToken = default)
+    public async Task<IDictionary<string, string[]>> ValidateAsync<TRequest>(TRequest model,
+        Action<ValidationStrategy<TRequest>> options, CancellationToken cancellationToken = default)
     {
         var validators = _serviceProvider.GetServices<IValidator<TRequest>>();
 
@@ -44,13 +51,11 @@ public class ValidationService : IValidationService
         return (await validators.ValidateAsync(context, cancellationToken)).ToDictionary();
     }
 
-    public async Task<IEnumerable<string>> ValidatePropertyAsync<TRequest>(TRequest model, string propertyName, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<string>> ValidatePropertyAsync<TRequest>(TRequest model, string propertyName,
+        CancellationToken cancellationToken = default)
     {
         var validationResult = await ValidateAsync(model,
-            options =>
-            {
-                options.IncludeProperties(propertyName);
-            }, cancellationToken);
+            options => { options.IncludeProperties(propertyName); }, cancellationToken);
 
         return validationResult.Where(x => x.Key == propertyName).SelectMany(x => x.Value);
     }

@@ -8,11 +8,7 @@ public static class ProductCacheKey
     public const string GetAllCacheKey = "all-Products";
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromHours(1);
     private static CancellationTokenSource _tokenSource;
-    private static readonly object _tokenLock = new object();
-    public static string GetProductByIdCacheKey(int id)
-    {
-        return $"GetProductById,{id}";
-    }
+    private static readonly object _tokenLock = new();
 
     static ProductCacheKey()
     {
@@ -21,6 +17,11 @@ public static class ProductCacheKey
 
     public static MemoryCacheEntryOptions MemoryCacheEntryOptions =>
         new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
+
+    public static string GetProductByIdCacheKey(int id)
+    {
+        return $"GetProductById,{id}";
+    }
 
     public static string GetPaginationCacheKey(string parameters)
     {
@@ -31,10 +32,7 @@ public static class ProductCacheKey
     {
         lock (_tokenLock)
         {
-            if (_tokenSource.IsCancellationRequested)
-            {
-                _tokenSource = new CancellationTokenSource(RefreshInterval);
-            }
+            if (_tokenSource.IsCancellationRequested) _tokenSource = new CancellationTokenSource(RefreshInterval);
 
             return _tokenSource;
         }

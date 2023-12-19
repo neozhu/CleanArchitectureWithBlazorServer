@@ -12,18 +12,20 @@ public class MemoryCacheBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
     public MemoryCacheBehaviour(
         IAppCache cache,
         ILogger<MemoryCacheBehaviour<TRequest, TResponse>> logger
-        )
+    )
     {
         _cache = cache;
         _logger = logger;
     }
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
         _logger.LogTrace("{Name} is caching with {@Request}", nameof(request), request);
         var response = await _cache.GetOrAddAsync(
             request.CacheKey,
             async () =>
-            await next(),
+                await next(),
             request.Options).ConfigureAwait(false);
 
         return response;

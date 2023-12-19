@@ -38,7 +38,7 @@ public class DeleteProductCommandHandler :
 
     public async Task<Result<int>> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var items = await _context.Products.Where(x=>request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+        var items = await _context.Products.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
         {
             item.AddDomainEvent(new DeletedEvent<Product>(item));

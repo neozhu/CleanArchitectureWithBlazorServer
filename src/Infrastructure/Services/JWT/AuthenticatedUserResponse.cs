@@ -1,6 +1,7 @@
 ﻿namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
+
 /// <summary>
-/// the dto used to send an authenticated user response containing access Token and refresh Token
+///     the dto used to send an authenticated user response containing access Token and refresh Token
 /// </summary>
 public class AuthenticatedUserResponse
 {

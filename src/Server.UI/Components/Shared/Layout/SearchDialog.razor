@@ -1,5 +1,4 @@
 @using Toolbelt.Blazor.HotKeys2
-
 @inject IStringLocalizer<SharedResource> L
 @inject HotKeys HotKeys
 @inject NavigationManager Navigation
@@ -11,7 +10,7 @@
                           Class="mb-3"
                           Clearable="true"
                           Placeholder="@L["Search..."]"
-                          TextChanged="@(SearchPages)" 
+                          TextChanged="@(SearchPages)"
                           Immediate="true"/>
             <MudList Clickable="true"
                      Style="height: 300px; overflow-y: auto">
@@ -19,7 +18,7 @@
                 {
                     <MudListItem OnClick="@(() => Navigation.NavigateTo(value))">
                         <MudHighlighter HighlightedText="@_search"
-                                        Text="@key" />
+                                        Text="@key"/>
                     </MudListItem>
                 }
             </MudList>
@@ -29,8 +28,7 @@
 
 @code
 {
-    [CascadingParameter]
-    private MudDialogInstance MudDialog { get; set; } = default!;
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 
     private readonly Dictionary<string, string> _pages = new();
     private HotKeysContext? _hotKeysContext;

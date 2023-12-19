@@ -4,6 +4,6 @@ public class CustomerByIdSpecification : Specification<Customer>
 {
     public CustomerByIdSpecification(int id)
     {
-       Query.Where(q => q.Id == id);
+        Query.Where(q => q.Id == id);
     }
 }

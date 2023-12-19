@@ -1,6 +1,4 @@
 @using System.Net
-@using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
-
 @inject NavigationManager Navigation
 @inject ILogger<CustomError> Logger
 
@@ -10,20 +8,20 @@
     </TitleContent>
     <DialogContent>
         <div Class="px-6 rounded-lg d-flex flex-column">
-            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Class="pb-4" Style="height:100px;width:100px;margin:auto" Color="Color.Warning" />
+            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Class="pb-4" Style="height:100px;width:100px;margin:auto" Color="Color.Warning"/>
 
             <div class="d-flex align-center gap-4">
                 <MudText Typo="Typo.subtitle2">@Message</MudText>
                 <MudText Typo="Typo.subtitle2">@DateTime.Now</MudText>
-                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(()=>ShowStackTrace=!ShowStackTrace)">More</MudButton>
+                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(() => ShowStackTrace = !ShowStackTrace)">More</MudButton>
             </div>
             <MudText>@Message For more information, contact your system administrator</MudText>
             @if (ShowStackTrace)
             {
                 <MudText Typo="Typo.body2" Class="mt-2">@StackTrace</MudText>
             }
-            <MudDivider Class="my-3" />
-    
+            <MudDivider Class="my-3"/>
+
         </div>
     </DialogContent>
     <DialogActions>
@@ -33,11 +31,9 @@
 
 @code
 {
-    [CascadingParameter]
-    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
 
-    [EditorRequired][Parameter]
-    public Exception Exception { get; set; } = default!;
+    [EditorRequired] [Parameter] public Exception Exception { get; set; } = default!;
 
     private string? Message { get; set; }
     private bool ShowStackTrace { get; set; }
@@ -57,6 +53,7 @@
                 {
                     Message = string.Join(", ", e.ErrorMessages.ToArray());
                 }
+
                 break;
             default:
                 if (Exception.InnerException != null)
@@ -66,6 +63,7 @@
                         Exception = Exception.InnerException;
                     }
                 }
+
                 Message = Exception.Message;
                 break;
         }

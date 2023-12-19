@@ -3,12 +3,12 @@
 
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
-using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination;
 
 public class TenantsWithPaginationQuery : PaginationFilter, ICacheableRequest<PaginatedData<TenantDto>>
 {
+    public TenantsPaginationSpecification Specification => new(this);
     public string CacheKey => TenantCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => TenantCacheKey.MemoryCacheEntryOptions;
 
@@ -16,7 +16,6 @@ public class TenantsWithPaginationQuery : PaginationFilter, ICacheableRequest<Pa
     {
         return $"Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
-    public TenantsPaginationSpecification Specification => new TenantsPaginationSpecification(this);
 }
 
 public class TenantsWithPaginationQueryHandler :
@@ -41,7 +40,8 @@ public class TenantsWithPaginationQueryHandler :
         CancellationToken cancellationToken)
     {
         var data = await _context.Tenants.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                        .ProjectToPaginatedDataAsync<Tenant, TenantDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
+            .ProjectToPaginatedDataAsync<Tenant, TenantDto>(request.Specification, request.PageNumber, request.PageSize,
+                _mapper.ConfigurationProvider, cancellationToken);
         return data;
     }
 }
@@ -51,6 +51,7 @@ public class TenantsPaginationSpecification : Specification<Tenant>
     public TenantsPaginationSpecification(TenantsWithPaginationQuery query)
     {
         Query.Where(q => q.Name != null)
-              .Where(q => q.Name.Contains(query.Keyword) || q.Description.Contains(query.Keyword), !string.IsNullOrEmpty(query.Keyword));
+            .Where(q => q.Name.Contains(query.Keyword) || q.Description.Contains(query.Keyword),
+                !string.IsNullOrEmpty(query.Keyword));
     }
 }
