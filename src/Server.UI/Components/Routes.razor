@@ -7,34 +7,23 @@
 @inject LayoutService LayoutService
 
 <Fluxor.Blazor.Web.StoreInitializer />
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(Program).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <Authorizing>
+                    <text>@L["Please wait, we are authorizing you..."]</text>
+                </Authorizing>
+                <NotAuthorized>
+                    <RedirectToLogin />
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+    </Router>
+</CascadingAuthenticationState>
 
+@code
+{
 
-        <CascadingAuthenticationState>
-            <Router AppAssembly="@typeof(Program).Assembly">
-                <Found Context="routeData">
-                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
-                        <Authorizing>
-                            <text>@L["Please wait, we are authorizing you..."]</text>
-                        </Authorizing>
-                        <NotAuthorized>
-                          <RedirectToLogin/>
-                        </NotAuthorized>
-                    </AuthorizeRouteView>
-                </Found>
-                <NotFound>
-                    <PageTitle>Not found</PageTitle>
-                    <LayoutView Layout="@typeof(MainLayout)">
-                        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex">
-                            <p role="alert">
-                                @L["Sorry, there's nothing at this address."] <MudButton Variant="Variant.Filled" Size="Size.Small" Link="/">@L["Go Home"]</MudButton>
-                                </p>
-                            </MudContainer>
-                        </LayoutView>
-                    </NotFound>
-                </Router>
-            </CascadingAuthenticationState>
-
-    @code
-    {
-    
 }
