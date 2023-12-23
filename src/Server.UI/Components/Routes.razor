@@ -1,10 +1,12 @@
-﻿@inject IStringLocalizer<SharedResource> L
+﻿@using CleanArchitecture.Blazor.Server.UI.Constants
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication
+
+
+@inject IStringLocalizer<SharedResource> L
 @inject NavigationManager NavManager
 @inject LayoutService LayoutService
 
-<Fluxor.Blazor.Web.StoreInitializer/>
-
-
+<Fluxor.Blazor.Web.StoreInitializer />
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
@@ -13,20 +15,11 @@
                     <text>@L["Please wait, we are authorizing you..."]</text>
                 </Authorizing>
                 <NotAuthorized>
-                    <RedirectToLogin/>
+                    <RedirectToLogin />
                 </NotAuthorized>
             </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
-        <NotFound>
-            <PageTitle>Not found</PageTitle>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="d-flex">
-                    <p role="alert">
-                        @L["Sorry, there's nothing at this address."] <MudButton Variant="Variant.Filled" Size="Size.Small" Link="/">@L["Go Home"]</MudButton>
-                    </p>
-                </MudContainer>
-            </LayoutView>
-        </NotFound>
     </Router>
 </CascadingAuthenticationState>
 
