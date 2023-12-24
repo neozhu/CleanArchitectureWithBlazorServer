@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Blazor-ApexCharts" Version="2.1.0" />
+      <PackageReference Include="Blazor-ApexCharts" Version="2.2.1" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj" />
