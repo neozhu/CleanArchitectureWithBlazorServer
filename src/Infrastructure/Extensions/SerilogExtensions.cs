@@ -65,7 +65,7 @@ public static class SerilogExtensions
                 WriteToNpgsql(serilogConfig, connectionString);
                 break;
             case DbProviderKeys.SqLite:
-                WriteToSqLite(serilogConfig, connectionString);
+                WriteToSqLite(serilogConfig, "BlazorDashboardDb.db");
                 break;
         }
     }
@@ -168,16 +168,15 @@ public static class SerilogExtensions
         ));
     }
 
-    private static void WriteToSqLite(LoggerConfiguration serilogConfig, string? connectionString)
+    private static void WriteToSqLite(LoggerConfiguration serilogConfig, string dbname)
     {
-        if (string.IsNullOrEmpty(connectionString)) return;
-
+        var sqlPath = Environment.CurrentDirectory + dbname;
         const string tableName = "Loggers";
         serilogConfig.WriteTo.Async(wt => wt.SQLite(
-            connectionString,
+            sqlPath,
             tableName,
             LogEventLevel.Information
-        ));
+        ).CreateLogger());
     }
 
 

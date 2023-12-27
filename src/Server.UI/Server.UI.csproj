@@ -15,18 +15,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Resources\EmailTemplates\*"/>
+        <EmbeddedResource Include="Resources\EmailTemplates\*" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Blazor-ApexCharts" Version="2.1.0"/>
+      <PackageReference Include="Blazor-ApexCharts" Version="2.2.1" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj"/>
-        <ProjectReference Include="..\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj"/>
-        <ProjectReference Include="..\Migrators\Migrators.SqLite\Migrators.SqLite.csproj"/>
-        <ProjectReference Include="..\Server\Server.csproj"/>
+        <ProjectReference Include="..\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj" />
+        <ProjectReference Include="..\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj" />
+        <ProjectReference Include="..\Migrators\Migrators.SqLite\Migrators.SqLite.csproj" />
+        <ProjectReference Include="..\Server\Server.csproj" />
     </ItemGroup>
-
+    
 
 </Project>
