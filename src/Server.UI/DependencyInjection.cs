@@ -27,16 +27,16 @@ public static class DependencyInjection
         services.AddRazorComponents().AddInteractiveServerComponents();
         services.AddCascadingAuthenticationState();
         services.AddMudBlazorDialog()
-            .AddMudServices(config =>
+            .AddMudServices(mudServicesConfiguration =>
             {
-                config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
-                config.SnackbarConfiguration.PreventDuplicates = false;
-                config.SnackbarConfiguration.NewestOnTop = true;
-                config.SnackbarConfiguration.ShowCloseIcon = true;
-                config.SnackbarConfiguration.VisibleStateDuration = 4000;
-                config.SnackbarConfiguration.HideTransitionDuration = 500;
-                config.SnackbarConfiguration.ShowTransitionDuration = 500;
-                config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+                mudServicesConfiguration.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
+                mudServicesConfiguration.SnackbarConfiguration.PreventDuplicates = false;
+                mudServicesConfiguration.SnackbarConfiguration.NewestOnTop = true;
+                mudServicesConfiguration.SnackbarConfiguration.ShowCloseIcon = true;
+                mudServicesConfiguration.SnackbarConfiguration.VisibleStateDuration = 4000;
+                mudServicesConfiguration.SnackbarConfiguration.HideTransitionDuration = 500;
+                mudServicesConfiguration.SnackbarConfiguration.ShowTransitionDuration = 500;
+                mudServicesConfiguration.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
             }).AddHotKeys2();
 
         services.AddFluxor(options =>
