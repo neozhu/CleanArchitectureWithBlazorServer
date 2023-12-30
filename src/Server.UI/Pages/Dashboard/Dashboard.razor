@@ -103,25 +103,25 @@
         {
             <MudSimpleTable Dense="true" Hover="true" Class="flex-grow-1">
                 <thead>
-                <tr>
-                    <th>Nr</th>
-                    <th>Sign</th>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Molar mass</th>
-                </tr>
+                    <tr>
+                        <th>Nr</th>
+                        <th>Sign</th>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Molar mass</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @foreach (var item in Elements)
-                {
-                    <tr>
-                        <td>@item.Number</td>
-                        <td>@item.Sign</td>
-                        <td>@item.Name</td>
-                        <td>@item.Position</td>
-                        <td>@item.Molar</td>
-                    </tr>
-                }
+                    @foreach (var item in Elements)
+                    {
+                        <tr>
+                            <td>@item.Number</td>
+                            <td>@item.Sign</td>
+                            <td>@item.Name</td>
+                            <td>@item.Position</td>
+                            <td>@item.Molar</td>
+                        </tr>
+                    }
                 </tbody>
             </MudSimpleTable>
         }

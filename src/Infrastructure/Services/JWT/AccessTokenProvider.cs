@@ -77,9 +77,7 @@ public class AccessTokenProvider : IAccessTokenProvider
                 RefreshToken = token.Value.RefreshToken;
                 var validationResult = await _tokenValidator.ValidateTokenAsync(AccessToken!);
                 if (validationResult.IsValid)
-                {
                     return SetUserPropertiesFromClaimsPrincipal(new ClaimsPrincipal(validationResult.ClaimsIdentity));
-                }
 
                 var validationRefreshResult = await _refreshTokenValidator.ValidateTokenAsync(RefreshToken!);
                 if (validationRefreshResult.IsValid)

@@ -80,17 +80,17 @@
 </head>
 
 <body>
-<Routes @rendermode="new InteractiveServerRenderMode(false)"/>
-<script src="_framework/blazor.web.js"></script>
-<script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
-<script src="js/msal/authConfig.js"></script>
+    <Routes @rendermode="new InteractiveServerRenderMode(false)"/>
+    <script src="_framework/blazor.web.js"></script>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
+    <script src="js/msal/authConfig.js"></script>
 
-<script src="https://accounts.google.com/gsi/client"></script>
-<script src="js/gapi/auth2config.js"></script>
-<script src="_content/MudBlazor/MudBlazor.min.js"></script>
-<script src="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"></script>
-<script src="_content/BlazorTime/blazorTime.js"></script>
-<script type="text/javascript">
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <script src="js/gapi/auth2config.js"></script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"></script>
+    <script src="_content/BlazorTime/blazorTime.js"></script>
+    <script type="text/javascript">
 
         async function externalLogin(provider, dotNetHelper) {
             if (provider == 'Microsoft') {

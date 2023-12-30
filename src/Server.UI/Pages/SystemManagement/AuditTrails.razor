@@ -1,6 +1,4 @@
 @page "/system/audittrails"
-
-
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications
@@ -88,21 +86,21 @@
             <MudCardContent Class="py-3">
                 <MudSimpleTable Hover="true" Bordered="true">
                     <thead>
-                    <tr>
-                        <th>@L["Field Name"]</th>
-                        <th>@L[_currentDto.GetMemberDescription(x => x.OldValues)]</th>
-                        <th>@L[_currentDto.GetMemberDescription(x => x.NewValues)]</th>
-                    </tr>
+                        <tr>
+                            <th>@L["Field Name"]</th>
+                            <th>@L[_currentDto.GetMemberDescription(x => x.OldValues)]</th>
+                            <th>@L[_currentDto.GetMemberDescription(x => x.NewValues)]</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach (var field in context.Item.NewValues?.Any() ?? false ? context.Item.NewValues : context.Item.OldValues?.Any() ?? false ? context.Item.OldValues : new Dictionary<string, object?>())
-                    {
-                        <tr>
-                            <td>@field.Key</td>
-                            <td class="mud-text-secondary">@(context.Item.OldValues?.ContainsKey(field.Key) ?? false ? context.Item.OldValues[field.Key] : string.Empty)</td>
-                            <td>@(context.Item.NewValues?.ContainsKey(field.Key) ?? false ? context.Item.NewValues[field.Key] : string.Empty)</td>
-                        </tr>
-                    }
+                        @foreach (var field in context.Item.NewValues?.Any() ?? false ? context.Item.NewValues : context.Item.OldValues?.Any() ?? false ? context.Item.OldValues : new Dictionary<string, object?>())
+                        {
+                            <tr>
+                                <td>@field.Key</td>
+                                <td class="mud-text-secondary">@(context.Item.OldValues?.ContainsKey(field.Key) ?? false ? context.Item.OldValues[field.Key] : string.Empty)</td>
+                                <td>@(context.Item.NewValues?.ContainsKey(field.Key) ?? false ? context.Item.NewValues[field.Key] : string.Empty)</td>
+                            </tr>
+                        }
                     </tbody>
                 </MudSimpleTable>
             </MudCardContent>

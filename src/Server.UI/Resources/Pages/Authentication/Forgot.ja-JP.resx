@@ -59,7 +59,8 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
                 xmlns="">
         <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
         <xsd:element name="root" msdata:IsDataSet="true">
@@ -122,8 +123,9 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="Enter the email address linked to your account and you will receive an email containing a link to reset your password."
-          xml:space="preserve">
+    <data
+        name="Enter the email address linked to your account and you will receive an email containing a link to reset your password."
+        xml:space="preserve">
     <value>パスワードをリセットするためのリンクを含む電子メールが送信されます。</value>
   </data>
     <data name="Forgot Password?" xml:space="preserve">
@@ -132,8 +134,9 @@
     <data name="Reset Password" xml:space="preserve">
     <value>パスワードのリセット</value>
   </data>
-    <data name="{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password."
-          xml:space="preserve">
+    <data
+        name="{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password."
+        xml:space="preserve">
     <value>{0} は、アカウント {1} の回復用メールとして電子メールを使用する要求を受け取りました。このトークン:[ {2} ]を使用して、パスワードの復元を完了してください。</value>
   </data>
     <data name="{0}, please contact the administrator" xml:space="preserve">
@@ -143,8 +146,9 @@
     <data name="E-mail" xml:space="preserve">
     <value>電子メール</value>
   </data>
-    <data name="Enter the email address linked to your account and you will receive an email containing a token string to reset your password."
-          xml:space="preserve">
+    <data
+        name="Enter the email address linked to your account and you will receive an email containing a token string to reset your password."
+        xml:space="preserve">
     <value>パスワードをリセットするためのトークン文字列を含むメールを受信します。</value>
   </data>
     <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">

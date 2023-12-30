@@ -59,7 +59,8 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
                 xmlns="">
         <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
         <xsd:element name="root" msdata:IsDataSet="true">
@@ -122,8 +123,9 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="Enter the email address linked to your account and you will receive an email containing a link to reset your password."
-          xml:space="preserve">
+    <data
+        name="Enter the email address linked to your account and you will receive an email containing a link to reset your password."
+        xml:space="preserve">
     <value>Entrez l'adresse e-mail liée à votre compte et vous recevrez un e-mail contenant un lien pour réinitialiser votre mot de passe.</value>
   </data>
     <data name="Forgot Password?" xml:space="preserve">
@@ -132,8 +134,9 @@
     <data name="Reset Password" xml:space="preserve">
     <value>Réinitialiser le mot de passe</value>
   </data>
-    <data name="{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password."
-          xml:space="preserve">
+    <data
+        name="{0} received a request to use email as a recovery email for the account {1}. Use this token:[ {2} ] to finish resting password."
+        xml:space="preserve">
     <value>{0} a reçu une demande d'utilisation de l'email comme email de récupération pour le compte {1}. Utilisez ce jeton :[ {2} ] pour finir de restaurer le mot de passe.</value>
   </data>
     <data name="{0}, please contact the administrator" xml:space="preserve">
@@ -143,8 +146,9 @@
     <data name="E-mail" xml:space="preserve">
     <value>E-mail</value>
   </data>
-    <data name="Enter the email address linked to your account and you will receive an email containing a token string to reset your password."
-          xml:space="preserve">
+    <data
+        name="Enter the email address linked to your account and you will receive an email containing a token string to reset your password."
+        xml:space="preserve">
     <value>Entrez l'adresse e-mail liée à votre compte et vous recevrez un e-mail contenant une chaîne de caractères pour réinitialiser votre mot de passe.</value>
   </data>
     <data name="Enter the token string from the recovery email to set your new password." xml:space="preserve">

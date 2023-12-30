@@ -59,7 +59,8 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
                 xmlns="">
         <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
         <xsd:element name="root" msdata:IsDataSet="true">
@@ -181,8 +182,9 @@
     <data name="User name" xml:space="preserve">
     <value>사용자 이름</value>
   </data>
-    <data name="Please check your username and password.  If you are still unable to log in, contact your administrator."
-          xml:space="preserve">
+    <data
+        name="Please check your username and password.  If you are still unable to log in, contact your administrator."
+        xml:space="preserve">
     <value>사용자 이름과 비밀번호를 확인하세요. 여전히 로그인할 수 없으면 관리자에게 문의하십시오.</value>
   </data>
 </root>

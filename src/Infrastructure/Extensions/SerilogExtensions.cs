@@ -153,7 +153,10 @@ public static class SerilogExtensions
             { "log_event", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
             { "user_name", new SinglePropertyColumnWriter("UserName", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
             { "client_ip", new SinglePropertyColumnWriter("ClientIp", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
-            { "client_agent",new SinglePropertyColumnWriter("ClientAgent", PropertyWriteMethod.ToString, NpgsqlDbType.Varchar) }
+            {
+                "client_agent",
+                new SinglePropertyColumnWriter("ClientAgent", PropertyWriteMethod.ToString, NpgsqlDbType.Varchar)
+            }
         };
         serilogConfig.WriteTo.Async(wt => wt.PostgreSQL(
             connectionString,
@@ -164,7 +167,6 @@ public static class SerilogExtensions
             schemaName: "public",
             useCopy: false,
             failureCallback: e => Console.WriteLine($"Sink error: {e.Message}")
-
         ));
     }
 

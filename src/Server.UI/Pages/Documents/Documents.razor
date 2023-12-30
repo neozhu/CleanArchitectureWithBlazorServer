@@ -2,6 +2,7 @@
 
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 @inherits FluxorComponent
+@using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.GetFileStream
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
@@ -11,7 +12,6 @@
 @using CleanArchitecture.Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Server.UI.Pages.Documents.Components
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
-@using Severity = MudBlazor.Severity
 @using CleanArchitecture.Blazor.Application.Features.Documents.Caching
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete

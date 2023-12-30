@@ -64,9 +64,7 @@ public class InMemoryNotificationService : INotificationService
         try
         {
             if ((await _localStorageService.GetAsync<DateTime>(LocalStorageKey)).Success == false)
-            {
                 return DateTime.MinValue;
-            }
 
             var timestamp = await _localStorageService.GetAsync<DateTime>(LocalStorageKey);
             return timestamp.Value;

@@ -41,8 +41,8 @@ Blazor technology.
 ## Docker compose https deployment
 
 - Create self-signed development certificates for the project
-    -
-    cmd: `dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\CleanArchitecture.Blazor.Server.UI.pfx -p Password@123`
+  -
+  cmd: `dotnet dev-certs https -ep $env:USERPROFILE\.aspnet\https\CleanArchitecture.Blazor.Server.UI.pfx -p Password@123`
     - cmd: `dotnet dev-certs https --trust`
 - Manage User secrets to save the password
     - cmd: `dotnet user-secrets init`
