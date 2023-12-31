@@ -178,30 +178,30 @@
                              EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
-                            <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                            <MudMenuItem OnAction="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                         }
                         @if (_canDelete)
                         {
-                            <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                            <MudMenuItem OnAction="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
                         @if (_canManagePermissions)
                         {
-                            <MudMenuItem OnClick="@(() => OnSetPermissions(context.Item))">@L["Set Permissions"]</MudMenuItem>
+                            <MudMenuItem OnAction="@(() => OnSetPermissions(context.Item))">@L["Set Permissions"]</MudMenuItem>
                         }
                         @if (_canActive)
                         {
                             @if (context.Item.IsActive)
                             {
-                                <MudMenuItem OnClick=@(() => OnSetActive(context.Item))>@L["Set Inactive"]</MudMenuItem>
+                                <MudMenuItem OnAction=@(() => OnSetActive(context.Item))>@L["Set Inactive"]</MudMenuItem>
                             }
                             else
                             {
-                                <MudMenuItem OnClick=@(() => OnSetActive(context.Item))>@L["Set Active"]</MudMenuItem>
+                                <MudMenuItem OnAction=@(() => OnSetActive(context.Item))>@L["Set Active"]</MudMenuItem>
                             }
                         }
                         @if (_canRestPassword)
                         {
-                            <MudMenuItem OnClick=@(() => OnResetPassword(context.Item))>@L["Reset Password"]</MudMenuItem>
+                            <MudMenuItem OnAction=@(() => OnResetPassword(context.Item))>@L["Reset Password"]</MudMenuItem>
                         }
                     </MudMenu>
                 }

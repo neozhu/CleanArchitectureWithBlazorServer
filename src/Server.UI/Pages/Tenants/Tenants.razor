@@ -72,14 +72,14 @@
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnClick="@(() => OnRefresh())">@ConstantString.Refresh</MudMenuItem>
+                            <MudMenuItem Disabled="@_loading" OnAction="@(() => OnRefresh())">@ConstantString.Refresh</MudMenuItem>
                             @if (_canCreate)
                             {
-                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@ConstantString.New</MudMenuItem>
+                                <MudMenuItem Disabled="@_loading" OnAction="OnCreate">@ConstantString.New</MudMenuItem>
                             }
                             @if (_canDelete)
                             {
-                                <MudMenuItem OnClick="OnDeleteChecked">@ConstantString.Delete</MudMenuItem>
+                                <MudMenuItem OnAction="OnDeleteChecked">@ConstantString.Delete</MudMenuItem>
                             }
 
                         </MudMenu>
@@ -106,11 +106,11 @@
                              EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
-                            <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                            <MudMenuItem OnAction="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                         }
                         @if (_canDelete)
                         {
-                            <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                            <MudMenuItem OnAction="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
                     </MudMenu>
                 }

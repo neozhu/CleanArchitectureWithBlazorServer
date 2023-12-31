@@ -49,7 +49,7 @@
                         <MudText>@L["Profile"]</MudText>
                     </div>
                 </MudMenuItem>
-                <MudMenuItem OnClick="OnSettingClick">
+                <MudMenuItem OnAction="OnSettingClick">
                     <div class="d-flex">
                         <MudIcon Class="mx-2"
                                  Icon="@Icons.Material.Filled.Settings"/>
@@ -72,7 +72,7 @@
 
 @code
 {
-    [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
+    [Parameter] public EventCallback<EventArgs> OnSettingClick { get; set; }
     [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
     private bool IsLoading => UserProfileState.Value.IsLoading;
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
