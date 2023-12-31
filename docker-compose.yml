@@ -14,8 +14,8 @@ services:
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=Password@123
       #- ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/CleanArchitecture.Blazor.Server.UI.pfx
     volumes:
-     - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets:ro
-     - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets:ro
+      - ~/.aspnet/https:/root/.aspnet/https:ro
     ports:
       - "5000:80"
       - "5001:443"

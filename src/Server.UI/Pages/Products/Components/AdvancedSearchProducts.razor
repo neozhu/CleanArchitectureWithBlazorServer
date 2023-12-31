@@ -1,5 +1,4 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
-
 @inject IStringLocalizer<Products> L
 
 <MudExpansionPanel @bind-IsExpanded="_advancedSearchExpanded"
@@ -7,36 +6,38 @@
                    Class="mud-elevation-25 pa-2 mb-3" Text="@ConstantString.AdvancedSearch">
     <MudGrid>
         <MudItem xs="12" sm="6" md="4">
-            <MudTextField @bind-Value="TRequest.Name" 
+            <MudTextField @bind-Value="TRequest.Name"
                           Placeholder="@L["Search for product name"]"
                           Clearable="true"
                           TextChanged="TextChanged">
             </MudTextField>
         </MudItem>
-        <MudItem xs="12" sm="6"  md="4">
-           <PicklistAutocomplete Picklist="Picklist.Brand"
-                                Placeholder="@L["Search for brand"]"
-                                TextChanged="TextChanged"
-                                ResetValueOnEmptyText="true"
-                                @bind-Value="TRequest.Brand"></PicklistAutocomplete>
+        <MudItem xs="12" sm="6" md="4">
+            <PicklistAutocomplete Picklist="Picklist.Brand"
+                                  Placeholder="@L["Search for brand"]"
+                                  TextChanged="TextChanged"
+                                  ResetValueOnEmptyText="true"
+                                  @bind-Value="TRequest.Brand">
+            </PicklistAutocomplete>
         </MudItem>
-        <MudItem xs="12" sm="6"  md="4">
-          <PicklistAutocomplete Picklist="Picklist.Unit"
-                                Placeholder="@L["Search for unit"]"
-                                TextChanged="TextChanged"
-                                ResetValueOnEmptyText="true"
-                                @bind-Value="TRequest.Unit"></PicklistAutocomplete>
+        <MudItem xs="12" sm="6" md="4">
+            <PicklistAutocomplete Picklist="Picklist.Unit"
+                                  Placeholder="@L["Search for unit"]"
+                                  TextChanged="TextChanged"
+                                  ResetValueOnEmptyText="true"
+                                  @bind-Value="TRequest.Unit">
+            </PicklistAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <MudNumericField Clearable="true" @bind-Value="TRequest.MinPrice"
-                          Placeholder="@L["Search for minimum price"]"
+                             Placeholder="@L["Search for minimum price"]"
                              TextChanged="TextChanged">
             </MudNumericField>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <MudNumericField @bind-Value="TRequest.MaxPrice"
                              Clearable="true"
-                          Placeholder="@L["Search for maximum price"]"
+                             Placeholder="@L["Search for maximum price"]"
                              TextChanged="TextChanged">
             </MudNumericField>
         </MudItem>
@@ -45,10 +46,8 @@
 
 @code
 {
-    [EditorRequired][Parameter]
-    public ProductsWithPaginationQuery TRequest { get; set; } = default!;
-    [EditorRequired][Parameter]
-    public EventCallback<string> OnConditionChanged { get; set; }
+    [EditorRequired] [Parameter] public ProductsWithPaginationQuery TRequest { get; set; } = default!;
+    [EditorRequired] [Parameter] public EventCallback<string> OnConditionChanged { get; set; }
 
     private bool _advancedSearchExpanded;
 

@@ -25,10 +25,9 @@ public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (st
 
     public GetFileStreamQueryHandler(
         IApplicationDbContext context
-
     )
     {
-       _context = context;
+        _context = context;
     }
 
     public async Task<(string, byte[])> Handle(GetFileStreamQuery request, CancellationToken cancellationToken)
@@ -49,9 +48,10 @@ public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (st
     {
         public DocumentsQuery(string userId, string tenantId, string keyword)
         {
-            Query.Where(p=>(p.CreatedBy == userId && p.IsPublic == false) || p.IsPublic == true)
-                 .Where(x => x.TenantId == tenantId, !string.IsNullOrEmpty(tenantId) )
-                 .Where(x => x.Title!.Contains(keyword) || x.Description!.Contains(keyword),!string.IsNullOrEmpty(keyword));
+            Query.Where(p => (p.CreatedBy == userId && p.IsPublic == false) || p.IsPublic == true)
+                .Where(x => x.TenantId == tenantId, !string.IsNullOrEmpty(tenantId))
+                .Where(x => x.Title!.Contains(keyword) || x.Description!.Contains(keyword),
+                    !string.IsNullOrEmpty(keyword));
         }
     }
 }

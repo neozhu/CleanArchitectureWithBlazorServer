@@ -28,15 +28,19 @@ public abstract class PaginatedList
         return new PaginatedList<T>(items, count, pageNumber, pageSize);
     }
 }
+
 public class PaginatedList<T> : PaginatedList
 {
-    public IReadOnlyCollection<T> Items { get; }
-
     public PaginatedList(
         IReadOnlyCollection<T> items,
         int count,
         int pageNumber,
-        int pageSize) : base(count, pageNumber, pageSize) => Items = items;
+        int pageSize) : base(count, pageNumber, pageSize)
+    {
+        Items = items;
+    }
+
+    public IReadOnlyCollection<T> Items { get; }
 
 
     public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)

@@ -5,15 +5,13 @@ using CleanArchitecture.Blazor.Domain.Identity;
 using LazyCache;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
+
 public class UserDataProvider : IUserDataProvider
 {
     private const string CACHEKEY = "ALL-ApplicationUserDto";
     private readonly IAppCache _cache;
     private readonly IMapper _mapper;
     private readonly UserManager<ApplicationUser> _userManager;
-    public List<ApplicationUserDto> DataSource { get; private set; }
-
-    public event Action? OnChange;
 
     public UserDataProvider(
         IAppCache cache,
@@ -26,23 +24,33 @@ public class UserDataProvider : IUserDataProvider
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         DataSource = new List<ApplicationUserDto>();
     }
+
+    public List<ApplicationUserDto> DataSource { get; private set; }
+
+    public event Action? OnChange;
+
     public void Initialize()
     {
-        DataSource = _cache.GetOrAdd(CACHEKEY,()=>_userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x=>x.UserName).ToList());
+        DataSource = _cache.GetOrAdd(CACHEKEY,
+            () => _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role)
+                .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x => x.UserName).ToList());
         OnChange?.Invoke();
     }
 
     public async Task InitializeAsync()
     {
-        DataSource =await _cache.GetOrAddAsync(CACHEKEY,()=> _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x => x.UserName).ToListAsync());
+        DataSource = await _cache.GetOrAddAsync(CACHEKEY,
+            () => _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role)
+                .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x => x.UserName).ToListAsync());
         OnChange?.Invoke();
     }
 
     public async Task Refresh()
     {
         _cache.Remove(CACHEKEY);
-        DataSource = await _cache.GetOrAddAsync(CACHEKEY, () => _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x => x.UserName).ToListAsync());
+        DataSource = await _cache.GetOrAddAsync(CACHEKEY,
+            () => _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role)
+                .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x => x.UserName).ToListAsync());
         OnChange?.Invoke();
-       
     }
 }

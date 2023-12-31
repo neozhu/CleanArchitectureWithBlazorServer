@@ -1,7 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Domain.Entities;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Conversions;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,12 +12,12 @@ public class AuditTrailConfiguration : IEntityTypeConfiguration<AuditTrail>
     public void Configure(EntityTypeBuilder<AuditTrail> builder)
     {
         builder.HasOne(x => x.Owner)
-               .WithMany()
-               .HasForeignKey(x => x.UserId)
-               .OnDelete(DeleteBehavior.SetNull);
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
         builder.Navigation(e => e.Owner).AutoInclude();
         builder.Property(t => t.AuditType)
-           .HasConversion<string>();
+            .HasConversion<string>();
         builder.Property(e => e.AffectedColumns).HasStringListConversion();
         builder.Property(u => u.OldValues).HasJsonConversion();
         builder.Property(u => u.NewValues).HasJsonConversion();

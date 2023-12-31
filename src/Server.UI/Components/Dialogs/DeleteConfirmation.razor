@@ -1,10 +1,11 @@
+@using Severity = Severity
 @inject IStringLocalizer<SharedResource> L
 @inject IMediator Mediator
 
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Delete" Class="mr-3 mb-n1" />
+            <MudIcon Icon="@Icons.Material.Filled.Delete" Class="mr-3 mb-n1"/>
             @ConstantString.DeleteConfirmationTitle
         </MudText>
     </TitleContent>
@@ -19,30 +20,27 @@
 
 @code
 {
-    [CascadingParameter]
-    private MudDialogInstance MudDialog { get; set; } = default!;
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired]
-    [Parameter]
-    public string? ContentText { get; set; }
-    [EditorRequired]
-    [Parameter]
-    public IRequest<Result<int>> Command { get; set; } = default!;
+    [EditorRequired] [Parameter] public string? ContentText { get; set; }
+    [EditorRequired] [Parameter] public IRequest<Result<int>> Command { get; set; } = default!;
 
     private async Task Submit()
     {
         var result = await Mediator.Send(Command);
         if (result.Succeeded)
         {
-            Snackbar.Add($"{ConstantString.DeleteSuccess}", MudBlazor.Severity.Info);
+            Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             MudDialog.Close(DialogResult.Ok(true));
         }
         else
         {
-            Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+            Snackbar.Add($"{result.ErrorMessage}", Severity.Error);
         }
-
     }
 
-    private void Cancel() => MudDialog.Cancel();
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
 }

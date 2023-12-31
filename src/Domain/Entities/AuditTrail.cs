@@ -19,10 +19,10 @@ public class AuditTrail : IEntity<int>
     public Dictionary<string, object?>? NewValues { get; set; }
     public List<string>? AffectedColumns { get; set; }
     public Dictionary<string, object> PrimaryKey { get; set; } = new();
-
     public List<PropertyEntry> TemporaryProperties { get; } = new();
     public bool HasTemporaryProperties => TemporaryProperties.Any();
 }
+
 public enum AuditType
 {
     None,

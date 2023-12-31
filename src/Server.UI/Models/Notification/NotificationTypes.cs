@@ -7,5 +7,5 @@ public enum NotificationTypes
     CommentLiked,
     CommentAnswered,
     OrderPlaced,
-    OrderReceived,
+    OrderReceived
 }

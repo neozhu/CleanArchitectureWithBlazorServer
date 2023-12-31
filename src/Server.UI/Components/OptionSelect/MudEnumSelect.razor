@@ -1,7 +1,6 @@
-﻿@using System.Reflection
+﻿@typeparam TEnum
+@using System.Reflection
 @using System.ComponentModel
-
-@typeparam TEnum
 @inherits MudSelect<TEnum>
 
 @{
@@ -57,9 +56,9 @@
 
     private T SetFlag<T>(T flag, bool set)
     {
-        Enum? value = Value as Enum;
+        var value = Value as Enum;
 
-        Type underlyingType = Enum.GetUnderlyingType(EnumOrUnderlyingType!);
+        var underlyingType = Enum.GetUnderlyingType(EnumOrUnderlyingType!);
 
         // note: AsInt mean: math integer vs enum (not the c# int type)
         dynamic valueAsInt = Convert.ChangeType(value!, underlyingType);
@@ -78,9 +77,9 @@
         {
             ChildContent = __builder =>
             {
-                @foreach (TEnum item in EnumValueList)
+                @foreach (var item in EnumValueList)
                 {
-                    <MudSelectItem T="TEnum" Value="@item">@(MudEnumSelect<TEnum>.GetDescriptionText(item))</MudSelectItem>
+                    <MudSelectItem T="TEnum" Value="@item">@GetDescriptionText(item)</MudSelectItem>
                 }
             };
         }

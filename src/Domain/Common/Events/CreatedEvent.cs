@@ -8,6 +8,7 @@
 using CleanArchitecture.Blazor.Domain.Common.Entities;
 
 namespace CleanArchitecture.Blazor.Domain.Common.Events;
+
 public class CreatedEvent<T> : DomainEvent where T : IEntity
 {
     public CreatedEvent(T entity)

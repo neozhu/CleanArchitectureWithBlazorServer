@@ -10,7 +10,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Paginat
 
 public class ProductsWithPaginationQuery : ProductAdvancedFilter, ICacheableRequest<PaginatedData<ProductDto>>
 {
-   
+    public ProductAdvancedSpecification Specification => new(this);
+
 
     public string CacheKey => ProductCacheKey.GetPaginationCacheKey($"{this}");
 
@@ -20,10 +21,8 @@ public class ProductsWithPaginationQuery : ProductAdvancedFilter, ICacheableRequ
     public override string ToString()
     {
         return
-            $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{MinPrice},MaxPrice:{MaxPrice},SortDirection:{SortDirection},OrderBy:{OrderBy},{ PageNumber},{PageSize}";
+            $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{MinPrice},MaxPrice:{MaxPrice},SortDirection:{SortDirection},OrderBy:{OrderBy},{PageNumber},{PageSize}";
     }
-
-    public ProductAdvancedSpecification Specification => new ProductAdvancedSpecification(this);
 }
 
 public class ProductsWithPaginationQueryHandler :
@@ -47,9 +46,9 @@ public class ProductsWithPaginationQueryHandler :
     public async Task<PaginatedData<ProductDto>> Handle(ProductsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-
         var data = await _context.Products.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                        .ProjectToPaginatedDataAsync<Product,ProductDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
+            .ProjectToPaginatedDataAsync<Product, ProductDto>(request.Specification, request.PageNumber,
+                request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
         return data;
     }
 }

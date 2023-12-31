@@ -8,6 +8,7 @@
 using CleanArchitecture.Blazor.Domain.Common.Entities;
 
 namespace CleanArchitecture.Blazor.Domain.Common.Events;
+
 public class DeletedEvent<T> : DomainEvent where T : IEntity
 {
     public DeletedEvent(T entity)

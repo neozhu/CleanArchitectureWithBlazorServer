@@ -2,7 +2,7 @@
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 
-public partial class OpenSeadragon
+public class OpenSeadragon
 {
     private readonly IJSRuntime _jsRuntime;
 
@@ -10,12 +10,11 @@ public partial class OpenSeadragon
     {
         _jsRuntime = jsRuntime;
     }
+
     public async Task<ValueTask> Open(string url)
     {
         var target = "openseadragon";
         var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/openseadragon.js");
         return jsmodule.InvokeVoidAsync(JSInteropConstants.ShowOpenSeadragon, target, url);
     }
-
-
 }

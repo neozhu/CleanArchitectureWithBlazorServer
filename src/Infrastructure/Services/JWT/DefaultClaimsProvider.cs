@@ -1,13 +1,14 @@
 ﻿namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
+
 /// <summary>
-/// Use <see cref="DefaultClaimsProvider"/> to get access token claims and refresh token claims
+///     Use <see cref="DefaultClaimsProvider" /> to get access token claims and refresh token claims
 /// </summary>
 /// <typeparam name="TUserKey"></typeparam>
 /// <typeparam name="TUser"></typeparam>
 public class DefaultClaimsProvider : IClaimsProvider
 {
     /// <summary>
-    /// Provide claims for access token
+    ///     Provide claims for access token
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
@@ -17,7 +18,7 @@ public class DefaultClaimsProvider : IClaimsProvider
     }
 
     /// <summary>
-    /// Provide claims for refresh token
+    ///     Provide claims for refresh token
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
@@ -28,14 +29,11 @@ public class DefaultClaimsProvider : IClaimsProvider
 
     private static IEnumerable<Claim> GetUserClaims(ClaimsPrincipal user)
     {
-        Claim? identitfierClaim = user.FindFirst(ClaimTypes.NameIdentifier);
-        if (identitfierClaim == null)
+        var identitfierClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+        if (identitfierClaim == null) throw new InvalidOperationException("Null identifier claim");
+        return new List<Claim>
         {
-            throw new InvalidOperationException("Null identifier claim");
-        }
-        return new List<Claim>()
-        {
-            new Claim("id", identitfierClaim.Value),
+            new("id", identitfierClaim.Value)
         };
     }
 }

@@ -3,10 +3,8 @@ using Microsoft.Extensions.Options;
 
 namespace CleanArchitecture.Blazor.Server.Middlewares;
 #nullable disable
-public class LocalizationCookiesMiddleware : Microsoft.AspNetCore.Http.IMiddleware
+public class LocalizationCookiesMiddleware : IMiddleware
 {
-    public CookieRequestCultureProvider Provider { get; }
-
     public LocalizationCookiesMiddleware(IOptions<RequestLocalizationOptions> requestLocalizationOptions)
     {
         Provider =
@@ -18,6 +16,8 @@ public class LocalizationCookiesMiddleware : Microsoft.AspNetCore.Http.IMiddlewa
                 .FirstOrDefault();
     }
 
+    public CookieRequestCultureProvider Provider { get; }
+
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         if (Provider != null)
@@ -25,16 +25,14 @@ public class LocalizationCookiesMiddleware : Microsoft.AspNetCore.Http.IMiddlewa
             var feature = context.Features.Get<IRequestCultureFeature>();
 
             if (feature != null)
-            {
                 // remember culture across request
                 context.Response
                     .Cookies
                     .Append(
                         Provider.CookieName,
                         CookieRequestCultureProvider.MakeCookieValue(feature.RequestCulture),
-                        new CookieOptions() { Expires = new DateTimeOffset(DateTime.Now.AddMonths(3)) }
+                        new CookieOptions { Expires = new DateTimeOffset(DateTime.Now.AddMonths(3)) }
                     );
-            }
         }
 
         await next(context);

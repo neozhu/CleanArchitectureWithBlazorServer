@@ -2,8 +2,7 @@
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 
-
-public partial class InputClear
+public class InputClear
 {
     private readonly IJSRuntime _jsRuntime;
 
@@ -11,11 +10,10 @@ public partial class InputClear
     {
         _jsRuntime = jsRuntime;
     }
+
     public async Task<ValueTask> Clear(string targetId)
     {
         var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/clearinput.js");
         return jsmodule.InvokeVoidAsync(JSInteropConstants.ClearInput, targetId);
     }
-
-
 }

@@ -65,4 +65,4 @@ const silentRequest = {
     scopes: ["openid", "profile", "User.Read", "Mail.Read"]
 };
 
-const logoutRequest = {}
+const logoutRequest = {};

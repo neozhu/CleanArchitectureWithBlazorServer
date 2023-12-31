@@ -3,14 +3,13 @@
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
-using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 
 [Description("Audit Trails")]
 public class AuditTrailDto
 {
-    [Description("Id")] public int Id { get; set; }  
+    [Description("Id")] public int Id { get; set; }
 
     [Description("User Id")] public string? UserId { get; set; }
 

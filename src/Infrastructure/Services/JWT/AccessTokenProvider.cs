@@ -4,29 +4,27 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
+
 public class AccessTokenProvider : IAccessTokenProvider
 {
-    private readonly string _tokenKey = nameof(_tokenKey);
-    private readonly string _refreshTokenKey = nameof(_refreshTokenKey);
+    private readonly ICurrentUserService _currentUser;
     private readonly ProtectedLocalStorage _localStorage;
     private readonly ILoginService _loginService;
-    private readonly IAccessTokenValidator _tokenValidator;
+    private readonly string _refreshTokenKey = nameof(_refreshTokenKey);
     private readonly IRefreshTokenValidator _refreshTokenValidator;
-    private readonly IAccessTokenGenerator _tokenGenerator;
     private readonly ITenantProvider _tenantProvider;
-    private readonly ICurrentUserService _currentUser;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IAccessTokenGenerator _tokenGenerator;
+    private readonly string _tokenKey = nameof(_tokenKey);
+    private readonly IAccessTokenValidator _tokenValidator;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
-    public string? AccessToken { get; private set; }
-    public string? RefreshToken { get; private set; }
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public AccessTokenProvider(IServiceScopeFactory scopeFactory, 
+    public AccessTokenProvider(IServiceScopeFactory scopeFactory,
         ProtectedLocalStorage localStorage,
-        ILoginService loginService, 
-        IAccessTokenValidator tokenValidator, 
+        ILoginService loginService,
+        IAccessTokenValidator tokenValidator,
         IRefreshTokenValidator refreshTokenValidator,
         IAccessTokenGenerator tokenGenerator,
         ITenantProvider tenantProvider,
@@ -34,7 +32,8 @@ public class AccessTokenProvider : IAccessTokenProvider
     {
         var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        _userClaimsPrincipalFactory = scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
+        _userClaimsPrincipalFactory =
+            scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _localStorage = localStorage;
         _loginService = loginService;
         _tokenValidator = tokenValidator;
@@ -43,26 +42,30 @@ public class AccessTokenProvider : IAccessTokenProvider
         _tenantProvider = tenantProvider;
         _currentUser = currentUser;
     }
+
+    public string? AccessToken { get; private set; }
+    public string? RefreshToken { get; private set; }
+
     public async Task<string?> Login(ApplicationUser applicationUser)
     {
         var principal = await _userClaimsPrincipalFactory.CreateAsync(applicationUser);
         var token = await _loginService.LoginAsync(principal);
-        await  _localStorage.SetAsync(_tokenKey, token);
+        await _localStorage.SetAsync(_tokenKey, token);
         AccessToken = token.AccessToken;
         RefreshToken = token.RefreshToken;
         SetUserPropertiesFromClaimsPrincipal(principal);
         return AccessToken;
     }
+
     public async Task<ClaimsPrincipal> ParseClaimsFromJwt(string? accessToken)
     {
-        if(string.IsNullOrEmpty(accessToken)) return  new ClaimsPrincipal(new ClaimsIdentity());
+        if (string.IsNullOrEmpty(accessToken)) return new ClaimsPrincipal(new ClaimsIdentity());
         var validationResult = await _tokenValidator.ValidateTokenAsync(accessToken);
         if (validationResult.IsValid)
-        {
             return SetUserPropertiesFromClaimsPrincipal(new ClaimsPrincipal(validationResult.ClaimsIdentity));
-        }
         return new ClaimsPrincipal(new ClaimsIdentity());
     }
+
     public async Task<ClaimsPrincipal> GetClaimsPrincipal()
     {
         try
@@ -74,20 +77,12 @@ public class AccessTokenProvider : IAccessTokenProvider
                 RefreshToken = token.Value.RefreshToken;
                 var validationResult = await _tokenValidator.ValidateTokenAsync(AccessToken!);
                 if (validationResult.IsValid)
-                {
-                    
                     return SetUserPropertiesFromClaimsPrincipal(new ClaimsPrincipal(validationResult.ClaimsIdentity));
-                }
-                else
-                {
-                    var validationRefreshResult = await _refreshTokenValidator.ValidateTokenAsync(RefreshToken!);
-                    if (validationRefreshResult.IsValid)
-                    {
 
-                        return SetUserPropertiesFromClaimsPrincipal(new ClaimsPrincipal(validationRefreshResult.ClaimsIdentity));
-                    }
-
-                }
+                var validationRefreshResult = await _refreshTokenValidator.ValidateTokenAsync(RefreshToken!);
+                if (validationRefreshResult.IsValid)
+                    return SetUserPropertiesFromClaimsPrincipal(
+                        new ClaimsPrincipal(validationRefreshResult.ClaimsIdentity));
             }
         }
         catch (CryptographicException)
@@ -98,7 +93,14 @@ public class AccessTokenProvider : IAccessTokenProvider
         {
             return new ClaimsPrincipal(new ClaimsIdentity());
         }
+
         return new ClaimsPrincipal(new ClaimsIdentity());
+    }
+
+
+    public ValueTask RemoveAuthDataFromStorage()
+    {
+        return _localStorage.DeleteAsync(_tokenKey);
     }
 
     private ClaimsPrincipal SetUserPropertiesFromClaimsPrincipal(ClaimsPrincipal principal)
@@ -108,29 +110,21 @@ public class AccessTokenProvider : IAccessTokenProvider
         _currentUser.UserId = principal.GetUserId();
         _currentUser.UserName = principal.GetUserName();
         _currentUser.TenantId = principal.GetTenantId();
-        _currentUser.TenantName = principal.GetTenantName();  // This seems to be an error in original code. Fixing it here.
+        _currentUser.TenantName =
+            principal.GetTenantName(); // This seems to be an error in original code. Fixing it here.
         return principal;
     }
 
-     
-    public ValueTask RemoveAuthDataFromStorage() => _localStorage.DeleteAsync(_tokenKey);
-
     public async Task<string> Refresh(string refreshToken)
     {
-        TokenValidationResult validationResult = await _tokenValidator.ValidateTokenAsync(refreshToken!);
-        if (!validationResult.IsValid)
-        {
-            throw validationResult.Exception;
-        }
-        JwtSecurityToken? jwt = validationResult.SecurityToken as JwtSecurityToken;
-        string userId = jwt!.Claims.First(claim => claim.Type == "id").Value;
+        var validationResult = await _tokenValidator.ValidateTokenAsync(refreshToken!);
+        if (!validationResult.IsValid) throw validationResult.Exception;
+        var jwt = validationResult.SecurityToken as JwtSecurityToken;
+        var userId = jwt!.Claims.First(claim => claim.Type == "id").Value;
         var user = await _userManager.FindByIdAsync(userId);
-        if (user == null)
-        {
-            throw new Exception($"no found user by userId:{userId}");
-        }
+        if (user == null) throw new Exception($"no found user by userId:{userId}");
         var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
-        string accessToken = _tokenGenerator.GenerateAccessToken(principal);
+        var accessToken = _tokenGenerator.GenerateAccessToken(principal);
         return accessToken;
     }
 }

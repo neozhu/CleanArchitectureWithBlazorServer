@@ -1,10 +1,9 @@
-@using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
+@using CleanArchitecture.Blazor.Infrastructure.Services.JWT
 @using CleanArchitecture.Blazor.Server.UI.Services
-
 @inherits FluxorComponent
 
 @inject NavigationManager NavigationManager
-@inject IState<Fluxor.UserProfileState> UserProfileState
+@inject IState<UserProfileState> UserProfileState
 @inject IStringLocalizer<SharedResource> L
 @inject IAccessTokenProvider TokenProvider
 
@@ -21,7 +20,7 @@
                 <MudStack Row="true" Class="ma-4">
                     @if (IsLoading)
                     {
-                        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+                        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true"/>
                     }
                     else
                     {
@@ -42,18 +41,18 @@
                     </MudStack>
                 </MudStack>
 
-                <MudDivider Class="my-2" />
+                <MudDivider Class="my-2"/>
                 <MudMenuItem Href="/user/profile">
                     <div class="d-flex">
                         <MudIcon Class="mx-2"
-                                 Icon="@Icons.Material.Filled.Person" />
+                                 Icon="@Icons.Material.Filled.Person"/>
                         <MudText>@L["Profile"]</MudText>
                     </div>
                 </MudMenuItem>
-                <MudMenuItem OnClick="OnSettingClick">
+                <MudMenuItem OnAction="OnSettingClick">
                     <div class="d-flex">
                         <MudIcon Class="mx-2"
-                                 Icon="@Icons.Material.Filled.Settings" />
+                                 Icon="@Icons.Material.Filled.Settings"/>
                         <MudText>@L["Settings"]</MudText>
                     </div>
                 </MudMenuItem>
@@ -71,12 +70,10 @@
     </MudMenu>
 </MudTooltip>
 
-@code 
+@code
 {
-    [Parameter]
-    public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
-    [Inject]
-    public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+    [Parameter] public EventCallback<EventArgs> OnSettingClick { get; set; }
+    [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
     private bool IsLoading => UserProfileState.Value.IsLoading;
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
 
@@ -84,8 +81,8 @@
     {
         var parameters = new DialogParameters<LogoutConfirmation>
         {
-            { x=>x.ContentText, $"{ConstantString.LogoutConfirmation}"},
-            { x=>x.Color,  Color.Error}
+            { x => x.ContentText, $"{ConstantString.LogoutConfirmation}" },
+            { x => x.Color, Color.Error }
         };
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };

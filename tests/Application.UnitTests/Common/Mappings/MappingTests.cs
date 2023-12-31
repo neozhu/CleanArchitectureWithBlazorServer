@@ -18,7 +18,8 @@ public class MappingTests
 
     public MappingTests()
     {
-        _configuration = new MapperConfiguration(cfg => cfg.AddMaps(Assembly.GetAssembly(typeof(IApplicationDbContext))));
+        _configuration =
+            new MapperConfiguration(cfg => cfg.AddMaps(Assembly.GetAssembly(typeof(IApplicationDbContext))));
         _mapper = _configuration.CreateMapper();
     }
 
@@ -32,17 +33,13 @@ public class MappingTests
     [TestCase(typeof(Document), typeof(DocumentDto), true)]
     [TestCase(typeof(KeyValue), typeof(KeyValueDto), true)]
     [TestCase(typeof(Product), typeof(ProductDto), true)]
-
     public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination, bool inverseMap = false)
     {
         var instance = GetInstanceOf(source);
 
         _mapper.Map(instance, source, destination);
 
-        if (inverseMap)
-        {
-            ShouldSupportMappingFromSourceToDestination(destination, source, false);
-        }
+        if (inverseMap) ShouldSupportMappingFromSourceToDestination(destination, source);
     }
 
     private object GetInstanceOf(Type type)
@@ -54,4 +51,3 @@ public class MappingTests
         return FormatterServices.GetUninitializedObject(type);
     }
 }
-

@@ -71,10 +71,11 @@ public class Testing
 
         _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
 
-        _checkpoint = await Respawner.CreateAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"), new RespawnerOptions
-        {
-            TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
-        });
+        _checkpoint = await Respawner.CreateAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"),
+            new RespawnerOptions
+            {
+                TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
+            });
 
         EnsureDatabase();
     }
@@ -121,10 +122,7 @@ public class Testing
         {
             var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
 
-            foreach (var role in roles)
-            {
-                await roleManager.CreateAsync(new IdentityRole(role));
-            }
+            foreach (var role in roles) await roleManager.CreateAsync(new IdentityRole(role));
 
             await userManager.AddToRolesAsync(user, roles);
         }
@@ -184,6 +182,7 @@ public class Testing
         var scope = _scopeFactory.CreateScope();
         return scope.ServiceProvider.GetRequiredService<IPicklistService>();
     }
+
     public static ITenantService CreateTenantsService()
     {
         var scope = _scopeFactory.CreateScope();

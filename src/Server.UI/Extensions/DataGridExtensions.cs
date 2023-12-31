@@ -5,9 +5,12 @@ namespace CleanArchitecture.Blazor.Server.UI.Extensions;
 public static class DataGridExtensions
 {
     public static IQueryable<T> EfOrderBySortDefinitions<T, T1>(this IQueryable<T> source, GridState<T1> state)
-        => source.EfOrderBySortDefinitions(state.SortDefinitions);
+    {
+        return source.EfOrderBySortDefinitions(state.SortDefinitions);
+    }
 
-    public static IQueryable<T> EfOrderBySortDefinitions<T, T1>(this IQueryable<T> source, ICollection<SortDefinition<T1>> sortDefinitions)
+    public static IQueryable<T> EfOrderBySortDefinitions<T, T1>(this IQueryable<T> source,
+        ICollection<SortDefinition<T1>> sortDefinitions)
     {
         // avoid multiple enumeration
         var sourceQuery = source;
@@ -26,22 +29,26 @@ public static class DataGridExtensions
             {
                 var sortMethod = typeof(Queryable)
                     .GetMethods()
-                    .Where(m => m.Name == (sortDefinition.Descending ? "OrderByDescending" : "OrderBy") && m.IsGenericMethodDefinition) // ensure selecting the right overload
+                    .Where(m => m.Name == (sortDefinition.Descending ? "OrderByDescending" : "OrderBy") &&
+                                m.IsGenericMethodDefinition) // ensure selecting the right overload
                     .Single(m => m.GetParameters().ToList().Count == 2);
                 var genericMethod = sortMethod.MakeGenericMethod(typeof(T), orderByProperty.Type);
-                orderedQuery = (IOrderedQueryable<T>?)genericMethod.Invoke(genericMethod, new object[] { source, sortLambda });
+                orderedQuery =
+                    (IOrderedQueryable<T>?)genericMethod.Invoke(genericMethod, new object[] { source, sortLambda });
             }
             else
             {
                 var sortMethod = typeof(Queryable)
                     .GetMethods()
-                    .Where(m => m.Name == (sortDefinition.Descending ? "ThenByDescending" : "ThenBy") && m.IsGenericMethodDefinition) // ensure selecting the right overload
+                    .Where(m => m.Name == (sortDefinition.Descending ? "ThenByDescending" : "ThenBy") &&
+                                m.IsGenericMethodDefinition) // ensure selecting the right overload
                     .Single(m => m.GetParameters().ToList().Count == 2);
                 var genericMethod = sortMethod.MakeGenericMethod(typeof(T), orderByProperty.Type);
-                orderedQuery = (IOrderedQueryable<T>?)genericMethod.Invoke(genericMethod, new object[] { source, sortLambda });
+                orderedQuery =
+                    (IOrderedQueryable<T>?)genericMethod.Invoke(genericMethod, new object[] { source, sortLambda });
             }
         }
+
         return orderedQuery ?? sourceQuery;
     }
 }
-

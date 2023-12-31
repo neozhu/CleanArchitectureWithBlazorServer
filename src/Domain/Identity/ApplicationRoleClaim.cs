@@ -1,4 +1,5 @@
 ﻿namespace CleanArchitecture.Blazor.Domain.Identity;
+
 public class ApplicationRoleClaim : IdentityRoleClaim<string>
 {
     public string? Description { get; set; }

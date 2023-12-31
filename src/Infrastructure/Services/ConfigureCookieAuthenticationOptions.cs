@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 #nullable disable
 public class ConfigureCookieAuthenticationOptions
-  : IPostConfigureOptions<CookieAuthenticationOptions>
+    : IPostConfigureOptions<CookieAuthenticationOptions>
 {
     private readonly ITicketStore _ticketStore;
 
@@ -16,7 +16,7 @@ public class ConfigureCookieAuthenticationOptions
     }
 
     public void PostConfigure(string name,
-             CookieAuthenticationOptions options)
+        CookieAuthenticationOptions options)
     {
         options.SessionStore = _ticketStore;
     }

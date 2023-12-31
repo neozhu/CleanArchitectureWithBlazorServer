@@ -8,8 +8,7 @@ namespace CleanArchitecture.Blazor.Domain.Common.Entities;
 
 public abstract class OwnerPropertyEntity : BaseAuditableEntity
 {
-    [ForeignKey("CreatedBy")]
-    public virtual ApplicationUser? Owner { get; set; }
-    [ForeignKey("LastModifiedBy")]
-    public virtual ApplicationUser? Editor { get; set; }
+    [ForeignKey("CreatedBy")] public virtual ApplicationUser? Owner { get; set; }
+
+    [ForeignKey("LastModifiedBy")] public virtual ApplicationUser? Editor { get; set; }
 }

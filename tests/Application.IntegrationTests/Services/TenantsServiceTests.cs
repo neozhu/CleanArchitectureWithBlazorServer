@@ -4,16 +4,18 @@ using CleanArchitecture.Blazor.Domain.Entities;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.IntegrationTests.Services;
+
 using static Testing;
+
 public class TenantsServiceTests : TestBase
 {
     [SetUp]
     public async Task InitData()
     {
-        await AddAsync(new Tenant() { Name = "Test1",  Description= "Test1" });
-        await AddAsync(new Tenant() { Name = "Test2", Description = "Text2" });
-        
+        await AddAsync(new Tenant { Name = "Test1", Description = "Test1" });
+        await AddAsync(new Tenant { Name = "Test2", Description = "Text2" });
     }
+
     [Test]
     public void ShouldLoadDataSource()
     {
@@ -21,16 +23,15 @@ public class TenantsServiceTests : TestBase
         tenantsService.Initialize();
         var count = tenantsService.DataSource.Count();
         Assert.Equals(2, count);
-
     }
+
     [Test]
     public async Task ShouldUpdateDataSource()
     {
-        await AddAsync(new Tenant() { Name = "Test3", Description = "Test3" });
+        await AddAsync(new Tenant { Name = "Test3", Description = "Test3" });
         var tenantsService = CreateTenantsService();
         await tenantsService.Refresh();
         var count = tenantsService.DataSource.Count();
         Assert.Equals(3, count);
-
     }
 }

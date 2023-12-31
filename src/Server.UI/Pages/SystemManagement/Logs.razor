@@ -1,13 +1,10 @@
 @page "/system/logs"
-@using CleanArchitecture.Blazor.Server.UI.Pages.SystemManagement.Components
+@using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
-@using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
-@using CleanArchitecture.Blazor.Infrastructure.Constants.User
-@using CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Clear
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery
-@using CleanArchitecture.Blazor.Application.Features.Loggers.Specifications;
-@using FluentEmail.Core
-@using Severity = MudBlazor.Severity
+@using CleanArchitecture.Blazor.Application.Features.Loggers.Specifications
+@using CleanArchitecture.Blazor.Server.UI.Pages.SystemManagement.Components
+@using CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Clear
 
 @attribute [Authorize(Policy = Permissions.Logs.View)]
 @inject IStringLocalizer<Logs> L
@@ -16,15 +13,15 @@
 
 <LogsLineCharts></LogsLineCharts>
 <MudDataGrid T="LogDto"
-                ServerData="@(ServerReload)"
-                FixedHeader="true"
-                FixedFooter="false"
-                Virtualize="true"
-                RowsPerPage="@_defaultPageSize"
-                Height="calc(100vh - 360px)"
-                Style="min-height:700px"
-                Loading="@_loading"
-                Hover="true" @ref="_table">
+             ServerData="@(ServerReload)"
+             FixedHeader="true"
+             FixedFooter="false"
+             Virtualize="true"
+             RowsPerPage="@_defaultPageSize"
+             Height="calc(100vh - 360px)"
+             Style="min-height:700px"
+             Loading="@_loading"
+             Hover="true" @ref="_table">
     <ToolBarContent>
         <div class="d-flex align-start flex-grow-1">
             <div class="d-flex gap-4">
@@ -40,21 +37,21 @@
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
                     <MudButton DisableElevation Variant="Variant.Outlined"
-                                Size="Size.Small"
-                                Disabled="@_loading"
-                                OnClick="@(OnRefresh)"
-                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                Style="margin-right: 5px;">
+                               Size="Size.Small"
+                               Disabled="@_loading"
+                               OnClick="@(OnRefresh)"
+                               StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                               Style="margin-right: 5px;">
                         @ConstantString.Refresh
                     </MudButton>
                     @if (_canPurge)
                     {
                         <MudButton DisableElevation Variant="Variant.Outlined"
-                                    Size="Size.Small"
-                                    Disabled="@(_loading || _clearing)"
-                                    OnClick="@(OnPurge)"
-                                    StartIcon="@Icons.Material.Filled.ClearAll" IconColor="Color.Surface" Color="Color.Secondary"
-                                    Style="margin-right: 5px;">
+                                   Size="Size.Small"
+                                   Disabled="@(_loading || _clearing)"
+                                   OnClick="@(OnPurge)"
+                                   StartIcon="@Icons.Material.Filled.ClearAll" IconColor="Color.Surface" Color="Color.Secondary"
+                                   Style="margin-right: 5px;">
                             @if (_clearing)
                             {
                                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -71,7 +68,7 @@
                 <MudStack Row="true" AlignItems="AlignItems.Stretch">
                     <MudEnumSelect TEnum="LogLevel?" Placeholder="Search for level" Value="@Query.Level" Clearable="true" ValueChanged="OnChangedLevel" Style="width:160px" FullWidth="true"> </MudEnumSelect>
                     <MudTextField T="string" Style="min-width:300px" ValueChanged="@(OnSearch)" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End"
-                                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium">
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium">
                     </MudTextField>
                 </MudStack>
 
@@ -147,25 +144,23 @@
         <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"/>
     </PagerContent>
 </MudDataGrid>
-  
+
 <style>
     .mud-table-toolbar {
         height: 120px !important;
     }
 </style>
 
-@code 
-    {
-    [CascadingParameter]
-    private Task<AuthenticationState> AuthState { get; set; } = default!;
+@code
+{
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
 
-    [Inject]
-    private IMediator Mediator { get; set; } = default!;
+    [Inject] private IMediator Mediator { get; set; } = default!;
     private string Title { get; set; } = "Logs";
     private string _searchString = string.Empty;
     private MudDataGrid<LogDto> _table = default!;
     private readonly LogDto _currentDto = new();
-    private int _defaultPageSize = 15;
+    private readonly int _defaultPageSize = 15;
 
 
     private bool _loading;
@@ -180,9 +175,7 @@
         var state = await AuthState;
         _canPurge = (await AuthService.AuthorizeAsync(state.User, Permissions.Logs.Purge)).Succeeded;
     }
-     
 
- 
 
     private async Task<GridData<LogDto>> ServerReload(GridState<LogDto> state)
     {
@@ -231,7 +224,7 @@
     {
         var parameters = new DialogParameters<ConfirmationDialog>
         {
-            { x=>x.ContentText, $"{L["Are you sure you want to erase all the logs?"]}" }
+            { x => x.ContentText, $"{L["Are you sure you want to erase all the logs?"]}" }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>

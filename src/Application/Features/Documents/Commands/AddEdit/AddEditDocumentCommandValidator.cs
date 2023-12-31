@@ -19,6 +19,4 @@ public class AddEditDocumentCommandValidator : AbstractValidator<AddEditDocument
             .NotNull()
             .When(x => x.Id <= 0);
     }
-
-    
 }

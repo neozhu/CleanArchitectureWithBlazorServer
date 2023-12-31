@@ -1,4 +1,5 @@
 ﻿namespace CleanArchitecture.Blazor.Server.Common.Interfaces;
+
 public interface ISignalRHub
 {
     public const string Url = "/signalRHub";

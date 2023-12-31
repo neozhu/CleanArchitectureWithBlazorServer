@@ -9,7 +9,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.Pagina
 
 public class DocumentsWithPaginationQuery : AdvancedDocumentsFilter, ICacheableRequest<PaginatedData<DocumentDto>>
 {
-    
+    public AdvancedDocumentsSpecification Specification => new(this);
+
     public string CacheKey => DocumentCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;
 
@@ -18,8 +19,6 @@ public class DocumentsWithPaginationQuery : AdvancedDocumentsFilter, ICacheableR
         return
             $"CurrentUserId:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
-
-    public AdvancedDocumentsSpecification Specification =>new AdvancedDocumentsSpecification(this);
 }
 
 public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuery, PaginatedData<DocumentDto>>
@@ -40,12 +39,9 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
         CancellationToken cancellationToken)
     {
         var data = await _context.Documents.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                        .ProjectToPaginatedDataAsync<Document, DocumentDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
+            .ProjectToPaginatedDataAsync<Document, DocumentDto>(request.Specification, request.PageNumber,
+                request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
 
         return data;
     }
-
-    
 }
-
-

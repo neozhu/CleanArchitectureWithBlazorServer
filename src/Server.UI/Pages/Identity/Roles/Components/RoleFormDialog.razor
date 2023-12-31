@@ -1,5 +1,4 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
-
 @inherits MudComponentBase
 @inject IStringLocalizer<Roles> L
 
@@ -31,11 +30,9 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter]
-    private MudDialogInstance MudDialog { get; set; } = default!;
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired][Parameter]
-    public ApplicationRoleDto Model { get; set; } = default!;
+    [EditorRequired] [Parameter] public ApplicationRoleDto Model { get; set; } = default!;
 
     private MudForm? _form;
     private readonly RoleDtoValidator _modelValidator = new();
@@ -60,14 +57,15 @@
         public RoleDtoValidator()
         {
             RuleFor(v => v.Name)
-                 .MaximumLength(256)
-                 .NotEmpty();
+                .MaximumLength(256)
+                .NotEmpty();
         }
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
             var result = await ValidateAsync(ValidationContext<ApplicationRoleDto>.CreateWithOptions((ApplicationRoleDto)model, x => x.IncludeProperties(propertyName)));
-            return result.IsValid ? (IEnumerable<string>)Array.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
+            return result.IsValid ? Array.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
         };
     }
+
 }

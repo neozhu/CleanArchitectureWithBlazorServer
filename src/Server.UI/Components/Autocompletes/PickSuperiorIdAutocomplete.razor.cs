@@ -5,12 +5,11 @@ namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
 public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
 {
+    private List<ApplicationUserDto>? _userList;
     [Parameter] public string? TenantId { get; set; }
     [Parameter] public string OwnerName { get; set; } = string.Empty;
 
     [Inject] private IIdentityService IdentityService { get; set; } = default!;
-
-    private List<ApplicationUserDto>? _userList;
 
     public override Task SetParametersAsync(ParameterView parameters)
     {
@@ -52,13 +51,13 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
         if (_userList is not null && !string.IsNullOrEmpty(str) &&
             _userList.Any(x => x.Id.Equals(str, StringComparison.OrdinalIgnoreCase)))
         {
-            ApplicationUserDto userDto = _userList.First(x => x.Id == str);
+            var userDto = _userList.First(x => x.Id == str);
             return userDto.UserName;
         }
 
         if (_userList is null && !string.IsNullOrEmpty(str))
         {
-            string userName = IdentityService.GetUserName(str);
+            var userName = IdentityService.GetUserName(str);
             return userName;
         }
 

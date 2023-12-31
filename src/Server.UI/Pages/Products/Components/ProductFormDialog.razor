@@ -1,14 +1,14 @@
-@using Blazor.Server.UI.Services.JsInterop;
-@using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
-@using CleanArchitecture.Blazor.Domain.Common.Enums
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
-@using Severity = MudBlazor.Severity
+@using Severity = Severity
 @using Size = SixLabors.ImageSharp.Size
-@using Color = MudBlazor.Color
+@using Color = Color
+@using Image = SixLabors.ImageSharp.Image
+@using SixLabors.ImageSharp.Processing
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats.Png
-@using SixLabors.ImageSharp.Processing
-@using Image = SixLabors.ImageSharp.Image
+@using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
+@using CleanArchitecture.Blazor.Domain.Common.Enums
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 
 @inherits MudComponentBase
 
@@ -44,7 +44,7 @@
                                           ShowProgressIndicator="true"
                                           @bind-Value="Model.Brand">
                         <ProgressIndicatorTemplate>
-                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true"/>
                         </ProgressIndicatorTemplate>
                     </PicklistAutocomplete>
                 </MudItem>
@@ -65,7 +65,7 @@
                                           ShowProgressIndicator="true"
                                           @bind-Value="Model.Unit">
                         <ProgressIndicatorTemplate>
-                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true"/>
                         </ProgressIndicatorTemplate>
                     </PicklistAutocomplete>
                 </MudItem>
@@ -85,14 +85,14 @@
                         </MudFileUpload>
                     </div>
                     <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
-                        <div class="d-fex">
-                            @if (Model.Pictures is not null)
+                    <div class="d-fex">
+                        @if (Model.Pictures is not null)
                         {
                             foreach (var img in Model.Pictures)
                             {
                                 <div style="float:left; position: relative; width: 160px; height: 80px; margin: 10px;">
                                     <MudTooltip Delay="500" Text="@img.Name">
-                                        <MudImage ObjectFit="ObjectFit.Cover" Height="80" Width="160" Src="@img.Url" Alt="@img.Name" Elevation="25" Class="mr-2 rounded-lg" />
+                                        <MudImage ObjectFit="ObjectFit.Cover" Height="80" Width="160" Src="@img.Url" Alt="@img.Name" Elevation="25" Class="mr-2 rounded-lg"/>
                                     </MudTooltip>
                                     <div style="position: absolute;top: 0px;left: 0px; z-index: 2990;">
                                         <MudIconButton OnClick="@(() => PreviewImage(img.Url, Model.Pictures))" Icon="@Icons.Material.Filled.Image" aria-label="preview" Color="Color.Info" Size="MudBlazor.Size.Small"></MudIconButton>
@@ -110,21 +110,17 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-            <MudLoadingButton Loading="@_saveingnew" OnClick="SaveAndNew">@ConstantString.SaveAndNew</MudLoadingButton>
-            <MudLoadingButton Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
-        </DialogActions>
-    </MudDialog>
+        <MudLoadingButton Loading="@_saveingnew" OnClick="SaveAndNew">@ConstantString.SaveAndNew</MudLoadingButton>
+        <MudLoadingButton Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+    </DialogActions>
+</MudDialog>
 
 @code {
-    [CascadingParameter]
-    private MudDialogInstance MudDialog { get; set; } = default!;
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired]
-    [Parameter]
-    public AddEditProductCommand Model { get; set; } = default!;
+    [EditorRequired] [Parameter] public AddEditProductCommand Model { get; set; } = default!;
 
-    [Parameter]
-    public Action? Refresh { get; set; }
+    [Parameter] public Action? Refresh { get; set; }
 
     private MudForm? _form;
     private bool _saving;
@@ -139,7 +135,7 @@
         {
             var parameters = new DialogParameters<ConfirmationDialog>
             {
-                { x=>x.ContentText, $"{L["Are you sure you want to erase this image?"]}" }
+                { x => x.ContentText, $"{L["Are you sure you want to erase this image?"]}" }
             };
             var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
             var dialog = DialogService.Show<ConfirmationDialog>($"{L["Erase imatge"]}", parameters, options);
@@ -191,6 +187,7 @@
                     Snackbar.Add($"{ex.Message}", Severity.Error);
                 }
             }
+
             Snackbar.Add(L["Upload pictures successfully"], Severity.Info);
 
             if (Model.Pictures is null)
@@ -262,4 +259,5 @@
     {
         MudDialog.Cancel();
     }
+
 }

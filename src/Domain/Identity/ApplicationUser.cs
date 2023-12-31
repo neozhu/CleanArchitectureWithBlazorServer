@@ -7,12 +7,21 @@ namespace CleanArchitecture.Blazor.Domain.Identity;
 
 public class ApplicationUser : IdentityUser
 {
+    public ApplicationUser()
+    {
+        UserClaims = new HashSet<ApplicationUserClaim>();
+        UserRoles = new HashSet<ApplicationUserRole>();
+        Logins = new HashSet<ApplicationUserLogin>();
+        Tokens = new HashSet<ApplicationUserToken>();
+    }
+
     public string? DisplayName { get; set; }
     public string? Provider { get; set; } = "Local";
     public string? TenantId { get; set; }
     public string? TenantName { get; set; }
-    [Column(TypeName = "text")]
-    public string? ProfilePictureDataUrl { get; set; }
+
+    [Column(TypeName = "text")] public string? ProfilePictureDataUrl { get; set; }
+
     public bool IsActive { get; set; }
     public bool IsLive { get; set; }
     public string? RefreshToken { get; set; }
@@ -23,15 +32,6 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<ApplicationUserToken> Tokens { get; set; }
 
     public string? SuperiorId { get; set; } = null;
-    [ForeignKey("SuperiorId")]
-    public ApplicationUser? Superior { get; set; } = null;
-    public ApplicationUser() : base()
-    {
-        UserClaims = new HashSet<ApplicationUserClaim>();
-        UserRoles = new HashSet<ApplicationUserRole>();
-        Logins = new HashSet<ApplicationUserLogin>();
-        Tokens = new HashSet<ApplicationUserToken>();
-    }
 
-
+    [ForeignKey("SuperiorId")] public ApplicationUser? Superior { get; set; } = null;
 }

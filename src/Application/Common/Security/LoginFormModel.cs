@@ -1,5 +1,3 @@
-using FluentValidation.Results;
-
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public class LoginFormModel
@@ -24,6 +22,4 @@ public class LoginFormModelFluentValidator : AbstractValidator<LoginFormModel>
             .MinimumLength(6).WithMessage(_localizer["Your password length must be at least 6 characters."])
             .MaximumLength(16).WithMessage(_localizer["Your password length must not exceed 16 characters."]);
     }
-
-   
 }

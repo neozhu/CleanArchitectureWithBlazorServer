@@ -7,5 +7,4 @@ public abstract class BaseAuditableSoftDeleteEntity : BaseAuditableEntity, ISoft
 {
     public DateTime? Deleted { get; set; }
     public string? DeletedBy { get; set; }
-
 }

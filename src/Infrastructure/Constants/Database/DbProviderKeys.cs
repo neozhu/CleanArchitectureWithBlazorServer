@@ -1,4 +1,5 @@
 ﻿namespace CleanArchitecture.Blazor.Infrastructure.Constants.Database;
+
 internal class DbProviderKeys
 {
     public const string Npgsql = "postgresql";

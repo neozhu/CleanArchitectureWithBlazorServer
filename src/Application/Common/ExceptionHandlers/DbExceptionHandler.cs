@@ -29,7 +29,6 @@ public class
             && exception.InnerException != null
             && exception.InnerException is SqlException sqlException
            )
-        {
             switch (sqlException.Number)
             {
                 case 2627: // Unique constraint error
@@ -52,7 +51,6 @@ public class
                     errors.Add("A Missing Parameter has led to Error  While Creating the record(s)!");
                     break;
             }
-        }
 
 
         return errors.ToArray();

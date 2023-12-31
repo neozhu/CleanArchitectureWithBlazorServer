@@ -14,5 +14,3 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Ignore(e => e.DomainEvents);
     }
 }
-
-

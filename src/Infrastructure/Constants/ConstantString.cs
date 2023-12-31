@@ -2,19 +2,17 @@
 using System.Resources;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Constants;
+
 public static class ConstantString
 {
-    public const string CONSTANTSTRINGRESOURCEID = "CleanArchitecture.Blazor.Infrastructure.Resources.Constants.ConstantString";
+    public const string CONSTANTSTRINGRESOURCEID =
+        "CleanArchitecture.Blazor.Infrastructure.Resources.Constants.ConstantString";
+
     private static readonly ResourceManager rm;
 
     static ConstantString()
     {
         rm = new ResourceManager(CONSTANTSTRINGRESOURCEID, typeof(ConstantString).Assembly);
-    }
-
-    public static string Localize(string key)
-    {
-        return rm.GetString(key, CultureInfo.CurrentCulture) ?? key;
     }
 
     //==========================================================//
@@ -84,13 +82,25 @@ public static class ConstantString
     public static string DeleteTheItem => Localize("Delete the {0}");
     public static string DeleteItems => Localize("Delete selected items: {0}");
     public static string DeleteConfirmation => Localize("Are you sure you want to delete this item: {0}?");
-    public static string DeleteConfirmationWithId => Localize("Are you sure you want to delete this item with Id: {0}?");
-    public static string DeleteConfirmWithSelected => Localize("Are you sure you want to delete the selected items: {0}?");
+
+    public static string DeleteConfirmationWithId =>
+        Localize("Are you sure you want to delete this item with Id: {0}?");
+
+    public static string DeleteConfirmWithSelected =>
+        Localize("Are you sure you want to delete the selected items: {0}?");
+
     public static string NoRecords => Localize("There are no records to view.");
     public static string Loading => Localize("Loading...");
     public static string Waiting => Localize("Wating...");
     public static string Processing => Localize("Processing...");
     public static string DeleteConfirmationTitle => Localize("Delete Confirmation");
     public static string LogoutConfirmationTitle => Localize("Logout Confirmation");
-    public static string LogoutConfirmation => Localize("You are attempting to log out of application. Do you really want to log out?");
+
+    public static string LogoutConfirmation =>
+        Localize("You are attempting to log out of application. Do you really want to log out?");
+
+    public static string Localize(string key)
+    {
+        return rm.GetString(key, CultureInfo.CurrentCulture) ?? key;
+    }
 }

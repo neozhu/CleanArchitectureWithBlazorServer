@@ -4,8 +4,7 @@ namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
 public class MultiTenantAutocomplete : MudAutocomplete<string>
 {
-    [Inject]
-    private ITenantService TenantsService { get; set; } = default!;
+    [Inject] private ITenantService TenantsService { get; set; } = default!;
 
     protected override void OnInitialized()
     {
@@ -42,8 +41,10 @@ public class MultiTenantAutocomplete : MudAutocomplete<string>
             var result = TenantsService.DataSource.OrderBy(x => x.Name).Select(x => x.Id).ToList();
             return Task.FromResult<IEnumerable<string>>(result);
         }
-        return Task.FromResult<IEnumerable<string>>(TenantsService.DataSource.Where(x => x.Name!.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
-          (x.Description != null && x.Description.Contains(value, StringComparison.InvariantCultureIgnoreCase))
+
+        return Task.FromResult<IEnumerable<string>>(TenantsService.DataSource.Where(x =>
+            x.Name!.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
+            (x.Description != null && x.Description.Contains(value, StringComparison.InvariantCultureIgnoreCase))
         ).OrderBy(x => x.Name).Select(x => x.Id).ToList());
     }
 

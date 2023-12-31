@@ -3,7 +3,6 @@
 
 using System.Reflection;
 using CleanArchitecture.Blazor.Domain.Common.Entities;
-using CleanArchitecture.Blazor.Domain.Entities;
 using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
@@ -15,7 +14,9 @@ public class ApplicationDbContext : IdentityDbContext<
     ApplicationRoleClaim, ApplicationUserToken>, IApplicationDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options) { }
+        : base(options)
+    {
+    }
 
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<Logger> Loggers { get; set; }
@@ -38,8 +39,6 @@ public class ApplicationDbContext : IdentityDbContext<
     {
         if (!optionsBuilder.IsConfigured)
         {
-
         }
     }
-
 }

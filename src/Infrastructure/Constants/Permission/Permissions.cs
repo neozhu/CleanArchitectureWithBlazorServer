@@ -8,6 +8,24 @@ namespace CleanArchitecture.Blazor.Infrastructure.Constants.Permission;
 
 public static class Permissions
 {
+    /// <summary>
+    ///     Returns a list of Permissions.
+    /// </summary>
+    /// <returns></returns>
+    public static List<string> GetRegisteredPermissions()
+    {
+        var permissions = new List<string>();
+        foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c =>
+                     c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+        {
+            var propertyValue = prop.GetValue(null);
+            if (propertyValue is not null)
+                permissions.Add((string)propertyValue);
+        }
+
+        return permissions;
+    }
+
     [DisplayName("AuditTrails")]
     [Description("AuditTrails Permissions")]
     public static class AuditTrails
@@ -16,6 +34,7 @@ public static class Permissions
         public const string Search = "Permissions.AuditTrails.Search";
         public const string Export = "Permissions.AuditTrails.Export";
     }
+
     [DisplayName("Logs")]
     [Description("Logs Permissions")]
     public static class Logs
@@ -39,6 +58,7 @@ public static class Permissions
         public const string Export = "Permissions.Products.Export";
         public const string Import = "Permissions.Products.Import";
     }
+
     [DisplayName("Customers")]
     [Description("Customers Permissions")]
     public static class Customers
@@ -78,6 +98,7 @@ public static class Permissions
         public const string Import = "Permissions.Documents.Import";
         public const string Download = "Permissions.Documents.Download";
     }
+
     [DisplayName("Dictionaries")]
     [Description("Dictionaries Permissions")]
     public static class Dictionaries
@@ -122,6 +143,7 @@ public static class Permissions
         public const string ManagePermissions = "Permissions.Roles.Permissions";
         public const string ManageNavigation = "Permissions.Roles.Navigation";
     }
+
     [DisplayName("Multi-Tenant")]
     [Description("Multi-Tenant Permissions")]
     public static class Tenants
@@ -132,6 +154,7 @@ public static class Permissions
         public const string Delete = "Permissions.Tenants.Delete";
         public const string Search = "Permissions.Tenants.Search";
     }
+
     [DisplayName("Role Claims")]
     [Description("Role Claims Permissions")]
     public static class RoleClaims
@@ -142,7 +165,6 @@ public static class Permissions
         public const string Delete = "Permissions.RoleClaims.Delete";
         public const string Search = "Permissions.RoleClaims.Search";
     }
-
 
 
     [DisplayName("Dashboards")]
@@ -159,23 +181,4 @@ public static class Permissions
         public const string View = "Permissions.Hangfire.View";
         public const string Jobs = "Permissions.Hangfire.Jobs";
     }
-
-
-    /// <summary>
-    /// Returns a list of Permissions.
-    /// </summary>
-    /// <returns></returns>
-    public static List<string> GetRegisteredPermissions()
-    {
-        var permissions = new List<string>();
-        foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
-        {
-            var propertyValue = prop.GetValue(null);
-            if (propertyValue is not null)
-                permissions.Add((string)propertyValue);
-        }
-        return permissions;
-    }
-
-
 }

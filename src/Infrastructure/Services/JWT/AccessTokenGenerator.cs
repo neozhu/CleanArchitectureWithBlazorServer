@@ -5,8 +5,9 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 
 public class AccessTokenGenerator : IAccessTokenGenerator
 {
-    private readonly JwtSecurityTokenHandler _tokenHandler;
     private readonly SimpleJwtOptions _options;
+    private readonly JwtSecurityTokenHandler _tokenHandler;
+
     public AccessTokenGenerator(JwtSecurityTokenHandler tokenHandler, IOptions<SimpleJwtOptions> options)
     {
         _tokenHandler = tokenHandler;
