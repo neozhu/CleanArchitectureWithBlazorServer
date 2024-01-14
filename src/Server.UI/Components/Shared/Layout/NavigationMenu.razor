@@ -26,6 +26,7 @@
 
     @if (DrawerOpen)
     {
+			if(IsAuthenticated){
         <div class="mx-3">
             <MudButton Class="d-flex justify-start my-3 user-button"
                        FullWidth="true">
@@ -61,6 +62,7 @@
                 </ChildContent>
             </MudButton>
         </div>
+				}
     }
     else
     {
@@ -78,10 +80,10 @@
             </MudAvatar>
         </div>
     }
-
     <MudNavMenu>
         @foreach (var section in MenuSections.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
         {
+					@* TODO: Must fix this, so that when user is logged out, it should refresh the navigation links. *@
             @if (section is not null)
             {
                 @if (DrawerOpen)
@@ -142,17 +144,14 @@
             }
         }
     </MudNavMenu>
-
     <MudDivider Class="mt-auto"></MudDivider>
     <MudNavMenu Class="d-flex justify-space-between pa-4">
         <MudLink Href="#" Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">@Settings.Copyright</MudLink>
         <MudText Class="" Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">version @Settings.Version</MudText>
     </MudNavMenu>
-
 </MudDrawer>
 
 <style>
-
     .mud-nav-link {
         white-space: normal !important;
     }
@@ -185,7 +184,6 @@ else
         .mud-nav-link.active:not(.mud-nav-link-disabled) {
             border-right: 3px solid var(--mud-palette-primary);
         }
-        
         .side-menu {
             border-right: 1px solid var(--mud-palette-table-lines)
         }
@@ -195,13 +193,26 @@ else
 @code
 {
     [EditorRequired] [Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
-
     [EditorRequired] [Parameter] public bool DrawerOpen { get; set; }
-
+		[CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; } = default!;
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     private bool IsLoading => UserProfileState.Value.IsLoading;
+		private bool IsAuthenticated { get; set; } = false;
     private IEnumerable<MenuSectionModel> MenuSections => MenuService.Features;
     private string[] Roles => UserProfile.AssignedRoles ?? Array.Empty<string>();
+
+		protected override async Task OnInitializedAsync()
+		{
+			var state = await AuthState;
+			if (state.User.Identity?.IsAuthenticated ?? false)
+			{
+				IsAuthenticated = true;
+			}
+			else
+			{
+				IsAuthenticated = false;
+			}
+	}
 
     private bool Expanded(MenuSectionItemModel menu)
     {

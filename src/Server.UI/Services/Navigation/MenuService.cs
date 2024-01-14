@@ -13,9 +13,11 @@ public class MenuService : IMenuService
             SectionItems = new List<MenuSectionItemModel>
             {
                 new() { Title = "Home", Icon = Icons.Material.Filled.Home, Href = "/" },
+                new() { Title = "Dashboard", Icon = Icons.Material.Filled.Dashboard, Href = "/dashboard", Roles = new[] { RoleName.Admin, RoleName.Users, } },
                 new()
                 {
                     Title = "E-Commerce",
+                    Roles = new[] { RoleName.Admin, RoleName.Users },
                     Icon = Icons.Material.Filled.ShoppingCart,
                     PageStatus = PageStatus.Completed,
                     IsParent = true,

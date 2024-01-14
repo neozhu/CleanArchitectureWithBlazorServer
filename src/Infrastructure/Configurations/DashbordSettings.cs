@@ -52,7 +52,7 @@ public class DashboardSettings : IApplicationSettings
     /// <summary>
     ///     Copyright watermark
     /// </summary>
-    public string Copyright { get; set; } = "@2023 Copyright";
+    public string Copyright { get; set; } = "@2024 Copyright";
 
     /// <summary>
     ///     Current application version

@@ -1,0 +1,31 @@
+@page "/"
+@using MudBlazor.Utilities
+<PageTitle>@Title</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+  <MudText Typo="Typo.h1" Color="Color.Primary">Home</MudText>
+  <MudItem Class="world-map-item" xs="12" sm="12" md="6">
+  <MudText Typo="Typo.h5" Class="white-text">Welcome to CleanArchitectureWithBlazorServer</MudText>
+    <div class="world-map">
+      <WorldMap/>
+    </div>
+  </MudItem>
+</MudContainer>
+
+<style>
+    .lp-app-grid {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+    }
+</style>
+
+@code
+{
+    private readonly bool IsMobile = false;
+    public string Title { get; set; } = "Home";
+    protected string ContentClassNames => new CssBuilder("flex-grow-1 flex-shrink-1")
+        .AddClass("pa-5", !IsMobile)
+        .AddClass("px-8", IsMobile)
+        .Build();
+}
