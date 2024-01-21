@@ -22,10 +22,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+      
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="3.2.1" />
     </ItemGroup>
     
