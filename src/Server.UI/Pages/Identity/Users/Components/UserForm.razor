@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+﻿@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
 @using CleanArchitecture.Blazor.Infrastructure;
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
@@ -19,7 +19,8 @@ using CleanArchitecture.Blazor.Domain.Identity;
 
 @inject IUploadService UploadService
 @inject ITenantService TenantsService
-@inject RoleManager<ApplicationRole> RoleManager
+@* @inject RoleManager<ApplicationRole> RoleManager *@
+@inject CustomRoleManager RoleManager
 @inject IStringLocalizer<Users> L
 
 <MudForm Model="@Model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)">
@@ -161,8 +162,6 @@ using CleanArchitecture.Blazor.Domain.Identity;
 
     [EditorRequired] [Parameter] public ApplicationUserDto Model { get; set; } = default!;
 
-    [Inject]
-    private CustomRoleManager RoleManager { get; set; } = default!;
     [EditorRequired] [Parameter] public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
 
 
