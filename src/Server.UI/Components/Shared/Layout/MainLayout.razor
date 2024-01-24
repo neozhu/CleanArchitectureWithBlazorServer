@@ -1,0 +1,163 @@
+@using Severity = Severity
+@using Toolbelt.Blazor.HotKeys2
+@using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences
+@using CleanArchitecture.Blazor.Server.UI.Constants
+@inherits LayoutComponentBase
+
+@inject LayoutService LayoutService
+@inject HotKeys HotKeys
+@inject IStringLocalizer<SharedResource> L
+
+<MudRTLProvider RightToLeft="@LayoutService.IsRTL">
+    <MudDialogProvider/>
+    <MudSnackbarProvider/>
+    <MudThemeProvider @ref="@_mudThemeProvider" Theme="@LayoutService.CurrentTheme" IsDarkMode="@LayoutService.IsDarkMode" IsDarkModeChanged="@LayoutService.SetDarkMode"/>
+
+    <MudLayout>
+        <AuthorizeView>
+            <NotAuthorized>
+                <MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center" Style="height: 100vh;">
+                    <div class="d-flex flex-column mud-width-full">
+                        <MudPaper Elevation="25" Class="pa-8" Width="100%" MaxWidth="500px">
+                            <MudIcon Icon="@Icons.Custom.Brands.MudBlazor" Size="Size.Large" Style="width:100px; height:100px;"/>
+                            @Body
+                        </MudPaper>
+                        <MudAlert Severity="Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">
+                            @L["authentication is required, click"] <MudLink Href="/"> @L["sign in"]</MudLink>
+                        </MudAlert>
+                    </div>
+                </MudContainer>
+            </NotAuthorized>
+            <Authorized>
+
+                <HeaderMenu NavigationMenuDrawerOpen="_navigationMenuDrawerOpen"
+                            OpenSearchDialog="OpenSearchDialog"
+                            IsDarkMode="@LayoutService.IsDarkMode"
+                            ToggleNavigationMenuDrawer="ToggleNavigationMenuDrawer"
+                            RightToLeft="@LayoutService.IsRTL"
+                            RightToLeftToggle="LayoutService.ToggleRightToLeft"
+                            OnSettingClick="@(() => _themingDrawerOpen = true)"/>
+                <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen"
+                                DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler"/>
+                <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
+                            ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
+                            UserPreferences="_userPreferences"
+                            UserPreferencesChanged="LayoutService.UpdateUserPreferences"/>
+                <ThemesButton OnClick="@(() => _themingDrawerOpen = true)"/>
+                <MudMainContent>
+                    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mb-4 mt-4">
+                        <ErrorBoundary @ref="_errorBoundary">
+                            <ChildContent>
+                                @Body
+                            </ChildContent>
+                            <ErrorContent Context="exception">
+                                <CustomError Exception="exception"></CustomError>
+                            </ErrorContent>
+                        </ErrorBoundary>
+                    </MudContainer>
+                </MudMainContent>
+                <UserLoginState/>
+            </Authorized>
+        </AuthorizeView>
+    </MudLayout>
+</MudRTLProvider>
+
+@code
+{
+    private bool _commandPaletteOpen;
+    private HotKeysContext? _hotKeysContext;
+    private bool _navigationMenuDrawerOpen = true;
+    private UserPreferences _userPreferences = new();
+    private MudThemeProvider _mudThemeProvider = null!;
+    private bool _themingDrawerOpen;
+    private bool _defaultDarkMode;
+
+    private ErrorBoundary? _errorBoundary { set; get; }
+
+    protected override void OnParametersSet()
+    {
+        ResetBoundary();
+    }
+
+    private void ResetBoundary()
+    {
+        // On each page navigation, reset any error state
+        _errorBoundary?.Recover();
+    }
+
+    public void Dispose()
+    {
+        LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
+        _hotKeysContext?.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await ApplyUserPreferences();
+            await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
+            StateHasChanged();
+        }
+    }
+
+    private async Task ApplyUserPreferences()
+    {
+        _defaultDarkMode = await _mudThemeProvider.GetSystemPreference();
+        _userPreferences = await LayoutService.ApplyUserPreferences(_defaultDarkMode);
+    }
+
+    protected override void OnInitialized()
+    {
+        LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
+        LayoutService.SetBaseTheme(Theme.ApplicationTheme());
+        _hotKeysContext = HotKeys.CreateContext().Add(ModKey.Ctrl, Key.K, async () => await OpenSearchDialog(), "Open command palette.");
+    }
+
+    private async Task OnSystemPreferenceChanged(bool newValue)
+    {
+        await LayoutService.OnSystemPreferenceChanged(newValue);
+    }
+
+    private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
+
+
+    protected void NavigationMenuDrawerOpenChangedHandler(bool state)
+    {
+        _navigationMenuDrawerOpen = state;
+    }
+
+    protected void ThemingDrawerOpenChangedHandler(bool state)
+    {
+        _themingDrawerOpen = state;
+    }
+
+    protected void ToggleNavigationMenuDrawer()
+    {
+        _navigationMenuDrawerOpen = !_navigationMenuDrawerOpen;
+    }
+
+    private async Task OpenSearchDialog()
+    {
+        if (!_commandPaletteOpen)
+        {
+            var options = new DialogOptions
+            {
+                NoHeader = true,
+                MaxWidth = MaxWidth.Medium,
+                FullWidth = true
+            };
+
+            var commandPalette = DialogService.Show<SearchDialog>("", options);
+            _commandPaletteOpen = true;
+
+            await commandPalette.Result;
+            _commandPaletteOpen = false;
+        }
+    }
+}

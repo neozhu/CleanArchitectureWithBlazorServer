@@ -26,7 +26,7 @@ public class AddEditKeyValueCommand : ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<KeyValueDto,AddEditKeyValueCommand>(MemberList.None);
+            CreateMap<KeyValueDto, AddEditKeyValueCommand>(MemberList.None);
             CreateMap<AddEditKeyValueCommand, KeyValue>(MemberList.None);
         }
     }

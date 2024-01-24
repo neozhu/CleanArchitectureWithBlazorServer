@@ -1,38 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
-  <metadata>
-    <id>CleanArchitecture.Blazor.Solution.Template</id>
-    <version>1.0.0-preview.16</version>
-    <title>Clean Architecture Blazor Solution Template</title>
-    <authors>hl.z</authors>
-    <description>Clean Architecture Blazor Solution Template for .NET 7.</description>
-    <summary>
-      A Clean Architecture Blazor Server Solution Template for creating a Single-Page Application (SPA) with ASP.NET Core.
-    </summary>
-    <releaseNotes>
-      1.0.0-preview.16
-      -  ✨ refactoring code for DialogParameters
-      -  ✨ add UseSnakeCaseNamingConvention for Npgsql
-     </releaseNotes>
+    <metadata>
+        <id>CleanArchitecture.Blazor.Solution.Template</id>
+        <version>1.0.0-preview.17</version>
+        <title>Clean Architecture Blazor Solution Template</title>
+        <authors>hl.z</authors>
+        <description>Clean Architecture Blazor Solution Template for .NET 8.</description>
+        <summary>
+            A Clean Architecture Blazor Server Solution Template for creating a Single-Page Application (SPA) with
+            ASP.NET Core.
+        </summary>
+        <releaseNotes>
+            1.0.0-preview.17
+            - 🌈 support.net 8
+        </releaseNotes>
 
-    <projectUrl>https://github.com/neozhu/CleanArchitectureWithBlazorServer</projectUrl>
-    <repository type="git" url="https://github.com/neozhu/CleanArchitectureWithBlazorServer.git" branch="main" />
+        <projectUrl>https://github.com/neozhu/CleanArchitectureWithBlazorServer</projectUrl>
+        <repository type="git" url="https://github.com/neozhu/CleanArchitectureWithBlazorServer.git" branch="main"/>
 
-    <license type="expression">MIT</license>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <tags>clean-architecture blazor server application project template csharp </tags>
-    <icon>icon.png</icon>
-    <readme>README.md</readme>
+        <license type="expression">MIT</license>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <tags>clean-architecture blazor server application project template csharp</tags>
+        <icon>icon.png</icon>
+        <readme>README.md</readme>
 
-    <packageTypes>
-      <packageType name="Template" />
-    </packageTypes>
-  </metadata>
+        <packageTypes>
+            <packageType name="Template"/>
+        </packageTypes>
+    </metadata>
 
-  <files>
-    <file src=".template.config\icon.png" />
-    <file src="README.md" />
-    <file src=".\**" target="content" exclude=".template.config\**;*.exe\;*\bin\**;**\obj\**;**\.vs\**;**\.vscode\**;**\wwwroot\dist\**;content\Directory.Build.*;**\.git\**;**\.github\**;**\CODE_OF_CONDUCT.md;**\LICENSE;**\README.md;" />
-  </files>
+    <files>
+        <file src=".template.config\icon.png"/>
+        <file src="README.md"/>
+        <file src=".\**" target="content"
+              exclude=".template.config\**;*.exe\;*\bin\**;**\obj\**;**\.vs\**;**\.vscode\**;**\wwwroot\dist\**;content\Directory.Build.*;**\.git\**;**\.github\**;**\CODE_OF_CONDUCT.md;**\LICENSE;**\README.md;"/>
+    </files>
 
 </package>

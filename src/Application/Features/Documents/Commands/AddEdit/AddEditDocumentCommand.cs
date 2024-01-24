@@ -36,7 +36,7 @@ public class AddEditDocumentCommand : ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<DocumentDto,AddEditDocumentCommand>(MemberList.None);
+            CreateMap<DocumentDto, AddEditDocumentCommand>(MemberList.None);
             CreateMap<AddEditDocumentCommand, Document>(MemberList.None);
         }
     }
@@ -61,7 +61,6 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
 
     public async Task<Result<int>> Handle(AddEditDocumentCommand request, CancellationToken cancellationToken)
     {
-
         if (request.Id > 0)
         {
             var document = await _context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);

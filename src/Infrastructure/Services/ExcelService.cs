@@ -40,6 +40,7 @@ public class ExcelService : IExcelService
 
                 colIndex++;
             }
+
             using (var stream = new MemoryStream())
             {
                 workbook.SaveAs(stream);
@@ -77,6 +78,7 @@ public class ExcelService : IExcelService
 
                 colIndex++;
             }
+
             var dataList = data.ToList();
             foreach (var item in dataList)
             {
@@ -86,10 +88,9 @@ public class ExcelService : IExcelService
                 var result = headers.Select(header => mappers[header](item));
 
                 foreach (var value in result)
-                {
-                    ws.Cell(rowIndex, colIndex++).Value = value==null?Blank.Value:value.ToString();
-                }
+                    ws.Cell(rowIndex, colIndex++).Value = value == null ? Blank.Value : value.ToString();
             }
+
             using (var stream = new MemoryStream())
             {
                 workbook.SaveAs(stream);
@@ -100,64 +101,50 @@ public class ExcelService : IExcelService
         }
     }
 
-    public async Task<IResult<IEnumerable<TEntity>>> ImportAsync<TEntity>(byte[] data, Dictionary<string, Func<DataRow, TEntity, object?>> mappers, string sheetName = "Sheet1")
+    public async Task<IResult<IEnumerable<TEntity>>> ImportAsync<TEntity>(byte[] data,
+        Dictionary<string, Func<DataRow, TEntity, object?>> mappers, string sheetName = "Sheet1")
     {
-
         using (var workbook = new XLWorkbook(new MemoryStream(data)))
         {
             if (!workbook.Worksheets.Contains(sheetName))
-            {
-                return await Result<IEnumerable<TEntity>>.FailureAsync(new string[] { string.Format(_localizer["Sheet with name {0} does not exist!"], sheetName) });
-            }
+                return await Result<IEnumerable<TEntity>>.FailureAsync(
+                    string.Format(_localizer["Sheet with name {0} does not exist!"], sheetName));
             var ws = workbook.Worksheet(sheetName);
             var dt = new DataTable();
             var titlesInFirstRow = true;
 
             foreach (var firstRowCell in ws.Range(1, 1, 1, ws.LastCellUsed().Address.ColumnNumber).Cells())
-            {
-                dt.Columns.Add(titlesInFirstRow ? firstRowCell.GetString() : $"Column {firstRowCell.Address.ColumnNumber}");
-            }
+                dt.Columns.Add(titlesInFirstRow
+                    ? firstRowCell.GetString()
+                    : $"Column {firstRowCell.Address.ColumnNumber}");
             var startRow = titlesInFirstRow ? 2 : 1;
             var headers = mappers.Keys.Select(x => x).ToList();
             var errors = new List<string>();
             foreach (var header in headers)
-            {
                 if (!dt.Columns.Contains(header))
-                {
                     errors.Add(string.Format(_localizer["Header '{0}' does not exist in table!"], header));
-                }
-            }
-            if (errors.Any())
-            {
-                return await Result<IEnumerable<TEntity>>.FailureAsync(errors);
-            }
+            if (errors.Any()) return await Result<IEnumerable<TEntity>>.FailureAsync(errors.ToArray());
             var lastRow = ws.LastRowUsed();
             var list = new List<TEntity>();
-            foreach (IXLRow row in ws.Rows(startRow, lastRow.RowNumber()))
-            {
+            foreach (var row in ws.Rows(startRow, lastRow.RowNumber()))
                 try
                 {
-                    DataRow dataRow = dt.Rows.Add();
-                    var item = (TEntity?)Activator.CreateInstance(typeof(TEntity))??throw new NullReferenceException($"{nameof(TEntity)}");
-                    foreach (IXLCell cell in row.Cells())
-                    {
+                    var dataRow = dt.Rows.Add();
+                    var item = (TEntity?)Activator.CreateInstance(typeof(TEntity)) ??
+                               throw new NullReferenceException($"{nameof(TEntity)}");
+                    foreach (var cell in row.Cells())
                         if (cell.DataType == XLDataType.DateTime)
-                        {
                             dataRow[cell.Address.ColumnNumber - 1] = cell.GetDateTime().ToString("yyyy-MM-dd HH:mm:ss");
-                        }
                         else
-                        {
                             dataRow[cell.Address.ColumnNumber - 1] = cell.Value.ToString();
-                        }
-                    }
                     headers.ForEach(x => mappers[x](dataRow, item));
                     list.Add(item);
                 }
                 catch (Exception e)
                 {
-                    return await Result<IEnumerable<TEntity>>.FailureAsync(new string[] { string.Format(_localizer["Sheet name {0}:{1}"], sheetName, e.Message) });
+                    return await Result<IEnumerable<TEntity>>.FailureAsync(
+                        string.Format(_localizer["Sheet name {0}:{1}"], sheetName, e.Message));
                 }
-            }
 
 
             return await Result<IEnumerable<TEntity>>.SuccessAsync(list);

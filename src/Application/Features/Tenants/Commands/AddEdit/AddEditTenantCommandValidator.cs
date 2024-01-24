@@ -11,6 +11,4 @@ public class AddEditTenantCommandValidator : AbstractValidator<AddEditTenantComm
             .MaximumLength(256)
             .NotEmpty();
     }
-
-    
 }

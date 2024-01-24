@@ -3,15 +3,12 @@
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Import;
 
-    public class ImportCustomersCommandValidator : AbstractValidator<ImportCustomersCommand>
+public class ImportCustomersCommandValidator : AbstractValidator<ImportCustomersCommand>
+{
+    public ImportCustomersCommandValidator()
     {
-        public ImportCustomersCommandValidator()
-        {
-           // TODO: Implement ImportCustomerCommandValidator method, for example: 
-           // RuleFor(v => v.Data)
-           //      .NotNull()
-           //      .NotEmpty();
-           throw new System.NotImplementedException();
-        }
+        RuleFor(v => v.Data)
+            .NotNull()
+            .NotEmpty();
     }
-
+}

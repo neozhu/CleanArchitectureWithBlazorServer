@@ -12,12 +12,12 @@ public class AuditTrailConfiguration : IEntityTypeConfiguration<AuditTrail>
     public void Configure(EntityTypeBuilder<AuditTrail> builder)
     {
         builder.HasOne(x => x.Owner)
-               .WithMany()
-               .HasForeignKey(x => x.UserId)
-               .OnDelete(DeleteBehavior.SetNull);
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
         builder.Navigation(e => e.Owner).AutoInclude();
         builder.Property(t => t.AuditType)
-           .HasConversion<string>();
+            .HasConversion<string>();
         builder.Property(e => e.AffectedColumns).HasStringListConversion();
         builder.Property(u => u.OldValues).HasJsonConversion();
         builder.Property(u => u.NewValues).HasJsonConversion();

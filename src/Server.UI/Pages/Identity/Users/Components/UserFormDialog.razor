@@ -1,0 +1,39 @@
+@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+@inherits MudComponentBase
+
+@inject IStringLocalizer<Users> L
+
+<MudDialog>
+    <DialogContent>
+        <UserForm @ref="@_userForm" Model="Model" OnFormSubmit="OnFormSubmitHandler"></UserForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">@ConstantString.Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code{
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter] public ApplicationUserDto Model { get; set; } = default!;
+
+    private UserForm? _userForm;
+
+    protected async Task Submit()
+    {
+        await _userForm!.Submit();
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    protected Task OnFormSubmitHandler(ApplicationUserDto model)
+    {
+        MudDialog.Close(DialogResult.Ok(model));
+        return Task.CompletedTask;
+    }
+
+}

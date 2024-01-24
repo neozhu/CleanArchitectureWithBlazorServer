@@ -5,14 +5,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Updat
 
 public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
 {
-        public UpdateCustomerCommandValidator()
-        {
-           // TODO: Implement UpdateCustomerCommandValidator method, for example: 
-           // RuleFor(v => v.Name)
-           //      .MaximumLength(256)
-           //      .NotEmpty();
-           throw new System.NotImplementedException();
-        }
-    
+    public UpdateCustomerCommandValidator()
+    {
+        RuleFor(v => v.Id).NotNull();
+        RuleFor(v => v.Name).MaximumLength(256).NotEmpty();
+    }
 }
-

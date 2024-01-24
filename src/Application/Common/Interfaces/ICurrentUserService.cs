@@ -11,6 +11,5 @@ public interface ICurrentUserService
     string? UserName { get; set; }
     ICollection<ApplicationUserRoleTenantDto>? UserRoles { get; set; } 
     string? TenantId { get; set; }
-    string? TenantName { get; set;}
- 
+    string? TenantName { get; set; }
 }

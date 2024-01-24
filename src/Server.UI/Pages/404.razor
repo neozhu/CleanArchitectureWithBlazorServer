@@ -1,0 +1,22 @@
+﻿@page "/404"
+@inject IStringLocalizer<SharedResource> L
+<PageTitle>Not found</PageTitle>
+<MudPaper Class="pa-16 ma-2" Elevation="3" Style="max-width: 100%;
+  height: 475px;
+  margin: 0;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;">
+
+    <h1 style="font-size: 48px; margin: 0;">
+        404 Error.
+    </h1>
+    <p style=" font-size: 16px;  width: 35%;  margin: 16px auto 24px; text-align: center;"> We can't find the page you're looking for.</p>
+    <MudButton Variant="Variant.Filled" Size="Size.Small" Href="/">@L["Go Home"]</MudButton>
+</MudPaper>
+
+@code {
+
+}

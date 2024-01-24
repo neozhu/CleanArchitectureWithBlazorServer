@@ -8,10 +8,10 @@ using CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
 
-public class ExportProductsQuery : ProductAdvancedFilter,  IRequest<Result<byte[]>>
+public class ExportProductsQuery : ProductAdvancedFilter, IRequest<Result<byte[]>>
 {
     public ExportType ExportType { get; set; }
-    public ProductAdvancedSpecification Specification => new ProductAdvancedSpecification(this);
+    public ProductAdvancedSpecification Specification => new(this);
 }
 
 public class ExportProductsQueryHandler :

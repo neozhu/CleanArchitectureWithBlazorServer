@@ -1,4 +1,5 @@
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
+
 public interface ISerializer
 {
     string Serialize<T>(T value) where T : class;

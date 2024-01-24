@@ -9,14 +9,15 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Pagina
 
 public class KeyValuesWithPaginationQuery : KeyValueAdvancedFilter, ICacheableRequest<PaginatedData<KeyValueDto>>
 {
-  
+    public KeyValueAdvancedSpecification Specification => new(this);
+
     public string CacheKey => $"{nameof(KeyValuesWithPaginationQuery)},{this}";
     public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
+
     public override string ToString()
     {
         return $"Picklist:{Picklist},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
-    public KeyValueAdvancedSpecification Specification => new KeyValueAdvancedSpecification(this);
 }
 
 public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuery, PaginatedData<KeyValueDto>>
@@ -37,7 +38,8 @@ public class KeyValuesQueryHandler : IRequestHandler<KeyValuesWithPaginationQuer
         CancellationToken cancellationToken)
     {
         var data = await _context.KeyValues.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                        .ProjectToPaginatedDataAsync<KeyValue, KeyValueDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
+            .ProjectToPaginatedDataAsync<KeyValue, KeyValueDto>(request.Specification, request.PageNumber,
+                request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
 
         return data;
     }

@@ -9,10 +9,11 @@ namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Pagi
 
 public class AuditTrailsWithPaginationQuery : AuditTrailAdvancedFilter, ICacheableRequest<PaginatedData<AuditTrailDto>>
 {
-   
+    public AuditTrailAdvancedSpecification Specification => new(this);
+
     public string CacheKey => AuditTrailsCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => AuditTrailsCacheKey.MemoryCacheEntryOptions;
-    public AuditTrailAdvancedSpecification Specification => new AuditTrailAdvancedSpecification(this);
+
     public override string ToString()
     {
         return
@@ -41,10 +42,9 @@ public class AuditTrailsQueryHandler : IRequestHandler<AuditTrailsWithPagination
         CancellationToken cancellationToken)
     {
         var data = await _context.AuditTrails.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                        .ProjectToPaginatedDataAsync<AuditTrail, AuditTrailDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
+            .ProjectToPaginatedDataAsync<AuditTrail, AuditTrailDto>(request.Specification, request.PageNumber,
+                request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
 
         return data;
     }
 }
-
-

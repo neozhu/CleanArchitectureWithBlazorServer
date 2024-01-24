@@ -48,10 +48,10 @@ public class Testing
 
         services.AddSingleton(Mock.Of<IWebHostEnvironment>(w =>
             w.EnvironmentName == "Development" &&
-            w.ApplicationName == "Blazor.Server.UI"));
+            w.ApplicationName == "Server.UI"));
 
-        services.AddInfrastructureServices(_configuration)
-            .AddApplicationServices();
+        services.AddInfrastructure(_configuration)
+            .AddApplication();
 
         //services.AddLogging();
 
@@ -66,16 +66,17 @@ public class Testing
 
         // Register testing version
         services.AddScoped(provider =>
-            Mock.Of<ICurrentUserService>(s =>  s.UserId == _currentUserId));
+            Mock.Of<ICurrentUserService>(s => s.UserId == _currentUserId));
         services.AddScoped(provider =>
             Mock.Of<ITenantProvider>(s => s.TenantId == _currentTenantId));
 
         _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
 
-        _checkpoint =await Respawner.CreateAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"), new RespawnerOptions
-        {
-            TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
-        });
+        _checkpoint = await Respawner.CreateAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"),
+            new RespawnerOptions
+            {
+                TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
+            });
 
         EnsureDatabase();
     }
@@ -122,10 +123,7 @@ public class Testing
         {
             var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
 
-            foreach (var role in roles)
-            {
-                await roleManager.CreateAsync(new IdentityRole(role));
-            }
+            foreach (var role in roles) await roleManager.CreateAsync(new IdentityRole(role));
 
             //todo enable below line by making context object
             //await userManager.AddToRolesAsyncWithTenant(user,user.TenantId, context, roles);
@@ -187,6 +185,7 @@ public class Testing
         var scope = _scopeFactory.CreateScope();
         return scope.ServiceProvider.GetRequiredService<IPicklistService>();
     }
+
     public static ITenantService CreateTenantsService()
     {
         var scope = _scopeFactory.CreateScope();

@@ -9,13 +9,15 @@ using FluentAssertions;
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.IntegrationTests.Products.Commands;
+
 using static Testing;
-internal class DeleteProductCommandTests: TestBase
+
+internal class DeleteProductCommandTests : TestBase
 {
     [Test]
-        public void ShouldRequireValidKeyValueId()
+    public void ShouldRequireValidKeyValueId()
     {
-        var command = new DeleteProductCommand(new int[] { 99 });
+        var command = new DeleteProductCommand(new[] { 99 });
 
         FluentActions.Invoking(() =>
             SendAsync(command)).Should().ThrowAsync<NotFoundException>();
@@ -24,23 +26,26 @@ internal class DeleteProductCommandTests: TestBase
     [Test]
     public async Task ShouldDeleteOne()
     {
-        var addCommand = new AddEditProductCommand() { Name = "Test", Brand = "Brand", Price = 100m, Unit = "EA", Description = "Description" };
+        var addCommand = new AddEditProductCommand
+            { Name = "Test", Brand = "Brand", Price = 100m, Unit = "EA", Description = "Description" };
         var result = await SendAsync(addCommand);
 
-        await SendAsync(new DeleteProductCommand(new int[] { result.Data }));
+        await SendAsync(new DeleteProductCommand(new[] { result.Data }));
 
         var item = await FindAsync<Product>(result.Data);
 
         item.Should().BeNull();
     }
+
     [SetUp]
     public async Task InitData()
     {
-        await AddAsync(new Product() { Name = "Test1" });
-        await AddAsync(new Product() { Name = "Test2" });
-        await AddAsync(new Product() { Name = "Test3" });
-        await AddAsync(new Product() { Name = "Test4" });
+        await AddAsync(new Product { Name = "Test1" });
+        await AddAsync(new Product { Name = "Test2" });
+        await AddAsync(new Product { Name = "Test3" });
+        await AddAsync(new Product { Name = "Test4" });
     }
+
     [Test]
     public async Task ShouldDeleteAll()
     {
@@ -53,7 +58,5 @@ internal class DeleteProductCommandTests: TestBase
 
         var deleteResult = await SendAsync(query);
         deleteResult.Should().BeNullOrEmpty();
-
-
     }
 }

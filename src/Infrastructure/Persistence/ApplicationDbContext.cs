@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using CleanArchitecture.Blazor.Domain.Entities.Logger;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Common.Entities;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
@@ -64,8 +66,6 @@ public class ApplicationDbContext : IdentityDbContext<
         optionsBuilder.LogTo(Console.WriteLine);
         if (!optionsBuilder.IsConfigured)
         {
-
         }
     }
-
 }

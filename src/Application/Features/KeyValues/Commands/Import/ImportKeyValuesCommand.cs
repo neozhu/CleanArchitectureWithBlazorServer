@@ -107,7 +107,7 @@ public class ImportKeyValuesCommandHandler :
                 }
             }
 
-            if (errorsOccurred) return await Result.FailureAsync(errors);
+            if (errorsOccurred) return await Result.FailureAsync(errors.ToArray());
 
             await _context.SaveChangesAsync(cancellationToken);
             return await Result.SuccessAsync();

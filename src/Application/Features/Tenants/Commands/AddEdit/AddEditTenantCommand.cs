@@ -30,7 +30,7 @@ public class AddEditTenantCommand : ICacheInvalidatorRequest<Result<string>>
     {
         public Mapping()
         {
-            CreateMap<TenantDto,AddEditTenantCommand>(MemberList.None);
+            CreateMap<TenantDto, AddEditTenantCommand>(MemberList.None);
             CreateMap<AddEditTenantCommand, Tenant>(MemberList.None);
         }
     }
@@ -38,10 +38,10 @@ public class AddEditTenantCommand : ICacheInvalidatorRequest<Result<string>>
 
 public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand, Result<string>>
 {
-    private readonly ITenantService _tenantsService;
     private readonly IApplicationDbContext _context;
     private readonly IStringLocalizer<AddEditTenantCommandHandler> _localizer;
     private readonly IMapper _mapper;
+    private readonly ITenantService _tenantsService;
 
     public AddEditTenantCommandHandler(
         ITenantService tenantsService,
@@ -58,8 +58,7 @@ public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand,
 
     public async Task<Result<string>> Handle(AddEditTenantCommand request, CancellationToken cancellationToken)
     {
-    
-        var item = await _context. Tenants.FindAsync(new object[] { request.Id }, cancellationToken);
+        var item = await _context.Tenants.FindAsync(new object[] { request.Id }, cancellationToken);
         if (item is null)
         {
             item = _mapper.Map<Tenant>(request);

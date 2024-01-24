@@ -11,6 +11,4 @@ public class AddEditKeyValueCommandValidator : AbstractValidator<AddEditKeyValue
         RuleFor(v => v.Text).MaximumLength(256).NotEmpty();
         RuleFor(v => v.Value).MaximumLength(256).NotEmpty();
     }
-
-    
 }

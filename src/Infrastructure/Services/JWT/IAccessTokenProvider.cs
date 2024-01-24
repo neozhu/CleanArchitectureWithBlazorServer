@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
+﻿using CleanArchitecture.Blazor.Domain.Identity;
+
+namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 
 public interface IAccessTokenProvider
 {
@@ -6,6 +8,7 @@ public interface IAccessTokenProvider
     string? RefreshToken { get; }
 
     Task<ClaimsPrincipal> GetClaimsPrincipal();
-    Task Login(ApplicationUser applicationUser);
-    Task RemoveAuthDataFromStorage();
+    Task<ClaimsPrincipal> ParseClaimsFromJwt(string? accessToken);
+    Task<string?> Login(ApplicationUser applicationUser);
+    ValueTask RemoveAuthDataFromStorage();
 }

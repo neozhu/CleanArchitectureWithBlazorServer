@@ -1,4 +1,3 @@
-
 namespace CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 #nullable disable warnings
 public class ProductAdvancedSpecification : Specification<Product>
@@ -14,17 +13,15 @@ public class ProductAdvancedSpecification : Specification<Product>
             today.AddDays(-30).ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
             CultureInfo.CurrentCulture);
         Query.Where(x => x.Name != null)
-             .Where(x => x.Name!.Contains(filter.Keyword) || x.Description!.Contains(filter.Keyword) ||
-                     x.Brand!.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword))
-             .Where(x => x.Name!.Contains(filter.Name), !string.IsNullOrEmpty(filter.Name))
-             .Where(x => x.Unit == filter.Unit, !string.IsNullOrEmpty(filter.Unit))
-             .Where(x => x.Brand == filter.Brand, !string.IsNullOrEmpty(filter.Brand))
-             .Where(x => x.Price <= filter.MaxPrice, !string.IsNullOrEmpty(filter.Brand))
-             .Where(x => x.Price >= filter.MinPrice, filter.MinPrice is not null)
-             .Where(x => x.CreatedBy == filter.CurrentUser.UserId, filter.ListView == ProductListView.My)
-             .Where(x => x.Created >= start && x.Created <= end, filter.ListView == ProductListView.CreatedToday)
-             .Where(x => x.Created >= last30day, filter.ListView == ProductListView.Created30Days);
-
-        
+            .Where(x => x.Name!.Contains(filter.Keyword) || x.Description!.Contains(filter.Keyword) ||
+                        x.Brand!.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword))
+            .Where(x => x.Name!.Contains(filter.Name), !string.IsNullOrEmpty(filter.Name))
+            .Where(x => x.Unit == filter.Unit, !string.IsNullOrEmpty(filter.Unit))
+            .Where(x => x.Brand == filter.Brand, !string.IsNullOrEmpty(filter.Brand))
+            .Where(x => x.Price <= filter.MaxPrice, !string.IsNullOrEmpty(filter.Brand))
+            .Where(x => x.Price >= filter.MinPrice, filter.MinPrice is not null)
+            .Where(x => x.CreatedBy == filter.CurrentUser.UserId, filter.ListView == ProductListView.My)
+            .Where(x => x.Created >= start && x.Created <= end, filter.ListView == ProductListView.CreatedToday)
+            .Where(x => x.Created >= last30day, filter.ListView == ProductListView.Created30Days);
     }
 }

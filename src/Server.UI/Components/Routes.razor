@@ -1,0 +1,25 @@
+﻿@inject IStringLocalizer<SharedResource> L
+@inject NavigationManager NavManager
+@inject LayoutService LayoutService
+
+<Fluxor.Blazor.Web.StoreInitializer/>
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(Program).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <Authorizing>
+                    <text>@L["Please wait, we are authorizing you..."]</text>
+                </Authorizing>
+                <NotAuthorized>
+                    <RedirectToLogin/>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+        </Found>
+    </Router>
+</CascadingAuthenticationState>
+
+@code
+{
+
+}

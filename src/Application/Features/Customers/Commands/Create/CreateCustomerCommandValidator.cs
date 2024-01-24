@@ -7,12 +7,8 @@ public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCo
 {
     public CreateCustomerCommandValidator()
     {
-        // TODO: Implement CreateCustomerCommandValidator method, for example: 
-        // RuleFor(v => v.Name)
-        //      .MaximumLength(256)
-        //      .NotEmpty();
-        throw new System.NotImplementedException();
+        RuleFor(v => v.Name)
+            .MaximumLength(256)
+            .NotEmpty();
     }
-   
 }
-

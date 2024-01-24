@@ -1,6 +1,8 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CleanArchitecture.Blazor.Domain.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using System.Text.Json;
 using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
 using Newtonsoft.Json;
@@ -17,6 +19,7 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
     {
         _userManager = userManager;
     }
+
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
         var principal = await base.CreateAsync(user);
@@ -27,32 +30,28 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
             });
         }
         if (!string.IsNullOrEmpty(user.TenantId))
-        {
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[]
+            {
                 new Claim(ApplicationClaimTypes.TenantId, user.TenantId)
             });
-        }
         if (!string.IsNullOrEmpty(user.TenantName))
-        {
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[]
+            {
                 new Claim(ApplicationClaimTypes.TenantName, user.TenantName)
             });
-        }
         if (!string.IsNullOrEmpty(user.SuperiorId))
-        {
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[]
+            {
                 new Claim(ApplicationClaimTypes.SuperiorId, user.SuperiorId)
             });
-        }
         if (!string.IsNullOrEmpty(user.DisplayName))
-        {
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[]
+            {
                 new Claim(ClaimTypes.GivenName, user.DisplayName)
             });
-        }
         if (!string.IsNullOrEmpty(user.ProfilePictureDataUrl))
-        {
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[]
+            {
                 new Claim(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl)
             });
         }
@@ -65,6 +64,7 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
                 new Claim(ApplicationClaimTypes.AssignedRoles, rolesStr)
             });
         }
+
         return principal;
     }
 }

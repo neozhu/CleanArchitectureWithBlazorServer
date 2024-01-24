@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+using CleanArchitecture.Blazor.Domain.Identity;
 using LazyCache;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
+
 public class UserDataProvider : IUserDataProvider
 {
     private const string CACHEKEY = "ALL-ApplicationUserDto";
@@ -11,8 +13,6 @@ public class UserDataProvider : IUserDataProvider
     private readonly IMapper _mapper;
     private readonly CustomUserManager _userManager;
     public List<ApplicationUserDto> DataSource { get; private set; }
-
-    public event Action? OnChange;
 
     public UserDataProvider(
         IAppCache cache,
@@ -25,6 +25,11 @@ public class UserDataProvider : IUserDataProvider
         _userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>();
         DataSource = new List<ApplicationUserDto>();
     }
+
+    public List<ApplicationUserDto> DataSource { get; private set; }
+
+    public event Action? OnChange;
+
     public void Initialize()
     {
         DataSource = _cache.GetOrAdd(CACHEKEY,()=>_userManager.Users.Include(x => x.UserRoleTenants).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x=>x.UserName).ToList());
@@ -42,6 +47,5 @@ public class UserDataProvider : IUserDataProvider
         _cache.Remove(CACHEKEY);
         DataSource = await _cache.GetOrAddAsync(CACHEKEY, () => _userManager.Users.Include(x => x.UserRoleTenants).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x => x.UserName).ToListAsync());
         OnChange?.Invoke();
-       
     }
 }

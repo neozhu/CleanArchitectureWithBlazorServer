@@ -2,5 +2,5 @@
 
 public interface IAccessTokenGenerator
 {
-    Task<string> GenerateAccessToken(ApplicationUser user);
+    string GenerateAccessToken(ClaimsPrincipal user);
 }
