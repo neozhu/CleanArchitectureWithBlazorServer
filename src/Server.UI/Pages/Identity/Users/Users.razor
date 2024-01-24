@@ -1,9 +1,14 @@
-@inherits OwningComponentBase
+﻿@inherits OwningComponentBase
+@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+@using CleanArchitecture.Blazor.Domain.Enums
+@using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
 @using CleanArchitecture.Blazor.Infrastructure.Persistence;
+@using CleanArchitecture.Blazor.Server.UI.Models.Identity
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
 @using LazyCache
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
-@using CleanArchitecture.Blazor.Application.Constants.ClaimTypes
 
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
 @using Blazor.Server.UI.Pages.Identity.Roles
@@ -342,7 +347,7 @@
 
 
     protected override async Task OnInitializedAsync()
-    {
+        {
 
         UserManager = ScopedServices.GetRequiredService<CustomUserManager>();
         RoleManager = ScopedServices.GetRequiredService<CustomRoleManager>();
@@ -362,16 +367,16 @@
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
         _tenants = TenantsService.DataSource.Select(x => x.Name).ToList();//fetch tenants based on user level permissions
-    }
+        }
     private bool isOnline(string username)
-    {
+        {
         return UsersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
-    }
+        }
 
     private async Task<GridData<ApplicationUserDto>> ServerReload(GridState<ApplicationUserDto> state)
-    {
-        try
         {
+        try
+            {
             var userState = await AuthState;
             var tenantId = userState.User.GetTenantId();//had to get all active tenants and type
             var roles = userState.User.GetAssignRoles();
@@ -387,14 +392,14 @@
 
             //TODO nxt Instead of writing logic here ,do in backend & use here
             if (!string.IsNullOrEmpty(_searchRole))
-            {
+                {
                 query = query.Where(x => x.UserRoleTenants.Any(y => y.Role.Name == _searchRole));
-            }
+                }
             if (!string.IsNullOrEmpty(_searchTenant))
-            {
+                {
                 //todo change this to tenantId
                 query = query.Where(x => x.UserRoleTenants.Any(y => y.Tenant.Name == _searchTenant));
-            }
+                }
             var items = await query
                  .Include(x => x.UserRoleTenants)
                  .Include(x => x.Superior)
@@ -407,49 +412,49 @@
             //user search separate page
             var total = await UserManager.Users.CountAsync(searchPredicate);
             return new GridData<ApplicationUserDto> { TotalItems = total, Items = items };
-        }
+            }
         finally
-        {
+            {
             _loading = false;
+            }
         }
-    }
 
     private async Task OnSearch(string text)
-    {
+        {
         if (_loading) return;
         _searchString = text.ToLower();
         await _table.ReloadServerData();
-    }
+        }
 
     private async Task OnSearchRole(string role)
-    {
+        {
         if (_loading) return;
         _searchRole = role;
         await _table.ReloadServerData();
-    }
+        }
     private async Task OnSearchTenant(string tenant)
-    {
+        {
         if (_loading) return;
         _searchTenant = tenant;
         await _table.ReloadServerData();
-    }
+        }
 
     private async Task OnRefresh()
-    {
+        {
         await _table.ReloadServerData();
-    }
+        }
     private async Task OnCreate()
-    {
+        {
         var userState = await AuthState;
         var model = new ApplicationUserDto { Provider = "Local", Email = "",TenantId= userState.User.GetTenantId()
         ,TenantName=userState.User.GetTenantName() ,
         UserRoleTenants=userState.User.GetUserRoleTenants()
         ,UserName = "", AssignedRoles = new[] { RoleNamesEnum.Patient.ToString() } };
-        var parameters = new DialogParameters<_UserFormDialog> {
+        var parameters = new DialogParameters<UserFormDialog> {
             { x=>x.Model,model }
            };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
+        var dialog = DialogService.Show<UserFormDialog>(L["Create a new user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
         {
@@ -497,11 +502,11 @@
     private async Task OnEdit(ApplicationUserDto item)
     {
 
-        var parameters = new DialogParameters<_UserFormDialog> {
+        var parameters = new DialogParameters<UserFormDialog> {
             { x=>x.Model,item }
            };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
+        var dialog = DialogService.Show<UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
         {
@@ -664,11 +669,11 @@
         {
 
         var model = new ResetPasswordFormModel { Id = item.Id, DisplayName = item.DisplayName, UserName = item.UserName, ProfilePictureDataUrl = item.ProfilePictureDataUrl };
-        var parameters = new DialogParameters<_ResetPasswordDialog> {
+        var parameters = new DialogParameters<ResetPasswordDialog> {
             {x=>x.Model, model }
         };
         var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = DialogService.Show<_ResetPasswordDialog>(L["Set Password"], parameters, options);
+        var dialog = DialogService.Show<ResetPasswordDialog>(L["Set Password"], parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
             {

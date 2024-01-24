@@ -1,6 +1,9 @@
-using Blazor.Server.UI.Models.NavigationMenu;
- 
+﻿//using Blazor.Server.UI.Models.NavigationMenu;
+using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
+
+
 using CleanArchitecture.Blazor.Domain.Enums;
+using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
 
 namespace Blazor.Server.UI.Services.Navigation;
 

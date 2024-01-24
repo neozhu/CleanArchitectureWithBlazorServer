@@ -1,10 +1,13 @@
-using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
+﻿using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
+using CleanArchitecture.Blazor.Domain.Enums;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using CleanArchitecture.Blazor.Infrastructure.Common.Extensions;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 namespace CleanArchitecture.Blazor.Server.EndPoints;
 
@@ -13,7 +16,8 @@ public class AuthController : Controller
     private readonly IDataProtectionProvider _dataProtectionProvider;
     private readonly ILogger<AuthController> _logger;
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly CustomUserManager _userManager;
+    private readonly CustomRoleManager _roleManager;
 
     public AuthController(
         ILogger<AuthController> logger,

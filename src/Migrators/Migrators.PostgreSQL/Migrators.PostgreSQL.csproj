@@ -10,7 +10,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj"/>
+      <Compile Remove="Migrations\20230425144203_Init.Designer.cs" />
+      <Compile Remove="Migrations\20231012104644_InitialCreate.cs" />
+      <Compile Remove="Migrations\20231012104644_InitialCreate.Designer.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

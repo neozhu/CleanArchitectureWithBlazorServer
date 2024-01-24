@@ -1,4 +1,4 @@
-@page "/identity/roles"
+﻿@page "/identity/roles"
 @using Severity = Severity
 @using LazyCache
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
@@ -13,7 +13,8 @@
 @attribute [Authorize(Policy = Permissions.Roles.View)]
 @inherits OwningComponentBase
 
-@inject RoleManager<ApplicationRole> RoleManager
+@* @inject RoleManager<ApplicationRole> RoleManager *@
+@inject CustomRoleManager RoleManager
 @inject IAppCache Cache
 @inject IStringLocalizer<Roles> L
 
@@ -202,13 +203,7 @@
     private HashSet<ApplicationRoleDto> _selectedItems = new();
     private readonly ApplicationRoleDto _currentDto = new();
     private string _searchString = string.Empty;
-    private string? Title { get; set; }
-
-    [CascadingParameter]
-    private Task<AuthenticationState> AuthState { get; set; } = default!;
-
-    private CustomRoleManager RoleManager { get; set; } = default!;
-
+  
     private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
     private LazyCacheEntryOptions Options => new LazyCacheEntryOptions().SetAbsoluteExpiration(RefreshInterval, ExpirationMode.LazyExpiration);
 

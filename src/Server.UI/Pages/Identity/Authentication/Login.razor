@@ -1,4 +1,4 @@
-@page "/pages/authentication/login" 
+﻿@page "/pages/authentication/login" 
 @using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -18,7 +18,8 @@
 @inject IJSRuntime JS
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
-@inject UserManager<ApplicationUser> UserManager
+@* @inject UserManager<ApplicationUser> UserManager *@
+@inject CustomUserManager UserManager
 @inject IIdentityService IdentityService
 @inject IDataProtectionProvider DataProtectionProvider
 @inject IValidationService Validator
@@ -99,28 +100,10 @@
     private bool _success;
     private bool _loading;
     [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
-    private CustomUserManager UserManager { get; set; } = default!;
-
+ 
     private CustomRoleManager RoleManager { get; set; } = default!;
     private IAccessTokenProvider AccessTokenProvider { get; set; } = default!;
-
-    private readonly LoginFormModel _model = new()
-    {
-        UserName = "administrator",
-        Password = "Password123!",
-        RememberMe = true
-    };
-    [Inject]
-    private ILogger<Login> Logger { get; set; } = default!;
-
-    [Inject]
-    private IDataProtectionProvider DataProtectionProvider { get; set; } = default!;
-
-    [Inject]
-    protected NavigationManager NavigationManager { get; set; } = null!;
-    [Inject]
-    protected IIdentityService _identityService { get; set; } = null!;
-
+ 
     private LoginFormModel _model = new()
         {
             UserName = UserName.Administrator,// "administrator",
