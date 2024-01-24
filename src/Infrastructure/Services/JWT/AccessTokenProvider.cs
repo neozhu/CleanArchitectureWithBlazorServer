@@ -27,7 +27,8 @@ public class AccessTokenProvider : IAccessTokenProvider
     private readonly string _tokenKey = nameof(_tokenKey);
     private readonly IAccessTokenValidator _tokenValidator;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
-    private readonly UserManager<ApplicationUser> _userManager;
+    //private readonly UserManager<ApplicationUser> _userManager;
+    private readonly CustomUserManager _userManager;
 
     private readonly IMapper _mapper;
 
@@ -41,7 +42,7 @@ public class AccessTokenProvider : IAccessTokenProvider
         ICurrentUserService currentUser, IMapper mapper)
     {
         var scope = scopeFactory.CreateScope();
-        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>();
         _userClaimsPrincipalFactory =
             scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _localStorage = localStorage;

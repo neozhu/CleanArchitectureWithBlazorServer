@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -121,9 +121,11 @@ public class Testing
 
         if (roles.Any())
         {
-            var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+            //var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+            var roleManager = scope.ServiceProvider.GetService<CustomRoleManager>();
 
-            foreach (var role in roles) await roleManager.CreateAsync(new IdentityRole(role));
+            //foreach (var role in roles) await roleManager.CreateAsync(new IdentityRole(role));
+            foreach (var role in roles) await roleManager.CreateAsync(new ApplicationRole(role));
 
             //todo enable below line by making context object
             //await userManager.AddToRolesAsyncWithTenant(user,user.TenantId, context, roles);

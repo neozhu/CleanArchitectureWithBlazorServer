@@ -1,4 +1,4 @@
-@page "/pages/authentication/register"
+﻿@page "/pages/authentication/register"
 
 @attribute [AllowAnonymous]
 @using Severity = Severity
@@ -9,7 +9,8 @@
 @inherits OwningComponentBase
 
 @inject NavigationManager Navigation
-@inject UserManager<ApplicationUser> UserManager
+@* @inject UserManager<ApplicationUser> UserManager *@
+@inject CustomUserManager UserManager
 @inject IMailService MailService
 @inject IStringLocalizer<Register> L
 @inject IValidationService Validator

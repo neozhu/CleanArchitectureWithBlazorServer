@@ -1,4 +1,4 @@
-@page "/pages/authentication/forgot-password"
+﻿@page "/pages/authentication/forgot-password"
 
 @attribute [AllowAnonymous]
 @using Severity = Severity
@@ -73,12 +73,13 @@
     private string _inputToken = string.Empty;
 
     private readonly ApplicationUser? _user = null;
-    private UserManager<ApplicationUser> UserManager { get; set; } = null!;
+    // private UserManager<ApplicationUser> UserManager { get; set; } = null!;
+    private CustomUserManager UserManager { get; set; } = null!;
 
     protected override Task OnInitializedAsync()
     {
         Title = L["Forgot Password"];
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        UserManager = ScopedServices.GetRequiredService<CustomUserManager>();
         return base.OnInitializedAsync();
     }
 
