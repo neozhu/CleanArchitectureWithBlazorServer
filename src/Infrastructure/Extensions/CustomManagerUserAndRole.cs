@@ -121,8 +121,10 @@ public class CustomUserManager : UserManager<ApplicationUser>
     }
     public async Task<ApplicationUser?> FindByNameForLocalAccountAsync(string userName)
     {//Since local account validation expects hash and all so get it from default.In real time its performance overhead.
-        //TODO need to validate which is best in performance
-        return await base.FindByNameAsync(userName);
+     //TODO need to validate which is best in performance
+
+        return await FindByNameAsync(userName);
+        // return await base.FindByNameAsync(userName);
     }
     public override async Task<ApplicationUser?> FindByNameAsync(string userName)
     {

@@ -23,12 +23,7 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
         var principal = await base.CreateAsync(user);
-        if (user.UserRoleTenants != null && user.UserRoleTenants.Any())
-        {
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
-                new Claim(ApplicationClaimTypes.UserRoles,JsonConvert.SerializeObject(user.UserRoleTenants))
-            });
-        }
+
         if (!string.IsNullOrEmpty(user.TenantId))
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[]
             {
@@ -60,6 +55,10 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
             var rolesStr = string.Join(",", user.UserRoleTenants.Select(x => x.RoleName));
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
                 new Claim(ApplicationClaimTypes.AssignedRoles, rolesStr)
+            });
+
+            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[] {
+                new Claim(ApplicationClaimTypes.UserRoles,JsonConvert.SerializeObject(user.UserRoleTenants))
             });
         }
 

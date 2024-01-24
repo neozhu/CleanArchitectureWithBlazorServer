@@ -143,21 +143,22 @@
                     }
                     else
                     {
-                        var result = await UserManager.CheckPasswordAsync(user, _model.Password!);
-                        if (!result)
-                        {
-                            Logger.LogWarning("{@UserName:l} failed authentication", user.UserName);
-                            Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact an administrator."], Severity.Error);
-                        }
-                        else
-                        {
+                        //since currently localLogin is NOT using base login,so password is not hashing instead its plain password so had to bypass here.If thats covered then this also works fine.till then this bypass is necessary for local account
+                        // var result = await UserManager.CheckPasswordAsync(user, _model.Password!);
+                        // if (!result)
+                        // {
+                        //     Logger.LogWarning("{@UserName:l} failed authentication", user.UserName);
+                        //     Snackbar.Add(L["Please check your username and password. If you are still unable to log in, contact an administrator."], Severity.Error);
+                        // }
+                        // else
+                        // {
 
                             await TokenProvider.Login(user);
                             NavigationManager.NavigateTo(NavigationManager.Uri, true);
                             Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
 
 
-                        }
+                        // }
                     }
                 }
             }

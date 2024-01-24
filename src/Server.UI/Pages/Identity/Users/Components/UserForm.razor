@@ -177,6 +177,8 @@ using CleanArchitecture.Blazor.Domain.Identity;
         //take all standard roles from default structure and then add more assigned from??????????????????? Userroles table
         //step1: load standard roles as per tenant
         //step2: update assigned roles
+
+        //for new user,get my allowed tenants & respective roles I can asssign only had to be shown on page
         var tenant = TenantsService.DataSource.Find(x => x.Id == Model.TenantId);
         if (tenant != null)
             {

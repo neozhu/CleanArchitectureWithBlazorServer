@@ -1,4 +1,4 @@
-Tenants for user user edit page to add other new tenant....more logic improve
+﻿Tenants for user user edit page to add other new tenant....more logic improve
 
 
 mostly done verify??????????islive is not updating for logged in user...need to do
@@ -96,6 +96,14 @@ All ROles Add,edit,view,delete
 
 self register, assign default tenant and default role as guest
 -externallogin
+Login/SignInExternal("Google") => ConfirmExternal(string provider, string userName, string name, string accessToken)
+=>ExternalLogin(string provider, string userName, string name, string accessToken)
+
+-LocalLogin
+OnInitializedAsync()=> OnSubmit() =>Welcome page
+
+-Both login afterwards calls,
+=> await TokenProvider.Login(user);
 
 
 others adding then add under creator tenant if not then add default tenant & role
