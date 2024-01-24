@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.IdentityModel.Tokens.Jwt;
@@ -12,6 +12,7 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
@@ -130,6 +131,9 @@ public static class DependencyInjection
         services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
         services.AddTransient<IApplicationDbContext>(provider =>
             provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
+        services.AddScoped<CustomUserManager>();
+        services.AddScoped<CustomRoleManager>();
+        
         services.AddScoped<ApplicationDbContextInitializer>();
 
         return services;

@@ -2,6 +2,7 @@
 using System.Reflection;
 using Blazor.Server.UI.Services.Navigation;
 using BlazorDownloadFile;
+using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Server.Hubs;
 using CleanArchitecture.Blazor.Server.Middlewares;
@@ -61,7 +62,7 @@ public static class DependencyInjection
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
             .AddScoped<IMenuService, MenuService>()
             .AddScoped<INotificationService, InMemoryNotificationService>();
-
+        services.AddScoped<StaticData>();
         return services;
     }
 
