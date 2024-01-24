@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using CleanArchitecture.Blazor.Infrastructure.Common.Extensions;
 using static CleanArchitecture.Blazor.Infrastructure.Constants.Permission.Permissions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 

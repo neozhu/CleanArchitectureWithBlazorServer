@@ -5,6 +5,7 @@ using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using System.Text.Json;
 using Newtonsoft.Json;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 #nullable disable

@@ -7,6 +7,8 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Enums;
 using Microsoft.Extensions.DependencyInjection;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 public class ApplicationDbContextInitializer

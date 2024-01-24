@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using LazyCache;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;

@@ -11,6 +11,7 @@ using FluentEmail.Core;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Newtonsoft.Json;
+using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 
@@ -27,6 +28,8 @@ public class AccessTokenProvider : IAccessTokenProvider
     private readonly IAccessTokenValidator _tokenValidator;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly UserManager<ApplicationUser> _userManager;
+
+    private readonly IMapper _mapper;
 
     public AccessTokenProvider(IServiceScopeFactory scopeFactory,
         ProtectedLocalStorage localStorage,
@@ -48,6 +51,7 @@ public class AccessTokenProvider : IAccessTokenProvider
         _tokenGenerator = tokenGenerator;
         _tenantProvider = tenantProvider;
         _currentUser = currentUser;
+        _mapper = mapper;
     }
 
     public string? AccessToken { get; private set; }
@@ -60,6 +64,8 @@ public class AccessTokenProvider : IAccessTokenProvider
         await _localStorage.SetAsync(_tokenKey, token);
         AccessToken = token.AccessToken;
         RefreshToken = token.RefreshToken;
+       
+        //extra in nammadhu
         _tenantProvider.TenantId = applicationUser.TenantId;
         _tenantProvider.TenantName = applicationUser.TenantName;
         _currentUser.UserId = applicationUser.Id;
@@ -69,6 +75,8 @@ public class AccessTokenProvider : IAccessTokenProvider
         applicationUser.UserRoleTenants.ForEach(x => _currentUser.UserRoles.Add(_mapper.Map<ApplicationUserRoleTenantDto>(x)));
         _currentUser.TenantId = applicationUser.TenantId;
         _currentUser.TenantName = applicationUser.TenantName;
+       
+        
         SetUserPropertiesFromClaimsPrincipal(principal);
         return AccessToken;
     }
