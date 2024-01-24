@@ -108,38 +108,41 @@ using CleanArchitecture.Blazor.Domain.Identity;
 
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
-            <div class="d-fex">
-                <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
-            </div>
-        </MudItem>
+                <div class="d-fex">
+                    <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
+                </div>
+            </MudItem>
 
 
-        <MudItem sm="6" xs="12">
-            <MudSelect For="@(() => Model.TenantId)"
-                       T="string"
-                       Label="@L["Select Tenant"]"
-                       Text="@Model.TenantName"
-                       Required="true"
-                       RequiredError="@L["Tenant is required."]"
-                       Value="@Model.TenantId"
-                       ValueChanged="TenantSelectChanged">
-                @foreach (var item in Model.UserRoleTenants)
+            <MudItem sm="6" xs="12">
+                <MudSelect For="@(() => Model.TenantId)"
+                           T="string"
+                           Label="@L["Select Tenant"]"
+                           Text="@Model.TenantName"
+                           Required="true"
+                           RequiredError="@L["Tenant is required."]"
+                           Value="@Model.TenantId"
+                           ValueChanged="TenantSelectChanged">
+                    @if (Model.UserRoleTenants != null)
                     {
-                    <MudSelectItem T="string" Value="@item.TenantId">@item.TenantName</MudSelectItem>
+                    @foreach (var item in Model.UserRoleTenants)
+                        {
+                        <MudSelectItem T="string" Value="@item.TenantId">@item.TenantName</MudSelectItem>
+                        }
                     }
             </MudSelect>
         </MudItem>
 
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
-            <div class="d-fex">
-                <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsUserTenantRolesActive" Label="@L["Is User-Tenant Roles Active"]"></MudCheckBox>
-            </div>
-        </MudItem>
-        <MudItem xs="12" sm="12">
-            <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
-            <MudGrid Class="mt-1">
-                @for (var i = 0; i < Roles.Count; i++)
+                <div class="d-fex">
+                    <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsUserTenantRolesActive" Label="@L["Is User-Tenant Roles Active"]"></MudCheckBox>
+                </div>
+            </MudItem>
+            <MudItem xs="12" sm="12">
+                <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
+                <MudGrid Class="mt-1">
+                    @for (var i = 0; i < Roles.Count; i++)
                     {
                     var x = i;
                     <MudItem xs="6" sm="6" Class="py-0 my=0">
@@ -160,9 +163,9 @@ using CleanArchitecture.Blazor.Domain.Identity;
         public byte Level { get; set; }//for hierarchy order
         }
 
-    [EditorRequired] [Parameter] public ApplicationUserDto Model { get; set; } = default!;
+    [EditorRequired][Parameter] public ApplicationUserDto Model { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
+    [EditorRequired][Parameter] public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
 
 
     private MudForm? _form = default!;
@@ -255,15 +258,15 @@ using CleanArchitecture.Blazor.Domain.Identity;
                 {
                 Model.AssignedRoles = Roles.Where(x => x.Value).Select(x => x.Key).ToArray();
                 await OnFormSubmit.InvokeAsync(Model);
+                }
             }
         }
-    }
 
     // TODO: probably this will be moved as feature in the application layer
     public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>
-    {
-        public ApplicationUserDtoValidator()
         {
+        public ApplicationUserDtoValidator()
+            {
             RuleFor(v => v.TenantId)
                 .MaximumLength(256)
                 .NotEmpty();
@@ -289,7 +292,7 @@ using CleanArchitecture.Blazor.Domain.Identity;
                 .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
             RuleFor(x => x.ConfirmPassword)
                 .Equal(x => x.Password);
-        }
+            }
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
@@ -298,6 +301,6 @@ using CleanArchitecture.Blazor.Domain.Identity;
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);
         };
-    }
+        }
 
 }
