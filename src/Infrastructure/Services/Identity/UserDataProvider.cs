@@ -26,8 +26,6 @@ public class UserDataProvider : IUserDataProvider
         DataSource = new List<ApplicationUserDto>();
     }
 
-    public List<ApplicationUserDto> DataSource { get; private set; }
-
     public event Action? OnChange;
 
     public void Initialize()

@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Security;
@@ -9,7 +9,6 @@ using p = CleanArchitecture.Blazor.Domain.Enums.PermissionsEnum;
 using FluentEmail.Core;
 using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace CleanArchitecture.Blazor.Application.Constants.Permission;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -192,32 +191,8 @@ public static class Permissions
     }
 
 
-    /// <summary>
-    /// Returns a list of Permissions.
-    /// </summary>
-    /// <returns></returns>
-    public static List<string> GetRegisteredPermissions()
-    {
-        var permissions = new List<string>();
-        foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
-        {
-            var propertyValue = prop.GetValue(null);
-            if (propertyValue is not null)
-                permissions.Add((string)propertyValue);
-        }
-        return permissions;
-    }
-    public static List<string> GetRegisteredPermissions(Type type)
-    {
-        var permissions = new List<string>();
-        foreach (var prop in type.GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
-        {
-            var propertyValue = prop.GetValue(null);
-            if (propertyValue is not null)
-                permissions.Add((string)propertyValue);
-        }
-        return permissions;
-    }
+
+
 }
 public static class Perms
 {

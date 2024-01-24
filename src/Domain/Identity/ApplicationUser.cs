@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel;
@@ -9,13 +9,7 @@ namespace CleanArchitecture.Blazor.Domain.Identity;
 
 public class ApplicationUser : IdentityUser
 {
-    public ApplicationUser()
-    {
-        UserClaims = new HashSet<ApplicationUserClaim>();
-        UserRoles = new HashSet<ApplicationUserRole>();
-        Logins = new HashSet<ApplicationUserLogin>();
-        Tokens = new HashSet<ApplicationUserToken>();
-    }
+   
 
     public string? DisplayName { get; set; }
     public string? Provider { get; set; } = "Google";
@@ -44,6 +38,7 @@ public class ApplicationUser : IdentityUser
         Logins = new HashSet<ApplicationUserLogin>();
         Tokens = new HashSet<ApplicationUserToken>();
     }
+
     //public ApplicationUser(ApplicationUser source)
     //{
     //    if (source == null)

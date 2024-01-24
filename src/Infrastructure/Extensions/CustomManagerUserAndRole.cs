@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using CleanArchitecture.Blazor.Application.Common.Extensions;
-using CleanArchitecture.Blazor.Application.Constants.Permission;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Permission;
 using CleanArchitecture.Blazor.Application.Constants.User;
 using CleanArchitecture.Blazor.Domain.Entities;
 using CleanArchitecture.Blazor.Domain.Enums;
@@ -15,7 +15,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
-using static CleanArchitecture.Blazor.Application.Constants.Permission.Permissions;
+using CleanArchitecture.Blazor.Infrastructure.Common.Extensions;
+using static CleanArchitecture.Blazor.Infrastructure.Constants.Permission.Permissions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;

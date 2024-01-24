@@ -8,16 +8,16 @@ public class DefaultAuthenticator : IAuthenticator
     private readonly IAccessTokenGenerator _tokenGenerator;
     private readonly IAccessTokenValidator _tokenValidator;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
-    private readonly UserManager<ApplicationUser> _userManager;
+    //private readonly UserManager<ApplicationUser> _userManager;
     private readonly CustomUserManager _userManager;
 
     public DefaultAuthenticator(IServiceScopeFactory scopeFactory, IAccessTokenValidator tokenValidator,
         IAccessTokenGenerator tokenGenerator)
     {
         var scope = scopeFactory.CreateScope();
-        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    }
-
+        _userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>();
+        _userClaimsPrincipalFactory =
+                scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _tokenValidator = tokenValidator;
         _tokenGenerator = tokenGenerator;
     }

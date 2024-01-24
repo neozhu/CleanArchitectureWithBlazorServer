@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using AutoMapper;
@@ -28,8 +28,6 @@ public class IdentityService : IIdentityService
     private readonly IAppCache _cache;
     private readonly IStringLocalizer<IdentityService> _localizer;
     private readonly IMapper _mapper;
-    private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
-    private readonly UserManager<ApplicationUser> _userManager;
 
     public IdentityService(
         IServiceScopeFactory scopeFactory,

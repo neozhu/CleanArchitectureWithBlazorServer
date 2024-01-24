@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 public class StaticData//only for first time

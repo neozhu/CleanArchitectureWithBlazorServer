@@ -1,5 +1,5 @@
-using CleanArchitecture.Blazor.Domain.Enums;
-
+﻿using CleanArchitecture.Blazor.Domain.Enums;
+using CleanArchitecture.Blazor.Domain.Common.Entities;
 namespace CleanArchitecture.Blazor.Domain.Entities;
 public class TenantPending : BaseAuditableEntity, IEntity<string>
 {

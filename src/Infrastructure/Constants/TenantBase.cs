@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Domain.Identity;
 using DocumentFormat.OpenXml.Wordprocessing;
+using CleanArchitecture.Blazor.Domain.Enums;
+using CleanArchitecture.Blazor.Domain.Common.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Constants;
 public class TenantBase

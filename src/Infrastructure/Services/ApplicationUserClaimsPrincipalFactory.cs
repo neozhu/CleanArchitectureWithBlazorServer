@@ -1,10 +1,9 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using System.Text.Json;
-using CleanArchitecture.Blazor.Application.Constants.ClaimTypes;
 using Newtonsoft.Json;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
@@ -54,8 +53,6 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
             {
                 new Claim(ApplicationClaimTypes.ProfilePictureDataUrl, user.ProfilePictureDataUrl)
             });
-        }
-
         //  var appUser = await UserManager.FindByIdAsync(user.Id);//this can be redundant
         if (user.UserRoleTenants != null && user.UserRoleTenants.Any())
         {
