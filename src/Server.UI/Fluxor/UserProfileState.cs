@@ -1,4 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+using CleanArchitecture.Blazor.Domain.Enums;
+using Common;
 
 namespace CleanArchitecture.Blazor.Server.UI.Fluxor;
 
@@ -34,7 +36,7 @@ public class UserProfileState
             SuperiorId = dto.SuperiorId,
             SuperiorName = dto.SuperiorName,
             AssignedRoles = dto.AssignedRoles,
-            DefaultRole = dto.DefaultRole
+            DefaultRole = dto.AssignedRoles.MaxEnumString<RoleNamesEnum>() //dto.DefaultRole
         };
     }
 

@@ -11,16 +11,16 @@ public enum TenantTypeEnum : byte
     [Description(nameof(Patient))]
     Patient = 4,
 
-    [Description("New Request for creating Hospital/Pharmacy/DiagnosticCenter")]
+    [Description("New Request for creating HOSPITAL/PHARMACY/DIAGNOSTICCENTER")]
     NewTenant = 6,
 
-    [Description("Pharmacy & Staff related")]
+    [Description("PHARMACY & Staff related")]
     PharmacyAndStaff = 15,
 
-    [Description("Diagnostic center & Staff related")]
+    [Description("DIAGNOSTICIAN center & Staff related")]
     DiagnosticsAndStaff = 20,
 
-    [Description("Hospital & All Staff related")]
+    [Description("HOSPITAL & All Staff related")]
     HospitalAndStaff = 30,
 
     Internal = 50

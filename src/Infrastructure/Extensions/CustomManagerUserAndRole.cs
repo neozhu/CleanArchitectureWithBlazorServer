@@ -49,7 +49,7 @@ public class Repository<T> where T : class
 }
 public class CustomUserManager : UserManager<ApplicationUser>
 {
-    readonly List<string> _defaultRoles = new() { RoleNamesEnum.Patient.ToString() };
+    readonly List<string> _defaultRoles = new() { RoleNamesEnum.PATIENT.ToString() };
     private Repository<ApplicationUser> _repository;
     public const string DefaultTenantId = "";//todo make it loaded as per db
     private readonly CustomRoleManager _roleManager;
@@ -200,9 +200,11 @@ public class CustomUserManager : UserManager<ApplicationUser>
         }
     }
     public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
-    {
+    {//here role update not happening,for that separate code after this completion
+
         // Add your custom logic here before calling the base method
         // For example, you can validate user data or perform additional tasks.
+        var existingUserRoleTenants = user?.UserRoleTenants;
         try
         {
 
@@ -212,12 +214,15 @@ public class CustomUserManager : UserManager<ApplicationUser>
             {
                 var result = _dbContext.Users.Update(user);
                 var rrr = await _dbContext.SaveChangesAsync();
+                user.UserRoleTenants = existingUserRoleTenants;
                 return IdentityResult.Success;
             }
 
         }
         catch (Exception e)
         {
+            if (user != null && existingUserRoleTenants != null)
+                user.UserRoleTenants = existingUserRoleTenants;
             Console.WriteLine(e.ToString());
             return IdentityResult.Failed(new IdentityError() { Description = e.ToString() });
         }

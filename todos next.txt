@@ -1,4 +1,7 @@
-﻿Tenants for user user edit page to add other new tenant....more logic improve
+﻿make multiple tenants listing based on loggedin hierarchy & roles
+Adding new user to tenant
+
+Tenants for user user edit page to add other new tenant....more logic improve
 
 
 mostly done verify??????????islive is not updating for logged in user...need to do

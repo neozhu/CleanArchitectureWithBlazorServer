@@ -109,9 +109,9 @@ public class ApplicationDbContextInitializer
 
         // Default users
         var defaultGoogleUsers = new List<(string email, RoleNamesEnum role, TenantTypeEnum tenantType)>()
-       {("madhusudhan.veerabhadrappa@gmail.com",RoleNamesEnum.RootAdmin ,TenantTypeEnum.Internal)
-       ,("vmadhu203@gmail.com", RoleNamesEnum.HospitalAdmin, TenantTypeEnum.HospitalAndStaff)
-       ,("vmadhu2023@gmail.com", RoleNamesEnum.ViewerHospital, TenantTypeEnum.HospitalAndStaff)
+       {("madhusudhan.veerabhadrappa@gmail.com",RoleNamesEnum.ROOTADMIN ,TenantTypeEnum.Internal)
+       ,("vmadhu203@gmail.com", RoleNamesEnum.HOSPITALADMIN, TenantTypeEnum.HospitalAndStaff)
+       ,("vmadhu2023@gmail.com", RoleNamesEnum.VIEWERHOSPITAL, TenantTypeEnum.HospitalAndStaff)
        };
         //TODO change this logic hospital admin/viewer should be only under specific hospital tenant rather general
 
@@ -131,7 +131,7 @@ public class ApplicationDbContextInitializer
                             Provider = "Google",
                             IsActive = true,
                             //TenantId = _context.UserRoleTenants.First().Id,//todo need to make change
-                            //todo need to change based on selection like whether Patient/Internal/any hospital
+                            //todo need to change based on selection like whether PATIENT/Internal/any hospital
                             TenantId = tenant1.Id,//todo need to make change
                             TenantName = tenant1.Name,
                             DisplayName = email,
@@ -155,7 +155,7 @@ public class ApplicationDbContextInitializer
             {
                 if (_userManager.Users.All(u => u.UserName != administrator.UserName))
                 {
-                    await _userManager.CreateAsync(administrator, roles: new List<string> { RoleNamesEnum.RootAdmin.ToString() }, password: UserName.DefaultPassword);
+                    await _userManager.CreateAsync(administrator, roles: new List<string> { RoleNamesEnum.ROOTADMIN.ToString() }, password: UserName.DefaultPassword);
                 }
             }
         }
@@ -165,7 +165,7 @@ public class ApplicationDbContextInitializer
 
                 if (_userManager.Users.All(u => u.UserName != patient.UserName))
                 {
-                    await _userManager.CreateAsync(patient, roles: new List<string> { RoleNamesEnum.Patient.ToString() }, password: UserName.DefaultPassword);
+                    await _userManager.CreateAsync(patient, roles: new List<string> { RoleNamesEnum.PATIENT.ToString() }, password: UserName.DefaultPassword);
                 }
         }
         #endregion mustRemove
@@ -214,32 +214,32 @@ public class ApplicationDbContextInitializer
 }
 
 /*
-         _context.UserRoleTenants.Add(new Tenant { Name = "Nanjappa Hospital", Description = "Nanjappa Hospital" });
-         _context.UserRoleTenants.Add(new Tenant { Name = "Sarji Hospital", Description = "Sarji Hospital" });
-         _context.UserRoleTenants.Add(new Tenant { Name = "Narayana Hospital", Description = "Narayana Hospital" });
+         _context.UserRoleTenants.Add(new Tenant { Name = "Nanjappa HOSPITAL", Description = "Nanjappa HOSPITAL" });
+         _context.UserRoleTenants.Add(new Tenant { Name = "Sarji HOSPITAL", Description = "Sarji HOSPITAL" });
+         _context.UserRoleTenants.Add(new Tenant { Name = "Narayana HOSPITAL", Description = "Narayana HOSPITAL" });
          */
 /*
- await AddRoleAndPermissions(new ApplicationRole(RoleName.RootAdmin), permissions);
- await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminGroup), permissions);
- await AddRoleAndPermissions(new ApplicationRole(RoleName.ElevateAdminViewer), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.ROOTADMIN), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.ELEVATEADMINGROUP), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.ELEVATEADMINVIEWER), permissions);
 
- await AddRoleAndPermissions(new ApplicationRole(RoleName.Hospital), permissions);
- await AddRoleAndPermissions(new ApplicationRole(RoleName.HospitalAdmin), permissions);
- await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorHOD), permissions);
- await AddRoleAndPermissions(new ApplicationRole(RoleName.Doctor), permissions);
- await AddRoleAndPermissions(new ApplicationRole(RoleName.DoctorAssistant), permissions);
- await AddRoleAndPermissions(new ApplicationRole(RoleName.Nurse), permissions);
- await AddRoleAndPermissions(new ApplicationRole(RoleName.ViewerHospital), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.HOSPITAL), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.HOSPITALADMIN), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.DOCTORHOD), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.DOCTOR), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.DOCTORASSISTANT), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.NURSE), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.VIEWERHOSPITAL), permissions);
 
- await AddRoleAndPermissions(new ApplicationRole(RoleName.DiagnosticCenter), permissions);
- await AddRoleAndPermissions(new ApplicationRole(RoleName.Diagnostic), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.DIAGNOSTICCENTER), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.DIAGNOSTICIAN), permissions);
 
- await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacy), permissions);
- await AddRoleAndPermissions(new ApplicationRole(RoleName.Pharmacist), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.PHARMACY), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.PHARMACIST), permissions);
 
- await AddRoleAndPermissions(new ApplicationRole(RoleName.Patient), permissions);
+ await AddRoleAndPermissions(new ApplicationRole(RoleName.PATIENT), permissions);
  */
-//  await AddRoleAndPermissions(new ApplicationRole(RoleName.Guest), permissions);
+//  await AddRoleAndPermissions(new ApplicationRole(RoleName.GUEST), permissions);
 
 /*      var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
       if (_roleManager.Roles.All(r => r.Name != userRole.Name))

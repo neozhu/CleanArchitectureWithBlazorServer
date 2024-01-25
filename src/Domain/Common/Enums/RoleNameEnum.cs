@@ -9,31 +9,31 @@ namespace CleanArchitecture.Blazor.Domain.Enums;
 
 public enum RoleNamesEnum : byte
 {
-    RootAdmin = 50,
-    ElevateAdminGroup = 45,
-    ElevateAdminViewer = 41,
+    ROOTADMIN = 50,
+    ELEVATEADMINGROUP = 45,
+    ELEVATEADMINVIEWER = 41,
 
-    Hospital = 30,
-    HospitalAdmin = 29,
-    DoctorHOD = 28,
-    Doctor = 27,
-    DoctorAssistant = 26,
-    Nurse = 25,
-    ViewerHospital = 21,
+    HOSPITAL = 30,
+    HOSPITALADMIN = 29,
+    DOCTORHOD = 28,
+    DOCTOR = 27,
+    DOCTORASSISTANT = 26,
+    NURSE = 25,
+    VIEWERHOSPITAL = 21,
 
-    DiagnosticCenter = 20,
-    Diagnostic = 16,
+    DIAGNOSTICCENTER = 20,
+    DIAGNOSTICIAN = 16,
 
-    Pharmacy = 15,
-    Pharmacist = 11,
+    PHARMACY = 15,
+    PHARMACIST = 11,
 
-    Patient = 4,
+    PATIENT = 4,
 
-    [Description(nameof(Guest))]
-    Guest = 1,
-    Rejected = 0,
-    // public const string Guest = nameof(Guest);//vmadhu2023 =>requesting for Hospital registration , vmadhu203=>patient   ,   vmadhu2022 =>req for doctor 
-   // DefaultRole1 = Patient
+    [Description(nameof(GUEST))]
+    GUEST = 1,
+    REJECTED = 0,
+    // public const string GUEST = nameof(GUEST);//vmadhu2023 =>requesting for HOSPITAL registration , vmadhu203=>patient   ,   vmadhu2022 =>req for doctor 
+   // DefaultRole1 = PATIENT
     //public const string Basic =nameof(Basic);
     //public const string Users =nameof(Users);
 }

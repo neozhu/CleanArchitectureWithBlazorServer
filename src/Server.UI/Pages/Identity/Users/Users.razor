@@ -449,7 +449,7 @@
         var model = new ApplicationUserDto { Provider = "Local", Email = "",TenantId= userState.User.GetTenantId()
         ,TenantName=userState.User.GetTenantName() ,
         UserRoleTenants=userState.User.GetUserRoleTenants()
-        ,UserName = "", AssignedRoles = new[] { RoleNamesEnum.Patient.ToString() } };
+        ,UserName = "", AssignedRoles = new[] { RoleNamesEnum.PATIENT.ToString() } };
         var parameters = new DialogParameters<UserFormDialog> {
             { x=>x.Model,model }
            };
@@ -457,7 +457,7 @@
         var dialog = DialogService.Show<UserFormDialog>(L["Create a new user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
-        {
+            {
             var applicationUser = new ApplicationUser
                     {
                     Provider = model.Provider,
@@ -475,7 +475,7 @@
             var state = await UserManager.CreateAsync(applicationUser, model.AssignedRoles.ToList(), model.TenantId, password!);
 
             if (state.Succeeded)
-            {
+                {
                 /*
                 //todo remove this to make it as per userroles
                 if (model.AssignedRoles is not null && model.AssignedRoles.Length > 0)
@@ -491,16 +491,16 @@
                 Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
                 await  UserDataProvider.Refresh();
                 await OnRefresh();
-            }
+                }
             else
-            {
+                {
                 Snackbar.Add($"{string.Join(",", state.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+                }
             }
         }
-    }
 
     private async Task OnEdit(ApplicationUserDto item)
-    {
+        {
 
         var parameters = new DialogParameters<UserFormDialog> {
             { x=>x.Model,item }
@@ -509,7 +509,7 @@
         var dialog = DialogService.Show<UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
-        {
+            {
             //var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
             var user = await UserManager.FindByNameOrIdFullUserObject(userId: Guid.Parse(item.Id!)) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
             var state = await AuthState;
@@ -522,21 +522,25 @@
             user.IsActive = item.IsActive;
             user.IsUserTenantRolesActive = item.IsUserTenantRolesActive;
             if (user.IsUserTenantRolesActive && item.AssignedRoles != null && item.AssignedRoles.Any())//change tenant only if its IsUserTenantRolesActive & having any roles
-            {
+                {
                 user.TenantId = item.TenantId;
                 user.TenantName = item.TenantName;
-            }
+                }
             else
-            {
+                {
                 user.TenantId = user.UserRoleTenants.OrderBy(x => x.Role.Level).FirstOrDefault(ur => ur.UserId == user.Id && ur.TenantId != item.TenantId & ur.IsActive == true)?.TenantId;
                 user.TenantName = string.IsNullOrEmpty(user.TenantId) ? string.Empty : TenantsService.DataSource.Find(x => x.Id == user.TenantId)?.Name;
 
-            }
+                }
             user.SuperiorId = item.SuperiorId;
-
+          
             var identityResult = await UserManager.UpdateAsync(user);
+          
             if (identityResult.Succeeded)
             {
+                //todo madhu continue here next
+                //when rootadmin tenant changed as sarji pharmacy then issue occurring as bcz on change 
+                //in previous step making user.UserRoleTenants=null so here next no more roles avaialbale
                 int? modifyCount = 0;
                 if (item.AssignedRoles != null && item.AssignedRoles.Any() &&
                 (Guid.TryParse(user.TenantId, out Guid tid) || !user.IsUserTenantRolesActive))
