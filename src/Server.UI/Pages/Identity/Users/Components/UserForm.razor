@@ -177,6 +177,8 @@
         //step2: update assigned roles
 
         //for new user,get my allowed tenants & respective roles I can asssign only had to be shown on page
+        //madhu continue here
+        //here load all tenants below my id by default
         var tenant = TenantsService.DataSource.Find(x => x.Id == Model.TenantId);
         if (tenant != null)
             {
