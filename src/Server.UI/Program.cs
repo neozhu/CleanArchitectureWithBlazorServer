@@ -15,18 +15,19 @@ try
     };
     var builder = WebApplication.CreateBuilder(args);
 
-builder.RegisterSerilog();
-builder.WebHost.UseStaticWebAssets();
+    builder.RegisterSerilog();
+    builder.WebHost.UseStaticWebAssets();
 
-builder.Services
-    .AddApplication()
-    .AddInfrastructure(builder.Configuration)
-    .AddServer(builder.Configuration)
-    .AddServerUI(builder.Configuration);
+    builder.Services
+        .AddApplication()
+        .AddInfrastructure(builder.Configuration)
+        .AddServer(builder.Configuration)
+        .AddServerUI(builder.Configuration);
 
-var app = builder.Build();
+    var app = builder.Build();
 
-app.ConfigureServer(builder.Configuration);
+    app.ConfigureServer(builder.Configuration);
+ 
 
     if (app.Environment.IsDevelopment())
     {
@@ -51,6 +52,7 @@ app.ConfigureServer(builder.Configuration);
     using (var scope = app.Services.CreateScope())//for loading static data for first time
     {//todo alternative can be covered like cache or some more
         var initializer = scope.ServiceProvider.GetRequiredService<StaticData>();
+        await initializer.LoadAllTenants();
         await initializer.LoadUserBaseRoles();
     }
 

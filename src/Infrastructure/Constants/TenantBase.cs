@@ -44,7 +44,7 @@ public class TenantBase
             new("Nanjappa HOSPITAL,Shimoga", TenantTypeEnum.HospitalAndStaff,ApplicationRole.CreateRolesForTenantType( HospitalRoles,TenantTypeEnum.HospitalAndStaff)),
               new("Sarji HOSPITAL,Shimogga", TenantTypeEnum.HospitalAndStaff,ApplicationRole.CreateRolesForTenantType(HospitalRoles,TenantTypeEnum.HospitalAndStaff)),
     new("Sarji PHARMACY,Shivamogga",TenantTypeEnum.PharmacyAndStaff,ApplicationRole.CreateRolesForTenantType(PharmacyRoles,TenantTypeEnum.PharmacyAndStaff)),
-    new("Malnad DIAGNOSTICIAN Center,Bhadravathi", TenantTypeEnum.DiagnosticsAndStaff, ApplicationRole.CreateRolesForTenantType( DiagnosticCenterRoles,TenantTypeEnum.DiagnosticsAndStaff))
+    new("Malnad DIAGNOSTIC Center,Bhadravathi", TenantTypeEnum.DiagnosticsAndStaff, ApplicationRole.CreateRolesForTenantType( DiagnosticCenterRoles,TenantTypeEnum.DiagnosticsAndStaff))
 
             };
         return defaultTenantStructure1;

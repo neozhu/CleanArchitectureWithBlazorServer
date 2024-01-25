@@ -44,6 +44,7 @@ public class IdentityService : IIdentityService
         _cache = cache;
         _mapper = mapper;
         _localizer = localizer;
+        _appConfig = appConfig;
     }
 
     private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
@@ -51,15 +52,23 @@ public class IdentityService : IIdentityService
     private LazyCacheEntryOptions Options =>
         new LazyCacheEntryOptions().SetAbsoluteExpiration(RefreshInterval, ExpirationMode.LazyExpiration);
 
+    public async Task<List<TenantDto>> GetAllTenants()
+    {
+        var key = $"{nameof(GetAllTenants)}";
+        var tt = await _userManager.GetAllTenants();
+        var ttt=_mapper.Map<List<TenantDto>>(tt);
+        var roles = await _cache.GetOrAddAsync(key, async () =>_mapper.Map<List<TenantDto>>(await _userManager.GetAllTenants()));
+        return roles;
+    }
     public async Task<List<ApplicationRoleDto>> GetAllRoles()
     {
-        var key = $"GetAllRoles";
+        var key = $"{nameof(GetAllRoles)}";
         var roles = await _cache.GetOrAddAsync(key, async () => await _roleManager.Roles.ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider).ToListAsync());
         return roles;
     }
     public async Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default)
     {
-        var key = $"GetUserNameAsync:{userId}";
+        var key = $"{nameof(GetUserNameAsync)}:{userId}";
         var user = await _cache.GetOrAddAsync(key,
             async () => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId), Options);
         return user?.UserName;
@@ -67,7 +76,7 @@ public class IdentityService : IIdentityService
 
     public string GetUserName(string userId)
     {
-        var key = $"GetUserName-byId:{userId}";
+        var key = $"{nameof(GetUserName)}-byId:{userId}";
         var user = _cache.GetOrAdd(key, () => _userManager.Users.SingleOrDefault(u => u.Id == userId), Options);
         return user?.UserName ?? string.Empty;
     }
@@ -120,7 +129,7 @@ public class IdentityService : IIdentityService
 
     public async Task<ApplicationUserDto> GetApplicationUserDto(string userId, CancellationToken cancellation = default)
     {
-        var key = $"GetApplicationUserDto:{userId}";
+        var key = $"{nameof(GetApplicationUserDto)}:{userId}";
         var result = await _cache.GetOrAddAsync(key,
             async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoleTenants)
                 .ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
@@ -131,7 +140,7 @@ public class IdentityService : IIdentityService
     public async Task<List<ApplicationUserDto>?> GetUsers(string? tenantId, CancellationToken cancellation = default)
     {
         //TODO add pagination, change logic as map with tenant id & name kind of as per customusermanagerrole
-        var key = $"GetApplicationUserDtoListWithTenantId:{tenantId}";
+        var key = $"{nameof(GetUsers)}:{tenantId}";
         Func<string?, CancellationToken, Task<List<ApplicationUserDto>?>> getUsersByTenantId = async (tenantId, token) =>
         {
             if (string.IsNullOrEmpty(tenantId))
@@ -152,7 +161,7 @@ public class IdentityService : IIdentityService
 
     public async Task<TenantDto> GetTenantsOfUser(string userId, CancellationToken cancellation = default)
     {
-        var key = $"GetTenantsOfUser:{userId}";
+        var key = $"{nameof(GetTenantsOfUser)}:{userId}";
         var result = await _cache.GetOrAddAsync(key, async () => await _userManager.Users.Where(x => x.Id == userId).Select(x => x.UserRoleTenants.Select(ur => ur.Tenant)).ProjectTo<TenantDto>(_mapper.ConfigurationProvider).FirstAsync(cancellation), Options);
         return result;
     }

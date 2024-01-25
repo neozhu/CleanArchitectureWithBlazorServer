@@ -9,6 +9,7 @@ using CleanArchitecture.Blazor.Domain.Enums;
 using Microsoft.Extensions.DependencyInjection;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Domain.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 public class ApplicationDbContextInitializer
@@ -146,14 +147,23 @@ public class ApplicationDbContextInitializer
             }
         }
         #region mustRemove
-        var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Administrator, Email = "admin@mail.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
-        var patient = new ApplicationUser { UserName = UserName.Patient, IsActive = true, Provider = "Local", TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name, DisplayName = UserName.Patient, Email = "patient@mail.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
+        //still in seeding StaticData are not loaded so cant use that
+        var allTenants = new List<Tenant> { };
+        using (var scope = _serviceProvider.CreateScope())
+        using (_userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>())
+            allTenants = await _userManager.GetAllTenants();
+
+        var internalTenant = allTenants.FirstOrDefault(x => x.Type == (byte)TenantTypeEnum.Internal);
+        var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = internalTenant.Id, TenantName = internalTenant.Name, DisplayName = UserName.Administrator, Email = "admin@mail.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
+
+        var patientTenant = allTenants.FirstOrDefault(x => x.Type == (byte)TenantTypeEnum.Patient);
+        var patient = new ApplicationUser { UserName = UserName.Patient, IsActive = true, Provider = "Local", TenantId = patientTenant.Id, TenantName = patientTenant.Name, DisplayName = UserName.Patient, Email = "patient@mail.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
 
         using (var scope = _serviceProvider.CreateScope())
         {
             using (_userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>())
             {
-                if (_userManager.Users.All(u => u.UserName != administrator.UserName))
+                if (!_userManager.Users.Any(u => u.UserName == administrator.UserName))
                 {
                     await _userManager.CreateAsync(administrator, roles: new List<string> { RoleNamesEnum.ROOTADMIN.ToString() }, password: UserName.DefaultPassword);
                 }
@@ -163,7 +173,7 @@ public class ApplicationDbContextInitializer
         {
             using (_userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>())
 
-                if (_userManager.Users.All(u => u.UserName != patient.UserName))
+                if (!_userManager.Users.Any(u => u.UserName == patient.UserName))
                 {
                     await _userManager.CreateAsync(patient, roles: new List<string> { RoleNamesEnum.PATIENT.ToString() }, password: UserName.DefaultPassword);
                 }

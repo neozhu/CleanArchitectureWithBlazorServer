@@ -1,6 +1,9 @@
-use [9katthe]
-SELECT userid,RoleId,u.UserName,r.Name,ur.TenantId  FROM [AspNetUserRoles] ur left join AspNetUsers u on ur.UserId=u.Id left join AspNetRoles r on ur.RoleId=r.Id
-SELECT *  FROM [Tenants]
+﻿--use [9katthe]
+SELECT r.Name,ur.TenantId,t.Name,userid,RoleId,u.UserName  FROM [AspNetUserRoles] ur 
+left join AspNetUsers u on ur.UserId=u.Id 
+left join AspNetRoles r on ur.RoleId=r.Id
+left join Tenants t on ur.TenantId=t.Id
+--SELECT *  FROM [Tenants]
 --SELECT *   FROM [AspNetRoles]
 --SELECT *  FROM [AspNetUserRoles]
 --select * from [AspNetUsers]

@@ -130,6 +130,10 @@ public class CustomUserManager : UserManager<ApplicationUser>
     {
         return await FindByNameOrId(userName: userName);
     }
+    public async Task<List<Tenant>> GetAllTenants()
+    {
+        return await _dbContext.Tenants.Where(x => x.Active).ToListAsync();
+    }
     public async Task<ApplicationUser?> FindByNameOrId(string userName = "", Guid? userId = null)
     {
         if (userName.IsNullOrEmptyAndTrimSelf() && !userId.HasValue) return null;
@@ -270,7 +274,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
 
     public async Task<int?> RolesUpdateInsert(ApplicationUser user, IEnumerable<string> roleNames)
     {
-        if (user == null || user.TenantId.IsNullOrEmptyAndTrimSelf() || !Guid.TryParse(user.TenantId, out Guid id1)
+        if (user == null || user.TenantId.IsNullOrEmptyAndTrimSelf() || !Guid.TryParse(user.TenantId, out Guid tenantId)
             || user.Id.IsNullOrEmptyAndTrimSelf() || !Guid.TryParse(user.Id, out Guid id)) return null;
 
         roleNames = roleNames.Select(x => x.Trim().TrimStart().TrimEnd().ToUpper())
@@ -280,9 +284,10 @@ public class CustomUserManager : UserManager<ApplicationUser>
         {
             if (roleNames.Any())
             {
-                var existingAll = _dbContext.UserRoles.Where(role => role.UserId == user.Id && role.TenantId == user.TenantId);
-                //todo might need to include Role also to get name
-                var existing = existingAll.Where(x => roleNames.Contains(x.Role.NormalizedName!));
+                var existingAllInCurrentTenant = _dbContext.UserRoles.Include(x => x.Role).Where(role => role.UserId == user.Id && role.TenantId == user.TenantId);
+                var t1 = existingAllInCurrentTenant.ToList();
+                //save happens ata time for one tenant,so other tenant will not fetch details
+                var existing = existingAllInCurrentTenant.Where(x => roleNames.Contains(x.Role.NormalizedName!)).ToList();
                 var changesTriggered = false;
                 if (existing.All(x => x.IsActive != user.IsUserTenantRolesActive))//existing update
                 {
@@ -295,8 +300,8 @@ public class CustomUserManager : UserManager<ApplicationUser>
                     changesTriggered = true;
                 }
 
-                var toInsert = roleNames.Except(existingAll.Select(x => x.Role.NormalizedName));
-                var toRemove = existingAll.Select(x => x.Role.NormalizedName).ToList().Except(roleNames);
+                var toInsert = roleNames.Except(existingAllInCurrentTenant.Select(x => x.Role.NormalizedName)).ToList();
+                var toRemove = existingAllInCurrentTenant.Select(x => x.Role.NormalizedName).ToList().Except(roleNames).ToList();
 
                 if (toInsert.Any())
                 {
@@ -312,7 +317,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
                 }
                 if (toRemove.Any())
                 {
-                    _dbContext.UserRoles.RemoveRange(existingAll.Where(x => toRemove.Contains(x.Role.NormalizedName)));
+                    _dbContext.UserRoles.RemoveRange(existingAllInCurrentTenant.Where(x => toRemove.Contains(x.Role.NormalizedName)));
                     changesTriggered = true;
                 }
                 return changesTriggered ? await _dbContext.SaveChangesAsync() : 0;
