@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 public class ApplicationDbContextInitializer
@@ -148,7 +149,7 @@ public class ApplicationDbContextInitializer
         }
         #region mustRemove
         //still in seeding StaticData are not loaded so cant use that
-        var allTenants = new List<Tenant> { };
+        var allTenants = new List<TenantDto> { };
         using (var scope = _serviceProvider.CreateScope())
         using (_userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>())
             allTenants = await _userManager.GetAllTenants();

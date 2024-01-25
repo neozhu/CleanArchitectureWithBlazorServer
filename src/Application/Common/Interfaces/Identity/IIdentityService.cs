@@ -12,7 +12,6 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 public interface IIdentityService : IService
 {
-    Task<List<TenantDto>> GetAllTenants();
     Task<List<ApplicationRoleDto>> GetAllRoles();
 
     //Task<Result<TokenResponse>> LoginAsync(TokenRequest request, CancellationToken cancellation = default);

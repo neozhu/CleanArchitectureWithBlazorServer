@@ -52,14 +52,6 @@ public class IdentityService : IIdentityService
     private LazyCacheEntryOptions Options =>
         new LazyCacheEntryOptions().SetAbsoluteExpiration(RefreshInterval, ExpirationMode.LazyExpiration);
 
-    public async Task<List<TenantDto>> GetAllTenants()
-    {
-        var key = $"{nameof(GetAllTenants)}";
-        var tt = await _userManager.GetAllTenants();
-        var ttt=_mapper.Map<List<TenantDto>>(tt);
-        var roles = await _cache.GetOrAddAsync(key, async () =>_mapper.Map<List<TenantDto>>(await _userManager.GetAllTenants()));
-        return roles;
-    }
     public async Task<List<ApplicationRoleDto>> GetAllRoles()
     {
         var key = $"{nameof(GetAllRoles)}";

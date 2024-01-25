@@ -19,6 +19,10 @@ using CleanArchitecture.Blazor.Infrastructure.Common.Extensions;
 using static CleanArchitecture.Blazor.Infrastructure.Constants.Permission.Permissions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using CleanArchitecture.Blazor.Domain.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
@@ -56,6 +60,8 @@ public class CustomUserManager : UserManager<ApplicationUser>
     private readonly IServiceProvider _serviceProvider;
     private ApplicationDbContext _dbContext;
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly TenantService _tenantService;
+    private readonly IMapper _mapper;
     public CustomUserManager(ApplicationDbContext context,
          IUserStore<ApplicationUser> store,
          IOptions<IdentityOptions> optionsAccessor,
@@ -65,7 +71,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
          ILookupNormalizer keyNormalizer,
          IdentityErrorDescriber errors,
          IServiceProvider services,
-         ILogger<UserManager<ApplicationUser>> logger, CustomRoleManager roleManager, IServiceScopeFactory scopeFactory)
+         ILogger<UserManager<ApplicationUser>> logger, CustomRoleManager roleManager, IServiceScopeFactory scopeFactory, TenantService tenantService, IMapper mapper)
          : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
     {
         _scopeFactory = scopeFactory;
@@ -73,6 +79,8 @@ public class CustomUserManager : UserManager<ApplicationUser>
         _serviceProvider = services;
         _dbContext = services.CreateScope().ServiceProvider.GetRequiredService<ApplicationDbContext>();
         _repository = new Repository<ApplicationUser>(_dbContext);
+        _tenantService = tenantService;
+        _mapper = mapper;
     }
     public async Task<IdentityResult> CreateWithDefaultRolesAsync(ApplicationUser user, string? tenantId = null, string? password = null)
     {
@@ -130,9 +138,11 @@ public class CustomUserManager : UserManager<ApplicationUser>
     {
         return await FindByNameOrId(userName: userName);
     }
-    public async Task<List<Tenant>> GetAllTenants()
+    public async Task<List<TenantDto>> GetAllTenants(bool forceLoad = false)
     {
-        return await _dbContext.Tenants.Where(x => x.Active).ToListAsync();
+        if (forceLoad || !_tenantService.DataSource.Any())
+            return await _dbContext.Tenants.Where(x => x.Active).ProjectTo<TenantDto>(_mapper.ConfigurationProvider).ToListAsync(); ;
+        return _tenantService.DataSource;
     }
     public async Task<ApplicationUser?> FindByNameOrId(string userName = "", Guid? userId = null)
     {

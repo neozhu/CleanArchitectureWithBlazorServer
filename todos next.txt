@@ -1,4 +1,13 @@
-﻿make multiple tenants listing based on loggedin hierarchy & roles
+﻿next:
+on ""Create a new user"" page make tenant dtropdown listing of tenants
+also on update page
+
+Here tenant should appear based on logged in user permission
+
+
+
+
+make multiple tenants listing based on loggedin hierarchy & roles
 Adding new user to tenant
 
 Tenants for user user edit page to add other new tenant....more logic improve

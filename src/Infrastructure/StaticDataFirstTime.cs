@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
@@ -8,9 +9,11 @@ public class StaticData//only for first time
     public static List<ApplicationRoleDto>? Roles = null;
     public static List<TenantDto>? Tenants = null;
     readonly IIdentityService _identityService;
-    public StaticData(IIdentityService identityService)
+    readonly ITenantService _tenantService;
+    public StaticData(IIdentityService identityService, ITenantService tenantService)
     {
         _identityService = identityService;
+        _tenantService = tenantService;
     }
     public async Task<List<ApplicationRoleDto>> LoadUserBaseRoles(bool forceLoad = false)
     {
@@ -27,7 +30,7 @@ public class StaticData//only for first time
     public async Task<List<TenantDto>> LoadAllTenants(bool forceLoad = false)
     {
         if (forceLoad || Tenants == null || !Tenants.Any())
-            Tenants = (await _identityService.GetAllTenants()).OrderByDescending(r => r.Type).ToList();
+            Tenants = _tenantService.DataSource;
         return Tenants;
     }
 }
