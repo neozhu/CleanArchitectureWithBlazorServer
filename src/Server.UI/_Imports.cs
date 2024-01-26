@@ -1,4 +1,4 @@
-global using System.Data;
+﻿global using System.Data;
 global using AutoMapper.QueryableExtensions;
 global using CleanArchitecture.Blazor.Application.Common.Interfaces;
 global using CleanArchitecture.Blazor.Application.Common.Models;
@@ -16,3 +16,6 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Logging;
 global using MudBlazor;
 global using Severity = MudBlazor.Severity;
+
+global using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+global using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;

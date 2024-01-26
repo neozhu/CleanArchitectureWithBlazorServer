@@ -93,17 +93,17 @@
     </Authorized>
 </AuthorizeView>
 
-    @code {
+@code {
 
     private string _title = "Sign In";
     private MudForm? _form;
     private bool _success;
     private bool _loading;
     [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
- 
+
     private CustomRoleManager RoleManager { get; set; } = default!;
     private IAccessTokenProvider AccessTokenProvider { get; set; } = default!;
- 
+
     private LoginFormModel _model = new()
         {
             UserName = UserName.Administrator,// "administrator",
@@ -112,37 +112,37 @@
         };
 
     protected override async Task OnInitializedAsync()
-    {
+        {
         await base.OnInitializedAsync();
         _title = L["Sign In"];
         UserManager = ScopedServices.GetRequiredService<CustomUserManager>();
         RoleManager = ScopedServices.GetRequiredService<CustomRoleManager>();
         AccessTokenProvider = ScopedServices.GetRequiredService<IAccessTokenProvider>();
-    }
+        }
 
     private async Task OnSubmit()
-    {
-        try
         {
+        try
+            {
             _loading = true;
             await _form!.Validate();
 
             if (_form!.IsValid)
-            {
+                {
                 var user = await UserManager.FindByNameForLocalAccountAsync(_model.UserName!);
                 if (user is null)
-                {
+                    {
                     Logger.LogWarning("Someone tried to login to the user {@UserName:l}, however this account does not exist", _model.UserName);
                     Snackbar.Add(L["No user found, or no authorization, please contact the administrator."], Severity.Error);
-                }
-                else
-                {
-                    if (user.IsActive == false)
-                    {
-                        await OnResetPassword(user);
                     }
-                    else
+                else
                     {
+                    if (user.IsActive == false)
+                        {
+                        await OnResetPassword(user);
+                        }
+                    else
+                        {
                         //since currently localLogin is NOT using base login,so password is not hashing instead its plain password so had to bypass here.If thats covered then this also works fine.till then this bypass is necessary for local account
                         // var result = await UserManager.CheckPasswordAsync(user, _model.Password!);
                         // if (!result)
@@ -153,16 +153,21 @@
                         // else
                         // {
 
-                            await TokenProvider.Login(user);
-                            NavigationManager.NavigateTo(NavigationManager.Uri, true);
-                            Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
+                        await TokenProvider.Login(user);
+                        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+                        Logger.LogInformation("{@UserName:l} has successfully logged in", user.UserName);
 
 
                         // }
+                        }
                     }
                 }
             }
-        }
+        catch(Exception e)
+            {
+            Console.WriteLine(e.ToString());            
+
+    }
         finally
         {
             _loading = false;

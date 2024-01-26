@@ -112,8 +112,7 @@
                 </div>
             </MudItem>
 
-
-            <MudItem sm="6" xs="12">
+   <MudItem sm="6" xs="12">
                 <MudSelect For="@(() => Model.TenantId)"
                            T="string"
                            Label="@L["Select Tenant"]"
@@ -122,15 +121,16 @@
                            RequiredError="@L["Tenant is required."]"
                            Value="@Model.TenantId"
                            ValueChanged="TenantSelectChanged">
-                    @if (Tenants != null && Tenants.Any())
+                 @if (Tenants != null && Tenants.Any())
                     {
-                    @foreach (var item in Tenants))
+                 @*    @foreach (var item in Tenants))
                 {
                 <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
-                }
-                    }
+                } *@
+                    } 
             </MudSelect>
         </MudItem>
+         
 
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
