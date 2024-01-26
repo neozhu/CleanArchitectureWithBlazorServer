@@ -123,10 +123,10 @@
                            ValueChanged="TenantSelectChanged">
                  @if (Tenants != null && Tenants.Any())
                     {
-                 @*    @foreach (var item in Tenants))
-                {
+                    @foreach (var item in Tenants)
+                        {
                 <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
-                } *@
+                        }
                     } 
             </MudSelect>
         </MudItem>
