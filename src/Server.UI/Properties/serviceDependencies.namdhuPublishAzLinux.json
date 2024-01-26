@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/namdhu/providers/Microsoft.ServiceLinker/linkers/DatabaseSettingsConnectionString_86D26D82EC",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/namdhu-server/databases/namdhu-database",
+      "type": "mssql.azure",
+      "connectionId": "DatabaseSettings:ConnectionString",
+      "dynamicId": null
+    }
+  }
+}
