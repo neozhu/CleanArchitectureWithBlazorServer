@@ -8,7 +8,7 @@ using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
 
-namespace CleanArchitecture.Blazor.Application.Features.Identity.Dto;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 public class ApplicationUserRoleTenantDto
 {
     public virtual ApplicationUserDto User { get; set; } = default!;

@@ -1,8 +1,11 @@
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
+using CleanArchitecture.Blazor.Domain.Enums;
+using CleanArchitecture.Blazor.Infrastructure.Common.Extensions;
 using LazyCache;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
@@ -26,6 +29,47 @@ public class TenantService : ITenantService
 
     public event Action? OnChange;
     public List<TenantDto> DataSource { get; private set; } = new();
+
+    //public List<TenantDto> GetAllowedTenants(string userTenantId)
+    //{
+    //    var userTenant = DataSource.Find(x => x.Id == userTenantId);
+    //    if (userTenant != null)
+    //    {
+    //        var lessOrEquivalentTenants = DataSource.Where(x => x.Type <= userTenant.Type).ToList();
+    //    }
+    //    return null;
+    //}
+    public List<TenantDto> GetAllowedTenants(ApplicationUserDto userDto)
+    {
+        //if no mapping exists
+        if (userDto.UserRoleTenants == null || userDto.UserRoleTenants.Count == 0)
+        {
+            if (!userDto.TenantId.IsNullOrEmpty())
+                return [DataSource.FirstOrDefault(x => x.Id == userDto.TenantId)];
+            return null;
+        }
+
+        //internal user,give all tenants
+        if (userDto.DefaultRole == RoleNamesEnum.ROOTADMIN.ToString() || //ned to think more
+            userDto.UserRoleTenants.Any(x => x.RoleName == RoleNamesEnum.ROOTADMIN.ToString()
+            || userDto.UserRoleTenants.Any(x => x.Tenant.Type == (byte)TenantTypeEnum.Internal)))
+        {
+            return DataSource;
+        }
+
+        //all other users their tenat + created/approved/modified
+        var userTenantIds = userDto.UserRoleTenants.Select(t => t.TenantId);
+
+        var myTenants = DataSource.Where(x => userTenantIds.Contains(x.Id)).ToList();
+        var myApprovedTenants = DataSource.Where(x => x.CreatedByUser == userDto.Id || x.ApprovedByUser == userDto.Id || x.ModifiedLastByUser == userDto.Id).ToList();
+        var result = new List<TenantDto>();
+        if (myTenants.Count == 0)
+            result.AddRange(myTenants);
+
+        if (myApprovedTenants.Count == 0)
+            result.AddRange(myApprovedTenants);
+        return result.DistinctBy(x=>x.Id).ToList();
+    }
 
     public async Task InitializeAsync()
     {
