@@ -9,7 +9,7 @@ public interface ICurrentUserService
 {
     string? UserId { get; set; }
     string? UserName { get; set; }
-    ICollection<ApplicationUserRoleTenantDto>? UserRoles { get; set; } 
+    ICollection<ApplicationUserRoleTenantDto>? UserRoleTenants { get; set; } 
     string? TenantId { get; set; }
     string? TenantName { get; set; }
 }

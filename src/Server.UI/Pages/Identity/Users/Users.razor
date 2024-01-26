@@ -15,6 +15,7 @@
 @using System.Security.Claims
 @using System.ComponentModel
 @using System.Linq.Expressions
+@using Newtonsoft.Json
 @using Severity = MudBlazor.Severity
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
 @using System.Reflection
@@ -52,38 +53,38 @@
                 <div class="d-flex">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton DisableElevation Variant="Variant.Outlined"
-                                    Size="Size.Small"
-                                    Disabled="@_loading"
-                                    OnClick="@(OnRefresh)"
-                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                    Style="margin-right: 4px; margin-bottom:4px">@ConstantString.Refresh</MudButton>
-                         @if (_canCreate)
+                                   Size="Size.Small"
+                                   Disabled="@_loading"
+                                   OnClick="@(OnRefresh)"
+                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                                   Style="margin-right: 4px; margin-bottom:4px">@ConstantString.Refresh</MudButton>
+                        @if (_canCreate)
                             {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                        StartIcon="@Icons.Material.Filled.Add"
-                                        Size="Size.Small"
-                                        Style="margin-right: 4px; margin-bottom:4px"
-                                        OnClick="OnCreate"
-                                        IconColor="Color.Surface">@ConstantString.New</MudButton>
+                                       StartIcon="@Icons.Material.Filled.Add"
+                                       Size="Size.Small"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       OnClick="OnCreate"
+                                       IconColor="Color.Surface">@ConstantString.New</MudButton>
                             }
                         @if (_canDelete)
                             {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                        StartIcon="@Icons.Material.Filled.Delete"
-                                        Disabled="@(!(_selectedItems.Count>0))"
-                                        Size="Size.Small"
-                                        Style="margin-right: 4px; margin-bottom:4px"
-                                        OnClick="OnDeleteChecked"
-                                        IconColor="Color.Surface">@ConstantString.Delete</MudButton>
+                                       StartIcon="@Icons.Material.Filled.Delete"
+                                       Disabled="@(!(_selectedItems.Count>0))"
+                                       Size="Size.Small"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       OnClick="OnDeleteChecked"
+                                       IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                             }
                         @if (_canExport)
                             {
                             <MudLoadingButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                               StartIcon="@Icons.Material.Filled.Download"
-                                               Size="Size.Small"
-                                               @bind-Loading="_exporting" LoadingAdornment="Adornment.Start" OnClick="OnExport"
-                                               Style="margin-right: 4px; margin-bottom:4px"
-                                               IconColor="Color.Surface">@ConstantString.Export</MudLoadingButton>
+                                              StartIcon="@Icons.Material.Filled.Download"
+                                              Size="Size.Small"
+                                              @bind-Loading="_exporting" LoadingAdornment="Adornment.Start" OnClick="OnExport"
+                                              Style="margin-right: 4px; margin-bottom:4px"
+                                              IconColor="Color.Surface">@ConstantString.Export</MudLoadingButton>
                             }
                         @if (_canImport)
                             {
@@ -114,21 +115,21 @@
                         @if (_canCreate)
                             {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                        StartIcon="@Icons.Material.Filled.Add"
-                                        Size="Size.Small"
-                                        Style="margin-right: 4px; margin-bottom:4px"
-                                        OnClick="OnCreate"
-                                        IconColor="Color.Surface">@ConstantString.New</MudButton>
+                                       StartIcon="@Icons.Material.Filled.Add"
+                                       Size="Size.Small"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       OnClick="OnCreate"
+                                       IconColor="Color.Surface">@ConstantString.New</MudButton>
                             }
                         @if (_canDelete)
                             {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                        StartIcon="@Icons.Material.Filled.Delete"
-                                        Disabled="@(!(_selectedItems.Count>0))"
-                                        Size="Size.Small"
-                                        Style="margin-right: 4px; margin-bottom:4px"
-                                        OnClick="OnDeleteChecked"
-                                        IconColor="Color.Surface">@ConstantString.Delete</MudButton>
+                                       StartIcon="@Icons.Material.Filled.Delete"
+                                       Disabled="@(!(_selectedItems.Count>0))"
+                                       Size="Size.Small"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       OnClick="OnDeleteChecked"
+                                       IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                             }
                     </MudHidden>
                 </div>
@@ -221,22 +222,22 @@
         <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x=>x.UserName)]">
             <CellTemplate>
                 <div class="d-flex align-items-center">
-                <MudBadge Color="@(isOnline(context.Item.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
-                    <MudAvatar>
-                        @if (string.IsNullOrEmpty(context.Item.ProfilePictureDataUrl))
-                        {
-                            @context.Item.UserName.First()
-                        }
-                        else
-                        {
-                            <MudImage Src="@context.Item.ProfilePictureDataUrl"></MudImage>
-                        }
-                    </MudAvatar>
-                </MudBadge>
-                <div class="pl-3">
-                    <MudText Class="ml-2 align-self-center">@context.Item.UserName</MudText>
-                    <MudText Typo="Typo.body2" Class="ml-2 align-self-center mud-text-secondary" >@context.Item.Email</MudText>
-                </div>
+                    <MudBadge Color="@(isOnline(context.Item.UserName)? Color.Success :Color.Error)" Overlap="false" Dot="true" Bordered="true">
+                        <MudAvatar>
+                            @if (string.IsNullOrEmpty(context.Item.ProfilePictureDataUrl))
+                                {
+                                @context.Item.UserName.First()
+                                }
+                            else
+                                {
+                                <MudImage Src="@context.Item.ProfilePictureDataUrl"></MudImage>
+                                }
+                        </MudAvatar>
+                    </MudBadge>
+                    <div class="pl-3">
+                        <MudText Class="ml-2 align-self-center">@context.Item.UserName</MudText>
+                        <MudText Typo="Typo.body2" Class="ml-2 align-self-center mud-text-secondary">@context.Item.Email</MudText>
+                    </div>
                 </div>
             </CellTemplate>
         </PropertyColumn>
@@ -276,24 +277,27 @@
         <PropertyColumn Property="x => x.IsActive" Title="@L[_currentDto.GetMemberDescription(x=>x.IsActive)]">
             <CellTemplate>
                 <MudCheckBox Checked="@context.Item.IsActive" ReadOnly Color="Color.Secondary"></MudCheckBox>
-             </CellTemplate>
-         </PropertyColumn>
-         <PropertyColumn Property="x => x.LockoutEnd" Title="@L[_currentDto.GetMemberDescription(x=>x.LockoutEnd)]">
-             <CellTemplate>
-                 @context.Item.LockoutEnd
-             </CellTemplate>
-         </PropertyColumn>
-     </Columns>
+            </CellTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.LockoutEnd" Title="@L[_currentDto.GetMemberDescription(x=>x.LockoutEnd)]">
+            <CellTemplate>
+                @context.Item.LockoutEnd
+            </CellTemplate>
+        </PropertyColumn>
+    </Columns>
 
-     <PagerContent>
-         <MudDataGridPager PageSizeOptions="@(new[]{10,15,30,50,100,500,1000})" />
-     </PagerContent>
- </MudDataGrid>
+    <PagerContent>
+        <MudDataGridPager PageSizeOptions="@(new[]{10,15,30,50,100,500,1000})" />
+    </PagerContent>
+</MudDataGrid>
 
- <_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@_processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
+<_PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@_processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></_PermissionsDrawer>
 
 
 @code {
+    [Inject]
+    private ICurrentUserService _currentUser{ get; set; }
+
     [Inject]
     private IUsersStateContainer UsersStateContainer { get; set; } = default!;
     private int _defaultPageSize = 15;
@@ -365,7 +369,13 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
-        _tenants = TenantsService.DataSource.Select(x => x.Name).ToList();//fetch tenants based on user level permissions
+        var oldTT = TenantsService.DataSource.Select(x => x.Name).ToList();//fetch tenants based on user level permissions
+
+        //madhu continue here as UserRoleTenants coming null eventhough its set...need to check
+        _currentDto.UserRoleTenants = state.User.GetUserRoleTenants();
+        _currentDto.Id = _currentUser.UserId;
+
+        _tenants = TenantsService.GetAllowedTenants(_currentDto).Select(x => x.Name).ToList();
         }
     private bool isOnline(string username)
         {
@@ -379,6 +389,7 @@
             var userState = await AuthState;
             var tenantId = userState.User.GetTenantId();//had to get all active tenants and type
             var roles = userState.User.GetAssignRoles();
+                        userState.User.GetUserRoleTenants();
             _loading = true;
             Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
             (x.UserName!.ToLower().Contains(_searchString) ||
@@ -445,10 +456,18 @@
     private async Task OnCreate()
         {
         var userState = await AuthState;
-        var model = new ApplicationUserDto { Provider = "Local", Email = "",TenantId= userState.User.GetTenantId()
-        ,TenantName=userState.User.GetTenantName() ,
-        UserRoleTenants=userState.User.GetUserRoleTenants()
-        ,UserName = "", AssignedRoles = new[] { RoleNamesEnum.PATIENT.ToString() } };
+        var model = new ApplicationUserDto
+                {
+                Provider = "Local",
+                Email = "",
+                TenantId = userState.User.GetTenantId()
+                    ,
+                TenantName = userState.User.GetTenantName(),
+                UserRoleTenants = userState.User.GetUserRoleTenants()
+                    ,
+                UserName = "",
+                AssignedRoles = new[] { RoleNamesEnum.PATIENT.ToString() }
+                };
         var parameters = new DialogParameters<UserFormDialog> {
             { x=>x.Model,model }
            };
@@ -488,7 +507,7 @@
                 }
                 */
                 Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
-                await  UserDataProvider.Refresh();
+                await UserDataProvider.Refresh();
                 await OnRefresh();
                 }
             else
@@ -532,35 +551,35 @@
 
                 }
             user.SuperiorId = item.SuperiorId;
-          
+
             var identityResult = await UserManager.UpdateAsync(user);
-          
+
             if (identityResult.Succeeded)
-            {
+                {
                 //todo need to verify more
-                //when rootadmin tenant changed as sarji pharmacy then issue occurring as bcz on change 
+                //when rootadmin tenant changed as sarji pharmacy then issue occurring as bcz on change
                 //in previous step making user.UserRoleTenants=null so here next no more roles avaialbale
                 int? modifyCount = 0;
                 if (item.AssignedRoles != null && item.AssignedRoles.Any() &&
                 (Guid.TryParse(user.TenantId, out Guid tid) || !user.IsUserTenantRolesActive))
-                {
+                    {
                     if (!user.IsUserTenantRolesActive) user.TenantId = item.TenantId;//this is only for role deactivation purpose
                     modifyCount = await UserManager.RolesUpdateInsert(user, item.AssignedRoles);
-                }
+                    }
                 //todo had to make which tenant,like other than default tenant
                 Snackbar.Add($"Role update:{modifyCount ?? 0} {ConstantString.UpdateSuccess}", Severity.Info);
                 await OnRefresh();
                 await UserDataProvider.Refresh();
-            }
+                }
             else
-            {
+                {
                 Snackbar.Add($"{string.Join(",", (identityResult.Errors.Select(x => x.Description).ToArray()))}", Severity.Error);
+                }
             }
         }
-    }
 
     private async Task OnDelete(ApplicationUserDto dto)
-    {
+        {
         var deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters<ConfirmationDialog>
         {
@@ -570,55 +589,55 @@
         var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DeleteConfirmationTitle, parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
-        {
+            {
             // Requesting the current user id
             var state = await AuthState;
             var currentUserId = state.User.GetUserId();
 
             // Checks if the current user is trying to remove his own account
             if (currentUserId != null && currentUserId.Equals(dto.Id))
-            {
+                {
                 Snackbar.Add("You cannot delete your own account!", Severity.Error);
                 return;
-            }
+                }
 
             // Trying to find the user that needs to be deleted in the database (nullable check)
             var requestedDeletedUser = await UserManager.FindByIdAsync(dto.Id);
             if (requestedDeletedUser == null)
-            {
+                {
                 Snackbar.Add("The user doesn't seem to exist in the database!", Severity.Error);
                 return;
-            }
+                }
 
             // Trying to remove the requested user
             var deleteResult = await UserManager.DeleteAsync(requestedDeletedUser);
             if (!deleteResult.Succeeded)
-            {
+                {
                 Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
                 return;
-            }
+                }
 
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
             await UserDataProvider.Refresh();
+            }
         }
-    }
 
     private async Task OnDeleteChecked()
-    {
+        {
         var state = await AuthState;
         var currentUserId = state.User.GetUserId();
         var isSelectedItemContainCurrentUser = _selectedItems.Any(x => x.Id == currentUserId);
 
         if (isSelectedItemContainCurrentUser)
-        {
-            if (_selectedItems.Count == 1)
             {
+            if (_selectedItems.Count == 1)
+                {
                 Snackbar.Add("You cannot delete your own account!", Severity.Error);
                 return;
-            }
+                }
             _selectedItems.Remove(_selectedItems.First(x => x.Id == currentUserId));
-        }
+            }
 
         string deleteContent = ConstantString.DeleteConfirmation;
         var parameters = new DialogParameters<ConfirmationDialog> {
@@ -630,34 +649,34 @@
         var result = await dialog.Result;
 
         if (!result.Canceled)
-        {
+            {
             var deleteId = _selectedItems.Select(x => x.Id).ToArray();
             var deleteUsers = await UserManager.Users.Where(x => deleteId.Contains(x.Id)).ToListAsync();
 
             foreach (var deleteUser in deleteUsers)
-            {
+                {
                 var deleteResult = await UserManager.DeleteAsync(deleteUser);
                 if (!deleteResult.Succeeded)
-                {
+                    {
                     Snackbar.Add($"{string.Join(",", (deleteResult.Errors.Select(x => x.Description).ToArray()))}", Severity.Error);
                     return;
+                    }
                 }
-            }
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
-            await  UserDataProvider.Refresh();
+            await UserDataProvider.Refresh();
+            }
+
         }
 
-    }
-
     private async Task OnSetActive(ApplicationUserDto item)
-    {
+        {
         var res = UserManager.UpdateColumn(item.Id, nameof(ApplicationUserDto.IsActive), !item.IsActive);
         // var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
         // user.IsActive = !item.IsActive;
         // var state = await UserManager.UpdateAsync(user);
         item.IsActive = !item.IsActive;
-        if (res>0)
+        if (res > 0)
             {
             Snackbar.Add($"{ConstantString.UpdateSuccess}", Severity.Info);
             }
@@ -846,7 +865,7 @@
                          }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                     new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                                                                    {
+                                                                                                {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
@@ -854,7 +873,7 @@
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                                                                                    }
+                                                                                                }
                     , L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);

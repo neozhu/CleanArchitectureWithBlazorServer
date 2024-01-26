@@ -63,10 +63,10 @@ public class TenantService : ITenantService
         var myTenants = DataSource.Where(x => userTenantIds.Contains(x.Id)).ToList();
         var myApprovedTenants = DataSource.Where(x => x.CreatedByUser == userDto.Id || x.ApprovedByUser == userDto.Id || x.ModifiedLastByUser == userDto.Id).ToList();
         var result = new List<TenantDto>();
-        if (myTenants.Count == 0)
+        if (myTenants.Count != 0)
             result.AddRange(myTenants);
 
-        if (myApprovedTenants.Count == 0)
+        if (myApprovedTenants.Count != 0)
             result.AddRange(myApprovedTenants);
         return result.DistinctBy(x=>x.Id).ToList();
     }

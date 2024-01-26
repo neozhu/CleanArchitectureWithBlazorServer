@@ -61,24 +61,26 @@ public class AccessTokenProvider : IAccessTokenProvider
     public async Task<string?> Login(ApplicationUser applicationUser)
     {
         var principal = await _userClaimsPrincipalFactory.CreateAsync(applicationUser);
+
+
+        //extra in nammadhu
+        //_tenantProvider.TenantId = applicationUser.TenantId;
+        //_tenantProvider.TenantName = applicationUser.TenantName;
+        //_currentUser.UserId = applicationUser.Id;
+        //_currentUser.UserName = applicationUser.UserName;
+        //_currentUser.TenantId = applicationUser.TenantId;
+        //_currentUser.TenantName = applicationUser.TenantName;
+        //_currentUser.UserRoleTenants ??= new List<ApplicationUserRoleTenantDto>();
+
+        SetUserPropertiesFromClaimsPrincipal(principal);
+        if (_currentUser.UserRoleTenants != null && _currentUser.UserRoleTenants.Count==0)
+            applicationUser.UserRoleTenants.ForEach(x => _currentUser.UserRoleTenants.Add(_mapper.Map<ApplicationUserRoleTenantDto>(x)));
+
+
         var token = await _loginService.LoginAsync(principal);
         await _localStorage.SetAsync(_tokenKey, token);
         AccessToken = token.AccessToken;
         RefreshToken = token.RefreshToken;
-       
-        //extra in nammadhu
-        _tenantProvider.TenantId = applicationUser.TenantId;
-        _tenantProvider.TenantName = applicationUser.TenantName;
-        _currentUser.UserId = applicationUser.Id;
-        _currentUser.UserName = applicationUser.UserName;
-
-        _currentUser.UserRoles ??= new List<ApplicationUserRoleTenantDto>();
-        applicationUser.UserRoleTenants.ForEach(x => _currentUser.UserRoles.Add(_mapper.Map<ApplicationUserRoleTenantDto>(x)));
-        _currentUser.TenantId = applicationUser.TenantId;
-        _currentUser.TenantName = applicationUser.TenantName;
-       
-        
-        SetUserPropertiesFromClaimsPrincipal(principal);
         return AccessToken;
     }
 
@@ -135,8 +137,8 @@ public class AccessTokenProvider : IAccessTokenProvider
         _currentUser.UserId = principal.GetUserId();
         _currentUser.UserName = principal.GetUserName();
         _currentUser.TenantId = principal.GetTenantId();
-        _currentUser.TenantName =
-            principal.GetTenantName(); // This seems to be an error in original code. Fixing it here.
+        _currentUser.TenantName = principal.GetTenantName(); // This seems to be an error in original code. Fixing it here.
+        _currentUser.UserRoleTenants = principal.GetUserRoleTenants();
         return principal;
     }
 

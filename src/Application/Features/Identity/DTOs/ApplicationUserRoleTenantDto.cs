@@ -14,7 +14,9 @@ public class ApplicationUserRoleTenantDto
     public virtual ApplicationUserDto User { get; set; } = default!;
     public virtual ApplicationRoleDto Role { get; set; } = default!;
     public virtual TenantDto Tenant { get; set; } = default!;
+    public string UserId { get; set; } = default!;
     public string TenantId { get; set; } = default!;
+    public string RoleId { get; set; } = default!;
     public bool IsActive { get; set; } = true;
     [NotMapped] public string? UserName { get; set; }
     [NotMapped] public string? RoleName { get; set; }
@@ -24,9 +26,14 @@ public class ApplicationUserRoleTenantDto
         public Mapping()
         {
             CreateMap<ApplicationUserRoleTenant, ApplicationUserRoleTenantDto>(MemberList.None)
-                .ForMember(x => x.TenantName, s => s.MapFrom(y => (y.Tenant != null) ? y.Tenant.Name : null))
-                .ForMember(x => x.RoleName, s => s.MapFrom(y => (y.Role != null) ? y.Role.Name : null))
-                .ForMember(x => x.UserName, s => s.MapFrom(y => (y.User != null) ? y.User.UserName : null))
+                .ForMember(x => x.TenantName, s => s.MapFrom(y => (y.Tenant != null) ? y.Tenant.Name : y.TenantName))
+                .ForMember(x => x.RoleName, s => s.MapFrom(y => (y.Role != null) ? y.Role.Name : y.RoleName))
+                .ForMember(x => x.UserName, s => s.MapFrom(y => (y.User != null) ? y.User.UserName : y.UserName))
+                .ForMember(x => x.UserId, s => s.MapFrom(y => (y.User != null) ? y.User.Id: y.UserId))
+                .ForMember(x => x.Tenant, s => s.MapFrom(y => y.Tenant ))
+                .ForMember(x => x.TenantId, s => s.MapFrom(y => (y.Tenant != null) ? y.Tenant.Id : y.TenantId))
+                .ForMember(x => x.Role, s => s.MapFrom(y => y.Role))
+                .ForMember(x => x.RoleId, s => s.MapFrom(y => (y.Role != null) ? y.Role.Id : y.RoleId))
                 ;
         }
     }

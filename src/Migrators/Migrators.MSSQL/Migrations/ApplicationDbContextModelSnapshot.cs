@@ -691,7 +691,7 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUserRoleTenant", b =>
                 {
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationRole", "Role")
-                        .WithMany("UserRoles")
+                        .WithMany("UserRoleTenants")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -730,7 +730,7 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                 {
                     b.Navigation("RoleClaims");
 
-                    b.Navigation("UserRoles");
+                    b.Navigation("UserRoleTenants");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", b =>

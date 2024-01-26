@@ -107,30 +107,30 @@
 
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
-                <div class="d-fex">
-                    <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
-                </div>
-            </MudItem>
+            <div class="d-fex">
+                <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
+            </div>
+        </MudItem>
 
-   <MudItem sm="6" xs="12">
-                <MudSelect For="@(() => Model.TenantId)"
-                           T="string"
-                           Label="@L["Select Tenant"]"
-                           Text="@Model.TenantName"
-                           Required="true"
-                           RequiredError="@L["Tenant is required."]"
-                           Value="@Model.TenantId"
-                           ValueChanged="TenantSelectChanged">
-                 @if (Tenants != null && Tenants.Any())
+        <MudItem sm="6" xs="12">
+            <MudSelect For="@(() => Model.TenantId)"
+                       T="string"
+                       Label="@L["Select Tenant"]"
+                       Text="@Model.TenantName"
+                       Required="true"
+                       RequiredError="@L["Tenant is required."]"
+                       Value="@Model.TenantId"
+                       ValueChanged="TenantSelectChanged">
+                @if (Tenants != null && Tenants.Any())
                     {
                     @foreach (var item in Tenants)
                         {
-                <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
+                        <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
                         }
-                    } 
+                    }
             </MudSelect>
         </MudItem>
-         
+
 
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
@@ -142,12 +142,12 @@
             <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
             <MudGrid Class="mt-1">
                 @for (var i = 0; i < Roles.Count; i++)
-                                {
-                                var x = i;
-                <MudItem xs="6" sm="6" Class="py-0 my=0">
-                    <MudCheckBox T="bool" Checked="@Roles[x].Value" Label="@Roles[x].Key" CheckedChanged="@(s => Roles[x].Value = s)"></MudCheckBox>
-                </MudItem>
-                                }
+                    {
+                    var x = i;
+                    <MudItem xs="6" sm="6" Class="py-0 my=0">
+                        <MudCheckBox T="bool" Checked="@Roles[x].Value" Label="@Roles[x].Key" CheckedChanged="@(s => Roles[x].Value = s)"></MudCheckBox>
+                    </MudItem>
+                    }
             </MudGrid>
         </MudItem>
 
@@ -155,162 +155,166 @@
 </MudForm>
 
 @code {
-public class CheckItem
-    {
-    public string Key { get; set; } = string.Empty;
-    public bool Value { get; set; }
-    public byte Level { get; set; }//for hierarchy order
-    }
-
-[EditorRequired][Parameter] public ApplicationUserDto Model { get; set; } = default!;
-
-[EditorRequired][Parameter] public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
-
-
-private MudForm? _form = default!;
-private readonly ApplicationUserDtoValidator _modelValidator = new();
-private List<CheckItem> Roles { get; set; } = new();
-private List<TenantDto> Tenants { get; set; } = new();
-
-protected override async Task OnInitializedAsync()
-    {
-    //take all standard roles from default structure and then add more assigned from??????????????????? Userroles table
-    //step1: load standard roles as per tenant
-    //step2: update assigned roles
-
-    //for new user,get my allowed tenants & respective roles I can asssign only had to be shown on page
-    //madhu continue here
-    //here load all tenants below my id by default
-
-    //making allowed tenants & setting current
-    Tenants = TenantsService.GetAllowedTenants(Model);
-    var currentTenant = Tenants.FirstOrDefault(x => x.Id == Model.TenantId);
-
-
-    if (currentTenant == null) return;
-
-
-    if (StaticData.Roles != null && StaticData.Roles.Any())
-    {
-    StaticData.RolesOfTenantType(currentTenant.Type).ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
-    if (Model.AssignedRoles != null && Model.AssignedRoles.Intersect(Roles.Select(x => x.Key)).Count() > 0)
+    public class CheckItem
         {
-        Model.AssignedRoles.Intersect(Roles.Select(x => x.Key)).ToList().ForEach(a => { Roles.Find(r => r.Key == a).Value = true; });
-        Roles = Roles.OrderByDescending(x => x.Value).ToList();
+        public string Key { get; set; } = string.Empty;
+        public bool Value { get; set; }
+        public byte Level { get; set; }//for hierarchy order
         }
-    }
+
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [EditorRequired][Parameter] public ApplicationUserDto Model { get; set; } = default!;
+
+    [EditorRequired][Parameter] public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
 
 
-    }
+    private MudForm? _form = default!;
+    private readonly ApplicationUserDtoValidator _modelValidator = new();
+    private List<CheckItem> Roles { get; set; } = new();
+    private List<TenantDto> Tenants { get; set; } = new();
 
-private async Task<Task> TenantSelectChanged(string id)
-    {
-    //based upon tenant, show roles
-    var tenant = TenantsService.DataSource.Find(x => x.Id == id);
-    if (tenant != null)
-    {
-    Roles = new();
-    Model.TenantId = tenant?.Id;
-    Model.TenantName = tenant?.Name;
-    //todo 1 take all standard roles from default structure and then add more assigned from Userroles table
-    //step1: load standard roles as per tenant
-    //step2: update assigned roles
-    if (StaticData.Roles != null && StaticData.Roles.Any())
+    protected override async Task OnInitializedAsync()
         {
-        StaticData.RolesOfTenantType(tenant.Type).ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
-        var existingRoles = await RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id)).Select(x => x.Name).ToListAsync();
-        if (existingRoles != null && existingRoles.Any())
-            Roles.ForEach(r => { if (existingRoles.Contains(r.Key)) r.Value = true; });
-        Roles = Roles.OrderByDescending(x => x.Value).ToList();
+        //take all standard roles from default structure and then add more assigned from??????????????????? Userroles table
+        //step1: load standard roles as per tenant
+        //step2: update assigned roles
+
+        //for new user,get my allowed tenants & respective roles I can asssign only had to be shown on page
+        //madhu continue here
+        //here load all tenants below my id by default
+
+        //making allowed tenants & setting current
+        var state = await AuthState;
+        Tenants = TenantsService.GetAllowedTenants(new ApplicationUserDto() { UserRoleTenants = state.User.GetUserRoleTenants() });
+        //model means particular choose user account/model
+        var currentTenant = Tenants.FirstOrDefault(x => x.Id == Model.TenantId);
+
+
+        if (currentTenant == null) return;
+
+
+        if (StaticData.Roles != null && StaticData.Roles.Any())
+            {
+            StaticData.RolesOfTenantType(currentTenant.Type).ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
+            if (Model.AssignedRoles != null && Model.AssignedRoles.Intersect(Roles.Select(x => x.Key)).Count() > 0)
+                {
+                Model.AssignedRoles.Intersect(Roles.Select(x => x.Key)).ToList().ForEach(a => { Roles.Find(r => r.Key == a).Value = true; });
+                Roles = Roles.OrderByDescending(x => x.Value).ToList();
+                }
+            }
+
+
         }
-    }
-    else
-    {
 
-    Roles = new();
-    Model.TenantId = null;
-    Model.TenantName = null;
-    }
-
-    return Task.CompletedTask;
-    }
-
-private async Task UploadPhoto(InputFileChangeEventArgs e)
-    {
-    var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
-    var imgStream = new MemoryStream();
-    await filestream.CopyToAsync(imgStream);
-    imgStream.Position = 0;
-    using (var outStream = new MemoryStream())
-    {
-    using (var image = Image.Load(imgStream))
+    private async Task<Task> TenantSelectChanged(string id)
         {
-        image.Mutate(
-            i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) }));
-        image.Save(outStream, PngFormat.Instance);
-        var filename = e.File.Name;
-        var fi = new FileInfo(filename);
-        var ext = fi.Extension;
-        var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.ProfilePicture, outStream.ToArray()));
-        Model.ProfilePictureDataUrl = result;
-        //Do your validations here
-        Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
-        }
-    }
-    }
+        //based upon tenant, show roles
+        var tenant = TenantsService.DataSource.Find(x => x.Id == id);
+        if (tenant != null)
+            {
+            Roles = new();
+            Model.TenantId = tenant?.Id;
+            Model.TenantName = tenant?.Name;
+            //todo 1 take all standard roles from default structure and then add more assigned from Userroles table
+            //step1: load standard roles as per tenant
+            //step2: update assigned roles
+            if (StaticData.Roles != null && StaticData.Roles.Any())
+                {
+                StaticData.RolesOfTenantType(tenant.Type).ForEach(x => Roles.Add(new CheckItem { Key = x.Name!, Value = false }));
+                var existingRoles = await RoleManager.Roles.Where(x => x.UserRoles.Any(ur => ur.TenantId == id && ur.UserId == Model.Id)).Select(x => x.Name).ToListAsync();
+                if (existingRoles != null && existingRoles.Any())
+                    Roles.ForEach(r => { if (existingRoles.Contains(r.Key)) r.Value = true; });
+                Roles = Roles.OrderByDescending(x => x.Value).ToList();
+                }
+            }
+        else
+            {
 
-public async Task Submit()
-    {
-    if (_form is not null)
-    {
-    await _form.Validate();
-    if (_form.IsValid)
+            Roles = new();
+            Model.TenantId = null;
+            Model.TenantName = null;
+            }
+
+        return Task.CompletedTask;
+        }
+
+    private async Task UploadPhoto(InputFileChangeEventArgs e)
         {
-        Model.AssignedRoles = Roles.Where(x => x.Value).Select(x => x.Key).ToArray();
-        await OnFormSubmit.InvokeAsync(Model);
+        var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
+        var imgStream = new MemoryStream();
+        await filestream.CopyToAsync(imgStream);
+        imgStream.Position = 0;
+        using (var outStream = new MemoryStream())
+            {
+            using (var image = Image.Load(imgStream))
+                {
+                image.Mutate(
+                    i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) }));
+                image.Save(outStream, PngFormat.Instance);
+                var filename = e.File.Name;
+                var fi = new FileInfo(filename);
+                var ext = fi.Extension;
+                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.ProfilePicture, outStream.ToArray()));
+                Model.ProfilePictureDataUrl = result;
+                //Do your validations here
+                Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
+                }
+            }
         }
-    }
-    }
 
-// TODO: probably this will be moved as feature in the application layer
-public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>
-    {
-    public ApplicationUserDtoValidator()
-    {
-    RuleFor(v => v.TenantId)
-        .MaximumLength(256)
-        .NotEmpty();
-    //RuleFor(v => v.SuperiorId)
-    //     .MaximumLength(256)
-    //     .NotEmpty().When(x=>!x.UserName.Equals("Administrator", StringComparison.CurrentCultureIgnoreCase));
-    RuleFor(v => v.Provider)
-        .MaximumLength(256)
-        .NotEmpty();
-    RuleFor(v => v.UserName)
-        .MaximumLength(256)
-        .NotEmpty();
-    RuleFor(v => v.Email)
-        .MaximumLength(256)
-        .NotEmpty()
-        .EmailAddress();
-    RuleFor(p => p.Password).NotEmpty().WithMessage("Your password cannot be empty")
-        .MinimumLength(6).WithMessage("Your password length must be at least 6.")
-        .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
-        .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
-        .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
-        .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
-        .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
-    RuleFor(x => x.ConfirmPassword)
-        .Equal(x => x.Password);
-    }
+    public async Task Submit()
+        {
+        if (_form is not null)
+            {
+            await _form.Validate();
+            if (_form.IsValid)
+                {
+                Model.AssignedRoles = Roles.Where(x => x.Value).Select(x => x.Key).ToArray();
+                await OnFormSubmit.InvokeAsync(Model);
+                }
+            }
+        }
 
-    public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-    {
-    var result = await ValidateAsync(ValidationContext<ApplicationUserDto>.CreateWithOptions((ApplicationUserDto)model, x => x.IncludeProperties(propertyName)));
-    if (result.IsValid)
-        return Array.Empty<string>();
-    return result.Errors.Select(e => e.ErrorMessage);
-    };
-    }
+    // TODO: probably this will be moved as feature in the application layer
+    public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>
+        {
+        public ApplicationUserDtoValidator()
+            {
+            RuleFor(v => v.TenantId)
+                .MaximumLength(256)
+                .NotEmpty();
+            //RuleFor(v => v.SuperiorId)
+            //     .MaximumLength(256)
+            //     .NotEmpty().When(x=>!x.UserName.Equals("Administrator", StringComparison.CurrentCultureIgnoreCase));
+            RuleFor(v => v.Provider)
+                .MaximumLength(256)
+                .NotEmpty();
+            RuleFor(v => v.UserName)
+                .MaximumLength(256)
+                .NotEmpty();
+            RuleFor(v => v.Email)
+                .MaximumLength(256)
+                .NotEmpty()
+                .EmailAddress();
+            RuleFor(p => p.Password).NotEmpty().WithMessage("Your password cannot be empty")
+                .MinimumLength(6).WithMessage("Your password length must be at least 6.")
+                .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
+                .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
+                .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
+                .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
+                .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
+            RuleFor(x => x.ConfirmPassword)
+                .Equal(x => x.Password);
+            }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<ApplicationUserDto>.CreateWithOptions((ApplicationUserDto)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+        }
 
 }
