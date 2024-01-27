@@ -155,30 +155,18 @@ public class ApplicationDbContextInitializer
             allTenants = await _userManager.GetAllTenants();
 
         var internalTenant = allTenants.FirstOrDefault(x => x.Type == (byte)TenantTypeEnum.Internal);
-        var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = internalTenant.Id, TenantName = internalTenant.Name, DisplayName = UserName.Administrator, Email = "admin@mail.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
+        await AddNewUserToDb(UserName.Administrator, internalTenant, new List<RoleNamesEnum> { RoleNamesEnum.ROOTADMIN });
 
         var patientTenant = allTenants.FirstOrDefault(x => x.Type == (byte)TenantTypeEnum.Patient);
-        var patient = new ApplicationUser { UserName = UserName.Patient, IsActive = true, Provider = "Local", TenantId = patientTenant.Id, TenantName = patientTenant.Name, DisplayName = UserName.Patient, Email = "patient@mail.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
+        await AddNewUserToDb(RoleNamesEnum.PATIENT.ToString(), patientTenant, new List<RoleNamesEnum> { RoleNamesEnum.PATIENT });
+        await AddNewUserToDb(RoleNamesEnum.PATIENT.ToString()+"1", patientTenant, new List<RoleNamesEnum> { RoleNamesEnum.PATIENT });
 
-        using (var scope = _serviceProvider.CreateScope())
-        {
-            using (_userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>())
-            {
-                if (!_userManager.Users.Any(u => u.UserName == administrator.UserName))
-                {
-                    await _userManager.CreateAsync(administrator, roles: new List<string> { RoleNamesEnum.ROOTADMIN.ToString() }, password: UserName.DefaultPassword);
-                }
-            }
-        }
-        using (var scope = _serviceProvider.CreateScope())
-        {
-            using (_userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>())
+        var hospitalTenant = allTenants.FirstOrDefault(x => x.Type == (byte)TenantTypeEnum.HospitalAndStaff);
+        await AddNewUserToDb(RoleNamesEnum.HOSPITAL.ToString(), patientTenant, new List<RoleNamesEnum> { RoleNamesEnum.HOSPITAL, RoleNamesEnum.HOSPITALADMIN, RoleNamesEnum.VIEWERHOSPITAL});
+        await AddNewUserToDb(RoleNamesEnum.HOSPITALADMIN.ToString() + "1", patientTenant, new List<RoleNamesEnum> { RoleNamesEnum.HOSPITALADMIN});
+        await AddNewUserToDb(RoleNamesEnum.VIEWERHOSPITAL.ToString() + "1", patientTenant, new List<RoleNamesEnum> { RoleNamesEnum.VIEWERHOSPITAL });
 
-                if (!_userManager.Users.Any(u => u.UserName == patient.UserName))
-                {
-                    await _userManager.CreateAsync(patient, roles: new List<string> { RoleNamesEnum.PATIENT.ToString() }, password: UserName.DefaultPassword);
-                }
-        }
+
         #endregion mustRemove
         // Default data
         // Seed, if necessary
@@ -207,6 +195,25 @@ public class ApplicationDbContextInitializer
             _context.Products.Add(new Product { Brand = "MI", Name = "MI 12 Pro", Description = "Xiaomi 12 Pro Android smartphone. Announced Dec 2021. Features 6.73″ display, Snapdragon 8 Gen 1 chipset, 4600 mAh battery, 256 GB storage.", Unit = "EA", Price = 199.00m });
             _context.Products.Add(new Product { Brand = "Logitech", Name = "MX KEYS Mini", Description = "Logitech MX Keys Mini Introducing MX Keys Mini – a smaller, smarter, and mightier keyboard made for creators. Type with confidence on a keyboard crafted for efficiency, stability, and...", Unit = "PA", Price = 99.90m });
             await _context.SaveChangesAsync();
+        }
+    }
+    private static ApplicationUser GetNewUser(string userName, string tenantId, string tenantName)
+    {
+        return new ApplicationUser { UserName = userName, IsActive = true, Provider = "Local", TenantId = tenantId, TenantName = tenantName, DisplayName = userName + " profile", Email = userName + "@mail.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
+    }
+    private async Task AddNewUserToDb(string userName, TenantDto? tenant, List<RoleNamesEnum> roleNamesEnums)
+    {
+        var user = GetNewUser(userName, tenant.Id, tenant.Name);
+
+        using (var scope = _serviceProvider.CreateScope())
+        {
+            using (_userManager = scope.ServiceProvider.GetRequiredService<CustomUserManager>())
+            {
+                if (!_userManager.Users.Any(u => u.UserName == user.UserName))
+                {
+                    await _userManager.CreateAsync(user, roles: roleNamesEnums.Select(e => e.ToString()).ToList(), password: UserName.DefaultPassword);
+                }
+            }
         }
     }
     private async Task AddRoleAndPermissions(ApplicationRole role, IEnumerable<string> permissions)
@@ -263,12 +270,12 @@ public class ApplicationDbContextInitializer
           }
       } */
 
-/*var administrator = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.UserRoleTenants.First().Id, TenantName = _context.UserRoleTenants.First().Name, DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
+/*var user = new ApplicationUser { UserName = UserName.Administrator, Provider = "Local", IsActive = true, TenantId = _context.UserRoleTenants.First().Id, TenantName = _context.UserRoleTenants.First().Name, DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
 var demo = new ApplicationUser { UserName = UserName.Demo, IsActive = true, Provider = "Local", TenantId = _context.UserRoleTenants.First().Id, TenantName = _context.UserRoleTenants.First().Name, DisplayName = UserName.Demo, Email = "neozhu@126.com", EmailConfirmed = true, ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
-if (_userManager.Users.All(u => u.UserName != administrator.UserName))
+if (_userManager.Users.All(u => u.UserName != user.UserName))
 {
-    await _userManager.CreateAsync(administrator, UserName.DefaultPassword);
-    await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name! });
+    await _userManager.CreateAsync(user, UserName.DefaultPassword);
+    await _userManager.AddToRolesAsync(user, new[] { administratorRole.Name! });
 }
 if (_userManager.Users.All(u => u.UserName != demo.UserName))
 {

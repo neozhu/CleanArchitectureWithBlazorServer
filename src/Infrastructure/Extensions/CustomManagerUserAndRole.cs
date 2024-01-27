@@ -327,7 +327,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
                 var toInsert = roleNames.Except(existingAllInCurrentTenant.Select(x => x.Role.NormalizedName)).ToList();
                 var toRemove = existingAllInCurrentTenant.Select(x => x.Role.NormalizedName).ToList().Except(roleNames).ToList();
 
-                if (toInsert.Any())
+                if (toInsert.Count != 0)
                 {
                     var toAdd = new List<ApplicationUserRoleTenant>();
                     toInsert.ForEach(x =>
@@ -339,7 +339,7 @@ public class CustomUserManager : UserManager<ApplicationUser>
                     await _dbContext.UserRoles.AddRangeAsync(toAdd);
                     changesTriggered = true;
                 }
-                if (toRemove.Any())
+                if (toRemove.Count != 0)
                 {
                     _dbContext.UserRoles.RemoveRange(existingAllInCurrentTenant.Where(x => toRemove.Contains(x.Role.NormalizedName)));
                     changesTriggered = true;
