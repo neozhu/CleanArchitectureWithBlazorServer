@@ -54,7 +54,7 @@ public class IdentityService : IIdentityService
     public async Task<List<ApplicationRoleDto>> GetAllRoles()
     {
         var key = $"{nameof(GetAllRoles)}";
-        var roles = await _cache.GetOrAddAsync(key, async () => await _roleManager.Roles.ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider).ToListAsync());
+        var roles = await _cache.GetOrAddAsync(key, async () => await _roleManager.Roles.OrderByDescending(r => r.Level).ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider).ToListAsync());
         return roles;
     }
     public async Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default)

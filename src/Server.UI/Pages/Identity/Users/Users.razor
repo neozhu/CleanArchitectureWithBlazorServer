@@ -2,6 +2,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using CleanArchitecture.Blazor.Domain.Enums
 @using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Infrastructure
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
 @using CleanArchitecture.Blazor.Infrastructure.Persistence;
 @using CleanArchitecture.Blazor.Server.UI.Models.Identity
@@ -138,8 +139,8 @@
                     <MudStack Row="true" AlignItems="AlignItems.Stretch">
                         <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="Tenant or Role name" Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small"></MudTextField>
-                    </MudStack>
-                    <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                        @*  </MudStack>
+                    <MudStack Row="true" AlignItems="AlignItems.Stretch"> *@
                         <MudSelect T="string" Placeholder="Search for tenant" Value="@_searchTenant" Clearable="true" ValueChanged="@(OnSearchTenant)">
                             @foreach (var str in _tenants)
                                 {
@@ -368,8 +369,9 @@
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-        _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
-        var oldTT = TenantsService.DataSource.Select(x => x.Name).ToList();//fetch tenants based on user level permissions
+        _roles = StaticData.Roles.Select(x => x.Name).ToList();
+
+        //var oldTT = TenantsService.DataSource.Select(x => x.Name).ToList();//fetch tenants based on user level permissions
 
         //madhu continue here as UserRoleTenants coming null eventhough its set...need to check
         _currentDto.UserRoleTenants = state.User.GetUserRoleTenants();
@@ -386,11 +388,11 @@
         {
         try
             {
+            _loading = true;
             var userState = await AuthState;
             var tenantId = userState.User.GetTenantId();//had to get all active tenants and type
-            var roles = userState.User.GetAssignRoles();
+            var rolesOfUser = userState.User.GetAssignRoles();
 
-            _loading = true;
             Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
             (x.UserName!.ToLower().Contains(_searchString) ||
             x.Email!.ToLower().Contains(_searchString) ||
@@ -439,6 +441,14 @@
             //any others ,load only of there tenants
             //user search separate page
             var total = await UserManager.Users.CountAsync(searchPredicate);
+            _roles = null;
+            if (total > 0)
+                {
+                var lst = new List<string>();
+                _roles= items.SelectMany(user => user.UserRoleTenants)
+                .Select(urt => urt.RoleName).Distinct().ToList();
+
+                }
             return new GridData<ApplicationUserDto> { TotalItems = total, Items = items };
             }
         finally
@@ -479,10 +489,10 @@
                 Provider = "Local",
                 Email = "",
                 TenantId = userState.User.GetTenantId()
-                                                    ,
+                                                            ,
                 TenantName = userState.User.GetTenantName(),
                 UserRoleTenants = userState.User.GetUserRoleTenants()
-                                                    ,
+                                                            ,
                 UserName = "",
                 AssignedRoles = new[] { RoleNamesEnum.PATIENT.ToString() }
                 };
@@ -883,7 +893,7 @@
                          }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                     new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                                                                                                                {
+                                                                                                                                        {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
@@ -891,7 +901,7 @@
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                                                                                                                                }
+                                                                                                                                        }
                     , L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);

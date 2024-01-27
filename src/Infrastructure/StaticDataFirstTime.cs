@@ -16,8 +16,8 @@ public class StaticData//only for first time
     }
     public async Task<List<ApplicationRoleDto>> LoadUserBaseRoles(bool forceLoad = false)
     {
-        if (forceLoad || Roles == null || !Roles.Any())
-            Roles = (await _identityService.GetAllRoles()).OrderByDescending(r=>r.Level).ToList();
+        if (forceLoad || Roles == null || Roles.Count==0)
+            Roles = (await _identityService.GetAllRoles());
         return Roles;
     }
 
