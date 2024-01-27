@@ -148,9 +148,13 @@
                                 }
                         </MudSelect>
                         <MudSelect T="string" Placeholder="Search for role" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)">
-                            @foreach (var str in _roles)
+                            @{ if(_roles!=null && _roles.Count>0)
+                            {
+                            foreach (var str in _roles)
                                 {
                                 <MudSelectItem Value="@str">@str</MudSelectItem>
+                                }
+                            }
                                 }
                         </MudSelect>
                     </MudStack>
@@ -441,7 +445,7 @@
             //any others ,load only of there tenants
             //user search separate page
           //  var total = await UserManager.Users.CountAsync(searchPredicate);
-            _roles = null;
+            _roles = new();
             if (items.Count > 0)
                 {
                 var lst = new List<string>();
