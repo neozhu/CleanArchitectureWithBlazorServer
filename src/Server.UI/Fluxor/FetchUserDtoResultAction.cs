@@ -24,6 +24,11 @@ public class FetchUserDtoResultAction
             AssignedRoles = dto.AssignedRoles,
             DefaultRole = dto.AssignedRoles.MaxEnumString<RoleNamesEnum>() //dto.DefaultRole
         };
+        //if (dto.UserRoleTenants != null && dto.UserRoleTenants.Any())
+        //{
+        //    UserProfile.AssignedRoles = dto.UserRoleTenants.Where(x => x.TenantId == dto.TenantId).Select(x => x.RoleName).ToList().ToArray();
+        //    UserProfile.DefaultRole = UserProfile.AssignedRoles.First();
+        //}
     }
 
     public UserProfile UserProfile { get; }

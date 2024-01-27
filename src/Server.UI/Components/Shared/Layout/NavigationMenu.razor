@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu
+﻿@using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu
 @using CleanArchitecture.Blazor.Server.UI.Services.Navigation
 @inherits FluxorComponent
 
@@ -56,6 +56,7 @@
                         <MudStack Justify="Justify.SpaceBetween" Spacing="0">
                             <MudText Typo="Typo.body1">@UserProfile?.DisplayName</MudText>
                             <MudText Typo="Typo.body2">@UserProfile?.DefaultRole</MudText>
+                            <MudText Typo="Typo.body2">@UserProfile?.TenantName</MudText>
                         </MudStack>
                     </MudStack>
                 </ChildContent>

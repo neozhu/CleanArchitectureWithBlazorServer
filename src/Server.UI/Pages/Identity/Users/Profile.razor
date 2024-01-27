@@ -51,7 +51,7 @@
                                                 {
                                                     @foreach (var role in model.AssignedRoles)
                                                     {
-                                                        <MudChip Size="MudBlazor.Size.Small">@role</MudChip>
+                                                        <MudChip Size="MudBlazor.Size.Small">@role /@model.TenantName</MudChip>
                                                     }
                                                 }
                                             </div>
@@ -69,7 +69,7 @@
                                                 {
                                                     @foreach (var role in model.AssignedRoles)
                                                     {
-                                                        <MudChip Size="MudBlazor.Size.Small">@role</MudChip>
+                                                        <MudChip Size="MudBlazor.Size.Small">@role/@model.TenantName</MudChip>
                                                     }
                                                 }
                                             </div>

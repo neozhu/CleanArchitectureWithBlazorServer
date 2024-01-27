@@ -11,6 +11,7 @@ public class MenuService : IMenuService
 {
     private readonly List<MenuSectionModel> _features = new()
     {
+        //If roles not mentioned means anyone can access with authentication
         new MenuSectionModel
         {
             Title = "Application",
@@ -68,7 +69,7 @@ public class MenuService : IMenuService
         new MenuSectionModel
         {
             Title = "MANAGEMENT",
-            Roles = new[] { RoleNamesEnum.ROOTADMIN.ToString() , RoleNamesEnum.HOSPITALADMIN.ToString(), RoleNamesEnum.ELEVATEADMINGROUP.ToString(), RoleNamesEnum.ELEVATEADMINVIEWER.ToString() },
+            //Roles = new[] { RoleNamesEnum.ROOTADMIN.ToString() , RoleNamesEnum.HOSPITALADMIN.ToString(), RoleNamesEnum.ELEVATEADMINGROUP.ToString(), RoleNamesEnum.ELEVATEADMINVIEWER.ToString() },
             SectionItems = new List<MenuSectionItemModel>
             {
                 new()

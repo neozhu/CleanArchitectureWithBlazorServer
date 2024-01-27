@@ -296,7 +296,7 @@
 
 @code {
     [Inject]
-    private ICurrentUserService _currentUser{ get; set; }
+    private ICurrentUserService _currentUser { get; set; }
 
     [Inject]
     private IUsersStateContainer UsersStateContainer { get; set; } = default!;
@@ -389,7 +389,7 @@
             var userState = await AuthState;
             var tenantId = userState.User.GetTenantId();//had to get all active tenants and type
             var roles = userState.User.GetAssignRoles();
-                        userState.User.GetUserRoleTenants();
+
             _loading = true;
             Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
             (x.UserName!.ToLower().Contains(_searchString) ||
@@ -400,6 +400,12 @@
             x.Provider!.ToLower().Contains(_searchString));
             var query = UserManager.Users.Where(searchPredicate);
 
+            //allow only particular allowed tenants always rather complete search
+            //var loggedinUserTenants = userState.User.GetUserRoleTenants();
+
+            var allowedTenants = TenantsService.GetAllowedTenants(new ApplicationUserDto() { UserRoleTenants = userState.User.GetUserRoleTenants() });
+
+
             //TODO nxt Instead of writing logic here ,do in backend & use here
             if (!string.IsNullOrEmpty(_searchRole))
                 {
@@ -407,9 +413,17 @@
                 }
             if (!string.IsNullOrEmpty(_searchTenant))
                 {
+                if (!allowedTenants.Any(t => t.Name == _searchTenant)) return null;
+
                 //todo change this to tenantId
                 query = query.Where(x => x.UserRoleTenants.Any(y => y.Tenant.Name == _searchTenant));
+                //to show all my related users then below query
+                //query = query.Where(x => allowedTenants.Select(l => l.Id).Contains(x.TenantId));
+
+                //to show particular currently selected tenant then below query
+                //query = query.Where(x => allowedTenants.Select(l => l.Id).Contains(x.TenantId));
                 }
+
             var items = await query
                  .Include(x => x.UserRoleTenants)
                  .Include(x => x.Superior)
@@ -461,10 +475,10 @@
                 Provider = "Local",
                 Email = "",
                 TenantId = userState.User.GetTenantId()
-                    ,
+                                                ,
                 TenantName = userState.User.GetTenantName(),
                 UserRoleTenants = userState.User.GetUserRoleTenants()
-                    ,
+                                                ,
                 UserName = "",
                 AssignedRoles = new[] { RoleNamesEnum.PATIENT.ToString() }
                 };
@@ -865,7 +879,7 @@
                          }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                     new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                                                                                {
+                                                                                                                            {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
@@ -873,7 +887,7 @@
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                                                                                                }
+                                                                                                                            }
                     , L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
