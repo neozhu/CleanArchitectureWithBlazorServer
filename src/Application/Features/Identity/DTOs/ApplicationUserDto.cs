@@ -77,17 +77,22 @@ public class ApplicationUserDto
     {
         public Mapping()
         {
+            //todo this is not working need to check
             CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
                 .ForMember(x => x.SuperiorName, s => s.MapFrom(y => y.Superior!.UserName))
                 .ForMember(x => x.UserRoleTenants, s => s.MapFrom(c => c.UserRoleTenants))
                 //todo need to make sure of this 
-                .ForMember(x=>x.TenantName, s =>
+
+                .ForMember(x => x.TenantName, s =>
                 s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ? y.TenantName : y.UserRoleTenants.FirstOrDefault().TenantName))
                 .ForMember(x => x.TenantId, s =>
                 s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ? y.TenantId : y.UserRoleTenants.FirstOrDefault().TenantId))
+
                 .ForMember(x => x.AssignedRoles, s =>
                 s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ?
                 y.UserRoleTenants.Where(g => g.TenantId == y.TenantId).Select(r => r.Role.Name) : y.UserRoleTenants.Select(r => r.Role.Name)))
+
+
                 .ForMember(x => x.IsUserTenantRolesActive, s => s.MapFrom(y => y.UserRoleTenants.Any(r => r.IsActive)))
                 ;
         }

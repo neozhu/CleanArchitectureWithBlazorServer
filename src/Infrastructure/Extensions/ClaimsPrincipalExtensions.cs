@@ -66,7 +66,7 @@ public static class ClaimsPrincipalExtensions
     //    => claimsPrincipal.FindFirstValue(ApplicationClaimTypes.UserRoleTenants);
     public static ICollection<ApplicationUserRoleTenantDto>? GetUserRoleTenants(this ClaimsPrincipal claimsPrincipal)
     {
-        var ex = claimsPrincipal.FindFirstValue(ApplicationClaimTypes.UserRoles);
+        var ex = claimsPrincipal.FindFirstValue(ApplicationClaimTypes.UserRoleTenants);
         return string.IsNullOrEmpty(ex) ? null : JsonConvert.DeserializeObject<ICollection<ApplicationUserRoleTenantDto>>(ex);
     }
     public static bool GetStatus(this ClaimsPrincipal claimsPrincipal)

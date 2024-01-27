@@ -3,7 +3,7 @@
 namespace CleanArchitecture.Blazor.Domain.Enums;
 
 public enum TenantTypeEnum : byte
-{
+{//mORE IS HIGHEST PREVILEGE
     Rejected = 0,
     [Description(nameof(Guest))]
     Guest = 1,

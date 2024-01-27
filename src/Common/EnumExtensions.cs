@@ -36,4 +36,29 @@ public static class EnumExtensions
         return enumValues ?? "No valid enum values";
     }
 
+    // var sortedList = EnumSorting.SortByEnum<string, MyEnum>(stringList);
+    public static List<T> SortByEnum<T, U>(List<T> itemList, bool descending = false) where U : IComparable
+    {
+        //below extracts all enum values
+        var itemToEnumMap = Enum.GetValues(typeof(U))
+                                 .Cast<U>()
+                                 .ToDictionary(enumValue => enumValue.ToString());
+
+        //then sort by value
+        if (descending)
+            return itemList.OrderByDescending(item => itemToEnumMap[item.ToString()]).ToList();
+        return itemList.OrderBy(item => itemToEnumMap[item.ToString()]).ToList();
+    }
+
+    public static Enum? MaxEnum<TEnum>(this IEnumerable<Enum>? enumValues) where TEnum : struct
+    {
+        if (!typeof(TEnum).IsEnum)
+        {
+            throw new ArgumentException($"{nameof(TEnum)} must be an enumerated type");
+        }
+        if (enumValues == null || !enumValues.Any()) return null;
+
+        return enumValues.OrderBy(e => Convert.ToByte(e)).Last();//ascending order
+    }
+
 }

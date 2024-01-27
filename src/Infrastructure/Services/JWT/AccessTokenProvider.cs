@@ -62,16 +62,6 @@ public class AccessTokenProvider : IAccessTokenProvider
     {
         var principal = await _userClaimsPrincipalFactory.CreateAsync(applicationUser);
 
-
-        //extra in nammadhu
-        //_tenantProvider.TenantId = applicationUser.TenantId;
-        //_tenantProvider.TenantName = applicationUser.TenantName;
-        //_currentUser.UserId = applicationUser.Id;
-        //_currentUser.UserName = applicationUser.UserName;
-        //_currentUser.TenantId = applicationUser.TenantId;
-        //_currentUser.TenantName = applicationUser.TenantName;
-        //_currentUser.UserRoleTenants ??= new List<ApplicationUserRoleTenantDto>();
-
         SetUserPropertiesFromClaimsPrincipal(principal);
         if (_currentUser.UserRoleTenants != null && _currentUser.UserRoleTenants.Count==0)
             applicationUser.UserRoleTenants.ForEach(x => _currentUser.UserRoleTenants.Add(_mapper.Map<ApplicationUserRoleTenantDto>(x)));

@@ -166,11 +166,13 @@ public class CustomUserManager : UserManager<ApplicationUser>
                     //TODO change below as join operator
                     UserRoleTenants = _dbContext.UserRoles.Where(urt => urt.UserId == user.Id).Select(u => new ApplicationUserRoleTenant
                     {
+                        TenantType = u.Tenant.Type,
                         TenantId = u.TenantId,
                         TenantName = u.Tenant.Name,
                         RoleId = u.RoleId,
-                        RoleName = u.Role.Name
-                    }).ToList(),
+                        RoleName = u.Role.Name,
+                        RoleLevel = u.Role.Level
+                    }).OrderByDescending(x => x.TenantType).ThenByDescending(x => x.RoleLevel).ToList(),
                     Id = user.Id,
                     SecurityStamp = user.SecurityStamp,
                     DisplayName = user.DisplayName,
@@ -189,6 +191,18 @@ public class CustomUserManager : UserManager<ApplicationUser>
                 });
 
             var applicationUser = await query.FirstOrDefaultAsync();
+
+            //TODO had to confirm is this required or not
+            //because resetting to top tenant
+            //if (applicationUser!=null && applicationUser.UserRoleTenants != null && applicationUser.UserRoleTenants.Count > 0)
+            //{
+            //    applicationUser.TenantId = applicationUser.UserRoleTenants.First().TenantId;
+            //    applicationUser.TenantName = applicationUser.UserRoleTenants.First().TenantName;
+            //    //can assign role also like below
+            //    //applicationUser.RoleName = applicationUser.UserRoleTenants.First().RoleName;
+            //}
+
+
             return applicationUser;
         }
     }

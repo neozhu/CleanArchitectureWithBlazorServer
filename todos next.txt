@@ -1,4 +1,6 @@
-﻿next:
+﻿next:tenant switching if multiple exists
+
+done:
 on ""Create a new user"" page make tenant dtropdown listing of tenants
 also on update page
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CleanArchitecture.Blazor.Domain.Enums;
 
 public enum RoleNamesEnum : byte
-{
+{//mORE IS HIGHEST PREVILEGE
     ROOTADMIN = 50,
     ELEVATEADMINGROUP = 45,
     ELEVATEADMINVIEWER = 41,

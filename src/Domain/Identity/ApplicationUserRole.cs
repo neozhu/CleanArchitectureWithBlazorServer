@@ -1,6 +1,7 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -19,7 +20,9 @@ public class ApplicationUserRoleTenant : IdentityUserRole<string>
 
     [NotMapped] public string? UserName { get; set; }
     [NotMapped] public string? RoleName { get; set; }
-    [NotMapped]public string? TenantName { get; set; }
+    [NotMapped] public byte? RoleLevel { get; set; }
+    [NotMapped] public string? TenantName { get; set; }
+    [NotMapped] public byte? TenantType { get; set; }
 
     public override string ToString()
     {
