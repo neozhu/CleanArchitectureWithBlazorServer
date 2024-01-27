@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using CleanArchitecture.Blazor.Domain.Enums;
 using CleanArchitecture.Blazor.Domain.Identity;
 using DocumentFormat.OpenXml.Drawing;
+using Common;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
@@ -35,7 +37,7 @@ public class ApplicationUserDto
     [Description("User Roles and Tenants")]
     public ICollection<ApplicationUserRoleTenantDto> UserRoleTenants { get; set; }
 
-    [Description("Default Role")] public string? DefaultRole => AssignedRoles?.FirstOrDefault();//todo take max permission role
+    [Description("Default Role")] public string? DefaultRole { get; set; }  //=> AssignedRoles?.FirstOrDefault();//todo take max permission role
 
     [Description("Is User Active")] public bool IsActive { get; set; }
 
@@ -83,15 +85,29 @@ public class ApplicationUserDto
                 .ForMember(x => x.UserRoleTenants, s => s.MapFrom(c => c.UserRoleTenants))
                 //todo need to make sure of this 
 
-                .ForMember(x => x.TenantName, s =>
-                s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ? y.TenantName : y.UserRoleTenants.FirstOrDefault().TenantName))
-                .ForMember(x => x.TenantId, s =>
-                s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ? y.TenantId : y.UserRoleTenants.FirstOrDefault().TenantId))
+                .ForMember(x => x.TenantName, s => s.MapFrom(y => y.TenantName))
+                //s.MapFrom(y =>  y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ? y.TenantName : y.UserRoleTenants.FirstOrDefault().TenantName))
 
+                .ForMember(x => x.TenantId, s => s.MapFrom(y => y.TenantId))
+                //s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ? y.TenantId : y.UserRoleTenants.FirstOrDefault().TenantId))
+
+                //.ForMember(x => x.AssignedRoles, s =>
+                //s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ?
+                //y.UserRoleTenants.Where(g => g.TenantId == y.TenantId).Select(r => r.Role.Name) : y.UserRoleTenants.Select(r => r.Role.Name)))
+                //above selects roles of default tenant only
                 .ForMember(x => x.AssignedRoles, s =>
-                s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ?
-                y.UserRoleTenants.Where(g => g.TenantId == y.TenantId).Select(r => r.Role.Name) : y.UserRoleTenants.Select(r => r.Role.Name)))
+                s.MapFrom(y => y.UserRoleTenants.Count > 0 ?
+                EnumExtensions.SortByEnum<string, RoleNamesEnum>(
+                y.UserRoleTenants.Select(r => string.IsNullOrEmpty(r.RoleName) ? (r.Role != null ? r.Role.Name : "") : r.RoleName),true).ToArray() : null))
 
+                 //.ForMember(x => x.DefaultRole, s =>
+                 //s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ?
+                 //y.UserRoleTenants.Where(g => g.TenantId == y.TenantId).Select(r => string.IsNullOrEmpty(r.RoleName) ? (r.Role != null ? r.Role.Name : null) : r.RoleName).First() : y.UserRoleTenants.Select(r => string.IsNullOrEmpty(r.RoleName) ? (r.Role != null ? r.Role.Name : null) : r.RoleName).Distinct().MaxEnumString<RoleNamesEnum>()))
+
+                 .ForMember(x => x.DefaultRole, s =>
+                s.MapFrom(y => y.UserRoleTenants.Any(g => g.TenantId == y.TenantId) ?
+                y.UserRoleTenants.Where(g => g.TenantId == y.TenantId).Select(r => r.RoleName).First()
+                : y.UserRoleTenants.Select(r => r.RoleName).MaxEnumString<RoleNamesEnum>()))
 
                 .ForMember(x => x.IsUserTenantRolesActive, s => s.MapFrom(y => y.UserRoleTenants.Any(r => r.IsActive)))
                 ;

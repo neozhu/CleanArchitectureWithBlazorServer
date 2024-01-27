@@ -22,7 +22,7 @@ public class FetchUserDtoResultAction
             SuperiorId = dto.SuperiorId,
             SuperiorName = dto.SuperiorName,
             AssignedRoles = dto.AssignedRoles,
-            DefaultRole = dto.AssignedRoles.MaxEnumString<RoleNamesEnum>() //dto.DefaultRole
+            DefaultRole = dto.DefaultRole//dto.AssignedRoles.MaxEnumString<RoleNamesEnum>() //
         };
         //if (dto.UserRoleTenants != null && dto.UserRoleTenants.Any())
         //{

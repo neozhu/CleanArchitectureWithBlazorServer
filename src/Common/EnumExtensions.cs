@@ -37,11 +37,12 @@ public static class EnumExtensions
     }
 
     // var sortedList = EnumSorting.SortByEnum<string, MyEnum>(stringList);
-    public static List<T> SortByEnum<T, U>(List<T> itemList, bool descending = false) where U : IComparable
+    public static List<CustomType> SortByEnum<CustomType, enumType>(IEnumerable<CustomType?> itemList, bool descending = false) where enumType : IComparable
     {
+        itemList = itemList.Distinct().ToList();
         //below extracts all enum values
-        var itemToEnumMap = Enum.GetValues(typeof(U))
-                                 .Cast<U>()
+        var itemToEnumMap = Enum.GetValues(typeof(enumType))
+                                 .Cast<enumType>()
                                  .ToDictionary(enumValue => enumValue.ToString());
 
         //then sort by value
