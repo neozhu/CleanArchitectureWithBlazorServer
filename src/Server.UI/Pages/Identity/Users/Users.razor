@@ -440,16 +440,16 @@
             //for internal load all tenants
             //any others ,load only of there tenants
             //user search separate page
-            var total = await UserManager.Users.CountAsync(searchPredicate);
+          //  var total = await UserManager.Users.CountAsync(searchPredicate);
             _roles = null;
-            if (total > 0)
+            if (items.Count > 0)
                 {
                 var lst = new List<string>();
                 _roles= items.SelectMany(user => user.UserRoleTenants)
                 .Select(urt => urt.RoleName).Distinct().ToList();
 
                 }
-            return new GridData<ApplicationUserDto> { TotalItems = total, Items = items };
+            return new GridData<ApplicationUserDto> { TotalItems = items.Count, Items = items };
             }
         finally
             {
@@ -535,8 +535,8 @@
                 }
                 */
                 Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
-                await UserDataProvider.Refresh();
-                await OnRefresh();
+                // await UserDataProviderDontUseThisToAvoidBlasting.Refresh();
+                 await OnRefresh();
                 }
             else
                 {
@@ -596,8 +596,8 @@
                     }
                 //todo had to make which tenant,like other than default tenant
                 Snackbar.Add($"Role update:{modifyCount ?? 0} {ConstantString.UpdateSuccess}", Severity.Info);
-                await OnRefresh();
-                await UserDataProvider.Refresh();
+                 await OnRefresh();
+                // await UserDataProviderDontUseThisToAvoidBlasting.Refresh();
                 }
             else
                 {
@@ -647,7 +647,7 @@
 
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
-            await UserDataProvider.Refresh();
+           // await UserDataProviderDontUseThisToAvoidBlasting.Refresh();
             }
         }
 
@@ -692,7 +692,7 @@
                 }
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
-            await UserDataProvider.Refresh();
+            //await UserDataProviderDontUseThisToAvoidBlasting.Refresh();
             }
 
         }

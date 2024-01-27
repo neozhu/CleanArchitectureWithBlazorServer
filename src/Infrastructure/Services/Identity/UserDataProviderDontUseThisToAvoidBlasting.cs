@@ -7,15 +7,16 @@ using LazyCache;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
-public class UserDataProvider : IUserDataProvider
+public class UserDataProviderDontUseThisToAvoidBlasting : IUserDataProvider
 {
+    //Its bad descision to store all users at one place,so all referred place taking out
     private const string CACHEKEY = "ALL-ApplicationUserDto";
     private readonly IAppCache _cache;
     private readonly IMapper _mapper;
     private readonly CustomUserManager _userManager;
     public List<ApplicationUserDto> DataSource { get; private set; }
 
-    public UserDataProvider(
+    public UserDataProviderDontUseThisToAvoidBlasting(
         IAppCache cache,
         IMapper mapper,
         IServiceScopeFactory scopeFactory)
@@ -31,13 +32,13 @@ public class UserDataProvider : IUserDataProvider
 
     public void Initialize()
     {
-        DataSource = _cache.GetOrAdd(CACHEKEY,()=>_userManager.Users.Include(x => x.UserRoleTenants).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x=>x.UserName).ToList());
+        DataSource = _cache.GetOrAdd(CACHEKEY, () => _userManager.Users.Include(x => x.UserRoleTenants).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x => x.UserName).ToList());
         OnChange?.Invoke();
     }
 
     public async Task InitializeAsync()
     {
-        DataSource =await _cache.GetOrAddAsync(CACHEKEY,()=> _userManager.Users.Include(x => x.UserRoleTenants).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x => x.UserName).ToListAsync());
+        DataSource = await _cache.GetOrAddAsync(CACHEKEY, () => _userManager.Users.Include(x => x.UserRoleTenants).ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x => x.UserName).ToListAsync());
         OnChange?.Invoke();
     }
 

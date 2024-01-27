@@ -288,11 +288,11 @@ public static class DependencyInjection
                 };
             });
         services.ConfigureApplicationCookie(options => { options.LoginPath = "/pages/authentication/login"; });
-        services.AddSingleton<UserDataProvider>()
+        services.AddSingleton<UserDataProviderDontUseThisToAvoidBlasting>()
             .AddSingleton<IUserDataProvider>(sp =>
             {
-                var service = sp.GetRequiredService<UserDataProvider>();
-                service.Initialize();
+                var service = sp.GetRequiredService<UserDataProviderDontUseThisToAvoidBlasting>();
+              //  service.Initialize();
                 return service;
             });
 
