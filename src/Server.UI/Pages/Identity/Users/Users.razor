@@ -423,6 +423,10 @@
                 //to show particular currently selected tenant then below query
                 //query = query.Where(x => allowedTenants.Select(l => l.Id).Contains(x.TenantId));
                 }
+            else
+                {
+                query = query.Where(x => x.UserRoleTenants.Any(y => y.Tenant.Id == userState.User.GetTenantId()));
+                }
 
             var items = await query
                  .Include(x => x.UserRoleTenants)
@@ -475,10 +479,10 @@
                 Provider = "Local",
                 Email = "",
                 TenantId = userState.User.GetTenantId()
-                                                ,
+                                                    ,
                 TenantName = userState.User.GetTenantName(),
                 UserRoleTenants = userState.User.GetUserRoleTenants()
-                                                ,
+                                                    ,
                 UserName = "",
                 AssignedRoles = new[] { RoleNamesEnum.PATIENT.ToString() }
                 };
@@ -879,7 +883,7 @@
                          }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                     new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                                                                                                            {
+                                                                                                                                {
                       {L["Id"],item => item.Id},
                       {L["User Name"],item => item.UserName},
                       {L["Display Name"],item => item.DisplayName},
@@ -887,7 +891,7 @@
                       {L["Phone Number"],item => item.PhoneNumber},
                       {L["Tenant Id"],item => item.TenantId},
                       {L["Tenant Name"],item => item.TenantName},
-                                                                                                                            }
+                                                                                                                                }
                     , L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
