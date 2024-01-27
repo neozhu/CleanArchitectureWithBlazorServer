@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Server.UI/bin/Debug/net6.0/CleanArchitecture.Blazor.Server.UI.dll",
+            "program": "${workspaceFolder}/src/Server.UI/bin/Debug/net8.0/CleanArchitecture.Blazor.Server.UI.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/Server.UI",
             "stopAtEntry": false,
