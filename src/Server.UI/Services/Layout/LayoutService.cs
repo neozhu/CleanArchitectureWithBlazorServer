@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Microsoft.IdentityModel.Tokens;
 
@@ -227,5 +227,6 @@ public class LayoutService
 
 
         await _userPreferencesService.SaveUserPreferences(_userPreferences);
+        OnMajorUpdateOccured();
     }
 }
