@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu
+﻿@using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu
 @using CleanArchitecture.Blazor.Server.UI.Services.Navigation
 @inherits FluxorComponent
 
@@ -23,61 +23,6 @@
             <b>@L[Settings.AppName]</b>
         </MudText>
     </MudDrawerHeader>
-
-    @if (DrawerOpen)
-    {
-        <div class="mx-3">
-            <MudButton Class="d-flex justify-start my-3 user-button"
-                       FullWidth="true">
-                <ChildContent>
-                    <MudStack Row="true">
-                        @if (IsLoading)
-                        {
-                            <MudSkeleton SkeletonType="SkeletonType.Circle" Width="40px" Height="40px"/>
-                            <MudStack Justify="Justify.Center" Spacing="0">
-                                <MudSkeleton Width="120px" Height="12px"/>
-                                <MudSkeleton Width="120px" Height="12px"/>
-                            </MudStack>
-                        }
-                        else
-                        {
-                            <MudAvatar>
-                                @if (string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl))
-                                {
-                                    <MudImage>@UserProfile?.UserName?.First()</MudImage>
-                                }
-                                else
-                                {
-                                    <MudImage Src="@UserProfile?.ProfilePictureDataUrl"></MudImage>
-                                }
-
-                            </MudAvatar>
-                        }
-                        <MudStack Justify="Justify.SpaceBetween" Spacing="0">
-                            <MudText Typo="Typo.body1">@UserProfile?.DisplayName</MudText>
-                            <MudText Typo="Typo.body2">@UserProfile?.DefaultRole</MudText>
-                        </MudStack>
-                    </MudStack>
-                </ChildContent>
-            </MudButton>
-        </div>
-    }
-    else
-    {
-        <div class="d-flex justify-center my-3">
-            <MudAvatar>
-                @if (string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl))
-                {
-                    <MudImage>@UserProfile?.UserName?.First()</MudImage>
-                }
-                else
-                {
-                    <MudImage Src="@UserProfile?.ProfilePictureDataUrl"></MudImage>
-                }
-
-            </MudAvatar>
-        </div>
-    }
 
     <MudNavMenu>
         @foreach (var section in MenuSections.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))

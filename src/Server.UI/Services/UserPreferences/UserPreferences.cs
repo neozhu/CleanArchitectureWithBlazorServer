@@ -1,4 +1,4 @@
-// Copyright (c) MudBlazor 2021
+﻿// Copyright (c) MudBlazor 2021
 // MudBlazor licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -28,7 +28,7 @@ public class UserPreferences
     public double Body1FontSize => DefaultFontSize;
     public double Body2FontSize => DefaultFontSize - 0.125;
     public double ButtonFontSize => DefaultFontSize;
-    public double CaptionFontSize => DefaultFontSize - 0.125;
+    public double CaptionFontSize => DefaultFontSize + 0.0625;
     public double OverlineFontSize => DefaultFontSize - 0.125;
     public double Subtitle1FontSize => DefaultFontSize + 0.125;
     public double Subtitle2FontSize => DefaultFontSize;
