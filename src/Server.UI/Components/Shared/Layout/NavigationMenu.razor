@@ -18,7 +18,7 @@
         <MudIcon Class="ml-6 mr-2"
                  Color="Color.Primary"
                  Icon="@Icons.Custom.Brands.MudBlazor"
-                 Size="Size.Large"/>
+                 Size="Size.Large" />
         <MudText Typo="Typo.subtitle2">
             <b>@L[Settings.AppName]</b>
         </MudText>
@@ -29,16 +29,15 @@
         {
             @if (section is not null)
             {
-                @if (DrawerOpen)
-                {
-                    <div class="@(LayoutService.IsRTL ? "mr-6" : "ml-6") my-3">
-                        <MudText Typo="Typo.caption">
-                            <b>
-                                @(L[section.Title])
-                            </b>
-                        </MudText>
-                    </div>
-                }
+
+                <div class="@(LayoutService.IsRTL ? "mr-6" : "ml-6") my-3">
+                    <MudText Typo="Typo.caption">
+                        <b>
+                            @(L[section.Title])
+                        </b>
+                    </MudText>
+                </div>
+
 
                 @if (section.SectionItems is not null)
                 {
@@ -49,21 +48,20 @@
                             <MudNavGroup Icon="@sectionItem.Icon" Title="@L[sectionItem.Title]" Expanded="Expanded(sectionItem)">
                                 @foreach (var menuItem in sectionItem.MenuItems.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
                                 {
-                                    @if (DrawerOpen)
-                                    {
-                                        <MudNavLink Disabled="@(menuItem.PageStatus != PageStatus.Completed)" Href="@(menuItem.Href)" Target="@(menuItem.Target)" Match="NavLinkMatch.All">
-                                            <div class="d-flex">
-                                                @(L[menuItem.Title])
-                                                @if (menuItem.PageStatus != PageStatus.Completed)
-                                                {
-                                                    <MudSpacer/>
-                                                    <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
-                                                        @(L[menuItem.PageStatus.GetDescription()])
-                                                    </MudChip>
-                                                }
-                                            </div>
-                                        </MudNavLink>
-                                    }
+
+                                    <MudNavLink Disabled="@(menuItem.PageStatus != PageStatus.Completed)" Href="@(menuItem.Href)" Target="@(menuItem.Target)" Match="NavLinkMatch.All">
+                                        <div class="d-flex">
+                                            @(L[menuItem.Title])
+                                            @if (menuItem.PageStatus != PageStatus.Completed)
+                                            {
+                                                <MudSpacer />
+                                                <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
+                                                    @(L[menuItem.PageStatus.GetDescription()])
+                                                </MudChip>
+                                            }
+                                        </div>
+                                    </MudNavLink>
+
                                 }
                             </MudNavGroup>
                         }
@@ -74,7 +72,7 @@
                                     @(L[sectionItem.Title])
                                     @if (sectionItem.PageStatus != PageStatus.Completed)
                                     {
-                                        <MudSpacer/>
+                                        <MudSpacer />
                                         <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
                                             @(L[sectionItem.PageStatus.GetDescription()])
                                         </MudChip>
@@ -101,6 +99,7 @@
     .mud-nav-link {
         white-space: normal !important;
     }
+
     .user-button {
         text-transform: none;
         background: rgba(var(--mud-palette-primary-rgb), 0.1)
@@ -119,9 +118,10 @@
             border-left: 3px solid var(--mud-palette-primary);
             background-color: rgba(var(--mud-palette-primary-rgb), 0.1);
         }
+
         .side-menu {
             border-left: 1px solid var(--mud-palette-table-lines)
-        }  
+        }
     </style>
 }
 else
@@ -130,7 +130,7 @@ else
         .mud-nav-link.active:not(.mud-nav-link-disabled) {
             border-right: 3px solid var(--mud-palette-primary);
         }
-        
+
         .side-menu {
             border-right: 1px solid var(--mud-palette-table-lines)
         }
@@ -139,9 +139,9 @@ else
 
 @code
 {
-    [EditorRequired] [Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
+    [EditorRequired][Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
 
-    [EditorRequired] [Parameter] public bool DrawerOpen { get; set; }
+    [EditorRequired][Parameter] public bool DrawerOpen { get; set; }
 
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
     private bool IsLoading => UserProfileState.Value.IsLoading;
