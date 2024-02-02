@@ -1,14 +1,77 @@
-﻿.loadScreen-fade-in {
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
+﻿.mud-input {
+    font-size: var(--mud-typography-default-size);
 }
 
-.loadScreen-fade-out {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+.mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
+    font-size: var(--mud-typography-default-size);
 }
 
-.loadScreen-initial-hidden {
-    opacity: 0;
-    visibility: hidden;
+.mud-expand-panel .mud-expand-panel-header {
+    font-size: var(--mud-typography-subtitle1-size);
+}
+
+.mud-button-year {
+    font-size: var(--mud-typography-default-size);
+}
+
+.mud-table-cell {
+    font-size: var(--mud-typography-default-size);
+}
+
+.mud-typography-body1 {
+    font-size: var(--mud-typography-body1-size);
+}
+
+.mud-typography-body2 {
+    font-size: var(--mud-typography-body2-size);
+}
+
+.mud-button-outlined-size-small {
+    font-size: var(--mud-typography-body2-size);
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    background-color: var(--mud-palette-error);
+    color: var(--mud-palette-error-text);
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    padding: 0.6rem 1.75rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
+}
+
+#reconnect-modal {
+    background: lightyellow;
+    background-color: var(--mud-palette-warning-hover);
+    color: var(--mud-palette-warning-darken);
+    top: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    padding: 0.6rem 1.75rem 0.7rem 1.25rem;
+    margin: 0px;
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
+}
+
+
+.mud-nav-link {
+    white-space: normal !important;
+}
+
+.user-button {
+    text-transform: none;
+    background: rgba(var(--mud-palette-primary-rgb), 0.1)
+}
+
+.side-menu .mud-chip.mud-chip-size-small {
+    font-size: 0.625rem;
+    height: 1.125rem;
 }

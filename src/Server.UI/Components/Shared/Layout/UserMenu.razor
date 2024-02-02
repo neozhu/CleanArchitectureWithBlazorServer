@@ -1,7 +1,8 @@
-@using CleanArchitecture.Blazor.Infrastructure.Services.JWT
+﻿@using CleanArchitecture.Blazor.Infrastructure.Services.JWT
 @using CleanArchitecture.Blazor.Server.UI.Services
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @inherits FluxorComponent
-
+@inject IJSRuntime JS
 @inject NavigationManager NavigationManager
 @inject IState<UserProfileState> UserProfileState
 @inject IStringLocalizer<SharedResource> L
@@ -93,6 +94,7 @@
         {
             await TokenProvider.RemoveAuthDataFromStorage();
             ((BlazorAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
+            await new ExternalAuth(JS).Logout();
         }
     }
 }

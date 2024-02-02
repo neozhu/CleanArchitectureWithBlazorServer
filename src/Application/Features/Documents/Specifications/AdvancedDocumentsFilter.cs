@@ -13,5 +13,5 @@ public enum DocumentListView
 public class AdvancedDocumentsFilter : PaginationFilter
 {
     public DocumentListView ListView { get; set; } = DocumentListView.All;
-    public required UserProfile CurrentUser { get; set; }
+    public UserProfile? CurrentUser { get; set; }
 }

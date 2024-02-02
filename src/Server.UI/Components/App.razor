@@ -1,149 +1,27 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <base href="/"/>
-    <link href="css/app.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet"/>
     <link href="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.css" rel="stylesheet"/>
-
-    <style>
-
-
-        .mud-input {
-            font-size: var(--mud-typography-default-size);
-        }
-
-        .mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
-            font-size: var(--mud-typography-default-size);
-        }
-
-        .mud-expand-panel .mud-expand-panel-header {
-            font-size: var(--mud-typography-subtitle1-size);
-        }
-
-        .mud-button-year {
-            font-size: var(--mud-typography-default-size);
-        }
-
-        .mud-table-cell {
-            font-size: var(--mud-typography-default-size);
-        }
-
-        .mud-typography-body1 {
-            font-size: var(--mud-typography-body1-size);
-        }
-
-        .mud-typography-body2 {
-            font-size: var(--mud-typography-body2-size);
-        }
-
-        .mud-button-outlined-size-small {
-            font-size: var(--mud-typography-body2-size);
-        }
-
-        #blazor-error-ui {
-            background: lightyellow;
-            background-color: var(--mud-palette-error);
-            color: var(--mud-palette-error-text);
-            bottom: 0;
-            box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-            display: none;
-            left: 0;
-            padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-            padding: 0.6rem 1.75rem 0.7rem 1.25rem;
-            position: fixed;
-            width: 100%;
-            z-index: 9999;
-        }
-
-        #reconnect-modal {
-            background: lightyellow;
-            background-color: var(--mud-palette-warning-hover);
-            color: var(--mud-palette-warning-darken);
-            top: 0;
-            box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-            display: none;
-            left: 0;
-            padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-            padding: 0.6rem 1.75rem 0.7rem 1.25rem;
-            margin: 0px;
-            position: fixed;
-            width: 100%;
-            z-index: 9999;
-        }
-    </style>
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="CleanArchitecture.Blazor.Server.UI.styles.css" rel="stylesheet" />
     <HeadOutlet @rendermode="new InteractiveServerRenderMode(false)"/>
 </head>
 
 <body>
     <Routes @rendermode="new InteractiveServerRenderMode(false)"/>
     <script src="_framework/blazor.web.js"></script>
-    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
-    <script src="js/msal/authConfig.js"></script>
-
-    <script src="https://accounts.google.com/gsi/client"></script>
-    <script src="js/gapi/auth2config.js"></script>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
+    <script type="text/javascript" src="https://accounts.google.com/gsi/client"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"></script>
     <script src="_content/BlazorTime/blazorTime.js"></script>
-    <script type="text/javascript">
-
-        async function externalLogin(provider, dotNetHelper) {
-            if (provider == 'Microsoft') {
-                await loginWithMicrosoft(provider, dotNetHelper);
-            } else if (provider == 'Google') {
-                await loginWithGoogle(provider, dotNetHelper);
-            }
-
-        }
-        async function loginWithMicrosoft(provider, dotNetHelper) {
-            var client = new msal.PublicClientApplication(msalConfig);
-            var response = await client.loginPopup(loginRequest);
-            await dotNetHelper.invokeMethodAsync('ConfirmExternal', provider, response.account.username, response.account.name, response.accessToken);
-            console.log('login with microsoft success');
-            localStorage.setItem('microsoft_client_token', response.account.homeAccountId);
-        }
-        async function loginWithGoogle(provider, dotNetHelper) {
-            console.log(provider + 'initialize');
-            client = google.accounts.oauth2.initTokenClient({
-                client_id: auth2Config.clientId,
-                scope: auth2Config.scope,
-                ux_mode: 'popup',
-                callback: async response => {
-                    const access_token = response.access_token;
-                    const url = `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`;
-                    const data = await fetch(url).then(response => response.json());
-                    await dotNetHelper.invokeMethodAsync('ConfirmExternal', provider, data.email, data.name, access_token);
-                    console.log('login with microsoft success');
-                    localStorage.setItem('google_client_token', access_token);
-
-                }
-            });
-            client.requestAccessToken();
-        }
-        async function externalLogout() {
-            let client_token = localStorage.getItem('microsoft_client_token');
-            if (client_token) {
-                const client = new msal.PublicClientApplication(msalConfig);
-                const logoutRequest = {
-                    account: client.getAccountByHomeId(client_token)
-                };
-
-                await client.logoutPopup(logoutRequest);
-                localStorage.removeItem('microsoft_client_token');
-            } else {
-                client_token = localStorage.getItem('google_client_token');
-                if (client_token) {
-                    google.accounts.oauth2.revoke(client_token);
-                    localStorage.removeItem('google_client_token');
-                }
-            }
-        }
-    </script>
+  
 </body>
 
 </html>

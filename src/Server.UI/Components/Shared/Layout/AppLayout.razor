@@ -32,7 +32,9 @@
                 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mb-4 mt-4">
                     <ErrorBoundary @ref="_errorBoundary">
                         <ChildContent>
-                            @Body
+                            <CascadingValue Value="@_userProfile">
+                                @Body
+                            </CascadingValue>
                         </ChildContent>
                         <ErrorContent Context="exception">
                             <CustomError Exception="exception"></CustomError>
@@ -55,9 +57,15 @@
     private MudThemeProvider _mudThemeProvider = null!;
     private bool _themingDrawerOpen;
     private bool _defaultDarkMode;
-
-     private ErrorBoundary? _errorBoundary { set; get; }
-
+    private UserProfile? _userProfile;
+    private ErrorBoundary? _errorBoundary { set; get; }
+    [CascadingParameter] 
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState;
+        _userProfile = state.User.GetUserProfileFromClaim();
+    }
     protected override void OnParametersSet()
     {
         ResetBoundary();
