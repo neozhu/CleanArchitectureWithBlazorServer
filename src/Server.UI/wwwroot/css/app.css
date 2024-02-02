@@ -60,3 +60,18 @@
     width: 100%;
     z-index: 9999;
 }
+
+
+.mud-nav-link {
+    white-space: normal !important;
+}
+
+.user-button {
+    text-transform: none;
+    background: rgba(var(--mud-palette-primary-rgb), 0.1)
+}
+
+.side-menu .mud-chip.mud-chip-size-small {
+    font-size: 0.625rem;
+    height: 1.125rem;
+}

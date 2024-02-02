@@ -1,9 +1,7 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu
 @using CleanArchitecture.Blazor.Server.UI.Services.Navigation
-@inherits FluxorComponent
 
 @inject IMenuService MenuService
-@inject IState<UserProfileState> UserProfileState
 @inject LayoutService LayoutService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<NavigationMenu> L
@@ -94,22 +92,7 @@
 
 </MudDrawer>
 
-<style>
 
-    .mud-nav-link {
-        white-space: normal !important;
-    }
-
-    .user-button {
-        text-transform: none;
-        background: rgba(var(--mud-palette-primary-rgb), 0.1)
-    }
-
-    .side-menu .mud-chip.mud-chip-size-small {
-        font-size: 0.625rem;
-        height: 1.125rem;
-    }
-</style>
 
 @if (LayoutService.IsRTL)
 {
@@ -139,19 +122,22 @@ else
 
 @code
 {
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     [EditorRequired][Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
 
     [EditorRequired][Parameter] public bool DrawerOpen { get; set; }
 
-    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
-    private bool IsLoading => UserProfileState.Value.IsLoading;
     private IEnumerable<MenuSectionModel> MenuSections => MenuService.Features;
-    private string[] Roles => UserProfile.AssignedRoles ?? Array.Empty<string>();
+    private string[] Roles = Array.Empty<string>();
 
     private bool Expanded(MenuSectionItemModel menu)
     {
         var href = NavigationManager.Uri[(NavigationManager.BaseUri.Length - 1)..];
         return menu is { IsParent: true, MenuItems: not null } &&
                menu.MenuItems.Any(x => !string.IsNullOrEmpty(x.Href) && x.Href.Equals(href));
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        Roles = (await AuthState).User.GetRoles() ?? Array.Empty<string>();
     }
 }

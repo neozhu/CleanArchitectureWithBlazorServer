@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences
+﻿@using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences
 @using System.Globalization
 @inject LayoutService LayoutService
 @inject IStringLocalizer<SharedResource> L
@@ -18,7 +18,7 @@
                        OnClick="@(() => ThemingDrawerOpenChanged.InvokeAsync(false))"
                        Size="Size.Small"/>
     </MudDrawerHeader>
-    <MudDivider/>
+
     <div class="ma-6">
         <MudText Typo="Typo.body2">
             <b>@L["Mode"]</b>

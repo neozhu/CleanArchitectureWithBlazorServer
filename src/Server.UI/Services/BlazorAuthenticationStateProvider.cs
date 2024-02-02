@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 

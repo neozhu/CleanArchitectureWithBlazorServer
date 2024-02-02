@@ -1,4 +1,5 @@
-@page "/pages/authentication/login" 
+﻿@page "/pages/authentication/login" 
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -189,7 +190,8 @@
 
     private async Task SignInExternal(string provider)
     {
-        await JS.InvokeVoidAsync("externalLogin", provider, DotNetObjectReference.Create(this));
+        await new ExternalAuth(JS).Login(provider, DotNetObjectReference.Create(this));
+       
     }
 
     [JSInvokable]

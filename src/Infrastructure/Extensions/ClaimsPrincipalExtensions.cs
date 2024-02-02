@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
@@ -7,6 +7,30 @@ namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {
+    public static UserProfile GetUserProfileFromClaim(this
+        ClaimsPrincipal claimsPrincipal
+           )
+    {
+        var profile = new UserProfile() { Email = "", UserId = "", UserName = "" };
+        if (claimsPrincipal.Identity?.IsAuthenticated ?? false)
+        {
+            profile.UserId = claimsPrincipal.GetUserId() ?? "";
+            profile.UserName = claimsPrincipal.GetUserName() ?? "";
+            profile.TenantName = claimsPrincipal.GetTenantName();
+            profile.PhoneNumber = claimsPrincipal.GetPhoneNumber();
+            profile.SuperiorName = claimsPrincipal.GetSuperiorName();
+            profile.SuperiorId = claimsPrincipal.GetSuperiorId();
+            profile.Email = claimsPrincipal.GetEmail() ?? "";
+            profile.DisplayName = claimsPrincipal.GetDisplayName();
+            profile.AssignedRoles = claimsPrincipal.GetRoles();
+            profile.DefaultRole = profile.AssignedRoles?.First();
+            profile.ProfilePictureDataUrl = claimsPrincipal.GetProfilePictureDataUrl();
+            profile.IsActive = true;
+
+        }
+        return profile;
+    }
+
     public static string? GetEmail(this ClaimsPrincipal claimsPrincipal)
     {
         return claimsPrincipal.FindFirstValue(ClaimTypes.Email);

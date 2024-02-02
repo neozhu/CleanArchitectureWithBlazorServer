@@ -1,7 +1,6 @@
-@page "/pages/documents"
+﻿@page "/pages/documents"
 
 @attribute [Authorize(Policy = Permissions.Documents.View)]
-@inherits FluxorComponent
 @using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.GetFileStream
@@ -16,8 +15,6 @@
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
 @implements IDisposable
-
-@inject IState<UserProfileState> UserProfileState
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject HubClient Client
 @inject IMediator Mediator
@@ -228,7 +225,8 @@
 @code {
     [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; } = default!;
 
-    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
+    [CascadingParameter]
+    private UserProfile? UserProfile { get; set; }
     private string? Title { get; set; }
 
     private HashSet<DocumentDto> _selectedItems = new();
@@ -264,7 +262,6 @@
         _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
         Client.JobCompletedEvent += _client_JobCompleted;
         Client.JobStartedEvent += _client_JobStarted;
-        UserProfileState.StateChanged += StateOnStateChanged;
         await Client.StartAsync();
         Query = new DocumentsWithPaginationQuery { CurrentUser = UserProfile };
     }
@@ -287,20 +284,12 @@
         });
     }
 
-    private void StateOnStateChanged(object? sender, EventArgs args)
-    {
-        InvokeAsync(async () =>
-        {
-            if (!UserProfileState.Value.IsLoading) await _table.ReloadServerData();
-        });
-    }
+    
 
-    public new void Dispose()
+    public void Dispose()
     {
-        UserProfileState.StateChanged -= StateOnStateChanged;
         Client.JobCompletedEvent -= _client_JobCompleted;
         Client.JobStartedEvent -= _client_JobStarted;
-        base.Dispose();
     }
 
     private async Task<GridData<DocumentDto>> ServerReload(GridState<DocumentDto> state)

@@ -1,9 +1,9 @@
-@page "/system/audittrails"
+﻿@page "/system/audittrails"
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching
-@inherits FluxorComponent
+
 @attribute [Authorize(Policy = Permissions.AuditTrails.View)]
 
 @inject IStringLocalizer<AuditTrails> L
@@ -135,7 +135,8 @@
     private readonly AuditTrailDto _currentDto = new();
 
     private AuditTrailsWithPaginationQuery Query { get; } = new();
-    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
+    [CascadingParameter]
+    private UserProfile? UserProfile { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

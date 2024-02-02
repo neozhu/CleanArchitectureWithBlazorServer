@@ -1,4 +1,4 @@
-@page "/pages/products"
+﻿@page "/pages/products"
 @using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
@@ -13,12 +13,9 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
 
 @attribute [Authorize(Policy = Permissions.Products.View)]
-@inherits FluxorComponent
-
 @inject IJSRuntime JS
 @inject IStringLocalizer<Products> L
 @inject IMapper Mapper
-@inject IState<UserProfileState> UserProfileState
 @inject IMediator Mediator
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 
@@ -273,7 +270,8 @@
     private bool _canExport;
 
     private ProductsWithPaginationQuery Query { get; } = new();
-    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
+    [CascadingParameter]
+    private UserProfile? UserProfile{ get; set; }
 
     protected override async Task OnInitializedAsync()
     {
