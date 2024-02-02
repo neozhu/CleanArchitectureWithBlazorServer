@@ -128,7 +128,9 @@ else
     [EditorRequired][Parameter] public bool DrawerOpen { get; set; }
 
     private IEnumerable<MenuSectionModel> MenuSections => MenuService.Features;
-    private string[] Roles = Array.Empty<string>();
+    [EditorRequired]
+    [Parameter]
+    public string[] Roles { get; set; }= Array.Empty<string>();
 
     private bool Expanded(MenuSectionItemModel menu)
     {
@@ -136,8 +138,5 @@ else
         return menu is { IsParent: true, MenuItems: not null } &&
                menu.MenuItems.Any(x => !string.IsNullOrEmpty(x.Href) && x.Href.Equals(href));
     }
-    protected override async Task OnInitializedAsync()
-    {
-        Roles = (await AuthState).User.GetRoles() ?? Array.Empty<string>();
-    }
+   
 }

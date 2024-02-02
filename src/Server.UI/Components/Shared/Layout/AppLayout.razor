@@ -21,7 +21,7 @@
                         RightToLeft="@LayoutService.IsRTL"
                         RightToLeftToggle="LayoutService.ToggleRightToLeft"
                         OnSettingClick="@(() => _themingDrawerOpen = true)" />
-            <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen"
+            <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@_userProfile?.AssignedRoles"
                             DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler" />
             <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
                         ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
