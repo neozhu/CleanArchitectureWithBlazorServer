@@ -250,8 +250,10 @@
 </style>
 
 @code{
-    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-
+    [CascadingParameter] 
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [CascadingParameter]
+    private UserProfile? UserProfile { get; set; }
     public string? Title { get; private set; }
     private HashSet<ProductDto> _selectedItems = new();
     private MudDataGrid<ProductDto> _table = default!;
@@ -270,8 +272,7 @@
     private bool _canExport;
 
     private ProductsWithPaginationQuery Query { get; } = new();
-    [CascadingParameter]
-    private UserProfile? UserProfile{ get; set; }
+    
 
     protected override async Task OnInitializedAsync()
     {
