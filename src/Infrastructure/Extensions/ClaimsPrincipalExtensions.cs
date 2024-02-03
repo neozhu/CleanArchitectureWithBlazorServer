@@ -16,6 +16,7 @@ public static class ClaimsPrincipalExtensions
         {
             profile.UserId = claimsPrincipal.GetUserId() ?? "";
             profile.UserName = claimsPrincipal.GetUserName() ?? "";
+            profile.TenantId = claimsPrincipal.GetTenantId();
             profile.TenantName = claimsPrincipal.GetTenantName();
             profile.PhoneNumber = claimsPrincipal.GetPhoneNumber();
             profile.SuperiorName = claimsPrincipal.GetSuperiorName();
