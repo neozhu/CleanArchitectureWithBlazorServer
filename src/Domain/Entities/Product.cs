@@ -5,7 +5,7 @@ using CleanArchitecture.Blazor.Domain.Common.Entities;
 
 namespace CleanArchitecture.Blazor.Domain.Entities;
 
-public class Product : BaseAuditableEntity
+public class Product : BaseAuditableEntity, IAuditTrial
 {
     public string? Name { get; set; }
     public string? Description { get; set; }

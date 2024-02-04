@@ -24,7 +24,7 @@ public class ProductCreatedEventHandler : INotificationHandler<CreatedEvent<Prod
         _timer.Start();
         await Task.Delay(5000, cancellationToken);
         _timer.Stop();
-        _logger.LogInformation("Domain Event: {DomainEvent},{ElapsedMilliseconds}ms", notification.GetType().FullName,
+        _logger.LogInformation("Domain Event - Product created: {DomainEvent},{@Entity},{ElapsedMilliseconds}ms", nameof(notification), notification.Entity,
             _timer.ElapsedMilliseconds);
     }
 }

@@ -17,7 +17,7 @@ public class ProductUpdatedEventHandler : INotificationHandler<UpdatedEvent<Prod
 
     public Task Handle(UpdatedEvent<Product> notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Domain Event: {DomainEvent}", notification.GetType().FullName);
+        _logger.LogInformation("Domain Event - Product Upated: {DomainEvent}, {@Entity}", nameof(notification), notification.Entity);
 
         return Task.CompletedTask;
     }
