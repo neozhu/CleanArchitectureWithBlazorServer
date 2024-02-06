@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 
@@ -24,7 +25,7 @@ public static class ClaimsPrincipalExtensions
             profile.Email = claimsPrincipal.GetEmail() ?? "";
             profile.DisplayName = claimsPrincipal.GetDisplayName();
             profile.AssignedRoles = claimsPrincipal.GetRoles();
-            profile.DefaultRole = profile.AssignedRoles?.First();
+            profile.DefaultRole = profile.AssignedRoles.Any()?profile.AssignedRoles.First():RoleName.Basic;
             profile.ProfilePictureDataUrl = claimsPrincipal.GetProfilePictureDataUrl();
             profile.IsActive = true;
 
@@ -97,7 +98,7 @@ public static class ClaimsPrincipalExtensions
         return claimsPrincipal.FindFirstValue(ApplicationClaimTypes.AssignedRoles);
     }
 
-    public static string[]? GetRoles(this ClaimsPrincipal claimsPrincipal)
+    public static string[] GetRoles(this ClaimsPrincipal claimsPrincipal)
     {
         return claimsPrincipal.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToArray();
     }
