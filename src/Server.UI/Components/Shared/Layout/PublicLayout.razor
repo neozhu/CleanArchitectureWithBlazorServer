@@ -1,0 +1,52 @@
+﻿@layout MainLayout
+@inherits LayoutComponentBase
+@inject LayoutService LayoutService
+@inject IStringLocalizer<SharedResource> L
+<MudLayout>
+    <MudAppBar Elevation="2"
+               Style="background: --mud-palette-appbar-background">
+        <NavLink ActiveClass="d-flex align-center me-4" href="/">
+            <MudIcon Class="ml-6 mr-2"
+                     Color="Color.Primary"
+                     Icon="@Icons.Custom.Brands.MudBlazor"
+                     Size="Size.Large" />
+            <MudText Typo="Typo.subtitle2">
+                <b>@L[Settings.AppName]</b>
+            </MudText>
+        </NavLink>
+        <MudSpacer />
+        <MudTooltip Arrow="true"
+                    Text="Navigate to GitHub">
+            <MudIconButton Class="mx-1"
+                           Color="Color.Default"
+                           Icon="@Icons.Custom.Brands.GitHub"
+                           Link="https://github.com/neozhu/CleanArchitectureWithBlazorServer"
+                           Target="_blank" />
+        </MudTooltip>
+        <LanguageSelector />
+        <MudTooltip Text="@(RightToLeft ? "Toggle right-to-left" : "Toggle left-to-right")">
+            <MudIconButton Class="mx-1"
+                           Icon="@(RightToLeft ? Icons.Material.Filled.FormatTextdirectionLToR : Icons.Material.Filled.FormatTextdirectionRToL)"
+                           Color="Color.Default"
+                           OnClick="@(e => LayoutService.ToggleRightToLeft())" />
+        </MudTooltip>
+
+        <MudTooltip Text="@L["Login"]">
+            <MudButton Variant="Variant.Text" Href="/pages/authentication/login"
+                       StartIcon="@Icons.Material.Rounded.Login"
+                       Style="text-transform:none">
+                @L["Login"]
+            </MudButton>
+        </MudTooltip>
+        
+    </MudAppBar>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="mb-4 mt-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+@code
+{
+    public bool RightToLeft { get; set; }
+}
