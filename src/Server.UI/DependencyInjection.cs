@@ -1,4 +1,4 @@
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Reflection;
 using BlazorDownloadFile;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
@@ -100,7 +100,7 @@ public static class DependencyInjection
         app.UseRequestLocalization(localizationOptions);
 
         app.UseMiddleware<LocalizationCookiesMiddleware>();
-        app.UseMiddleware<ExceptionHandlingMiddleware>();
+        app.UseExceptionHandler();
         app.UseHangfireDashboard("/jobs", new DashboardOptions
         {
             Authorization = new[] { new HangfireDashboardAuthorizationFilter() },

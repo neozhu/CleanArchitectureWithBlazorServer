@@ -1,4 +1,4 @@
-using Blazor.Analytics;
+﻿using Blazor.Analytics;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Server.Middlewares;
@@ -34,9 +34,9 @@ public static class DependencyInjection
 
         services.AddScoped<IApplicationHubWrapper, ServerHubWrapper>()
             .AddSignalR();
-
-        services.AddScoped<ExceptionHandlingMiddleware>()
-            .AddHealthChecks();
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
+        services.AddHealthChecks();
 
         var privacySettings = config.GetRequiredSection(PrivacySettings.Key).Get<PrivacySettings>();
         if (privacySettings!.UseGoogleAnalytics)
