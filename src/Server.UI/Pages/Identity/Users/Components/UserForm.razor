@@ -1,4 +1,4 @@
-@using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
+﻿@using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Severity = Severity
 @using Size = SixLabors.ImageSharp.Size
 @using Image = SixLabors.ImageSharp.Image
@@ -53,8 +53,7 @@ using CleanArchitecture.Blazor.Domain.Identity;
                        Text="@Model.TenantName"
                        Required="true"
                        RequiredError="@L["Tenant is required."]"
-                       Value="@Model.TenantId"
-                       ValueChanged="TenantSelectChanged">
+                       @bind-Value="@Model.TenantId">
                 @foreach (var item in TenantsService.DataSource)
                 {
                     <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
@@ -166,15 +165,6 @@ using CleanArchitecture.Blazor.Domain.Identity;
             }
         }
     }
-
-    private Task TenantSelectChanged(string id)
-    {
-        var tenant = TenantsService.DataSource.Find(x => x.Id == id);
-        Model.TenantId = tenant?.Id;
-        Model.TenantName = tenant?.Name;
-        return Task.CompletedTask;
-    }
-
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
         var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
