@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,6 +18,7 @@ public class ApplicationUser : IdentityUser
     public string? DisplayName { get; set; }
     public string? Provider { get; set; } = "Local";
     public string? TenantId { get; set; }
+    public virtual Tenant? Tenant { get; set; }
     public string? TenantName { get; set; }
 
     [Column(TypeName = "text")] public string? ProfilePictureDataUrl { get; set; }
@@ -32,6 +33,5 @@ public class ApplicationUser : IdentityUser
     public virtual ICollection<ApplicationUserToken> Tokens { get; set; }
 
     public string? SuperiorId { get; set; } = null;
-
-    [ForeignKey("SuperiorId")] public ApplicationUser? Superior { get; set; } = null;
+    public ApplicationUser? Superior { get; set; } = null;
 }

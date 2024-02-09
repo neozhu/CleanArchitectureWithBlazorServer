@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Domain.Identity;
@@ -10,13 +10,6 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 {
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {
-        // Each User can have many UserClaims
-        // duplicate definition 
-        //builder.HasMany(e => e.UserClaims)
-        //    .WithOne()
-        //    .HasForeignKey(uc => uc.UserId)
-        //    .IsRequired();
-
         // Each User can have many UserLogins
         builder.HasMany(e => e.Logins)
             .WithOne()
@@ -34,6 +27,10 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
             .WithOne()
             .HasForeignKey(ur => ur.UserId)
             .IsRequired();
+
+        builder.HasOne(x => x.Superior).WithMany().HasForeignKey(u => u.SuperiorId);
+        builder.HasOne(x => x.Tenant).WithMany().HasForeignKey(u => u.TenantId);
+        builder.Navigation(e => e.Tenant).AutoInclude();
     }
 }
 
