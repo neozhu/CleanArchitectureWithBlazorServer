@@ -22,7 +22,7 @@ public class PicklistServiceTests : TestBase
     public async Task ShouldLoadDataSource()
     {
         var picklist = CreatePicklistService();
-        await picklist.InitializeAsync();
+        picklist.Initialize();
         var count = picklist.DataSource.Count();
         Assert.Equals(4, count);
     }
@@ -32,7 +32,7 @@ public class PicklistServiceTests : TestBase
     {
         await AddAsync(new KeyValue { Name = Picklist.Brand, Text = "Text5", Value = "Value5" });
         var picklist = CreatePicklistService();
-        await picklist.Refresh();
+        picklist.Refresh();
         var count = picklist.DataSource.Count();
         Assert.Equals(5, count);
     }
