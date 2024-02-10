@@ -304,7 +304,7 @@ public static class DependencyInjection
             Duration = TimeSpan.FromMinutes(120),
             // FAIL-SAFE OPTIONS
             IsFailSafeEnabled = true,
-            FailSafeMaxDuration = TimeSpan.FromHours(2),
+            FailSafeMaxDuration = TimeSpan.FromHours(8),
             FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
             // FACTORY TIMEOUTS
             FactorySoftTimeout = TimeSpan.FromMilliseconds(100),
