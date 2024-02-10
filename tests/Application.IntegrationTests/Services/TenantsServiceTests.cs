@@ -30,7 +30,7 @@ public class TenantsServiceTests : TestBase
     {
         await AddAsync(new Tenant { Name = "Test3", Description = "Test3" });
         var tenantsService = CreateTenantsService();
-        await tenantsService.Refresh();
+        tenantsService.Refresh();
         var count = tenantsService.DataSource.Count();
         Assert.Equals(3, count);
     }
