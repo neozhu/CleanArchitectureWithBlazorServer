@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
@@ -63,7 +63,7 @@ public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand,
         }
 
         await _context.SaveChangesAsync(cancellationToken);
-        await _tenantsService.Refresh();
+        _tenantsService.Refresh();
         return await Result<string>.SuccessAsync(item.Id);
     }
 }

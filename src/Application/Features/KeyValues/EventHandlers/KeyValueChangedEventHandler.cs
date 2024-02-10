@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.EventHandlers;
@@ -17,9 +17,10 @@ public class KeyValueChangedEventHandler : INotificationHandler<UpdatedEvent<Key
         _logger = logger;
     }
 
-    public async Task Handle(UpdatedEvent<KeyValue> notification, CancellationToken cancellationToken)
+    public Task Handle(UpdatedEvent<KeyValue> notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("KeyValue Changed {DomainEvent},{@Entity}", nameof(notification), notification.Entity);
-        await _picklistService.Refresh();
+        _picklistService.Refresh();
+        return Task.CompletedTask;
     }
 }

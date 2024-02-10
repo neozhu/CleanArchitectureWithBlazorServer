@@ -1,4 +1,4 @@
-@page "/identity/users"
+﻿@page "/identity/users"
 @using Severity = Severity
 @using LazyCache
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
@@ -22,7 +22,7 @@
 
 @inject IUsersStateContainer UsersStateContainer
 @inject IBlazorDownloadFileService BlazorDownloadFileService
-@inject IUserDataProvider UserDataProvider
+@inject IUserService UserService
 @inject ITenantService TenantsService
 @inject ITenantProvider TenantProvider
 @inject IAppCache Cache
@@ -467,7 +467,7 @@
                 }
 
                 Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
-                await UserDataProvider.Refresh();
+                UserService.Refresh();
                 await OnRefresh();
             }
             else
@@ -518,7 +518,7 @@
 
                 Snackbar.Add($"{ConstantString.UpdateSuccess}", Severity.Info);
                 await OnRefresh();
-                await UserDataProvider.Refresh();
+                UserService.Refresh();
             }
             else
             {
@@ -568,7 +568,7 @@
 
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
-            await UserDataProvider.Refresh();
+            UserService.Refresh();
         }
     }
 
@@ -612,10 +612,9 @@
                     return;
                 }
             }
-
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
-            await UserDataProvider.Refresh();
+            UserService.Refresh();
         }
     }
 

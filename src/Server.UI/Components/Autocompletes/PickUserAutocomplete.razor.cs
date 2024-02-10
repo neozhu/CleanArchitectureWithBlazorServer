@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
@@ -7,10 +7,24 @@ public class PickUserAutocomplete : MudAutocomplete<string>
 {
     private List<ApplicationUserDto>? _userList;
 
-    [Parameter] public string TenantId { get; set; } = string.Empty;
+    [Parameter] public string? TenantId { get; set; }
 
-    [Inject] private IUserDataProvider DataProvider { get; set; } = default!;
+    [Inject] private IUserService UserService { get; set; } = default!;
+    protected override void OnInitialized()
+    {
+        UserService.OnChange += TenantsService_OnChange;
+    }
 
+    private void TenantsService_OnChange()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        UserService.OnChange -= TenantsService_OnChange;
+        base.Dispose(disposing);
+    }
     public override Task SetParametersAsync(ParameterView parameters)
     {
         SearchFuncWithCancel = SearchKeyValues;
@@ -19,40 +33,29 @@ public class PickUserAutocomplete : MudAutocomplete<string>
         ResetValueOnEmptyText = true;
         ShowProgressIndicator = true;
         MaxItems = 50;
+        _userList = string.IsNullOrEmpty(TenantId) ? UserService.DataSource : UserService.DataSource.Where(x => x.TenantId == TenantId).ToList();
         return base.SetParametersAsync(parameters);
     }
 
     private Task<IEnumerable<string>> SearchKeyValues(string value, CancellationToken cancellation)
     {
-        // if text is null or empty, show complete list
-        _userList = DataProvider.DataSource.Where(x => x.TenantId == TenantId).ToList();
-        var result = new List<string>();
 
-        if (_userList is not null && string.IsNullOrEmpty(value))
-            result = _userList.Select(x => x.UserName).ToList();
-        else if (_userList is not null)
-            result = _userList
-                .Where(x => x.UserName.Contains(value, StringComparison.OrdinalIgnoreCase) ||
-                            x.Email.Contains(value, StringComparison.OrdinalIgnoreCase)).Select(x => x.UserName)
-                .ToList();
+        var result = string.IsNullOrEmpty(value) ?
+        _userList?.Select(x => x.UserName) :
+        _userList?.Where(x => x.UserName.Contains(value, StringComparison.OrdinalIgnoreCase) ||
+                         x.Email.Contains(value, StringComparison.OrdinalIgnoreCase))
+             .Select(x => x.UserName);
 
-        return Task.FromResult(result.AsEnumerable());
+        return Task.FromResult(result?.AsEnumerable() ?? new string[] { } );
     }
 
     private string ToString(string str)
     {
-        if (!string.IsNullOrEmpty(str) && _userList != null && _userList.Any(x =>
-                (x.DisplayName != null && x.DisplayName.Contains(str, StringComparison.OrdinalIgnoreCase)) ||
-                x.UserName.Contains(str, StringComparison.OrdinalIgnoreCase)))
-        {
-            var userDto = _userList.Find(x =>
-                (x.DisplayName != null && x.DisplayName.Contains(str, StringComparison.OrdinalIgnoreCase)) ||
-                x.UserName.Contains(str, StringComparison.OrdinalIgnoreCase));
-            return _userList.Find(x =>
-                (x.DisplayName != null && x.DisplayName.Contains(str, StringComparison.OrdinalIgnoreCase)) ||
-                x.UserName.Contains(str, StringComparison.OrdinalIgnoreCase))?.DisplayName ?? str;
-        }
+   
+        var user = _userList?.FirstOrDefault(x =>
+            (x.DisplayName != null && x.DisplayName.Contains(str, StringComparison.OrdinalIgnoreCase)) ||
+            x.UserName.Contains(str, StringComparison.OrdinalIgnoreCase));
 
-        return str;
+        return user?.DisplayName ?? str;
     }
 }

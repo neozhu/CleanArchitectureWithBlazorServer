@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.IdentityModel.Tokens.Jwt;
@@ -284,10 +284,10 @@ public static class DependencyInjection
                 };
             });
         services.ConfigureApplicationCookie(options => { options.LoginPath = "/pages/authentication/login"; });
-        services.AddSingleton<UserDataProvider>()
-            .AddSingleton<IUserDataProvider>(sp =>
+        services.AddSingleton<UserService>()
+            .AddSingleton<IUserService>(sp =>
             {
-                var service = sp.GetRequiredService<UserDataProvider>();
+                var service = sp.GetRequiredService<UserService>();
                 service.Initialize();
                 return service;
             });
@@ -301,10 +301,10 @@ public static class DependencyInjection
         services.AddFusionCache().WithDefaultEntryOptions(new FusionCacheEntryOptions
         {
             // CACHE DURATION
-            Duration = TimeSpan.FromMinutes(30),
+            Duration = TimeSpan.FromMinutes(120),
             // FAIL-SAFE OPTIONS
             IsFailSafeEnabled = true,
-            FailSafeMaxDuration = TimeSpan.FromHours(2),
+            FailSafeMaxDuration = TimeSpan.FromHours(8),
             FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
             // FACTORY TIMEOUTS
             FactorySoftTimeout = TimeSpan.FromMilliseconds(100),
