@@ -5,10 +5,14 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Creat
 
 public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
 {
-    public CreateCustomerCommandValidator()
-    {
-        RuleFor(v => v.Name)
-            .MaximumLength(256)
-            .NotEmpty();
-    }
+        public CreateCustomerCommandValidator()
+        {
+           
+            RuleFor(v => v.Name)
+                 .MaximumLength(256)
+                 .NotEmpty();
+        
+        }
+       
 }
+
