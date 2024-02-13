@@ -1,12 +1,12 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel;
 using System.Reflection;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Constants.Permission;
+namespace CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 
-public static class Permissions
+public static partial class Permissions
 {
     /// <summary>
     ///     Returns a list of Permissions.
@@ -46,58 +46,9 @@ public static class Permissions
     }
 
 
-    [DisplayName("Products")]
-    [Description("Products Permissions")]
-    public static class Products
-    {
-        public const string View = "Permissions.Products.View";
-        public const string Create = "Permissions.Products.Create";
-        public const string Edit = "Permissions.Products.Edit";
-        public const string Delete = "Permissions.Products.Delete";
-        public const string Search = "Permissions.Products.Search";
-        public const string Export = "Permissions.Products.Export";
-        public const string Import = "Permissions.Products.Import";
-    }
+    
 
-    [DisplayName("Customers")]
-    [Description("Customers Permissions")]
-    public static class Customers
-    {
-        public const string View = "Permissions.Customers.View";
-        public const string Create = "Permissions.Customers.Create";
-        public const string Edit = "Permissions.Customers.Edit";
-        public const string Delete = "Permissions.Customers.Delete";
-        public const string Search = "Permissions.Customers.Search";
-        public const string Export = "Permissions.Customers.Export";
-        public const string Import = "Permissions.Customers.Import";
-    }
-
-    [DisplayName("Categories")]
-    [Description("Categories Permissions")]
-    public static class Categories
-    {
-        public const string View = "Permissions.Categories.View";
-        public const string Create = "Permissions.Categories.Create";
-        public const string Edit = "Permissions.Categories.Edit";
-        public const string Delete = "Permissions.Categories.Delete";
-        public const string Search = "Permissions.Categories.Search";
-        public const string Export = "Permissions.Categories.Export";
-        public const string Import = "Permissions.Categories.Import";
-    }
-
-    [DisplayName("Documents")]
-    [Description("Documents Permissions")]
-    public static class Documents
-    {
-        public const string View = "Permissions.Documents.View";
-        public const string Create = "Permissions.Documents.Create";
-        public const string Edit = "Permissions.Documents.Edit";
-        public const string Delete = "Permissions.Documents.Delete";
-        public const string Search = "Permissions.Documents.Search";
-        public const string Export = "Permissions.Documents.Export";
-        public const string Import = "Permissions.Documents.Import";
-        public const string Download = "Permissions.Documents.Download";
-    }
+ 
 
     [DisplayName("Dictionaries")]
     [Description("Dictionaries Permissions")]
