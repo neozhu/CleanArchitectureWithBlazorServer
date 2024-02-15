@@ -59,7 +59,13 @@ public static class DependencyInjection
             .AddBlazorDownloadFile()
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
             .AddScoped<IMenuService, MenuService>()
-            .AddScoped<INotificationService, InMemoryNotificationService>();
+            .AddScoped<InMemoryNotificationService>()
+           .AddScoped<INotificationService>(sp =>
+         {
+             var service = sp.GetRequiredService<InMemoryNotificationService>();
+             service.Preload();
+             return service;
+         });
 
         return services;
     }
@@ -96,9 +102,7 @@ public static class DependencyInjection
             .SetDefaultCulture(LocalizationConstants.SupportedLanguages.Select(x => x.Code).First())
             .AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray())
             .AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
-
         app.UseRequestLocalization(localizationOptions);
-
         app.UseMiddleware<LocalizationCookiesMiddleware>();
         app.UseExceptionHandler();
         app.UseHangfireDashboard("/jobs", new DashboardOptions
@@ -106,11 +110,8 @@ public static class DependencyInjection
             Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
             AsyncAuthorization = new[] { new HangfireDashboardAsyncAuthorizationFilter() }
         });
-
-
         app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
         app.MapHub<ServerHub>(ISignalRHub.Url);
-
         return app;
     }
 }

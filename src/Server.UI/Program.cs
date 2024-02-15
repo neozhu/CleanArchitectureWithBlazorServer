@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application;
+﻿using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using CleanArchitecture.Blazor.Server;
@@ -27,9 +27,7 @@ if (app.Environment.IsDevelopment())
         var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
         await initializer.InitialiseAsync();
         await initializer.SeedAsync();
-        var notificationService = scope.ServiceProvider.GetService<INotificationService>();
-        if (notificationService is InMemoryNotificationService inMemoryNotificationService)
-            inMemoryNotificationService.Preload();
+       
     }
 
 await app.RunAsync();
