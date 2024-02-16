@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Notifications;
@@ -80,16 +80,16 @@ public class InMemoryNotificationService : INotificationService
     public void Preload()
     {
         _messages.Add(new NotificationMessage(
-            "mudblazor-here-to-stay",
-            "MudBlazor is here to stay",
+            "readme",
+            "Blazor Application is ready",
             "We are paving the way for the future of Blazor",
             "Announcement",
             new DateTime(2022, 01, 13),
-            "_content/MudBlazor.Docs/images/announcements/mudblazor_heretostay.png",
+            "https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/dotnet.yml/badge.svg",
             new[]
             {
-                new NotificationAuthor("Jonny Larsson",
-                    "https://avatars.githubusercontent.com/u/10367109?v=4")
+                new NotificationAuthor("Hualin",
+                    "https://avatars.githubusercontent.com/u/1549611?s=48&v=4")
             }, typeof(NotificationMessage)));
     }
 }
