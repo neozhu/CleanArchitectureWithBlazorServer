@@ -1,4 +1,4 @@
-@page "/system/logs"
+﻿@page "/system/logs"
 @using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery
@@ -21,6 +21,7 @@
              Height="calc(100vh - 360px)"
              Style="min-height:700px"
              Loading="@_loading"
+             ColumnResizeMode="ResizeMode.Column"
              Hover="true" @ref="_table">
     <ToolBarContent>
         <div class="d-flex align-start flex-grow-1">

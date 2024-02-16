@@ -31,6 +31,7 @@ public static class SerilogExtensions
                 .MinimumLevel.Override("Hangfire.Server.BackgroundServerProcess", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.Server.ServerHeartbeatProcess", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.Processing.BackgroundExecution", LogEventLevel.Error)
+                .MinimumLevel.Override("ZiggyCreatures.Caching.Fusion.FusionCache", LogEventLevel.Error)
                 .Enrich.FromLogContext()
                 .Enrich.WithUtcTime()
                 .WriteTo.Async(wt => wt.File("./log/log-.txt", rollingInterval: RollingInterval.Day))
