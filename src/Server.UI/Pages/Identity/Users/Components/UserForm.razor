@@ -13,13 +13,13 @@
 using CleanArchitecture.Blazor.Domain.Identity;
 
 @inherits MudComponentBase
-
+@inject IValidationService Validator
 @inject IUploadService UploadService
 @inject ITenantService TenantsService
 @inject RoleManager<ApplicationRole> RoleManager
 @inject IStringLocalizer<Users> L
 
-<MudForm Model="@Model" @ref="@_form" Validation="@(_modelValidator.ValidateValue)">
+<MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
     <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden"/>
     <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden"/>
     <InputFile id="UploadPhoto" OnChange="UploadPhoto" hidden accept=".jpg, .jpeg, .png"/>

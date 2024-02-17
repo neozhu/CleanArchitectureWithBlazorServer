@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Customers.Specifications;
+﻿using CleanArchitecture.Blazor.Application.Common.Security;
+
+namespace CleanArchitecture.Blazor.Application.Features.Customers.Specifications;
 #nullable disable warnings
 public enum CustomerListView
 {

@@ -1,4 +1,7 @@
-﻿namespace CleanArchitecture.Blazor.Server.UI.Fluxor;
+﻿
+using CleanArchitecture.Blazor.Application.Common.Security;
+
+namespace CleanArchitecture.Blazor.Server.UI.Fluxor;
 
 public class UserProfileUpdateAction
 {

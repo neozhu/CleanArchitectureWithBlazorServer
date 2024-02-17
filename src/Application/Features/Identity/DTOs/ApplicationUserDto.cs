@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Blazor.Domain.Identity;
+﻿using CleanArchitecture.Blazor.Application.Common.Security;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 

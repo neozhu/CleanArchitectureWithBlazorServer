@@ -21,7 +21,7 @@
                 <MudStack Row="true" Class="ma-4">
                     @if (IsLoading)
                     {
-                        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true"/>
+                        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
                     }
                     else
                     {
@@ -35,25 +35,26 @@
                                 <MudImage Src="@UserProfile?.ProfilePictureDataUrl"></MudImage>
                             }
                         </MudAvatar>
+
+                        <MudStack Justify="Justify.SpaceBetween" Spacing="0">
+                            <MudText Typo="Typo.body1">@UserProfile?.DisplayName</MudText>
+                            <MudText Typo="Typo.body2">@UserProfile?.Email</MudText>
+                        </MudStack>
                     }
-                    <MudStack Justify="Justify.SpaceBetween" Spacing="0">
-                        <MudText Typo="Typo.body1">@UserProfile?.DisplayName</MudText>
-                        <MudText Typo="Typo.body2">@UserProfile?.Email</MudText>
-                    </MudStack>
                 </MudStack>
 
-                <MudDivider Class="my-2"/>
+                <MudDivider Class="my-2" />
                 <MudMenuItem Href="/user/profile">
                     <div class="d-flex">
                         <MudIcon Class="mx-2"
-                                 Icon="@Icons.Material.Filled.Person"/>
+                                 Icon="@Icons.Material.Filled.Person" />
                         <MudText>@L["Profile"]</MudText>
                     </div>
                 </MudMenuItem>
                 <MudMenuItem OnAction="OnSettingClick">
                     <div class="d-flex">
                         <MudIcon Class="mx-2"
-                                 Icon="@Icons.Material.Filled.Settings"/>
+                                 Icon="@Icons.Material.Filled.Settings" />
                         <MudText>@L["Settings"]</MudText>
                     </div>
                 </MudMenuItem>
