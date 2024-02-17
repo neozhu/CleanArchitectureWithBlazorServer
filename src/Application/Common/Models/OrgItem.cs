@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Server.UI.Models.Identity;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Models;
 
 public class OrgItem
 {

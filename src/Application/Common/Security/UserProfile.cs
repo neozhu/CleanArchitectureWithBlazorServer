@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Application.Common.Models;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public class UserProfile
 {
@@ -26,6 +26,6 @@ public class UserProfileEditValidator : AbstractValidator<UserProfile>
             .MaximumLength(128)
             .NotEmpty();
         RuleFor(x => x.PhoneNumber)
-            .MaximumLength(128);
+            .MaximumLength(2);
     }
 }

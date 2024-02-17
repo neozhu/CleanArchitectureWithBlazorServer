@@ -1,4 +1,4 @@
-@page "/user/profile"
+﻿@page "/user/profile"
 @using Color = Color
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Severity = Severity
@@ -6,7 +6,6 @@
 @using SixLabors.ImageSharp.Processing
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats.Png
-@using CleanArchitecture.Blazor.Server.UI.Models.Identity
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -26,7 +25,7 @@
 
 <ErrorBoundary>
     <ChildContent>
-        @if (IsLoading && string.IsNullOrEmpty(model.UserId))
+        @if (model is null || IsLoading)
         {
             <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"/>
         }
@@ -121,7 +120,7 @@
                     </MudForm>
                 </MudTabPanel>
                 <MudTabPanel Text="@L["Change Password"]">
-                    <MudForm Model="@_changepassword" @ref="@_passwordform" Validation="@(_passwordValidator.ValidateValue)" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
+                    <MudForm Model="@_changepassword" @ref="@_passwordform" Validation="@(Validator.ValidateValue(_changepassword))" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
                         <MudGrid Justify="Justify.Center" Style="max-width:300px">
                             <MudItem sm="12" xs="12">
                                 <MudPasswordField Immediate="true"
@@ -192,17 +191,12 @@
     private bool _submitting;
 
     private ChangePasswordModel _changepassword { get; } = new();
-    private readonly ChangePasswordModelValidator _passwordValidator = new();
     private readonly List<OrgItem> _orgData = new();
 
     public string Id => Guid.NewGuid().ToString();
     private bool IsLoading => UserProfileState.Value.IsLoading;
-    private UserProfile model => UserProfileState.Value.UserProfile;
+    private UserProfile? model => UserProfileState.Value.UserProfile;
 
-    public void ReRender()
-    {
-        StateHasChanged();
-    }
 
     private async void ActivePanelIndexChanged(int index)
     {
@@ -332,29 +326,6 @@
         }
     }
 
-    // TODO: probably this will be moved as feature in the application layer
-    public class ChangePasswordModelValidator : AbstractValidator<ChangePasswordModel>
-    {
-        public ChangePasswordModelValidator()
-        {
-            RuleFor(p => p.NewPassword).NotEmpty().WithMessage("Your password cannot be empty")
-                .MinimumLength(6).WithMessage("Your password length must be at least 6.")
-                .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
-                .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
-                .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
-                .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
-                .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
-            RuleFor(x => x.ConfirmPassword)
-                .Equal(x => x.NewPassword);
-        }
-
-        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-        {
-            var result = await ValidateAsync(ValidationContext<ChangePasswordModel>.CreateWithOptions((ChangePasswordModel)model, x => x.IncludeProperties(propertyName)));
-            if (result.IsValid)
-                return Array.Empty<string>();
-            return result.Errors.Select(e => e.ErrorMessage);
-        };
-    }
+    
 
 }

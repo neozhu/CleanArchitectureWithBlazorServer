@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+﻿using CleanArchitecture.Blazor.Application.Common.Security;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Fluxor;
 

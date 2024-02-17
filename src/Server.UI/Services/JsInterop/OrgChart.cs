@@ -1,5 +1,4 @@
-﻿using CleanArchitecture.Blazor.Server.UI.Models.Identity;
-using Microsoft.JSInterop;
+﻿using Microsoft.JSInterop;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 

@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Identity.Notification;
+﻿using CleanArchitecture.Blazor.Application.Common.Security;
+
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Notification;
 
 public class UpdateUserProfileCommand : INotification
 {
