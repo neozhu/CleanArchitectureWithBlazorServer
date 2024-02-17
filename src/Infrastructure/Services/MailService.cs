@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
@@ -12,7 +12,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class MailService : IMailService
 {
-    private const string TemplatePath = "Server.UI.Resources.EmailTemplates.{0}.cshtml";
+    private const string TemplatePath = "CleanArchitecture.Blazor.Server.UI.Resources.EmailTemplates.{0}.cshtml";
     private readonly AppConfigurationSettings _appConfig;
     private readonly IFluentEmail _fluentEmail;
     private readonly ILogger<MailService> _logger;

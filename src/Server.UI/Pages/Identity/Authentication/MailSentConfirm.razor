@@ -1,0 +1,35 @@
+﻿@page "/pages/authentication/mailsentconfirm"
+
+@attribute [AllowAnonymous]
+@using Severity = Severity
+@using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.ResetPassword
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
+@inherits OwningComponentBase
+
+@inject IStringLocalizer<Forgot> L
+@inject IMailService MailService
+@inject ISender Sender
+@inject ILogger<Forgot> Logger
+@inject NavigationManager Navigation
+
+<PageTitle>@Title</PageTitle>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <MudText Typo="Typo.h4" GutterBottom="true">@L["Check Your Inbox"]</MudText>
+        <MudText Typo="Typo.body1">@L["We've sent an email to the address you provided. Please check your inbox for a link to reset your password. If you don't see the email, be sure to check your spam or junk folder."]</MudText>
+        <div Class="d-flex justify-space-between align-center my-3">
+            <MudButton Href="/pages/authentication/forgot-password">@L["Resend Email"]</MudButton>
+            <MudButton Href="/pages/authentication/login">@L["Return to Login"]</MudButton>
+        </div>
+    </NotAuthorized>
+    <Authorized>
+        <RedirectToHome></RedirectToHome>
+        <MudAlert Severity="Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
+    </Authorized>
+</AuthorizeView>
+
+@code{
+    public string Title = "Email Sent Confirmation";
+}
