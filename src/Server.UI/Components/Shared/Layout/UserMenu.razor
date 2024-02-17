@@ -18,10 +18,14 @@
         <ChildContent>
             <div class="pb-4"
                  style="min-width: 260px;margin-bottom:0px!important">
-                <MudStack Row="true" Class="ma-4">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Class="ma-4">
                     @if (IsLoading)
                     {
                         <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+                        <MudStack Justify="Justify.Center" Spacing="0">
+                            <MudSkeleton Width="120px" />
+                            <MudSkeleton Width="120px" />
+                        </MudStack>
                     }
                     else
                     {
