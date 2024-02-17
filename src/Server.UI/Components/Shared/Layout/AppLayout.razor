@@ -51,12 +51,9 @@
 @code
 {
     private bool _commandPaletteOpen;
-    private HotKeysContext? _hotKeysContext;
     private bool _navigationMenuDrawerOpen = true;
     private UserPreferences _userPreferences = new();
-    private MudThemeProvider _mudThemeProvider = null!;
     private bool _themingDrawerOpen;
-    private bool _defaultDarkMode;
     private UserProfile? _userProfile;
     private ErrorBoundary? _errorBoundary { set; get; }
     [CascadingParameter] 

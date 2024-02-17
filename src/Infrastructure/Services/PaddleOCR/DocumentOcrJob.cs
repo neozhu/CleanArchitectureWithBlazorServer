@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
@@ -90,22 +90,6 @@ public class DocumentOcrJob : IDocumentOcrJob
         catch (Exception ex)
         {
             _logger.LogError(ex, "{Id}: recognize error {ExMessage}", id, ex.Message);
-        }
-    }
-
-    private string ReadBase64String(string path)
-    {
-        using (var image = Image.FromFile(path))
-        {
-            using (var m = new MemoryStream())
-            {
-                image.Save(m, image.RawFormat);
-                var imageBytes = m.ToArray();
-
-                // Convert byte[] to Base64 String
-                var base64String = Convert.ToBase64String(imageBytes);
-                return base64String;
-            }
         }
     }
 }

@@ -1,4 +1,4 @@
-@using Color = Color
+﻿@using Color = Color
 @using Severity = Severity
 @using SixLabors.ImageSharp.Processing
 @using SixLabors.ImageSharp
@@ -46,11 +46,11 @@
         <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!_uploadedFiles.Any())" OnClick="Clear">@ConstantString.Clear</MudButton>
         <MudFileUpload T="IReadOnlyList<IBrowserFile>" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="LoadFiles" Style="margin-top:0px">
             <ButtonTemplate>
-                <MudButton Variant="Variant.Filled" HtmlTag="label"
+                <MudLoadingButton Loading="@_uploading" Variant="Variant.Filled" HtmlTag="label"
                            Icon="@Icons.Material.Filled.AttachFile"
                            for="@context">
                     @L["Choose files"]
-                </MudButton>
+                </MudLoadingButton>
             </ButtonTemplate>
         </MudFileUpload>
 
