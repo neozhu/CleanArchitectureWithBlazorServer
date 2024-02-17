@@ -18,7 +18,7 @@
 
 @code
 {
-    private HotKeysContext? _hotKeysContext;
+
     private UserPreferences _userPreferences = new();
     private MudThemeProvider _mudThemeProvider = null!;
     private bool _defaultDarkMode;
@@ -28,7 +28,6 @@
     public void Dispose()
     {
         LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
-        _hotKeysContext?.Dispose();
         GC.SuppressFinalize(this);
     }
 
