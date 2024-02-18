@@ -77,4 +77,24 @@ public class ApplicationUserDto
                 .ForMember(x => x.AssignedRoles, s => s.MapFrom(y => y.UserRoles.Select(r => r.Role.Name)));
         }
     }
+
+    public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>
+    {
+        public ApplicationUserDtoValidator()
+        {
+            RuleFor(v => v.TenantId)
+                .MaximumLength(256)
+                .NotEmpty();
+            RuleFor(v => v.Provider)
+                .MaximumLength(256)
+                .NotEmpty();
+            RuleFor(v => v.UserName)
+                .MaximumLength(256)
+                .NotEmpty();
+            RuleFor(v => v.Email)
+                .MaximumLength(256)
+                .NotEmpty()
+                .EmailAddress();
+        }
+    }
 }

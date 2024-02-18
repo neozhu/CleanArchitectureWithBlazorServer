@@ -44,8 +44,6 @@
     private bool _sending;
     private readonly string _resetPasswordToken = string.Empty;
     private string _inputToken = string.Empty;
-
-    private readonly ApplicationUser? _user = null;
     private UserManager<ApplicationUser> UserManager { get; set; } = null!;
 
     protected override Task OnInitializedAsync()

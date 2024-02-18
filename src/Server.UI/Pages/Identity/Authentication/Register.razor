@@ -53,7 +53,7 @@
                               Variant="Variant.Outlined"
                               Required="true"
                               RequiredError="@L["password is required!"]"
-                              Class="mt-4"/>
+                              Class="mt-4" />
             <MudPasswordField Immediate="true"
                               Label="@L["Confirm Password"]"
                               @bind-Value="_model.ConfirmPassword"
@@ -62,7 +62,7 @@
                               PasswordMode="true"
                               Required="true"
                               RequiredError="@L["password is required!"]"
-                              Class="mt-4"/>
+                              Class="mt-4" />
 
             <MudCheckBox For="@(() => _model.AgreeToTerms)" @bind-Checked="@_model.AgreeToTerms" Label="@L["I agree to the terms and privacy"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
 
@@ -74,7 +74,7 @@
                        FullWidth="true">
                 @if (_loading)
                 {
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                     <MudText Class="ms-2"> @ConstantString.Loading</MudText>
                 }
                 else
@@ -90,7 +90,7 @@
     </Authorized>
 </AuthorizeView>
 
-@code{
+@code {
     private readonly string Title = "Sign Up";
     private MudForm? _form;
     private bool _loading;
@@ -105,10 +105,11 @@
             if (_form!.IsValid)
             {
                 var user = new ApplicationUser
-                {
-                    UserName = _model.UserName,
-                    Email = _model.Email
-                };
+                    {
+                        UserName = _model.UserName,
+                        Email = _model.Email,
+                        IsActive = true
+                    };
                 var result = await UserManager.CreateAsync(user, _model.Password!);
                 if (result.Succeeded)
                 {
