@@ -91,15 +91,12 @@ public static class DependencyInjection
             .AddSingleton(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value)
             .AddSingleton<IIdentitySettings>(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value);
 
-        services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.Key))
-            .AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value)
-            .AddSingleton<IApplicationSettings>(s => s.GetRequiredService<IOptions<DashboardSettings>>().Value);
+        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.Key))
+            .AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value)
+            .AddSingleton<IApplicationSettings>(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
 
         services.Configure<DatabaseSettings>(configuration.GetSection(DatabaseSettings.Key))
             .AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);
-
-        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.Key))
-            .AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
 
         services.Configure<PrivacySettings>(configuration.GetSection(PrivacySettings.Key))
             .AddSingleton(s => s.GetRequiredService<IOptions<PrivacySettings>>().Value);

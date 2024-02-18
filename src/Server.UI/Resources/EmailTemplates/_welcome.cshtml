@@ -1,7 +1,54 @@
-﻿<p>Hi @Model.UserName,</p>
-<p>Thank you for signing up for @Model.AppName. We are here to help you get the most out of your trial to show how you and your team can develop smarter and faster.</p>
-<br>
-<p><a href="https://mudblazor-s.dotnet6.cn/">Log in</a> and pick one of the walk-throughs to learn how.</p>
-<br>
-<p>if you have any question at any time, give us a call at 0800(Freephone). We're here to support you. </p>
-<p>Welcome to @Model.AppName.</p>
+﻿<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Welcome to @Model.AppName</h2>
+        <p>Dear @Model.UserName,</p>
+        <p>We're thrilled to have you on board. Thank you for choosing @Model.AppName. We're committed to providing you with the best experience possible.</p>
+        <p>To get the most out of @Model.AppName, you can log in to your account here:</p>
+        <a href="@Model.LoginUrl" class="button">Log In</a>
+        <p>We look forward to seeing you achieve great things!</p>
+        <p>Warmest welcome,</p>
+        <p>The @Model.Company Team</p>
+    </div>
+</body>
+</html>
