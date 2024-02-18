@@ -144,8 +144,8 @@
     private Task<SendResponse> SendWelcome(string toEmail, string userName)
     {
         var subject = string.Format(L["Welcome to {0}"], ApplicationSettings.AppName);
-        var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates", "_welcome.txt");
-        return MailService.SendAsync(toEmail, subject, "_welcome", new { ApplicationSettings.AppName, Email = toEmail, UserName = userName });
+        var LoginUrl = $"{ApplicationSettings.ApplicationUrl}/pages/authentication/login";
+        return MailService.SendAsync(toEmail, subject, "_welcome", new { LoginUrl, ApplicationSettings.AppName, Email = toEmail, UserName = userName, ApplicationSettings.Company });
     }
 
 }

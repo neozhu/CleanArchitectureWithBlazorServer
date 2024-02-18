@@ -13,11 +13,6 @@
         <UserSecretsId>8118d19e-a6db-4446-bdb6-fa62b17f843d</UserSecretsId>
         <LangVersion>default</LangVersion>
     </PropertyGroup>
-
-    <ItemGroup>
-        <EmbeddedResource Include="Resources\EmailTemplates\*" />
-    </ItemGroup>
-
     <ItemGroup>
       <PackageReference Include="Blazor-ApexCharts" Version="2.3.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.1">
@@ -30,6 +25,14 @@
         <ProjectReference Include="..\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj" />
         <ProjectReference Include="..\Migrators\Migrators.SqLite\Migrators.SqLite.csproj" />
         <ProjectReference Include="..\Server\Server.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\EmailTemplates\_recoverypassword.cshtml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Resources\EmailTemplates\_welcome.cshtml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
     
 
