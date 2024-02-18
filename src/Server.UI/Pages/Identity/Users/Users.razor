@@ -1,4 +1,5 @@
 ﻿@page "/identity/users"
+@using FluentEmail.Core.Models
 @using Severity = Severity
 @using LazyCache
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
@@ -29,6 +30,7 @@
 @inject IMapper Mapper
 @inject UserManager<ApplicationUser> UserManager
 @inject RoleManager<ApplicationRole> RoleManager
+@inject IMailService MailService
 @inject IStringLocalizer<Users> L
 
 <PageTitle>@Title</PageTitle>
@@ -46,12 +48,12 @@
     <ToolBarContent>
         <div class="d-flex align-start flex-grow-1">
             <div class="d-flex gap-4">
-                <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large"/>
+                <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large" />
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption">@L["Users"]</MudText>
                 </div>
             </div>
-            <div class="flex-grow-1"/>
+            <div class="flex-grow-1" />
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
@@ -110,7 +112,7 @@
                                                for="@context">
                                         @if (_uploading)
                                         {
-                                            <MudProgressCircular Size="Size.Small" Indeterminate="true"/>
+                                            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
                                             @ConstantString.Uploading
                                         }
                                         else
@@ -260,7 +262,7 @@
                 @context.Item.SuperiorName
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Provider" Title="@L[_currentDto.GetMemberDescription(x => x.Provider)]"/>
+        <PropertyColumn Property="x => x.Provider" Title="@L[_currentDto.GetMemberDescription(x => x.Provider)]" />
 
         <PropertyColumn Sortable="false" Property="x => x.AssignedRoles" Title="@L[_currentDto.GetMemberDescription(x => x.AssignedRoles)]">
             <CellTemplate>
@@ -305,7 +307,7 @@
     </Columns>
 
     <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"/>
+        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
 
@@ -439,21 +441,19 @@
         if (!result.Canceled)
         {
             var applicationUser = new ApplicationUser
-            {
-                Provider = model.Provider,
-                DisplayName = model.DisplayName,
-                UserName = model.UserName,
-                TenantId = model.TenantId,
-                TenantName = model.TenantName,
-                Email = model.Email,
-                PhoneNumber = model.PhoneNumber,
-                SuperiorId = model.SuperiorId,
-                ProfilePictureDataUrl = model.ProfilePictureDataUrl,
-                IsActive = model.IsActive
-            };
-            var password = model.Password;
-            var state = await UserManager.CreateAsync(applicationUser, password!);
-
+                {
+                    Provider = model.Provider,
+                    DisplayName = model.DisplayName,
+                    UserName = model.UserName,
+                    TenantId = model.TenantId,
+                    TenantName = model.TenantName,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    SuperiorId = model.SuperiorId,
+                    ProfilePictureDataUrl = model.ProfilePictureDataUrl,
+                    IsActive = false
+                };
+            var state = await UserManager.CreateAsync(applicationUser);
             if (state.Succeeded)
             {
                 if (model.AssignedRoles is not null && model.AssignedRoles.Length > 0)
@@ -464,10 +464,14 @@
                 {
                     await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
                 }
-
                 Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
                 UserService.Refresh();
                 await OnRefresh();
+                var response = await SendWelcome(applicationUser.Email, applicationUser.UserName!);
+                if (response.Successful == false)
+                {
+                    Snackbar.Add(string.Format(L["{0}"], response.ErrorMessages.FirstOrDefault()), Severity.Error);
+                }
             }
             else
             {
@@ -699,20 +703,18 @@
 
             var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             allPermissions.AddRange(from field in fields
-                select field.GetValue(null)
-                into propertyValue
-                where propertyValue is not null
-                select propertyValue.ToString()
-                into claimValue
-                select new PermissionModel
-                {
-                    UserId = dto.Id,
-                    ClaimValue = claimValue,
-                    ClaimType = ApplicationClaimTypes.Permission,
-                    Group = moduleName,
-                    Description = moduleDescription,
-                    Assigned = _assignedClaims.Any(x => x.Value == claimValue)
-                });
+                                    select field.GetValue(null) into propertyValue
+                                    where propertyValue is not null
+                                    select propertyValue.ToString() into claimValue
+                                    select new PermissionModel
+                                        {
+                                            UserId = dto.Id,
+                                            ClaimValue = claimValue,
+                                            ClaimType = ApplicationClaimTypes.Permission,
+                                            Group = moduleName,
+                                            Description = moduleDescription,
+                                            Assigned = _assignedClaims.Any(x => x.Value == claimValue)
+                                        });
         }
 
         return allPermissions;
@@ -804,18 +806,18 @@
                 (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole)));
             var items = await UserManager.Users.Where(searchPredicate)
                 .Select(x => new ApplicationUserDto
-                {
-                    Id = x.Id,
-                    UserName = x.UserName!,
-                    DisplayName = x.DisplayName,
-                    Email = x.Email!,
-                    PhoneNumber = x.PhoneNumber,
-                    TenantId = x.TenantId,
-                    TenantName = x.TenantName
-                }).ToListAsync();
+                    {
+                        Id = x.Id,
+                        UserName = x.UserName!,
+                        DisplayName = x.DisplayName,
+                        Email = x.Email!,
+                        PhoneNumber = x.PhoneNumber,
+                        TenantId = x.TenantId,
+                        TenantName = x.TenantName
+                    }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                 new Dictionary<string, Func<ApplicationUserDto, object?>>
-                {
+                        {
                     { L["Id"], item => item.Id },
                     { L["User Name"], item => item.UserName },
                     { L["Display Name"], item => item.DisplayName },
@@ -823,7 +825,7 @@
                     { L["Phone Number"], item => item.PhoneNumber },
                     { L["Tenant Id"], item => item.TenantId },
                     { L["Tenant Name"], item => item.TenantName }
-                }, L["Users"]);
+                        }, L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
         }
@@ -881,5 +883,10 @@
 
         _uploading = false;
     }
-
+    private Task<SendResponse> SendWelcome(string toEmail, string userName)
+    {
+        var subject = string.Format(L["Welcome to {0}"], ApplicationSettings.AppName);
+        var LoginUrl = $"{ApplicationSettings.ApplicationUrl}/pages/authentication/login";
+        return MailService.SendAsync(toEmail, subject, "_welcome", new { LoginUrl, ApplicationSettings.AppName, Email = toEmail, UserName = userName, ApplicationSettings.Company });
+    }
 }

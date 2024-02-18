@@ -10,8 +10,6 @@
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
-using CleanArchitecture.Blazor.Domain.Identity;
-
 @inherits MudComponentBase
 @inject IValidationService Validator
 @inject IUploadService UploadService
@@ -65,7 +63,7 @@ using CleanArchitecture.Blazor.Domain.Identity;
         </MudItem>
 
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L["User Name"]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L["User Name"]" Variant="Variant.Text" Required="true" RequiredError="@L["User Name is required."]"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <PickSuperiorIdAutocomplete For="@(() => Model.SuperiorId)"
@@ -76,36 +74,11 @@ using CleanArchitecture.Blazor.Domain.Identity;
             </PickSuperiorIdAutocomplete>
 
         </MudItem>
-        @if (string.IsNullOrEmpty(Model.Id))
-        {
-            <MudItem xs="12" sm="6">
-                <MudPasswordField Immediate="true"
-                                  Label="@L["Password"]"
-                                  @bind-Value="Model.Password"
-                                  For="@(() => Model.Password)"
-                                  Variant="Variant.Text"
-                                  PasswordMode="true"
-                                  Required="true"
-                                  RequiredError="@L["password is required!"]"
-                                  Class="mt-4"/>
-            </MudItem>
-            <MudItem xs="12" sm="6">
-                <MudPasswordField Immediate="true"
-                                  Label="@L["Confirm Password"]"
-                                  @bind-Value="Model.ConfirmPassword"
-                                  For="@(() => Model.ConfirmPassword)"
-                                  Variant="Variant.Text"
-                                  PasswordMode="true"
-                                  Required="true"
-                                  RequiredError="@L["confrm password is required!"]"
-                                  Class="mt-4"/>
-            </MudItem>
-        }
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L["E-mail"]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L["E-mail"]" Variant="Variant.Text" Required="true" RequiredError="@L["E-mail is required."]"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
@@ -115,7 +88,7 @@ using CleanArchitecture.Blazor.Domain.Identity;
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
             <div class="d-fex">
-                <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
+                <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Checked="Model.IsActive" Label="@L["Is Active"]" Disabled="@(string.IsNullOrEmpty(Model.Id))"></MudCheckBox>
             </div>
         </MudItem>
         <MudItem xs="12" sm="12">
@@ -147,7 +120,6 @@ using CleanArchitecture.Blazor.Domain.Identity;
 
 
     private MudForm? _form = default!;
-    private readonly ApplicationUserDtoValidator _modelValidator = new();
     private List<CheckItem> Roles { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
@@ -200,47 +172,6 @@ using CleanArchitecture.Blazor.Domain.Identity;
                 await OnFormSubmit.InvokeAsync(Model);
             }
         }
-    }
-
-    // TODO: probably this will be moved as feature in the application layer
-    public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>
-    {
-        public ApplicationUserDtoValidator()
-        {
-            RuleFor(v => v.TenantId)
-                .MaximumLength(256)
-                .NotEmpty();
-            //RuleFor(v => v.SuperiorId)
-            //     .MaximumLength(256)
-            //     .NotEmpty().When(x=>!x.UserName.Equals("Administrator", StringComparison.CurrentCultureIgnoreCase));
-            RuleFor(v => v.Provider)
-                .MaximumLength(256)
-                .NotEmpty();
-            RuleFor(v => v.UserName)
-                .MaximumLength(256)
-                .NotEmpty();
-            RuleFor(v => v.Email)
-                .MaximumLength(256)
-                .NotEmpty()
-                .EmailAddress();
-            RuleFor(p => p.Password).NotEmpty().WithMessage("Your password cannot be empty")
-                .MinimumLength(6).WithMessage("Your password length must be at least 6.")
-                .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
-                .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
-                .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
-                .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
-                .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
-            RuleFor(x => x.ConfirmPassword)
-                .Equal(x => x.Password);
-        }
-
-        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-        {
-            var result = await ValidateAsync(ValidationContext<ApplicationUserDto>.CreateWithOptions((ApplicationUserDto)model, x => x.IncludeProperties(propertyName)));
-            if (result.IsValid)
-                return Array.Empty<string>();
-            return result.Errors.Select(e => e.ErrorMessage);
-        };
     }
 
 }

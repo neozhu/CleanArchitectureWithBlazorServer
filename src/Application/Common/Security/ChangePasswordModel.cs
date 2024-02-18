@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Security;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+
+namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public class ChangePasswordModel
 {
@@ -9,16 +11,30 @@ public class ChangePasswordModel
 
 public class ChangePasswordModelValidator : AbstractValidator<ChangePasswordModel>
 {
-    public ChangePasswordModelValidator()
+    private readonly IIdentitySettings _identitySettings;
+    private readonly IStringLocalizer<ChangePasswordModelValidator> _localizer;
+
+    public ChangePasswordModelValidator(IIdentitySettings identitySettings,
+         IStringLocalizer<ChangePasswordModelValidator> localizer)
     {
-        RuleFor(p => p.NewPassword).NotEmpty().WithMessage("Your password cannot be empty")
-            .MinimumLength(6).WithMessage("Your password length must be at least 6.")
-            .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
-            .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
-            .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
-            .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
-            .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
+        _identitySettings = identitySettings;
+        _localizer = localizer;
+        RuleFor(p => p.NewPassword).NotEmpty().WithMessage(_localizer["CannotBeEmpty"])
+           .MinimumLength(_identitySettings.RequiredLength)
+           .WithMessage(string.Format(_localizer["MinLength"], _identitySettings.RequiredLength))
+           .MaximumLength(_identitySettings.MaxLength)
+           .WithMessage(string.Format(_localizer["MaxLength"], _identitySettings.MaxLength))
+           .Matches(_identitySettings.RequireUpperCase ? @"[A-Z]+" : string.Empty)
+           .WithMessage(_localizer["MustContainUpperCase"])
+           .Matches(_identitySettings.RequireLowerCase ? @"[a-z]+" : string.Empty)
+           .WithMessage(_localizer["MustContainLowerCase"])
+           .Matches(_identitySettings.RequireDigit ? @"[0-9]+" : string.Empty)
+           .WithMessage(_localizer["MustContainDigit"])
+           .Matches(_identitySettings.RequireNonAlphanumeric ? @"[\@\!\?\*\.]+" : string.Empty)
+           .WithMessage(_localizer["MustContainNonAlphanumericCharacter"]);
+
         RuleFor(x => x.ConfirmPassword)
             .Equal(x => x.NewPassword);
+       
     }
 }

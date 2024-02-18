@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 
@@ -33,7 +33,7 @@ public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormMo
             .Matches(_identitySettings.RequireDigit ? @"[0-9]+" : string.Empty)
             .WithMessage(_localizer["MustContainDigit"])
             .Matches(_identitySettings.RequireNonAlphanumeric ? @"[\@\!\?\*\.]+" : string.Empty)
-            .WithMessage(_localizer["MustContainAlphanumericCharacter"]);
+            .WithMessage(_localizer["MustContainNonAlphanumericCharacter"]);
         RuleFor(x => x.ConfirmPassword)
             .Equal(x => x.Password);
         RuleFor(x => x.AgreeToTerms)
