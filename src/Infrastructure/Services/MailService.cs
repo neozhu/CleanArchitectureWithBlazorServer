@@ -13,13 +13,13 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 public class MailService : IMailService
 {
     private const string TemplatePath = "CleanArchitecture.Blazor.Server.UI.Resources.EmailTemplates.{0}.cshtml";
-    private readonly AppConfigurationSettings _appConfig;
+    private readonly IApplicationSettings _appConfig;
     private readonly IFluentEmail _fluentEmail;
     private readonly ILogger<MailService> _logger;
     private readonly AsyncRetryPolicy _policy;
 
     public MailService(
-        AppConfigurationSettings appConfig,
+        IApplicationSettings appConfig,
         IFluentEmail fluentEmail,
         ILogger<MailService> logger)
     {
