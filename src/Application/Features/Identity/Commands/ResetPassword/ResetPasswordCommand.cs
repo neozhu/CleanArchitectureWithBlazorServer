@@ -1,4 +1,6 @@
-﻿using CleanArchitecture.Blazor.Domain.Identity;
+﻿using System.Web;
+using CleanArchitecture.Blazor.Domain.Identity;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Commands.ResetPassword;
@@ -11,7 +13,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
     private readonly IMailService _mailService;
     private readonly IApplicationSettings _settings;
     private readonly UserManager<ApplicationUser> _userManager;
-
+    private string RequestUrl = "";
     public ResetPasswordCommandHandler(UserManager<ApplicationUser> userManager,
         IStringLocalizer<ResetPasswordCommandHandler> localizer,
         IMailService mailService,
@@ -33,15 +35,16 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         //var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_recoverypassword.txt");
-        var sendMailResult = await _mailService.SendAsync(
+        RequestUrl = $"{_settings.ApplicationUrl}/pages/authentication/reset-password/{user.Id}?token={HttpUtility.UrlEncode(resetPasswordToken)}";
+         var sendMailResult = await _mailService.SendAsync(
             request.Email,
             _localizer["Verify your recovery email"],
             "_recoverypassword",
             new
             {
+                RequestUrl,
                 _settings.AppName,
                 request.Email,
-                Token = resetPasswordToken
             });
 
         return sendMailResult.Successful

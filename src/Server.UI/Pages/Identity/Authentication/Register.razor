@@ -1,4 +1,4 @@
-@page "/pages/authentication/register"
+﻿@page "/pages/authentication/register"
 
 @attribute [AllowAnonymous]
 @using Severity = Severity
@@ -143,9 +143,9 @@
 
     private Task<SendResponse> SendWelcome(string toEmail, string userName)
     {
-        var subject = string.Format(L["Welcome to {0}"], Settings.AppName);
+        var subject = string.Format(L["Welcome to {0}"], ApplicationSettings.AppName);
         var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates", "_welcome.txt");
-        return MailService.SendAsync(toEmail, subject, "_welcome", new { Settings.AppName, Email = toEmail, UserName = userName });
+        return MailService.SendAsync(toEmail, subject, "_welcome", new { ApplicationSettings.AppName, Email = toEmail, UserName = userName });
     }
 
 }
