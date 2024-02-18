@@ -44,6 +44,8 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
             {
                 RequestUrl,
                 _settings.AppName,
+                _settings.Company,
+                user.UserName,
                 request.Email,
             });
 
