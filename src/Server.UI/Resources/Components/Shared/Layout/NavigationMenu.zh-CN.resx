@@ -117,73 +117,88 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Confirm password must match the new password" xml:space="preserve">
-    <value>확인 비밀번호는 새 비밀번호와 일치해야 합니다.</value>
+  <data name="Jobs" xml:space="preserve">
+    <value>工作</value>
   </data>
-  <data name="Confirm password must match the password" xml:space="preserve">
-    <value>확인 비밀번호는 비밀번호와 일치해야 합니다.</value>
+  <data name="@2024 Copyright" xml:space="preserve">
+    <value>@2024 版权所有</value>
   </data>
-  <data name="Display name must be less than 128 characters" xml:space="preserve">
-    <value>표시 이름은 128자 미만이어야 합니다.</value>
+  <data name="Analytics" xml:space="preserve">
+    <value>分析</value>
   </data>
-  <data name="E-mail cannot be empty" xml:space="preserve">
-    <value>이메일은 비워둘 수 없습니다.</value>
+  <data name="Application" xml:space="preserve">
+    <value>应用程序</value>
   </data>
-  <data name="E-mail must be a valid email address" xml:space="preserve">
-    <value>이메일은 유효한 이메일 주소이어야 합니다.</value>
+  <data name="Audit Trails" xml:space="preserve">
+    <value>审计跟踪</value>
   </data>
-  <data name="E-mail must be less than 100 characters" xml:space="preserve">
-    <value>이메일은 100자 미만이어야 합니다.</value>
+  <data name="Authorization" xml:space="preserve">
+    <value>授权</value>
   </data>
-  <data name="New password cannot be empty" xml:space="preserve">
-    <value>새 비밀번호는 비워둘 수 없습니다.</value>
+  <data name="Banking" xml:space="preserve">
+    <value>银行业务</value>
   </data>
-  <data name="Password cannot be empty" xml:space="preserve">
-    <value>비밀번호는 비워둘 수 없습니다.</value>
+  <data name="Blazor" xml:space="preserve">
+    <value>Blazor</value>
   </data>
-  <data name="Password cannot be longer than {0} characters" xml:space="preserve">
-    <value>비밀번호는 {0}자를 초과할 수 없습니다.</value>
+  <data name="Blazor Dashboard" xml:space="preserve">
+    <value>Blazor 仪表板</value>
   </data>
-  <data name="Password must be at least {0} characters long" xml:space="preserve">
-    <value>비밀번호는 적어도 {0}자 이상이어야 합니다.</value>
+  <data name="Booking" xml:space="preserve">
+    <value>预订</value>
   </data>
-  <data name="Password must contain at least one digit" xml:space="preserve">
-    <value>비밀번호는 적어도 하나의 숫자를 포함해야 합니다.</value>
+  <data name="Coming Soon" xml:space="preserve">
+    <value>即将推出</value>
   </data>
-  <data name="Password must contain at least one lowercase letter" xml:space="preserve">
-    <value>비밀번호는 적어도 하나의 소문자를 포함해야 합니다.</value>
+  <data name="Company" xml:space="preserve">
+    <value>公司</value>
   </data>
-  <data name="Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)" xml:space="preserve">
-    <value>비밀번호는 적어도 하나의 비문자 숫자 문자를 포함해야 합니다 (예: @, !, ?, *, .).</value>
+  <data name="Completed" xml:space="preserve">
+    <value>已完成</value>
   </data>
-  <data name="Password must contain at least one uppercase letter" xml:space="preserve">
-    <value>비밀번호는 적어도 하나의 대문자를 포함해야 합니다.</value>
+  <data name="Documents" xml:space="preserve">
+    <value>文档</value>
   </data>
-  <data name="Phone number must be between 1 and 20 digits" xml:space="preserve">
-    <value>전화번호는 1자 이상 20자 이하이어야 합니다.</value>
+  <data name="E-Commerce" xml:space="preserve">
+    <value>电子商务</value>
   </data>
-  <data name="User name cannot be empty" xml:space="preserve">
-    <value>사용자 이름은 비워둘 수 없습니다.</value>
+  <data name="Home" xml:space="preserve">
+    <value>主页</value>
   </data>
-  <data name="User name must be between 2 and 100 characters" xml:space="preserve">
-    <value>사용자 이름은 2자 이상 100자 이하이어야 합니다.</value>
+  <data name="Logs" xml:space="preserve">
+    <value>日志</value>
   </data>
-  <data name="You must agree to the terms and conditions" xml:space="preserve">
-    <value>약관에 동의해야 합니다.</value>
+  <data name="MANAGEMENT" xml:space="preserve">
+    <value>管理</value>
   </data>
-  <data name="Provider cannot be empty" xml:space="preserve">
-    <value>공급자는 비워둘 수 없습니다.</value>
+  <data name="Multi-Tenant" xml:space="preserve">
+    <value>多租户</value>
   </data>
-  <data name="Provider must be less than 100 characters" xml:space="preserve">
-    <value>공급자는 100자 미만이어야 합니다.</value>
+  <data name="New" xml:space="preserve">
+    <value>新</value>
   </data>
-  <data name="Tenant id must be less than 128 characters" xml:space="preserve">
-    <value>테넌트 ID는 128자 미만이어야 합니다.</value>
+  <data name="Picklist" xml:space="preserve">
+    <value>选项列表</value>
   </data>
-  <data name="Tenant name cannot be empty" xml:space="preserve">
-    <value>테넌트 이름은 비워둘 수 없습니다.</value>
+  <data name="Products" xml:space="preserve">
+    <value>产品</value>
   </data>
-  <data name="Phone number must be less than 20 digits" xml:space="preserve">
-    <value>전화번호는 20자 미만이어야 합니다.</value>
+  <data name="Profile" xml:space="preserve">
+    <value>配置文件</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>系统</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="version" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="WIP" xml:space="preserve">
+    <value>进行中</value>
   </data>
 </root>

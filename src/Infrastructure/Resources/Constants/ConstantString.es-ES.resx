@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
+  <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,236 +59,240 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
-                id="root"
-                xmlns="">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root" xmlns="">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="Logout Confirmation" xml:space="preserve">
+  </resheader>
+  <data name="Logout Confirmation" xml:space="preserve">
     <value>Confirmación de cierre de sesión</value>
   </data>
-    <data name="Actions" xml:space="preserve">
-    <value>Comportamiento</value>
+  <data name="Actions" xml:space="preserve">
+    <value>Acciones</value>
   </data>
-    <data name="Add" xml:space="preserve">
-    <value>Agregar</value>
+  <data name="Add" xml:space="preserve">
+    <value>Añadir</value>
   </data>
-    <data name="Advanced Search" xml:space="preserve">
-    <value>Búsqueda Avanzada</value>
+  <data name="Advanced Search" xml:space="preserve">
+    <value>Búsqueda avanzada</value>
   </data>
-    <data name="Are you sure you want to delete the selected items: {0}?" xml:space="preserve">
-    <value>¿Está seguro de que desea eliminar los elementos seleccionados: {0}?</value>
+  <data name="Are you sure you want to delete the selected items: {0}?" xml:space="preserve">
+    <value>¿Estás seguro de que quieres eliminar los elementos seleccionados: {0}?</value>
   </data>
-    <data name="Are you sure you want to delete this item with Id: {0}?" xml:space="preserve">
-    <value>¿Está seguro de que desea eliminar este elemento con Id: {0}?</value>
+  <data name="Are you sure you want to delete this item with Id: {0}?" xml:space="preserve">
+    <value>¿Estás seguro de que quieres eliminar este elemento con Id: {0}?</value>
   </data>
-    <data name="Are you sure you want to delete this item: {0}?" xml:space="preserve">
-    <value>¿Está seguro de que desea eliminar este elemento: {0}?</value>
+  <data name="Are you sure you want to delete this item: {0}?" xml:space="preserve">
+    <value>¿Estás seguro de que quieres eliminar este elemento: {0}?</value>
   </data>
-    <data name="Cancel" xml:space="preserve">
+  <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-    <data name="Clear" xml:space="preserve">
-    <value>Claro</value>
+  <data name="Clear" xml:space="preserve">
+    <value>Limpiar</value>
   </data>
-    <data name="Close" xml:space="preserve">
+  <data name="Close" xml:space="preserve">
     <value>Cerrar</value>
   </data>
-    <data name="New" xml:space="preserve">
+  <data name="New" xml:space="preserve">
     <value>Nuevo</value>
   </data>
-    <data name="Create a new {0}" xml:space="preserve">
+  <data name="Create a new {0}" xml:space="preserve">
     <value>Crear un nuevo {0}</value>
   </data>
-    <data name="Create successfully" xml:space="preserve">
-    <value>Crear con éxito</value>
+  <data name="Create successfully" xml:space="preserve">
+    <value>Creación exitosa</value>
   </data>
-    <data name="Delete" xml:space="preserve">
-    <value>Borrar</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Eliminar</value>
   </data>
-    <data name="Delete Confirmation" xml:space="preserve">
-    <value>Eliminar Confirmación</value>
+  <data name="Delete Confirmation" xml:space="preserve">
+    <value>Confirmación de eliminación</value>
   </data>
-    <data name="Delete selected items: {0}" xml:space="preserve">
+  <data name="Delete selected items: {0}" xml:space="preserve">
     <value>Eliminar elementos seleccionados: {0}</value>
   </data>
-    <data name="Delete successfully" xml:space="preserve">
-    <value>Eliminar con éxito</value>
+  <data name="Delete successfully" xml:space="preserve">
+    <value>Eliminación exitosa</value>
   </data>
-    <data name="Delete the {0}" xml:space="preserve">
+  <data name="Delete the {0}" xml:space="preserve">
     <value>Eliminar el {0}</value>
   </data>
-    <data name="Downloading..." xml:space="preserve">
+  <data name="Downloading..." xml:space="preserve">
     <value>Descargando...</value>
   </data>
-    <data name="Edit" xml:space="preserve">
+  <data name="Edit" xml:space="preserve">
     <value>Editar</value>
   </data>
-    <data name="Edit the {0}" xml:space="preserve">
+  <data name="Edit the {0}" xml:space="preserve">
     <value>Editar el {0}</value>
   </data>
-    <data name="Export fail" xml:space="preserve">
-    <value>Error al exportar</value>
+  <data name="Export fail" xml:space="preserve">
+    <value>Fallo al exportar</value>
   </data>
-    <data name="Export successfully" xml:space="preserve">
-    <value>Exportar con éxito</value>
+  <data name="Export successfully" xml:space="preserve">
+    <value>Exportación exitosa</value>
   </data>
-    <data name="Export to Excel" xml:space="preserve">
+  <data name="Export to Excel" xml:space="preserve">
     <value>Exportar a Excel</value>
   </data>
-    <data name="Import fail" xml:space="preserve">
-    <value>Importación fallida</value>
+  <data name="Import fail" xml:space="preserve">
+    <value>Fallo al importar</value>
   </data>
-    <data name="Import from Excel" xml:space="preserve">
+  <data name="Import from Excel" xml:space="preserve">
     <value>Importar desde Excel</value>
   </data>
-    <data name="Import successfully" xml:space="preserve">
-    <value>Importar correctamente</value>
+  <data name="Import successfully" xml:space="preserve">
+    <value>Importación exitosa</value>
   </data>
-    <data name="Loading..." xml:space="preserve">
+  <data name="Loading..." xml:space="preserve">
     <value>Cargando...</value>
   </data>
-    <data name="Login fail" xml:space="preserve">
-    <value>Carga fallida</value>
+  <data name="Login fail" xml:space="preserve">
+    <value>Fallo en el inicio de sesión</value>
   </data>
-    <data name="Login successfully" xml:space="preserve">
-    <value>Iniciar sesión con éxito</value>
+  <data name="Login successfully" xml:space="preserve">
+    <value>Inicio de sesión exitoso</value>
   </data>
-    <data name="Logout" xml:space="preserve">
+  <data name="Logout" xml:space="preserve">
     <value>Cerrar sesión</value>
   </data>
-    <data name="Logout fail" xml:space="preserve">
-    <value>Error de cierre de sesión</value>
+  <data name="Logout fail" xml:space="preserve">
+    <value>Fallo al cerrar sesión</value>
   </data>
-    <data name="Logout successfully" xml:space="preserve">
-    <value>Cerrar sesión con éxito</value>
+  <data name="Logout successfully" xml:space="preserve">
+    <value>Cierre de sesión exitoso</value>
   </data>
-    <data name="Next" xml:space="preserve">
-    <value>próximo</value>
+  <data name="Next" xml:space="preserve">
+    <value>Siguiente</value>
   </data>
-    <data name="No" xml:space="preserve">
+  <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
-    <data name="No Allowed" xml:space="preserve">
+  <data name="No Allowed" xml:space="preserve">
     <value>No permitido</value>
   </data>
-    <data name="OK" xml:space="preserve">
-    <value>DE ACUERDO</value>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
   </data>
-    <data name="Order By" xml:space="preserve">
-    <value>ordenar por</value>
+  <data name="Order By" xml:space="preserve">
+    <value>Ordenar por</value>
   </data>
-    <data name="Previous" xml:space="preserve">
+  <data name="Previous" xml:space="preserve">
     <value>Anterior</value>
   </data>
-    <data name="Refresh" xml:space="preserve">
-    <value>Actualizar</value>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refrescar</value>
   </data>
-    <data name="Reset" xml:space="preserve">
-    <value>Reiniciar</value>
+  <data name="Reset" xml:space="preserve">
+    <value>Restablecer</value>
   </data>
-    <data name="Save" xml:space="preserve">
+  <data name="Save" xml:space="preserve">
     <value>Guardar</value>
   </data>
-    <data name="Save Changes" xml:space="preserve">
+  <data name="Save Changes" xml:space="preserve">
     <value>Guardar cambios</value>
   </data>
-    <data name="Save successfully" xml:space="preserve">
-    <value>Guardar con éxito</value>
+  <data name="Save successfully" xml:space="preserve">
+    <value>Guardado exitoso</value>
   </data>
-    <data name="Search" xml:space="preserve">
-    <value>Búsqueda</value>
+  <data name="Search" xml:space="preserve">
+    <value>Buscar</value>
   </data>
-    <data name="Sign in with {0}" xml:space="preserve">
+  <data name="Sign in with {0}" xml:space="preserve">
     <value>Iniciar sesión con {0}</value>
   </data>
-    <data name="Update successfully" xml:space="preserve">
-    <value>Actualizar correctamente</value>
+  <data name="Update successfully" xml:space="preserve">
+    <value>Actualización exitosa</value>
   </data>
-    <data name="Uploading..." xml:space="preserve">
+  <data name="Uploading..." xml:space="preserve">
     <value>Subiendo...</value>
   </data>
-    <data name="Yes" xml:space="preserve">
+  <data name="Yes" xml:space="preserve">
     <value>Sí</value>
   </data>
-    <data name="Confirm" xml:space="preserve">
+  <data name="Confirm" xml:space="preserve">
     <value>Confirmar</value>
   </data>
-    <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
-    <value>Está intentando cerrar sesión en la aplicación. ¿Realmente quieres cerrar sesión?</value>
+  <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
+    <value>Estás intentando cerrar sesión en la aplicación. ¿Realmente deseas salir?</value>
   </data>
-    <data name="Sign In" xml:space="preserve">
-    <value>Registrarse</value>
+  <data name="Sign In" xml:space="preserve">
+    <value>Iniciar sesión</value>
   </data>
-    <data name="Export to PDF" xml:space="preserve">
+  <data name="Export to PDF" xml:space="preserve">
     <value>Exportar a PDF</value>
   </data>
-    <data name="Submit" xml:space="preserve">
-    <value>Entregar</value>
+  <data name="Submit" xml:space="preserve">
+    <value>Enviar</value>
   </data>
-    <data name="Clone" xml:space="preserve">
-    <value>Clon</value>
+  <data name="Clone" xml:space="preserve">
+    <value>Clonar</value>
   </data>
-    <data name="Save &amp; New" xml:space="preserve">
-    <value>Guardar y nueva</value>
+  <data name="Save &amp; New" xml:space="preserve">
+    <value>Guardar y nuevo</value>
+  </data>
+  <data name="Selected Total" xml:space="preserve">
+    <value>Total seleccionado</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>Seleccionado</value>
   </data>
 </root>
