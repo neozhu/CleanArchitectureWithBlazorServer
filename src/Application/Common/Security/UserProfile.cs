@@ -1,4 +1,7 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Security;
+﻿using FluentValidation;
+using static CleanArchitecture.Blazor.Application.Features.Identity.DTOs.ApplicationUserDto;
+
+namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public class UserProfile
 {
@@ -20,12 +23,24 @@ public class UserProfile
 
 public class UserProfileEditValidator : AbstractValidator<UserProfile>
 {
-    public UserProfileEditValidator()
+    private readonly IStringLocalizer<ApplicationUserDtoValidator> _localizer;
+
+    public UserProfileEditValidator(IStringLocalizer<ApplicationUserDtoValidator> localizer)
     {
+        _localizer = localizer;
+        RuleFor(x => x.UserName)
+           .NotEmpty().WithMessage(_localizer["User name cannot be empty"])
+           .Length(2, 100).WithMessage(_localizer["User name must be between 2 and 100 characters"]);
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage(_localizer["E-mail cannot be empty"])
+            .MaximumLength(100).WithMessage(_localizer["E-mail must be less than 100 characters"])
+            .EmailAddress().WithMessage(_localizer["E-mail must be a valid email address"]);
+
         RuleFor(x => x.DisplayName)
-            .MaximumLength(128)
-            .NotEmpty();
+            .MaximumLength(128).WithMessage(_localizer["Display name must be less than 128 characters"]);
+
         RuleFor(x => x.PhoneNumber)
-            .MaximumLength(2);
+            .MaximumLength(20).WithMessage(_localizer["Phone number must be less than 20 digits"]);
+
     }
 }
