@@ -121,4 +121,58 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
+  <data name="E-mail cannot be empty" xml:space="preserve">
+    <value>Электронная почта не может быть пустой.</value>
+  </data>
+  <data name="Confirm password must match the new password" xml:space="preserve">
+    <value>Подтверждение пароля должно соответствовать новому паролю.</value>
+  </data>
+  <data name="Confirm password must match the password" xml:space="preserve">
+    <value>Подтверждение пароля должно совпадать с паролем.</value>
+  </data>
+  <data name="Display name must be less than 128 characters" xml:space="preserve">
+    <value>Отображаемое имя должно быть менее 128 символов.</value>
+  </data>
+  <data name="E-mail must be a valid email address" xml:space="preserve">
+    <value>Электронная почта должна быть действительным адресом.</value>
+  </data>
+  <data name="E-mail must be less than 100 characters" xml:space="preserve">
+    <value>Электронная почта должна содержать менее 100 символов.</value>
+  </data>
+  <data name="New password cannot be empty" xml:space="preserve">
+    <value>Новый пароль не может быть пустым.</value>
+  </data>
+  <data name="Password cannot be empty" xml:space="preserve">
+    <value>Пароль не может быть пустым.</value>
+  </data>
+  <data name="Password cannot be longer than {0} characters" xml:space="preserve">
+    <value>Пароль не может быть длиннее {0} символов.</value>
+  </data>
+  <data name="Password must be at least {0} characters long" xml:space="preserve">
+    <value>Пароль должен быть не менее {0} символов в длину.</value>
+  </data>
+  <data name="Password must contain at least one digit" xml:space="preserve">
+    <value>Пароль должен содержать хотя бы одну цифру.</value>
+  </data>
+  <data name="Password must contain at least one lowercase letter" xml:space="preserve">
+    <value>Пароль должен содержать хотя бы одну строчную букву.</value>
+  </data>
+  <data name="Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)" xml:space="preserve">
+    <value>Пароль должен содержать хотя бы один неалфавитно-цифровой символ (например, @, !, ?, *, .).</value>
+  </data>
+  <data name="Password must contain at least one uppercase letter" xml:space="preserve">
+    <value>Пароль должен содержать хотя бы одну заглавную букву.</value>
+  </data>
+  <data name="Phone number must be between 1 and 20 digits" xml:space="preserve">
+    <value>Номер телефона должен быть от 1 до 20 цифр.</value>
+  </data>
+  <data name="User name cannot be empty" xml:space="preserve">
+    <value>Имя пользователя не может быть пустым.</value>
+  </data>
+  <data name="User name must be between 2 and 100 characters" xml:space="preserve">
+    <value>Имя пользователя должно быть от 2 до 100 символов.</value>
+  </data>
+  <data name="You must agree to the terms and conditions" xml:space="preserve">
+    <value>Вы должны согласиться с условиями и положениями.</value>
+  </data>
 </root>

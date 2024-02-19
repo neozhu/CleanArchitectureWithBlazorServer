@@ -121,4 +121,58 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
+  <data name="E-mail cannot be empty" xml:space="preserve">
+    <value>អ៊ីម៉ែលមិនអាចទទេបានទេ។</value>
+  </data>
+  <data name="Confirm password must match the new password" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់បញ្ជាក់ត្រូវតែដូចនឹងពាក្យសម្ងាត់ថ្មី។</value>
+  </data>
+  <data name="Confirm password must match the password" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់បញ្ជាក់ត្រូវតែដូចនឹងពាក្យសម្ងាត់។</value>
+  </data>
+  <data name="Display name must be less than 128 characters" xml:space="preserve">
+    <value>ឈ្មោះបង្ហាញត្រូវតែមានតួអក្សរតិចជាង១២៨តួ។</value>
+  </data>
+  <data name="E-mail must be a valid email address" xml:space="preserve">
+    <value>អ៊ីម៉ែលត្រូវតែជាអាសយដ្ឋានត្រឹមត្រូវ។</value>
+  </data>
+  <data name="E-mail must be less than 100 characters" xml:space="preserve">
+    <value>អ៊ីម៉ែលត្រូវតែមានតួអក្សរតិចជាង១០០តួ។</value>
+  </data>
+  <data name="New password cannot be empty" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់ថ្មីមិនអាចទទេបានទេ។</value>
+  </data>
+  <data name="Password cannot be empty" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់មិនអាចទទេបានទេ។</value>
+  </data>
+  <data name="Password cannot be longer than {0} characters" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់មិនអាចវែងជាង {0} តួអក្សរបានទេ។</value>
+  </data>
+  <data name="Password must be at least {0} characters long" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់ត្រូវតែមានយ៉ាងហោចណាស់ {0} តួអក្សរ។</value>
+  </data>
+  <data name="Password must contain at least one digit" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់ត្រូវតែមានលេខយ៉ាងហោចណាស់មួយ។</value>
+  </data>
+  <data name="Password must contain at least one lowercase letter" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់ត្រូវតែមានអក្សរតូចយ៉ាងហោចណាស់មួយ។</value>
+  </data>
+  <data name="Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់ត្រូវតែមានអក្សរដែលមិនមែនជាលេខនិងអក្សរយ៉ាងហោចណាស់មួយ (ឧទាហរណ៍ @, !, ?, *, .)។</value>
+  </data>
+  <data name="Password must contain at least one uppercase letter" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់ត្រូវតែមានអក្សរធំយ៉ាងហោចណាស់មួយ។</value>
+  </data>
+  <data name="Phone number must be between 1 and 20 digits" xml:space="preserve">
+    <value>លេខទូរស័ព្ទត្រូវតែមានចន្លោះពី ១ ដល់ ២០ ខ្ទង់។</value>
+  </data>
+  <data name="User name cannot be empty" xml:space="preserve">
+    <value>ឈ្មោះអ្នកប្រើមិនអាចទទេបានទេ។</value>
+  </data>
+  <data name="User name must be between 2 and 100 characters" xml:space="preserve">
+    <value>ឈ្មោះអ្នកប្រើត្រូវតែមានចន្លោះពី ២ ដល់ ១០០ តួអក្សរ។</value>
+  </data>
+  <data name="You must agree to the terms and conditions" xml:space="preserve">
+    <value>អ្នកត្រូវតែយល់ព្រមជាមួយលក្ខខណ្ឌនិងលក្ខខ័ណ្ឌ។</value>
+  </data>
 </root>

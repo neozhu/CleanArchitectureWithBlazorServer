@@ -122,57 +122,57 @@
         </value>
   </resheader>
   <data name="New password cannot be empty" xml:space="preserve">
-    <value></value>
+    <value>New password cannot be empty</value>
   </data>
   <data name="Password must be at least {0} characters long" xml:space="preserve">
-    <value></value>
+    <value>Password must be at least {0} characters long</value>
   </data>
   <data name="Password cannot be longer than {0} characters" xml:space="preserve">
-    <value></value>
+    <value>Password cannot be longer than {0} characters</value>
   </data>
   <data name="Password must contain at least one uppercase letter" xml:space="preserve">
-    <value></value>
+    <value>Password must contain at least one uppercase letter</value>
   </data>
   <data name="Password must contain at least one lowercase letter" xml:space="preserve">
-    <value></value>
+    <value>Password must contain at least one lowercase letter</value>
   </data>
   <data name="Password must contain at least one digit" xml:space="preserve">
-    <value></value>
+    <value>Password must contain at least one digit</value>
   </data>
   <data name="Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)" xml:space="preserve">
-    <value></value>
+    <value>Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)</value>
   </data>
   <data name="Confirm password must match the new password" xml:space="preserve">
-    <value></value>
+    <value>Confirm password must match the new password</value>
   </data>
   <data name="User name cannot be empty" xml:space="preserve">
-    <value></value>
+    <value>User name cannot be empty</value>
   </data>
   <data name="User name must be between 2 and 100 characters" xml:space="preserve">
-    <value></value>
+    <value>User name must be between 2 and 100 characters</value>
   </data>
   <data name="Password cannot be empty" xml:space="preserve">
-    <value></value>
+    <value>Password cannot be empty</value>
   </data>
   <data name="Confirm password must match the password" xml:space="preserve">
-    <value></value>
+    <value>Confirm password must match the password</value>
   </data>
   <data name="You must agree to the terms and conditions" xml:space="preserve">
-    <value></value>
+    <value>You must agree to the terms and conditions</value>
   </data>
   <data name="Phone number must be between 1 and 20 digits" xml:space="preserve">
-    <value></value>
+    <value>Phone number must be between 1 and 20 digits</value>
   </data>
   <data name="Display name must be less than 128 characters" xml:space="preserve">
-    <value></value>
+    <value>Display name must be less than 128 characters</value>
   </data>
   <data name="E-mail must be a valid email address" xml:space="preserve">
-    <value></value>
+    <value>E-mail must be a valid email address</value>
   </data>
   <data name="E-mail must be less than 100 characters" xml:space="preserve">
-    <value></value>
+    <value>E-mail must be less than 100 characters</value>
   </data>
   <data name="E-mail cannot be empty" xml:space="preserve">
-    <value></value>
+    <value>E-mail cannot be empty</value>
   </data>
 </root>

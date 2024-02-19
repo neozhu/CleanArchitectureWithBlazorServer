@@ -121,4 +121,58 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
+  <data name="E-mail cannot be empty" xml:space="preserve">
+    <value>El correo electrónico no puede estar vacío.</value>
+  </data>
+  <data name="Confirm password must match the new password" xml:space="preserve">
+    <value>La contraseña de confirmación debe coincidir con la nueva contraseña.</value>
+  </data>
+  <data name="Confirm password must match the password" xml:space="preserve">
+    <value>La contraseña de confirmación debe coincidir con la contraseña.</value>
+  </data>
+  <data name="Display name must be less than 128 characters" xml:space="preserve">
+    <value>El nombre para mostrar debe tener menos de 128 caracteres.</value>
+  </data>
+  <data name="E-mail must be a valid email address" xml:space="preserve">
+    <value>El correo electrónico debe ser una dirección válida.</value>
+  </data>
+  <data name="E-mail must be less than 100 characters" xml:space="preserve">
+    <value>El correo electrónico debe tener menos de 100 caracteres.</value>
+  </data>
+  <data name="New password cannot be empty" xml:space="preserve">
+    <value>La nueva contraseña no puede estar vacía.</value>
+  </data>
+  <data name="Password cannot be empty" xml:space="preserve">
+    <value>La contraseña no puede estar vacía.</value>
+  </data>
+  <data name="Password cannot be longer than {0} characters" xml:space="preserve">
+    <value>La contraseña no puede tener más de {0} caracteres.</value>
+  </data>
+  <data name="Password must be at least {0} characters long" xml:space="preserve">
+    <value>La contraseña debe tener al menos {0} caracteres de longitud.</value>
+  </data>
+  <data name="Password must contain at least one digit" xml:space="preserve">
+    <value>La contraseña debe contener al menos un dígito.</value>
+  </data>
+  <data name="Password must contain at least one lowercase letter" xml:space="preserve">
+    <value>La contraseña debe contener al menos una letra minúscula.</value>
+  </data>
+  <data name="Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)" xml:space="preserve">
+    <value>La contraseña debe contener al menos un carácter no alfanumérico (por ejemplo, @, !, ?, *, .).</value>
+  </data>
+  <data name="Password must contain at least one uppercase letter" xml:space="preserve">
+    <value>La contraseña debe contener al menos una letra mayúscula.</value>
+  </data>
+  <data name="Phone number must be between 1 and 20 digits" xml:space="preserve">
+    <value>El número de teléfono debe tener entre 1 y 20 dígitos.</value>
+  </data>
+  <data name="User name cannot be empty" xml:space="preserve">
+    <value>El nombre de usuario no puede estar vacío.</value>
+  </data>
+  <data name="User name must be between 2 and 100 characters" xml:space="preserve">
+    <value>El nombre de usuario debe tener entre 2 y 100 caracteres.</value>
+  </data>
+  <data name="You must agree to the terms and conditions" xml:space="preserve">
+    <value>Debes aceptar los términos y condiciones.</value>
+  </data>
 </root>
