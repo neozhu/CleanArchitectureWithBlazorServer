@@ -29,4 +29,20 @@
     <ItemGroup>
         <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Resources\Features\Identity\DTOs\ApplicationUserDtoValidator.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ApplicationUserDtoValidator.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\Features\Identity\DTOs\ApplicationUserDtoValidator.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>ApplicationUserDtoValidator.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Resources\Common\" />
+    </ItemGroup>
 </Project>

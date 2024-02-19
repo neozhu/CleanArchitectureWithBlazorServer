@@ -1,4 +1,7 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Security;
+﻿using FluentValidation;
+using static CleanArchitecture.Blazor.Application.Features.Identity.DTOs.ApplicationUserDto;
+
+namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public class UserProfile
 {
@@ -20,9 +23,9 @@ public class UserProfile
 
 public class UserProfileEditValidator : AbstractValidator<UserProfile>
 {
-    private readonly IStringLocalizer<RegisterFormModelFluentValidator> _localizer;
+    private readonly IStringLocalizer<ApplicationUserDtoValidator> _localizer;
 
-    public UserProfileEditValidator(IStringLocalizer<RegisterFormModelFluentValidator> localizer)
+    public UserProfileEditValidator(IStringLocalizer<ApplicationUserDtoValidator> localizer)
     {
         _localizer = localizer;
         RuleFor(x => x.UserName)
@@ -37,7 +40,7 @@ public class UserProfileEditValidator : AbstractValidator<UserProfile>
             .MaximumLength(128).WithMessage(_localizer["Display name must be less than 128 characters"]);
 
         RuleFor(x => x.PhoneNumber)
-            .Length(1, 20).WithMessage(_localizer["Phone number must be between 1 and 20 digits"]);
+            .MaximumLength(20).WithMessage(_localizer["Phone number must be less than 20 digits"]);
 
     }
 }

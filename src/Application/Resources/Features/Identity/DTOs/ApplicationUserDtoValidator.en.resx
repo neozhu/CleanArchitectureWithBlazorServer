@@ -117,58 +117,73 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="E-mail cannot be empty" xml:space="preserve">
-    <value>لا يمكن أن يكون حقل البريد الإلكتروني فارغاً</value>
-  </data>
   <data name="Confirm password must match the new password" xml:space="preserve">
-    <value>يجب أن تتطابق كلمة المرور التأكيدية مع كلمة المرور الجديدة</value>
+    <value>Confirm password must match the new password</value>
   </data>
   <data name="Confirm password must match the password" xml:space="preserve">
-    <value>يجب أن تتطابق كلمة المرور التأكيدية مع كلمة المرور</value>
+    <value>Confirm password must match the password</value>
   </data>
   <data name="Display name must be less than 128 characters" xml:space="preserve">
-    <value>يجب ألا يتجاوز الاسم المعروض 128 حرفاً</value>
+    <value>Display name must be less than 128 characters</value>
+  </data>
+  <data name="E-mail cannot be empty" xml:space="preserve">
+    <value>E-mail cannot be empty</value>
   </data>
   <data name="E-mail must be a valid email address" xml:space="preserve">
-    <value>يجب أن يكون البريد الإلكتروني عنوانًا صالحًا</value>
+    <value>E-mail must be a valid email address</value>
   </data>
   <data name="E-mail must be less than 100 characters" xml:space="preserve">
-    <value>يجب ألا يتجاوز البريد الإلكتروني 100 حرف</value>
+    <value>E-mail must be less than 100 characters</value>
   </data>
   <data name="New password cannot be empty" xml:space="preserve">
-    <value>لا يمكن أن تكون كلمة المرور الجديدة فارغة</value>
+    <value>New password cannot be empty</value>
   </data>
   <data name="Password cannot be empty" xml:space="preserve">
-    <value>لا يمكن أن تكون كلمة المرور فارغة</value>
+    <value>Password cannot be empty</value>
   </data>
   <data name="Password cannot be longer than {0} characters" xml:space="preserve">
-    <value>لا يمكن أن تكون كلمة المرور أطول من {0} حرفاً</value>
+    <value>Password cannot be longer than {0} characters</value>
   </data>
   <data name="Password must be at least {0} characters long" xml:space="preserve">
-    <value>يجب أن تكون كلمة المرور على الأقل {0} حرفاً</value>
+    <value>Password must be at least {0} characters long</value>
   </data>
   <data name="Password must contain at least one digit" xml:space="preserve">
-    <value>يجب أن تحتوي كلمة المرور على رقم واحد على الأقل</value>
+    <value>Password must contain at least one digit</value>
   </data>
   <data name="Password must contain at least one lowercase letter" xml:space="preserve">
-    <value>يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل</value>
+    <value>Password must contain at least one lowercase letter</value>
   </data>
   <data name="Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)" xml:space="preserve">
-    <value>يجب أن تحتوي كلمة المرور على حرف واحد غير ألفبائي على الأقل (مثل @, !, ?, *, .)</value>
+    <value>Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)</value>
   </data>
   <data name="Password must contain at least one uppercase letter" xml:space="preserve">
-    <value>يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل</value>
+    <value>Password must contain at least one uppercase letter</value>
   </data>
   <data name="Phone number must be between 1 and 20 digits" xml:space="preserve">
-    <value>يجب أن يكون رقم الهاتف بين 1 و20 رقماً</value>
+    <value>Phone number must be between 1 and 20 digits</value>
   </data>
   <data name="User name cannot be empty" xml:space="preserve">
-    <value>لا يمكن أن يكون اسم المستخدم فارغاً</value>
+    <value>User name cannot be empty</value>
   </data>
   <data name="User name must be between 2 and 100 characters" xml:space="preserve">
-    <value>يجب أن يكون اسم المستخدم بين 2 و100 حرفاً</value>
+    <value>User name must be between 2 and 100 characters</value>
   </data>
   <data name="You must agree to the terms and conditions" xml:space="preserve">
-    <value>يجب أن توافق على الشروط والأحكام</value>
+    <value>You must agree to the terms and conditions</value>
+  </data>
+  <data name="Tenant name cannot be empty" xml:space="preserve">
+    <value>Tenant name cannot be empty</value>
+  </data>
+  <data name="Tenant id must be less than 128 characters" xml:space="preserve">
+    <value>Tenant id must be less than 128 characters</value>
+  </data>
+  <data name="Provider must be less than 100 characters" xml:space="preserve">
+    <value>Provider must be less than 100 characters</value>
+  </data>
+  <data name="Provider cannot be empty" xml:space="preserve">
+    <value>Provider cannot be empty</value>
+  </data>
+  <data name="Phone number must be less than 20 digits" xml:space="preserve">
+    <value>Phone number must be less than 20 digits</value>
   </data>
 </root>

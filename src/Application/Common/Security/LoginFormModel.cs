@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using static CleanArchitecture.Blazor.Application.Features.Identity.DTOs.ApplicationUserDto;
 
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 
@@ -12,11 +13,11 @@ public class LoginFormModel
 public class LoginFormModelFluentValidator : AbstractValidator<LoginFormModel>
 {
     private readonly IIdentitySettings _identitySettings;
-    private readonly IStringLocalizer<RegisterFormModelFluentValidator> _localizer;
+    private readonly IStringLocalizer<ApplicationUserDtoValidator> _localizer;
 
     public LoginFormModelFluentValidator(
         IIdentitySettings identitySettings,
-        IStringLocalizer<RegisterFormModelFluentValidator> localizer)
+        IStringLocalizer<ApplicationUserDtoValidator> localizer)
     {
         _identitySettings = identitySettings;
         _localizer = localizer;

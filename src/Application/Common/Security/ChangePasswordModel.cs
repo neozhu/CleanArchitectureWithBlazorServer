@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using static CleanArchitecture.Blazor.Application.Features.Identity.DTOs.ApplicationUserDto;
 
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 
@@ -12,10 +13,10 @@ public class ChangePasswordModel
 public class ChangePasswordModelValidator : AbstractValidator<ChangePasswordModel>
 {
     private readonly IIdentitySettings _identitySettings;
-    private readonly IStringLocalizer<RegisterFormModelFluentValidator> _localizer;
+    private readonly IStringLocalizer<ApplicationUserDtoValidator> _localizer;
 
     public ChangePasswordModelValidator(IIdentitySettings identitySettings,
-         IStringLocalizer<RegisterFormModelFluentValidator> localizer)
+         IStringLocalizer<ApplicationUserDtoValidator> localizer)
     {
         _identitySettings = identitySettings;
         _localizer = localizer;

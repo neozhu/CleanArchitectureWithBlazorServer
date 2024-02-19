@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using static CleanArchitecture.Blazor.Application.Features.Identity.DTOs.ApplicationUserDto;
 
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 
@@ -14,10 +15,10 @@ public class ResetPasswordFormModel
 
 public class ResetPasswordFormModelValidator : AbstractValidator<ResetPasswordFormModel>
 {
-    private readonly IStringLocalizer<RegisterFormModelFluentValidator> _localizer;
+    private readonly IStringLocalizer<ApplicationUserDtoValidator> _localizer;
     private readonly IIdentitySettings _identitySettings;
 
-    public ResetPasswordFormModelValidator(IStringLocalizer<RegisterFormModelFluentValidator> localizer,
+    public ResetPasswordFormModelValidator(IStringLocalizer<ApplicationUserDtoValidator> localizer,
         IIdentitySettings identitySettings)
     {
         _localizer = localizer;
