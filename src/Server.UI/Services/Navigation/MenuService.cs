@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
+﻿using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Navigation;
@@ -121,7 +121,7 @@ public class MenuService : IMenuService
                         },
                         new()
                         {
-                            Title = "Log",
+                            Title = "Logs",
                             Href = "/system/logs",
                             PageStatus = PageStatus.Completed
                         },
