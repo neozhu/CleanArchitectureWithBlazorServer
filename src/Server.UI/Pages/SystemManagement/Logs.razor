@@ -9,7 +9,7 @@
 @attribute [Authorize(Policy = Permissions.Logs.View)]
 @inject IStringLocalizer<Logs> L
 
-<PageTitle>@L[Title]</PageTitle>
+<PageTitle>@Title</PageTitle>
 
 <LogsLineCharts></LogsLineCharts>
 <MudDataGrid T="LogDto"
@@ -28,8 +28,8 @@
             <div class="d-flex gap-4">
                 <MudIcon Icon="@Icons.Material.Filled.BarChart" Size="Size.Large"/>
                 <div class="d-flex flex-column">
-                    <MudText Typo="Typo.caption">@L["Logs"]</MudText>
-                    <MudEnumSelect Style="min-width:220px" TEnum="LogListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
+                    <MudText Typo="Typo.caption" Class="mb-2">@Title</MudText>
+                    <MudEnumSelect Style="min-width:120px" TEnum="LogListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
                     </MudEnumSelect>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                                Disabled="@_loading"
                                OnClick="@(OnRefresh)"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                               Style="margin-right: 5px;">
+                               Style="margin-right: 4px; margin-bottom:4px">
                         @ConstantString.Refresh
                     </MudButton>
                     @if (_canPurge)
@@ -52,11 +52,11 @@
                                    Disabled="@(_loading || _clearing)"
                                    OnClick="@(OnPurge)"
                                    StartIcon="@Icons.Material.Filled.ClearAll" IconColor="Color.Surface" Color="Color.Secondary"
-                                   Style="margin-right: 5px;">
+                                   Style="margin-right: 4px; margin-bottom:4px">
                             @if (_clearing)
                             {
                                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                                <MudText Class="ms-2">waiting</MudText>
+                                <MudText Class="ms-2">@ConstantString.Waiting</MudText>
                             }
                             else
                             {
@@ -67,10 +67,12 @@
                     }
                 </div>
                 <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                    <MudEnumSelect TEnum="LogLevel?" Placeholder="Search for level" Value="@Query.Level" Clearable="true" ValueChanged="OnChangedLevel" Style="width:160px" FullWidth="true"> </MudEnumSelect>
-                    <MudTextField T="string" Style="min-width:300px" ValueChanged="@(OnSearch)" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End"
+                    <MudEnumSelect TEnum="LogLevel?" Placeholder="@L["Search for level"]" Value="@Query.Level" Clearable="true" ValueChanged="OnChangedLevel" Style="min-width:120px" FullWidth="true"> </MudEnumSelect>
+                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                    <MudTextField T="string" Style="min-width:120px" ValueChanged="@(OnSearch)" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End"
                                   AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium">
                     </MudTextField>
+                    </MudHidden>
                 </MudStack>
 
             </div>

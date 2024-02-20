@@ -11,7 +11,7 @@
 @inject IState<UserProfileState> UserProfileState
 @inject IMediator Mediator
 
-<PageTitle>@L[Title]</PageTitle>
+<PageTitle>@Title</PageTitle>
 
 <MudDataGrid ServerData="@(ServerReload)"
              T="AuditTrailDto"
@@ -27,8 +27,8 @@
             <div class="d-flex gap-4">
                 <MudIcon Icon="@Icons.Material.Filled.ReceiptLong" Size="Size.Large"/>
                 <div class="d-flex flex-column">
-                    <MudText Typo="Typo.caption">@L[Title]</MudText>
-                    <MudEnumSelect Style="min-width:220px" TEnum="AuditTrailListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
+                    <MudText Typo="Typo.caption" Class="mb-2">@Title</MudText>
+                    <MudEnumSelect Style="min-width:120px" TEnum="AuditTrailListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
                     </MudEnumSelect>
                 </div>
             </div>
@@ -40,16 +40,18 @@
                                Size="Size.Small"
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                               Style="margin-right: 5px;">
+                               Style="margin-right: 4px; margin-bottom:4px">
                         @ConstantString.Refresh
                     </MudButton>
                 </div>
 
                 <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                    <MudEnumSelect TEnum="AuditType?" Placeholder="Search for audit type" Value="@Query.AuditType" Clearable="true" ValueChanged="@(s => OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
-                    <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End" Style="width:260px" FullWidth="true"
+                    <MudEnumSelect TEnum="AuditType?" Placeholder="@L["Search for audit type"]" Value="@Query.AuditType" Clearable="true" ValueChanged="@(s => OnSearch(s))" Style="min-width:120px" FullWidth="true"> </MudEnumSelect>
+                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End" Style="min-width:120px" FullWidth="true"
                                   AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                     </MudTextField>
+                    </MudHidden>
                 </MudStack>
 
 

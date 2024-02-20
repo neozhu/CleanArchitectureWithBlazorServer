@@ -33,7 +33,7 @@
             <div class="d-flex gap-4">
                 <MudIcon Icon="@Icons.Material.Filled.Groups" Size="Size.Large"/>
                 <div class="d-flex flex-column">
-                    <MudText Typo="Typo.caption">@L["Roles"]</MudText>
+                    <MudText Typo="Typo.caption">@Title</MudText>
                 </div>
             </div>
             <div class="flex-grow-1"/>
@@ -108,24 +108,36 @@
                         }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-                        <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnClick="@(OnRefresh)">@ConstantString.Refresh</MudMenuItem>
-                            @if (_canCreate)
-                            {
-                                <MudMenuItem OnAction="OnCreate">@ConstantString.New</MudMenuItem>
-                            }
-                            @if (_canDelete)
-                            {
-                                <MudMenuItem OnAction="OnDeleteChecked">@ConstantString.Delete</MudMenuItem>
-                            }
-                        </MudMenu>
+                        @if (_canCreate)
+                        {
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.Add"
+                                       Size="Size.Small"
+                                       OnClick="OnCreate"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       IconColor="Color.Surface">
+                                @ConstantString.New
+                            </MudButton>
+                        }
+                        @if (_canDelete)
+                        {
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                                       StartIcon="@Icons.Material.Filled.Delete"
+                                       Disabled="@(!(_selectedItems.Count > 0))"
+                                       OnClick="OnDeleteChecked"
+                                       Size="Size.Small"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       IconColor="Color.Surface">
+                                @ConstantString.Delete
+                            </MudButton>
+                        }
                     </MudHidden>
                 </div>
                 @if (_canSearch)
                 {
                     <MudTextField T="string" Immediate="false" Value="_searchString" FullWidth="false" ValueChanged="@(OnSearch)"
                                   Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
-                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0 mb-3">
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                     </MudTextField>
                 }
 
