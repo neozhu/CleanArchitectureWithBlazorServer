@@ -28,7 +28,7 @@
                 }
                 else
                 {
-                <MudText>@L["Send Link"]</MudText>
+                <MudText>@L["Send E-mail"]</MudText>
                 }
             </MudButton>
     </NotAuthorized>
@@ -61,7 +61,7 @@
         {
             Snackbar.Clear();
             Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-            Snackbar.Add(string.Format(L["The email has been sent, please check the email:{0} "], _emailAddress), Severity.Success, config =>
+            Snackbar.Add(string.Format(L["The email has been sent, please check the email:{0}."], _emailAddress), Severity.Success, config =>
             {
                 config.ShowCloseIcon = false;
                 config.HideTransitionDuration = 5000;

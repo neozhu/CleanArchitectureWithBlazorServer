@@ -57,7 +57,12 @@ public static class LocalizationConstants
         new()
         {
             Code = "ar-iq",
-            DisplayName = "Arabic Iraq"
+            DisplayName = "Arabic"
+        },
+        new()
+        {
+            Code = "ko-kr",
+            DisplayName = "Korean"
         }
     };
 }

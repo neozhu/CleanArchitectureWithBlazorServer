@@ -121,16 +121,16 @@
     <value>Feines</value>
   </data>
   <data name="@2024 Copyright" xml:space="preserve">
-    <value>Drets d'autor @2024</value>
+    <value>Copyright @2024</value>
   </data>
   <data name="Analytics" xml:space="preserve">
-    <value>Anàlisi</value>
+    <value>Analítica</value>
   </data>
   <data name="Application" xml:space="preserve">
     <value>Aplicació</value>
   </data>
   <data name="Audit Trails" xml:space="preserve">
-    <value>Registres d'auditoria</value>
+    <value>Pistes d'auditoria</value>
   </data>
   <data name="Authorization" xml:space="preserve">
     <value>Autorització</value>
@@ -142,16 +142,16 @@
     <value>Blazor</value>
   </data>
   <data name="Blazor Dashboard" xml:space="preserve">
-    <value>Tauler de Blazor</value>
+    <value>Tauler de control de Blazor</value>
   </data>
   <data name="Booking" xml:space="preserve">
-    <value>Reserves</value>
+    <value>Reserva</value>
   </data>
   <data name="Coming Soon" xml:space="preserve">
-    <value>Properament</value>
+    <value>Pròximament</value>
   </data>
   <data name="Company" xml:space="preserve">
-    <value>Empresa</value>
+    <value>Companyia</value>
   </data>
   <data name="Completed" xml:space="preserve">
     <value>Completat</value>
@@ -163,7 +163,7 @@
     <value>Comerç electrònic</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Inici</value>
+    <value>A casa</value>
   </data>
   <data name="Logs" xml:space="preserve">
     <value>Registres</value>
@@ -172,7 +172,7 @@
     <value>GESTIÓ</value>
   </data>
   <data name="Multi-Tenant" xml:space="preserve">
-    <value>Multi-llogater</value>
+    <value>Multi-inquilí</value>
   </data>
   <data name="New" xml:space="preserve">
     <value>Nou</value>

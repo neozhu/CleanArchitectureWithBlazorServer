@@ -118,87 +118,87 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Jobs" xml:space="preserve">
-    <value>직업</value>
+    <value>ការងារ</value>
   </data>
   <data name="@2024 Copyright" xml:space="preserve">
-    <value>@2024 저작권</value>
+    <value>@2024 រក្សាសិទ្ធិ</value>
   </data>
   <data name="Analytics" xml:space="preserve">
-    <value>분석</value>
+    <value>វិភាគ</value>
   </data>
   <data name="Application" xml:space="preserve">
-    <value>어플리케이션</value>
+    <value>ការដាក់ពាក្យ</value>
   </data>
   <data name="Audit Trails" xml:space="preserve">
-    <value>감사 추적</value>
+    <value>ផ្លូវសវនកម្ម</value>
   </data>
   <data name="Authorization" xml:space="preserve">
-    <value>인증</value>
+    <value>ការអនុញ្ញាត</value>
   </data>
   <data name="Banking" xml:space="preserve">
-    <value>뱅킹</value>
+    <value>ធនាគារ</value>
   </data>
   <data name="Blazor" xml:space="preserve">
-    <value>Blazor</value>
+    <value>ប្លាហ្ស័រ</value>
   </data>
   <data name="Blazor Dashboard" xml:space="preserve">
-    <value>Blazor 대시보드</value>
+    <value>ផ្ទាំងគ្រប់គ្រង Blazor</value>
   </data>
   <data name="Booking" xml:space="preserve">
-    <value>예약</value>
+    <value>ការកក់ទុក</value>
   </data>
   <data name="Coming Soon" xml:space="preserve">
-    <value>곧 출시</value>
+    <value>មកដល់ឆាប់ៗនេះ</value>
   </data>
   <data name="Company" xml:space="preserve">
-    <value>회사</value>
+    <value>ក្រុមហ៊ុន</value>
   </data>
   <data name="Completed" xml:space="preserve">
-    <value>완료됨</value>
+    <value>បានបញ្ចប់</value>
   </data>
   <data name="Documents" xml:space="preserve">
-    <value>문서</value>
+    <value>ឯកសារ</value>
   </data>
   <data name="E-Commerce" xml:space="preserve">
-    <value>전자상거래</value>
+    <value>ពាណិជ្ជកម្មអេឡិចត្រូនិក</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>홈</value>
+    <value>ផ្ទះ</value>
   </data>
   <data name="Logs" xml:space="preserve">
-    <value>로그</value>
+    <value>កំណត់ហេតុ</value>
   </data>
   <data name="MANAGEMENT" xml:space="preserve">
-    <value>관리</value>
+    <value>ការគ្រប់គ្រង</value>
   </data>
   <data name="Multi-Tenant" xml:space="preserve">
-    <value>멀티 테넌트</value>
+    <value>ភតិកៈច្រើន។</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>새로운</value>
+    <value>ថ្មី។</value>
   </data>
   <data name="Picklist" xml:space="preserve">
-    <value>픽리스트</value>
+    <value>បញ្ជីជ្រើសរើស</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>제품</value>
+    <value>ផលិតផល</value>
   </data>
   <data name="Profile" xml:space="preserve">
-    <value>프로필</value>
+    <value>ប្រវត្តិរូប</value>
   </data>
   <data name="Roles" xml:space="preserve">
-    <value>역할</value>
+    <value>តួនាទី</value>
   </data>
   <data name="System" xml:space="preserve">
-    <value>시스템</value>
+    <value>ប្រព័ន្ធ</value>
   </data>
   <data name="Users" xml:space="preserve">
-    <value>사용자</value>
+    <value>អ្នកប្រើប្រាស់</value>
   </data>
   <data name="version" xml:space="preserve">
-    <value>버전</value>
+    <value>កំណែ</value>
   </data>
   <data name="WIP" xml:space="preserve">
-    <value>작업 중</value>
+    <value>WIP</value>
   </data>
 </root>

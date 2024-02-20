@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
+  <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,179 +59,177 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
-                id="root"
-                xmlns="">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root" xmlns="">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="{0} session changed." xml:space="preserve">
-    <value>{0} 세션이 변경되었습니다.</value>
+  </resheader>
+  <data name="{0} session changed." xml:space="preserve">
+    <value>{0} សម័យបានផ្លាស់ប្តូរ។</value>
   </data>
-    <data name="Assign Roles" xml:space="preserve">
-    <value>역할 할당</value>
+  <data name="Assign Roles" xml:space="preserve">
+    <value>កំណត់តួនាទី</value>
   </data>
-    <data name="Click upload a photo." xml:space="preserve">
-    <value>사진 업로드를 클릭합니다.</value>
+  <data name="Click upload a photo." xml:space="preserve">
+    <value>ចុចបង្ហោះរូបថត។</value>
   </data>
-    <data name="Confirm New Password" xml:space="preserve">
-    <value>새 암호를 확인합니다</value>
+  <data name="Confirm New Password" xml:space="preserve">
+    <value>បញ្ជាក់​លេខសំងាត់​ថ្មី</value>
   </data>
-    <data name="confirm password is required!" xml:space="preserve">
-    <value>비밀번호 확인이 필요합니다!</value>
+  <data name="confirm password is required!" xml:space="preserve">
+    <value>បញ្ជាក់ពាក្យសម្ងាត់គឺចាំបាច់!</value>
   </data>
-    <data name="Create a new user" xml:space="preserve">
-    <value>새 사용자 만들기</value>
+  <data name="Create a new user" xml:space="preserve">
+    <value>បង្កើតអ្នកប្រើប្រាស់ថ្មី។</value>
   </data>
-    <data name="Edit the user" xml:space="preserve">
-    <value>사용자 편집</value>
+  <data name="Edit the user" xml:space="preserve">
+    <value>កែសម្រួលអ្នកប្រើប្រាស់</value>
   </data>
-    <data name="Email" xml:space="preserve">
-    <value>이메일</value>
+  <data name="Email" xml:space="preserve">
+    <value>អ៊ីមែល</value>
   </data>
-    <data name="Is Active" xml:space="preserve">
-    <value>활성</value>
+  <data name="Is Active" xml:space="preserve">
+    <value>សកម្ម</value>
   </data>
-    <data name="Lock Status" xml:space="preserve">
-    <value>잠금 상태</value>
+  <data name="Lock Status" xml:space="preserve">
+    <value>ស្ថានភាពចាក់សោ</value>
   </data>
-    <data name="New Password" xml:space="preserve">
-    <value>새 비밀번호</value>
+  <data name="New Password" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់​ថ្មី</value>
   </data>
-    <data name="password is required!" xml:space="preserve">
-    <value>비밀번호가 필요합니다!</value>
+  <data name="password is required!" xml:space="preserve">
+    <value>ពាក្យ​សម្ងាត់​គឺ​ត្រូវ​បាន​ទាមទារ!</value>
   </data>
-    <data name="Phone Number" xml:space="preserve">
-    <value>전화 번호</value>
+  <data name="Phone Number" xml:space="preserve">
+    <value>លេខទូរសព្ទ</value>
   </data>
-    <data name="Reset password successfully" xml:space="preserve">
-    <value>비밀번호 재설정 성공</value>
+  <data name="Reset password successfully" xml:space="preserve">
+    <value>កំណត់ពាក្យសម្ងាត់ឡើងវិញដោយជោគជ័យ</value>
   </data>
-    <data name="Search for user name" xml:space="preserve">
-    <value>사용자 이름 검색</value>
+  <data name="Search for user name" xml:space="preserve">
+    <value>ស្វែងរកឈ្មោះអ្នកប្រើប្រាស់</value>
   </data>
-    <data name="Set Active" xml:space="preserve">
-    <value>활성으로 설정</value>
+  <data name="Set Active" xml:space="preserve">
+    <value>កំណត់សកម្ម</value>
   </data>
-    <data name="Set Inactive" xml:space="preserve">
-    <value>비활성화 설정</value>
+  <data name="Set Inactive" xml:space="preserve">
+    <value>កំណត់អសកម្ម</value>
   </data>
-    <data name="Set Password" xml:space="preserve">
-    <value>암호를 설정하세요</value>
+  <data name="Set Password" xml:space="preserve">
+    <value>កំណត់ពាក្យសម្ងាត់</value>
   </data>
-    <data name="Site" xml:space="preserve">
-    <value>대지</value>
+  <data name="Site" xml:space="preserve">
+    <value>គេហទំព័រ</value>
   </data>
-    <data name="User Name" xml:space="preserve">
-    <value>사용자 이름</value>
+  <data name="User Name" xml:space="preserve">
+    <value>ឈ្មោះ​អ្នកប្រើប្រាស់</value>
   </data>
-    <data name="Users" xml:space="preserve">
-    <value>사용자</value>
+  <data name="Users" xml:space="preserve">
+    <value>អ្នកប្រើប្រាស់</value>
   </data>
-    <data name="Select Tenant" xml:space="preserve">
-    <value>ជ្រើស អ្នក ជួល</value>
+  <data name="Select Tenant" xml:space="preserve">
+    <value>ជ្រើសរើសអ្នកជួល</value>
   </data>
-    <data name="Tenant Name" xml:space="preserve">
-    <value>세입자 이름</value>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>ឈ្មោះអ្នកជួល</value>
   </data>
-    <data name="Provider" xml:space="preserve">
-    <value>공급자</value>
+  <data name="Provider" xml:space="preserve">
+    <value>អ្នកផ្តល់សេវា</value>
   </data>
-    <data name="Superior Name" xml:space="preserve">
-    <value>상위 이름</value>
+  <data name="Superior Name" xml:space="preserve">
+    <value>ឈ្មោះឧត្តម</value>
   </data>
-    <data name="Select Superior" xml:space="preserve">
-    <value>슈페리어 선택</value>
+  <data name="Select Superior" xml:space="preserve">
+    <value>ជ្រើសរើស Superior</value>
   </data>
-    <data name="E-mail" xml:space="preserve">
-    <value>이메일</value>
+  <data name="E-mail" xml:space="preserve">
+    <value>អ៊ីមែល</value>
   </data>
-    <data name="Password" xml:space="preserve">
-    <value>비밀번호</value>
+  <data name="Password" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់</value>
   </data>
-    <data name="Status" xml:space="preserve">
-    <value>상태</value>
+  <data name="Status" xml:space="preserve">
+    <value>ស្ថានភាព</value>
   </data>
-    <data name="Confirm Password" xml:space="preserve">
-    <value>비밀번호 확인</value>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>បញ្ជាក់ពាក្យសម្ងាត់</value>
   </data>
-    <data name="Display Name" xml:space="preserve">
-    <value>이름 표시하기</value>
+  <data name="Display Name" xml:space="preserve">
+    <value>ឈ្មោះបង្ហាញ</value>
   </data>
-    <data name="Set Permissions" xml:space="preserve">
-    <value>권한 설정</value>
+  <data name="Set Permissions" xml:space="preserve">
+    <value>កំណត់ការអនុញ្ញាត</value>
   </data>
-    <data name="Assigned Roles" xml:space="preserve">
-    <value>할당된 역할</value>
+  <data name="Assigned Roles" xml:space="preserve">
+    <value>តួនាទីដែលបានកំណត់</value>
   </data>
-    <data name="Email / PhoneNumber" xml:space="preserve">
-    <value>이메일/전화번호</value>
+  <data name="Email / PhoneNumber" xml:space="preserve">
+    <value>អ៊ីមែល / លេខទូរស័ព្ទ</value>
   </data>
-    <data name="Permission removed successfully!" xml:space="preserve">
-    <value>권한이 성공적으로 제거되었습니다!</value>
+  <data name="Permission removed successfully!" xml:space="preserve">
+    <value>ការអនុញ្ញាតត្រូវបានដកចេញដោយជោគជ័យ!</value>
   </data>
-    <data name="Permission added successfully!" xml:space="preserve">
-    <value>권한이 성공적으로 추가되었습니다!</value>
+  <data name="Permission added successfully!" xml:space="preserve">
+    <value>ការអនុញ្ញាតត្រូវបានបន្ថែមដោយជោគជ័យ!</value>
   </data>
-    <data name="Reset Password" xml:space="preserve">
-    <value>암호를 재설정</value>
+  <data name="Reset Password" xml:space="preserve">
+    <value>កំណត់ពាក្យសម្ងាត់ឡើងវិញ</value>
   </data>
 </root>

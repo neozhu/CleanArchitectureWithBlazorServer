@@ -2,7 +2,7 @@
 @inherits MudComponentBase
 
 @inject INotificationService NotificationService
-@inject IStringLocalizer<SharedResource> L
+@inject IStringLocalizer<HeaderMenu> L
 
 <MudTooltip Arrow="true" Text="@L["Notification"]">
     <MudBadge Color="Color.Secondary" Dot="true" Overlap="true" Visible="_newNotificationsAvailable">
@@ -15,7 +15,7 @@
             {
                 @foreach (var (message, isRead) in _messages.Take(5))
                 {
-                    <MudMenuItem Class="px-2 py-0 rounded" Link="@($"/public/index/{message.Id}")">
+                    <MudMenuItem Class="px-2 py-0 rounded" Href="@($"/public/index/{message.Id}")">
                         <MudText Typo="Typo.subtitle2">@message.Title</MudText>
                         <MudText Typo="Typo.body2">@($"{message.Authors.FirstOrDefault()?.DisplayName} • {message.PublishDate:MM/dd/yyyy}")</MudText>
                     </MudMenuItem>

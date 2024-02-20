@@ -1,9 +1,9 @@
-@using System.Globalization
+﻿@using System.Globalization
 @using Microsoft.Extensions.Options
 @inject NavigationManager Navigation
 @inject IOptions<RequestLocalizationOptions> LocalizationOptions
 @inject LayoutService LayoutService
-
+@inject IStringLocalizer<HeaderMenu> L
 <MudTooltip Text="@CurrentLanguage">
     <MudMenu Class="mx-1" Icon="@Icons.Material.Outlined.Translate" Color="Color.Default" Dense="true">
         @if (SupportedLanguages is not null)
