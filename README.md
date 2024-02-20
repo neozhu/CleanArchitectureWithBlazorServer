@@ -36,7 +36,7 @@ docker pull dockerksjscn/cleanarchitectureblazorserver:last
 # default container port:8080
 
 # default without database
-docker run -p 8080:8080 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development dockerksjscn/cleanarchitectureblazorserver:latest
+docker run -p 8080:8080 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development dockerksjscn/cleanarchitectureblazorserver:last
 
 # set database connection
 # set SMPT Server
@@ -48,7 +48,7 @@ docker run -d -p 8080:8080 -e UseInMemoryDatabase=false \
 -e SmtpClientOptions__Port=25 \
 -e SmtpClientOptions__Server=*** \
 -e SmtpClientOptions__Password=*** \
-dockerksjscn/cleanarchitectureblazorserver:latest
+dockerksjscn/cleanarchitectureblazorserver:last
 ```
 
 ![image](https://user-images.githubusercontent.com/1549611/183799080-380e1f01-ef80-4568-80d2-517514aa59e5.png)
