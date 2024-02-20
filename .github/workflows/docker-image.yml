@@ -22,10 +22,21 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: dockerksjscn/cleanarchitectureblazorserver
+        # Use Git tag as version, or short SHA if no tag
+        tags: |
+          type=ref,event=branch
+          type=sha, prefix=sha-, format=short
+
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
-        context: . 
+        context: .
         push: true
-        tags: dockerksjscn/cleanarchitectureblazorserver:latest
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
      
