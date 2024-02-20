@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
+  <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,179 +59,180 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
-                id="root"
-                xmlns="">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root" xmlns="">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="Assign Roles" xml:space="preserve">
+  </resheader>
+  <data name="Assign Roles" xml:space="preserve">
     <value>Assign Roles</value>
   </data>
-    <data name="Click upload a photo." xml:space="preserve">
+  <data name="Click upload a photo." xml:space="preserve">
     <value>Click upload a photo.</value>
   </data>
-    <data name="Confirm New Password" xml:space="preserve">
+  <data name="Confirm New Password" xml:space="preserve">
     <value>Confirm New Password</value>
   </data>
-    <data name="confirm password is required!" xml:space="preserve">
+  <data name="confirm password is required!" xml:space="preserve">
     <value>confirm password is required!</value>
   </data>
-    <data name="Create a new user" xml:space="preserve">
+  <data name="Create a new user" xml:space="preserve">
     <value>Create a new user</value>
   </data>
-    <data name="Edit the user" xml:space="preserve">
+  <data name="Edit the user" xml:space="preserve">
     <value>Edit the user</value>
   </data>
-    <data name="Email" xml:space="preserve">
+  <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
-    <data name="Is Active" xml:space="preserve">
+  <data name="Is Active" xml:space="preserve">
     <value>Is Active</value>
   </data>
-    <data name="Lock Status" xml:space="preserve">
+  <data name="Lock Status" xml:space="preserve">
     <value>Lock Status</value>
   </data>
-    <data name="New Password" xml:space="preserve">
+  <data name="New Password" xml:space="preserve">
     <value>New Password</value>
   </data>
-    <data name="password is required!" xml:space="preserve">
+  <data name="password is required!" xml:space="preserve">
     <value>password is required!</value>
   </data>
-    <data name="Phone Number" xml:space="preserve">
+  <data name="Phone Number" xml:space="preserve">
     <value>Phone Number</value>
   </data>
-    <data name="Reset password successfully" xml:space="preserve">
+  <data name="Reset password successfully" xml:space="preserve">
     <value>Reset password successfully</value>
   </data>
-    <data name="Search for user name" xml:space="preserve">
+  <data name="Search for user name" xml:space="preserve">
     <value>Search for user name</value>
   </data>
-    <data name="Select Tenant" xml:space="preserve">
+  <data name="Select Tenant" xml:space="preserve">
     <value>Select Tenant</value>
   </data>
-    <data name="Set Active" xml:space="preserve">
+  <data name="Set Active" xml:space="preserve">
     <value>Set Active</value>
   </data>
-    <data name="Set Inactive" xml:space="preserve">
+  <data name="Set Inactive" xml:space="preserve">
     <value>Set Inactive</value>
   </data>
-    <data name="Set Password" xml:space="preserve">
+  <data name="Set Password" xml:space="preserve">
     <value>Set Password</value>
   </data>
-    <data name="Site" xml:space="preserve">
+  <data name="Site" xml:space="preserve">
     <value>Site</value>
   </data>
-    <data name="Tenant Name" xml:space="preserve">
+  <data name="Tenant Name" xml:space="preserve">
     <value>Tenant Name</value>
   </data>
-    <data name="User Name" xml:space="preserve">
+  <data name="User Name" xml:space="preserve">
     <value>User Name</value>
   </data>
-    <data name="Users" xml:space="preserve">
+  <data name="Users" xml:space="preserve">
     <value>Users</value>
   </data>
-    <data name="{0} session changed." xml:space="preserve">
+  <data name="{0} session changed." xml:space="preserve">
     <value>{0} session changed.</value>
   </data>
-    <data name="Superior Name" xml:space="preserve">
+  <data name="Superior Name" xml:space="preserve">
     <value>Superior Name</value>
   </data>
-    <data name="Provider" xml:space="preserve">
+  <data name="Provider" xml:space="preserve">
     <value>Provider</value>
   </data>
-    <data name="Select Superior" xml:space="preserve">
+  <data name="Select Superior" xml:space="preserve">
     <value>Select Superior</value>
   </data>
-    <data name="E-mail" xml:space="preserve">
+  <data name="E-mail" xml:space="preserve">
     <value>E-mail</value>
   </data>
-    <data name="Password" xml:space="preserve">
+  <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
-    <data name="Status" xml:space="preserve">
+  <data name="Status" xml:space="preserve">
     <value>Status</value>
   </data>
-    <data name="Confirm Password" xml:space="preserve">
+  <data name="Confirm Password" xml:space="preserve">
     <value>Confirm Password</value>
   </data>
-    <data name="Display Name" xml:space="preserve">
+  <data name="Display Name" xml:space="preserve">
     <value>Display Name</value>
   </data>
-    <data name="Set Permissions" xml:space="preserve">
+  <data name="Set Permissions" xml:space="preserve">
     <value>Set Permissions</value>
   </data>
-    <data name="Assigned Roles" xml:space="preserve">
+  <data name="Assigned Roles" xml:space="preserve">
     <value>Assigned Roles</value>
   </data>
-    <data name="Email / PhoneNumber" xml:space="preserve">
+  <data name="Email / PhoneNumber" xml:space="preserve">
     <value>Email / PhoneNumber</value>
   </data>
-    <data name="Permission added successfully!" xml:space="preserve">
+  <data name="Permission added successfully!" xml:space="preserve">
       <value>Permission added successfully!</value>
   </data>
-    <data name="Permission removed successfully!" xml:space="preserve">
+  <data name="Permission removed successfully!" xml:space="preserve">
       <value>Permission removed successfully!</value>
   </data>
-    <data name="Reset Password" xml:space="preserve">
+  <data name="Reset Password" xml:space="preserve">
     <value>Reset Password</value>
+  </data>
+  <data name="Display Name / PhoneNumber" xml:space="preserve">
+    <value></value>
   </data>
 </root>
