@@ -17,9 +17,12 @@ COPY . .
 WORKDIR "/src/src/Server.UI"
 RUN dotnet build "Server.UI.csproj" -c Release -o /app/build
 
+FROM build AS publish
+RUN dotnet publish "/src/src/Server.UI/Server.UI.csproj" -c Release -o /app/publish
+
 FROM base AS final
 WORKDIR /app
-COPY --from=build /app/build .
+COPY --from=publish /app/publish .
 
 
 ENTRYPOINT ["dotnet", "CleanArchitecture.Blazor.Server.UI.dll"]
