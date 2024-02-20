@@ -134,7 +134,7 @@
     <value>Password is required!</value>
   </data>
   <data name="Password must be at least of length 6" xml:space="preserve">
-      <value>Password must be at least 6 characters</value>
+      <value>Password must be at least of length 6</value>
   </data>
   <data name="Password must contain at least one capital letter" xml:space="preserve">
     <value>Password must contain at least one capital letter</value>
@@ -146,7 +146,7 @@
     <value>Password must contain at least one lowercase letter</value>
   </data>
   <data name="Please check your username and password. If you are still unable to log in, contact an administrator." xml:space="preserve">
-      <value>Please check your username and password.  If you are still unable to log in, contact an administrator.</value>
+      <value>Please check your username and password. If you are still unable to log in, contact an administrator.</value>
   </data>
   <data name="Remember me?" xml:space="preserve">
     <value>Remember me?</value>
@@ -182,9 +182,9 @@
     <value>Please check your username and password.  If you are still unable to log in, contact your administrator.</value>
   </data>
   <data name="Set new password" xml:space="preserve">
-    <value></value>
+    <value>Set new password</value>
   </data>
   <data name="Password update successfuly" xml:space="preserve">
-    <value></value>
+    <value>Password update successfuly</value>
   </data>
 </root>

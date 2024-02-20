@@ -1,7 +1,7 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences
 @using System.Globalization
 @inject LayoutService LayoutService
-@inject IStringLocalizer<SharedResource> L
+@inject IStringLocalizer<ThemesMenu> L
 
 <MudDrawer Anchor="LayoutService.IsRTL ? Anchor.Left : Anchor.Right"
            @bind-Open="ThemingDrawerOpen"
@@ -87,7 +87,7 @@
             }
         </MudGrid>
         <MudText Typo="Typo.body2">
-            <b>Border Radius</b>
+            <b>@L["Border Radius"]</b>
         </MudText>
         <MudGrid Class="my-3"
                  Spacing="3">
@@ -101,7 +101,7 @@
 
         </MudGrid>
         <MudText Typo="Typo.body2">
-            <b>Default Font Size</b>
+            <b>@L["Default Font Size"]</b>
         </MudText>
         <MudGrid Class="my-3"
                  Spacing="3">

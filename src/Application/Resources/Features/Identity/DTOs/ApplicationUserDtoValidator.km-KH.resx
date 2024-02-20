@@ -118,72 +118,72 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Confirm password must match the new password" xml:space="preserve">
-    <value>확인 비밀번호는 새 비밀번호와 일치해야 합니다.</value>
+    <value>បញ្ជាក់ពាក្យសម្ងាត់ត្រូវតែផ្គូផ្គងពាក្យសម្ងាត់ថ្មី។</value>
   </data>
   <data name="Confirm password must match the password" xml:space="preserve">
-    <value>확인 비밀번호는 비밀번호와 일치해야 합니다.</value>
+    <value>បញ្ជាក់ពាក្យសម្ងាត់ត្រូវតែផ្គូផ្គងពាក្យសម្ងាត់</value>
   </data>
   <data name="Display name must be less than 128 characters" xml:space="preserve">
-    <value>표시 이름은 128자 미만이어야 합니다.</value>
+    <value>ឈ្មោះដែលបង្ហាញត្រូវតែតិចជាង 128 តួអក្សរ</value>
   </data>
   <data name="E-mail cannot be empty" xml:space="preserve">
-    <value>이메일은 비워둘 수 없습니다.</value>
+    <value>អ៊ីមែលមិនអាចទទេបានទេ។</value>
   </data>
   <data name="E-mail must be a valid email address" xml:space="preserve">
-    <value>이메일은 유효한 이메일 주소이어야 합니다.</value>
+    <value>អ៊ីមែលត្រូវតែជាអាសយដ្ឋានអ៊ីមែលត្រឹមត្រូវ។</value>
   </data>
   <data name="E-mail must be less than 100 characters" xml:space="preserve">
-    <value>이메일은 100자 미만이어야 합니다.</value>
+    <value>អ៊ីមែលត្រូវតែតិចជាង 100 តួអក្សរ</value>
   </data>
   <data name="New password cannot be empty" xml:space="preserve">
-    <value>새 비밀번호는 비워둘 수 없습니다.</value>
+    <value>ពាក្យសម្ងាត់ថ្មីមិនអាចទទេបានទេ។</value>
   </data>
   <data name="Password cannot be empty" xml:space="preserve">
-    <value>비밀번호는 비워둘 수 없습니다.</value>
+    <value>ពាក្យសម្ងាត់មិនអាចទទេបានទេ។</value>
   </data>
   <data name="Password cannot be longer than {0} characters" xml:space="preserve">
-    <value>비밀번호는 {0}자를 초과할 수 없습니다.</value>
+    <value>ពាក្យសម្ងាត់មិនអាចវែងជាង {0} តួអក្សរទេ។</value>
   </data>
   <data name="Password must be at least {0} characters long" xml:space="preserve">
-    <value>비밀번호는 적어도 {0}자 이상이어야 합니다.</value>
+    <value>ពាក្យសម្ងាត់ត្រូវតែមានយ៉ាងហោចណាស់ {0} តួអក្សរ</value>
   </data>
   <data name="Password must contain at least one digit" xml:space="preserve">
-    <value>비밀번호는 적어도 하나의 숫자를 포함해야 합니다.</value>
+    <value>ពាក្យសម្ងាត់ត្រូវតែមានយ៉ាងហោចណាស់មួយខ្ទង់</value>
   </data>
   <data name="Password must contain at least one lowercase letter" xml:space="preserve">
-    <value>비밀번호는 적어도 하나의 소문자를 포함해야 합니다.</value>
+    <value>ពាក្យសម្ងាត់ត្រូវតែមានយ៉ាងហោចណាស់អក្សរតូចមួយ។</value>
   </data>
   <data name="Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)" xml:space="preserve">
-    <value>비밀번호는 적어도 하나의 비문자 숫자 문자를 포함해야 합니다 (예: @, !, ?, *, .).</value>
+    <value>ពាក្យ​សម្ងាត់​ត្រូវ​តែ​មាន​យ៉ាង​ហោច​ណាស់​មួយ​តួអក្សរ​ដែល​មិន​មែន​ជា​អក្សរ​លេខ (ឧ. @, !, ?, *, .)</value>
   </data>
   <data name="Password must contain at least one uppercase letter" xml:space="preserve">
-    <value>비밀번호는 적어도 하나의 대문자를 포함해야 합니다.</value>
+    <value>ពាក្យសម្ងាត់ត្រូវតែមានយ៉ាងហោចណាស់អក្សរធំមួយ។</value>
   </data>
   <data name="Phone number must be between 1 and 20 digits" xml:space="preserve">
-    <value>전화번호는 1자 이상 20자 이하이어야 합니다.</value>
+    <value>លេខទូរស័ព្ទត្រូវតែមានចន្លោះពី 1 ទៅ 20 ខ្ទង់</value>
   </data>
   <data name="User name cannot be empty" xml:space="preserve">
-    <value>사용자 이름은 비워둘 수 없습니다.</value>
+    <value>ឈ្មោះអ្នកប្រើមិនអាចទទេបានទេ។</value>
   </data>
   <data name="User name must be between 2 and 100 characters" xml:space="preserve">
-    <value>사용자 이름은 2자 이상 100자 이하이어야 합니다.</value>
+    <value>ឈ្មោះអ្នកប្រើត្រូវតែមានចន្លោះពី 2 ទៅ 100 តួអក្សរ</value>
   </data>
   <data name="You must agree to the terms and conditions" xml:space="preserve">
-    <value>약관에 동의해야 합니다.</value>
+    <value>អ្នកត្រូវតែយល់ព្រមតាមលក្ខខណ្ឌ</value>
   </data>
   <data name="Provider cannot be empty" xml:space="preserve">
-    <value>공급자는 비워둘 수 없습니다.</value>
+    <value>អ្នកផ្តល់សេវាមិនអាចទទេបានទេ។</value>
   </data>
   <data name="Provider must be less than 100 characters" xml:space="preserve">
-    <value>공급자는 100자 미만이어야 합니다.</value>
+    <value>អ្នកផ្តល់សេវាត្រូវតែតិចជាង 100 តួអក្សរ</value>
   </data>
   <data name="Tenant id must be less than 128 characters" xml:space="preserve">
-    <value>테넌트 ID는 128자 미만이어야 합니다.</value>
+    <value>លេខសម្គាល់អ្នកជួលត្រូវតែតិចជាង 128 តួអក្សរ</value>
   </data>
   <data name="Tenant name cannot be empty" xml:space="preserve">
-    <value>테넌트 이름은 비워둘 수 없습니다.</value>
+    <value>ឈ្មោះអ្នកជួលមិនអាចទទេបានទេ។</value>
   </data>
   <data name="Phone number must be less than 20 digits" xml:space="preserve">
-    <value>전화번호는 20자 미만이어야 합니다.</value>
+    <value>លេខទូរស័ព្ទត្រូវតែតិចជាង 20 ខ្ទង់</value>
   </data>
 </root>

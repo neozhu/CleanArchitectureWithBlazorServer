@@ -7,10 +7,10 @@
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
 @inherits OwningComponentBase
 
-@inject IStringLocalizer<Forgot> L
+@inject IStringLocalizer<MailSentConfirm> L
 @inject IMailService MailService
 @inject ISender Sender
-@inject ILogger<Forgot> Logger
+@inject ILogger<MailSentConfirm> Logger
 @inject NavigationManager Navigation
 
 <PageTitle>@Title</PageTitle>
@@ -32,4 +32,7 @@
 
 @code{
     public string Title = "Email Sent Confirmation";
+    protected override void OnInitialized(){
+        Title = L["Email Sent Confirmation"];
+    }
 }
