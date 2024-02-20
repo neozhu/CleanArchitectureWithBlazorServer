@@ -18,7 +18,7 @@ WORKDIR "/src/src/Server.UI"
 RUN dotnet build "Server.UI.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Server.UI.csproj" -c Release -o /app/publish
+RUN dotnet publish "src/Server.UI/Server.UI.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
