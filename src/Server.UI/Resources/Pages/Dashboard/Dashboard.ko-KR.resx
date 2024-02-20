@@ -168,4 +168,19 @@
   <data name="We are growing every day, developers from all over the world are using MudBlazor and are engaged with the community." xml:space="preserve">
     <value>우리는 매일 성장하고 있으며 전 세계의 개발자들이 MudBlazor를 사용하고 있으며 커뮤니티에 참여하고 있습니다.</value>
   </data>
+  <data name="Molar mass" xml:space="preserve">
+    <value>몰 질량</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>이름</value>
+  </data>
+  <data name="Sign" xml:space="preserve">
+    <value>징후</value>
+  </data>
+  <data name="Nr" xml:space="preserve">
+    <value>번호</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>위치</value>
+  </data>
 </root>

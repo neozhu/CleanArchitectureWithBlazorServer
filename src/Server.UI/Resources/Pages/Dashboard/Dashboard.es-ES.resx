@@ -168,4 +168,19 @@
   <data name="We are growing every day, developers from all over the world are using MudBlazor and are engaged with the community." xml:space="preserve">
     <value>Estamos creciendo cada día, los desarrolladores de todo el mundo utilizan MudBlazor y están comprometidos con la comunidad.</value>
   </data>
+  <data name="Molar mass" xml:space="preserve">
+    <value>Masa molar</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Sign" xml:space="preserve">
+    <value>Firmar</value>
+  </data>
+  <data name="Nr" xml:space="preserve">
+    <value>nº</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Posición</value>
+  </data>
 </root>

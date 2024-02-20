@@ -168,4 +168,19 @@
   <data name="Discord Members" xml:space="preserve">
     <value>Discord Members</value>
   </data>
+  <data name="Nr" xml:space="preserve">
+    <value>Nr</value>
+  </data>
+  <data name="Sign" xml:space="preserve">
+    <value>Sign</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="Molar mass" xml:space="preserve">
+    <value>Molar mass</value>
+  </data>
 </root>
