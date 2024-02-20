@@ -8,8 +8,14 @@ services:
       dockerfile: src/Server.UI/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - UseInMemoryDatabase=true
-      - ConnectionStrings__DefaultConnection=Server=sqldb;Database=BlazorDashboardDb;User=sa;Password=Password@123;MultipleActiveResultSets=true
+      - UseInMemoryDatabase=false
+      - DatabaseSettings__DBProvider=mssql
+      - DatabaseSettings__ConnectionString=Server=sqldb;Database=BlazorDashboardDb;User=sa;Password=Password@123;MultipleActiveResultSets=true
+      - AppConfigurationSettings__ApplicationUrl=https://architecture.blazorserver.com
+      - SmtpClientOptions__Server=
+      - SmtpClientOptions__Port=
+      - SmtpClientOptions__User=
+      - SmtpClientOptions__Password=
       - ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=Password@123
       #- ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/CleanArchitecture.Blazor.Server.UI.pfx
