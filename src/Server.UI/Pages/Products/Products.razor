@@ -39,7 +39,7 @@
             <div class="d-flex gap-4">
                 <MudIcon Icon="@Icons.Material.Filled.QrCodeScanner" Size="Size.Large"/>
                 <div class="d-flex flex-column">
-                    <MudText Typo="Typo.caption">@L[_currentDto.GetClassDescription()]</MudText>
+                    <MudText Typo="Typo.caption" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
                     <MudEnumSelect Style="min-width:120px" TEnum="ProductListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
                     </MudEnumSelect>
                 </div>

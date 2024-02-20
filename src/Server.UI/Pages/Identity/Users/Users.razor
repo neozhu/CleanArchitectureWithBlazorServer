@@ -50,7 +50,7 @@
             <div class="d-flex gap-4">
                 <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large" />
                 <div class="d-flex flex-column">
-                    <MudText Typo="Typo.caption">@L["Users"]</MudText>
+                    <MudText Typo="Typo.caption">@Title</MudText>
                 </div>
             </div>
             <div class="flex-grow-1" />
@@ -159,9 +159,11 @@
                                 <MudSelectItem Value="@str">@str</MudSelectItem>
                             }
                         </MudSelect>
+                        <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                         </MudTextField>
+                        </MudHidden>
                     </MudStack>
                 }
 

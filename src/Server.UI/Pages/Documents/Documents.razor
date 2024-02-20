@@ -40,7 +40,7 @@
             <div class="d-flex gap-4">
                 <MudIcon Icon="@Icons.Material.Filled.DocumentScanner" Size="Size.Large"/>
                 <div class="d-flex flex-column">
-                    <MudText Typo="Typo.caption">@L["Documents"]</MudText>
+                    <MudText Typo="Typo.caption" Class="mb-2">@L["Documents"]</MudText>
                     <MudEnumSelect Style="min-width:120px" TEnum="DocumentListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
                     </MudEnumSelect>
                 </div>
@@ -84,23 +84,25 @@
                         }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-                        <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Material.Filled.KeyboardCommandKey" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnAction="@(() => OnRefresh())">@ConstantString.Refresh</MudMenuItem>
-                            @if (_canCreate)
-                            {
-                                <MudMenuItem Disabled="@_loading" OnAction="OnCreate">@L["Upload Pictures"]</MudMenuItem>
-                            }
-                            @if (_canDelete)
-                            {
-                                <MudMenuItem OnAction="OnDeleteChecked">@ConstantString.Delete</MudMenuItem>
-                            }
-                        </MudMenu>
+                        @if (_canCreate)
+                        {
+                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.Camera"
+                                       Size="Size.Small"
+                                       Disabled="@_loading"
+                                       OnClick="OnCreate"
+                                       Style="margin-right: 4px; margin-bottom:4px"
+                                       IconColor="Color.Surface">
+                                @L["Upload Pictures"]
+                            </MudButton>
+                        }
+                        
                     </MudHidden>
                 </div>
                 @if (_canSearch)
                 {
                     <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0">
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                     </MudTextField>
                 }
 
