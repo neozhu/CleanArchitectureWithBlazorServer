@@ -25,6 +25,32 @@ Blazor technology.
 - .NET 8.0
 - Unit Test
 
+## Docker Container
+```bash
+# Docker Pull Command
+docker pull dockerksjscn/cleanarchitectureblazorserver:last
+```
+
+```bash
+# Docker Run
+# default container port:8080
+
+# default without database
+docker run -p 8080:8080 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development dockerksjscn/cleanarchitectureblazorserver:latest
+
+# set database connection
+# set SMPT Server
+docker run -d -p 8080:8080 -e UseInMemoryDatabase=false \
+-e ASPNETCORE_ENVIRONMENT=Development \
+-e DatabaseSettings__DBProvider=mssql \
+-e DatabaseSettings__ConnectionString=Server=10.33.1.xxx;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false \
+-e SmtpClientOptions__User=*** \
+-e SmtpClientOptions__Port=25 \
+-e SmtpClientOptions__Server=*** \
+-e SmtpClientOptions__Password=*** \
+dockerksjscn/cleanarchitectureblazorserver:latest
+```
+
 ![image](https://user-images.githubusercontent.com/1549611/183799080-380e1f01-ef80-4568-80d2-517514aa59e5.png)
 
 ## Supported Databases
