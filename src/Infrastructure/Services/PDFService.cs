@@ -9,7 +9,7 @@ public class PDFService : IPDFService
 {
     private const int MarginPTs = 56;
     private const string FontFamilyName = Fonts.Arial;
-    private const string ChFontFamilyName = "Noto Sans SC";
+    private const string ChFontFamilyName = "Noto Sans CJK SC";
     private const float FontSize = 10F;
     private const int MaxCharsPerCell = 80;
     private const int MinCharsPerCell = 10;
