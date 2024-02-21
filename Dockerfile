@@ -20,9 +20,9 @@ COPY ["src/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 RUN dotnet restore "src/Server.UI/Server.UI.csproj"
 COPY . .
-# RUN dotnet add package SkiaSharp.NativeAssets.Linux
-RUN dotnet add package HarfBuzzSharp.NativeAssets.Linux
+
 WORKDIR "/src/src/Server.UI"
+RUN dotnet add package HarfBuzzSharp.NativeAssets.Linux
 RUN dotnet build "Server.UI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
