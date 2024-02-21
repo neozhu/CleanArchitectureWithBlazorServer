@@ -9,6 +9,7 @@ public class PDFService : IPDFService
 {
     private const int MarginPTs = 56;
     private const string FontFamilyName = Fonts.Arial;
+    private const string ChFontFamilyName = "simhei";
     private const float FontSize = 10F;
     private const int MaxCharsPerCell = 80;
     private const int MinCharsPerCell = 10;
@@ -27,7 +28,7 @@ public class PDFService : IPDFService
                     page.PageColor(Colors.White);
                     page.DefaultTextStyle(x =>
                         x.FontSize(FontSize).FontFamily(FontFamilyName)
-                            .Fallback(TextStyle.Default.FontFamily("simhei")));
+                            .Fallback(TextStyle.Default.FontFamily(ChFontFamilyName)));
 
                     page.Header()
                         .Text(title)
