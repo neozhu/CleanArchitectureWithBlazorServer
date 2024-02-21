@@ -22,6 +22,7 @@ RUN dotnet restore "src/Server.UI/Server.UI.csproj"
 COPY . .
 
 WORKDIR "/src/src/Server.UI"
+RUN dotnet add package SkiaSharp.NativeAssets.Linux.NoDependencies
 RUN dotnet add package HarfBuzzSharp.NativeAssets.Linux
 RUN dotnet build "Server.UI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
