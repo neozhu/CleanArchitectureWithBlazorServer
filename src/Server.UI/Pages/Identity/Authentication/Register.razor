@@ -13,7 +13,7 @@
 @inject IMailService MailService
 @inject IStringLocalizer<Register> L
 @inject IValidationService Validator
-
+@inject ILogger<Register> Logger
 <PageTitle>@Title</PageTitle>
 
 <AuthorizeView>
@@ -128,6 +128,7 @@
                     {
                         Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", Severity.Error);
                     }
+                    Logger.LogInformation("New user registration succeeded. Username: {@UserName:l}, UserId: {@UserId}", user.UserName, user.Id);
                 }
                 else
                 {

@@ -32,7 +32,7 @@
 @inject RoleManager<ApplicationRole> RoleManager
 @inject IMailService MailService
 @inject IStringLocalizer<Users> L
-
+@inject ILogger<Users> Logger
 <PageTitle>@Title</PageTitle>
 
 <MudDataGrid @ref="_table"
@@ -467,6 +467,7 @@
                     await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
                 }
                 Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
+                Logger.LogInformation("Create a user succeeded. Username: {@UserName:l}, UserId: {@UserId}", applicationUser.UserName, applicationUser.Id);
                 UserService.Refresh();
                 await OnRefresh();
                 var response = await SendWelcome(applicationUser.Email, applicationUser.UserName!);
@@ -570,7 +571,7 @@
                 Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
                 return;
             }
-
+            Logger.LogInformation("Delete the user succeeded. Username: {@UserName:l}, UserId: {@UserId}", requestedDeletedUser.UserName, requestedDeletedUser.Id);
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
             UserService.Refresh();
@@ -616,6 +617,7 @@
                     Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
                     return;
                 }
+                Logger.LogInformation("Delete the user succeeded. Username: {@UserName:l}, UserId: {@UserId}", deleteUser.UserName, deleteUser.Id);
             }
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using static CleanArchitecture.Blazor.Application.Features.Identity.DTOs.ApplicationUserDto;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 
