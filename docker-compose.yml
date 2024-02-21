@@ -5,7 +5,7 @@ services:
     image: ${DOCKER_REGISTRY-}blazorserver
     build:
       context: .
-      dockerfile: src/Server.UI/Dockerfile
+      dockerfile: .
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - UseInMemoryDatabase=false

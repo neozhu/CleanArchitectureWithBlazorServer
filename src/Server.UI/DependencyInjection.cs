@@ -16,6 +16,7 @@ using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using MudExtensions.Services;
 using Polly;
+using QuestPDF.Infrastructure;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Server.UI;
@@ -112,6 +113,10 @@ public static class DependencyInjection
         });
         app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
         app.MapHub<ServerHub>(ISignalRHub.Url);
+
+        //QuestPDF License configuration
+        QuestPDF.Settings.License = LicenseType.Community;
+
         return app;
     }
 }
