@@ -2,12 +2,12 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 # apt update and install fonts
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends fontconfig ttf-mscorefonts-installer && \
-    # clear cache
-    rm -rf /var/lib/apt/lists/* && \
-    # update font cache
-    fc-cache -f -v
+RUN echo "deb http://deb.debian.org/debian/ bookworm main contrib" > /etc/apt/sources.list && \
+    echo "deb-src http://deb.debian.org/debian/ bookworm main contrib" >> /etc/apt/sources.list && \
+    echo "deb http://security.debian.org/ bookworm-security main contrib" >> /etc/apt/sources.list && \
+    echo "deb-src http://security.debian.org/ bookworm-security main contrib" >> /etc/apt/sources.list
+RUN sed -i'.bak' 's/$/ contrib/' /etc/apt/sources.list
+RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 
 USER app
 WORKDIR /app
