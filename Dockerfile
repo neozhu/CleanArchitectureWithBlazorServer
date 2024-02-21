@@ -1,13 +1,22 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-RUN apt-get update && apt-get install -y ttf-mscorefonts-installer fontconfig libc6 libc6-dev libgtk2.0-0 libnss3 libatk-bridge2.0-0 libx11-xcb1 libxcb-dri3-0 libdrm-common libgbm1 libasound2 libappindicator3-1 libxrender1 libfontconfig1 libxshmfence1
-RUN chmod 777 .
 
-USER app
+USER root
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
+
+# 安装微软核心字体
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    echo "deb http://deb.debian.org/debian contrib" >> /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends fontconfig ttf-mscorefonts-installer && \
+    rm -rf /var/lib/apt/lists/* && \
+    fc-cache -f -v
+
+USER app
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
