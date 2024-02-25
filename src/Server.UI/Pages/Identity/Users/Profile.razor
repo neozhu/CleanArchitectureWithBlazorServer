@@ -72,7 +72,7 @@
                                             </div>
                                         </MudElement>
                                     }
-                                    <MudTooltip Text="@L["Click upload a image."]">
+                                    <MudTooltip Text="@L["Click upload a image"]">
                                         <MudFileUpload T="IBrowserFile" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="UploadPhoto" Style="margin-top:-10px;margin-left:-15px">
                                             <ButtonTemplate>
                                                 <MudIconButton HtmlTag="label"
@@ -130,7 +130,7 @@
                                                   Variant="Variant.Text"
                                                   PasswordMode="true"
                                                   Required="true"
-                                                  RequiredError="@L["current password is required!"]"/>
+                                                  />
                             </MudItem>
                             <MudItem xs="12">
                                 <MudPasswordField Immediate="true"
@@ -140,7 +140,7 @@
                                                   Variant="Variant.Text"
                                                   PasswordMode="true"
                                                   Required="true"
-                                                  RequiredError="@L["password is required!"]"/>
+                                                  />
                             </MudItem>
                             <MudItem xs="12">
                                 <MudPasswordField Immediate="true"
@@ -150,7 +150,7 @@
                                                   Variant="Variant.Text"
                                                   PasswordMode="true"
                                                   Required="true"
-                                                  RequiredError="@L["password is required!"]"/>
+                                                 />
                             </MudItem>
                             <MudItem sm="12" xs="12" Class="d-flex justify-end">
                                 <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await ChangePassword())">
@@ -195,7 +195,7 @@
 
     public string Id => Guid.NewGuid().ToString();
     private bool IsLoading => UserProfileState.Value.IsLoading;
-    private UserProfile? model => UserProfileState.Value.UserProfile;
+    private UserProfile model => UserProfileState.Value.UserProfile;
 
 
     private async void ActivePanelIndexChanged(int index)
@@ -270,7 +270,7 @@
                 var user = await UserManager.FindByIdAsync(model.UserId!);
                 user!.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
-                Snackbar.Add(L["The avatar has been updated."], Severity.Info);
+                Snackbar.Add(L["The avatar has been updated"], Severity.Info);
                 Dispatcher.Dispatch(new UserProfileUpdateAction { UserProfile = model });
             }
         }
@@ -312,7 +312,7 @@
                 var result = await UserManager.ChangePasswordAsync(user!, _changepassword.CurrentPassword, _changepassword.NewPassword);
                 if (result.Succeeded)
                 {
-                    Snackbar.Add($"{L["Changed password successfully."]}", Severity.Info);
+                    Snackbar.Add($"{L["Password changed successfully"]}", Severity.Info);
                 }
                 else
                 {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
+  <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,131 +59,129 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
-                id="root"
-                xmlns="">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root" xmlns="">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="Attachement" xml:space="preserve">
+  </resheader>
+  <data name="Attachement" xml:space="preserve">
     <value>Adjunt</value>
   </data>
-    <data name="Document Type" xml:space="preserve">
-    <value>Tipus de document</value>
+  <data name="Document Type" xml:space="preserve">
+    <value>tipus de document</value>
   </data>
-    <data name="Document type is required!" xml:space="preserve">
-    <value>El tipus de document és obligatori</value>
+  <data name="Document type is required!" xml:space="preserve">
+    <value>El tipus de document és obligatori!</value>
   </data>
-    <data name="Documents" xml:space="preserve">
+  <data name="Documents" xml:space="preserve">
     <value>Documents</value>
   </data>
-    <data name="Is Public" xml:space="preserve">
-    <value>És públic</value>
+  <data name="Is Public" xml:space="preserve">
+    <value>És Públic</value>
   </data>
-    <data name="Select Document Type" xml:space="preserve">
-    <value>Seleccionar tipus de document</value>
+  <data name="Select Document Type" xml:space="preserve">
+    <value>Seleccioneu el tipus de document</value>
   </data>
-    <data name="Tenant Name" xml:space="preserve">
-    <value>Nom del arrendatari</value>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>Nom del llogater</value>
   </data>
-    <data name="Title" xml:space="preserve">
+  <data name="Title" xml:space="preserve">
     <value>Títol</value>
   </data>
-    <data name="Title is required!" xml:space="preserve">
-    <value>El títol és obligatori</value>
+  <data name="Title is required!" xml:space="preserve">
+    <value>El títol és obligatori!</value>
   </data>
-    <data name="Upload" xml:space="preserve">
-    <value>Carregar</value>
+  <data name="Upload" xml:space="preserve">
+    <value>Carrega</value>
   </data>
-    <data name="Upload successfully" xml:space="preserve">
-    <value>Carregat amb con èxit</value>
+  <data name="Upload successfully" xml:space="preserve">
+    <value>Carrega correctament</value>
   </data>
-    <data name="Download" xml:space="preserve">
-    <value>Descarregar</value>
+  <data name="Download" xml:space="preserve">
+    <value>descarregar</value>
   </data>
-    <data name="Owner" xml:space="preserve">
+  <data name="Owner" xml:space="preserve">
     <value>Propietari</value>
   </data>
-    <data name="{0} job started." xml:space="preserve">
+  <data name="{0} job started." xml:space="preserve">
     <value>{0} feina començada.</value>
   </data>
-    <data name="{0} recognize completed." xml:space="preserve">
+  <data name="{0} recognize completed." xml:space="preserve">
     <value>{0} reconeixement completat.</value>
   </data>
-    <data name="Upload Pictures" xml:space="preserve">
+  <data name="Upload Pictures" xml:space="preserve">
     <value>Carrega Imatges</value>
   </data>
-    <data name="Recognize result" xml:space="preserve">
+  <data name="Recognize result" xml:space="preserve">
     <value>Reconeix el resultat</value>
   </data>
-    <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
+  <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
     <value>Si us plau, feu clic al botó [Tria fitxers] per pujar la vostra foto.</value>
   </data>
-    <data name="Only .jpg and .png files are allowed." xml:space="preserve">
+  <data name="Only .jpg and .png files are allowed." xml:space="preserve">
     <value>Només es permeten fitxers .jpg i .png.</value>
   </data>
-    <data name="Choose files" xml:space="preserve">
+  <data name="Choose files" xml:space="preserve">
     <value>Trieu fitxers</value>
   </data>
-    <data name="Content" xml:space="preserve">
+  <data name="Content" xml:space="preserve">
     <value>Contingut</value>
   </data>
 </root>

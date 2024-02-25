@@ -27,10 +27,10 @@
                     <CardHeaderContent>
                         <MudStack Spacing="1">
                             <MudText Typo="Typo.body1">
-                                @group
+                                @L[group]
                             </MudText>
                             <MudText Typo="Typo.body2">
-                                @(Permissions.FirstOrDefault(x => x.Group == group)?.Description)
+                                @(L[Permissions.First(x => x.Group == group).Description])
                             </MudText>
                         </MudStack>
                     </CardHeaderContent>
@@ -49,9 +49,9 @@
                             <MudCheckBox Dense="true"
                                          T="bool"
                                          Size="Size.Small"
-                                         Checked="@Permissions[x].Assigned"
-                                         Label="@Permissions[x].ClaimValue"
-                                         CheckedChanged="@(s => OnAssignChanged.InvokeAsync(Permissions[x]))"
+                                         Value="@Permissions[x].Assigned"
+                                         Label="@L[Permissions[x].ClaimValue]"
+                                         ValueChanged="@(s => OnAssignChanged.InvokeAsync(Permissions[x]))"
                                          Color="Color.Primary">
                             </MudCheckBox>
                         }

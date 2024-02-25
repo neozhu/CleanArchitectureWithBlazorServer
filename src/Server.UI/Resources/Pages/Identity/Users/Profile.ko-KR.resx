@@ -120,7 +120,7 @@
   <data name="Change Password" xml:space="preserve">
     <value>비밀번호 변경</value>
   </data>
-  <data name="Changed password successfully." xml:space="preserve">
+  <data name="Password changed successfully" xml:space="preserve">
     <value>비밀번호가 성공적으로 변경되었습니다.</value>
   </data>
   <data name="Click upload a photo." xml:space="preserve">
@@ -170,5 +170,14 @@
   </data>
   <data name="User Name" xml:space="preserve">
     <value>사용자 이름</value>
+  </data>
+  <data name="Click upload a image" xml:space="preserve">
+    <value>이미지 업로드를 클릭하세요</value>
+  </data>
+  <data name="Org Chart" xml:space="preserve">
+    <value>조직도</value>
+  </data>
+  <data name="The avatar has been updated" xml:space="preserve">
+    <value>아바타가 업데이트되었습니다</value>
   </data>
 </root>

@@ -773,7 +773,7 @@
             if (model is { Assigned: true, ClaimType: not null, ClaimValue: not null })
             {
                 await UserManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
-                Snackbar.Add($"{L["Permission added successfully!"]}", Severity.Info);
+                Snackbar.Add($"{L["Permission assigned successfully"]}", Severity.Info);
             }
             else
             {
@@ -783,7 +783,7 @@
                     await UserManager.RemoveClaimAsync(user, removed);
                 }
 
-                Snackbar.Add($"{L["Permission removed successfully!"]}", Severity.Info);
+                Snackbar.Add($"{L["Permission removed successfully"]}", Severity.Info);
             }
 
             var key = $"get-claims-by-{user.Id}";

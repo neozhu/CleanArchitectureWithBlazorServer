@@ -26,8 +26,8 @@ public static partial class Permissions
         return permissions;
     }
 
-    [DisplayName("AuditTrails")]
-    [Description("AuditTrails Permissions")]
+    [DisplayName("Audit Trails")]
+    [Description("Audit Trails Permissions")]
     public static class AuditTrails
     {
         public const string View = "Permissions.AuditTrails.View";
@@ -50,8 +50,8 @@ public static partial class Permissions
 
  
 
-    [DisplayName("Dictionaries")]
-    [Description("Dictionaries Permissions")]
+    [DisplayName("Picklist")]
+    [Description("Picklist Permissions")]
     public static class Dictionaries
     {
         public const string View = "Permissions.Dictionaries.View";
@@ -118,15 +118,15 @@ public static partial class Permissions
     }
 
 
-    [DisplayName("Dashboards")]
-    [Description("Dashboards Permissions")]
+    [DisplayName("Dashboard")]
+    [Description("Dashboard Permissions")]
     public static class Dashboards
     {
         public const string View = "Permissions.Dashboards.View";
     }
 
-    [DisplayName("Hangfire")]
-    [Description("Hangfire Permissions")]
+    [DisplayName("Job")]
+    [Description("Job Permissions")]
     public static class Hangfire
     {
         public const string View = "Permissions.Hangfire.View";

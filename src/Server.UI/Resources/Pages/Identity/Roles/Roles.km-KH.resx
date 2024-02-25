@@ -151,16 +151,112 @@
   <data name="Unassigned successfully" xml:space="preserve">
     <value>មិនបានចាត់តាំងដោយជោគជ័យ</value>
   </data>
-  <data name="Permission removed successfully!" xml:space="preserve">
-    <value>ការអនុញ្ញាតត្រូវបានដកចេញដោយជោគជ័យ!</value>
-  </data>
   <data name="Assigned Roles" xml:space="preserve">
     <value>តួនាទីដែលបានកំណត់</value>
   </data>
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>អ៊ីមែល / លេខទូរស័ព្ទ</value>
   </data>
-  <data name="Permission added successfully!" xml:space="preserve">
-    <value>ការអនុញ្ញាតត្រូវបានបន្ថែមដោយជោគជ័យ!</value>
+  <data name="Assign or Unassign all" xml:space="preserve">
+    <value>ចាត់តាំង ឬមិនប្រគល់ទាំងអស់។</value>
+  </data>
+  <data name="Audit Trails" xml:space="preserve">
+    <value>ផ្លូវសវនកម្ម</value>
+  </data>
+  <data name="Audit Trails Permissions" xml:space="preserve">
+    <value>ការអនុញ្ញាតផ្លូវសវនកម្ម</value>
+  </data>
+  <data name="Authorization has been changed" xml:space="preserve">
+    <value>ការអនុញ្ញាតត្រូវបានផ្លាស់ប្តូរ</value>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>ប្រភេទ</value>
+  </data>
+  <data name="Categories Permissions" xml:space="preserve">
+    <value>ការអនុញ្ញាតតាមប្រភេទ</value>
+  </data>
+  <data name="Customers" xml:space="preserve">
+    <value>អតិថិជន</value>
+  </data>
+  <data name="Customers Permissions" xml:space="preserve">
+    <value>ការអនុញ្ញាតពីអតិថិជន</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>ផ្ទាំងគ្រប់គ្រង</value>
+  </data>
+  <data name="Dashboard Permissions" xml:space="preserve">
+    <value>ការអនុញ្ញាតផ្ទាំងគ្រប់គ្រង</value>
+  </data>
+  <data name="Documents" xml:space="preserve">
+    <value>ឯកសារ</value>
+  </data>
+  <data name="Documents Permissions" xml:space="preserve">
+    <value>ការអនុញ្ញាតឯកសារ</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>លេខសម្គាល់</value>
+  </data>
+  <data name="Job" xml:space="preserve">
+    <value>ការងារ</value>
+  </data>
+  <data name="Job Permissions" xml:space="preserve">
+    <value>ការអនុញ្ញាតការងារ</value>
+  </data>
+  <data name="Logs" xml:space="preserve">
+    <value>កំណត់ហេតុ</value>
+  </data>
+  <data name="Logs Permissions" xml:space="preserve">
+    <value>ការអនុញ្ញាតកំណត់ហេតុ</value>
+  </data>
+  <data name="Multi-Tenant" xml:space="preserve">
+    <value>ភតិកៈច្រើន។</value>
+  </data>
+  <data name="Multi-Tenant Permissions" xml:space="preserve">
+    <value>ការអនុញ្ញាតច្រើនអ្នកជួល</value>
+  </data>
+  <data name="Normalized Name" xml:space="preserve">
+    <value>ឈ្មោះធម្មតា។</value>
+  </data>
+  <data name="Permission" xml:space="preserve">
+    <value>ការអនុញ្ញាត</value>
+  </data>
+  <data name="Permission assigned successfully" xml:space="preserve">
+    <value>ការអនុញ្ញាតត្រូវបានផ្តល់ដោយជោគជ័យ</value>
+  </data>
+  <data name="Permission Description" xml:space="preserve">
+    <value>ការពិពណ៌នាការអនុញ្ញាត</value>
+  </data>
+  <data name="Permission removed successfully" xml:space="preserve">
+    <value>ការអនុញ្ញាតត្រូវបានដកចេញដោយជោគជ័យ</value>
+  </data>
+  <data name="Picklist" xml:space="preserve">
+    <value>បញ្ជីជ្រើសរើស</value>
+  </data>
+  <data name="Picklist Permissions" xml:space="preserve">
+    <value>សិទ្ធិជ្រើសរើសបញ្ជី</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>ផលិតផល</value>
+  </data>
+  <data name="Products Permissions" xml:space="preserve">
+    <value>ការអនុញ្ញាតផលិតផល</value>
+  </data>
+  <data name="Role Claims" xml:space="preserve">
+    <value>ការទាមទារតួនាទី</value>
+  </data>
+  <data name="Role Claims Permissions" xml:space="preserve">
+    <value>តួនាទីទាមទារសិទ្ធិ</value>
+  </data>
+  <data name="Roles Permissions" xml:space="preserve">
+    <value>ការអនុញ្ញាតតួនាទី</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>បានជ្រើសរើស</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>អ្នកប្រើប្រាស់</value>
+  </data>
+  <data name="Users Permissions" xml:space="preserve">
+    <value>ការអនុញ្ញាតរបស់អ្នកប្រើប្រាស់</value>
   </data>
 </root>

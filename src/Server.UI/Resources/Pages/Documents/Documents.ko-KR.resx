@@ -117,142 +117,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Assign changed successfully" xml:space="preserve">
-    <value>할당이 성공적으로 변경되었습니다.</value>
+  <data name="{0} job started." xml:space="preserve">
+    <value>{0} 작업이 시작되었습니다.</value>
   </data>
-  <data name="Assigned Roles" xml:space="preserve">
-    <value>할당된 역할</value>
+  <data name="{0} recognize completed." xml:space="preserve">
+    <value>{0} 인식이 완료되었습니다.</value>
   </data>
-  <data name="Assigned successfully" xml:space="preserve">
-    <value>성공적으로 할당됨</value>
+  <data name="Attachement" xml:space="preserve">
+    <value>첨부파일</value>
   </data>
-  <data name="Create a new role" xml:space="preserve">
-    <value>새 역할 만들기</value>
+  <data name="Choose files" xml:space="preserve">
+    <value>파일 선택</value>
   </data>
-  <data name="Description" xml:space="preserve">
-    <value>설명</value>
+  <data name="Content" xml:space="preserve">
+    <value>콘텐츠</value>
   </data>
-  <data name="Edit the role" xml:space="preserve">
-    <value>역할 편집</value>
+  <data name="Document Type" xml:space="preserve">
+    <value>문서 유형</value>
   </data>
-  <data name="Email / PhoneNumber" xml:space="preserve">
-    <value>이메일/전화번호</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>이름</value>
-  </data>
-  <data name="Roles" xml:space="preserve">
-    <value>역할</value>
-  </data>
-  <data name="Search for role name" xml:space="preserve">
-    <value>역할 이름 검색</value>
-  </data>
-  <data name="Set Permissions" xml:space="preserve">
-    <value>권한 설정</value>
-  </data>
-  <data name="Unassigned successfully" xml:space="preserve">
-    <value>할당이 성공적으로 취소되었습니다.</value>
-  </data>
-  <data name="Assign or Unassign all" xml:space="preserve">
-    <value>모두 할당 또는 할당 취소</value>
-  </data>
-  <data name="Audit Trails" xml:space="preserve">
-    <value>감사 추적</value>
-  </data>
-  <data name="Audit Trails Permissions" xml:space="preserve">
-    <value>감사 추적 권한</value>
-  </data>
-  <data name="Authorization has been changed" xml:space="preserve">
-    <value>권한이 변경되었습니다.</value>
-  </data>
-  <data name="Categories" xml:space="preserve">
-    <value>카테고리</value>
-  </data>
-  <data name="Categories Permissions" xml:space="preserve">
-    <value>카테고리 권한</value>
-  </data>
-  <data name="Customers" xml:space="preserve">
-    <value>고객</value>
-  </data>
-  <data name="Customers Permissions" xml:space="preserve">
-    <value>고객 권한</value>
-  </data>
-  <data name="Dashboard" xml:space="preserve">
-    <value>계기반</value>
-  </data>
-  <data name="Dashboard Permissions" xml:space="preserve">
-    <value>대시보드 권한</value>
+  <data name="Document type is required!" xml:space="preserve">
+    <value>문서 유형이 필요합니다!</value>
   </data>
   <data name="Documents" xml:space="preserve">
     <value>서류</value>
   </data>
-  <data name="Documents Permissions" xml:space="preserve">
-    <value>문서 권한</value>
+  <data name="Download" xml:space="preserve">
+    <value>다운로드</value>
   </data>
-  <data name="Id" xml:space="preserve">
-    <value>ID</value>
+  <data name="Is Public" xml:space="preserve">
+    <value>공개임</value>
   </data>
-  <data name="Job" xml:space="preserve">
-    <value>직업</value>
+  <data name="Only .jpg and .png files are allowed." xml:space="preserve">
+    <value>.jpg 및 .png 파일만 허용됩니다.</value>
   </data>
-  <data name="Job Permissions" xml:space="preserve">
-    <value>직업 허가</value>
+  <data name="Owner" xml:space="preserve">
+    <value>소유자</value>
   </data>
-  <data name="Logs" xml:space="preserve">
-    <value>로그</value>
+  <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
+    <value>사진을 업로드하려면 [파일 선택] 버튼을 클릭하세요.</value>
   </data>
-  <data name="Logs Permissions" xml:space="preserve">
-    <value>로그 권한</value>
+  <data name="Recognize result" xml:space="preserve">
+    <value>결과를 인식</value>
   </data>
-  <data name="Multi-Tenant" xml:space="preserve">
-    <value>다중 테넌트</value>
+  <data name="Select Document Type" xml:space="preserve">
+    <value>문서 유형 선택</value>
   </data>
-  <data name="Multi-Tenant Permissions" xml:space="preserve">
-    <value>다중 테넌트 권한</value>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>테넌트 이름</value>
   </data>
-  <data name="Normalized Name" xml:space="preserve">
-    <value>정규화된 이름</value>
+  <data name="Title" xml:space="preserve">
+    <value>제목</value>
   </data>
-  <data name="Permission" xml:space="preserve">
-    <value>허가</value>
+  <data name="Title is required!" xml:space="preserve">
+    <value>제목은 필수입니다!</value>
   </data>
-  <data name="Permission assigned successfully" xml:space="preserve">
-    <value>권한이 할당되었습니다.</value>
+  <data name="Upload" xml:space="preserve">
+    <value>업로드</value>
   </data>
-  <data name="Permission Description" xml:space="preserve">
-    <value>권한 설명</value>
+  <data name="Upload Pictures" xml:space="preserve">
+    <value>사진 업로드</value>
   </data>
-  <data name="Permission removed successfully" xml:space="preserve">
-    <value>권한이 삭제되었습니다.</value>
-  </data>
-  <data name="Picklist" xml:space="preserve">
-    <value>선택 목록</value>
-  </data>
-  <data name="Picklist Permissions" xml:space="preserve">
-    <value>선택 목록 권한</value>
-  </data>
-  <data name="Products" xml:space="preserve">
-    <value>제품</value>
-  </data>
-  <data name="Products Permissions" xml:space="preserve">
-    <value>제품 권한</value>
-  </data>
-  <data name="Role Claims" xml:space="preserve">
-    <value>역할 청구</value>
-  </data>
-  <data name="Role Claims Permissions" xml:space="preserve">
-    <value>역할 청구 권한</value>
-  </data>
-  <data name="Roles Permissions" xml:space="preserve">
-    <value>역할 권한</value>
-  </data>
-  <data name="Selected" xml:space="preserve">
-    <value>선택된</value>
-  </data>
-  <data name="Users" xml:space="preserve">
-    <value>사용자</value>
-  </data>
-  <data name="Users Permissions" xml:space="preserve">
-    <value>사용자 권한</value>
+  <data name="Upload successfully" xml:space="preserve">
+    <value>성공적으로 업로드</value>
   </data>
 </root>

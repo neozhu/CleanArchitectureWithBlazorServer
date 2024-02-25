@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
+  <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,179 +59,180 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
-                id="root"
-                xmlns="">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root" xmlns="">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="{0} session changed." xml:space="preserve">
-    <value>{0} sessión cambiada.</value>
+  </resheader>
+  <data name="{0} session changed." xml:space="preserve">
+    <value>S'ha canviat {0} sessió.</value>
   </data>
-    <data name="Assign Roles" xml:space="preserve">
-    <value>Assignar Rols</value>
+  <data name="Assign Roles" xml:space="preserve">
+    <value>Assignar rols</value>
   </data>
-    <data name="Click upload a photo." xml:space="preserve">
-    <value>Feu clic per carregar una foto.</value>
+  <data name="Click upload a photo." xml:space="preserve">
+    <value>Feu clic a carregar una foto.</value>
   </data>
-    <data name="Confirm New Password" xml:space="preserve">
+  <data name="Confirm New Password" xml:space="preserve">
     <value>Confirmar nova contrasenya</value>
   </data>
-    <data name="confirm password is required!" xml:space="preserve">
-    <value>és nescessari confirmar la contrasenya</value>
+  <data name="confirm password is required!" xml:space="preserve">
+    <value>cal confirmar la contrasenya!</value>
   </data>
-    <data name="Create a new user" xml:space="preserve">
+  <data name="Create a new user" xml:space="preserve">
     <value>Crea un usuari nou</value>
   </data>
-    <data name="Edit the user" xml:space="preserve">
-    <value>Editar l'usuari</value>
+  <data name="Edit the user" xml:space="preserve">
+    <value>Editeu l'usuari</value>
   </data>
-    <data name="Email" xml:space="preserve">
+  <data name="Email" xml:space="preserve">
     <value>Correu electrònic</value>
   </data>
-    <data name="Is Active" xml:space="preserve">
+  <data name="Is Active" xml:space="preserve">
     <value>Està actiu</value>
   </data>
-    <data name="Lock Status" xml:space="preserve">
+  <data name="Lock Status" xml:space="preserve">
     <value>Estat de bloqueig</value>
   </data>
-    <data name="New Password" xml:space="preserve">
-    <value>Nova contrasenya</value>
+  <data name="New Password" xml:space="preserve">
+    <value>nova contrasenya</value>
   </data>
-    <data name="password is required!" xml:space="preserve">
+  <data name="password is required!" xml:space="preserve">
     <value>Es requereix contrasenya!</value>
   </data>
-    <data name="Phone Number" xml:space="preserve">
+  <data name="Phone Number" xml:space="preserve">
     <value>Número de telèfon</value>
   </data>
-    <data name="Reset password successfully" xml:space="preserve">
-    <value>Restablerta la contrasenya correctament</value>
+  <data name="Reset password successfully" xml:space="preserve">
+    <value>Restableix la contrasenya correctament</value>
   </data>
-    <data name="Search for user name" xml:space="preserve">
-    <value>Buscar per nom de l'usuari</value>
+  <data name="Search for user name" xml:space="preserve">
+    <value>Cerca el nom d'usuari</value>
   </data>
-    <data name="Set Active" xml:space="preserve">
+  <data name="Set Active" xml:space="preserve">
     <value>Estableix actiu</value>
   </data>
-    <data name="Set Inactive" xml:space="preserve">
+  <data name="Set Inactive" xml:space="preserve">
     <value>Estableix inactiu</value>
   </data>
-    <data name="Set Password" xml:space="preserve">
-    <value>Estableix contrasenya</value>
+  <data name="Set Password" xml:space="preserve">
+    <value>Estableix la contrasenya</value>
   </data>
-    <data name="Site" xml:space="preserve">
+  <data name="Site" xml:space="preserve">
     <value>Lloc</value>
   </data>
-    <data name="User Name" xml:space="preserve">
-    <value>Nom de l'usuari</value>
+  <data name="User Name" xml:space="preserve">
+    <value>Nom d'usuari</value>
   </data>
-    <data name="Users" xml:space="preserve">
+  <data name="Users" xml:space="preserve">
     <value>Usuaris</value>
   </data>
-    <data name="Select Tenant" xml:space="preserve">
-    <value>Seleccioneu arrendatari</value>
+  <data name="Select Tenant" xml:space="preserve">
+    <value>Seleccioneu llogater</value>
   </data>
-    <data name="Tenant Name" xml:space="preserve">
-    <value>Nom del arrendatari</value>
+  <data name="Tenant Name" xml:space="preserve">
+    <value>Nom del llogater</value>
   </data>
-    <data name="E-mail" xml:space="preserve">
+  <data name="E-mail" xml:space="preserve">
     <value>Correu electrònic</value>
   </data>
-    <data name="Provider" xml:space="preserve">
+  <data name="Provider" xml:space="preserve">
     <value>Proveïdor</value>
   </data>
-    <data name="Password" xml:space="preserve">
+  <data name="Password" xml:space="preserve">
     <value>Contrasenya</value>
   </data>
-    <data name="Status" xml:space="preserve">
+  <data name="Status" xml:space="preserve">
     <value>Estat</value>
   </data>
-    <data name="Confirm Password" xml:space="preserve">
-    <value>Confirmar contrasenya</value>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>Confirma la contrassenya</value>
   </data>
-    <data name="Display Name" xml:space="preserve">
-    <value>Nom per visualitzar</value>
+  <data name="Display Name" xml:space="preserve">
+    <value>Nom de visualització</value>
   </data>
-    <data name="Permission removed successfully!" xml:space="preserve">
-    <value>S'ha eliminat el permís correctament!</value>
+  <data name="Permission removed successfully" xml:space="preserve">
+    <value>El permís s'ha eliminat correctament</value>
   </data>
-    <data name="Permission added successfully!" xml:space="preserve">
-    <value>S'ha afegit el permís correctament!</value>
-  </data>
-    <data name="Set Permissions" xml:space="preserve">
+  <data name="Set Permissions" xml:space="preserve">
     <value>Establir permisos</value>
   </data>
-    <data name="Select Superior" xml:space="preserve">
+  <data name="Select Superior" xml:space="preserve">
     <value>Seleccioneu Superior</value>
   </data>
-    <data name="Superior Name" xml:space="preserve">
+  <data name="Superior Name" xml:space="preserve">
     <value>Nom superior</value>
   </data>
-    <data name="Email / PhoneNumber" xml:space="preserve">
+  <data name="Email / PhoneNumber" xml:space="preserve">
     <value>Correu electrònic/Número de telèfon</value>
   </data>
-    <data name="Assigned Roles" xml:space="preserve">
+  <data name="Assigned Roles" xml:space="preserve">
     <value>Rols assignats</value>
   </data>
-    <data name="Reset Password" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="Reset Password" xml:space="preserve">
+    <value>Restablir la contrasenya</value>
+  </data>
+  <data name="Display Name / PhoneNumber" xml:space="preserve">
+    <value>Nom visualitzat/Número de telèfon</value>
+  </data>
+  <data name="Permission assigned successfully" xml:space="preserve">
+    <value>Permís assignat correctament</value>
   </data>
 </root>

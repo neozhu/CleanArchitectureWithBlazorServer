@@ -141,4 +141,34 @@
   <data name="User Id" xml:space="preserve">
     <value>사용자 ID</value>
   </data>
+  <data name="Affected Columns" xml:space="preserve">
+    <value>영향을 받는 열</value>
+  </data>
+  <data name="Document" xml:space="preserve">
+    <value>문서</value>
+  </data>
+  <data name="Field Name" xml:space="preserve">
+    <value>분야 명</value>
+  </data>
+  <data name="KeyValue" xml:space="preserve">
+    <value>핵심 가치</value>
+  </data>
+  <data name="New Values" xml:space="preserve">
+    <value>새로운 가치</value>
+  </data>
+  <data name="Old Values" xml:space="preserve">
+    <value>오래된 가치</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>소유자</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>제품</value>
+  </data>
+  <data name="Search for audit type" xml:space="preserve">
+    <value>감사 유형 검색</value>
+  </data>
+  <data name="Tenant" xml:space="preserve">
+    <value>거주자</value>
+  </data>
 </root>
