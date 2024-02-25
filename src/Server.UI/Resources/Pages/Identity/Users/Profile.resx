@@ -124,11 +124,11 @@
   <data name="Change Password" xml:space="preserve">
     <value>Change Password</value>
   </data>
-  <data name="Changed password successfully." xml:space="preserve">
-    <value>Changed password successfully.</value>
+  <data name="Password changed successfully" xml:space="preserve">
+    <value>Password changed successfully</value>
   </data>
   <data name="Click upload a photo." xml:space="preserve">
-      <value>Click to upload a photo.</value>
+      <value>Click upload a photo.</value>
   </data>
   <data name="Confirm New Password" xml:space="preserve">
     <value>Confirm New Password</value>
@@ -137,7 +137,7 @@
     <value>Current Password</value>
   </data>
   <data name="current password is required!" xml:space="preserve">
-      <value>Current password is required!</value>
+      <value>current password is required!</value>
   </data>
   <data name="Display Name" xml:space="preserve">
     <value>Display Name</value>
@@ -149,7 +149,7 @@
     <value>New Password</value>
   </data>
   <data name="password is required!" xml:space="preserve">
-      <value>Password is required!</value>
+      <value>password is required!</value>
   </data>
   <data name="Phone Number" xml:space="preserve">
     <value>Phone Number</value>
@@ -164,7 +164,7 @@
     <value>Update successfully</value>
   </data>
   <data name="User Name" xml:space="preserve">
-      <value>Username</value>
+      <value>User Name</value>
   </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>Tenant Name</value>
@@ -176,9 +176,12 @@
     <value>Superior Name</value>
   </data>
   <data name="Org Chart" xml:space="preserve">
-    <value></value>
+    <value>Org Chart</value>
   </data>
-  <data name="Click upload a image." xml:space="preserve">
-    <value></value>
+  <data name="Click upload a image" xml:space="preserve">
+    <value>Click upload a image</value>
+  </data>
+  <data name="The avatar has been updated" xml:space="preserve">
+    <value>The avatar has been updated</value>
   </data>
 </root>

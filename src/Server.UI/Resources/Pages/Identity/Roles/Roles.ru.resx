@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
+  <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,110 +59,204 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
-                id="root"
-                xmlns="">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root" xmlns="">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="Assign changed successfully" xml:space="preserve">
-    <value>Назначение успешно изменено</value>
+  </resheader>
+  <data name="Assign changed successfully" xml:space="preserve">
+    <value>Назначение изменено успешно</value>
   </data>
-    <data name="Assigned successfully" xml:space="preserve">
+  <data name="Assigned successfully" xml:space="preserve">
     <value>Назначено успешно</value>
   </data>
-    <data name="Create a new role" xml:space="preserve">
+  <data name="Create a new role" xml:space="preserve">
     <value>Создать новую роль</value>
   </data>
-    <data name="Description" xml:space="preserve">
+  <data name="Description" xml:space="preserve">
     <value>Описание</value>
   </data>
-    <data name="Edit the role" xml:space="preserve">
-    <value>Редактировать роль</value>
+  <data name="Edit the role" xml:space="preserve">
+    <value>Изменить роль</value>
   </data>
-    <data name="Name" xml:space="preserve">
+  <data name="Name" xml:space="preserve">
     <value>Имя</value>
   </data>
-    <data name="Roles" xml:space="preserve">
+  <data name="Roles" xml:space="preserve">
     <value>Роли</value>
   </data>
-    <data name="Search for role name" xml:space="preserve">
-    <value>Поиск имени роли</value>
+  <data name="Search for role name" xml:space="preserve">
+    <value>Поиск по названию роли</value>
   </data>
-    <data name="Set Permissions" xml:space="preserve">
+  <data name="Set Permissions" xml:space="preserve">
     <value>Установить разрешения</value>
   </data>
-    <data name="Unassigned successfully" xml:space="preserve">
-    <value>Не назначено успешно</value>
+  <data name="Unassigned successfully" xml:space="preserve">
+    <value>Назначение успешно отменено</value>
   </data>
-    <data name="Permission removed successfully!" xml:space="preserve">
-    <value>Разрешение успешно удалено!</value>
-  </data>
-    <data name="Assigned Roles" xml:space="preserve">
+  <data name="Assigned Roles" xml:space="preserve">
     <value>Назначенные роли</value>
   </data>
-    <data name="Email / PhoneNumber" xml:space="preserve">
-    <value>Электронная почта / номер телефона</value>
+  <data name="Email / PhoneNumber" xml:space="preserve">
+    <value>Электронная почта/номер телефона</value>
   </data>
-    <data name="Permission added successfully!" xml:space="preserve">
-    <value>Разрешение успешно добавлено!</value>
+  <data name="Assign or Unassign all" xml:space="preserve">
+    <value>Назначить или отменить назначение всех</value>
+  </data>
+  <data name="Audit Trails" xml:space="preserve">
+    <value>Аудиторские журналы</value>
+  </data>
+  <data name="Audit Trails Permissions" xml:space="preserve">
+    <value>Разрешения для контрольных журналов</value>
+  </data>
+  <data name="Authorization has been changed" xml:space="preserve">
+    <value>Авторизация изменена</value>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Категории</value>
+  </data>
+  <data name="Categories Permissions" xml:space="preserve">
+    <value>Категории Разрешения</value>
+  </data>
+  <data name="Customers" xml:space="preserve">
+    <value>Клиенты</value>
+  </data>
+  <data name="Customers Permissions" xml:space="preserve">
+    <value>Разрешения клиентов</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Панель приборов</value>
+  </data>
+  <data name="Dashboard Permissions" xml:space="preserve">
+    <value>Разрешения панели управления</value>
+  </data>
+  <data name="Documents" xml:space="preserve">
+    <value>Документы</value>
+  </data>
+  <data name="Documents Permissions" xml:space="preserve">
+    <value>Разрешения на документы</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Идентификатор</value>
+  </data>
+  <data name="Job" xml:space="preserve">
+    <value>Работа</value>
+  </data>
+  <data name="Job Permissions" xml:space="preserve">
+    <value>Разрешения на работу</value>
+  </data>
+  <data name="Logs" xml:space="preserve">
+    <value>Журналы</value>
+  </data>
+  <data name="Logs Permissions" xml:space="preserve">
+    <value>Разрешения журналов</value>
+  </data>
+  <data name="Multi-Tenant" xml:space="preserve">
+    <value>Многоквартирные дома</value>
+  </data>
+  <data name="Multi-Tenant Permissions" xml:space="preserve">
+    <value>Мультитенантные разрешения</value>
+  </data>
+  <data name="Normalized Name" xml:space="preserve">
+    <value>Нормализованное имя</value>
+  </data>
+  <data name="Permission" xml:space="preserve">
+    <value>Разрешение</value>
+  </data>
+  <data name="Permission assigned successfully" xml:space="preserve">
+    <value>Разрешение успешно получено</value>
+  </data>
+  <data name="Permission Description" xml:space="preserve">
+    <value>Описание разрешения</value>
+  </data>
+  <data name="Permission removed successfully" xml:space="preserve">
+    <value>Разрешение успешно удалено</value>
+  </data>
+  <data name="Picklist" xml:space="preserve">
+    <value>Список выбора</value>
+  </data>
+  <data name="Picklist Permissions" xml:space="preserve">
+    <value>Разрешения для раскрывающегося списка</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Продукты</value>
+  </data>
+  <data name="Products Permissions" xml:space="preserve">
+    <value>Разрешения на продукты</value>
+  </data>
+  <data name="Role Claims" xml:space="preserve">
+    <value>Ролевые претензии</value>
+  </data>
+  <data name="Role Claims Permissions" xml:space="preserve">
+    <value>Роль утверждает разрешения</value>
+  </data>
+  <data name="Roles Permissions" xml:space="preserve">
+    <value>Роли Разрешения</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>Выбрано</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Пользователи</value>
+  </data>
+  <data name="Users Permissions" xml:space="preserve">
+    <value>Разрешения пользователей</value>
   </data>
 </root>

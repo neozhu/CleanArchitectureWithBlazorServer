@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
+  <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,179 +59,180 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
-                id="root"
-                xmlns="">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root" xmlns="">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="{0} session changed." xml:space="preserve">
-    <value>{0} 会话更新</value>
+  </resheader>
+  <data name="{0} session changed." xml:space="preserve">
+    <value>{0} 会话已更改。</value>
   </data>
-    <data name="Assign Roles" xml:space="preserve">
+  <data name="Assign Roles" xml:space="preserve">
     <value>分配角色</value>
   </data>
-    <data name="Click upload a photo." xml:space="preserve">
-    <value>颜色</value>
+  <data name="Click upload a photo." xml:space="preserve">
+    <value>单击上传照片。</value>
   </data>
-    <data name="Confirm New Password" xml:space="preserve">
+  <data name="Confirm New Password" xml:space="preserve">
     <value>确认新密码</value>
   </data>
-    <data name="confirm password is required!" xml:space="preserve">
-    <value>确认密码必填</value>
+  <data name="confirm password is required!" xml:space="preserve">
+    <value>需要确认密码！</value>
   </data>
-    <data name="Create a new user" xml:space="preserve">
-    <value>创建新用户</value>
+  <data name="Create a new user" xml:space="preserve">
+    <value>创建一个新用户</value>
   </data>
-    <data name="Edit the user" xml:space="preserve">
+  <data name="Edit the user" xml:space="preserve">
     <value>编辑用户</value>
   </data>
-    <data name="Email" xml:space="preserve">
+  <data name="Email" xml:space="preserve">
     <value>电子邮件</value>
   </data>
-    <data name="Is Active" xml:space="preserve">
-    <value>是否激活</value>
+  <data name="Is Active" xml:space="preserve">
+    <value>活跃</value>
   </data>
-    <data name="Lock Status" xml:space="preserve">
-    <value>锁状态</value>
+  <data name="Lock Status" xml:space="preserve">
+    <value>锁定状态</value>
   </data>
-    <data name="Phone Number" xml:space="preserve">
+  <data name="Phone Number" xml:space="preserve">
     <value>电话号码</value>
   </data>
-    <data name="Reset password successfully" xml:space="preserve">
+  <data name="Reset password successfully" xml:space="preserve">
     <value>重置密码成功</value>
   </data>
-    <data name="Search for user name" xml:space="preserve">
-    <value>搜索</value>
+  <data name="Search for user name" xml:space="preserve">
+    <value>搜索用户名</value>
   </data>
-    <data name="Set Active" xml:space="preserve">
-    <value>激活</value>
+  <data name="Set Active" xml:space="preserve">
+    <value>设置为活动状态</value>
   </data>
-    <data name="Set Inactive" xml:space="preserve">
-    <value>暂停</value>
+  <data name="Set Inactive" xml:space="preserve">
+    <value>设置为非活动状态</value>
   </data>
-    <data name="Set Password" xml:space="preserve">
+  <data name="Set Password" xml:space="preserve">
     <value>设置密码</value>
   </data>
-    <data name="Site" xml:space="preserve">
-    <value>站点</value>
+  <data name="Site" xml:space="preserve">
+    <value>地点</value>
   </data>
-    <data name="User Name" xml:space="preserve">
+  <data name="User Name" xml:space="preserve">
     <value>用户名</value>
   </data>
-    <data name="Users" xml:space="preserve">
-    <value>系统账号</value>
+  <data name="Users" xml:space="preserve">
+    <value>用户</value>
   </data>
-    <data name="New Password" xml:space="preserve">
+  <data name="New Password" xml:space="preserve">
     <value>新密码</value>
   </data>
-    <data name="password is required!" xml:space="preserve">
-    <value>密码必填</value>
+  <data name="password is required!" xml:space="preserve">
+    <value>密码是必需的！</value>
   </data>
-    <data name="Select Tenant" xml:space="preserve">
+  <data name="Select Tenant" xml:space="preserve">
     <value>选择租户</value>
   </data>
-    <data name="Tenant Name" xml:space="preserve">
+  <data name="Tenant Name" xml:space="preserve">
     <value>租户名称</value>
   </data>
-    <data name="Provider" xml:space="preserve">
-    <value>来源</value>
+  <data name="Provider" xml:space="preserve">
+    <value>提供者</value>
   </data>
-    <data name="Superior Name" xml:space="preserve">
-    <value>上级</value>
+  <data name="Superior Name" xml:space="preserve">
+    <value>高级名称</value>
   </data>
-    <data name="Select Superior" xml:space="preserve">
-    <value>选择上级</value>
+  <data name="Select Superior" xml:space="preserve">
+    <value>选择高级</value>
   </data>
-    <data name="E-mail" xml:space="preserve">
+  <data name="E-mail" xml:space="preserve">
     <value>电子邮件</value>
   </data>
-    <data name="Password" xml:space="preserve">
-    <value>登录密码</value>
+  <data name="Password" xml:space="preserve">
+    <value>密码</value>
   </data>
-    <data name="Status" xml:space="preserve">
-    <value>状态</value>
+  <data name="Status" xml:space="preserve">
+    <value>地位</value>
   </data>
-    <data name="Confirm Password" xml:space="preserve">
+  <data name="Confirm Password" xml:space="preserve">
     <value>确认密码</value>
   </data>
-    <data name="Display Name" xml:space="preserve">
+  <data name="Display Name" xml:space="preserve">
     <value>显示名称</value>
   </data>
-    <data name="Set Permissions" xml:space="preserve">
+  <data name="Set Permissions" xml:space="preserve">
     <value>设置权限</value>
   </data>
-    <data name="Assigned Roles" xml:space="preserve">
-    <value>分配角色</value>
+  <data name="Assigned Roles" xml:space="preserve">
+    <value>分配的角色</value>
   </data>
-    <data name="Email / PhoneNumber" xml:space="preserve">
-    <value>电子邮件 / 电话</value>
+  <data name="Email / PhoneNumber" xml:space="preserve">
+    <value>电子邮件/电话号码</value>
   </data>
-    <data name="Permission removed successfully!" xml:space="preserve">
+  <data name="Permission removed successfully" xml:space="preserve">
     <value>权限删除成功</value>
   </data>
-    <data name="Permission added successfully!" xml:space="preserve">
-    <value>授权成功</value>
+  <data name="Reset Password" xml:space="preserve">
+    <value>重设密码</value>
   </data>
-    <data name="Reset Password" xml:space="preserve">
-    <value>重置密码</value>
+  <data name="Display Name / PhoneNumber" xml:space="preserve">
+    <value>显示名称/电话号码</value>
+  </data>
+  <data name="Permission assigned successfully" xml:space="preserve">
+    <value>权限分配成功</value>
   </data>
 </root>
