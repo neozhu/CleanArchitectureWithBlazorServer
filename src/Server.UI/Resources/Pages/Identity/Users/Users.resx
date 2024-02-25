@@ -223,16 +223,16 @@
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>Email / PhoneNumber</value>
   </data>
-  <data name="Permission added successfully!" xml:space="preserve">
-      <value>Permission added successfully!</value>
-  </data>
-  <data name="Permission removed successfully!" xml:space="preserve">
-      <value>Permission removed successfully!</value>
+  <data name="Permission removed successfully" xml:space="preserve">
+      <value>Permission removed successfully</value>
   </data>
   <data name="Reset Password" xml:space="preserve">
     <value>Reset Password</value>
   </data>
   <data name="Display Name / PhoneNumber" xml:space="preserve">
-    <value></value>
+    <value>Display Name / PhoneNumber</value>
+  </data>
+  <data name="Permission assigned successfully" xml:space="preserve">
+    <value>Permission assigned successfully</value>
   </data>
 </root>

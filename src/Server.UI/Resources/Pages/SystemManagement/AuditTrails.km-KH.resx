@@ -145,4 +145,34 @@
   <data name="User Id" xml:space="preserve">
     <value>លេខ​សម្គាល់​អ្នក​ប្រើ</value>
   </data>
+  <data name="Affected Columns" xml:space="preserve">
+    <value>ជួរឈរដែលរងផលប៉ះពាល់</value>
+  </data>
+  <data name="Document" xml:space="preserve">
+    <value>ឯកសារ</value>
+  </data>
+  <data name="Field Name" xml:space="preserve">
+    <value>ឈ្មោះវាល</value>
+  </data>
+  <data name="KeyValue" xml:space="preserve">
+    <value>តម្លៃគន្លឹះ</value>
+  </data>
+  <data name="New Values" xml:space="preserve">
+    <value>តម្លៃថ្មី។</value>
+  </data>
+  <data name="Old Values" xml:space="preserve">
+    <value>តម្លៃចាស់</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>ម្ចាស់</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>ផលិតផល</value>
+  </data>
+  <data name="Search for audit type" xml:space="preserve">
+    <value>ស្វែងរកប្រភេទសវនកម្ម</value>
+  </data>
+  <data name="Tenant" xml:space="preserve">
+    <value>អ្នក​ជួល</value>
+  </data>
 </root>

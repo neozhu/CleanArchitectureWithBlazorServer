@@ -171,11 +171,8 @@
   <data name="password is required!" xml:space="preserve">
     <value>비밀번호는 필수입니다!</value>
   </data>
-  <data name="Permission added successfully!" xml:space="preserve">
-    <value>권한이 추가되었습니다!</value>
-  </data>
-  <data name="Permission removed successfully!" xml:space="preserve">
-    <value>권한이 성공적으로 제거되었습니다!</value>
+  <data name="Permission removed successfully" xml:space="preserve">
+    <value>권한이 삭제되었습니다.</value>
   </data>
   <data name="Phone Number" xml:space="preserve">
     <value>전화 번호</value>
@@ -227,5 +224,11 @@
   </data>
   <data name="Users" xml:space="preserve">
     <value>사용자</value>
+  </data>
+  <data name="Display Name / PhoneNumber" xml:space="preserve">
+    <value>표시 이름/전화번호</value>
+  </data>
+  <data name="Permission assigned successfully" xml:space="preserve">
+    <value>권한이 할당되었습니다.</value>
   </data>
 </root>

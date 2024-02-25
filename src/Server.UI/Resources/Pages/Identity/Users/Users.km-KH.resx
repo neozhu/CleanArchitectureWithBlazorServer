@@ -223,13 +223,16 @@
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>អ៊ីមែល / លេខទូរស័ព្ទ</value>
   </data>
-  <data name="Permission removed successfully!" xml:space="preserve">
-    <value>ការអនុញ្ញាតត្រូវបានដកចេញដោយជោគជ័យ!</value>
-  </data>
-  <data name="Permission added successfully!" xml:space="preserve">
-    <value>ការអនុញ្ញាតត្រូវបានបន្ថែមដោយជោគជ័យ!</value>
+  <data name="Permission removed successfully" xml:space="preserve">
+    <value>ការអនុញ្ញាតត្រូវបានដកចេញដោយជោគជ័យ</value>
   </data>
   <data name="Reset Password" xml:space="preserve">
     <value>កំណត់ពាក្យសម្ងាត់ឡើងវិញ</value>
+  </data>
+  <data name="Display Name / PhoneNumber" xml:space="preserve">
+    <value>បង្ហាញឈ្មោះ/លេខទូរស័ព្ទ</value>
+  </data>
+  <data name="Permission assigned successfully" xml:space="preserve">
+    <value>ការអនុញ្ញាតត្រូវបានផ្តល់ដោយជោគជ័យ</value>
   </data>
 </root>

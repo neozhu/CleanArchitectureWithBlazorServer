@@ -124,8 +124,8 @@
   <data name="Change Password" xml:space="preserve">
     <value>ផ្លាស់ប្តូរពាក្យសម្ងាត់</value>
   </data>
-  <data name="Changed password successfully." xml:space="preserve">
-    <value>បានផ្លាស់ប្តូរពាក្យសម្ងាត់ដោយជោគជ័យ។</value>
+  <data name="Password changed successfully" xml:space="preserve">
+    <value>បានផ្លាស់ប្តូរពាក្យសម្ងាត់ដោយជោគជ័យ</value>
   </data>
   <data name="Click upload a photo." xml:space="preserve">
     <value>ចុចបង្ហោះរូបថត។</value>
@@ -174,5 +174,14 @@
   </data>
   <data name="Status" xml:space="preserve">
     <value>ស្ថានភាព</value>
+  </data>
+  <data name="Click upload a image" xml:space="preserve">
+    <value>ចុច​បង្ហោះ​រូបភាព</value>
+  </data>
+  <data name="Org Chart" xml:space="preserve">
+    <value>គំនូសតាងអង្គការ</value>
+  </data>
+  <data name="The avatar has been updated" xml:space="preserve">
+    <value>រូបតំណាងត្រូវបានធ្វើបច្ចុប្បន្នភាព</value>
   </data>
 </root>
