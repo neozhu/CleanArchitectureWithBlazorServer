@@ -50,6 +50,40 @@ docker run -d -p 8080:8080 -e UseInMemoryDatabase=false \
 -e SmtpClientOptions__Password=*** \
 dockerksjscn/cleanarchitectureblazorserver:latest
 ```
+## docker-compose.yaml
+
+```bash
+version: '3.8'
+services:
+  blazorserverapp:
+    image: dockerksjscn/cleanarchitectureblazorserver:latest
+    user: "1000:1000"
+    environment:
+      - UseInMemoryDatabase=false
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DatabaseSettings__DBProvider=mssql
+      - DatabaseSettings__ConnectionString=Server=10.33.1.xx;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false
+      - SmtpClientOptions__User=***
+      - SmtpClientOptions__Port=25
+      - SmtpClientOptions__Server=***
+      - SmtpClientOptions__Password=***
+    ports:
+      - "8014:8080"
+    volumes:
+      - files_volume:/app/Files
+
+volumes:
+  files_volume:
+```
+
+To run a Docker Compose setup as defined in your docker-compose.yaml file and ensure the Docker volume files_volume is accessible with read and write permissions by a user group with the ID 1000, follow these steps:
+
+```bash
+# Change Ownership: Use the chown command to change the owner and/or group of the volume directory. If you want the user group with group ID 1000 to own the directory, you can execute the following command:
+sudo chown -R :1000 /var/lib/docker/volumes/blazorserverapp_files_volume
+# Set Read and Write Permissions: Use the chmod command to change the permissions of files and directories. To grant read and write permissions to the group members, execute:
+sudo chmod -R g+rw /var/lib/docker/volumes/blazorserverapp_files_volume
+```
 
 ![image](https://user-images.githubusercontent.com/1549611/183799080-380e1f01-ef80-4568-80d2-517514aa59e5.png)
 
