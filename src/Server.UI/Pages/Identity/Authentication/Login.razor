@@ -52,7 +52,7 @@
             </MudPasswordField>
 
             <div Class="d-flex justify-space-between align-center">
-                <MudCheckBox For="@(() => _model.RememberMe)" @bind-Checked="_model.RememberMe" Label="@L["Remember me?"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+                <MudCheckBox For="@(() => _model.RememberMe)" @bind-Value="_model.RememberMe" Label="@L["Remember me?"]" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
                 <MudLink Href="/pages/authentication/forgot-password">@L["Forgot password?"]</MudLink>
             </div>
 

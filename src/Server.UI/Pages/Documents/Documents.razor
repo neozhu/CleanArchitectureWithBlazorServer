@@ -179,7 +179,7 @@
         <PropertyColumn Property="x => x.DocumentType" Title="@L[_currentDto.GetMemberDescription(x => x.DocumentType)]">
             <CellTemplate>
                 <div class="d-flex flex-column">
-                    <MudCheckBox Size="Size.Small" Label="@L[_currentDto.GetMemberDescription(x => x.IsPublic)]" Checked="@context.Item.IsPublic" Disabled="true"></MudCheckBox>
+                    <MudCheckBox Size="Size.Small" Label="@L[_currentDto.GetMemberDescription(x => x.IsPublic)]" Value="@context.Item.IsPublic" Disabled="true"></MudCheckBox>
                     <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.DocumentType</MudText>
                 </div>
             </CellTemplate>
