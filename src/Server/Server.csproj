@@ -11,7 +11,7 @@
     <ItemGroup>
         <PackageReference Include="Fluxor.Blazor.Web" Version="5.9.1" />
         <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.1" />
-        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.10" />
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.11" />
         <PackageReference Include="Hangfire.InMemory" Version="0.8.0" />
         <PackageReference Include="Blazor-Analytics" Version="3.12.0" />
         
