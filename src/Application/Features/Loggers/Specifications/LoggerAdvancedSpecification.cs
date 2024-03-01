@@ -16,7 +16,6 @@ public class LoggerAdvancedSpecification : Specification<Logger>
             .Where(p => p.TimeStamp >= last30days, filter.ListView == LogListView.Last30days)
             .Where(p => p.Level == filter.Level.ToString(), filter.Level is not null)
             .Where(
-                x => x.Message.Contains(filter.Keyword) || x.Exception.Contains(filter.Keyword) ||
-                     x.UserName.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword));
+                x => x.Message.Contains(filter.Keyword) || x.Exception.Contains(filter.Keyword)  , !string.IsNullOrEmpty(filter.Keyword));
     }
 }

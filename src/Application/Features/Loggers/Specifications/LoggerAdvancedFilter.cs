@@ -12,5 +12,5 @@ public enum LogListView
 public class LoggerAdvancedFilter : PaginationFilter
 {
     public LogLevel? Level { get; set; }
-    public LogListView ListView { get; set; } = LogListView.All;
+    public LogListView ListView { get; set; } = LogListView.Last30days;
 }
