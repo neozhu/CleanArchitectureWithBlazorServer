@@ -1,4 +1,4 @@
-# Clean Architecture With Blazor Server
+﻿# Clean Architecture With Blazor Server
 
 [![Build](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/codeql-analysis.yml)
@@ -50,7 +50,7 @@ docker run -d -p 8080:8080 -e UseInMemoryDatabase=false \
 -e SmtpClientOptions__Password=*** \
 dockerksjscn/cleanarchitectureblazorserver:latest
 ```
-## docker-compose.yaml
+## docker-compose.yml
 
 ```bash
 version: '3.8'
