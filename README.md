@@ -28,7 +28,7 @@ Blazor technology.
 ## Docker Container
 ```bash
 # Docker Pull Command
-docker pull dockerksjscn/cleanarchitectureblazorserver:latest
+docker pull blazordevlab/cleanarchitectureblazorserver:latest
 ```
 
 ```bash
@@ -36,7 +36,7 @@ docker pull dockerksjscn/cleanarchitectureblazorserver:latest
 # default container port:8080
 
 # default without database
-docker run -p 8080:8080 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development dockerksjscn/cleanarchitectureblazorserver:latest
+docker run -p 8080:8080 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development blazordevlab/cleanarchitectureblazorserver:latest
 
 # set database connection
 # set SMPT Server
@@ -48,7 +48,7 @@ docker run -d -p 8080:8080 -e UseInMemoryDatabase=false \
 -e SmtpClientOptions__Port=25 \
 -e SmtpClientOptions__Server=*** \
 -e SmtpClientOptions__Password=*** \
-dockerksjscn/cleanarchitectureblazorserver:latest
+blazordevlab/cleanarchitectureblazorserver:latest
 ```
 ## docker-compose.yml
 
@@ -56,7 +56,7 @@ dockerksjscn/cleanarchitectureblazorserver:latest
 version: '3.8'
 services:
   blazorserverapp:
-    image: dockerksjscn/cleanarchitectureblazorserver:latest
+    image: blazordevlab/cleanarchitectureblazorserver:latest
     user: "1000:1000"
     environment:
       - UseInMemoryDatabase=false
