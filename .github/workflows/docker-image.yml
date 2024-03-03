@@ -39,12 +39,12 @@ jobs:
       with:
         context: .
         push: true
-        tags: dockerksjscn/cleanarchitectureblazorserver:${{ steps.version.outputs.version }}
+        tags: blazordevlab/cleanarchitectureblazorserver:${{ steps.version.outputs.version }}
 
     - name: Build and push with latest tag
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
-        tags: dockerksjscn/cleanarchitectureblazorserver:latest
+        tags: blazordevlab/cleanarchitectureblazorserver:latest
      
