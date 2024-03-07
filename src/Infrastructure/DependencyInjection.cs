@@ -251,6 +251,11 @@ public static class DependencyInjection
                 }
             })
             .AddAuthentication()
+            .AddMicrosoftAccount(microsoftOptions =>
+            {
+                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId");
+                microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
+            })
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
