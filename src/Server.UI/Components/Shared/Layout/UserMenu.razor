@@ -32,7 +32,7 @@
                         <MudAvatar>
                             @if (string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl))
                             {
-                                <MudImage>@UserProfile?.UserName?.First()</MudImage>
+                               @UserProfile?.UserName?.First()
                             }
                             else
                             {
