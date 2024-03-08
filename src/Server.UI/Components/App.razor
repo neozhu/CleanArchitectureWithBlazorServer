@@ -10,11 +10,11 @@
     <link href="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.css" rel="stylesheet"/>
     <link href="css/app.css" rel="stylesheet" />
     <link href="CleanArchitecture.Blazor.Server.UI.styles.css" rel="stylesheet" />
-    <HeadOutlet @rendermode="new InteractiveServerRenderMode(false)"/>
+    <HeadOutlet @rendermode="RenderModeForPage" />
 </head>
 
 <body>
-    <Routes @rendermode="new InteractiveServerRenderMode(false)"/>
+    <Routes @rendermode="RenderModeForPage" />
     <script src="_framework/blazor.web.js"></script>
     <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
     <script type="text/javascript" src="https://accounts.google.com/gsi/client"></script>
@@ -25,3 +25,12 @@
 </body>
 
 </html>
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private IComponentRenderMode? RenderModeForPage => HttpContext.Request.Path.StartsWithSegments("/pages/authentication")
+        ? null
+        : new InteractiveServerRenderMode(false);
+}

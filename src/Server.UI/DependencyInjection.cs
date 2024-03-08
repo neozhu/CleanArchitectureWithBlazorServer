@@ -5,6 +5,7 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Server.Hubs;
 using CleanArchitecture.Blazor.Server.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
+using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication;
 using CleanArchitecture.Blazor.Server.UI.Services;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
@@ -27,6 +28,8 @@ public static class DependencyInjection
     {
         services.AddRazorComponents().AddInteractiveServerComponents();
         services.AddCascadingAuthenticationState();
+        services.AddScoped<IdentityUserAccessor>();
+        services.AddScoped<IdentityRedirectManager>();
         services.AddMudBlazorDialog()
             .AddMudServices(mudServicesConfiguration =>
             {
@@ -84,7 +87,6 @@ public static class DependencyInjection
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-
         app.UseStatusCodePagesWithRedirects("/404");
         app.MapHealthChecks("/health");
         app.UseHttpsRedirection();
@@ -116,6 +118,11 @@ public static class DependencyInjection
 
         //QuestPDF License configuration
         QuestPDF.Settings.License = LicenseType.Community;
+
+        // Add additional endpoints required by the Identity /Account Razor components.
+        app.MapAdditionalIdentityEndpoints();
+
+
 
         return app;
     }

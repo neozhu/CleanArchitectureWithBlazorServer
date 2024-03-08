@@ -253,38 +253,39 @@ public static class DependencyInjection
             .AddAuthentication()
             .AddMicrosoftAccount(microsoftOptions =>
             {
-                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId");
-                microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
-            })
-            .AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = false,
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes("yn4$#cr=+i@eljzlhhr2xlgf98aud&(3&!po3r60wlm^3*huh#")),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    RoleClaimType = ClaimTypes.Role,
-                    ClockSkew = TimeSpan.Zero,
-                    ValidateLifetime = false
-                };
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        var accessToken = context.Request.Headers.Authorization;
-                        var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) &&
-                            path.StartsWithSegments("/signalRHub")) // TODO: move in server?
-                            context.Token = accessToken.ToString().Substring(7);
-                        return Task.CompletedTask;
-                    }
-                };
+                microsoftOptions.ClientId = "89c688b8-6933-4a93-8bb4-c2c3513a4d76";// configuration.GetValue<string>("Authentication:Microsoft:ClientId");
+                microsoftOptions.ClientSecret = "770077e1-dbbf-4613-b95c-685f6c5d815c";// configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
             });
+     
+            //.services.AddJwtBearer(options =>
+            //{
+            //    options.SaveToken = true;
+            //    options.RequireHttpsMetadata = false;
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuerSigningKey = false,
+            //        IssuerSigningKey =
+            //            new SymmetricSecurityKey(
+            //                Encoding.UTF8.GetBytes("yn4$#cr=+i@eljzlhhr2xlgf98aud&(3&!po3r60wlm^3*huh#")),
+            //        ValidateIssuer = false,
+            //        ValidateAudience = false,
+            //        RoleClaimType = ClaimTypes.Role,
+            //        ClockSkew = TimeSpan.Zero,
+            //        ValidateLifetime = false
+            //    };
+            //    options.Events = new JwtBearerEvents
+            //    {
+            //        OnMessageReceived = context =>
+            //        {
+            //            var accessToken = context.Request.Headers.Authorization;
+            //            var path = context.HttpContext.Request.Path;
+            //            if (!string.IsNullOrEmpty(accessToken) &&
+            //                path.StartsWithSegments("/signalRHub")) // TODO: move in server?
+            //                context.Token = accessToken.ToString().Substring(7);
+            //            return Task.CompletedTask;
+            //        }
+            //    };
+            //});
         services.ConfigureApplicationCookie(options => { options.LoginPath = "/pages/authentication/login"; });
         services.AddSingleton<UserService>()
             .AddSingleton<IUserService>(sp =>

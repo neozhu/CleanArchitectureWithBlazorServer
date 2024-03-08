@@ -1,5 +1,6 @@
-﻿@page "/pages/authentication/login" 
+﻿@page "/pages/authentication/login"
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
+@using Microsoft.AspNetCore.Authentication
 @using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -11,9 +12,6 @@
 @using CleanArchitecture.Blazor.Infrastructure.Constants.User
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 
-@inherits OwningComponentBase
-@implements IDisposable
-
 @inject IAccessTokenProvider TokenProvider
 @inject IJSRuntime JS
 @inject ILogger<Login> Logger
@@ -23,7 +21,8 @@
 @inject IDataProtectionProvider DataProtectionProvider
 @inject IValidationService Validator
 @inject IStringLocalizer<Login> L
-
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IdentityRedirectManager RedirectManager
 <PageTitle>@_title</PageTitle>
 
 <AuthorizeView>
@@ -65,7 +64,7 @@
                        FullWidth="true">
                 @if (_loading)
                 {
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                     <MudText Class="ms-2"> @ConstantString.Loading</MudText>
                 }
                 else
@@ -74,17 +73,26 @@
                 }
 
             </MudButton>
-            <div class="d-flex justify-space-around flex-grow-1 my-4 gap-4">
-                <MudButton Class="flex-grow-1" OnClick="@(() => SignInExternal("Microsoft"))" Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.Microsoft" ButtonType="ButtonType.Button"
-                           title="Sign in with Microsoft">
-                    @ConstantString.Microsoft
-                </MudButton>
-                <MudButton Class="flex-grow-1" OnClick="@(() => SignInExternal("Google"))" Variant="Variant.Filled" StartIcon="@Icons.Custom.Brands.Google" ButtonType="ButtonType.Button"
-                           title="Sign in with Google">
-                    @ConstantString.Google
-                </MudButton>
-            </div>
+            
         </MudForm>
+        <div class="d-flex justify-space-around flex-grow-1 my-4 gap-4">
+            @if (externalLogins.Length > 0)
+            {
+                <form class="form-horizontal" action="/pages/authentication/PerformExternalLogin" method="post">
+                    <div>
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="@ReturnUrl" />
+                        <p>
+                            @foreach (var provider in externalLogins)
+                            {
+                                <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                            }
+                        </p>
+                    </div>
+                </form>
+            }
+
+        </div>
     </NotAuthorized>
     <Authorized>
         <RedirectToHome></RedirectToHome>
@@ -93,22 +101,26 @@
 </AuthorizeView>
 
 @code {
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
     private string _title = "Sign In";
     private MudForm? _form;
     private bool _success;
     private bool _loading;
     [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
-
+    private AuthenticationScheme[] externalLogins = [];
     private readonly LoginFormModel _model = new()
-    {
-        UserName = "administrator",
-        Password = "Password123!",
-        RememberMe = true
-    };
+        {
+            UserName = "administrator",
+            Password = "Password123!",
+            RememberMe = true
+        };
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
+        externalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToArray();
         _title = L["Sign In"];
     }
 
@@ -189,8 +201,21 @@
 
     private async Task SignInExternal(string provider)
     {
-        await new ExternalAuth(JS).Login(provider, DotNetObjectReference.Create(this));
-       
+        try
+        {
+            var info = await SignInManager.GetExternalLoginInfoAsync();
+            if (info is null)
+            {
+                RedirectManager.RedirectToWithStatus("/pages/authentication/login", "Error loading external login information.", HttpContext);
+            }
+
+            // await new ExternalAuth(JS).Login(provider, DotNetObjectReference.Create(this));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
     }
 
     [JSInvokable]
@@ -209,18 +234,18 @@
         {
             var admin = await UserManager.FindByNameAsync(UserName.Administrator) ?? throw new NotFoundException("Administrator's account Not Found.");
             user = new ApplicationUser
-            {
-                EmailConfirmed = true,
-                IsActive = true,
-                IsLive = true,
-                UserName = userName,
-                Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
-                Provider = provider,
-                DisplayName = name,
-                SuperiorId = admin.Id,
-                TenantId = admin.TenantId,
-                TenantName = admin.TenantName
-            };
+                {
+                    EmailConfirmed = true,
+                    IsActive = true,
+                    IsLive = true,
+                    UserName = userName,
+                    Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
+                    Provider = provider,
+                    DisplayName = name,
+                    SuperiorId = admin.Id,
+                    TenantId = admin.TenantId,
+                    TenantName = admin.TenantName
+                };
             var createResult = await UserManager.CreateAsync(user);
             if (createResult.Succeeded)
             {
