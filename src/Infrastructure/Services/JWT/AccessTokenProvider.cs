@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Dynamic.Core.Tokenizer;
 using System.Security.Cryptography;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Identity;
@@ -77,7 +78,11 @@ public class AccessTokenProvider : IAccessTokenProvider
                 RefreshToken = token.Value.RefreshToken;
                 var validationResult = await _tokenValidator.ValidateTokenAsync(AccessToken!);
                 if (validationResult.IsValid)
+                {
+                    await Refresh(AccessToken);
                     return SetUserPropertiesFromClaimsPrincipal(new ClaimsPrincipal(validationResult.ClaimsIdentity));
+                }
+                   
 
                 var validationRefreshResult = await _refreshTokenValidator.ValidateTokenAsync(RefreshToken!);
                 if (validationRefreshResult.IsValid)
@@ -110,8 +115,7 @@ public class AccessTokenProvider : IAccessTokenProvider
         _currentUser.UserId = principal.GetUserId();
         _currentUser.UserName = principal.GetUserName();
         _currentUser.TenantId = principal.GetTenantId();
-        _currentUser.TenantName =
-            principal.GetTenantName(); // This seems to be an error in original code. Fixing it here.
+        _currentUser.TenantName = principal.GetTenantName(); // This seems to be an error in original code. Fixing it here.
         return principal;
     }
 
@@ -120,11 +124,12 @@ public class AccessTokenProvider : IAccessTokenProvider
         var validationResult = await _tokenValidator.ValidateTokenAsync(refreshToken!);
         if (!validationResult.IsValid) throw validationResult.Exception;
         var jwt = validationResult.SecurityToken as JwtSecurityToken;
-        var userId = jwt!.Claims.First(claim => claim.Type == "id").Value;
-        var user = await _userManager.FindByIdAsync(userId);
-        if (user == null) throw new Exception($"no found user by userId:{userId}");
+        var userName = jwt!.Claims.First(claim => claim.Type== ClaimTypes.Name).Value;
+        var user = await _userManager.FindByNameAsync(userName);
+        if (user == null) throw new Exception($"no found user by userId:{userName}");
         var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
         var accessToken = _tokenGenerator.GenerateAccessToken(principal);
+        await _localStorage.SetAsync(_tokenKey, new AuthenticatedUserResponse { AccessToken= accessToken,RefreshToken= accessToken });
         return accessToken;
     }
 }

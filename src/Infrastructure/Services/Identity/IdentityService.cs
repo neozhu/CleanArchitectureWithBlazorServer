@@ -104,13 +104,13 @@ public class IdentityService : IIdentityService
         }
     }
 
-    public async Task<ApplicationUserDto> GetApplicationUserDto(string userId, CancellationToken cancellation = default)
+    public async Task<ApplicationUserDto> GetApplicationUserDto(string userName, CancellationToken cancellation = default)
     {
-        var key = $"GetApplicationUserDto:{userId}";
+        var key = $"GetApplicationUserDto:{userName}";
         var result = await _cache.GetOrAddAsync(key,
-            async () => await _userManager.Users.Where(x => x.Id == userId).Include(x => x.UserRoles)
+            async () => await _userManager.Users.Where(x => x.UserName == userName).Include(x => x.UserRoles)
                 .ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(cancellation) ?? new ApplicationUserDto(), Options);
+                .FirstOrDefaultAsync(cancellation) ?? new ApplicationUserDto() { UserName= "Anonymous" }, Options);
         return result;
     }
 
