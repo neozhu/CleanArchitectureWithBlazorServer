@@ -30,19 +30,19 @@
                     else
                     {
                         <MudAvatar>
-                            @if (string.IsNullOrEmpty(UserProfile?.ProfilePictureDataUrl))
+                            @if (string.IsNullOrEmpty(UserProfile.ProfilePictureDataUrl))
                             {
-                               @UserProfile?.UserName?.First()
+                                @(string.IsNullOrEmpty(UserProfile.UserName) ? "" : UserProfile.UserName.First())
                             }
                             else
                             {
-                                <MudImage Src="@UserProfile?.ProfilePictureDataUrl"></MudImage>
+                                <MudImage Src="@UserProfile.ProfilePictureDataUrl"></MudImage>
                             }
                         </MudAvatar>
 
                         <MudStack Justify="Justify.SpaceBetween" Spacing="0">
-                            <MudText Typo="Typo.body1">@UserProfile?.DisplayName</MudText>
-                            <MudText Typo="Typo.body2">@UserProfile?.Email</MudText>
+                            <MudText Typo="Typo.body1">@UserProfile.DisplayName</MudText>
+                            <MudText Typo="Typo.body2">@UserProfile.Email</MudText>
                         </MudStack>
                     }
                 </MudStack>

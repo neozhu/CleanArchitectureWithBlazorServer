@@ -39,7 +39,7 @@ public class DefaultAuthenticator : IAuthenticator
         var validationResult = await _tokenValidator.ValidateTokenAsync(refreshToken!);
         if (!validationResult.IsValid) return string.Empty;
         var jwt = validationResult.SecurityToken as JwtSecurityToken;
-        var userId = jwt!.Claims.First(claim => claim.Type == "id").Value;
+        var userId = jwt!.Claims.First(claim => claim.Type == "userName").Value;
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null) return string.Empty;
         var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
