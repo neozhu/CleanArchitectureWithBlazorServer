@@ -1,9 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
-using System.Text;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Domain.Identity;
@@ -13,16 +11,16 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
-using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
 using CleanArchitecture.Blazor.Infrastructure.Services.Serialization;
 using FluentEmail.MailKitSmtp;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using ZiggyCreatures.Caching.Fusion;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -38,45 +36,7 @@ public static class DependencyInjection
 
         services
             .AddAuthenticationService(configuration)
-            .AddFusionCacheService()
-            .AddSimpleJwtService(options =>
-            {
-                options.UseCookie = false;
-
-                options.AccessSigningOptions = new JwtSigningOptions
-                {
-                    SigningKey =
-                        new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes("yn4$#cr=+i@eljzlhhr2xlgf98aud&(3&!po3r60wlm^3*huh#")),
-                    Algorithm = SecurityAlgorithms.HmacSha256,
-                    ExpirationMinutes = 120
-                };
-
-                options.RefreshSigningOptions = new JwtSigningOptions
-                {
-                    SigningKey =
-                        new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes("e_qmg*)=vr9yxpp^g^#((wkwk7fh#+3qy!zzq+r-hifw2(_u+=")),
-                    Algorithm = SecurityAlgorithms.HmacSha256,
-                    ExpirationMinutes = 2880
-                };
-                options.AccessValidationParameters = new TokenValidationParameters
-                {
-                    IssuerSigningKey = options.AccessSigningOptions.SigningKey,
-                    ValidIssuer = options.Issuer,
-                    ValidAudience = options.Audience,
-                    ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero
-                };
-                options.RefreshValidationParameters = new TokenValidationParameters
-                {
-                    IssuerSigningKey = options.RefreshSigningOptions.SigningKey,
-                    ValidIssuer = options.Issuer,
-                    ValidAudience = options.Audience,
-                    ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+            .AddFusionCacheService();
 
 
         services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
@@ -235,7 +195,12 @@ public static class DependencyInjection
             // User settings
             options.User.RequireUniqueEmail = true;
         });
-
+        services.Configure<CookiePolicyOptions>(options =>
+        {
+            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+            options.CheckConsentNeeded = context => true;
+            options.MinimumSameSitePolicy = SameSiteMode.Strict;
+        });
         services.AddScoped<IIdentityService, IdentityService>()
             .AddAuthorizationCore(options =>
             {
@@ -250,42 +215,44 @@ public static class DependencyInjection
                             policy => policy.RequireClaim(ApplicationClaimTypes.Permission, (string)propertyValue));
                 }
             })
-            .AddAuthentication()
+            .AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = "Microsoft";
+            })
+            .AddCookie(options =>
+            {
+              options.Cookie.IsEssential = true;
+                // add an instance of the patched manager to the options:
+                options.CookieManager = new ChunkingCookieManager();
+
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            })
             .AddMicrosoftAccount(microsoftOptions =>
             {
-                microsoftOptions.ClientId = "89c688b8-6933-4a93-8bb4-c2c3513a4d76";// configuration.GetValue<string>("Authentication:Microsoft:ClientId");
-                microsoftOptions.ClientSecret = "770077e1-dbbf-4613-b95c-685f6c5d815c";// configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
+                microsoftOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId");
+                microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
+                microsoftOptions.CallbackPath = "/pages/authentication/ExternalLogin";
+            })
+            .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId");
+                    googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret");
+                    googleOptions.CallbackPath = "/pages/authentication/ExternalLogin";
+                }
+                )
+            .AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId");
+                facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret");
+                facebookOptions.CallbackPath = "/pages/authentication/ExternalLogin";
             });
-     
-            //.services.AddJwtBearer(options =>
-            //{
-            //    options.SaveToken = true;
-            //    options.RequireHttpsMetadata = false;
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = false,
-            //        IssuerSigningKey =
-            //            new SymmetricSecurityKey(
-            //                Encoding.UTF8.GetBytes("yn4$#cr=+i@eljzlhhr2xlgf98aud&(3&!po3r60wlm^3*huh#")),
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false,
-            //        RoleClaimType = ClaimTypes.Role,
-            //        ClockSkew = TimeSpan.Zero,
-            //        ValidateLifetime = false
-            //    };
-            //    options.Events = new JwtBearerEvents
-            //    {
-            //        OnMessageReceived = context =>
-            //        {
-            //            var accessToken = context.Request.Headers.Authorization;
-            //            var path = context.HttpContext.Request.Path;
-            //            if (!string.IsNullOrEmpty(accessToken) &&
-            //                path.StartsWithSegments("/signalRHub")) // TODO: move in server?
-            //                context.Token = accessToken.ToString().Substring(7);
-            //            return Task.CompletedTask;
-            //        }
-            //    };
-            //});
+
+
+
         services.ConfigureApplicationCookie(options => { options.LoginPath = "/pages/authentication/login"; });
         services.AddSingleton<UserService>()
             .AddSingleton<IUserService>(sp =>
@@ -316,23 +283,5 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddSimpleJwtService(this IServiceCollection services,
-        Action<SimpleJwtOptions> options)
-    {
-        var sjOptions = new SimpleJwtOptions();
 
-        options?.Invoke(sjOptions);
-
-        services.AddSingleton(typeof(IOptions<SimpleJwtOptions>), Options.Create(sjOptions))
-            .AddScoped<IAccessTokenProvider, AccessTokenProvider>()
-            .AddScoped<IAccessTokenGenerator, AccessTokenGenerator>()
-            .AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>()
-            .AddScoped<ITokenGeneratorService, TokenGeneratorService>()
-            .AddScoped<IAccessTokenValidator, AccessTokenValidator>()
-            .AddScoped<IRefreshTokenValidator, RefreshTokenValidator>()
-            .AddScoped<ILoginService, JwtLoginService>()
-            .AddScoped<JwtSecurityTokenHandler>();
-
-        return services;
-    }
 }

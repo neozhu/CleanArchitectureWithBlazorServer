@@ -1,5 +1,7 @@
 ﻿using CleanArchitecture.Blazor.Domain.Identity;
+using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +10,7 @@ using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication;
+namespace CleanArchitecture.Blazor.Server.UI.Services;
 
 internal static class IdentityComponentsEndpointRouteBuilderExtensions
 {
@@ -31,11 +33,23 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
             var redirectUrl = UriHelper.BuildRelative(
                 context.Request.PathBase,
-                "/Account/ExternalLogin",
+                "/pages/authentication/ExternalLogin",
                 QueryString.Create(query));
 
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return TypedResults.Challenge(properties, [provider]);
+        });
+        accountGroup.MapGet("/ExternalLogin12", (
+           [FromQuery] string action,
+           [FromQuery] string returnUrl) =>
+        {
+            Console.Write("");
+        });
+        accountGroup.MapGet("/ExternalLogin11", (
+          [FromQuery] string action,
+          [FromQuery] string returnUrl) =>
+        {
+            Console.Write("");
         });
 
         accountGroup.MapPost("/Logout", async (
@@ -104,6 +118,8 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             context.Response.Headers.TryAdd("Content-Disposition", "attachment; filename=PersonalData.json");
             return TypedResults.File(fileBytes, contentType: "application/json", fileDownloadName: "PersonalData.json");
         });
+
+
 
         return accountGroup;
     }

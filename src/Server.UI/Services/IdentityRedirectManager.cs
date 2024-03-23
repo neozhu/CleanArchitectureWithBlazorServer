@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication;
+namespace CleanArchitecture.Blazor.Server.UI.Services;
 
 internal sealed class IdentityRedirectManager(NavigationManager navigationManager)
 {

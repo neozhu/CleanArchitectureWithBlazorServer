@@ -29,8 +29,14 @@
 @code {
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
-
     private IComponentRenderMode? RenderModeForPage => HttpContext.Request.Path.StartsWithSegments("/pages/authentication")
         ? null
         : new InteractiveServerRenderMode(false);
+
+    protected override Task OnInitializedAsync()
+    {
+        CookieProviderService.Cookie = HttpContext.Request.Cookies[".AspNetCore.Identity.Application"];
+
+        return base.OnInitializedAsync();
+    }
 }

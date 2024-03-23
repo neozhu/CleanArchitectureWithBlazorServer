@@ -55,10 +55,12 @@ public static class DependencyInjection
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
         }).AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(30)));
 
+        services.AddHttpContextAccessor();
         services.AddScoped<HubClient>();
-
+        
         services.AddMudExtensions()
-            .AddScoped<AuthenticationStateProvider, BlazorAuthenticationStateProvider>()
+            .AddScoped<CookieProvider>()
+            .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()
             .AddBlazorDownloadFile()
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
@@ -122,7 +124,7 @@ public static class DependencyInjection
         // Add additional endpoints required by the Identity /Account Razor components.
         app.MapAdditionalIdentityEndpoints();
 
-
+  
 
         return app;
     }
