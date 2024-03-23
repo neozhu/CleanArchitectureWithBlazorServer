@@ -59,7 +59,6 @@ public static class DependencyInjection
         services.AddScoped<HubClient>();
         
         services.AddMudExtensions()
-            .AddScoped<CookieProvider>()
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()
             .AddBlazorDownloadFile()

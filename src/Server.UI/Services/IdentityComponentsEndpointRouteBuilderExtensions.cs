@@ -39,7 +39,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return TypedResults.Challenge(properties, [provider]);
         });
-        accountGroup.MapGet("/ExternalLogin12", (
+        accountGroup.MapGet("/ExternalLogin", (
            [FromQuery] string action,
            [FromQuery] string returnUrl) =>
         {

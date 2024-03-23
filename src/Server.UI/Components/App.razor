@@ -35,8 +35,6 @@
 
     protected override Task OnInitializedAsync()
     {
-        CookieProviderService.Cookie = HttpContext.Request.Cookies[".AspNetCore.Identity.Application"];
-
         return base.OnInitializedAsync();
     }
 }

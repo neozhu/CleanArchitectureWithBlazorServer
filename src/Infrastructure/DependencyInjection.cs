@@ -21,6 +21,9 @@ using ZiggyCreatures.Caching.Fusion;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -166,10 +169,13 @@ public static class DependencyInjection
     private static IServiceCollection AddAuthenticationService(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddIdentity<ApplicationUser, ApplicationRole>()
+        services.AddIdentityCore<ApplicationUser>()
+            .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddSignInManager()
             .AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>()
             .AddDefaultTokenProviders();
+          
 
         services.Configure<IdentityOptions>(options =>
         {
@@ -195,12 +201,7 @@ public static class DependencyInjection
             // User settings
             options.User.RequireUniqueEmail = true;
         });
-        services.Configure<CookiePolicyOptions>(options =>
-        {
-            // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-            options.CheckConsentNeeded = context => true;
-            options.MinimumSameSitePolicy = SameSiteMode.Strict;
-        });
+
         services.AddScoped<IIdentityService, IdentityService>()
             .AddAuthorizationCore(options =>
             {
@@ -217,38 +218,33 @@ public static class DependencyInjection
             })
             .AddAuthentication(options =>
             {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = "Microsoft";
-            })
-            .AddCookie(options =>
-            {
-              options.Cookie.IsEssential = true;
-                // add an instance of the patched manager to the options:
-                options.CookieManager = new ChunkingCookieManager();
-
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SameSite = SameSiteMode.Strict;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
             .AddMicrosoftAccount(microsoftOptions =>
             {
-                microsoftOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId");
-                microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
+
+                microsoftOptions.ClientId = "";// configuration.GetValue<string>("Authentication:Microsoft:ClientId");
+                microsoftOptions.ClientSecret = "";// configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
                 microsoftOptions.CallbackPath = "/pages/authentication/ExternalLogin";
+                microsoftOptions.AccessDeniedPath = "/";
+                microsoftOptions.SaveTokens = true;
             })
             .AddGoogle(googleOptions =>
                 {
-                    googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId");
-                    googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret");
-                    googleOptions.CallbackPath = "/pages/authentication/ExternalLogin";
+                    googleOptions.ClientId = "";
+                    googleOptions.ClientSecret = "";
                 }
                 )
             .AddFacebook(facebookOptions =>
             {
-                facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId");
-                facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret");
+                facebookOptions.AppId = "";
+                facebookOptions.AppSecret = "";
                 facebookOptions.CallbackPath = "/pages/authentication/ExternalLogin";
+            })
+            .AddIdentityCookies(options => 
+            {
+               
             });
 
 
