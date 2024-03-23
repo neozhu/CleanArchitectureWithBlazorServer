@@ -30,8 +30,8 @@
         var state = await AuthState;
         if (state.User.Identity?.IsAuthenticated ?? false)
         {
-            var userId = state.User.GetUserId();
-            SetProfile(userId!);
+            var userName = state.User.Identity.Name;
+            SetProfile(userName!);
         }
     }
 
@@ -60,15 +60,15 @@
             var state = await authenticationState;
             if (state.User.Identity?.IsAuthenticated ?? false)
             {
-                var userId = state.User.GetUserId();
-                SetProfile(userId!);
+                var userName = state.User.Identity.Name;
+                SetProfile(userName!);
             }
         });
     }
 
-    private void SetProfile(string userId)
+    private void SetProfile(string userName)
     {
-        Dispatcher.Dispatch(new FetchUserDtoAction { UserId = userId });
+        Dispatcher.Dispatch(new FetchUserDtoAction { UserName = userName });
     }
 
 }
