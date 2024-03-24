@@ -1,8 +1,8 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Services
 @if (!string.IsNullOrEmpty(DisplayMessage))
 {
-    var statusMessageClass = DisplayMessage.StartsWith("Error") ? "danger" : "success";
-    <div class="alert alert-@statusMessageClass" role="alert">
+    var statusMessageClass = DisplayMessage.StartsWith("Error") ? "error" : "success";
+    <div class="mud-alert mud-alert-text-@statusMessageClass" role="alert">
         @DisplayMessage
     </div>
 }

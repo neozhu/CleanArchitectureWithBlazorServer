@@ -18,17 +18,16 @@
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ExternalLogin> Logger
 @inject ISender Sender
-<PageTitle>External Login</PageTitle>
+@inject IStringLocalizer<ExternalLogin> L
+<PageTitle>@L["External Login"]</PageTitle>
 
 
-<h1>Register</h1>
-<h2>Associate your @ProviderDisplayName account.</h2>
+<h1>@L["External Login"]</h1>
+<h2>@string.Format(L["Associate your {0} account."], ProviderDisplayName) </h2>
 <hr />
 
 <div  class="alert alert-info">
-    You've successfully authenticated with <strong>@ProviderDisplayName</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
+   @string.Format(L["You've successfully authenticated with {0}. Please enter an email address for this site below and click the Register button to finish logging in."], ProviderDisplayName)
 </div>
 
 <div class="row">
@@ -40,13 +39,13 @@
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
                     <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText type="text" @bind-Value="Input.Email" class="mud-input-slot mud-input-root mud-input-root-outlined" inputmode="text" maxlength="524288" aria-invalid="false" _bl_658="" />
-                        <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none" tabindex="-1" _bl_659=""></div>
+                        <InputText type="text" @bind-Value="Input.Email" class="mud-input-slot mud-input-root mud-input-root-outlined" inputmode="text" maxlength="524288" aria-invalid="false" />
+                        <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none" tabindex="-1"></div>
                         <!--!-->
                         <div class="mud-input-outlined-border"></div>
                     </div>
                     <!--!-->
-                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="mudinput-73ab4ee5-927f-4e83-a085-fb1d9fb2fba9">Email</label>
+                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="mudinput-73ab4ee5-927f-4e83-a085-fb1d9fb2fba9">@L["Email"]</label>
                 </div>
                 <div class="mud-input-helper-text mud-input-error">
                     <div class="d-flex">
@@ -59,7 +58,7 @@
                        Size="Size.Large"
                        ButtonType="ButtonType.Submit"
                        FullWidth="true">
-                <MudText>Register</MudText>
+                <MudText>@L["Register"]</MudText>
             </MudButton>
         </EditForm>
     </div>
@@ -162,14 +161,14 @@
             {
                 Logger.LogInformation("{UserName} created an account using {Name} provider.", Input.Email, externalLoginInfo.LoginProvider);
 
-                // if (UserManager.Options.SignIn.RequireConfirmedEmail)
-                // {
-                //     var sentResult= await Sender.Send(new UserActiviationCommand(Input.Email));
-                //     if (sentResult.Succeeded)
-                //     {
-                //         RedirectManager.RedirectTo("/pages/authentication/RegisterConfirmation", new() { ["email"] = Input.Email });
-                //     }
-                // }
+                if (UserManager.Options.SignIn.RequireConfirmedEmail)
+                {
+                    var sentResult= await Sender.Send(new UserActivationCommand(Input.Email));
+                    if (sentResult.Succeeded)
+                    {
+                        RedirectManager.RedirectTo("/pages/authentication/RegisterConfirmation", new() { ["email"] = Input.Email });
+                    }
+                }
 
                 // If account confirmation is required, we need to show the link if we don't have a real email sender
                 if (UserManager.Options.SignIn.RequireConfirmedAccount)
@@ -210,7 +209,7 @@
     {
         if (!UserManager.SupportsUserEmail)
         {
-            throw new NotSupportedException("The default UI requires a user store with email support.");
+            throw new NotSupportedException(L["The default UI requires a user store with email support."]);
         }
         return (IUserEmailStore<ApplicationUser>)UserStore;
     }

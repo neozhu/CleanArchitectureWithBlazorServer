@@ -1,6 +1,7 @@
 ﻿@page "/pages/user/register"
 
 @attribute [AllowAnonymous]
+@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.UserActivation
 @using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -14,6 +15,8 @@
 @inject IStringLocalizer<Register> L
 @inject IValidationService Validator
 @inject ILogger<Register> Logger
+@inject ISender Sender
+@inject IdentityRedirectManager RedirectManager
 <PageTitle>@Title</PageTitle>
 
 <AuthorizeView>
@@ -115,13 +118,25 @@
                     var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
                     if (assignResult.Succeeded && !string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.UserName))
                     {
-                        var response = await SendWelcome(user.Email!, user.UserName!);
-                        if (response.Successful == false)
-                        {
-                            Snackbar.Add(string.Format(L["{0}"], response.ErrorMessages.FirstOrDefault()), Severity.Warning);
-                        }
 
-                        Snackbar.Add(L["Register successfully!"], Severity.Info);
+                        if (UserManager.Options.SignIn.RequireConfirmedEmail)
+                        {
+                            var sentResult = await Sender.Send(new UserActivationCommand(user.Email));
+                            if (sentResult.Succeeded)
+                            {
+                                Snackbar.Add(string.Format(L["Activation Email Sent. Please check your email to confirm your account."], Severity.Info));
+                            }
+                        }
+                        else
+                        {
+                            Snackbar.Add(L["Register successfully!"], Severity.Info);
+                            var response = await SendWelcome(user.Email!, user.UserName!);
+                            if (response.Successful == false)
+                            {
+                                Snackbar.Add(string.Format(L["{0}"], response.ErrorMessages.FirstOrDefault()), Severity.Warning);
+                            }
+                           
+                        }
                         Navigation.NavigateTo("/pages/authentication/login", true);
                     }
                     else

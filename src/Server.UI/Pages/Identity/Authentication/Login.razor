@@ -34,13 +34,13 @@
                         <div class="mud-input-control-input-container">
                             <!--!--><!--!-->
                             <div class="mud-input mud-input-outlined mud-shrink">
-                                <InputText @bind-Value="_model.UserName" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" inputmode="text" maxlength="524288" aria-invalid="false" _bl_658="" />
-                                <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none" tabindex="-1" _bl_659=""></div>
+                                <InputText @bind-Value="_model.UserName" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" inputmode="text" maxlength="524288" aria-invalid="false"  />
+                                <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none" tabindex="-1"></div>
                                 <!--!-->
                                 <div class="mud-input-outlined-border"></div>
                             </div>
                             <!--!-->
-                            <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="mudinput-73ab4ee5-927f-4e83-a085-fb1d9fb2fba9">User Name</label>
+                            <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="mudinput-73ab4ee5-927f-4e83-a085-fb1d9fb2fba9">@L["User name"]</label>
                         </div>
                         <div class="mud-input-helper-text mud-input-error">
                             <div class="d-flex">
@@ -52,13 +52,13 @@
                         <div class="mud-input-control-input-container">
                             <!--!--><!--!-->
                             <div class="mud-input mud-input-outlined mud-shrink">
-                                <InputText type="password" @bind-Value="_model.Password" class="mud-input-slot mud-input-root mud-input-root-outlined" inputmode="text" maxlength="524288" aria-invalid="false" _bl_658="" />
-                                <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none" tabindex="-1" _bl_659=""></div>
+                                <InputText type="password" @bind-Value="_model.Password" class="mud-input-slot mud-input-root mud-input-root-outlined" inputmode="text" maxlength="524288" aria-invalid="false" />
+                                <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none" tabindex="-1"></div>
                                 <!--!-->
                                 <div class="mud-input-outlined-border"></div>
                             </div>
                             <!--!-->
-                            <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="mudinput-73ab4ee5-927f-4e83-a085-fb1d9fb2fba9">Password</label>
+                            <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="mudinput-73ab4ee5-927f-4e83-a085-fb1d9fb2fba9">@L["Password"]</label>
                         </div>
                         <div class="mud-input-helper-text mud-input-error">
                             <div class="d-flex">
@@ -74,7 +74,7 @@
                     <div Class="d-flex justify-space-between align-center mb-1">
                         <label class="form-label">
                             <InputCheckbox @bind-Value="_model.RememberMe" class="darker-border-checkbox form-check-input" />
-                            Remember me
+                            @L["Remember me"]
                         </label>
                         <MudLink Href="/pages/user/forgot-password">@L["Forgot password?"]</MudLink>
                     </div>
@@ -154,7 +154,7 @@
         }
         else
         {
-            errorMessage = "Error: Invalid login attempt.";
+            errorMessage = L["Error: Invalid login attempt."];
         }
     }
 

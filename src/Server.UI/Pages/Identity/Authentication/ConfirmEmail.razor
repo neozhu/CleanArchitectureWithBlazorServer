@@ -1,17 +1,20 @@
 ﻿@page "/pages/authentication/ConfirmEmail"
 
 @using System.Text
+@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.SendWelcome
 @using CleanArchitecture.Blazor.Domain.Identity
+@using FluentEmail.Core.Models
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 
 @inject IStringLocalizer<ConfirmEmail> L
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
+@inject ILogger<ConfirmEmail> Logger
+@inject ISender Sender
+<PageTitle>@L["Confirm email"]</PageTitle>
 
-<PageTitle>Confirm email</PageTitle>
-
-<h1>Confirm email</h1>
+<h1>@L["Confirm email"]</h1>
 <StatusMessage Message="@statusMessage" />
 <a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="/pages/authentication/login">@L["Return to Login"]</a>
 
@@ -38,13 +41,22 @@
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = $"Error loading user with ID {UserId}";
+            statusMessage =string.Format(L["Error loading user with ID {0}"],UserId);
         }
         else
         {
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
             var result = await UserManager.ConfirmEmailAsync(user, code);
-            statusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            if (result.Succeeded)
+            {
+                var sentResult = await Sender.Send(new SendWelcomeCommand(user.Email));
+                if (sentResult.Succeeded)
+                {
+                    Logger.LogInformation("{UserName} Activated Successfully!", user.Email);
+                }
+            }
+            statusMessage = result.Succeeded ? L["Thank you for confirming your email."] : L["Error confirming your email."];
         }
     }
+     
 }
