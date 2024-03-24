@@ -5,6 +5,7 @@
 @using System.Text
 @using System.Text.Encodings.Web
 @using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @using CleanArchitecture.Blazor.Server.UI.Services
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
@@ -160,6 +161,7 @@
                 Logger.LogInformation("User created an account using {Name} provider.", externalLoginInfo.LoginProvider);
 
                 var userId = await UserManager.GetUserIdAsync(user);
+                var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
                 var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
