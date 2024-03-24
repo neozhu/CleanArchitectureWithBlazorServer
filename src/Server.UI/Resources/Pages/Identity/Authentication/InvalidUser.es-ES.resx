@@ -120,4 +120,7 @@
   <data name="Invalid user" xml:space="preserve">
     <value>Usuario invalido</value>
   </data>
+  <data name="Invalid username and/or password." xml:space="preserve">
+    <value>Nombre de usuario y / o contraseña inválido.</value>
+  </data>
 </root>

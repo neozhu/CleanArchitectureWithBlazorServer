@@ -132,4 +132,7 @@
   <data name="You've successfully authenticated with {0}. Please enter an email address for this site below and click the Register button to finish logging in." xml:space="preserve">
     <value>អ្នកបានផ្ទៀងផ្ទាត់ដោយជោគជ័យជាមួយ {0}។ សូមបញ្ចូលអាសយដ្ឋានអ៊ីមែលសម្រាប់គេហទំព័រនេះខាងក្រោម ហើយចុចប៊ូតុងចុះឈ្មោះ ដើម្បីបញ្ចប់ការចូល។</value>
   </data>
+  <data name="Associate your {0} account." xml:space="preserve">
+    <value>ភ្ជាប់គណនី {0} របស់អ្នក។</value>
+  </data>
 </root>

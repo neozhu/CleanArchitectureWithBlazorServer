@@ -132,4 +132,7 @@
   <data name="You've successfully authenticated with {0}. Please enter an email address for this site below and click the Register button to finish logging in." xml:space="preserve">
     <value>Вы успешно прошли аутентификацию с помощью {0}. Пожалуйста, введите адрес электронной почты этого сайта ниже и нажмите кнопку «Зарегистрироваться», чтобы завершить вход.</value>
   </data>
+  <data name="Associate your {0} account." xml:space="preserve">
+    <value>Свяжите свою учетную запись {0}.</value>
+  </data>
 </root>

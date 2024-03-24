@@ -120,4 +120,7 @@
   <data name="Invalid user" xml:space="preserve">
     <value>잘못된 사용자</value>
   </data>
+  <data name="Invalid username and/or password." xml:space="preserve">
+    <value>사용자 이름 및/또는 비밀번호가 잘못되었습니다.</value>
+  </data>
 </root>

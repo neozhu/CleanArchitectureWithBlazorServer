@@ -120,4 +120,7 @@
   <data name="Invalid user" xml:space="preserve">
     <value>無効なユーザー</value>
   </data>
+  <data name="Invalid username and/or password." xml:space="preserve">
+    <value>ユーザー名またはパスワードが無効です。</value>
+  </data>
 </root>

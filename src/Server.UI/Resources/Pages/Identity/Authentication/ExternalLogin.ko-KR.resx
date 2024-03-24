@@ -132,4 +132,7 @@
   <data name="You've successfully authenticated with {0}. Please enter an email address for this site below and click the Register button to finish logging in." xml:space="preserve">
     <value>{0}로 성공적으로 인증되었습니다. 아래에 해당 사이트의 이메일 주소를 입력하신 후 등록 버튼을 클릭하시면 로그인이 완료됩니다.</value>
   </data>
+  <data name="Associate your {0} account." xml:space="preserve">
+    <value>{0} 계정을 연결하세요.</value>
+  </data>
 </root>

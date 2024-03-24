@@ -15,7 +15,7 @@
 <PageTitle>@L["Confirm email"]</PageTitle>
 
 <h1>@L["Confirm email"]</h1>
-<StatusMessage Message="@statusMessage" />
+<StatusMessage Message="@statusMessage" Error="@error" />
 <a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="/pages/authentication/login">@L["Return to Login"]</a>
 
 @code {
@@ -29,6 +29,7 @@
 
     [SupplyParameterFromQuery]
     private string? Code { get; set; }
+    private bool error { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,6 +43,7 @@
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
             statusMessage =string.Format(L["Error loading user with ID {0}"],UserId);
+            error = true;
         }
         else
         {
@@ -56,6 +58,7 @@
                 }
             }
             statusMessage = result.Succeeded ? L["Thank you for confirming your email."] : L["Error confirming your email."];
+            error = result.Succeeded?false:true;
         }
     }
      

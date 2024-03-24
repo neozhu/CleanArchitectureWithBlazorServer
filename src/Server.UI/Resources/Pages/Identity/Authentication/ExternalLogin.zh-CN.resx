@@ -132,4 +132,7 @@
   <data name="You've successfully authenticated with {0}. Please enter an email address for this site below and click the Register button to finish logging in." xml:space="preserve">
     <value>您已成功通过 {0} 进行身份验证。 请在下面输入此网站的电子邮件地址，然后单击“注册”按钮完成登录。</value>
   </data>
+  <data name="Associate your {0} account." xml:space="preserve">
+    <value>关联您的 {0} 帐户。</value>
+  </data>
 </root>

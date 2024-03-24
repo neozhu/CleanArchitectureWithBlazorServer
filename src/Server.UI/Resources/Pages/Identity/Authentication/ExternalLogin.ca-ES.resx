@@ -132,4 +132,7 @@
   <data name="You've successfully authenticated with {0}. Please enter an email address for this site below and click the Register button to finish logging in." xml:space="preserve">
     <value>Us heu autenticat correctament amb {0}. Introduïu una adreça de correu electrònic per a aquest lloc a continuació i feu clic al botó Registre per finalitzar la sessió.</value>
   </data>
+  <data name="Associate your {0} account." xml:space="preserve">
+    <value>Associa el teu compte de {0}.</value>
+  </data>
 </root>

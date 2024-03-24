@@ -1,7 +1,7 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Services
 @if (!string.IsNullOrEmpty(DisplayMessage))
 {
-    var statusMessageClass = DisplayMessage.StartsWith("Error") ? "error" : "success";
+    var statusMessageClass = Error ? "error" : "success";
     <div class="mud-alert mud-alert-text-@statusMessageClass" role="alert">
         @DisplayMessage
     </div>
@@ -12,6 +12,8 @@
 
     [Parameter]
     public string? Message { get; set; }
+    [Parameter]
+    public bool Error { get; set; }
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -20,11 +22,14 @@
 
     protected override void OnInitialized()
     {
-        messageFromCookie = HttpContext.Request.Cookies[IdentityRedirectManager.StatusCookieName];
-
-        if (messageFromCookie is not null)
+        if (HttpContext is not null)
         {
-            HttpContext.Response.Cookies.Delete(IdentityRedirectManager.StatusCookieName);
+            messageFromCookie = HttpContext.Request.Cookies[IdentityRedirectManager.StatusCookieName];
+
+            if (messageFromCookie is not null)
+            {
+                HttpContext.Response.Cookies.Delete(IdentityRedirectManager.StatusCookieName);
+            }
         }
     }
 }

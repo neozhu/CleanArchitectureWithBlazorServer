@@ -132,4 +132,7 @@
   <data name="You've successfully authenticated with {0}. Please enter an email address for this site below and click the Register button to finish logging in." xml:space="preserve">
     <value>{0} で認証に成功しました。 以下にこのサイトのメールアドレスを入力し、「登録」ボタンをクリックしてログインを完了してください。</value>
   </data>
+  <data name="Associate your {0} account." xml:space="preserve">
+    <value>{0} アカウントを関連付けます。</value>
+  </data>
 </root>

@@ -120,4 +120,7 @@
   <data name="Invalid user" xml:space="preserve">
     <value>无效的用户</value>
   </data>
+  <data name="Invalid username and/or password." xml:space="preserve">
+    <value>用户名和/或密码无效。</value>
+  </data>
 </root>
