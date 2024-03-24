@@ -18,12 +18,7 @@ using FluentEmail.MailKitSmtp;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -195,6 +190,7 @@ public static class DependencyInjection
             // Default SignIn settings.
             options.SignIn.RequireConfirmedEmail = false;
             options.SignIn.RequireConfirmedPhoneNumber = false;
+            options.SignIn.RequireConfirmedAccount = false;
 
             // User settings
             options.User.RequireUniqueEmail = true;
@@ -223,24 +219,24 @@ public static class DependencyInjection
             {
 
                 microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId");
-                microsoftOptions.ClientSecret =  configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
-                //microsoftOptions.CallbackPath = new PathString("/pages/authentication/ExternalLogin"); # don't set CallbackPath
+                microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
+                //microsoftOptions.CallbackPath = new PathString("/pages/authentication/ExternalLogin"); # dotn't set this parameter!!
                 // That's for personal account authentication flow
-                microsoftOptions.AuthorizationEndpoint = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize";
-                microsoftOptions.TokenEndpoint = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
-                microsoftOptions.CorrelationCookie.SameSite = SameSiteMode.Lax;
+                //microsoftOptions.AuthorizationEndpoint = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize";
+                //microsoftOptions.TokenEndpoint = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
+                //microsoftOptions.CorrelationCookie.SameSite = SameSiteMode.Lax;
             })
             .AddGoogle(googleOptions =>
                 {
-                    googleOptions.ClientId = "";
-                    googleOptions.ClientSecret = "";
+                    googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId");
+                    googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret");
                 }
                 )
             .AddFacebook(facebookOptions =>
             {
-                facebookOptions.AppId = "";
-                facebookOptions.AppSecret = "";
-          
+                facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId");
+                facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret");
+
             })
             .AddIdentityCookies(options => 
             {

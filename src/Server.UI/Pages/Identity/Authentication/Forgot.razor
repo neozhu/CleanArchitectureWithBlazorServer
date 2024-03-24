@@ -1,4 +1,4 @@
-﻿@page "/pages/authentication/forgot-password"
+﻿@page "/pages/user/forgot-password"
 
 @attribute [AllowAnonymous]
 @using Severity = Severity
@@ -67,7 +67,7 @@
                 config.HideTransitionDuration = 5000;
             });
             Logger.LogInformation("Password reset token sent to {0}.", _emailAddress);
-            NavigationManager.NavigateTo("/pages/authentication/mailsentconfirm");
+            NavigationManager.NavigateTo("/pages/user/mailsentconfirm");
         }
         else
         {

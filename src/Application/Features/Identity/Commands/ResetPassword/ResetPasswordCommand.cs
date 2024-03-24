@@ -35,7 +35,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         //var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_recoverypassword.txt");
-        RequestUrl = $"{_settings.ApplicationUrl}/pages/authentication/reset-password/{user.Id}?token={HttpUtility.UrlEncode(resetPasswordToken)}";
+        RequestUrl = $"{_settings.ApplicationUrl}/pages/user/reset-password/{user.Id}?token={HttpUtility.UrlEncode(resetPasswordToken)}";
          var sendMailResult = await _mailService.SendAsync(
             request.Email,
             _localizer["Verify your recovery email"],
