@@ -12,7 +12,7 @@ internal sealed class IdentityUserAccessor(UserManager<ApplicationUser> userMana
 
         if (user is null)
         {
-            redirectManager.RedirectToWithStatus("Account/InvalidUser", $"Error: Unable to load user with ID '{userManager.GetUserId(context.User)}'.", context);
+            redirectManager.RedirectToWithStatus("/pages/authentication/InvalidUser", $"Error: Unable to load user with ID '{userManager.GetUserId(context.User)}'.", context);
         }
 
         return user;

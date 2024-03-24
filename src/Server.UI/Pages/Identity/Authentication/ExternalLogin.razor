@@ -1,4 +1,4 @@
-﻿@page "/pages/authentication/externallogin1"
+﻿@page "/pages/authentication/externallogin"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
@@ -35,12 +35,29 @@
         <EditForm Model="Input" OnValidSubmit="OnValidSubmitAsync" FormName="confirmation" method="post">
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="email" placeholder="Please enter your email." />
-                <label for="email" class="form-label">Email</label>
-                <ValidationMessage For="() => Input.Email" />
+            <div class="mud-input-control mud-input-input-control my-4">
+                <div class="mud-input-control-input-container">
+                    <!--!--><!--!-->
+                    <div class="mud-input mud-input-outlined mud-shrink">
+                        <InputText type="text" @bind-Value="Input.Email" class="mud-input-slot mud-input-root mud-input-root-outlined" inputmode="text" maxlength="524288" aria-invalid="false" _bl_658="" />
+                        <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none" tabindex="-1" _bl_659=""></div>
+                        <!--!-->
+                        <div class="mud-input-outlined-border"></div>
+                    </div>
+                    <!--!-->
+                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="mudinput-73ab4ee5-927f-4e83-a085-fb1d9fb2fba9">Email</label>
+                </div>
+                <div class="mud-input-control-helper-container">
+                    <ValidationMessage For="() => Input.Email" class="mud-input-error" />
+                </div>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       ButtonType="ButtonType.Submit"
+                       FullWidth="true">
+                <MudText>Register</MudText>
+            </MudButton>
         </EditForm>
     </div>
 </div>
@@ -72,13 +89,13 @@
     {
         if (RemoteError is not null)
         {
-            RedirectManager.RedirectToWithStatus("Account/Login", $"Error from external provider: {RemoteError}", HttpContext);
+            RedirectManager.RedirectToWithStatus("/pages/authentication/login", $"Error from external provider: {RemoteError}", HttpContext);
         }
 
         var info = await SignInManager.GetExternalLoginInfoAsync();
         if (info is null)
         {
-            RedirectManager.RedirectToWithStatus("Account/Login", "Error loading external login information.", HttpContext);
+            RedirectManager.RedirectToWithStatus("/pages/authentication/login", "Error loading external login information.", HttpContext);
         }
 
         externalLoginInfo = info;
@@ -93,7 +110,7 @@
 
             // We should only reach this page via the login callback, so redirect back to
             // the login page if we get here some other way.
-            RedirectManager.RedirectTo("Account/Login");
+            RedirectManager.RedirectTo("/pages/authentication/login");
         }
     }
 
@@ -104,7 +121,7 @@
             externalLoginInfo.LoginProvider,
             externalLoginInfo.ProviderKey,
             isPersistent: false,
-            bypassTwoFactor: true);
+            bypassTwoFactor: false);
 
         if (result.Succeeded)
         {
@@ -116,7 +133,7 @@
         }
         else if (result.IsLockedOut)
         {
-            RedirectManager.RedirectTo("Account/Lockout");
+            RedirectManager.RedirectTo("/pages/authentication/lockout");
         }
 
         // If the user does not have an account, then ask the user to create an account.

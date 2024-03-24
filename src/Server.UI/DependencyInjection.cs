@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Reflection;
 using BlazorDownloadFile;
+using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Server.Hubs;
 using CleanArchitecture.Blazor.Server.Middlewares;
@@ -13,6 +14,7 @@ using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using MudExtensions.Services;
@@ -57,7 +59,7 @@ public static class DependencyInjection
 
         services.AddHttpContextAccessor();
         services.AddScoped<HubClient>();
-        
+        services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
         services.AddMudExtensions()
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()
@@ -88,11 +90,15 @@ public static class DependencyInjection
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
+
         app.UseStatusCodePagesWithRedirects("/404");
         app.MapHealthChecks("/health");
+    
+        app.UseAuthentication();
+        app.UseAntiforgery();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-        app.UseAntiforgery();
+     
         if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
             Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
 

@@ -175,8 +175,6 @@ public static class DependencyInjection
             .AddSignInManager()
             .AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>()
             .AddDefaultTokenProviders();
-          
-
         services.Configure<IdentityOptions>(options =>
         {
             var identitySettings = configuration.GetRequiredSection(IdentitySettings.Key).Get<IdentitySettings>();
@@ -224,11 +222,13 @@ public static class DependencyInjection
             .AddMicrosoftAccount(microsoftOptions =>
             {
 
-                microsoftOptions.ClientId = "";// configuration.GetValue<string>("Authentication:Microsoft:ClientId");
-                microsoftOptions.ClientSecret = "";// configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
-                microsoftOptions.CallbackPath = "/pages/authentication/ExternalLogin";
-                microsoftOptions.AccessDeniedPath = "/";
-                microsoftOptions.SaveTokens = true;
+                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId");
+                microsoftOptions.ClientSecret =  configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
+                //microsoftOptions.CallbackPath = new PathString("/pages/authentication/ExternalLogin"); # don't set CallbackPath
+                // That's for personal account authentication flow
+                microsoftOptions.AuthorizationEndpoint = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize";
+                microsoftOptions.TokenEndpoint = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
+                microsoftOptions.CorrelationCookie.SameSite = SameSiteMode.Lax;
             })
             .AddGoogle(googleOptions =>
                 {
@@ -240,7 +240,7 @@ public static class DependencyInjection
             {
                 facebookOptions.AppId = "";
                 facebookOptions.AppSecret = "";
-                facebookOptions.CallbackPath = "/pages/authentication/ExternalLogin";
+          
             })
             .AddIdentityCookies(options => 
             {
@@ -249,7 +249,7 @@ public static class DependencyInjection
 
 
 
-        services.ConfigureApplicationCookie(options => { options.LoginPath = "/pages/authentication/login"; });
+        services.ConfigureApplicationCookie(options => { options.LoginPath = "/pages/authentication/login";});
         services.AddSingleton<UserService>()
             .AddSingleton<IUserService>(sp =>
             {

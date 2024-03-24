@@ -3,13 +3,12 @@
 
 using System.Collections.Concurrent;
 using CleanArchitecture.Blazor.Server.Common.Interfaces;
-using DocumentFormat.OpenXml.CustomXmlSchemaReferences;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace CleanArchitecture.Blazor.Server.Hubs;
 
-[Authorize]
+[Authorize(AuthenticationSchemes = "Identity.Application")]
 public class ServerHub : Hub<ISignalRHub>
 {
     private static readonly ConcurrentDictionary<string, string> OnlineUsers = new();
