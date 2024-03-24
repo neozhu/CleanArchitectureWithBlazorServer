@@ -27,7 +27,7 @@
             <MudText>
                 @L["Have an account?"] <MudLink Href="/pages/authentication/login">@L["Sign In"]</MudLink>
             </MudText>
-
+            <StatusMessage Error="true" Message="@message"></StatusMessage>
             <MudTextField T="string"
                           Immediate="true"
                           Label="@L["User Name"]"
@@ -92,6 +92,7 @@
 
 @code {
     private string Title = "Sign Up";
+    private string? message;
     private MudForm? _form;
     private bool _loading;
     private readonly RegisterFormModel _model = new();
@@ -126,6 +127,12 @@
                             if (sentResult.Succeeded)
                             {
                                 Snackbar.Add(string.Format(L["Activation Email Sent. Please check your email to confirm your account."], Severity.Info));
+                                Navigation.NavigateTo("/pages/authentication/login", true);
+                            }
+                            else
+                            {
+                                Snackbar.Add(string.Format(L["{0}"], sentResult.Errors.FirstOrDefault()), Severity.Error);
+                                message = sentResult.Errors.FirstOrDefault();
                             }
                         }
                         else
@@ -136,15 +143,16 @@
                             {
                                 Snackbar.Add(string.Format(L["{0}"], response.Errors.FirstOrDefault()), Severity.Warning);
                             }
-                           
+                            Navigation.NavigateTo("/pages/authentication/login", true);
                         }
-                        Navigation.NavigateTo("/pages/authentication/login", true);
+                        Logger.LogInformation("New user registration succeeded. Username: {@UserName:l}, UserId: {@UserId}", user.UserName, user.Id);
+  
                     }
                     else
                     {
                         Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", Severity.Error);
                     }
-                    Logger.LogInformation("New user registration succeeded. Username: {@UserName:l}, UserId: {@UserId}", user.UserName, user.Id);
+                    
                 }
                 else
                 {
