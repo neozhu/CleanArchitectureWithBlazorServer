@@ -1,6 +1,7 @@
 ﻿@page "/pages/user/register"
 
 @attribute [AllowAnonymous]
+@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.SendWelcome
 @using CleanArchitecture.Blazor.Application.Features.Identity.Commands.UserActivation
 @using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Common.Security
@@ -130,10 +131,10 @@
                         else
                         {
                             Snackbar.Add(L["Register successfully!"], Severity.Info);
-                            var response = await SendWelcome(user.Email!, user.UserName!);
-                            if (response.Successful == false)
+                            var response = await Sender.Send(new SendWelcomeCommand(user.Email));
+                            if (response.Succeeded == false)
                             {
-                                Snackbar.Add(string.Format(L["{0}"], response.ErrorMessages.FirstOrDefault()), Severity.Warning);
+                                Snackbar.Add(string.Format(L["{0}"], response.Errors.FirstOrDefault()), Severity.Warning);
                             }
                            
                         }
@@ -157,11 +158,6 @@
         }
     }
 
-    private Task<SendResponse> SendWelcome(string toEmail, string userName)
-    {
-        var subject = string.Format(L["Welcome to {0}"], ApplicationSettings.AppName);
-        var LoginUrl = $"{ApplicationSettings.ApplicationUrl}/pages/authentication/login";
-        return MailService.SendAsync(toEmail, subject, "_welcome", new { LoginUrl, ApplicationSettings.AppName, Email = toEmail, UserName = userName, ApplicationSettings.Company });
-    }
+     
 
 }
