@@ -188,9 +188,9 @@ public static class DependencyInjection
             options.Lockout.AllowedForNewUsers = true;
 
             // Default SignIn settings.
-            options.SignIn.RequireConfirmedEmail = false;
+            options.SignIn.RequireConfirmedEmail = true;
             options.SignIn.RequireConfirmedPhoneNumber = false;
-            options.SignIn.RequireConfirmedAccount = false;
+            options.SignIn.RequireConfirmedAccount = true;
 
             // User settings
             options.User.RequireUniqueEmail = true;

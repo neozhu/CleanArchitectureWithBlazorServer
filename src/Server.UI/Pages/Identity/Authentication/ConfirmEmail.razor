@@ -5,7 +5,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 
-
+@inject IStringLocalizer<ConfirmEmail> L
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 
@@ -13,6 +13,7 @@
 
 <h1>Confirm email</h1>
 <StatusMessage Message="@statusMessage" />
+<a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="/pages/authentication/login">@L["Return to Login"]</a>
 
 @code {
     private string? statusMessage;
