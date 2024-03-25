@@ -1,7 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +13,8 @@ namespace CleanArchitecture.Blazor.Server.UI.Services;
 
 internal static class IdentityComponentsEndpointRouteBuilderExtensions
 {
+    public static readonly string PerformExternalLogin = "/pages/authentication/performexternallogin";
+    public static readonly string Logout = "/pages/authentication/logout";
     // These endpoints are required by the Identity Razor components defined in the /Components/Account/Pages directory of this project.
     public static IEndpointConventionBuilder MapAdditionalIdentityEndpoints(this IEndpointRouteBuilder endpoints)
     {
@@ -21,7 +22,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
         var accountGroup = endpoints.MapGroup("/pages/authentication");
 
-        accountGroup.MapPost("/PerformExternalLogin", (
+        accountGroup.MapPost("/performexternallogin", (
             HttpContext context,
             [FromServices] SignInManager<ApplicationUser> signInManager,
             [FromForm] string provider,
@@ -41,7 +42,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
         });
 
         
-        accountGroup.MapPost("/Logout", async (
+        accountGroup.MapPost("/logout", async (
             ClaimsPrincipal user,
             SignInManager<ApplicationUser> signInManager,
             [FromForm] string returnUrl) =>

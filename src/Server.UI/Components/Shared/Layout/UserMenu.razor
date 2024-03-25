@@ -61,7 +61,7 @@
                     </div>
                 </MudMenuItem>
                 <div class="mt-4 mx-4">
-                    <form action="/pages/authentication/Logout" method="post">
+                    <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="/" />
                         <MudButton Color="Color.Secondary"

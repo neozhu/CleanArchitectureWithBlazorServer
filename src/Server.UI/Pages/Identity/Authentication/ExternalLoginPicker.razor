@@ -19,7 +19,7 @@ else
     <div>
 
     </div>
-    <form class="form-horizontal" action="/pages/authentication/PerformExternalLogin" method="post">
+    <form class="form-horizontal" action="@IdentityComponentsEndpointRouteBuilderExtensions.PerformExternalLogin" method="post">
         <div>
             <AntiforgeryToken />
             <input type="hidden" name="ReturnUrl" value="@ReturnUrl" />
