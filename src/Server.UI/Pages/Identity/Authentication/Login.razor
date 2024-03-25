@@ -34,7 +34,7 @@
                         <div class="mud-input-control-input-container">
                             <!--!--><!--!-->
                             <div class="mud-input mud-input-outlined mud-shrink">
-                                <InputText @bind-Value="_model.UserName" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" inputmode="text" maxlength="524288" aria-invalid="false"  />
+                                <InputText @bind-Value="_model.UserName" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                                 <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none" tabindex="-1"></div>
                                 <!--!-->
                                 <div class="mud-input-outlined-border"></div>
@@ -52,7 +52,7 @@
                         <div class="mud-input-control-input-container">
                             <!--!--><!--!-->
                             <div class="mud-input mud-input-outlined mud-shrink">
-                                <InputText type="password" @bind-Value="_model.Password" class="mud-input-slot mud-input-root mud-input-root-outlined" inputmode="text" maxlength="524288" aria-invalid="false" />
+                                <InputText type="password" @bind-Value="_model.Password" class="mud-input-slot mud-input-root mud-input-root-outlined" autocomplete="current-password" aria-required="true" placeholder="password" />
                                 <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none" tabindex="-1"></div>
                                 <!--!-->
                                 <div class="mud-input-outlined-border"></div>
@@ -82,7 +82,6 @@
                     <MudButton Variant="Variant.Filled"
                                Color="Color.Primary"
                                Size="Size.Large"
-                               Disabled="@(_loading)"
                                ButtonType="ButtonType.Submit"
                                FullWidth="true">
                         <MudText>@L["Sign In"]</MudText>
@@ -110,9 +109,6 @@
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
     private string _title = "Sign In";
-    private MudForm? _form;
-    private bool _success;
-    private bool _loading;
     private AuthenticationScheme[] externalLogins = [];
     [SupplyParameterFromForm]
     private LoginFormModel _model { get; set; } = new()
@@ -124,7 +120,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-
+        _title = L["Sign In"];
         if (HttpContext is not null && HttpMethods.IsGet(HttpContext.Request.Method))
         {
             // Clear the existing external cookie to ensure a clean login process
