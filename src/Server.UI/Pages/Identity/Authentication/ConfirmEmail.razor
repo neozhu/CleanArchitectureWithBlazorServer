@@ -1,4 +1,4 @@
-﻿@page "/pages/authentication/ConfirmEmail"
+﻿@page "/pages/authentication/confirmemail"
 
 @using System.Text
 @using CleanArchitecture.Blazor.Application.Features.Identity.Commands.SendWelcome
@@ -16,9 +16,10 @@
 
 <h1>@L["Confirm email"]</h1>
 <StatusMessage Message="@statusMessage" Error="@error" />
-<a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="/pages/authentication/login">@L["Return to Login"]</a>
+<a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@Login.PageUrl">@L["Return to Login"]</a>
 
 @code {
+    public const string PageUrl = "/pages/authentication/confirmemail";
     private string? statusMessage;
 
     [CascadingParameter]

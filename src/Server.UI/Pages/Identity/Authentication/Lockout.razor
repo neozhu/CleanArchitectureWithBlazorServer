@@ -1,4 +1,4 @@
-﻿@page "/pages/authentication/Lockout"
+﻿@page "/pages/authentication/lockout"
 @inject IStringLocalizer<Lockout> L
 <PageTitle>@L["Locked out"]</PageTitle>
 
@@ -6,3 +6,7 @@
     <h1 class="text-danger">@L["Locked out"]</h1>
     <p class="text-danger">@L["This account has been locked out, please try again later."]</p>
 </header>
+
+@code {
+    public const string PageUrl = "/pages/authentication/lockout";
+}

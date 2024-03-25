@@ -25,7 +25,7 @@
         <MudForm Model="@_model" @ref="@_form" Validation="@(Validator.ValidateValue(_model))">
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
             <MudText>
-                @L["Have an account?"] <MudLink Href="/pages/authentication/login">@L["Sign In"]</MudLink>
+                @L["Have an account?"] <MudLink Href="@Login.PageUrl">@L["Sign In"]</MudLink>
             </MudText>
             <StatusMessage Error="true" Message="@message"></StatusMessage>
             <MudTextField T="string"
@@ -91,6 +91,8 @@
 </AuthorizeView>
 
 @code {
+
+    public const string PageUrl = "/pages/user/register";
     private string Title = "Sign Up";
     private string? message;
     private MudForm? _form;
@@ -127,7 +129,7 @@
                             if (sentResult.Succeeded)
                             {
                                 Snackbar.Add(string.Format(L["Activation Email Sent. Please check your email to confirm your account."], Severity.Info));
-                                Navigation.NavigateTo("/pages/authentication/login", true);
+                                Navigation.NavigateTo(Login.PageUrl, true);
                             }
                             else
                             {
@@ -143,16 +145,16 @@
                             {
                                 Snackbar.Add(string.Format(L["{0}"], response.Errors.FirstOrDefault()), Severity.Warning);
                             }
-                            Navigation.NavigateTo("/pages/authentication/login", true);
+                            Navigation.NavigateTo(Login.PageUrl, true);
                         }
                         Logger.LogInformation("New user registration succeeded. Username: {@UserName:l}, UserId: {@UserId}", user.UserName, user.Id);
-  
+
                     }
                     else
                     {
                         Snackbar.Add($"{string.Join(",", result.Errors.Select(x => x.Description))}", Severity.Error);
                     }
-                    
+
                 }
                 else
                 {
@@ -166,6 +168,6 @@
         }
     }
 
-     
+
 
 }

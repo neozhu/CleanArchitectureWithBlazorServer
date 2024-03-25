@@ -27,7 +27,7 @@
                     <DataAnnotationsValidator />
                     <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
                     <MudText>
-                        @L["Don't have an account?"] <MudLink Href="/pages/user/register" Target="_self">@L["Sign Up"]</MudLink>
+                        @L["Don't have an account?"] <MudLink Href="@Register.PageUrl" Target="_self">@L["Sign Up"]</MudLink>
                     </MudText>
                     <StatusMessage Message="@errorMessage" Error="true" />
                     <div class="mud-input-control mud-input-input-control my-4">
@@ -76,7 +76,7 @@
                             <InputCheckbox @bind-Value="_model.RememberMe" class="darker-border-checkbox form-check-input" />
                             @L["Remember me"]
                         </label>
-                        <MudLink Href="/pages/user/forgot-password">@L["Forgot password?"]</MudLink>
+                        <MudLink Href="@Forgot.PageUrl">@L["Forgot password?"]</MudLink>
                     </div>
 
                     <MudButton Variant="Variant.Filled"
@@ -103,6 +103,7 @@
     </Authorized>
 </AuthorizeView>
 @code {
+    public const string PageUrl = "/pages/authentication/login";
     private string? errorMessage;
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
@@ -150,7 +151,7 @@
         else if (result.IsLockedOut)
         {
             Logger.LogWarning($"{_model.UserName} account locked out.");
-            RedirectManager.RedirectTo("Account/Lockout");
+            RedirectManager.RedirectTo(Lockout.PageUrl);
         }
         else
         {

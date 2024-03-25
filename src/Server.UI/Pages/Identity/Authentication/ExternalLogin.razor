@@ -62,6 +62,7 @@
 </div>
 
 @code {
+    public const string PageUrl = "/pages/authentication/externallogin";
     public const string LoginCallbackAction = "LoginCallback";
 
     private string? message;
@@ -88,13 +89,13 @@
     {
         if (RemoteError is not null)
         {
-            RedirectManager.RedirectToWithStatus("/pages/authentication/login", $"Error from external provider: {RemoteError}", HttpContext);
+            RedirectManager.RedirectToWithStatus(Login.PageUrl, $"Error from external provider: {RemoteError}", HttpContext);
         }
 
         var info = await SignInManager.GetExternalLoginInfoAsync();
         if (info is null)
         {
-            RedirectManager.RedirectToWithStatus("/pages/authentication/login", "Error loading external login information.", HttpContext);
+            RedirectManager.RedirectToWithStatus(Login.PageUrl, "Error loading external login information.", HttpContext);
         }
 
         externalLoginInfo = info;
@@ -109,7 +110,7 @@
 
             // We should only reach this page via the login callback, so redirect back to
             // the login page if we get here some other way.
-            RedirectManager.RedirectTo("/pages/authentication/login");
+            RedirectManager.RedirectTo(Login.PageUrl);
         }
     }
 
@@ -132,7 +133,7 @@
         }
         else if (result.IsLockedOut)
         {
-            RedirectManager.RedirectTo("/pages/authentication/lockout");
+            RedirectManager.RedirectTo(Lockout.PageUrl);
         }
 
         // If the user does not have an account, then ask the user to create an account.
@@ -163,7 +164,7 @@
                     var sentResult= await Sender.Send(new UserActivationCommand(Input.Email));
                     if (sentResult.Succeeded)
                     {
-                        RedirectManager.RedirectTo("/pages/authentication/RegisterConfirmation", new() { ["email"] = Input.Email });
+                        RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new() { ["email"] = Input.Email });
                     }
                 }
 
@@ -176,9 +177,9 @@
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
                     var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-                        NavigationManager.ToAbsoluteUri("/pages/authentication/ConfirmEmail").AbsoluteUri,
+                        NavigationManager.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
                         new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
-                    RedirectManager.RedirectTo("/pages/authentication/RegisterConfirmation", new() { ["email"] = Input.Email, ["EmailConfirmationLink"] = callbackUrl });
+                    RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new() { ["email"] = Input.Email, ["EmailConfirmationLink"] = callbackUrl });
                 }
 
                 await SignInManager.SignInAsync(user, isPersistent: false, externalLoginInfo.LoginProvider);
