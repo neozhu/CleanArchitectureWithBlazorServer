@@ -2,8 +2,12 @@
 @if (!string.IsNullOrEmpty(DisplayMessage))
 {
     var statusMessageClass = Error ? "error" : "success";
-    <div class="mud-alert mud-alert-text-@statusMessageClass" role="alert">
-        @DisplayMessage
+    <div class="mud-alert mud-alert-text-@statusMessageClass mud-elevation-0" role="alert">
+        <div class="mud-alert-position justify-sm-start">
+            <div class="mud-alert-message">
+                @DisplayMessage
+            </div>
+        </div>
     </div>
 }
 

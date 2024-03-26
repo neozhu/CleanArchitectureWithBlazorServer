@@ -82,7 +82,7 @@
         var response = await Sender.Send(new ResetPasswordCommand(Input.Email));
         if (response.Succeeded)
         {
-            Logger.LogInformation("Rest assword reset email sent to {0}.", Input.Email);
+            Logger.LogInformation("Rest password email sent to {0}.", Input.Email);
             RedirectManager.RedirectTo(ForgotPasswordConfirmation.PageUrl);
         }
         else
