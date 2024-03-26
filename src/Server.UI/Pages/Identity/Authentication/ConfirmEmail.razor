@@ -13,11 +13,11 @@
 @inject ILogger<ConfirmEmail> Logger
 @inject ISender Sender
 <PageTitle>@L["Confirm email"]</PageTitle>
-
-<h1>@L["Confirm email"]</h1>
-<StatusMessage Message="@statusMessage" Error="@error" />
-<a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@Login.PageUrl">@L["Return to Login"]</a>
-
+<div class="d-flex flex-column gap-y-3">
+    <MudText Typo="Typo.h4" GutterBottom="true">@L["Confirm email"]</MudText>
+    <StatusMessage Message="@statusMessage" Error="@error" />
+    <a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@Login.PageUrl">@L["Return to Login"]</a>
+</div>
 @code {
     public const string PageUrl = "/pages/authentication/confirmemail";
     private string? statusMessage;
@@ -43,7 +43,7 @@
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage =string.Format(L["Error loading user with ID {0}"],UserId);
+            statusMessage = string.Format(L["Error loading user with ID {0}"], UserId);
             error = true;
         }
         else
@@ -59,8 +59,8 @@
                 }
             }
             statusMessage = result.Succeeded ? L["Thank you for confirming your email."] : L["Error confirming your email."];
-            error = result.Succeeded?false:true;
+            error = result.Succeeded ? false : true;
         }
     }
-     
+
 }

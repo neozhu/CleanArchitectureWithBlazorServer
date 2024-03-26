@@ -221,10 +221,6 @@ public static class DependencyInjection
                 microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId");
                 microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
                 //microsoftOptions.CallbackPath = new PathString("/pages/authentication/ExternalLogin"); # dotn't set this parameter!!
-                // That's for personal account authentication flow
-                //microsoftOptions.AuthorizationEndpoint = "https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize";
-                //microsoftOptions.TokenEndpoint = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token";
-                //microsoftOptions.CorrelationCookie.SameSite = SameSiteMode.Lax;
             })
             .AddGoogle(googleOptions =>
                 {
