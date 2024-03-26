@@ -23,13 +23,13 @@
 
 <MudText Typo="Typo.h4" GutterBottom="true">@L["External Login"]</MudText>
 <MudText Typo="Typo.h6" GutterBottom="true">@string.Format(L["Associate your {0} account."], ProviderDisplayName)</MudText>
-<MudDivider />
-<MudAlert Severity="MudBlazor.Severity.Info"> @string.Format(L["You've successfully authenticated with {0}. Please enter an email address for this site below and click the Register button to finish logging in."], ProviderDisplayName)</MudAlert>
+
+<MudText Typo="Typo.body1"> @string.Format(L["You've successfully authenticated with {0}. Please enter an email address for this site below and click the Register button to finish logging in."], ProviderDisplayName)</MudText>
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
         <EditForm Model="Input" OnValidSubmit="OnValidSubmitAsync" FormName="confirmation" method="post">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
+            <StatusMessage Message="@message" Error="true" />
             <div class="mud-input-control mud-input-input-control my-4">
                 <div class="mud-input-control-input-container">
                     <div class="mud-input mud-input-outlined mud-shrink">
@@ -162,9 +162,8 @@
                         RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new() { ["email"] = Input.Email });
                     }
                 }
-
                 // If account confirmation is required, we need to show the link if we don't have a real email sender
-                if (UserManager.Options.SignIn.RequireConfirmedAccount)
+                else if (UserManager.Options.SignIn.RequireConfirmedAccount)
                 {
                     var userId = await UserManager.GetUserIdAsync(user);
                     var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
@@ -177,7 +176,7 @@
                     RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new() { ["email"] = Input.Email, ["EmailConfirmationLink"] = callbackUrl });
                 }
 
-                await SignInManager.SignInAsync(user, isPersistent: false, externalLoginInfo.LoginProvider);
+                await SignInManager.SignInAsync(user, isPersistent: true, externalLoginInfo.LoginProvider);
                 RedirectManager.RedirectTo(ReturnUrl);
             }
         }

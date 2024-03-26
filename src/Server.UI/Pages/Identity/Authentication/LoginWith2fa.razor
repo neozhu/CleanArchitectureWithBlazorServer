@@ -4,7 +4,7 @@
 @using CleanArchitecture.Blazor.Domain.Identity
 @using Microsoft.AspNetCore.Identity
 
-
+@inject IStringLocalizer<LoginWith2fa> L
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
@@ -14,8 +14,8 @@
 <MudText Typo="Typo.h4" GutterBottom="true">@L["Two-factor authentication"]</MudText>
 <MudDivider />
 
+<MudText Typo="Typo.body1">@L["Your login is protected with an authenticator app. Enter your authenticator code below."]</MudText>
 
-<p>Your login is protected with an authenticator app. Enter your authenticator code below.</p>
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
         <EditForm Model="Input" FormName="login-with-2fa" OnValidSubmit="OnValidSubmitAsync" method="post">
@@ -83,7 +83,7 @@
     {
         // Ensure the user has gone through the username & password screen first
         user = await SignInManager.GetTwoFactorAuthenticationUserAsync() ??
-            throw new InvalidOperationException("Unable to load two-factor authentication user.");
+            throw new InvalidOperationException(L["Unable to load two-factor authentication user."]);
     }
 
     private async Task OnValidSubmitAsync()
@@ -105,7 +105,7 @@
         else
         {
             Logger.LogWarning("Invalid authenticator code entered for user with ID '{UserId}'.", userId);
-            message = "Error: Invalid authenticator code.";
+            message = L["Error: Invalid authenticator code."];
         }
     }
 

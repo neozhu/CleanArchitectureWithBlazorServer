@@ -117,22 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Check Your Inbox" xml:space="preserve">
-    <value>Check Your Inbox</value>
+  <data name="Error: Invalid recovery code entered." xml:space="preserve">
+    <value>Error: Invalid recovery code entered.</value>
   </data>
-  <data name="We've sent an email to the address you provided. Please check your inbox for a link to reset your password. If you don't see the email, be sure to check your spam or junk folder." xml:space="preserve">
-    <value>We've sent an email to the address you provided. Please check your inbox for a link to reset your password. If you don't see the email, be sure to check your spam or junk folder.</value>
+  <data name="Recovery Code" xml:space="preserve">
+    <value>Recovery Code</value>
   </data>
-  <data name="Resend Email" xml:space="preserve">
-    <value>Resend Email</value>
+  <data name="Recovery code verification" xml:space="preserve">
+    <value>Recovery code verification</value>
   </data>
-  <data name="Return to Login" xml:space="preserve">
-    <value>Return to Login</value>
+  <data name="Sign In" xml:space="preserve">
+    <value>Sign In</value>
   </data>
-  <data name="You are already logged in." xml:space="preserve">
-    <value>You are already logged in.</value>
+  <data name="Unable to load two-factor authentication user." xml:space="preserve">
+    <value>Unable to load two-factor authentication user.</value>
   </data>
-  <data name="Email Sent Confirmation" xml:space="preserve">
-    <value>Email Sent Confirmation</value>
+  <data name="You have requested to log in with a recovery code. This login will not be remembered until you provide an authenticator app code at log in or disable 2FA and log in again." xml:space="preserve">
+    <value>You have requested to log in with a recovery code. This login will not be remembered until you provide an authenticator app code at log in or disable 2FA and log in again.</value>
   </data>
 </root>

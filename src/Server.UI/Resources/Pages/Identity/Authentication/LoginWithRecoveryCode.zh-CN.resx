@@ -117,22 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Check Your Inbox" xml:space="preserve">
-    <value>Проверьте ваш почтовый ящик</value>
+  <data name="Error: Invalid recovery code entered." xml:space="preserve">
+    <value>错误：输入的恢复代码无效。</value>
   </data>
-  <data name="Email Sent Confirmation" xml:space="preserve">
-    <value>Подтверждение отправки электронной почты</value>
+  <data name="Recovery Code" xml:space="preserve">
+    <value>恢复代码</value>
   </data>
-  <data name="Resend Email" xml:space="preserve">
-    <value>Повторно отправить электронное письмо</value>
+  <data name="Recovery code verification" xml:space="preserve">
+    <value>恢复码验证</value>
   </data>
-  <data name="Return to Login" xml:space="preserve">
-    <value>Вернуться к входу</value>
+  <data name="Sign In" xml:space="preserve">
+    <value>登入</value>
   </data>
-  <data name="We've sent an email to the address you provided. Please check your inbox for a link to reset your password. If you don't see the email, be sure to check your spam or junk folder." xml:space="preserve">
-    <value>Мы отправили электронное письмо на указанный вами адрес. Пожалуйста, проверьте свой почтовый ящик на наличие ссылки для сброса пароля. Если вы не видите письмо, обязательно проверьте папку «Спам» или «Нежелательная почта».</value>
+  <data name="Unable to load two-factor authentication user." xml:space="preserve">
+    <value>无法加载双因素身份验证用户。</value>
   </data>
-  <data name="You are already logged in." xml:space="preserve">
-    <value>Вы уже вошли в систему.</value>
+  <data name="You have requested to log in with a recovery code. This login will not be remembered until you provide an authenticator app code at log in or disable 2FA and log in again." xml:space="preserve">
+    <value>您已请求使用恢复代码登录。 除非您在登录时提供身份验证器应用程序代码或禁用 2FA 并再次登录，否则不会记住此登录信息。</value>
   </data>
 </root>
