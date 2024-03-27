@@ -129,6 +129,7 @@ public class ApplicationDbContextInitializer
         {
             await _userManager.CreateAsync(administrator, UserName.DefaultPassword);
             await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name! });
+            await _userManager.SetTwoFactorEnabledAsync(administrator, true);
         }
 
         if (_userManager.Users.All(u => u.UserName != demo.UserName))

@@ -1,6 +1,7 @@
 ﻿@page "/pages/authentication/loginwith2fa"
 
 @using System.ComponentModel.DataAnnotations
+@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.SendFactorCode
 @using CleanArchitecture.Blazor.Domain.Identity
 @using Microsoft.AspNetCore.Identity
 
@@ -58,11 +59,13 @@
             </div>
         </EditForm>
     </div>
+    <MudText Typo="Typo.body1">
+        @L["Don't have access to your authenticator device? You can"]
+    </MudText>
+
+    <a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")">log in with a recovery code</a>.
 </div>
-<p>
-    Don't have access to your authenticator device? You can
-</p>
-<a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")">log in with a recovery code</a>.
+
 @code {
     public const string PageUrl = "/pages/authentication/loginwith2fa";
     private string? message;
@@ -76,20 +79,28 @@
 
     [SupplyParameterFromQuery]
     private bool RememberMe { get; set; }
+    private bool error = false;
 
     protected override async Task OnInitializedAsync()
     {
         // Ensure the user has gone through the username & password screen first
         user = await SignInManager.GetTwoFactorAuthenticationUserAsync() ??
             throw new InvalidOperationException(L["Unable to load two-factor authentication user."]);
+
+
     }
 
     private async Task OnValidSubmitAsync()
     {
         var authenticatorCode = Input.TwoFactorCode!.Replace(" ", string.Empty).Replace("-", string.Empty);
-        var result = await SignInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, RememberMe, Input.RememberMachine);
+        var isCodeValid = await UserManager.VerifyTwoFactorTokenAsync(user, "Email", authenticatorCode);
+        if (!isCodeValid)
+        {
+            message = L["Error: Invalid authenticator code."];
+            return;
+        }
+        var result = await SignInManager.TwoFactorSignInAsync("Email", authenticatorCode, true, true);
         var userId = await UserManager.GetUserIdAsync(user);
-
         if (result.Succeeded)
         {
             Logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", userId);

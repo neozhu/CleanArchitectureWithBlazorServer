@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace CleanArchitecture.Blazor.Application.Features.Identity.Commands.SendWelcome;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Commands.SendFactorCode;
 
-public record SendFactorCodeCommand(string Email) : IRequest<Result>;
+public record SendFactorCodeCommand(string Email,string AuthenticatorCode) : IRequest<Result>;
 
 public class SendFactorCodeCommandHandler : IRequestHandler<SendFactorCodeCommand, Result>
 {
@@ -36,19 +36,15 @@ public class SendFactorCodeCommandHandler : IRequestHandler<SendFactorCodeComman
         var user = await _userManager.FindByEmailAsync(request.Email);
 
         if (user == null) return Result.Failure(_localizer["No user found by email, please contact the administrator"]);
-        var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
-        if (!providers.Contains("Email"))
-        {
-            return Result.Failure(_localizer["Email-based two-factor authentication is not enabled for this account. Please choose an available two-factor authentication method."]);
-        }
-        var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+        
+        
         var subject = _localizer["Your Verification Code"];
 
         var sendMailResult = await _mailService.SendAsync(
             request.Email,
             subject,
             "_authenticatorcode",
-            new { AuthenticatorCode= token, _settings.AppName, user.Email, user.UserName, _settings.Company });
+            new { request.AuthenticatorCode, _settings.AppName, user.Email, user.UserName, _settings.Company });
 
         return sendMailResult.Successful
             ? Result.Success()

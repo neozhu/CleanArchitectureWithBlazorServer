@@ -1,4 +1,5 @@
 ﻿@page "/pages/authentication/login"
+@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.SendFactorCode
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using Microsoft.AspNetCore.Authentication
 @using Severity = Severity
@@ -19,6 +20,8 @@
 @inject IStringLocalizer<Login> L
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
+@inject ISender Sender
+
 <PageTitle>@_title</PageTitle>
 
 <div class="d-flex flex-column gap-y-3">
@@ -135,9 +138,22 @@
         }
         else if (result.RequiresTwoFactor)
         {
-            RedirectManager.RedirectTo(
-                LoginWith2fa.PageUrl,
-                new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
+            //var user = await UserManager.FindByNameAsync(Input.UserName);
+            var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
+            var token = await UserManager.GenerateTwoFactorTokenAsync(user, "Email");
+            var sentResult = await Sender.Send(new SendFactorCodeCommand(user.Email, token));
+            if (sentResult.Succeeded)
+            {
+                RedirectManager.RedirectTo(
+                 LoginWith2fa.PageUrl,
+                 new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
+            }
+            else
+            {
+          
+                errorMessage = L["Failed to send verification code. Please try again later."];
+            }
+            
         }
         else if (result.IsLockedOut)
         {
