@@ -12,7 +12,6 @@
 
 <PageTitle>@L["Two-factor authentication"]</PageTitle>
 <MudText Typo="Typo.h4" GutterBottom="true">@L["Two-factor authentication"]</MudText>
-<MudDivider />
 
 <MudText Typo="Typo.body1">@L["Your login is protected with an authenticator app. Enter your authenticator code below."]</MudText>
 
@@ -62,9 +61,8 @@
 </div>
 <p>
     Don't have access to your authenticator device? You can
-    <a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")">log in with a recovery code</a>.
 </p>
-
+<a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")">log in with a recovery code</a>.
 @code {
     public const string PageUrl = "/pages/authentication/loginwith2fa";
     private string? message;

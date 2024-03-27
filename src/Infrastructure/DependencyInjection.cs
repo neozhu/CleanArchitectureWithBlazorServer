@@ -194,6 +194,7 @@ public static class DependencyInjection
 
             // User settings
             options.User.RequireUniqueEmail = true;
+            options.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
         });
 
         services.AddScoped<IIdentityService, IdentityService>()

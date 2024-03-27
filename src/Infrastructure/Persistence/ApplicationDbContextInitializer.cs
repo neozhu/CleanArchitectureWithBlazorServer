@@ -113,7 +113,8 @@ public class ApplicationDbContextInitializer
             UserName = UserName.Administrator, Provider = "Local", IsActive = true,
             TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name,
             DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true,
-            ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80"
+            ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80",
+            TwoFactorEnabled=true
         };
         var demo = new ApplicationUser
         {

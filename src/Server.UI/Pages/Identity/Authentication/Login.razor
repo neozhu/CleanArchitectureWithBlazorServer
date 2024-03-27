@@ -136,7 +136,7 @@
         else if (result.RequiresTwoFactor)
         {
             RedirectManager.RedirectTo(
-                "Account/LoginWith2fa",
+                LoginWith2fa.PageUrl,
                 new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
         }
         else if (result.IsLockedOut)

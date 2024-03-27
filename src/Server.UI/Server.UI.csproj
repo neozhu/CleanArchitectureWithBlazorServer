@@ -15,6 +15,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Content Remove="Resources\EmailTemplates\_authenticatorcode.cshtml" />
       <Content Remove="Resources\EmailTemplates\_useractivation.cshtml" />
     </ItemGroup>
     <ItemGroup>
@@ -35,6 +36,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="Resources\EmailTemplates\_recoverypassword.cshtml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Resources\EmailTemplates\_authenticatorcode.cshtml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="Resources\EmailTemplates\_welcome.cshtml">
