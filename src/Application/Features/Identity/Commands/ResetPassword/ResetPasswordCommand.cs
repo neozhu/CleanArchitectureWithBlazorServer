@@ -1,7 +1,9 @@
-﻿using System.Web;
+﻿using System.Text;
+using System.Web;
 using CleanArchitecture.Blazor.Domain.Identity;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Commands.ResetPassword;
 
@@ -33,9 +35,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
         if (user == null) return Result.Failure(_localizer["No user found by email, please contact the administrator"]);
 
         var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-        //var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_recoverypassword.txt");
-        RequestUrl = $"{_settings.ApplicationUrl}/pages/authentication/reset-password/{user.Id}?token={HttpUtility.UrlEncode(resetPasswordToken)}";
+        RequestUrl = $"{_settings.ApplicationUrl}/pages/authentication/reset-password?userid={user.Id}&token={WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(resetPasswordToken))}";
          var sendMailResult = await _mailService.SendAsync(
             request.Email,
             _localizer["Verify your recovery email"],
