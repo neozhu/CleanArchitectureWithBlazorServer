@@ -14,7 +14,7 @@
 <PageTitle>@L["Two-factor authentication"]</PageTitle>
 <MudText Typo="Typo.h4" GutterBottom="true">@L["Two-factor authentication"]</MudText>
 
-<MudText Typo="Typo.body1">@L["Your login is protected with an authenticator app. Enter your authenticator code below."]</MudText>
+<MudText Typo="Typo.body1">@L["Your login is secured with two-factor authentication via email. Please enter the code sent to your email address below."]</MudText>
 
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
@@ -59,10 +59,10 @@
             </div>
         </EditForm>
     </div>
+
     <MudText Typo="Typo.body1">
         @L["Don't have access to your authenticator device? You can"]
     </MudText>
-
     <a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")">log in with a recovery code</a>.
 </div>
 
@@ -79,7 +79,7 @@
 
     [SupplyParameterFromQuery]
     private bool RememberMe { get; set; }
-    private bool error = false;
+
 
     protected override async Task OnInitializedAsync()
     {
