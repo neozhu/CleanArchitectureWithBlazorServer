@@ -187,4 +187,7 @@
   <data name="Set new password" xml:space="preserve">
     <value>Установить новый пароль</value>
   </data>
+  <data name="Error: Invalid login attempt." xml:space="preserve">
+    <value>Ошибка: Неверная попытка входа.</value>
+  </data>
 </root>
