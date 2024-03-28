@@ -60,10 +60,12 @@
         </EditForm>
     </div>
 
+    @* 
     <MudText Typo="Typo.body1">
         @L["Don't have access to your authenticator device? You can"]
     </MudText>
-    <a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")">log in with a recovery code</a>.
+    <a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")">log in with a recovery code</a>. 
+    *@
 </div>
 
 @code {

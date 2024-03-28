@@ -135,4 +135,7 @@
   <data name="Your login is protected with an authenticator app. Enter your authenticator code below." xml:space="preserve">
     <value>귀하의 로그인은 인증 앱으로 보호됩니다. 아래에 인증 코드를 입력하세요.</value>
   </data>
+  <data name="Your login is secured with two-factor authentication via email. Please enter the code sent to your email address below." xml:space="preserve">
+    <value>귀하의 로그인은 이메일을 통한 이중 인증으로 보호됩니다. 아래 이메일 주소로 전송된 코드를 입력해 주세요.</value>
+  </data>
 </root>

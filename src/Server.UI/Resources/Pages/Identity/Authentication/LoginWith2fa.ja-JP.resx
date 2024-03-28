@@ -135,4 +135,7 @@
   <data name="Your login is protected with an authenticator app. Enter your authenticator code below." xml:space="preserve">
     <value>ログインは認証アプリによって保護されています。 以下に認証コードを入力してください。</value>
   </data>
+  <data name="Your login is secured with two-factor authentication via email. Please enter the code sent to your email address below." xml:space="preserve">
+    <value>ログインは電子メールによる 2 要素認証によって保護されます。 メールアドレスに送信されたコードを以下に入力してください。</value>
+  </data>
 </root>

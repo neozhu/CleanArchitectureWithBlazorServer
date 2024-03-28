@@ -1,6 +1,5 @@
 ﻿@page "/pages/authentication/register"
 
-
 @using CleanArchitecture.Blazor.Application.Features.Identity.Commands.SendWelcome
 @using CleanArchitecture.Blazor.Application.Features.Identity.Commands.UserActivation
 @using Microsoft.AspNetCore.WebUtilities
@@ -10,8 +9,6 @@
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @using System.ComponentModel.DataAnnotations
 @using System.Text
-
-
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IStringLocalizer<Register> L
@@ -127,10 +124,7 @@
                        FullWidth="true">
                 <MudText>@L["Register"]</MudText>
             </MudButton>
-
-
         </EditForm>
-
     </div>
 </div>
 @code {

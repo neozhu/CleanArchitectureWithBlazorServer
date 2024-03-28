@@ -135,4 +135,7 @@
   <data name="Your login is protected with an authenticator app. Enter your authenticator code below." xml:space="preserve">
     <value>ការចូលរបស់អ្នកត្រូវបានការពារជាមួយនឹងកម្មវិធីផ្ទៀងផ្ទាត់។ បញ្ចូលលេខកូដផ្ទៀងផ្ទាត់របស់អ្នកខាងក្រោម។</value>
   </data>
+  <data name="Your login is secured with two-factor authentication via email. Please enter the code sent to your email address below." xml:space="preserve">
+    <value>ការចូលរបស់អ្នកត្រូវបានធានាដោយការផ្ទៀងផ្ទាត់ពីរកត្តាតាមរយៈអ៊ីមែល។ សូមបញ្ចូលលេខកូដដែលបានផ្ញើទៅអាសយដ្ឋានអ៊ីមែលរបស់អ្នកខាងក្រោម។</value>
+  </data>
 </root>

@@ -135,4 +135,7 @@
   <data name="Your login is protected with an authenticator app. Enter your authenticator code below." xml:space="preserve">
     <value>Votre connexion est protégée par une application d'authentification. Entrez votre code d'authentification ci-dessous.</value>
   </data>
+  <data name="Your login is secured with two-factor authentication via email. Please enter the code sent to your email address below." xml:space="preserve">
+    <value>Votre connexion est sécurisée avec une authentification à deux facteurs par e-mail. Veuillez saisir ci-dessous le code envoyé à votre adresse e-mail.</value>
+  </data>
 </root>

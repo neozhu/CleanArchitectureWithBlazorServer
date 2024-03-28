@@ -135,4 +135,7 @@
   <data name="Your login is protected with an authenticator app. Enter your authenticator code below." xml:space="preserve">
     <value>您的登录受到身份验证器应用程序的保护。 在下面输入您的验证码。</value>
   </data>
+  <data name="Your login is secured with two-factor authentication via email. Please enter the code sent to your email address below." xml:space="preserve">
+    <value>您的登录受到通过电子邮件的双因素身份验证的保护。 请在下面输入发送到您的电子邮件地址的代码。</value>
+  </data>
 </root>
