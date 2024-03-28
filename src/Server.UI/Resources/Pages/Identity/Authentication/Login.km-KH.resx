@@ -187,4 +187,7 @@
   <data name="Set new password" xml:space="preserve">
     <value>កំណត់ពាក្យសម្ងាត់ថ្មី។</value>
   </data>
+  <data name="Error: Invalid login attempt." xml:space="preserve">
+    <value>កំហុស៖ ការព្យាយាមចូលមិនត្រឹមត្រូវ។</value>
+  </data>
 </root>
