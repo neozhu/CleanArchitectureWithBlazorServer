@@ -1,10 +1,12 @@
 ﻿using System.Net.Http.Headers;
 using System.Reflection;
 using BlazorDownloadFile;
+using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Server.Hubs;
 using CleanArchitecture.Blazor.Server.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
+using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication;
 using CleanArchitecture.Blazor.Server.UI.Services;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
@@ -12,6 +14,8 @@ using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using MudExtensions.Services;
@@ -27,6 +31,8 @@ public static class DependencyInjection
     {
         services.AddRazorComponents().AddInteractiveServerComponents();
         services.AddCascadingAuthenticationState();
+        services.AddScoped<IdentityUserAccessor>();
+        services.AddScoped<IdentityRedirectManager>();
         services.AddMudBlazorDialog()
             .AddMudServices(mudServicesConfiguration =>
             {
@@ -52,10 +58,11 @@ public static class DependencyInjection
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
         }).AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(30)));
 
+        services.AddHttpContextAccessor();
         services.AddScoped<HubClient>();
-
+        services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
         services.AddMudExtensions()
-            .AddScoped<AuthenticationStateProvider, BlazorAuthenticationStateProvider>()
+            .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()
             .AddBlazorDownloadFile()
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
@@ -68,6 +75,9 @@ public static class DependencyInjection
              return service;
          });
 
+
+        services.AddDataProtection().DisableAutomaticKeyGeneration();
+             
         return services;
     }
 
@@ -87,9 +97,12 @@ public static class DependencyInjection
 
         app.UseStatusCodePagesWithRedirects("/404");
         app.MapHealthChecks("/health");
+    
+        app.UseAuthentication();
+        app.UseAntiforgery();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-        app.UseAntiforgery();
+     
         if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
             Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
 
@@ -116,6 +129,11 @@ public static class DependencyInjection
 
         //QuestPDF License configuration
         QuestPDF.Settings.License = LicenseType.Community;
+
+        // Add additional endpoints required by the Identity /Account Razor components.
+        app.MapAdditionalIdentityEndpoints();
+
+  
 
         return app;
     }

@@ -187,4 +187,7 @@
   <data name="Set new password" xml:space="preserve">
     <value>Estableix una nova contrasenya</value>
   </data>
+  <data name="Error: Invalid login attempt." xml:space="preserve">
+    <value>Error: intent d'inici de sessió no vàlid.</value>
+  </data>
 </root>
