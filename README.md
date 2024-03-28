@@ -43,11 +43,17 @@ docker run -p 8080:8080 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=De
 docker run -d -p 8080:8080 -e UseInMemoryDatabase=false \
 -e ASPNETCORE_ENVIRONMENT=Development \
 -e DatabaseSettings__DBProvider=mssql \
--e DatabaseSettings__ConnectionString=Server=10.33.1.xxx;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false \
+-e DatabaseSettings__ConnectionString=Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false \
 -e SmtpClientOptions__User=*** \
 -e SmtpClientOptions__Port=25 \
 -e SmtpClientOptions__Server=*** \
 -e SmtpClientOptions__Password=*** \
+-e Authentication__Microsoft__ClientId=*** \
+-e Authentication__Microsoft__ClientSecret=*** \
+-e Authentication__Google__ClientId=*** \
+-e Authentication__Google__ClientSecret=*** \
+-e Authentication__Facebook__AppId=*** \
+-e Authentication__Facebook__AppSecret=*** \
 blazordevlab/cleanarchitectureblazorserver:latest
 ```
 ## docker-compose.yml
@@ -62,11 +68,17 @@ services:
       - UseInMemoryDatabase=false
       - ASPNETCORE_ENVIRONMENT=Development
       - DatabaseSettings__DBProvider=mssql
-      - DatabaseSettings__ConnectionString=Server=10.33.1.xx;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false
+      - DatabaseSettings__ConnectionString=Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false
       - SmtpClientOptions__User=***
       - SmtpClientOptions__Port=25
       - SmtpClientOptions__Server=***
       - SmtpClientOptions__Password=***
+      - Authentication__Microsoft__ClientId=*** 
+      - Authentication__Microsoft__ClientSecret=*** 
+      - Authentication__Google__ClientId=*** 
+      - Authentication__Google__ClientSecret=*** 
+      - Authentication__Facebook__AppId=*** 
+      - Authentication__Facebook__AppSecret=*** 
     ports:
       - "8014:8080"
     volumes:
