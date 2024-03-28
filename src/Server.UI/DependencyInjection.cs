@@ -14,6 +14,7 @@ using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
@@ -74,6 +75,9 @@ public static class DependencyInjection
              return service;
          });
 
+
+        services.AddDataProtection().DisableAutomaticKeyGeneration();
+             
         return services;
     }
 
