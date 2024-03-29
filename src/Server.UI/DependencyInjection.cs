@@ -3,6 +3,7 @@ using System.Reflection;
 using BlazorDownloadFile;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
+using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using CleanArchitecture.Blazor.Server.Hubs;
 using CleanArchitecture.Blazor.Server.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
@@ -76,8 +77,8 @@ public static class DependencyInjection
          });
 
 
-        services.AddDataProtection().DisableAutomaticKeyGeneration();
-             
+        services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
+
         return services;
     }
 
