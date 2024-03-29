@@ -17,7 +17,7 @@ EXPOSE 443
 # Generate a self-signed certificate
 RUN mkdir -p /home/app/https
 RUN openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
-    -keyout https/private.key -out https/certificate.crt \
+    -keyout /home/app/https/private.key -out /home/app/https/certificate.crt \
     -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost" \
     && openssl pkcs12 -export -out /home/app/https/aspnetapp.pfx -inkey /home/app/https/private.key -in https/certificate.crt -password pass:CREDENTIAL_PLACEHOLDER
 
