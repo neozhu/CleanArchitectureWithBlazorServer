@@ -187,4 +187,7 @@
   <data name="Set new password" xml:space="preserve">
     <value>新しいパスワードを設定する</value>
   </data>
+  <data name="Error: Invalid login attempt." xml:space="preserve">
+    <value>エラー: 無効なログイン試行です。</value>
+  </data>
 </root>

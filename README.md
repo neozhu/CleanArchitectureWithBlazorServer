@@ -43,11 +43,17 @@ docker run -p 8080:8080 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=De
 docker run -d -p 8080:8080 -e UseInMemoryDatabase=false \
 -e ASPNETCORE_ENVIRONMENT=Development \
 -e DatabaseSettings__DBProvider=mssql \
--e DatabaseSettings__ConnectionString=Server=10.33.1.xxx;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false \
+-e DatabaseSettings__ConnectionString=Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false \
 -e SmtpClientOptions__User=*** \
 -e SmtpClientOptions__Port=25 \
 -e SmtpClientOptions__Server=*** \
 -e SmtpClientOptions__Password=*** \
+-e Authentication__Microsoft__ClientId=*** \
+-e Authentication__Microsoft__ClientSecret=*** \
+-e Authentication__Google__ClientId=*** \
+-e Authentication__Google__ClientSecret=*** \
+-e Authentication__Facebook__AppId=*** \
+-e Authentication__Facebook__AppSecret=*** \
 blazordevlab/cleanarchitectureblazorserver:latest
 ```
 ## docker-compose.yml
@@ -62,11 +68,17 @@ services:
       - UseInMemoryDatabase=false
       - ASPNETCORE_ENVIRONMENT=Development
       - DatabaseSettings__DBProvider=mssql
-      - DatabaseSettings__ConnectionString=Server=10.33.1.xx;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false
+      - DatabaseSettings__ConnectionString=Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false
       - SmtpClientOptions__User=***
       - SmtpClientOptions__Port=25
       - SmtpClientOptions__Server=***
       - SmtpClientOptions__Password=***
+      - Authentication__Microsoft__ClientId=*** 
+      - Authentication__Microsoft__ClientSecret=*** 
+      - Authentication__Google__ClientId=*** 
+      - Authentication__Google__ClientSecret=*** 
+      - Authentication__Facebook__AppId=*** 
+      - Authentication__Facebook__AppSecret=*** 
     ports:
       - "8014:8080"
     volumes:
@@ -85,7 +97,17 @@ sudo chown -R :1000 /var/lib/docker/volumes/blazorserverapp_files_volume
 sudo chmod -R g+rw /var/lib/docker/volumes/blazorserverapp_files_volume
 ```
 
-![image](https://user-images.githubusercontent.com/1549611/183799080-380e1f01-ef80-4568-80d2-517514aa59e5.png)
+
+
+## Setup Multiple authentication providers
+Use the following topics to configure your application to use the respective providers:
+- [Facebook instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-8.0)
+- [Twitter instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/twitter-logins?view=aspnetcore-8.0)
+- [Google instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-8.0)
+- [Microsoft instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/microsoft-logins?view=aspnetcore-8.0)
+- [Other provider instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/other-logins?view=aspnetcore-8.0)
+
+https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/?view=aspnetcore-8.0&tabs=visual-studio
 
 ## Supported Databases
 
@@ -135,6 +157,8 @@ sudo chmod -R g+rw /var/lib/docker/volumes/blazorserverapp_files_volume
     - Task List
 
         - ![image](https://user-images.githubusercontent.com/1549611/183537444-3d1b2980-b131-4e9d-bfe1-7b475f760b57.png)
+    - Test Explorer
+        - ![image](https://user-images.githubusercontent.com/1549611/183799080-380e1f01-ef80-4568-80d2-517514aa59e5.png)
 
 ## How to install solution templates
 
