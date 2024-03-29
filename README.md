@@ -6,86 +6,116 @@
 [![Docker Image CI](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/docker-image.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/docker-image.yml)
 [![Nuget](https://img.shields.io/nuget/dt/CleanArchitecture.Blazor.Solution.Template?label=Downloads)](https://www.nuget.org/packages/CleanArchitecture.Blazor.Solution.Template)
 
-This is a repository for creating a Blazor Server application following the principles of Clean Architecture. It has a
-nice user interface, and an efficient code generator that allows you to quickly build amazing web application with .net
-Blazor technology.
+This repository hosts a Blazor Server application designed with Clean Architecture principles, featuring a sophisticated user interface and an efficient code generator. This setup allows for the swift creation of remarkable web applications using .NET Blazor technology.
 
-## Live Demo
+## Explore the Live Demo
+Experience the application in action in Blazor Server mode by visiting 
 
-- Blazor Server mode:https://architecture.blazorserver.com/
+Login [architecture.blazorserver.com](https://architecture.blazorserver.com/)
 
-## Screenshots and video
-
+## Visual Insights
+Dive into the application's aesthetics and functionality through screenshots and a video walkthrough.
 [![Everything Is AWESOME](doc/page.png)](https://www.youtube.com/embed/GyZJl_dG-Pg "Everything Is AWESOME")
 
-## Development Environment
+## Development Setup
+To get started with development, ensure you have the following tools and environments set up:
 
 - Microsoft Visual Studio Community 2022 (64-bit)
 - Docker
 - .NET 8.0
 - Unit Test
 
-## Docker Container
+This streamlined overview provides all the essential information about the Blazor Server application's repository, live demo, visual insights, and required development environment.
+
+## Setup Multiple authentication providers
+Use the following topics to configure your application to use the respective providers:
+- [Facebook instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-8.0)
+- [Twitter instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/twitter-logins?view=aspnetcore-8.0)
+- [Google instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-8.0)
+- [Microsoft instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/microsoft-logins?view=aspnetcore-8.0)
+- [Other provider instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/other-logins?view=aspnetcore-8.0)
+
+https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/?view=aspnetcore-8.0&tabs=visual-studio
+
+## Docker Setup for Blazor Server Application
+
+### Pull the Docker Image
+First, pull the latest version of the Blazor Server Docker image:
 ```bash
-# Docker Pull Command
 docker pull blazordevlab/cleanarchitectureblazorserver:latest
 ```
 
+### Run the Docker Container
+
+You can start the container in two modes: using an in-memory database for development purposes or connecting to an MSSQL database for persistent storage and configuring SMTP for email functionalities.
+
+For Development (In-Memory Database):
+
 ```bash
-# Docker Run
-# default container port:8080
+docker run -p 8443:443 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_HTTPS_PORTS=443 blazordevlab/cleanarchitectureblazorserver:latest
+```
+For Production (Persistent Database and SMTP Configuration):
+```bash
 
-# default without database
-docker run -p 8080:8080 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development blazordevlab/cleanarchitectureblazorserver:latest
-
-# set database connection
-# set SMPT Server
-docker run -d -p 8080:8080 -e UseInMemoryDatabase=false \
+docker run -d -p 8443:443 \
+-e UseInMemoryDatabase=false \
 -e ASPNETCORE_ENVIRONMENT=Development \
+-e ASPNETCORE_HTTP_PORTS=80 \
+-e ASPNETCORE_HTTPS_PORTS=443 \
 -e DatabaseSettings__DBProvider=mssql \
--e DatabaseSettings__ConnectionString=Server=10.33.1.xxx;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false \
--e SmtpClientOptions__User=*** \
+-e DatabaseSettings__ConnectionString="Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=<YourPassword>;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false" \
+-e SmtpClientOptions__User=<YourSMTPUser> \
 -e SmtpClientOptions__Port=25 \
--e SmtpClientOptions__Server=*** \
--e SmtpClientOptions__Password=*** \
+-e SmtpClientOptions__Server=<YourSMTPServer> \
+-e SmtpClientOptions__Password=<YourSMTPPassword> \
+-e Authentication__Microsoft__ClientId=<YourMicrosoftClientId> \
+-e Authentication__Microsoft__ClientSecret=<YourMicrosoftClientSecret> \
+-e Authentication__Google__ClientId=<YourGoogleClientId> \
+-e Authentication__Google__ClientSecret=<YourGoogleClientSecret> \
+-e Authentication__Facebook__AppId=<YourFacebookAppId> \
+-e Authentication__Facebook__AppSecret=<YourFacebookAppSecret> \
 blazordevlab/cleanarchitectureblazorserver:latest
 ```
-## docker-compose.yml
+Replace placeholder values (<Your...>) with your actual configuration details.
 
-```bash
+### Docker Compose Setup
+
+For easier management, use a docker-compose.yml file:
+```yml
 version: '3.8'
 services:
   blazorserverapp:
     image: blazordevlab/cleanarchitectureblazorserver:latest
-    user: "1000:1000"
     environment:
       - UseInMemoryDatabase=false
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80;https://+:443
+      - ASPNETCORE_HTTP_PORTS=80
+      - ASPNETCORE_HTTPS_PORTS=443
       - DatabaseSettings__DBProvider=mssql
-      - DatabaseSettings__ConnectionString=Server=10.33.1.xx;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false
-      - SmtpClientOptions__User=***
+      - DatabaseSettings__ConnectionString=Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false
+      - SmtpClientOptions__User=<YourSMTPUser>
       - SmtpClientOptions__Port=25
-      - SmtpClientOptions__Server=***
-      - SmtpClientOptions__Password=***
+      - SmtpClientOptions__Server=<YourSMTPServer>
+      - SmtpClientOptions__Password=<YourSMTPPassword>
+      - Authentication__Microsoft__ClientId=<YourMicrosoftClientId>
+      - Authentication__Microsoft__ClientSecret=<YourMicrosoftClientSecret>
+      - Authentication__Google__ClientId=<YourGoogleClientId>
+      - Authentication__Google__ClientSecret=<YourGoogleClientSecret>
+      - Authentication__Facebook__AppId=<YourFacebookAppId>
+      - Authentication__Facebook__AppSecret=<YourFacebookAppSecret>
     ports:
-      - "8014:8080"
+      - "8443:443"
     volumes:
       - files_volume:/app/Files
 
 volumes:
   files_volume:
 ```
-
-To run a Docker Compose setup as defined in your docker-compose.yaml file and ensure the Docker volume files_volume is accessible with read and write permissions by a user group with the ID 1000, follow these steps:
-
-```bash
-# Change Ownership: Use the chown command to change the owner and/or group of the volume directory. If you want the user group with group ID 1000 to own the directory, you can execute the following command:
-sudo chown -R :1000 /var/lib/docker/volumes/blazorserverapp_files_volume
-# Set Read and Write Permissions: Use the chmod command to change the permissions of files and directories. To grant read and write permissions to the group members, execute:
-sudo chmod -R g+rw /var/lib/docker/volumes/blazorserverapp_files_volume
-```
-
-![image](https://user-images.githubusercontent.com/1549611/183799080-380e1f01-ef80-4568-80d2-517514aa59e5.png)
+### Notes:
+Replace <Your...> placeholders with actual values from your environment.
+The files_volume volume is used for persistent storage of application files. Adjust or extend volumes based on your specific needs.
+This optimized guide should help in setting up your Blazor Server application with either an in-memory or MSSQL database, configured SMTP server for email functionalities, and OAuth authentication for Microsoft, Google, and Facebook.
 
 ## Supported Databases
 
@@ -135,6 +165,8 @@ sudo chmod -R g+rw /var/lib/docker/volumes/blazorserverapp_files_volume
     - Task List
 
         - ![image](https://user-images.githubusercontent.com/1549611/183537444-3d1b2980-b131-4e9d-bfe1-7b475f760b57.png)
+    - Test Explorer
+        - ![image](https://user-images.githubusercontent.com/1549611/183799080-380e1f01-ef80-4568-80d2-517514aa59e5.png)
 
 ## How to install solution templates
 
