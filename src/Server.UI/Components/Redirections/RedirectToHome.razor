@@ -1,10 +1,10 @@
-﻿@inject NavigationManager NavigationManager
+﻿@inject IdentityRedirectManager RedirectManager
 
 @code {
 
     protected override void OnInitialized()
     {
-        NavigationManager.NavigateTo("/", false);
+        RedirectManager.RedirectTo("/");
     }
 
 }
