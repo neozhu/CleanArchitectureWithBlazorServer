@@ -1,6 +1,5 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Common.Entities;
-using MediatR;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -10,16 +9,12 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IDateTime _dateTime;
-    private readonly ITenantProvider _tenantProvider;
     private List<AuditTrail> _temporaryAuditTrailList = new();
 
     public AuditableEntityInterceptor(
-        ITenantProvider tenantProvider,
         ICurrentUserService currentUserService,
-        IMediator mediator,
         IDateTime dateTime)
     {
-        _tenantProvider = tenantProvider;
         _currentUserService = currentUserService;
         _dateTime = dateTime;
     }
@@ -43,7 +38,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
     private void UpdateEntities(DbContext context)
     {
         var userId = _currentUserService.UserId;
-        var tenantId = _tenantProvider.TenantId;
+        var tenantId = _currentUserService.TenantId;
         foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
             switch (entry.State)
             {
@@ -82,7 +77,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
         CancellationToken cancellationToken = default)
     {
         var userId = _currentUserService.UserId;
-        var tenantId = _tenantProvider.TenantId;
+        var tenantId = _currentUserService.TenantId;
         context.ChangeTracker.DetectChanges();
         var temporaryAuditEntries = new List<AuditTrail>();
         foreach (var entry in context.ChangeTracker.Entries<IAuditTrial>())
