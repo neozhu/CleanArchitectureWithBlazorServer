@@ -25,6 +25,16 @@ Blazor technology.
 - .NET 8.0
 - Unit Test
 
+## Setup Multiple authentication providers
+Use the following topics to configure your application to use the respective providers:
+- [Facebook instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-8.0)
+- [Twitter instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/twitter-logins?view=aspnetcore-8.0)
+- [Google instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-8.0)
+- [Microsoft instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/microsoft-logins?view=aspnetcore-8.0)
+- [Other provider instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/other-logins?view=aspnetcore-8.0)
+
+https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/?view=aspnetcore-8.0&tabs=visual-studio
+
 ## Docker Container
 ```bash
 # Docker Pull Command
@@ -36,12 +46,18 @@ docker pull blazordevlab/cleanarchitectureblazorserver:latest
 # default container port:8080
 
 # default without database
-docker run -p 8080:8080 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development blazordevlab/cleanarchitectureblazorserver:latest
+docker run -p 8443:443 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_HTTPS_PORTS=443 blazordevlab/cleanarchitectureblazorserver:latest
 
 # set database connection
 # set SMPT Server
-docker run -d -p 8080:8080 -e UseInMemoryDatabase=false \
+# Authentication__{Provider}__ClientId and Authentication__{Provider}__ClientSecret: 
+# These variables are for OAuth authentication with Microsoft, Google, and Facebook. 
+# The ClientId is the public identifier of your application on the OAuth provider's platform, 
+# and the ClientSecret is a confidential key used to authenticate your application to the OAuth provider.
+docker run -d -p 8443:443 -e UseInMemoryDatabase=false \
 -e ASPNETCORE_ENVIRONMENT=Development \
+-e ASPNETCORE_HTTP_PORTS=80
+-e ASPNETCORE_HTTPS_PORTS=443
 -e DatabaseSettings__DBProvider=mssql \
 -e DatabaseSettings__ConnectionString=Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false \
 -e SmtpClientOptions__User=*** \
@@ -63,10 +79,12 @@ version: '3.8'
 services:
   blazorserverapp:
     image: blazordevlab/cleanarchitectureblazorserver:latest
-    user: "1000:1000"
     environment:
       - UseInMemoryDatabase=false
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80;https://+:443
+      - ASPNETCORE_HTTP_PORTS=80
+      - ASPNETCORE_HTTPS_PORTS=443
       - DatabaseSettings__DBProvider=mssql
       - DatabaseSettings__ConnectionString=Server=127.0.0.1;Database=BlazorDashboardDb;User Id=sa;Password=***;MultipleActiveResultSets=true;Encrypt=false;TrustServerCertificate=false
       - SmtpClientOptions__User=***
@@ -80,7 +98,7 @@ services:
       - Authentication__Facebook__AppId=*** 
       - Authentication__Facebook__AppSecret=*** 
     ports:
-      - "8014:8080"
+      - "8443:443"
     volumes:
       - files_volume:/app/Files
 
@@ -88,26 +106,6 @@ volumes:
   files_volume:
 ```
 
-To run a Docker Compose setup as defined in your docker-compose.yaml file and ensure the Docker volume files_volume is accessible with read and write permissions by a user group with the ID 1000, follow these steps:
-
-```bash
-# Change Ownership: Use the chown command to change the owner and/or group of the volume directory. If you want the user group with group ID 1000 to own the directory, you can execute the following command:
-sudo chown -R :1000 /var/lib/docker/volumes/blazorserverapp_files_volume
-# Set Read and Write Permissions: Use the chmod command to change the permissions of files and directories. To grant read and write permissions to the group members, execute:
-sudo chmod -R g+rw /var/lib/docker/volumes/blazorserverapp_files_volume
-```
-
-
-
-## Setup Multiple authentication providers
-Use the following topics to configure your application to use the respective providers:
-- [Facebook instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-8.0)
-- [Twitter instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/twitter-logins?view=aspnetcore-8.0)
-- [Google instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-8.0)
-- [Microsoft instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/microsoft-logins?view=aspnetcore-8.0)
-- [Other provider instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/other-logins?view=aspnetcore-8.0)
-
-https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/?view=aspnetcore-8.0&tabs=visual-studio
 
 ## Supported Databases
 
