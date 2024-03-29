@@ -8,11 +8,12 @@ RUN echo "deb http://deb.debian.org/debian/ bookworm main contrib" > /etc/apt/so
     echo "deb-src http://security.debian.org/ bookworm-security main contrib" >> /etc/apt/sources.list
 RUN sed -i'.bak' 's/$/ contrib/' /etc/apt/sources.list
 RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
-RUN apt-get install -y fonts-noto-cjk fontconfig
-USER app
+RUN apt-get install -y fonts-noto-cjk fontconfig openssl
+
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
+
 
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -42,6 +43,16 @@ RUN dotnet publish "Server.UI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+# Generate a self-signed certificate
+RUN mkdir -p /app/https
+RUN openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
+    -keyout https/private.key -out https/certificate.crt \
+    -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost" \
+    && openssl pkcs12 -export -out https/aspnetapp.pfx -inkey https/private.key -in https/certificate.crt -password pass:CREDENTIAL_PLACEHOLDER
 
+# Setup environment variables for the application to find the certificate
+ENV ASPNETCORE_URLS="https://+;http://+"
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password="CREDENTIAL_PLACEHOLDER"
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/app/https/aspnetapp.pfx"
 
 ENTRYPOINT ["dotnet", "CleanArchitecture.Blazor.Server.UI.dll"]
