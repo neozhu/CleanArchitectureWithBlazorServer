@@ -15,16 +15,16 @@ EXPOSE 80
 EXPOSE 443
 
 # Generate a self-signed certificate
-RUN mkdir -p /app/https
+RUN mkdir -p /home/app/https
 RUN openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
     -keyout https/private.key -out https/certificate.crt \
     -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost" \
-    && openssl pkcs12 -export -out https/aspnetapp.pfx -inkey https/private.key -in https/certificate.crt -password pass:CREDENTIAL_PLACEHOLDER
+    && openssl pkcs12 -export -out /home/app/https/aspnetapp.pfx -inkey /home/app/https/private.key -in https/certificate.crt -password pass:CREDENTIAL_PLACEHOLDER
 
 # Setup environment variables for the application to find the certificate
 ENV ASPNETCORE_URLS="https://+;http://+"
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password="CREDENTIAL_PLACEHOLDER"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/app/https/aspnetapp.pfx"
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/home/app/https/aspnetapp.pfx"
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
