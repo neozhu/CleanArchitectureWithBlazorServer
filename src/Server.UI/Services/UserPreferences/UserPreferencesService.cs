@@ -1,4 +1,4 @@
-// Copyright (c) MudBlazor 2021
+﻿// Copyright (c) MudBlazor 2021
 // MudBlazor licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -48,6 +48,10 @@ public class UserPreferencesService : IUserPreferencesService
         catch (CryptographicException)
         {
             await _localStorage.DeleteAsync(Key);
+            return new UserPreferences();
+        }
+        catch (Exception)
+        {
             return new UserPreferences();
         }
     }
