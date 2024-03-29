@@ -43,7 +43,7 @@ docker pull blazordevlab/cleanarchitectureblazorserver:latest
 
 ```bash
 # Docker Run
-# default container port:8080
+# default container port:443
 
 # default without database
 docker run -p 8443:443 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_HTTPS_PORTS=443 blazordevlab/cleanarchitectureblazorserver:latest
