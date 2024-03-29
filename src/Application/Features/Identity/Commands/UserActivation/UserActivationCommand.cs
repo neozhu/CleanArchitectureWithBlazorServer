@@ -14,13 +14,16 @@ public class UserActivationCommandHandler : IRequestHandler<UserActivationComman
     private readonly IMailService _mailService;
     private readonly IApplicationSettings _settings;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly Logger<UserActivationCommandHandler> _logger;
     private string ActivationUrl = "";
     public UserActivationCommandHandler(UserManager<ApplicationUser> userManager,
+        Logger<UserActivationCommandHandler> logger,
         IStringLocalizer<UserActivationCommandHandler> localizer,
         IMailService mailService,
         IApplicationSettings settings)
     {
         _userManager = userManager;
+        _logger = logger;
         _localizer = localizer;
         _mailService = mailService;
         _settings = settings;
@@ -49,7 +52,7 @@ public class UserActivationCommandHandler : IRequestHandler<UserActivationComman
                 user.UserName,
                 request.Email,
             });
-
+        _logger.LogInformation("Activation email sent to {to}. sending result {Result} {Message}", request.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
         return sendMailResult.Successful
             ? Result.Success()
             : Result.Failure(string.Format(_localizer["{0}, please contact the administrator"],

@@ -14,17 +14,20 @@ public record SendWelcomeCommand(string Email) : IRequest<Result>;
 public class SendWelcomeCommandHandler : IRequestHandler<SendWelcomeCommand, Result>
 {
     private readonly IStringLocalizer<SendWelcomeCommandHandler> _localizer;
+    private readonly Logger<SendWelcomeCommandHandler> _logger;
     private readonly IMailService _mailService;
     private readonly IApplicationSettings _settings;
     private readonly UserManager<ApplicationUser> _userManager;
     private string LoginUrl = "";
     public SendWelcomeCommandHandler(UserManager<ApplicationUser> userManager,
         IStringLocalizer<SendWelcomeCommandHandler> localizer,
+        Logger<SendWelcomeCommandHandler> logger,
         IMailService mailService,
         IApplicationSettings settings)
     {
         _userManager = userManager;
         _localizer = localizer;
+        _logger = logger;
         _mailService = mailService;
         _settings = settings;
     }
@@ -43,7 +46,7 @@ public class SendWelcomeCommandHandler : IRequestHandler<SendWelcomeCommand, Res
             subject,
             "_welcome",
             new { LoginUrl, _settings.AppName, user.Email, user.UserName, _settings.Company });
-
+        _logger.LogInformation("Welcome email sent to {to}. sending result {Result} {Message}", request.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
         return sendMailResult.Successful
             ? Result.Success()
             : Result.Failure(string.Format(_localizer["{0}, please contact the administrator"],

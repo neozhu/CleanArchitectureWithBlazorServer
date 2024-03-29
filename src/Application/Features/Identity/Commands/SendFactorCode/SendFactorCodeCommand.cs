@@ -15,17 +15,20 @@ public record SendFactorCodeCommand(string Email,string AuthenticatorCode) : IRe
 public class SendFactorCodeCommandHandler : IRequestHandler<SendFactorCodeCommand, Result>
 {
     private readonly IStringLocalizer<SendFactorCodeCommandHandler> _localizer;
+    private readonly Logger<SendFactorCodeCommandHandler> _logger;
     private readonly IMailService _mailService;
     private readonly IApplicationSettings _settings;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public SendFactorCodeCommandHandler(UserManager<ApplicationUser> userManager,
         IStringLocalizer<SendFactorCodeCommandHandler> localizer,
+        Logger<SendFactorCodeCommandHandler> logger,
         IMailService mailService,
         IApplicationSettings settings)
     {
         _userManager = userManager;
         _localizer = localizer;
+        _logger = logger;
         _mailService = mailService;
         _settings = settings;
     }
@@ -45,7 +48,7 @@ public class SendFactorCodeCommandHandler : IRequestHandler<SendFactorCodeComman
             subject,
             "_authenticatorcode",
             new { request.AuthenticatorCode, _settings.AppName, user.Email, user.UserName, _settings.Company });
-
+        _logger.LogInformation("Verification Code email sent to {to}. sending result {Result} {Message}", request.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
         return sendMailResult.Successful
             ? Result.Success()
             : Result.Failure(string.Format(_localizer["{0}, please contact the administrator"],
