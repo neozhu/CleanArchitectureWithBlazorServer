@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -240,7 +241,7 @@ public static class DependencyInjection
                
             });
 
-
+        services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
         services.ConfigureApplicationCookie(options => { options.LoginPath = "/pages/authentication/login";});
         services.AddSingleton<UserService>()

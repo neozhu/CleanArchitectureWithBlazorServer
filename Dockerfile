@@ -21,7 +21,6 @@ RUN mkdir -p /app/https && \
     -inkey /app/https/private.key -in /app/https/certificate.crt \
     -password pass:CREDENTIAL_PLACEHOLDER
 
-RUN chmod 777 /app/https/aspnetapp.pfx
 
 # Setup environment variables for the application to find the certificate
 ENV ASPNETCORE_URLS=http://+:80;https://+:443

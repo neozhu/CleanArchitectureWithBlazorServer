@@ -77,8 +77,6 @@ public static class DependencyInjection
              return service;
          });
 
-
-        services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
         services.Configure<ForwardedHeadersOptions>(options =>
         {
             options.ForwardedHeaders =
