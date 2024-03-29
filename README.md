@@ -12,6 +12,7 @@ This repository hosts a Blazor Server application designed with Clean Architectu
 Experience the application in action in Blazor Server mode by visiting 
 
 Login [architecture.blazorserver.com](https://architecture.blazorserver.com/)
+Alternative [architecture.blazors.app](https://architecture.blazors.app/)
 
 ## Visual Insights
 Dive into the application's aesthetics and functionality through screenshots and a video walkthrough.
