@@ -10,6 +10,8 @@ RUN sed -i'.bak' 's/$/ contrib/' /etc/apt/sources.list
 RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 RUN apt-get install -y fonts-noto-cjk fontconfig openssl
 
+USER app
+
 # Generate a self-signed certificate
 RUN mkdir -p /app/https && \
     chown app:app /app/https && chmod 755 /app/https && \
