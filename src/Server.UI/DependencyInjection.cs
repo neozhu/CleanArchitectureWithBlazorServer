@@ -16,6 +16,7 @@ using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
@@ -78,7 +79,11 @@ public static class DependencyInjection
 
 
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
-
+        services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders =
+                ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+        });
         return services;
     }
 
@@ -133,8 +138,8 @@ public static class DependencyInjection
 
         // Add additional endpoints required by the Identity /Account Razor components.
         app.MapAdditionalIdentityEndpoints();
+        app.UseForwardedHeaders();
 
-  
 
         return app;
     }
