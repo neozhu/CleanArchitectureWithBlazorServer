@@ -1,0 +1,56 @@
+﻿<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset Request</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom:10px;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Account Activation Required</h2>
+        <p>Dear @Model.UserName,</p>
+        <p>Welcome to @Model.AppName! You're just one step away from completing your registration. To activate your account and get started, please click the link below:</p>
+        <a href="@Model.ActivationUrl" class="button">Activate Account</a>
+        <p>This link will take you to a secure page where you can confirm your email address and activate your account. Please note, for your security, this link will expire in 24 hours. If you did not sign up for a @Model.AppName account, please ignore this email or contact our support team if you have any concerns.</p>
+        <p>For security reasons, we need to ensure your email address is correct before granting access to your account.</p>
+        <p>If you encounter any issues during the activation process, please contact our customer support team for assistance.</p>
+        <p>Thank you for choosing @Model.AppName. We're excited to have you on board and are committed to ensuring the security and privacy of your account.</p>
+        <p>Best regards,</p>
+        <p>@Model.Company Support Team</p>
+    </div>
+</body>
+</html>
