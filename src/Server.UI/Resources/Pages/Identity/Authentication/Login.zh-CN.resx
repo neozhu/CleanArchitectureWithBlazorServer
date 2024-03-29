@@ -187,4 +187,7 @@
   <data name="Set new password" xml:space="preserve">
     <value>设置新密码</value>
   </data>
+  <data name="Error: Invalid login attempt." xml:space="preserve">
+    <value>错误：登录尝试无效。</value>
+  </data>
 </root>
