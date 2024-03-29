@@ -15,6 +15,7 @@ EXPOSE 80
 EXPOSE 443
 
 # Generate a self-signed certificate
+RUN mkdir -p /app/https
 RUN openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
     -keyout https/private.key -out https/certificate.crt \
     -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost" \
