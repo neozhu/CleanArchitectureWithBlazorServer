@@ -3,7 +3,7 @@ using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using CleanArchitecture.Blazor.Server;
 using CleanArchitecture.Blazor.Server.UI;
-using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
