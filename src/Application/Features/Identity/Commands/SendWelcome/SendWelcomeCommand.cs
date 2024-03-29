@@ -14,14 +14,14 @@ public record SendWelcomeCommand(string Email) : IRequest<Result>;
 public class SendWelcomeCommandHandler : IRequestHandler<SendWelcomeCommand, Result>
 {
     private readonly IStringLocalizer<SendWelcomeCommandHandler> _localizer;
-    private readonly Logger<SendWelcomeCommandHandler> _logger;
+    private readonly ILogger<SendWelcomeCommandHandler> _logger;
     private readonly IMailService _mailService;
     private readonly IApplicationSettings _settings;
     private readonly UserManager<ApplicationUser> _userManager;
     private string LoginUrl = "";
     public SendWelcomeCommandHandler(UserManager<ApplicationUser> userManager,
         IStringLocalizer<SendWelcomeCommandHandler> localizer,
-        Logger<SendWelcomeCommandHandler> logger,
+        ILogger<SendWelcomeCommandHandler> logger,
         IMailService mailService,
         IApplicationSettings settings)
     {

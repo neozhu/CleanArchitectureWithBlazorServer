@@ -15,14 +15,14 @@ public record SendFactorCodeCommand(string Email,string AuthenticatorCode) : IRe
 public class SendFactorCodeCommandHandler : IRequestHandler<SendFactorCodeCommand, Result>
 {
     private readonly IStringLocalizer<SendFactorCodeCommandHandler> _localizer;
-    private readonly Logger<SendFactorCodeCommandHandler> _logger;
+    private readonly ILogger<SendFactorCodeCommandHandler> _logger;
     private readonly IMailService _mailService;
     private readonly IApplicationSettings _settings;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public SendFactorCodeCommandHandler(UserManager<ApplicationUser> userManager,
         IStringLocalizer<SendFactorCodeCommandHandler> localizer,
-        Logger<SendFactorCodeCommandHandler> logger,
+        ILogger<SendFactorCodeCommandHandler> logger,
         IMailService mailService,
         IApplicationSettings settings)
     {

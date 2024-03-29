@@ -14,10 +14,10 @@ public class UserActivationCommandHandler : IRequestHandler<UserActivationComman
     private readonly IMailService _mailService;
     private readonly IApplicationSettings _settings;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly Logger<UserActivationCommandHandler> _logger;
+    private readonly ILogger<UserActivationCommandHandler> _logger;
     private string ActivationUrl = "";
     public UserActivationCommandHandler(UserManager<ApplicationUser> userManager,
-        Logger<UserActivationCommandHandler> logger,
+        ILogger<UserActivationCommandHandler> logger,
         IStringLocalizer<UserActivationCommandHandler> localizer,
         IMailService mailService,
         IApplicationSettings settings)

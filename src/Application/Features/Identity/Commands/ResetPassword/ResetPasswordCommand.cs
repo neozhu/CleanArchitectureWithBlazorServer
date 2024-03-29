@@ -12,14 +12,14 @@ public record ResetPasswordCommand(string Email) : IRequest<Result>;
 public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, Result>
 {
     private readonly IStringLocalizer<ResetPasswordCommandHandler> _localizer;
-    private readonly Logger<ResetPasswordCommandHandler> _logger;
+    private readonly ILogger<ResetPasswordCommandHandler> _logger;
     private readonly IMailService _mailService;
     private readonly IApplicationSettings _settings;
     private readonly UserManager<ApplicationUser> _userManager;
     private string RequestUrl = "";
     public ResetPasswordCommandHandler(UserManager<ApplicationUser> userManager,
         IStringLocalizer<ResetPasswordCommandHandler> localizer,
-        Logger<ResetPasswordCommandHandler> logger,
+        ILogger<ResetPasswordCommandHandler> logger,
         IMailService mailService,
         IApplicationSettings settings)
     {
