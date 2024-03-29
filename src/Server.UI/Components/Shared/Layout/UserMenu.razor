@@ -1,12 +1,10 @@
-﻿@using CleanArchitecture.Blazor.Infrastructure.Services.JWT
-@using CleanArchitecture.Blazor.Server.UI.Services
+﻿@using CleanArchitecture.Blazor.Server.UI.Services
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @inherits FluxorComponent
 @inject IJSRuntime JS
 @inject NavigationManager NavigationManager
 @inject IState<UserProfileState> UserProfileState
 @inject IStringLocalizer<HeaderMenu> L
-@inject IAccessTokenProvider TokenProvider
 
 
 <MudTooltip Arrow="true" Text="@L["User Profile"]">
@@ -63,17 +61,24 @@
                     </div>
                 </MudMenuItem>
                 <div class="mt-4 mx-4">
-                    <MudButton Color="Color.Default"
-                               FullWidth="true"
-                               StartIcon="@Icons.Material.Filled.Logout"
-                               OnClick="OnLogout"
-                               Variant="Variant.Outlined">
-                        @L["Logout"]
-                    </MudButton>
+                    <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="/" />
+                        <MudButton Color="Color.Secondary"
+                                   ButtonType="ButtonType.Submit"
+                                   FullWidth="true"
+                                   StartIcon="@Icons.Material.Filled.Logout"
+                                   Variant="Variant.Outlined">
+                            @L["Logout"]
+                        </MudButton>
+                    </form>
                 </div>
             </div>
         </ChildContent>
     </MudMenu>
+    <form method="post" hidden>
+        <AntiforgeryToken />
+    </form>
 </MudTooltip>
 
 @code
@@ -82,24 +87,4 @@
     [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
     private bool IsLoading => UserProfileState.Value.IsLoading;
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
-
-    private async Task OnLogout()
-    {
-        var parameters = new DialogParameters<LogoutConfirmation>
-        {
-            { x => x.ContentText, $"{ConstantString.LogoutConfirmation}" },
-            { x => x.Color, Color.Error }
-        };
-
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-        var dialog = DialogService.Show<LogoutConfirmation>(ConstantString.LogoutConfirmationTitle, parameters, options);
-        var result = await dialog.Result;
-
-        if (!result.Canceled)
-        {
-            await TokenProvider.RemoveAuthDataFromStorage();
-            ((BlazorAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
-            await new ExternalAuth(JS).Logout();
-        }
-    }
 }
