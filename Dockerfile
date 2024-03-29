@@ -24,7 +24,7 @@ RUN mkdir -p /app/https && \
 RUN chmod 777 /app/https/aspnetapp.pfx
 
 # Setup environment variables for the application to find the certificate
-ENV ASPNETCORE_URLS="https://+;http://+"
+ENV ASPNETCORE_URLS=http://+:80;https://+:443
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password="CREDENTIAL_PLACEHOLDER"
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/app/https/aspnetapp.pfx"
 
