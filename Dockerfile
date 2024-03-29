@@ -53,6 +53,6 @@ RUN dotnet publish "Server.UI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY --from=base /app/https/https /app/https
+COPY --from=base /app/https/ /app/https
 
 ENTRYPOINT ["dotnet", "CleanArchitecture.Blazor.Server.UI.dll"]
