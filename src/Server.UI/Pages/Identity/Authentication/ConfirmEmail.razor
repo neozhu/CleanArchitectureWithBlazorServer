@@ -56,6 +56,8 @@
                 if (sentResult.Succeeded)
                 {
                     Logger.LogInformation("{UserName} Activated Successfully!", user.Email);
+                    user.IsActive = true;
+                    await UserManager.UpdateAsync(user);
                 }
             }
             statusMessage = result.Succeeded ? L["Thank you for confirming your email."] : L["Error confirming your email."];

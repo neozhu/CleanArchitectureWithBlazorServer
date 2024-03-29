@@ -145,7 +145,7 @@
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
+        user.Provider = externalLoginInfo.LoginProvider;
         var result = await UserManager.CreateAsync(user);
         if (result.Succeeded)
         {
