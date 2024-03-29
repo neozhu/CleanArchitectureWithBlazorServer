@@ -113,7 +113,8 @@ public class ApplicationDbContextInitializer
             UserName = UserName.Administrator, Provider = "Local", IsActive = true,
             TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name,
             DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true,
-            ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80"
+            ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80",
+            TwoFactorEnabled=false
         };
         var demo = new ApplicationUser
         {
@@ -128,6 +129,7 @@ public class ApplicationDbContextInitializer
         {
             await _userManager.CreateAsync(administrator, UserName.DefaultPassword);
             await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name! });
+            //await _userManager.SetTwoFactorEnabledAsync(administrator, true);
         }
 
         if (_userManager.Users.All(u => u.UserName != demo.UserName))
