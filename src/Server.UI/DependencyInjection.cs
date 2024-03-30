@@ -56,8 +56,8 @@ public static class DependencyInjection
 
         services.AddHttpClient("ocr", c =>
         {
-            c.BaseAddress = new Uri("https://paddleocr.blazorserver.com/uploadocr");
-            c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
+            c.BaseAddress = new Uri("https://paddleocr.blazors.app/ocr/predict-by-file");
+            c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }).AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(30)));
 
         services.AddHttpContextAccessor();
