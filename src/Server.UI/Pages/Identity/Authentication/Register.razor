@@ -1,7 +1,7 @@
 ﻿@page "/pages/authentication/register"
 
-@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.SendWelcome
-@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.UserActivation
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -13,7 +13,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IStringLocalizer<Register> L
 @inject ILogger<Register> Logger
-@inject ISender Sender
+@inject IMediator Sender
 @inject IUserStore<ApplicationUser> UserStore
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
@@ -160,15 +160,10 @@
         Logger.LogInformation("{UserName} created a new account with password.", Input.UserName);
         if (UserManager.Options.SignIn.RequireConfirmedEmail)
         {
-            var sentResult = await Sender.Send(new UserActivationCommand(Input.Email));
-            if (sentResult.Succeeded)
-            {
-                RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new() { ["email"] = Input.Email });
-            }
-            else
-            {
-                message = L["There was an issue sending the confirm email. Please try again later or contact support."];
-            }
+            await Sender.Publish(new UserActivationNotification(Input.Email));
+
+            RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new() { ["email"] = Input.Email });
+
         }
         else if (UserManager.Options.SignIn.RequireConfirmedAccount)
         {
