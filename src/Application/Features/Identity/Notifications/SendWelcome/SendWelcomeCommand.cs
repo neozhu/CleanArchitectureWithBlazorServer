@@ -1,5 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome;
 
@@ -13,13 +14,14 @@ public class SendWelcomeNotificationHandler : INotificationHandler<SendWelcomeNo
     private readonly IApplicationSettings _settings;
     private readonly UserManager<ApplicationUser> _userManager;
     private string LoginUrl = "";
-    public SendWelcomeNotificationHandler(UserManager<ApplicationUser> userManager,
+    public SendWelcomeNotificationHandler(IServiceScopeFactory scopeFactory,
         IStringLocalizer<SendWelcomeNotificationHandler> localizer,
         ILogger<SendWelcomeNotificationHandler> logger,
         IMailService mailService,
         IApplicationSettings settings)
     {
-        _userManager = userManager;
+        var scope = scopeFactory.CreateScope();
+        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         _localizer = localizer;
         _logger = logger;
         _mailService = mailService;

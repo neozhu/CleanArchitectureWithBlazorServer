@@ -2,6 +2,7 @@
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation;
 
@@ -15,13 +16,14 @@ public class UserActivationNotificationHandler : INotificationHandler<UserActiva
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<UserActivationNotificationHandler> _logger;
     private string ActivationUrl = "";
-    public UserActivationNotificationHandler(UserManager<ApplicationUser> userManager,
+    public UserActivationNotificationHandler(IServiceScopeFactory scopeFactory,
         ILogger<UserActivationNotificationHandler> logger,
         IStringLocalizer<UserActivationNotificationHandler> localizer,
         IMailService mailService,
         IApplicationSettings settings)
     {
-        _userManager = userManager;
+        var scope = scopeFactory.CreateScope();
+        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         _logger = logger;
         _localizer = localizer;
         _mailService = mailService;

@@ -10,7 +10,7 @@ public class LoggerConfiguration : IEntityTypeConfiguration<Logger>
     public void Configure(EntityTypeBuilder<Logger> builder)
     {
         builder.Property(x => x.Level).HasMaxLength(450);
-        builder.Property(x => x.Message).HasMaxLength(2048);
+        builder.Property(x => x.Message).HasMaxLength(4000);
         builder.Property(x => x.Exception).HasMaxLength(4000);
         builder.HasIndex(x => new {x.Level, x.Message,x.Exception });
         builder.HasIndex(x => x.TimeStamp);

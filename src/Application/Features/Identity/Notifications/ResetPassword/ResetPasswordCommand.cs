@@ -2,6 +2,7 @@
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword;
 
@@ -15,13 +16,14 @@ public class ResetPasswordNotificationHandler : INotificationHandler<ResetPasswo
     private readonly IApplicationSettings _settings;
     private readonly UserManager<ApplicationUser> _userManager;
     private string RequestUrl = "";
-    public ResetPasswordNotificationHandler(UserManager<ApplicationUser> userManager,
+    public ResetPasswordNotificationHandler(IServiceScopeFactory scopeFactory,
         IStringLocalizer<ResetPasswordNotificationHandler> localizer,
         ILogger<ResetPasswordNotificationHandler> logger,
         IMailService mailService,
         IApplicationSettings settings)
     {
-        _userManager = userManager;
+        var scope = scopeFactory.CreateScope();
+        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         _localizer = localizer;
         _logger = logger;
         _mailService = mailService;

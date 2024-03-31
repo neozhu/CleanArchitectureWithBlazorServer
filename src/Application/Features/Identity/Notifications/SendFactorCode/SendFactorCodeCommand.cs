@@ -1,5 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendFactorCode;
 
@@ -13,13 +14,14 @@ public class SendFactorCodeNotificationHandler : INotificationHandler<SendFactor
     private readonly IApplicationSettings _settings;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public SendFactorCodeNotificationHandler(UserManager<ApplicationUser> userManager,
+    public SendFactorCodeNotificationHandler(IServiceScopeFactory scopeFactory,
         IStringLocalizer<SendFactorCodeNotificationHandler> localizer,
         ILogger<SendFactorCodeNotificationHandler> logger,
         IMailService mailService,
         IApplicationSettings settings)
     {
-        _userManager = userManager;
+        var scope = scopeFactory.CreateScope();
+        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         _localizer = localizer;
         _logger = logger;
         _mailService = mailService;
