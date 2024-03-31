@@ -4,7 +4,7 @@
 @using System.Security.Claims
 @using System.Text
 @using System.Text.Encodings.Web
-@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.UserActivation
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @using CleanArchitecture.Blazor.Server.UI.Services
@@ -17,7 +17,7 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ExternalLogin> Logger
-@inject ISender Sender
+@inject IMediator Sender
 @inject IStringLocalizer<ExternalLogin> L
 <PageTitle>@L["External Login"]</PageTitle>
 
@@ -156,11 +156,9 @@
 
                 if (UserManager.Options.SignIn.RequireConfirmedEmail)
                 {
-                    var sentResult= await Sender.Send(new UserActivationCommand(Input.Email));
-                    if (sentResult.Succeeded)
-                    {
-                        RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new() { ["email"] = Input.Email });
-                    }
+                     await Sender.Publish(new UserActivationNotification(Input.Email));
+                     RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new() { ["email"] = Input.Email });
+                  
                 }
                 // If account confirmation is required, we need to show the link if we don't have a real email sender
                 else if (UserManager.Options.SignIn.RequireConfirmedAccount)
