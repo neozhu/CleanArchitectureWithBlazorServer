@@ -369,8 +369,8 @@
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<DocumentFormDialog>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
 
-        await Task.Delay(300);
-        if (!string.IsNullOrEmpty(dto.URL)) await new OpenSeadragon(JS).Open(dto.URL);
+       
+       
         var state = await dialog.Result;
         if (!state.Canceled)
         {
