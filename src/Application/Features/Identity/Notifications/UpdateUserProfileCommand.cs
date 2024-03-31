@@ -1,6 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Security;
 
-namespace CleanArchitecture.Blazor.Application.Features.Identity.Notification;
+namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications;
 
 public class UpdateUserProfileCommand : INotification
 {
