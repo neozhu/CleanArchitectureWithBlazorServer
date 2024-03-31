@@ -55,8 +55,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                 DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                 if (string.IsNullOrEmpty(doc.URL)) return;
                 var imgFile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
-                if (!File.Exists(imgFile)) return;
-                // Create multipart/form-data content
+                if (!File.Exists(imgFile)) return; 
                 using var form = new MultipartFormDataContent();
                 using var fileStream = new FileStream(imgFile, FileMode.Open);
                 using var fileContent = new StreamContent(fileStream);
@@ -77,15 +76,14 @@ public class DocumentOcrJob : IDocumentOcrJob
                     DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                     _timer.Stop();
                     var elapsedMilliseconds = _timer.ElapsedMilliseconds;
-                    _logger.LogInformation(
-                        "Id: {Id}, elapsed: {ElapsedMilliseconds}, recognize the result: {@Result},{@Content}", id,
-                        elapsedMilliseconds, response.StatusCode, doc.Content);
+                    _logger.LogInformation("Image recognition completed. Id: {id}, Elapsed Time: {elapsedMilliseconds}ms, Status: {StatusCode}",
+                        id, elapsedMilliseconds, response.StatusCode);
                 }
             }
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "{Id}: recognize error {ExMessage}", id, ex.Message);
+            _logger.LogError(ex, "{id}: Image recognize error {Message}", id, ex.Message);
         }
     }
 }
