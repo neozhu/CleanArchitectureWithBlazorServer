@@ -34,7 +34,7 @@ public class SendFactorCodeNotificationHandler : INotificationHandler<SendFactor
         var user = await _userManager.FindByEmailAsync(notification.Email);
         if (user == null)
         {
-            _logger.LogError(string.Format(_localizer["Verification code notification sending failed. No user associated with email {Email}, Verify the email address or contact the administrator"]), notification.Email);
+            _logger.LogError("Verification code notification sending failed. No user associated with email {Email}, Verify the email address or contact the administrator", notification.Email);
             return;
         }
         var subject = _localizer["Your Verification Code"];

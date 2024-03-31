@@ -37,7 +37,7 @@ public class UserActivationNotificationHandler : INotificationHandler<UserActiva
 
         if (user == null)
         {
-            _logger.LogError(string.Format(_localizer["Account activation notification sending failed. No user associated with email {Email}, Verify the email address or contact the administrator"]), notification.Email);
+            _logger.LogError("Account activation notification sending failed. No user associated with email {Email}, Verify the email address or contact the administrator", notification.Email);
             return;
         }
 

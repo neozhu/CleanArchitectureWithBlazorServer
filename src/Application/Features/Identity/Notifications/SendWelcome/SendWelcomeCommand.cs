@@ -35,7 +35,7 @@ public class SendWelcomeNotificationHandler : INotificationHandler<SendWelcomeNo
 
         if (user == null)
         {
-            _logger.LogError(string.Format(_localizer["Welcome notification sending failed. No user associated with email {Email}, Verify the email address or contact the administrator"]), notification.Email);
+            _logger.LogError("Welcome notification sending failed. No user associated with email {Email}, Verify the email address or contact the administrator", notification.Email);
             return;
         }
 
