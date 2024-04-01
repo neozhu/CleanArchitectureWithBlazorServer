@@ -4,18 +4,17 @@ public class LoggerAdvancedSpecification : Specification<Logger>
 {
     public LoggerAdvancedSpecification(LoggerAdvancedFilter filter)
     {
-        var today = DateTime.Now.ToUniversalTime().Date;
-        var start = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
-            CultureInfo.CurrentCulture);
-        var end = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 23:59:59",
-            CultureInfo.CurrentCulture);
-        var last30days =
-            Convert.ToDateTime(today.AddDays(-30).ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
-                CultureInfo.CurrentCulture);
-        Query.Where(p => p.TimeStamp.Date == DateTime.Now.Date, filter.ListView == LogListView.CreatedToday)
-            .Where(p => p.TimeStamp >= last30days, filter.ListView == LogListView.Last30days)
-            .Where(p => p.Level == filter.Level.ToString(), filter.Level is not null)
-            .Where(
-                x => x.Message.Contains(filter.Keyword) || x.Exception.Contains(filter.Keyword)  , !string.IsNullOrEmpty(filter.Keyword));
+        // Convert to UTC to ensure consistency in time comparisons
+        var utcNow = DateTime.UtcNow;
+        var today = utcNow.Date; // Gets today's date with time set to 00:00:00
+        var startOfToday = today; // Start of today, already at 00:00:00
+        var endOfToday = today.AddHours(23).AddMinutes(59).AddSeconds(59); // End of today at 23:59:59
+        var startOfLast30Days = today.AddDays(-30); // Start date for the last 30 days filter
+
+        // Build the query conditions
+        Query.Where(p => p.TimeStamp >= startOfToday && p.TimeStamp <= endOfToday, filter.ListView == LogListView.CreatedToday)
+             .Where(p => p.TimeStamp >= startOfLast30Days, filter.ListView == LogListView.Last30days)
+             .Where(p => p.Level == filter.Level.ToString(), filter.Level is not null)
+             .Where(x => x.Message.Contains(filter.Keyword) || x.Exception.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword));
     }
 }
