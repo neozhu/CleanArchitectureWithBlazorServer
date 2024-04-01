@@ -9,6 +9,7 @@ using CleanArchitecture.Blazor.Server.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
 using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication;
 using CleanArchitecture.Blazor.Server.UI.Services;
+using CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
 using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
@@ -56,10 +57,10 @@ public static class DependencyInjection
 
         services.AddHttpClient("ocr", c =>
         {
-            c.BaseAddress = new Uri("https://paddleocr.blazorserver.com/uploadocr");
-            c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("multipart/form-data"));
+            c.BaseAddress = new Uri("http://10.33.1.150:8000/ocr/predict-by-file");
+            c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }).AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(30)));
-
+        services.AddScoped<LocalTimezoneOffset>();
         services.AddHttpContextAccessor();
         services.AddScoped<HubClient>();
         services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
