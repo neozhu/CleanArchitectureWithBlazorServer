@@ -48,7 +48,7 @@ public class MailService : IMailService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error sending an email to {Unknown} with subject {Subject}", to, subject);
+            _logger.LogError(e, "Failed to send email. Recipient: {Recipient}, Subject: {EmailSubject}. An exception occurred.", to, subject);
             throw;
         }
     }
@@ -72,8 +72,7 @@ public class MailService : IMailService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error sending an email to {Unknown} with subject {Subject} and template {Template}",
-                to, subject, template);
+            _logger.LogError(e, "Failed to send templated email. Recipient: {Recipient}, Subject: {EmailSubject}, Template: {EmailTemplate}. An exception occurred.", to, subject, template);
             throw;
         }
     }

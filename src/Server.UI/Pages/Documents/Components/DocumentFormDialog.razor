@@ -1,9 +1,10 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @inherits MudComponentBase
 
 @inject IValidationService Validator
 @inject IStringLocalizer<Documents> L
-
+@inject IJSRuntime JS
 <MudDialog>
     <DialogContent>
         <MudForm Model="Model" @ref="_form" Validation="@(Validator.ValidateValue(Model))">
@@ -55,7 +56,7 @@
 
                 <MudItem>
                     <MudPaper Elevation="3">
-                        <div id="openseadragon" style="width: 600px; height: 300px;"></div>
+                        <div id="openseadragon" style="width: 680px; height: 300px;"></div>
                     </MudPaper>
 
                 </MudItem>
@@ -78,6 +79,10 @@
 
     private const long MaxAllowedSize = 3145728;
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(Model.URL)) await new OpenSeadragon(JS).Open(Model.URL);
+    }
     private async Task Submit()
     {
         await _form!.Validate();

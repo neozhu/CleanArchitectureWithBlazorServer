@@ -1,7 +1,7 @@
 ﻿@page "/pages/authentication/confirmemail"
 
 @using System.Text
-@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.SendWelcome
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome
 @using CleanArchitecture.Blazor.Domain.Identity
 @using FluentEmail.Core.Models
 @using Microsoft.AspNetCore.Identity
@@ -11,7 +11,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ConfirmEmail> Logger
-@inject ISender Sender
+@inject IMediator Sender
 <PageTitle>@L["Confirm email"]</PageTitle>
 <div class="d-flex flex-column gap-y-3">
     <MudText Typo="Typo.h4" GutterBottom="true">@L["Confirm email"]</MudText>
@@ -52,13 +52,11 @@
             var result = await UserManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
             {
-                var sentResult = await Sender.Send(new SendWelcomeCommand(user.Email));
-                if (sentResult.Succeeded)
-                {
-                    Logger.LogInformation("{UserName} Activated Successfully!", user.Email);
-                    user.IsActive = true;
-                    await UserManager.UpdateAsync(user);
-                }
+                await Sender.Publish(new SendWelcomeNotification(user.Email));
+                Logger.LogInformation("{UserName} Activated Successfully!", user.Email);
+                user.IsActive = true;
+                await UserManager.UpdateAsync(user);
+
             }
             statusMessage = result.Succeeded ? L["Thank you for confirming your email."] : L["Error confirming your email."];
             error = result.Succeeded ? false : true;
