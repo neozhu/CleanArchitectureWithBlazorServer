@@ -2,6 +2,8 @@
 #nullable disable warnings
 public class LoggerAdvancedSpecification : Specification<Logger>
 {
+    public LoggerAdvancedSpecification(LoggerAdvancedFilter filter)
+{
     // Obtain the system's current time zone
     var localZone = TimeZoneInfo.Local;
     // Get the current UTC time
@@ -21,4 +23,5 @@ public class LoggerAdvancedSpecification : Specification<Logger>
          .Where(p => p.TimeStamp >= startOfLast30DaysLocalAsUtc, filter.ListView == LogListView.Last30days)
          .Where(p => p.Level == filter.Level.ToString(), filter.Level is not null)
          .Where(x => x.Message.Contains(filter.Keyword) || x.Exception.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword));
+}
 }
