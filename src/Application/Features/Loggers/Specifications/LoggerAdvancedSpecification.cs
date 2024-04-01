@@ -2,19 +2,23 @@
 #nullable disable warnings
 public class LoggerAdvancedSpecification : Specification<Logger>
 {
-    public LoggerAdvancedSpecification(LoggerAdvancedFilter filter)
-    {
-        // Convert to UTC to ensure consistency in time comparisons
-        var utcNow = DateTime.UtcNow;
-        var today = utcNow.Date; // Gets today's date with time set to 00:00:00
-        var startOfToday = today; // Start of today, already at 00:00:00
-        var endOfToday = today.AddHours(23).AddMinutes(59).AddSeconds(59); // End of today at 23:59:59
-        var startOfLast30Days = today.AddDays(-30); // Start date for the last 30 days filter
+    // Obtain the system's current time zone
+    var localZone = TimeZoneInfo.Local;
+    // Get the current UTC time
+    var utcNow = DateTime.UtcNow;
+    // Convert the current UTC time to the system's local time
+    var localNow = TimeZoneInfo.ConvertTimeFromUtc(utcNow, localZone);
+    // Determine today's date based on the system's local time
+    var localToday = localNow.Date;
+    // Convert the start and end of the local day back to UTC time for database querying
+    var startOfLocalTodayAsUtc = TimeZoneInfo.ConvertTimeToUtc(localToday, localZone);
+    var endOfLocalTodayAsUtc = TimeZoneInfo.ConvertTimeToUtc(localToday.AddDays(1).AddTicks(-1), localZone);
+    // Calculate the start of the last 30 days in local time, then convert to UTC for the query
+    var startOfLast30DaysLocalAsUtc = TimeZoneInfo.ConvertTimeToUtc(localToday.AddDays(-30), localZone);
 
-        // Build the query conditions
-        Query.Where(p => p.TimeStamp >= startOfToday && p.TimeStamp <= endOfToday, filter.ListView == LogListView.CreatedToday)
-             .Where(p => p.TimeStamp >= startOfLast30Days, filter.ListView == LogListView.Last30days)
-             .Where(p => p.Level == filter.Level.ToString(), filter.Level is not null)
-             .Where(x => x.Message.Contains(filter.Keyword) || x.Exception.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword));
-    }
+    // Construct the query conditions
+    Query.Where(p => p.TimeStamp >= startOfLocalTodayAsUtc && p.TimeStamp < endOfLocalTodayAsUtc, filter.ListView == LogListView.CreatedToday)
+         .Where(p => p.TimeStamp >= startOfLast30DaysLocalAsUtc, filter.ListView == LogListView.Last30days)
+         .Where(p => p.Level == filter.Level.ToString(), filter.Level is not null)
+         .Where(x => x.Message.Contains(filter.Keyword) || x.Exception.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword));
 }
