@@ -8,4 +8,5 @@ public class JSInteropConstants
     public static string ClearInput = "clearInput";
     public static string PreviewImage = "previewImage";
     public static string CreateOrgChart = "createOrgChart";
+    public static string GetTimezoneOffset = "getTimezoneOffset";
 }
