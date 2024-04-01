@@ -1,14 +1,12 @@
 ﻿@page "/pages/authentication/RegisterConfirmation"
 
 @using System.Text
-@using CleanArchitecture.Blazor.Application.Features.Identity.Commands.UserActivation
 @using CleanArchitecture.Blazor.Domain.Identity
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 
 
 @inject UserManager<ApplicationUser> UserManager
-@inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject IStringLocalizer<RegisterConfirmation> L
 <PageTitle>@L["Register confirmation"]</PageTitle>
