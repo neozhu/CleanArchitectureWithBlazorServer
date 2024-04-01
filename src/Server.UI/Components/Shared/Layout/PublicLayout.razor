@@ -15,7 +15,7 @@
             </MudText>
         </NavLink>
         <MudSpacer />
-        <MudHidden Breakpoint="Breakpoint.SmAndDown" >
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudTooltip Arrow="true"
                         Text="Navigate to GitHub">
                 <MudIconButton Class="mx-1"
@@ -25,25 +25,41 @@
                                Target="_blank" />
             </MudTooltip>
             <LanguageSelector />
-            <MudTooltip Text="@(RightToLeft ? "Toggle right-to-left" : "Toggle left-to-right")">
+            <MudTooltip Text="@(LayoutService.IsRTL ? "Toggle right-to-left" : "Toggle left-to-right")">
                 <MudIconButton Class="mx-1"
-                               Icon="@(RightToLeft ? Icons.Material.Filled.FormatTextdirectionLToR : Icons.Material.Filled.FormatTextdirectionRToL)"
+                               Icon="@(LayoutService.IsRTL ? Icons.Material.Filled.FormatTextdirectionLToR : Icons.Material.Filled.FormatTextdirectionRToL)"
                                Color="Color.Default"
                                OnClick="@(e => LayoutService.ToggleRightToLeft())" />
             </MudTooltip>
-
-            <MudTooltip Text="@L["Login"]">
-                <MudButton Variant="Variant.Text" Href="/pages/authentication/login"
-                           StartIcon="@Icons.Material.Rounded.Login"
-                           Style="text-transform:none">
-                    @L["Login"]
-                </MudButton>
-            </MudTooltip>
-        </MudHidden>
-         <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
+            <AuthorizeView>
+                <Authorized>
+                    <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="/" />
+                        <MudTooltip Text="@L["Logout"]">
+                            <MudButton Style="text-transform:none"
+                                   ButtonType="ButtonType.Submit"
+                                   Variant="Variant.Text"
+                                   StartIcon="@Icons.Material.Filled.Logout">
+                            @L["Logout"]
+                        </MudButton>
+                        </MudTooltip>
+                    </form>
+                </Authorized>
+                <NotAuthorized>
+                    <MudTooltip Text="@L["Login"]">
+                        <MudButton Variant="Variant.Text" Href="/pages/authentication/login"
+                                   StartIcon="@Icons.Material.Rounded.Login"
+                                   Style="text-transform:none">
+                            @L["Login"]
+                        </MudButton>
+                    </MudTooltip>
+                </NotAuthorized>
+            </AuthorizeView>
             
+        </MudHidden>
+        <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
             <LanguageSelector />
-
             <MudTooltip Text="@L["Login"]">
                 <MudButton Variant="Variant.Text" Href="/pages/authentication/login"
                            StartIcon="@Icons.Material.Rounded.Login"
@@ -52,18 +68,15 @@
                 </MudButton>
             </MudTooltip>
         </MudHidden>
-        
-
     </MudAppBar>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Large" Class="mb-4 mt-4" Style="height:max-content">
             <MudPaper Class="pa-16 ma-2" Elevation="3" Square Style="height:100dvh;background: url(/img/pattern.svg) no-repeat center bottom; background-size: cover;">
-            @Body
+                @Body
             </MudPaper>
         </MudContainer>
     </MudMainContent>
 </MudLayout>
 @code
 {
-    public bool RightToLeft { get; set; }
 }
