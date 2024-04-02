@@ -1,16 +1,19 @@
 ﻿@page "/pages/authentication/forgot-password"
 
+@using Microsoft.AspNetCore.WebUtilities
 @using Severity = Severity
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
 @using System.ComponentModel.DataAnnotations
+@using System.Text
 
 @inject IStringLocalizer<Forgot> L
 @inject IMediator Sender
 @inject ILogger<Forgot> Logger
 @inject IdentityRedirectManager RedirectManager
 @inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
 <PageTitle>@Title</PageTitle>
 
 <EditForm Model="Input" FormName="forgot-password" OnValidSubmit="OnValidSubmitAsync" method="post">
@@ -69,16 +72,22 @@
         if (user is null)
         {
             Message = L["No user found with the provided email address."];
+            return;
         }
         else
         {
             if (!(await UserManager.IsEmailConfirmedAsync(user)))
             {
                 Message = L["Your email address has not been confirmed. Please check your inbox for a confirmation email or request a new confirmation link."];
+                return;
             }
         }
-
-        await Sender.Publish(new ResetPasswordNotification(Input.Email));
+        var code = await UserManager.GeneratePasswordResetTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+            NavigationManager.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
+            new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
+        await Sender.Publish(new ResetPasswordNotification(callbackUrl,user.Email,user.UserName));
         Logger.LogInformation("Rest password email sent to {0}.", Input.Email);
         RedirectManager.RedirectTo(ForgotPasswordConfirmation.PageUrl);
 
