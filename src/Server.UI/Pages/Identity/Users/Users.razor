@@ -158,9 +158,9 @@
                             }
                         </MudSelect>
                         <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
-                        </MudTextField>
+                            <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                            </MudTextField>
                         </MudHidden>
                     </MudStack>
                 }
@@ -510,18 +510,14 @@
             if (identityResult.Succeeded)
             {
                 var roles = await UserManager.GetRolesAsync(user!);
-                if (roles.Count > 0)
+                if (roles.Count > 0 && item.AssignedRoles is not null && item.AssignedRoles.Any())
                 {
-                    var removeRoleResult = await UserManager.RemoveFromRolesAsync(user, roles);
-                    if (removeRoleResult.Succeeded)
-                    {
-                        if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
-                        {
-                            await UserManager.AddToRolesAsync(user, item.AssignedRoles);
-                        }
-                    }
+                    await UserManager.RemoveFromRolesAsync(user, roles);
                 }
-
+                if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
+                {
+                    await UserManager.AddToRolesAsync(user, item.AssignedRoles);
+                }
                 Snackbar.Add($"{ConstantString.SaveSuccess}", Severity.Info);
                 await OnRefresh();
                 UserService.Refresh();
@@ -821,7 +817,7 @@
                     }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                 new Dictionary<string, Func<ApplicationUserDto, object?>>
-                        {
+                            {
                     { L["Id"], item => item.Id },
                     { L["User Name"], item => item.UserName },
                     { L["Display Name"], item => item.DisplayName },
@@ -829,7 +825,7 @@
                     { L["Phone Number"], item => item.PhoneNumber },
                     { L["Tenant Id"], item => item.TenantId },
                     { L["Tenant Name"], item => item.TenantName }
-                        }, L["Users"]);
+                            }, L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
         }

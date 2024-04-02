@@ -150,25 +150,34 @@
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
         var result = await UserManager.CreateAsync(user, Input.Password);
-
         if (!result.Succeeded)
         {
             message = string.Join(" ", result.Errors.Select(error => error.Description));
             return;
         }
-
+        result = await UserManager.AddToRoleAsync(user, RoleName.Basic);
+        if (!result.Succeeded)
+        {
+            message = string.Join(" ", result.Errors.Select(error => error.Description));
+            return;
+        }
+        var userId = await UserManager.GetUserIdAsync(user);
         Logger.LogInformation("{UserName} created a new account with password.", Input.UserName);
         if (UserManager.Options.SignIn.RequireConfirmedEmail)
         {
-            await Sender.Publish(new UserActivationNotification(Input.Email));
-
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+                NavigationManager.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
+                new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = "/" });
+            await Sender.Publish(new UserActivationNotification(callbackUrl, Input.Email, userId, Input.UserName));
             RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new() { ["email"] = Input.Email });
 
         }
         else if (UserManager.Options.SignIn.RequireConfirmedAccount)
         {
-            var userId = await UserManager.GetUserIdAsync(user);
-            var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
+            
+           
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = NavigationManager.GetUriWithQueryParameters(

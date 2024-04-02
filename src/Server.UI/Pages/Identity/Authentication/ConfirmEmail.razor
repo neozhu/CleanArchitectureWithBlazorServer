@@ -10,6 +10,7 @@
 @inject IStringLocalizer<ConfirmEmail> L
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
+@inject NavigationManager NavigationManager
 @inject ILogger<ConfirmEmail> Logger
 @inject IMediator Sender
 <PageTitle>@L["Confirm email"]</PageTitle>
@@ -52,7 +53,11 @@
             var result = await UserManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
             {
-                await Sender.Publish(new SendWelcomeNotification(user.Email));
+                var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+                NavigationManager.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
+                new Dictionary<string, object?> { ["returnUrl"]="/" });
+
+                await Sender.Publish(new SendWelcomeNotification(callbackUrl,user.Email,user.UserName));
                 Logger.LogInformation("{UserName} Activated Successfully!", user.Email);
                 user.IsActive = true;
                 await UserManager.UpdateAsync(user);
