@@ -19,7 +19,7 @@
 @code
 {
 
-    private UserPreferences _userPreferences = new();
+ 
     private MudThemeProvider _mudThemeProvider = null!;
     private bool _defaultDarkMode;
 
@@ -45,7 +45,7 @@
     private async Task ApplyUserPreferences()
     {
         _defaultDarkMode = await _mudThemeProvider.GetSystemPreference();
-        _userPreferences = await LayoutService.ApplyUserPreferences(_defaultDarkMode);
+        await LayoutService.ApplyUserPreferences(_defaultDarkMode);
     }
 
     protected override void OnInitialized()

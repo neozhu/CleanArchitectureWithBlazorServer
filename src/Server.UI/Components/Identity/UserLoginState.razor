@@ -25,11 +25,12 @@
     {
         Client.LoginEvent += _client_Login;
         Client.LogoutEvent += _client_Logout;
-        await Client.StartAsync().ConfigureAwait(false);
+     
         AuthenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
         var state = await AuthState;
         if (state.User.Identity?.IsAuthenticated ?? false)
         {
+            await Client.StartAsync().ConfigureAwait(false);
             var userName = state.User.Identity.Name;
             SetProfile(userName!);
         }

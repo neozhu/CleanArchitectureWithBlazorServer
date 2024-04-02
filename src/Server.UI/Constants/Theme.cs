@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Server.UI.Constants;
+﻿namespace CleanArchitecture.Blazor.Server.UI.Constants;
 
 public class Theme
 {
@@ -25,7 +25,7 @@ public class Theme
             },
             PaletteDark = new PaletteDark
             {
-                Primary = "#7e6fff",
+                Primary = "#8b9ac6",
                 Dark = "#343a40",
                 PrimaryContrastText = "#c3cbe4",
                 Info = "#47bce8",

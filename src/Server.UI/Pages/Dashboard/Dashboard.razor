@@ -3,11 +3,7 @@
 @using MudBlazor.Utilities
 @inject IStringLocalizer<Dashboard> L
 <PageTitle>@Title</PageTitle>
-<AuthorizeView>
-<NotAuthorized>
-    <RedirectToLogin/>
-</NotAuthorized>
-<Authorized>
+
 <MudContainer MaxWidth="MaxWidth.Large">
 <div class="@ContentClassNames">
 
@@ -194,8 +190,7 @@
         grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
     }
 </style>
-</Authorized>
-</AuthorizeView>
+
 
 @code
 {

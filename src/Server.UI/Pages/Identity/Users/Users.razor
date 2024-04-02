@@ -28,8 +28,6 @@
 @inject IAppCache Cache
 @inject IExcelService ExcelService
 @inject IMapper Mapper
-@inject UserManager<ApplicationUser> UserManager
-@inject RoleManager<ApplicationRole> RoleManager
 @inject IMailService MailService
 @inject IStringLocalizer<Users> L
 @inject ILogger<Users> Logger
@@ -323,7 +321,8 @@
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-
+    private UserManager<ApplicationUser> UserManager;
+    private RoleManager<ApplicationRole> RoleManager;
     private int _defaultPageSize = 15;
     private HashSet<ApplicationUserDto> _selectedItems = new();
     private readonly ApplicationUserDto _currentDto = new();
@@ -357,7 +356,8 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-
+        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
