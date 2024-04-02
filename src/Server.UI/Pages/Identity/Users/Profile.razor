@@ -19,7 +19,7 @@
 @inject IDispatcher Dispatcher
 @inject IUploadService UploadService
 @inject IIdentityService IdentityService
-@inject UserManager<ApplicationUser> UserManager
+
 
 <PageTitle>@Title</PageTitle>
 
@@ -183,7 +183,7 @@
 
 @code{
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-
+    private UserManager<ApplicationUser> UserManager;
     public string Title { get; set; } = "Profile";
 
     private MudForm? _form;
@@ -238,6 +238,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         await base.OnInitializedAsync();
         UserProfileState.StateChanged += StateOnStateChanged;
     }

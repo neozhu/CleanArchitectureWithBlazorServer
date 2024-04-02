@@ -104,6 +104,7 @@ public static class DependencyInjection
         app.MapHealthChecks("/health");
     
         app.UseAuthentication();
+        app.UseAuthorization();
         app.UseAntiforgery();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
