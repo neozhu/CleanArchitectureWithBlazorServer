@@ -15,7 +15,6 @@ public sealed class HubClient : IAsyncDisposable
     public HubClient(NavigationManager navigationManager, IHttpContextAccessor  httpContextAccessor)
     {
         var uri = new UriBuilder(navigationManager.Uri);
-
         var container = new CookieContainer();
         if (httpContextAccessor.HttpContext != null)
         {
@@ -24,13 +23,11 @@ public sealed class HubClient : IAsyncDisposable
                 container.Add(new Cookie(c.Key, c.Value)
                 {
                     Domain = uri.Host, // Set the domain of the cookie
-                    Path = uri.Path // Set the path of the cookie
+                    Path = "/" // Set the path of the cookie
                 });
             }
         }
-
         var hubUrl = navigationManager.BaseUri.TrimEnd('/') + ISignalRHub.Url;
-
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(hubUrl, options =>
             {
@@ -89,7 +86,6 @@ public sealed class HubClient : IAsyncDisposable
     public async Task StartAsync(CancellationToken cancellation = default)
     {
         if (_started) return;
-
         _started = true;
         await _hubConnection.StartAsync(cancellation);
     }
