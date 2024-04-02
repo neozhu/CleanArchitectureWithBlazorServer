@@ -19,6 +19,7 @@ public class UserPreferences
     public bool IsDarkMode { get; set; }
 
     public string PrimaryColor { get; set; } = "#2d4275";
+    public string DarkPrimaryColor { get; set; } = "#8b9ac6";
     public string PrimaryDarken => AdjustBrightness(PrimaryColor, 0.8);
     public string PrimaryLighten => AdjustBrightness(PrimaryColor, 0.7);
     public string SecondaryColor { get; set; } = "#ff4081ff";
@@ -34,6 +35,26 @@ public class UserPreferences
     public double Subtitle2FontSize => DefaultFontSize;
     public DarkLightMode DarkLightTheme { get; set; }
 
+
+    public readonly static List<string> PrimaryColors = new()
+    {
+        "#2d4275",
+        Colors.Green.Default,
+        "#0576b9",
+        "#8421d1",
+        "#FF7F00",
+        Colors.Red.Default
+    };
+
+    public readonly static List<string> DarkPrimaryColors = new()
+    {
+        "#8b9ac6",
+        "#6c9f77",
+        "#79a5d1",
+        "#776BE7",
+        "#d0882c",
+        "#f88989"
+    };
 
     private string AdjustBrightness(string hexColor, double factor)
     {
