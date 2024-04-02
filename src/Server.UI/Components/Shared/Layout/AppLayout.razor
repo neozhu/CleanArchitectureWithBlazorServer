@@ -25,7 +25,7 @@
                             DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler" />
             <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
                         ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
-                        UserPreferences="_userPreferences"
+                        UserPreferences="@LayoutService.UserPreferences"
                         UserPreferencesChanged="LayoutService.UpdateUserPreferences" />
             <ThemesButton OnClick="@(() => _themingDrawerOpen = true)" />
             <MudMainContent>
@@ -52,7 +52,6 @@
 {
     private bool _commandPaletteOpen;
     private bool _navigationMenuDrawerOpen = true;
-    private UserPreferences _userPreferences = new();
     private bool _themingDrawerOpen;
     private UserProfile? _userProfile;
     private ErrorBoundary? _errorBoundary { set; get; }
