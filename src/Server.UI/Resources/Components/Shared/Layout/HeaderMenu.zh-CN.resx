@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -139,7 +139,7 @@
     <value>通知</value>
   </data>
   <data name="Profile" xml:space="preserve">
-    <value>轮廓</value>
+    <value>用户资料</value>
   </data>
   <data name="Search (Cmd + K)" xml:space="preserve">
     <value>搜索（Cmd + K）</value>

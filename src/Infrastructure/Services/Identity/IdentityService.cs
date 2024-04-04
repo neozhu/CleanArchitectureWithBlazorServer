@@ -106,11 +106,11 @@ public class IdentityService : IIdentityService
 
     public async Task<ApplicationUserDto> GetApplicationUserDto(string userName, CancellationToken cancellation = default)
     {
-        var key = $"GetApplicationUserDto:{userName}";
+        var key = GetApplicationUserCacheKey(userName);
         var result = await _cache.GetOrAddAsync(key,
             async () => await _userManager.Users.Where(x => x.UserName == userName).Include(x => x.UserRoles)
                 .ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(cancellation) ?? new ApplicationUserDto() { UserName= "Anonymous" }, Options);
+                .FirstOrDefaultAsync(cancellation) ?? new ApplicationUserDto() { UserName = "Anonymous" }, Options);
         return result;
     }
 
@@ -130,4 +130,12 @@ public class IdentityService : IIdentityService
         var result = await _cache.GetOrAddAsync(key, () => getUsersByTenantId(tenantId, cancellation), Options);
         return result;
     }
+
+    public void RemoveApplicationUserCache(string userName)
+    {
+        _cache.Remove(GetApplicationUserCacheKey(userName));
+    }
+
+    private string GetApplicationUserCacheKey(string userName) => $"GetApplicationUserDto:{userName}";
+
 }
