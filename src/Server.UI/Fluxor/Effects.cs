@@ -18,4 +18,11 @@ public class Effects
         if (result is not null)
             dispatcher.Dispatch(new FetchUserDtoResultAction(result));
     }
+
+    [EffectMethod]
+    public   Task HandleUserProfileChangedAction(UserProfileUpdateAction action, IDispatcher dispatcher)
+    {
+        _identityService.RemoveApplicationUserCache(action.UserProfile.UserName);
+        return Task.CompletedTask;
+    }
 }

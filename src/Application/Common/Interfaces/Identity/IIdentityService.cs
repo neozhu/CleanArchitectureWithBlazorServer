@@ -16,4 +16,5 @@ public interface IIdentityService : IService
     Task<ApplicationUserDto> GetApplicationUserDto(string userName, CancellationToken cancellation = default);
     string GetUserName(string userId);
     Task<List<ApplicationUserDto>?> GetUsers(string? tenantId, CancellationToken cancellation = default);
+    void RemoveApplicationUserCache(string userName);
 }
