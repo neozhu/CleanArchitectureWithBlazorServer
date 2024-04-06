@@ -137,15 +137,16 @@
             var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
             var token = await UserManager.GenerateTwoFactorTokenAsync(user, "Email");
             await Sender.Publish(new SendFactorCodeNotification(user.Email, user.UserName, token));
-
             RedirectManager.RedirectTo(LoginWith2fa.PageUrl, new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
-
-
         }
         else if (result.IsLockedOut)
         {
             Logger.LogWarning($"{Input.UserName} account locked out.");
             RedirectManager.RedirectTo(Lockout.PageUrl);
+        }
+        else if (result.IsNotAllowed)
+        {
+            errorMessage = L["Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps."];
         }
         else
         {

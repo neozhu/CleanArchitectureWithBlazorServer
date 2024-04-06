@@ -11,7 +11,7 @@
     <ItemGroup>
         <PackageReference Include="Fluxor.Blazor.Web" Version="5.9.1" />
         <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.1" />
-        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.11" />
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.12" />
         <PackageReference Include="Hangfire.InMemory" Version="0.8.1" />
         <PackageReference Include="Blazor-Analytics" Version="3.12.0" />
         
@@ -23,7 +23,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.3" />
       
-        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="3.3.0" />
+        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="4.0.0" />
     </ItemGroup>
     
     <ItemGroup>

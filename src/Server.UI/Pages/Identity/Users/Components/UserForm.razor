@@ -86,7 +86,7 @@
         <MudItem xs="12" sm="6">
             <MudText Typo="Typo.caption">@L["Status"]</MudText>
             <div class="d-fex">
-                <MudCheckBox For="@(() => Model.IsActive)" T="bool" @bind-Value="Model.IsActive" Label="@L["Is Active"]" Disabled="@(string.IsNullOrEmpty(Model.Id))"></MudCheckBox>
+                <MudCheckBox For="@(() => Model.IsActive)" Disabled="@(!string.IsNullOrEmpty(Model.Id))" T="bool" @bind-Value="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
             </div>
         </MudItem>
         <MudItem xs="12" sm="12">

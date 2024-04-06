@@ -235,4 +235,19 @@
   <data name="Permission assigned successfully" xml:space="preserve">
     <value>権限が正常に割り当てられました</value>
   </data>
+  <data name="The user updated successfully." xml:space="preserve">
+    <value>ユーザーは正常に更新されました。</value>
+  </data>
+  <data name="The user has been inactivated." xml:space="preserve">
+    <value>ユーザーは非アクティブ化されました。</value>
+  </data>
+  <data name="The user has been activated." xml:space="preserve">
+    <value>ユーザーがアクティブ化されました。</value>
+  </data>
+  <data name="Recovery email sent. Please check your inbox to set a new password." xml:space="preserve">
+    <value>回復メールが送信されました。 受信箱を確認して新しいパスワードを設定してください。</value>
+  </data>
+  <data name="New user created successfully." xml:space="preserve">
+    <value>新しいユーザーが正常に作成されました。</value>
+  </data>
 </root>
