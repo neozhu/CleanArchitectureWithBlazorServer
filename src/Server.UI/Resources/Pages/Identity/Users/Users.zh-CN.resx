@@ -235,4 +235,19 @@
   <data name="Permission assigned successfully" xml:space="preserve">
     <value>权限分配成功</value>
   </data>
+  <data name="The user updated successfully." xml:space="preserve">
+    <value>用户更新成功。</value>
+  </data>
+  <data name="The user has been inactivated." xml:space="preserve">
+    <value>该用户已被停用。</value>
+  </data>
+  <data name="The user has been activated." xml:space="preserve">
+    <value>用户已被激活。</value>
+  </data>
+  <data name="Recovery email sent. Please check your inbox to set a new password." xml:space="preserve">
+    <value>恢复电子邮件已发送。 请检查您的收件箱以设置新密码。</value>
+  </data>
+  <data name="New user created successfully." xml:space="preserve">
+    <value>新用户创建成功。</value>
+  </data>
 </root>

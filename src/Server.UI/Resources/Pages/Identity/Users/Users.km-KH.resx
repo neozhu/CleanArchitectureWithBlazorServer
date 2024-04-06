@@ -235,4 +235,19 @@
   <data name="Permission assigned successfully" xml:space="preserve">
     <value>ការអនុញ្ញាតត្រូវបានផ្តល់ដោយជោគជ័យ</value>
   </data>
+  <data name="The user updated successfully." xml:space="preserve">
+    <value>អ្នកប្រើប្រាស់បានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ។</value>
+  </data>
+  <data name="The user has been inactivated." xml:space="preserve">
+    <value>អ្នកប្រើប្រាស់ត្រូវបានអសកម្ម។</value>
+  </data>
+  <data name="The user has been activated." xml:space="preserve">
+    <value>អ្នកប្រើប្រាស់ត្រូវបានធ្វើឱ្យសកម្ម។</value>
+  </data>
+  <data name="Recovery email sent. Please check your inbox to set a new password." xml:space="preserve">
+    <value>បានផ្ញើអ៊ីមែលសង្គ្រោះ។ សូមពិនិត្យមើលប្រអប់សំបុត្ររបស់អ្នកដើម្បីកំណត់ពាក្យសម្ងាត់ថ្មី។</value>
+  </data>
+  <data name="New user created successfully." xml:space="preserve">
+    <value>អ្នកប្រើប្រាស់ថ្មីបានបង្កើតដោយជោគជ័យ។</value>
+  </data>
 </root>

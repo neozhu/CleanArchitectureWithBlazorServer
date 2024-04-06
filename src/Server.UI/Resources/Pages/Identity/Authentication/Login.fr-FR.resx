@@ -190,4 +190,7 @@
   <data name="Error: Invalid login attempt." xml:space="preserve">
     <value>Erreur : tentative de connexion invalide.</value>
   </data>
+  <data name="Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps." xml:space="preserve">
+    <value>Erreur : Votre compte n'est pas autorisé à se connecter. Veuillez vous assurer que votre compte a été activé et que vous avez effectué toutes les étapes requises.</value>
+  </data>
 </root>

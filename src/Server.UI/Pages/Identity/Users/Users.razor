@@ -1,5 +1,8 @@
 ﻿@page "/identity/users"
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome
 @using FluentEmail.Core.Models
+@using Microsoft.AspNetCore.WebUtilities
 @using Severity = Severity
 @using LazyCache
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
@@ -15,11 +18,13 @@
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @using System.Reflection
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
+@using System.Text
 
 @attribute [Authorize(Policy = Permissions.Users.View)]
 @inherits OwningComponentBase
 @implements IDisposable
-
+@inject IMediator Sender
+@inject NavigationManager NavigationManager
 @inject IUsersStateContainer UsersStateContainer
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
@@ -202,7 +207,7 @@
                         }
                         @if (_canRestPassword)
                         {
-                            <MudMenuItem OnAction=@(() => OnResetPassword(context.Item))>@L["Reset Password"]</MudMenuItem>
+                            <MudMenuItem Disabled="@(!context.Item.IsActive)" OnAction=@(() => OnResetPassword(context.Item))>@L["Reset Password"]</MudMenuItem>
                         }
                     </MudMenu>
                 }
@@ -323,6 +328,7 @@
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     private UserManager<ApplicationUser> UserManager;
     private RoleManager<ApplicationRole> RoleManager;
+
     private int _defaultPageSize = 15;
     private HashSet<ApplicationUserDto> _selectedItems = new();
     private readonly ApplicationUserDto _currentDto = new();
@@ -453,33 +459,36 @@
                     PhoneNumber = model.PhoneNumber,
                     SuperiorId = model.SuperiorId,
                     ProfilePictureDataUrl = model.ProfilePictureDataUrl,
-                    IsActive = false
+                    EmailConfirmed = true,
+                    IsActive = model.IsActive
                 };
-            var state = await UserManager.CreateAsync(applicationUser);
-            if (state.Succeeded)
+            var identityResult = await UserManager.CreateAsync(applicationUser);
+            if (!identityResult.Succeeded)
             {
-                if (model.AssignedRoles is not null && model.AssignedRoles.Length > 0)
-                {
-                    await UserManager.AddToRolesAsync(applicationUser, model.AssignedRoles);
-                }
-                else
-                {
-                    await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
-                }
-                Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
-                Logger.LogInformation("Create a user succeeded. Username: {@UserName:l}, UserId: {@UserId}", applicationUser.UserName, applicationUser.Id);
-                UserService.Refresh();
-                await OnRefresh();
-                var response = await SendWelcome(applicationUser.Email, applicationUser.UserName!);
-                if (response.Successful == false)
-                {
-                    Snackbar.Add(string.Format(L["{0}"], response.ErrorMessages.FirstOrDefault()), Severity.Error);
-                }
+                Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+                return;
+            }
+            Snackbar.Add($"{L["New user created successfully."]}", Severity.Info);
+            if (model.AssignedRoles is not null && model.AssignedRoles.Length > 0)
+            {
+                await UserManager.AddToRolesAsync(applicationUser, model.AssignedRoles);
             }
             else
             {
-                Snackbar.Add($"{string.Join(",", state.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+                await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
             }
+            if (applicationUser.IsActive)
+            {
+                var code = await UserManager.GeneratePasswordResetTokenAsync(applicationUser);
+                await SendRestPasswordNotification(code, applicationUser.Id, applicationUser.Email, applicationUser.UserName);
+                Snackbar.Add($"Recovery email sent. Please check your inbox to set a new password.", Severity.Info);
+            }
+
+            Logger.LogInformation("Create a user succeeded. Username: {@UserName:l}, UserId: {@UserId}", applicationUser.UserName, applicationUser.Id);
+            UserService.Refresh();
+            await OnRefresh();
+
+
         }
     }
 
@@ -518,7 +527,7 @@
                 {
                     await UserManager.AddToRolesAsync(user, item.AssignedRoles);
                 }
-                Snackbar.Add($"{ConstantString.SaveSuccess}", Severity.Info);
+                Snackbar.Add($"{L["The user updated successfully."]}", Severity.Info);
                 await OnRefresh();
                 UserService.Refresh();
             }
@@ -624,17 +633,45 @@
     private async Task OnSetActive(ApplicationUserDto item)
     {
         var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
-        user.IsActive = !item.IsActive;
-        var state = await UserManager.UpdateAsync(user);
-        item.IsActive = !item.IsActive;
-        if (state.Succeeded)
+        if (!user.IsActive)
         {
-            Snackbar.Add($"{ConstantString.UpdateSuccess}", Severity.Info);
+            var code = await UserManager.GeneratePasswordResetTokenAsync(user);
+            await SendRestPasswordNotification(code, user.Id, user.Email, user.UserName);
+            Snackbar.Add($"Email sent. Please check your inbox to set a new password.", Severity.Info);
+
+            user.IsActive = true;
+            user.LockoutEnd = null;
+            var identityResult = await UserManager.UpdateAsync(user);
+            if (identityResult.Succeeded)
+            {
+                item.IsActive = true;
+                item.LockoutEnd = null;
+                Snackbar.Add($"{L["The user has been activated."]}", Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+            }
+
         }
         else
         {
-            Snackbar.Add($"{string.Join(",", state.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+            user.IsActive = false;
+            user.LockoutEnd = DateTimeOffset.MaxValue;
+            var identityResult = await UserManager.UpdateAsync(user);
+           
+            if (identityResult.Succeeded)
+            {
+                item.IsActive = false;
+                item.LockoutEnd = DateTimeOffset.MaxValue;
+                Snackbar.Add($"{L["The user has been inactivated."]}", Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+            }
         }
+
     }
 
     private async Task OnResetPassword(ApplicationUserDto item)
@@ -649,11 +686,17 @@
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            var user = await UserManager.FindByIdAsync(item.Id!);
+            var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
+            
             var token = await UserManager.GeneratePasswordResetTokenAsync(user!);
             var state = await UserManager.ResetPasswordAsync(user!, token, model!.Password!);
             if (state.Succeeded)
             {
+                if (user.EmailConfirmed == false)
+                {
+                    user.EmailConfirmed = true;
+                    await UserManager.UpdateAsync(user);
+                }
                 Snackbar.Add($"{L["Reset password successfully"]}", Severity.Info);
             }
             else
@@ -817,7 +860,7 @@
                     }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                 new Dictionary<string, Func<ApplicationUserDto, object?>>
-                            {
+                                        {
                     { L["Id"], item => item.Id },
                     { L["User Name"], item => item.UserName },
                     { L["Display Name"], item => item.DisplayName },
@@ -825,7 +868,7 @@
                     { L["Phone Number"], item => item.PhoneNumber },
                     { L["Tenant Id"], item => item.TenantId },
                     { L["Tenant Name"], item => item.TenantName }
-                            }, L["Users"]);
+                                        }, L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
         }
@@ -883,10 +926,22 @@
 
         _uploading = false;
     }
-    private Task<SendResponse> SendWelcome(string toEmail, string userName)
+    private async Task SendWelcomeNotification(string toEmail, string userName)
     {
-        var subject = string.Format(L["Welcome to {0}"], ApplicationSettings.AppName);
-        var LoginUrl = $"{ApplicationSettings.ApplicationUrl}/pages/authentication/login";
-        return MailService.SendAsync(toEmail, subject, "_welcome", new { LoginUrl, ApplicationSettings.AppName, Email = toEmail, UserName = userName, ApplicationSettings.Company });
+        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+                 NavigationManager.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
+                 new Dictionary<string, object?> { ["returnUrl"] = "/" });
+
+        await Sender.Publish(new SendWelcomeNotification(callbackUrl, toEmail, userName));
+        Logger.LogInformation("{UserName} Activated Successfully!", toEmail);
+    }
+    private async Task SendRestPasswordNotification(string code, string userId, string toEmail, string userName)
+    {
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+            NavigationManager.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
+            new Dictionary<string, object?> { ["userId"] = userId, ["token"] = code });
+        await Sender.Publish(new ResetPasswordNotification(callbackUrl, toEmail, userName));
+        Logger.LogInformation("Rest password email sent to {0}.", toEmail);
     }
 }

@@ -231,4 +231,19 @@
   <data name="Permission assigned successfully" xml:space="preserve">
     <value>권한이 할당되었습니다.</value>
   </data>
+  <data name="The user updated successfully." xml:space="preserve">
+    <value>사용자가 성공적으로 업데이트되었습니다.</value>
+  </data>
+  <data name="The user has been inactivated." xml:space="preserve">
+    <value>사용자가 비활성화되었습니다.</value>
+  </data>
+  <data name="The user has been activated." xml:space="preserve">
+    <value>사용자가 활성화되었습니다.</value>
+  </data>
+  <data name="Recovery email sent. Please check your inbox to set a new password." xml:space="preserve">
+    <value>복구 이메일이 전송되었습니다. 새 비밀번호를 설정하려면 받은 편지함을 확인하세요.</value>
+  </data>
+  <data name="New user created successfully." xml:space="preserve">
+    <value>새 사용자가 성공적으로 생성되었습니다.</value>
+  </data>
 </root>
