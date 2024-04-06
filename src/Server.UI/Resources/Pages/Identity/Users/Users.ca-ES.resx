@@ -235,4 +235,19 @@
   <data name="Permission assigned successfully" xml:space="preserve">
     <value>Permís assignat correctament</value>
   </data>
+  <data name="The user updated successfully." xml:space="preserve">
+    <value>L'usuari s'ha actualitzat correctament.</value>
+  </data>
+  <data name="The user has been inactivated." xml:space="preserve">
+    <value>L'usuari ha estat desactivat.</value>
+  </data>
+  <data name="The user has been activated." xml:space="preserve">
+    <value>L'usuari ha estat activat.</value>
+  </data>
+  <data name="Recovery email sent. Please check your inbox to set a new password." xml:space="preserve">
+    <value>Correu electrònic de recuperació enviat. Si us plau, comproveu la vostra safata d'entrada per establir una nova contrasenya.</value>
+  </data>
+  <data name="New user created successfully." xml:space="preserve">
+    <value>Usuari nou creat correctament.</value>
+  </data>
 </root>

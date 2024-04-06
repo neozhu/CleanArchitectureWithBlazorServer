@@ -190,4 +190,7 @@
   <data name="Error: Invalid login attempt." xml:space="preserve">
     <value>エラー: 無効なログイン試行です。</value>
   </data>
+  <data name="Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps." xml:space="preserve">
+    <value>エラー: あなたのアカウントではログインが許可されていません。アカウントがアクティブ化されていて、必要な手順がすべて完了していることを確認してください。</value>
+  </data>
 </root>

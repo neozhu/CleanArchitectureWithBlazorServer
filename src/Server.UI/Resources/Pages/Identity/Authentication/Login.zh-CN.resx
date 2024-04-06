@@ -190,4 +190,7 @@
   <data name="Error: Invalid login attempt." xml:space="preserve">
     <value>错误：登录尝试无效。</value>
   </data>
+  <data name="Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps." xml:space="preserve">
+    <value>错误：您的帐户不允许登录。请确保您的帐户已激活并且您已完成所有必需的步骤。</value>
+  </data>
 </root>

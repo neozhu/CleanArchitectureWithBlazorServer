@@ -235,4 +235,19 @@
   <data name="Permission assigned successfully" xml:space="preserve">
     <value>Autorisation attribuée avec succès</value>
   </data>
+  <data name="The user updated successfully." xml:space="preserve">
+    <value>L'utilisateur a mis à jour avec succès.</value>
+  </data>
+  <data name="The user has been inactivated." xml:space="preserve">
+    <value>L'utilisateur a été inactivé.</value>
+  </data>
+  <data name="The user has been activated." xml:space="preserve">
+    <value>L'utilisateur a été activé.</value>
+  </data>
+  <data name="Recovery email sent. Please check your inbox to set a new password." xml:space="preserve">
+    <value>E-mail de récupération envoyé. Veuillez vérifier votre boîte de réception pour définir un nouveau mot de passe.</value>
+  </data>
+  <data name="New user created successfully." xml:space="preserve">
+    <value>Nouvel utilisateur créé avec succès.</value>
+  </data>
 </root>
