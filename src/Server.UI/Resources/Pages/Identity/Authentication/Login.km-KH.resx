@@ -190,4 +190,7 @@
   <data name="Error: Invalid login attempt." xml:space="preserve">
     <value>កំហុស៖ ការព្យាយាមចូលមិនត្រឹមត្រូវ។</value>
   </data>
+  <data name="Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps." xml:space="preserve">
+    <value>កំហុស៖ គណនីរបស់អ្នកមិនត្រូវបានអនុញ្ញាតឱ្យចូលទេ។ សូមប្រាកដថាគណនីរបស់អ្នកត្រូវបានធ្វើឱ្យសកម្ម ហើយអ្នកបានបញ្ចប់ជំហានដែលត្រូវការទាំងអស់។</value>
+  </data>
 </root>

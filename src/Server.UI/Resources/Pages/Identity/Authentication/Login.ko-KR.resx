@@ -186,4 +186,7 @@
   <data name="Error: Invalid login attempt." xml:space="preserve">
     <value>오류: 잘못된 로그인 시도입니다.</value>
   </data>
+  <data name="Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps." xml:space="preserve">
+    <value>오류: 귀하의 계정은 로그인이 허용되지 않습니다. 귀하의 계정이 활성화되었고 모든 필수 단계를 완료했는지 확인하십시오.</value>
+  </data>
 </root>

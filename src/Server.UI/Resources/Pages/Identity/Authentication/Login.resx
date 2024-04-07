@@ -190,4 +190,7 @@
   <data name="Error: Invalid login attempt." xml:space="preserve">
     <value>Error: Invalid login attempt.</value>
   </data>
+  <data name="Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps." xml:space="preserve">
+    <value>Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps.</value>
+  </data>
 </root>
