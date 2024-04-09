@@ -1,3 +1,3 @@
 ﻿export function getTimezoneOffset() {
-    return (new Date().getTimezoneOffset())/60;
+    return (new Date().getTimezoneOffset()) / 60;
 }

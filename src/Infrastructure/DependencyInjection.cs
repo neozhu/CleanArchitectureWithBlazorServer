@@ -8,18 +8,17 @@ using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
-using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
+using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
 using CleanArchitecture.Blazor.Infrastructure.Services.Serialization;
 using FluentEmail.MailKitSmtp;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.DataProtection;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 
@@ -217,7 +216,6 @@ public static class DependencyInjection
             })
             .AddMicrosoftAccount(microsoftOptions =>
             {
-
                 microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId");
                 microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
                 //microsoftOptions.CallbackPath = new PathString("/pages/authentication/ExternalLogin"); # dotn't set this parameter!!
@@ -227,21 +225,17 @@ public static class DependencyInjection
                     googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId");
                     googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret");
                 }
-                )
+            )
             .AddFacebook(facebookOptions =>
             {
                 facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId");
                 facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret");
-
             })
-            .AddIdentityCookies(options => 
-            {
-               
-            });
+            .AddIdentityCookies(options => { });
 
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
-        services.ConfigureApplicationCookie(options => { options.LoginPath = "/pages/authentication/login";});
+        services.ConfigureApplicationCookie(options => { options.LoginPath = "/pages/authentication/login"; });
         services.AddSingleton<UserService>()
             .AddSingleton<IUserService>(sp =>
             {
@@ -270,6 +264,4 @@ public static class DependencyInjection
         });
         return services;
     }
-
-
 }

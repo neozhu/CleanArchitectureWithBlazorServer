@@ -1,8 +1,6 @@
 ﻿@page "/pages/authentication/loginwithrecoverycode"
-
-@using System.ComponentModel.DataAnnotations
 @using CleanArchitecture.Blazor.Domain.Identity
-@using Microsoft.AspNetCore.Identity
+@using System.ComponentModel.DataAnnotations
 
 @inject IStringLocalizer<LoginWithRecoveryCode> L
 @inject SignInManager<ApplicationUser> SignInManager
@@ -13,22 +11,22 @@
 <PageTitle>@L["Recovery code verification"]</PageTitle>
 
 <MudText Typo="Typo.h4" GutterBottom="true">@L["Recovery code verification"]</MudText>
- 
+
 <MudText Typo="Typo.body1">
     @L["You have requested to log in with a recovery code. This login will not be remembered until you provide an authenticator app code at log in or disable 2FA and log in again."]
 </MudText>
- 
+
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
         <EditForm Model="Input" FormName="login-with-recovery-code" OnValidSubmit="OnValidSubmitAsync" method="post">
-            <DataAnnotationsValidator />
-            <StatusMessage Message="@message" Error="true" />
-            
+            <DataAnnotationsValidator/>
+            <StatusMessage Message="@message" Error="true"/>
+
             <div class="mud-input-control mud-input-input-control my-4">
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
                     <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText @bind-Value="Input.RecoveryCode" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="off" aria-required="true" />
+                        <InputText @bind-Value="Input.RecoveryCode" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="off" aria-required="true"/>
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                         <!--!-->
                         <div class="mud-input-outlined-border"></div>
@@ -38,7 +36,7 @@
                 </div>
                 <div class="mud-input-helper-text mud-input-error">
                     <div class="d-flex">
-                        <ValidationMessage For="() => Input.RecoveryCode" class="mud-input-error" />
+                        <ValidationMessage For="() => Input.RecoveryCode" class="mud-input-error"/>
                     </div>
                 </div>
             </div>
@@ -61,17 +59,15 @@
     private string? message;
     private ApplicationUser user = default!;
 
-    [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         // Ensure the user has gone through the username & password screen first
         user = await SignInManager.GetTwoFactorAuthenticationUserAsync() ??
-            throw new InvalidOperationException(L["Unable to load two-factor authentication user."]);
+               throw new InvalidOperationException(L["Unable to load two-factor authentication user."]);
     }
 
     private async Task OnValidSubmitAsync()
@@ -106,4 +102,5 @@
         [Display(Name = "Recovery Code")]
         public string RecoveryCode { get; set; } = "";
     }
+
 }

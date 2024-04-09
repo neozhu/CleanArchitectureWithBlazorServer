@@ -1,9 +1,9 @@
 ﻿@page "/system/logs"
-@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Specifications
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using CleanArchitecture.Blazor.Server.UI.Pages.SystemManagement.Components
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Clear
 
@@ -70,9 +70,9 @@
                 <MudStack Row="true" AlignItems="AlignItems.Stretch">
                     <MudEnumSelect TEnum="LogLevel?" Placeholder="@L["Search for level"]" Value="@Query.Level" Clearable="true" ValueChanged="OnChangedLevel" Style="min-width:120px" FullWidth="true"> </MudEnumSelect>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                    <MudTextField T="string" Style="min-width:120px" ValueChanged="@(OnSearch)" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End"
-                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium">
-                    </MudTextField>
+                        <MudTextField T="string" Style="min-width:120px" ValueChanged="@(OnSearch)" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium">
+                        </MudTextField>
                     </MudHidden>
                 </MudStack>
 

@@ -7,11 +7,8 @@ public class AddEditCustomerCommandValidator : AbstractValidator<AddEditCustomer
 {
     public AddEditCustomerCommandValidator()
     {
-            RuleFor(v => v.Name)
-                .MaximumLength(256)
-                .NotEmpty();
-       
-     }
-
+        RuleFor(v => v.Name)
+            .MaximumLength(256)
+            .NotEmpty();
+    }
 }
-

@@ -1,5 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
-using CleanArchitecture.Blazor.Domain.Common.Entities;
+﻿using CleanArchitecture.Blazor.Domain.Common.Entities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

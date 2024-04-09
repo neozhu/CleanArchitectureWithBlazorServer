@@ -2,10 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
-using System.Drawing;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
@@ -55,12 +53,13 @@ public class DocumentOcrJob : IDocumentOcrJob
                 DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                 if (string.IsNullOrEmpty(doc.URL)) return;
                 var imgFile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
-                if (!File.Exists(imgFile)) return; 
+                if (!File.Exists(imgFile)) return;
                 using var form = new MultipartFormDataContent();
                 using var fileStream = new FileStream(imgFile, FileMode.Open);
                 using var fileContent = new StreamContent(fileStream);
                 fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/png");
-                form.Add(fileContent, "file", Path.GetFileName(imgFile)); // "image" is the form parameter name for the file
+                form.Add(fileContent, "file",
+                    Path.GetFileName(imgFile)); // "image" is the form parameter name for the file
 
                 var response = await client.PostAsync("", form);
                 if (response.StatusCode == HttpStatusCode.OK)
@@ -76,7 +75,8 @@ public class DocumentOcrJob : IDocumentOcrJob
                     DocumentCacheKey.SharedExpiryTokenSource().Cancel();
                     _timer.Stop();
                     var elapsedMilliseconds = _timer.ElapsedMilliseconds;
-                    _logger.LogInformation("Image recognition completed. Id: {id}, Elapsed Time: {elapsedMilliseconds}ms, Status: {StatusCode}",
+                    _logger.LogInformation(
+                        "Image recognition completed. Id: {id}, Elapsed Time: {elapsedMilliseconds}ms, Status: {StatusCode}",
                         id, elapsedMilliseconds, response.StatusCode);
                 }
             }
@@ -90,11 +90,10 @@ public class DocumentOcrJob : IDocumentOcrJob
 #pragma warning disable CS8981
 internal class OcrResult
 {
-    [JsonPropertyName("resultcode")]
-    public string? ResultCode { get; set; }
-    [JsonPropertyName("message")]
-    public string? Message { get; set; }
-    [JsonPropertyName("data")]
-    public List<List<List<dynamic>>>? Data { get; set; }
+    [JsonPropertyName("resultcode")] public string? ResultCode { get; set; }
+
+    [JsonPropertyName("message")] public string? Message { get; set; }
+
+    [JsonPropertyName("data")] public List<List<List<dynamic>>>? Data { get; set; }
 }
 #pragma warning restore CS8981

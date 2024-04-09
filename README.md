@@ -6,19 +6,24 @@
 [![Docker Image CI](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/docker-image.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/docker-image.yml)
 [![Nuget](https://img.shields.io/nuget/dt/CleanArchitecture.Blazor.Solution.Template?label=Downloads)](https://www.nuget.org/packages/CleanArchitecture.Blazor.Solution.Template)
 
-This repository hosts a Blazor Server application designed with Clean Architecture principles, featuring a sophisticated user interface and an efficient code generator. This setup allows for the swift creation of remarkable web applications using .NET Blazor technology.
+This repository hosts a Blazor Server application designed with Clean Architecture principles, featuring a sophisticated
+user interface and an efficient code generator. This setup allows for the swift creation of remarkable web applications
+using .NET Blazor technology.
 
 ## Explore the Live Demo
-Experience the application in action in Blazor Server mode by visiting 
+
+Experience the application in action in Blazor Server mode by visiting
 
 Login [architecture.blazorserver.com](https://architecture.blazorserver.com/)
 Alternative [architecture.blazors.app](https://architecture.blazors.app/)
 
 ## Visual Insights
+
 Dive into the application's aesthetics and functionality through screenshots and a video walkthrough.
 [![Everything Is AWESOME](doc/page.png)](https://www.youtube.com/embed/GyZJl_dG-Pg "Everything Is AWESOME")
 
 ## Development Setup
+
 To get started with development, ensure you have the following tools and environments set up:
 
 - Microsoft Visual Studio Community 2022 (64-bit)
@@ -26,10 +31,13 @@ To get started with development, ensure you have the following tools and environ
 - .NET 8.0
 - Unit Test
 
-This streamlined overview provides all the essential information about the Blazor Server application's repository, live demo, visual insights, and required development environment.
+This streamlined overview provides all the essential information about the Blazor Server application's repository, live
+demo, visual insights, and required development environment.
 
 ## Setup Multiple authentication providers
+
 Use the following topics to configure your application to use the respective providers:
+
 - [Facebook instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/facebook-logins?view=aspnetcore-8.0)
 - [Twitter instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/twitter-logins?view=aspnetcore-8.0)
 - [Google instructions](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-8.0)
@@ -41,21 +49,26 @@ https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/?vi
 ## Docker Setup for Blazor Server Application
 
 ### Pull the Docker Image
+
 First, pull the latest version of the Blazor Server Docker image:
+
 ```bash
 docker pull blazordevlab/cleanarchitectureblazorserver:latest
 ```
 
 ### Run the Docker Container
 
-You can start the container in two modes: using an in-memory database for development purposes or connecting to an MSSQL database for persistent storage and configuring SMTP for email functionalities.
+You can start the container in two modes: using an in-memory database for development purposes or connecting to an MSSQL
+database for persistent storage and configuring SMTP for email functionalities.
 
 For Development (In-Memory Database):
 
 ```bash
 docker run -p 8443:443 -e UseInMemoryDatabase=true -e ASPNETCORE_ENVIRONMENT=Development -e ASPNETCORE_HTTPS_PORTS=443 blazordevlab/cleanarchitectureblazorserver:latest
 ```
+
 For Production (Persistent Database and SMTP Configuration):
+
 ```bash
 
 docker run -d -p 8443:443 \
@@ -77,11 +90,13 @@ docker run -d -p 8443:443 \
 -e Authentication__Facebook__AppSecret=<YourFacebookAppSecret> \
 blazordevlab/cleanarchitectureblazorserver:latest
 ```
+
 Replace placeholder values (<Your...>) with your actual configuration details.
 
 ### Docker Compose Setup
 
 For easier management, use a docker-compose.yml file:
+
 ```yml
 version: '3.8'
 services:
@@ -113,10 +128,15 @@ services:
 volumes:
   files_volume:
 ```
+
 ### Notes:
+
 Replace <Your...> placeholders with actual values from your environment.
-The files_volume volume is used for persistent storage of application files. Adjust or extend volumes based on your specific needs.
-This optimized guide should help in setting up your Blazor Server application with either an in-memory or MSSQL database, configured SMTP server for email functionalities, and OAuth authentication for Microsoft, Google, and Facebook.
+The files_volume volume is used for persistent storage of application files. Adjust or extend volumes based on your
+specific needs.
+This optimized guide should help in setting up your Blazor Server application with either an in-memory or MSSQL
+database, configured SMTP server for email functionalities, and OAuth authentication for Microsoft, Google, and
+Facebook.
 
 ## Supported Databases
 

@@ -8,6 +8,26 @@ namespace CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 
 public class UserPreferences
 {
+    public static readonly List<string> PrimaryColors = new()
+    {
+        "#2d4275",
+        Colors.Green.Default,
+        "#0576b9",
+        "#8421d1",
+        "#FF7F00",
+        Colors.Red.Default
+    };
+
+    public static readonly List<string> DarkPrimaryColors = new()
+    {
+        "#8b9ac6",
+        "#6c9f77",
+        "#79a5d1",
+        "#776BE7",
+        "#d0882c",
+        "#f88989"
+    };
+
     /// <summary>
     ///     Set the direction layout of the docs to RTL or LTR. If true RTL is used
     /// </summary>
@@ -34,27 +54,6 @@ public class UserPreferences
     public double Subtitle1FontSize => DefaultFontSize + 0.125;
     public double Subtitle2FontSize => DefaultFontSize;
     public DarkLightMode DarkLightTheme { get; set; }
-
-
-    public readonly static List<string> PrimaryColors = new()
-    {
-        "#2d4275",
-        Colors.Green.Default,
-        "#0576b9",
-        "#8421d1",
-        "#FF7F00",
-        Colors.Red.Default
-    };
-
-    public readonly static List<string> DarkPrimaryColors = new()
-    {
-        "#8b9ac6",
-        "#6c9f77",
-        "#79a5d1",
-        "#776BE7",
-        "#d0882c",
-        "#f88989"
-    };
 
     private string AdjustBrightness(string hexColor, double factor)
     {

@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
-using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using FluentEmail.Core;
 using FluentEmail.Core.Models;
 using Polly;
@@ -72,7 +71,9 @@ public class MailService : IMailService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to send templated email. Subject: {EmailSubject}, Template: {EmailTemplate}. An exception occurred.", subject, template);
+            _logger.LogError(e,
+                "Failed to send templated email. Subject: {EmailSubject}, Template: {EmailTemplate}. An exception occurred.",
+                subject, template);
             throw;
         }
     }

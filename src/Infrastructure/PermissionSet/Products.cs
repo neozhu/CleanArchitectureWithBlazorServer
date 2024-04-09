@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace CleanArchitecture.Blazor.Infrastructure.PermissionSet;
+
 public static partial class Permissions
 {
     [DisplayName("Products")]
@@ -20,7 +16,6 @@ public static partial class Permissions
         public const string Export = "Permissions.Products.Export";
         public const string Import = "Permissions.Products.Import";
     }
-
 
 
     [DisplayName("Categories")]

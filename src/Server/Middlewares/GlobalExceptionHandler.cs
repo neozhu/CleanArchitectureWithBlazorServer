@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Server.Middlewares;
+
 internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
-    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
+        CancellationToken cancellationToken)
     {
         var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
@@ -21,6 +18,7 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
 
         return true;
     }
+
     private static async Task GenerateProblemDetails(HttpContext httpContext,
         string traceId,
         Exception exception)
@@ -45,8 +43,8 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
         return exception switch
         {
             ArgumentOutOfRangeException => (StatusCodes.Status400BadRequest, exception.Message),
-            ServerException =>(StatusCodes.Status500InternalServerError,exception.Message),
-            KeyNotFoundException=> (StatusCodes.Status404NotFound, exception.Message),
+            ServerException => (StatusCodes.Status500InternalServerError, exception.Message),
+            KeyNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "We are sorry for the inconvenience but we are on it.")
         };
     }

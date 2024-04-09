@@ -16,6 +16,5 @@ public class LoggerConfiguration : IEntityTypeConfiguration<Logger>
         builder.HasIndex(x => new { x.Message });
         builder.HasIndex(x => new { x.Exception });
         builder.HasIndex(x => x.TimeStamp);
-
     }
 }

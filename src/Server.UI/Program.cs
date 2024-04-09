@@ -4,7 +4,6 @@ using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using CleanArchitecture.Blazor.Server;
 using CleanArchitecture.Blazor.Server.UI;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.RegisterSerilog();
@@ -27,7 +26,6 @@ if (app.Environment.IsDevelopment())
         var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
         await initializer.InitialiseAsync();
         await initializer.SeedAsync();
-       
     }
 
 await app.RunAsync();

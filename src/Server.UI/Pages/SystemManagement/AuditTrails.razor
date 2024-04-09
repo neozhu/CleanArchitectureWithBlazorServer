@@ -1,5 +1,4 @@
 ﻿@page "/system/audittrails"
-
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications
@@ -49,8 +48,8 @@
                     <MudEnumSelect TEnum="AuditType?" Placeholder="@L["Search for audit type"]" Value="@Query.AuditType" Clearable="true" ValueChanged="@(s => OnSearch(s))" Style="min-width:120px" FullWidth="true"> </MudEnumSelect>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End" Style="min-width:120px" FullWidth="true"
-                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
-                    </MudTextField>
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        </MudTextField>
                     </MudHidden>
                 </MudStack>
 
@@ -138,8 +137,7 @@
     private readonly AuditTrailDto _currentDto = new();
 
     private AuditTrailsWithPaginationQuery Query { get; } = new();
-    [CascadingParameter]
-    private UserProfile? UserProfile { get; set; }
+    [CascadingParameter] private UserProfile? UserProfile { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

@@ -15,8 +15,8 @@ public class ResetPasswordFormModel
 
 public class ResetPasswordFormModelValidator : AbstractValidator<ResetPasswordFormModel>
 {
-    private readonly IStringLocalizer<ApplicationUserDtoValidator> _localizer;
     private readonly IIdentitySettings _identitySettings;
+    private readonly IStringLocalizer<ApplicationUserDtoValidator> _localizer;
 
     public ResetPasswordFormModelValidator(IStringLocalizer<ApplicationUserDtoValidator> localizer,
         IIdentitySettings identitySettings)
@@ -24,8 +24,8 @@ public class ResetPasswordFormModelValidator : AbstractValidator<ResetPasswordFo
         _localizer = localizer;
         _identitySettings = identitySettings;
         RuleFor(x => x.UserName)
-             .NotEmpty().WithMessage(_localizer["User name cannot be empty."])
-             .Length(2, 100).WithMessage(_localizer["User name must be between 2 and 100 characters."]);
+            .NotEmpty().WithMessage(_localizer["User name cannot be empty."])
+            .Length(2, 100).WithMessage(_localizer["User name must be between 2 and 100 characters."]);
         RuleFor(p => p.Password).NotEmpty().WithMessage(_localizer["Password cannot be empty"])
             .MinimumLength(_identitySettings.RequiredLength)
             .WithMessage(_localizer["Password must be at least {0} characters long", _identitySettings.RequiredLength])
@@ -38,11 +38,9 @@ public class ResetPasswordFormModelValidator : AbstractValidator<ResetPasswordFo
             .Matches(_identitySettings.RequireDigit ? @"[0-9]+" : string.Empty)
             .WithMessage(_localizer["Password must contain at least one digit"])
             .Matches(_identitySettings.RequireNonAlphanumeric ? @"[\@\!\?\*\.]+" : string.Empty)
-            .WithMessage(_localizer["Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)"]);
+            .WithMessage(
+                _localizer["Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)"]);
         RuleFor(x => x.ConfirmPassword)
             .Equal(x => x.Password).WithMessage(_localizer["Confirm password must match the password"]);
-
-
     }
-
 }
