@@ -46,10 +46,6 @@ public static partial class Permissions
     }
 
 
-    
-
- 
-
     [DisplayName("Picklist")]
     [Description("Picklist Permissions")]
     public static class Dictionaries

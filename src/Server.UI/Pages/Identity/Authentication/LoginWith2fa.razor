@@ -1,8 +1,6 @@
 ﻿@page "/pages/authentication/loginwith2fa"
-
-@using System.ComponentModel.DataAnnotations
 @using CleanArchitecture.Blazor.Domain.Identity
-@using Microsoft.AspNetCore.Identity
+@using System.ComponentModel.DataAnnotations
 
 @inject IStringLocalizer<LoginWith2fa> L
 @inject SignInManager<ApplicationUser> SignInManager
@@ -18,15 +16,15 @@
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
         <EditForm Model="Input" FormName="login-with-2fa" OnValidSubmit="OnValidSubmitAsync" method="post">
-            <input type="hidden" name="ReturnUrl" value="@ReturnUrl" />
-            <input type="hidden" name="RememberMe" value="@RememberMe" />
-            <DataAnnotationsValidator />
-            <StatusMessage Message="@message"  Error="true"/>
+            <input type="hidden" name="ReturnUrl" value="@ReturnUrl"/>
+            <input type="hidden" name="RememberMe" value="@RememberMe"/>
+            <DataAnnotationsValidator/>
+            <StatusMessage Message="@message" Error="true"/>
             <div class="mud-input-control mud-input-input-control my-4">
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
                     <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText @bind-Value="Input.TwoFactorCode" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="off" aria-required="true"  />
+                        <InputText @bind-Value="Input.TwoFactorCode" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="off" aria-required="true"/>
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                         <!--!-->
                         <div class="mud-input-outlined-border"></div>
@@ -36,14 +34,14 @@
                 </div>
                 <div class="mud-input-helper-text mud-input-error">
                     <div class="d-flex">
-                        <ValidationMessage For="() => Input.TwoFactorCode" class="mud-input-error" />
+                        <ValidationMessage For="() => Input.TwoFactorCode" class="mud-input-error"/>
                     </div>
                 </div>
             </div>
-            
+
             <div class="checkbox mb-3">
                 <label for="remember-machine" class="form-label">
-                    <InputCheckbox @bind-Value="Input.RememberMachine" />
+                    <InputCheckbox @bind-Value="Input.RememberMachine"/>
                     Remember this machine
                 </label>
             </div>
@@ -72,23 +70,18 @@
     private string? message;
     private ApplicationUser user = default!;
 
-    [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
-    [SupplyParameterFromQuery]
-    private bool RememberMe { get; set; }
+    [SupplyParameterFromQuery] private bool RememberMe { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
         // Ensure the user has gone through the username & password screen first
         user = await SignInManager.GetTwoFactorAuthenticationUserAsync() ??
-            throw new InvalidOperationException(L["Unable to load two-factor authentication user."]);
-
-
+               throw new InvalidOperationException(L["Unable to load two-factor authentication user."]);
     }
 
     private async Task OnValidSubmitAsync()
@@ -100,6 +93,7 @@
             message = L["Error: Invalid authenticator code."];
             return;
         }
+
         var result = await SignInManager.TwoFactorSignInAsync("Email", authenticatorCode, true, true);
         var userId = await UserManager.GetUserIdAsync(user);
         if (result.Succeeded)
@@ -130,4 +124,5 @@
         [Display(Name = "Remember this machine")]
         public bool RememberMachine { get; set; }
     }
+
 }

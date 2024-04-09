@@ -1,5 +1,4 @@
-﻿
-using CleanArchitecture.Blazor.Application.Common.Security;
+﻿using CleanArchitecture.Blazor.Application.Common.Security;
 
 namespace CleanArchitecture.Blazor.Server.UI.Fluxor;
 

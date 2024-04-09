@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
+using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
@@ -114,7 +114,7 @@ public class ApplicationDbContextInitializer
             TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name,
             DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true,
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80",
-            TwoFactorEnabled=false
+            TwoFactorEnabled = false
         };
         var demo = new ApplicationUser
         {

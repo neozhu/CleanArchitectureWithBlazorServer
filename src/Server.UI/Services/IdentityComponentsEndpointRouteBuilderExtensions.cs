@@ -1,4 +1,6 @@
-﻿using CleanArchitecture.Blazor.Domain.Identity;
+﻿using System.Security.Claims;
+using System.Text.Json;
+using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -6,15 +8,15 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using System.Security.Claims;
-using System.Text.Json;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 
 internal static class IdentityComponentsEndpointRouteBuilderExtensions
 {
     public static readonly string PerformExternalLogin = "/pages/authentication/performexternallogin";
+
     public static readonly string Logout = "/pages/authentication/logout";
+
     // These endpoints are required by the Identity Razor components defined in the /Components/Account/Pages directory of this project.
     public static IEndpointConventionBuilder MapAdditionalIdentityEndpoints(this IEndpointRouteBuilder endpoints)
     {
@@ -28,9 +30,11 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             [FromForm] string provider,
             [FromForm] string returnUrl) =>
         {
-            IEnumerable<KeyValuePair<string, StringValues>> query = [
-                new("ReturnUrl", returnUrl),
-                    new("Action", ExternalLogin.LoginCallbackAction)];
+            IEnumerable<KeyValuePair<string, StringValues>> query =
+            [
+                new KeyValuePair<string, StringValues>("ReturnUrl", returnUrl),
+                new KeyValuePair<string, StringValues>("Action", ExternalLogin.LoginCallbackAction)
+            ];
 
             var redirectUrl = UriHelper.BuildRelative(
                 context.Request.PathBase,
@@ -41,7 +45,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             return TypedResults.Challenge(properties, [provider]);
         });
 
-        
+
         accountGroup.MapPost("/logout", async (
             ClaimsPrincipal user,
             SignInManager<ApplicationUser> signInManager,
@@ -66,7 +70,8 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 ExternalLogins.PageUrl,
                 QueryString.Create("Action", ExternalLogins.LinkLoginCallbackAction));
 
-            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, signInManager.UserManager.GetUserId(context.User));
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl,
+                signInManager.UserManager.GetUserId(context.User));
             return TypedResults.Challenge(properties, [provider]);
         });
 
@@ -80,9 +85,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
         {
             var user = await userManager.GetUserAsync(context.User);
             if (user is null)
-            {
                 return Results.NotFound($"Unable to load user with ID '{userManager.GetUserId(context.User)}'.");
-            }
 
             var userId = await userManager.GetUserIdAsync(user);
             downloadLogger.LogInformation("User with ID '{UserId}' asked for their personal data.", userId);
@@ -91,24 +94,17 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             var personalData = new Dictionary<string, string>();
             var personalDataProps = typeof(ApplicationUser).GetProperties().Where(
                 prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
-            foreach (var p in personalDataProps)
-            {
-                personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
-            }
+            foreach (var p in personalDataProps) personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
 
             var logins = await userManager.GetLoginsAsync(user);
-            foreach (var l in logins)
-            {
-                personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
-            }
+            foreach (var l in logins) personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
 
             personalData.Add("Authenticator Key", (await userManager.GetAuthenticatorKeyAsync(user))!);
             var fileBytes = JsonSerializer.SerializeToUtf8Bytes(personalData);
 
             context.Response.Headers.TryAdd("Content-Disposition", "attachment; filename=PersonalData.json");
-            return TypedResults.File(fileBytes, contentType: "application/json", fileDownloadName: "PersonalData.json");
+            return TypedResults.File(fileBytes, "application/json", "PersonalData.json");
         });
-
 
 
         return accountGroup;

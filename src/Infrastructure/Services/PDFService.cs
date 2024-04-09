@@ -13,6 +13,7 @@ public class PDFService : IPDFService
     private const float FontSize = 10F;
     private const int MaxCharsPerCell = 80;
     private const int MinCharsPerCell = 10;
+
     public async Task<byte[]> ExportAsync<TData>(IEnumerable<TData> data
         , Dictionary<string, Func<TData, object?>> mappers
         , string title, bool landscape)

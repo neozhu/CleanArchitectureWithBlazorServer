@@ -1,5 +1,5 @@
-﻿@using CleanArchitecture.Blazor.Server.UI.Constants
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
+@using CleanArchitecture.Blazor.Server.UI.Constants
 @implements IDisposable
 
 @inject LayoutService LayoutService
@@ -14,7 +14,7 @@
 
 @code
 {
-    
+
     private MudThemeProvider _mudThemeProvider = null!;
     private bool _defaultDarkMode;
 
@@ -56,5 +56,5 @@
     {
         StateHasChanged();
     }
-    
+
 }

@@ -16,7 +16,7 @@ public class ChangePasswordModelValidator : AbstractValidator<ChangePasswordMode
     private readonly IStringLocalizer<ApplicationUserDtoValidator> _localizer;
 
     public ChangePasswordModelValidator(IIdentitySettings identitySettings,
-         IStringLocalizer<ApplicationUserDtoValidator> localizer)
+        IStringLocalizer<ApplicationUserDtoValidator> localizer)
     {
         _identitySettings = identitySettings;
         _localizer = localizer;
@@ -32,10 +32,10 @@ public class ChangePasswordModelValidator : AbstractValidator<ChangePasswordMode
             .Matches(_identitySettings.RequireDigit ? @"[0-9]+" : string.Empty)
             .WithMessage(_localizer["Password must contain at least one digit"])
             .Matches(_identitySettings.RequireNonAlphanumeric ? @"[\@\!\?\*\.]+" : string.Empty)
-            .WithMessage(_localizer["Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)"]);
+            .WithMessage(
+                _localizer["Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)"]);
 
         RuleFor(x => x.ConfirmPassword)
             .Equal(x => x.NewPassword).WithMessage(_localizer["Confirm password must match the new password"]);
-
     }
 }

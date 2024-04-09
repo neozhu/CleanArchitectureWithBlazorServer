@@ -1,9 +1,5 @@
 ﻿@page "/pages/authentication/RegisterConfirmation"
-
-@using System.Text
 @using CleanArchitecture.Blazor.Domain.Identity
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.WebUtilities
 
 
 @inject UserManager<ApplicationUser> UserManager
@@ -28,18 +24,14 @@ else
 
 @code {
     public const string PageUrl = "/pages/authentication/RegisterConfirmation";
-    [SupplyParameterFromQuery]
-    private string? EmailConfirmationLink { get; set; }
+    [SupplyParameterFromQuery] private string? EmailConfirmationLink { get; set; }
     private string? statusMessage;
 
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
 
-    [SupplyParameterFromQuery]
-    private string? Email { get; set; }
+    [SupplyParameterFromQuery] private string? Email { get; set; }
 
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -54,6 +46,6 @@ else
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
             statusMessage = L["Error finding user for unspecified email"];
         }
-        
     }
+
 }

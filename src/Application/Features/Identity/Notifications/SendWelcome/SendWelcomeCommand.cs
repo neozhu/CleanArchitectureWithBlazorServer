@@ -1,6 +1,6 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome;
 
-public record SendWelcomeNotification(string LoginUrl, string Email,string UserName) : INotification;
+public record SendWelcomeNotification(string LoginUrl, string Email, string UserName) : INotification;
 
 public class SendWelcomeNotificationHandler : INotificationHandler<SendWelcomeNotification>
 {
@@ -30,7 +30,11 @@ public class SendWelcomeNotificationHandler : INotificationHandler<SendWelcomeNo
             notification.Email,
             subject,
             "_welcome",
-            new { notification.LoginUrl, _settings.AppName, notification.Email, notification.UserName, _settings.Company });
-        _logger.LogInformation("Welcome email sent to {Email}. sending result {Successful} {ErrorMessages}", notification.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
+            new
+            {
+                notification.LoginUrl, _settings.AppName, notification.Email, notification.UserName, _settings.Company
+            });
+        _logger.LogInformation("Welcome email sent to {Email}. sending result {Successful} {ErrorMessages}",
+            notification.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
     }
 }

@@ -10,7 +10,6 @@
 @using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Server.UI.Pages.Documents.Components
-@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using CleanArchitecture.Blazor.Application.Features.Documents.Caching
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
@@ -96,7 +95,7 @@
                                 @L["Upload Pictures"]
                             </MudButton>
                         }
-                        
+
                     </MudHidden>
                 </div>
                 @if (_canSearch)
@@ -228,8 +227,7 @@
 @code {
     [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; } = default!;
 
-    [CascadingParameter]
-    private UserProfile? UserProfile { get; set; }
+    [CascadingParameter] private UserProfile? UserProfile { get; set; }
     private string? Title { get; set; }
 
     private HashSet<DocumentDto> _selectedItems = new();
@@ -287,7 +285,6 @@
         });
     }
 
-    
 
     public void Dispose()
     {
@@ -369,8 +366,7 @@
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<DocumentFormDialog>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
 
-       
-       
+
         var state = await dialog.Result;
         if (!state.Canceled)
         {

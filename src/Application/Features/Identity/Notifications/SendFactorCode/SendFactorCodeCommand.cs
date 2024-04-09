@@ -1,6 +1,6 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendFactorCode;
 
-public record SendFactorCodeNotification(string Email,string UserName,string AuthenticatorCode) : INotification;
+public record SendFactorCodeNotification(string Email, string UserName, string AuthenticatorCode) : INotification;
 
 public class SendFactorCodeNotificationHandler : INotificationHandler<SendFactorCodeNotification>
 {
@@ -30,7 +30,12 @@ public class SendFactorCodeNotificationHandler : INotificationHandler<SendFactor
             notification.Email,
             subject,
             "_authenticatorcode",
-            new { notification.AuthenticatorCode, _settings.AppName, notification.Email, notification.UserName, _settings.Company });
-        _logger.LogInformation("Verification Code email sent to {Email}. sending result {Successful} {ErrorMessages}", notification.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
-     }
+            new
+            {
+                notification.AuthenticatorCode, _settings.AppName, notification.Email, notification.UserName,
+                _settings.Company
+            });
+        _logger.LogInformation("Verification Code email sent to {Email}. sending result {Successful} {ErrorMessages}",
+            notification.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
+    }
 }

@@ -1,11 +1,8 @@
 ﻿@page "/pages/authentication/confirmemail"
-
-@using System.Text
-@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome
 @using CleanArchitecture.Blazor.Domain.Identity
-@using FluentEmail.Core.Models
-@using Microsoft.AspNetCore.Identity
+@using System.Text
 @using Microsoft.AspNetCore.WebUtilities
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome
 
 @inject IStringLocalizer<ConfirmEmail> L
 @inject UserManager<ApplicationUser> UserManager
@@ -16,21 +13,19 @@
 <PageTitle>@L["Confirm email"]</PageTitle>
 <div class="d-flex flex-column gap-y-3">
     <MudText Typo="Typo.h4" GutterBottom="true">@L["Confirm email"]</MudText>
-    <StatusMessage Message="@statusMessage" Error="@error" />
+    <StatusMessage Message="@statusMessage" Error="@error"/>
     <a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@Login.PageUrl">@L["Return to Login"]</a>
 </div>
+
 @code {
     public const string PageUrl = "/pages/authentication/confirmemail";
     private string? statusMessage;
 
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
 
-    [SupplyParameterFromQuery]
-    private string? UserId { get; set; }
+    [SupplyParameterFromQuery] private string? UserId { get; set; }
 
-    [SupplyParameterFromQuery]
-    private string? Code { get; set; }
+    [SupplyParameterFromQuery] private string? Code { get; set; }
     private bool error { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -54,15 +49,15 @@
             if (result.Succeeded)
             {
                 var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-                NavigationManager.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
-                new Dictionary<string, object?> { ["returnUrl"]="/" });
+                    NavigationManager.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
+                    new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
-                await Sender.Publish(new SendWelcomeNotification(callbackUrl,user.Email,user.UserName));
+                await Sender.Publish(new SendWelcomeNotification(callbackUrl, user.Email, user.UserName));
                 Logger.LogInformation("{UserName} Activated Successfully!", user.Email);
                 user.IsActive = true;
                 await UserManager.UpdateAsync(user);
-
             }
+
             statusMessage = result.Succeeded ? L["Thank you for confirming your email."] : L["Error confirming your email."];
             error = result.Succeeded ? false : true;
         }

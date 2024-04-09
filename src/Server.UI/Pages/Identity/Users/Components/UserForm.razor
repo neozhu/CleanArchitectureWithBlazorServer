@@ -61,7 +61,7 @@
         </MudItem>
 
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L["User Name"]" Variant="Variant.Text" Required="true" ></MudTextField>
+            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L["User Name"]" Variant="Variant.Text" Required="true"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <PickSuperiorIdAutocomplete For="@(() => Model.SuperiorId)"
@@ -135,6 +135,7 @@
             }
         }
     }
+
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
         var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);

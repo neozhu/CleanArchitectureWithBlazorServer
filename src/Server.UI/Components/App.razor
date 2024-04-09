@@ -8,25 +8,25 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet"/>
     <link href="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.css" rel="stylesheet"/>
-    <link href="css/app.css" rel="stylesheet" />
-    <link href="CleanArchitecture.Blazor.Server.UI.styles.css" rel="stylesheet" />
-    <HeadOutlet @rendermode="RenderModeForPage" />
+    <link href="css/app.css" rel="stylesheet"/>
+    <link href="CleanArchitecture.Blazor.Server.UI.styles.css" rel="stylesheet"/>
+    <HeadOutlet @rendermode="RenderModeForPage"/>
 </head>
 
 <body>
-    <Routes @rendermode="RenderModeForPage" />
+    <Routes @rendermode="RenderModeForPage"/>
     <script src="_framework/blazor.web.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"></script>
     <script src="_content/BlazorTime/blazorTime.js"></script>
-  
+
 </body>
 
 </html>
 
 @code {
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
     private IComponentRenderMode? RenderModeForPage => HttpContext.Request.Path.StartsWithSegments("/pages/authentication")
         ? null
         : new InteractiveServerRenderMode(false);
@@ -35,4 +35,5 @@
     {
         return base.OnInitializedAsync();
     }
+
 }

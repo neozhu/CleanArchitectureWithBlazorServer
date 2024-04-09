@@ -49,9 +49,8 @@ public class
             //        break;
             //}
             foreach (var result in exception.Entries)
-            {
-                errors.Add($"A DbUpdateException was caught while saving changes. Type: {result.Entity.GetType().Name} was part of the problem. ");
-            }
+                errors.Add(
+                    $"A DbUpdateException was caught while saving changes. Type: {result.Entity.GetType().Name} was part of the problem. ");
 
         return errors.ToArray();
     }

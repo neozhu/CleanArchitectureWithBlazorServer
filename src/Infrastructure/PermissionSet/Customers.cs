@@ -20,4 +20,3 @@ public static partial class Permissions
         public const string Import = "Permissions.Customers.Import";
     }
 }
-
