@@ -1,6 +1,4 @@
-﻿@using CleanArchitecture.Blazor.Server.UI.Services
-@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
-@inherits FluxorComponent
+﻿@inherits FluxorComponent
 @inject IJSRuntime JS
 @inject NavigationManager NavigationManager
 @inject IState<UserProfileState> UserProfileState
@@ -19,10 +17,10 @@
                 <MudStack Row="true" AlignItems="AlignItems.Center" Class="ma-4">
                     @if (IsLoading)
                     {
-                        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+                        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true"/>
                         <MudStack Justify="Justify.Center" Spacing="0">
-                            <MudSkeleton Width="120px" />
-                            <MudSkeleton Width="120px" />
+                            <MudSkeleton Width="120px"/>
+                            <MudSkeleton Width="120px"/>
                         </MudStack>
                     }
                     else
@@ -45,25 +43,25 @@
                     }
                 </MudStack>
 
-                <MudDivider Class="my-2" />
+                <MudDivider Class="my-2"/>
                 <MudMenuItem Href="/user/profile">
                     <div class="d-flex">
                         <MudIcon Class="mx-2"
-                                 Icon="@Icons.Material.Filled.Person" />
+                                 Icon="@Icons.Material.Filled.Person"/>
                         <MudText>@L["Profile"]</MudText>
                     </div>
                 </MudMenuItem>
                 <MudMenuItem OnAction="OnSettingClick">
                     <div class="d-flex">
                         <MudIcon Class="mx-2"
-                                 Icon="@Icons.Material.Filled.Settings" />
+                                 Icon="@Icons.Material.Filled.Settings"/>
                         <MudText>@L["Settings"]</MudText>
                     </div>
                 </MudMenuItem>
                 <div class="mt-4 mx-4">
                     <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
-                        <AntiforgeryToken />
-                        <input type="hidden" name="ReturnUrl" value="/" />
+                        <AntiforgeryToken/>
+                        <input type="hidden" name="ReturnUrl" value="/"/>
                         <MudButton Color="Color.Secondary"
                                    ButtonType="ButtonType.Submit"
                                    FullWidth="true"
@@ -77,7 +75,7 @@
         </ChildContent>
     </MudMenu>
     <form method="post" hidden>
-        <AntiforgeryToken />
+        <AntiforgeryToken/>
     </form>
 </MudTooltip>
 

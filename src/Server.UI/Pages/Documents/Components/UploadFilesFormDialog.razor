@@ -47,8 +47,8 @@
         <MudFileUpload T="IReadOnlyList<IBrowserFile>" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="LoadFiles" Style="margin-top:0px">
             <ButtonTemplate>
                 <MudLoadingButton Loading="@_uploading" Variant="Variant.Filled" HtmlTag="label"
-                           Icon="@Icons.Material.Filled.AttachFile"
-                           for="@context">
+                                  Icon="@Icons.Material.Filled.AttachFile"
+                                  for="@context">
                     @L["Choose files"]
                 </MudLoadingButton>
             </ButtonTemplate>

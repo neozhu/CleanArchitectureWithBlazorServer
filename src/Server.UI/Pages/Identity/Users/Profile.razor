@@ -6,9 +6,9 @@
 @using SixLabors.ImageSharp.Processing
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats.Png
-@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @inherits OwningComponentBase
 
@@ -129,8 +129,7 @@
                                                   @bind-Value="_changepassword.CurrentPassword"
                                                   Variant="Variant.Text"
                                                   PasswordMode="true"
-                                                  Required="true"
-                                                  />
+                                                  Required="true"/>
                             </MudItem>
                             <MudItem xs="12">
                                 <MudPasswordField Immediate="true"
@@ -139,8 +138,7 @@
                                                   @bind-Value="_changepassword.NewPassword"
                                                   Variant="Variant.Text"
                                                   PasswordMode="true"
-                                                  Required="true"
-                                                  />
+                                                  Required="true"/>
                             </MudItem>
                             <MudItem xs="12">
                                 <MudPasswordField Immediate="true"
@@ -149,8 +147,7 @@
                                                   @bind-Value="_changepassword.ConfirmPassword"
                                                   Variant="Variant.Text"
                                                   PasswordMode="true"
-                                                  Required="true"
-                                                 />
+                                                  Required="true"/>
                             </MudItem>
                             <MudItem sm="12" xs="12" Class="d-flex justify-end">
                                 <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await ChangePassword())">
@@ -327,6 +324,5 @@
         }
     }
 
-    
 
 }

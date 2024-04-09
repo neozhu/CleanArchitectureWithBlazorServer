@@ -9,12 +9,12 @@
             <MudIcon Class="ml-6 mr-2"
                      Color="Color.Primary"
                      Icon="@Icons.Custom.Brands.MudBlazor"
-                     Size="Size.Large" />
+                     Size="Size.Large"/>
             <MudText Typo="Typo.subtitle2">
                 <b>@L[ApplicationSettings.AppName]</b>
             </MudText>
         </NavLink>
-        <MudSpacer />
+        <MudSpacer/>
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudTooltip Arrow="true"
                         Text="Navigate to GitHub">
@@ -22,27 +22,27 @@
                                Color="Color.Default"
                                Icon="@Icons.Custom.Brands.GitHub"
                                Href="https://github.com/neozhu/CleanArchitectureWithBlazorServer"
-                               Target="_blank" />
+                               Target="_blank"/>
             </MudTooltip>
-            <LanguageSelector />
+            <LanguageSelector/>
             <MudTooltip Text="@(LayoutService.IsRTL ? "Toggle right-to-left" : "Toggle left-to-right")">
                 <MudIconButton Class="mx-1"
                                Icon="@(LayoutService.IsRTL ? Icons.Material.Filled.FormatTextdirectionLToR : Icons.Material.Filled.FormatTextdirectionRToL)"
                                Color="Color.Default"
-                               OnClick="@(e => LayoutService.ToggleRightToLeft())" />
+                               OnClick="@(e => LayoutService.ToggleRightToLeft())"/>
             </MudTooltip>
             <AuthorizeView>
                 <Authorized>
                     <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
-                        <AntiforgeryToken />
-                        <input type="hidden" name="ReturnUrl" value="/" />
+                        <AntiforgeryToken/>
+                        <input type="hidden" name="ReturnUrl" value="/"/>
                         <MudTooltip Text="@L["Logout"]">
                             <MudButton Style="text-transform:none"
-                                   ButtonType="ButtonType.Submit"
-                                   Variant="Variant.Text"
-                                   StartIcon="@Icons.Material.Filled.Logout">
-                            @L["Logout"]
-                        </MudButton>
+                                       ButtonType="ButtonType.Submit"
+                                       Variant="Variant.Text"
+                                       StartIcon="@Icons.Material.Filled.Logout">
+                                @L["Logout"]
+                            </MudButton>
                         </MudTooltip>
                     </form>
                 </Authorized>
@@ -56,10 +56,10 @@
                     </MudTooltip>
                 </NotAuthorized>
             </AuthorizeView>
-            
+
         </MudHidden>
         <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-            <LanguageSelector />
+            <LanguageSelector/>
             <MudTooltip Text="@L["Login"]">
                 <MudButton Variant="Variant.Text" Href="/pages/authentication/login"
                            StartIcon="@Icons.Material.Rounded.Login"
@@ -77,6 +77,7 @@
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+
 @code
 {
 }

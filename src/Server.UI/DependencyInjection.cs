@@ -3,11 +3,9 @@ using System.Reflection;
 using BlazorDownloadFile;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
-using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using CleanArchitecture.Blazor.Server.Hubs;
 using CleanArchitecture.Blazor.Server.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
-using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication;
 using CleanArchitecture.Blazor.Server.UI.Services;
 using CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
@@ -16,13 +14,13 @@ using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using MudExtensions.Services;
 using Polly;
+using QuestPDF;
 using QuestPDF.Infrastructure;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
@@ -71,12 +69,12 @@ public static class DependencyInjection
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
             .AddScoped<IMenuService, MenuService>()
             .AddScoped<InMemoryNotificationService>()
-           .AddScoped<INotificationService>(sp =>
-         {
-             var service = sp.GetRequiredService<InMemoryNotificationService>();
-             service.Preload();
-             return service;
-         });
+            .AddScoped<INotificationService>(sp =>
+            {
+                var service = sp.GetRequiredService<InMemoryNotificationService>();
+                service.Preload();
+                return service;
+            });
 
         services.Configure<ForwardedHeadersOptions>(options =>
         {
@@ -102,13 +100,13 @@ public static class DependencyInjection
 
         app.UseStatusCodePagesWithRedirects("/404");
         app.MapHealthChecks("/health");
-    
+
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseAntiforgery();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-     
+
         if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
             Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
 
@@ -134,7 +132,7 @@ public static class DependencyInjection
         app.MapHub<ServerHub>(ISignalRHub.Url);
 
         //QuestPDF License configuration
-        QuestPDF.Settings.License = LicenseType.Community;
+        Settings.License = LicenseType.Community;
 
         // Add additional endpoints required by the Identity /Account Razor components.
         app.MapAdditionalIdentityEndpoints();

@@ -1,7 +1,5 @@
-﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Blazor.Application.Common.Security;
+﻿using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Domain.Identity;
-using FluentValidation;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 

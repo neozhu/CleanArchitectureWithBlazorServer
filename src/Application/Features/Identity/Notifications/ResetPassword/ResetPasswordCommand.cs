@@ -1,6 +1,6 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword;
 
-public record ResetPasswordNotification(string RequestUrl,string Email,string UserName) : INotification;
+public record ResetPasswordNotification(string RequestUrl, string Email, string UserName) : INotification;
 
 public class ResetPasswordNotificationHandler : INotificationHandler<ResetPasswordNotification>
 {
@@ -15,7 +15,6 @@ public class ResetPasswordNotificationHandler : INotificationHandler<ResetPasswo
         IMailService mailService,
         IApplicationSettings settings)
     {
-
         _localizer = localizer;
         _logger = logger;
         _mailService = mailService;
@@ -26,18 +25,18 @@ public class ResetPasswordNotificationHandler : INotificationHandler<ResetPasswo
     public async Task Handle(ResetPasswordNotification notification, CancellationToken cancellationToken)
     {
         var sendMailResult = await _mailService.SendAsync(
-           notification.Email,
-           _localizer["Verify your recovery email"],
-           "_recoverypassword",
-           new
-           {
-               notification.RequestUrl,
-               _settings.AppName,
-               _settings.Company,
-               notification.UserName,
-               notification.Email,
-           });
-        _logger.LogInformation("Password rest email sent to {Email}. sending result {Successful} {ErrorMessages}", notification.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
-
+            notification.Email,
+            _localizer["Verify your recovery email"],
+            "_recoverypassword",
+            new
+            {
+                notification.RequestUrl,
+                _settings.AppName,
+                _settings.Company,
+                notification.UserName,
+                notification.Email
+            });
+        _logger.LogInformation("Password rest email sent to {Email}. sending result {Successful} {ErrorMessages}",
+            notification.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
     }
 }

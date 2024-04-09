@@ -13,11 +13,12 @@ public class CustomerAdvancedSpecification : Specification<Customer>
             today.AddDays(-30).ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00",
             CultureInfo.CurrentCulture);
 
-       Query.Where(q => q.Name != null)
-             .Where(q => q.Name!.Contains(filter.Keyword) || q.Description!.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword))
-             .Where(q => q.CreatedBy == filter.CurrentUser.UserId, filter.ListView == CustomerListView.My && filter.CurrentUser is not null)
-             .Where(q => q.Created >= start && q.Created <= end, filter.ListView == CustomerListView.CreatedToday)
-             .Where(q => q.Created >= last30day, filter.ListView == CustomerListView.Created30Days);
-       
+        Query.Where(q => q.Name != null)
+            .Where(q => q.Name!.Contains(filter.Keyword) || q.Description!.Contains(filter.Keyword),
+                !string.IsNullOrEmpty(filter.Keyword))
+            .Where(q => q.CreatedBy == filter.CurrentUser.UserId,
+                filter.ListView == CustomerListView.My && filter.CurrentUser is not null)
+            .Where(q => q.Created >= start && q.Created <= end, filter.ListView == CustomerListView.CreatedToday)
+            .Where(q => q.Created >= last30day, filter.ListView == CustomerListView.Created30Days);
     }
 }

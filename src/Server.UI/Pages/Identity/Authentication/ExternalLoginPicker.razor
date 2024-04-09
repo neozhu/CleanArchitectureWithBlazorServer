@@ -1,8 +1,5 @@
-﻿@using CleanArchitecture.Blazor.Domain.Identity
-@using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Identity
-
-
+﻿@using Microsoft.AspNetCore.Authentication
+@using CleanArchitecture.Blazor.Domain.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 @inject IStringLocalizer<ExternalLoginPicker> L
@@ -18,12 +15,12 @@ else
 {
     <form class="form-horizontal" action="@IdentityComponentsEndpointRouteBuilderExtensions.PerformExternalLogin" method="post">
         <div>
-            <AntiforgeryToken />
-            <input type="hidden" name="ReturnUrl" value="@ReturnUrl" />
+            <AntiforgeryToken/>
+            <input type="hidden" name="ReturnUrl" value="@ReturnUrl"/>
             <div class="d-flex flex-column flex-grow-1 gap-y-2">
                 @foreach (var provider in externalLogins)
                 {
-                    <button type="submit" class="mud-button-root mud-button mud-button-outlined mud-button-filled-secondary mud-button-filled-size-medium mud-width-full mud-ripple" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@string.Format(L["Login with {0}"],provider.DisplayName)</button>
+                    <button type="submit" class="mud-button-root mud-button mud-button-outlined mud-button-filled-secondary mud-button-filled-size-medium mud-width-full mud-ripple" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@string.Format(L["Login with {0}"], provider.DisplayName)</button>
                 }
             </div>
         </div>
@@ -33,11 +30,11 @@ else
 @code {
     private AuthenticationScheme[] externalLogins = [];
 
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         externalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToArray();
     }
+
 }

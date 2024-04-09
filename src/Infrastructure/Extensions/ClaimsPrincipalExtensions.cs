@@ -11,9 +11,9 @@ public static class ClaimsPrincipalExtensions
 {
     public static UserProfile GetUserProfileFromClaim(this
         ClaimsPrincipal claimsPrincipal
-           )
+    )
     {
-        var profile = new UserProfile() { Email = "", UserId = "", UserName = "" };
+        var profile = new UserProfile { Email = "", UserId = "", UserName = "" };
         if (claimsPrincipal.Identity?.IsAuthenticated ?? false)
         {
             profile.UserId = claimsPrincipal.GetUserId() ?? "";
@@ -26,11 +26,11 @@ public static class ClaimsPrincipalExtensions
             profile.Email = claimsPrincipal.GetEmail() ?? "";
             profile.DisplayName = claimsPrincipal.GetDisplayName();
             profile.AssignedRoles = claimsPrincipal.GetRoles();
-            profile.DefaultRole = profile.AssignedRoles.Any()?profile.AssignedRoles.First():RoleName.Basic;
+            profile.DefaultRole = profile.AssignedRoles.Any() ? profile.AssignedRoles.First() : RoleName.Basic;
             profile.ProfilePictureDataUrl = claimsPrincipal.GetProfilePictureDataUrl();
             profile.IsActive = true;
-
         }
+
         return profile;
     }
 

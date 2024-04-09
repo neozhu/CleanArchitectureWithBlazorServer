@@ -1,12 +1,9 @@
 ﻿@page "/pages/authentication/forgot-password"
-
-@using Microsoft.AspNetCore.WebUtilities
-@using Severity = Severity
 @using CleanArchitecture.Blazor.Domain.Identity
-@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword
-@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
-@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.WebUtilities
 @using System.Text
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword
+@using System.ComponentModel.DataAnnotations
 
 @inject IStringLocalizer<Forgot> L
 @inject IMediator Sender
@@ -17,16 +14,16 @@
 <PageTitle>@Title</PageTitle>
 
 <EditForm Model="Input" FormName="forgot-password" OnValidSubmit="OnValidSubmitAsync" method="post">
-    <DataAnnotationsValidator />
+    <DataAnnotationsValidator/>
 
     <MudText Typo="Typo.h4" GutterBottom="true">@L["Forgot Password?"]</MudText>
     <MudText Typo="Typo.body1">@L["No worries! Just enter your email address below and we'll send you a link to reset your password."]</MudText>
-    <StatusMessage Message="@Message" Error="true" />
+    <StatusMessage Message="@Message" Error="true"/>
     <div class="mud-input-control mud-input-input-control my-4">
         <div class="mud-input-control-input-container">
             <!--!--><!--!-->
             <div class="mud-input mud-input-outlined mud-shrink">
-                <InputText @bind-Value="Input.Email" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="email" aria-required="true" placeholder="name@example.com" />
+                <InputText @bind-Value="Input.Email" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="email" aria-required="true" placeholder="name@example.com"/>
                 <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                 <!--!-->
                 <div class="mud-input-outlined-border"></div>
@@ -36,7 +33,7 @@
         </div>
         <div class="mud-input-helper-text mud-input-error">
             <div class="d-flex">
-                <ValidationMessage For="() => Input.Email" class="mud-input-error" />
+                <ValidationMessage For="() => Input.Email" class="mud-input-error"/>
             </div>
         </div>
     </div>
@@ -54,11 +51,11 @@
     public const string PageUrl = "/pages/authentication/forgot-password";
     public string Title = "Forgot Password";
 
-    [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
     private readonly string _resetPasswordToken = string.Empty;
     private string _inputToken = string.Empty;
     private string? Message;
+
     protected override Task OnInitializedAsync()
     {
         Title = L["Forgot Password"];
@@ -74,30 +71,27 @@
             Message = L["No user found with the provided email address."];
             return;
         }
-        else
+
+        if (!await UserManager.IsEmailConfirmedAsync(user))
         {
-            if (!(await UserManager.IsEmailConfirmedAsync(user)))
-            {
-                Message = L["Your email address has not been confirmed. Please check your inbox for a confirmation email or request a new confirmation link."];
-                return;
-            }
+            Message = L["Your email address has not been confirmed. Please check your inbox for a confirmation email or request a new confirmation link."];
+            return;
         }
+
         var code = await UserManager.GeneratePasswordResetTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(
             NavigationManager.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
-        await Sender.Publish(new ResetPasswordNotification(callbackUrl,user.Email,user.UserName));
+        await Sender.Publish(new ResetPasswordNotification(callbackUrl, user.Email, user.UserName));
         Logger.LogInformation("Rest password email sent to {0}.", Input.Email);
         RedirectManager.RedirectTo(ForgotPasswordConfirmation.PageUrl);
-
     }
 
 
     private sealed class InputModel
     {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; } = "";
+        [Required] [EmailAddress] public string Email { get; set; } = "";
     }
+
 }

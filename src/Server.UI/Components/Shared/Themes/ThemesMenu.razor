@@ -1,9 +1,8 @@
-﻿
+﻿@using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences
 @using System.Globalization
-@using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences
 @inject LayoutService LayoutService
 @inject IStringLocalizer<ThemesMenu> L
- 
+
 <MudDrawer Anchor="LayoutService.IsRTL ? Anchor.Left : Anchor.Right"
            @bind-Open="ThemingDrawerOpen"
            Elevation="1"
@@ -13,11 +12,11 @@
         <MudText Typo="Typo.body1">
             <b>@L["Themes"]</b>
         </MudText>
-        <MudSpacer />
+        <MudSpacer/>
         <MudIconButton Color="Color.Default"
                        Icon="@Icons.Material.Filled.Close"
                        OnClick="@(() => ThemingDrawerOpenChanged.InvokeAsync(false))"
-                       Size="Size.Small" />
+                       Size="Size.Small"/>
     </MudDrawerHeader>
 
     <div class="ma-6">
@@ -34,7 +33,7 @@
                                Style="background: white;">
                         <ChildContent>
                             <MudIcon Color="Color.Primary"
-                                     Icon="@Icons.Material.Filled.AutoMode" />
+                                     Icon="@Icons.Material.Filled.AutoMode"/>
                         </ChildContent>
                     </MudButton>
                 </MudTooltip>
@@ -47,7 +46,7 @@
                                Style="background: white;">
                         <ChildContent>
                             <MudIcon Color="Color.Primary"
-                                     Icon="@Icons.Material.Filled.WbSunny" />
+                                     Icon="@Icons.Material.Filled.WbSunny"/>
                         </ChildContent>
                     </MudButton>
                 </MudTooltip>
@@ -60,7 +59,7 @@
                                Style="background: #333333;">
                         <ChildContent>
                             <MudIcon Icon="@Icons.Material.Filled.DarkMode"
-                                     Style="color: #c9c9c9" />
+                                     Style="color: #c9c9c9"/>
                         </ChildContent>
                     </MudButton>
                 </MudTooltip>
@@ -88,7 +87,6 @@
                         </MudButton>
                     </MudItem>
                 }
-
             }
             else
             {
@@ -142,7 +140,7 @@
 <MudOverlay DarkBackground="false"
             OnClick="@(() => ThemingDrawerOpenChanged.InvokeAsync(false))"
             Visible="ThemingDrawerOpen"
-            VisibleChanged="ThemingDrawerOpenChanged" />
+            VisibleChanged="ThemingDrawerOpenChanged"/>
 
 
 <style>
@@ -176,13 +174,13 @@
 @code
 {
 
-    [EditorRequired][Parameter] public bool ThemingDrawerOpen { get; set; }
+    [EditorRequired] [Parameter] public bool ThemingDrawerOpen { get; set; }
 
-    [EditorRequired][Parameter] public EventCallback<bool> ThemingDrawerOpenChanged { get; set; }
+    [EditorRequired] [Parameter] public EventCallback<bool> ThemingDrawerOpenChanged { get; set; }
 
-    [EditorRequired][Parameter] public UserPreferences UserPreferences { get; set; } = new();
+    [EditorRequired] [Parameter] public UserPreferences UserPreferences { get; set; } = new();
 
-    [EditorRequired][Parameter] public EventCallback<UserPreferences> UserPreferencesChanged { get; set; }
+    [EditorRequired] [Parameter] public EventCallback<UserPreferences> UserPreferencesChanged { get; set; }
 
     [Parameter] public double Radius { get; set; }
 
@@ -207,8 +205,10 @@
                 {
                     UserPreferences.PrimaryColor = color;
                 }
+
                 break;
         }
+
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
 
@@ -229,6 +229,7 @@
         {
             UserPreferences.IsDarkMode = false;
         }
+
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
 

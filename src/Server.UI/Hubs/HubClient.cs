@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Http.Connections;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace CleanArchitecture.Blazor.Server.UI.Hubs;
@@ -12,28 +11,23 @@ public sealed class HubClient : IAsyncDisposable
     private readonly HubConnection _hubConnection;
     private bool _started;
 
-    public HubClient(NavigationManager navigationManager, IHttpContextAccessor  httpContextAccessor)
+    public HubClient(NavigationManager navigationManager, IHttpContextAccessor httpContextAccessor)
     {
         var uri = new UriBuilder(navigationManager.Uri);
         var container = new CookieContainer();
         if (httpContextAccessor.HttpContext != null)
-        {
             foreach (var c in httpContextAccessor.HttpContext.Request.Cookies)
-            {
                 container.Add(new Cookie(c.Key, c.Value)
                 {
-                    Domain = uri.Host, // Set the domain of the cookie
-                    Path = "/" // Set the path of the cookie
+                    Domain = uri.Host, Path // Set the domain of the cookie
+                        = "/" // Set the path of the cookie
                 });
-            }
-        }
         var hubUrl = navigationManager.BaseUri.TrimEnd('/') + ISignalRHub.Url;
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(hubUrl, options =>
             {
                 options.Transports = HttpTransportType.WebSockets;
                 options.Cookies = container;
-                
             }).WithAutomaticReconnect().Build();
 
         _hubConnection.ServerTimeout = TimeSpan.FromSeconds(30);

@@ -6,7 +6,6 @@ using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
-using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using LazyCache;
 using Microsoft.AspNetCore.Authorization;
@@ -104,13 +103,14 @@ public class IdentityService : IIdentityService
         }
     }
 
-    public async Task<ApplicationUserDto> GetApplicationUserDto(string userName, CancellationToken cancellation = default)
+    public async Task<ApplicationUserDto> GetApplicationUserDto(string userName,
+        CancellationToken cancellation = default)
     {
         var key = GetApplicationUserCacheKey(userName);
         var result = await _cache.GetOrAddAsync(key,
             async () => await _userManager.Users.Where(x => x.UserName == userName).Include(x => x.UserRoles)
                 .ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(cancellation) ?? new ApplicationUserDto() { UserName = "Anonymous" }, Options);
+                .FirstOrDefaultAsync(cancellation) ?? new ApplicationUserDto { UserName = "Anonymous" }, Options);
         return result;
     }
 
@@ -136,6 +136,8 @@ public class IdentityService : IIdentityService
         _cache.Remove(GetApplicationUserCacheKey(userName));
     }
 
-    private string GetApplicationUserCacheKey(string userName) => $"GetApplicationUserDto:{userName}";
-
+    private string GetApplicationUserCacheKey(string userName)
+    {
+        return $"GetApplicationUserDto:{userName}";
+    }
 }

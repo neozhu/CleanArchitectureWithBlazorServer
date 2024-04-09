@@ -1,8 +1,10 @@
 ﻿@inject IdentityRedirectManager RedirectManager
 
 @code {
+
     protected override void OnAfterRender(bool firstRender)
     {
         RedirectManager.RedirectTo("/");
     }
+
 }

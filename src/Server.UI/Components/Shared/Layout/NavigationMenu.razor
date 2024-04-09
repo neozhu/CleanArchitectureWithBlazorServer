@@ -1,6 +1,5 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu
 @using CleanArchitecture.Blazor.Server.UI.Services.Navigation
-
 @inject IMenuService MenuService
 @inject LayoutService LayoutService
 @inject NavigationManager NavigationManager
@@ -16,7 +15,7 @@
         <MudIcon Class="ml-6 mr-2"
                  Color="Color.Primary"
                  Icon="@Icons.Custom.Brands.MudBlazor"
-                 Size="Size.Large" />
+                 Size="Size.Large"/>
         <MudText Typo="Typo.subtitle2">
             <b>@L[ApplicationSettings.AppName]</b>
         </MudText>
@@ -27,7 +26,6 @@
         {
             @if (section is not null)
             {
-
                 <div class="@(LayoutService.IsRTL ? "mr-6" : "ml-6") my-3">
                     <MudText Typo="Typo.caption">
                         <b>
@@ -46,20 +44,18 @@
                             <MudNavGroup Icon="@sectionItem.Icon" Title="@L[sectionItem.Title]" Expanded="Expanded(sectionItem)">
                                 @foreach (var menuItem in sectionItem.MenuItems.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
                                 {
-
                                     <MudNavLink Disabled="@(menuItem.PageStatus != PageStatus.Completed)" Href="@(menuItem.Href)" Target="@(menuItem.Target)" Match="NavLinkMatch.All">
                                         <div class="d-flex">
                                             @(L[menuItem.Title])
                                             @if (menuItem.PageStatus != PageStatus.Completed)
                                             {
-                                                <MudSpacer />
+                                                <MudSpacer/>
                                                 <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
                                                     @(L[menuItem.PageStatus.GetDescription()])
                                                 </MudChip>
                                             }
                                         </div>
                                     </MudNavLink>
-
                                 }
                             </MudNavGroup>
                         }
@@ -70,7 +66,7 @@
                                     @(L[sectionItem.Title])
                                     @if (sectionItem.PageStatus != PageStatus.Completed)
                                     {
-                                        <MudSpacer />
+                                        <MudSpacer/>
                                         <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
                                             @(L[sectionItem.PageStatus.GetDescription()])
                                         </MudChip>
@@ -91,7 +87,6 @@
     </MudNavMenu>
 
 </MudDrawer>
-
 
 
 @if (LayoutService.IsRTL)
@@ -123,14 +118,12 @@ else
 @code
 {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-    [EditorRequired][Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
+    [EditorRequired] [Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
 
-    [EditorRequired][Parameter] public bool DrawerOpen { get; set; }
+    [EditorRequired] [Parameter] public bool DrawerOpen { get; set; }
 
     private IEnumerable<MenuSectionModel> MenuSections => MenuService.Features;
-    [EditorRequired]
-    [Parameter]
-    public string[] Roles { get; set; }= Array.Empty<string>();
+    [EditorRequired] [Parameter] public string[] Roles { get; set; } = Array.Empty<string>();
 
     private bool Expanded(MenuSectionItemModel menu)
     {
@@ -138,5 +131,5 @@ else
         return menu is { IsParent: true, MenuItems: not null } &&
                menu.MenuItems.Any(x => !string.IsNullOrEmpty(x.Href) && x.Href.Equals(href));
     }
-   
+
 }

@@ -83,6 +83,7 @@
     {
         if (!string.IsNullOrEmpty(Model.URL)) await new OpenSeadragon(JS).Open(Model.URL);
     }
+
     private async Task Submit()
     {
         await _form!.Validate();

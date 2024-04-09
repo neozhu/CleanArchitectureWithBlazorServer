@@ -34,7 +34,8 @@ public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormMo
             .Matches(_identitySettings.RequireDigit ? @"[0-9]+" : string.Empty)
             .WithMessage(_localizer["Password must contain at least one digit"])
             .Matches(_identitySettings.RequireNonAlphanumeric ? @"[\@\!\?\*\.]+" : string.Empty)
-            .WithMessage(_localizer["Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)"]);
+            .WithMessage(
+                _localizer["Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)"]);
         RuleFor(x => x.ConfirmPassword)
             .Equal(x => x.Password).WithMessage(_localizer["Confirm password must match the password"]);
 

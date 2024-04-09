@@ -1,14 +1,10 @@
 ﻿@page "/pages/authentication/register"
-
-@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome
-@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
-@using Microsoft.AspNetCore.WebUtilities
-@using CleanArchitecture.Blazor.Application.Common.Security
 @using CleanArchitecture.Blazor.Domain.Identity
-@using FluentEmail.Core.Models
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
-@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.WebUtilities
 @using System.Text
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
+@using System.ComponentModel.DataAnnotations
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IStringLocalizer<Register> L
@@ -23,7 +19,7 @@
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
-            <DataAnnotationsValidator />
+            <DataAnnotationsValidator/>
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
             <MudText>
                 @L["Have an account?"] <MudLink Href="@Login.PageUrl">@L["Sign In"]</MudLink>
@@ -33,7 +29,7 @@
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
                     <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText @bind-Value="Input.UserName" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="user name" />
+                        <InputText @bind-Value="Input.UserName" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="user name"/>
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                         <!--!-->
                         <div class="mud-input-outlined-border"></div>
@@ -43,7 +39,7 @@
                 </div>
                 <div class="mud-input-helper-text mud-input-error">
                     <div class="d-flex">
-                        <ValidationMessage For="() => Input.UserName" class="mud-input-error" />
+                        <ValidationMessage For="() => Input.UserName" class="mud-input-error"/>
                     </div>
                 </div>
             </div>
@@ -52,7 +48,7 @@
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
                     <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText @bind-Value="Input.Email" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="user name" />
+                        <InputText @bind-Value="Input.Email" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="user name"/>
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                         <!--!-->
                         <div class="mud-input-outlined-border"></div>
@@ -62,7 +58,7 @@
                 </div>
                 <div class="mud-input-helper-text mud-input-error">
                     <div class="d-flex">
-                        <ValidationMessage For="() => Input.Email" class="mud-input-error" />
+                        <ValidationMessage For="() => Input.Email" class="mud-input-error"/>
                     </div>
                 </div>
             </div>
@@ -71,7 +67,7 @@
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
                     <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText type="password" @bind-Value="Input.Password" class="mud-input-slot mud-input-root mud-input-root-outlined" autocomplete="current-password" aria-required="true" placeholder="password" />
+                        <InputText type="password" @bind-Value="Input.Password" class="mud-input-slot mud-input-root mud-input-root-outlined" autocomplete="current-password" aria-required="true" placeholder="password"/>
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                         <!--!-->
                         <div class="mud-input-outlined-border"></div>
@@ -81,7 +77,7 @@
                 </div>
                 <div class="mud-input-helper-text mud-input-error">
                     <div class="d-flex">
-                        <ValidationMessage For="() => Input.Password" class="mud-input-error" />
+                        <ValidationMessage For="() => Input.Password" class="mud-input-error"/>
                     </div>
                 </div>
             </div>
@@ -89,7 +85,7 @@
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
                     <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText type="password" @bind-Value="Input.ConfirmPassword" class="mud-input-slot mud-input-root mud-input-root-outlined" autocomplete="current-password" aria-required="true" placeholder="Confirm password" />
+                        <InputText type="password" @bind-Value="Input.ConfirmPassword" class="mud-input-slot mud-input-root mud-input-root-outlined" autocomplete="current-password" aria-required="true" placeholder="Confirm password"/>
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                         <!--!-->
                         <div class="mud-input-outlined-border"></div>
@@ -99,19 +95,19 @@
                 </div>
                 <div class="mud-input-helper-text mud-input-error">
                     <div class="d-flex">
-                        <ValidationMessage For="() => Input.ConfirmPassword" class="mud-input-error" />
+                        <ValidationMessage For="() => Input.ConfirmPassword" class="mud-input-error"/>
                     </div>
                 </div>
             </div>
 
             <div Class="d-flex justify-space-between align-center mb-1">
                 <label class="form-label">
-                    <InputCheckbox @bind-Value="Input.AgreeToTerms" class="form-check-input" />
+                    <InputCheckbox @bind-Value="Input.AgreeToTerms" class="form-check-input"/>
                     @L["I agree to the terms and privacy"]
                 </label>
                 <div class="mud-input-helper-text mud-input-error">
                     <div class="d-flex">
-                        <ValidationMessage For="() => Input.AgreeToTerms" class="mud-input-error" />
+                        <ValidationMessage For="() => Input.AgreeToTerms" class="mud-input-error"/>
                     </div>
                 </div>
             </div>
@@ -126,22 +122,23 @@
         </EditForm>
     </div>
 </div>
+
 @code {
 
     public const string PageUrl = "/pages/authentication/register";
     private string Title = "Sign Up";
 
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
     private string? message;
 
 
-    [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+
     protected override void OnInitialized()
     {
         Title = L["Sign Up"];
     }
+
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
@@ -155,12 +152,14 @@
             message = string.Join(" ", result.Errors.Select(error => error.Description));
             return;
         }
+
         result = await UserManager.AddToRoleAsync(user, RoleName.Basic);
         if (!result.Succeeded)
         {
             message = string.Join(" ", result.Errors.Select(error => error.Description));
             return;
         }
+
         var userId = await UserManager.GetUserIdAsync(user);
         Logger.LogInformation("{UserName} created a new account with password.", Input.UserName);
         if (UserManager.Options.SignIn.RequireConfirmedEmail)
@@ -171,24 +170,22 @@
                 NavigationManager.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
                 new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = "/" });
             await Sender.Publish(new UserActivationNotification(callbackUrl, Input.Email, userId, Input.UserName));
-            RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new() { ["email"] = Input.Email });
-
+            RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new Dictionary<string, object?> { ["email"] = Input.Email });
         }
         else if (UserManager.Options.SignIn.RequireConfirmedAccount)
         {
-            
-           
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = NavigationManager.GetUriWithQueryParameters(
                 NavigationManager.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
                 new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
-            RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new() { ["email"] = Input.Email, ["EmailConfirmationLink"] = callbackUrl });
+            RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new Dictionary<string, object?> { ["email"] = Input.Email, ["EmailConfirmationLink"] = callbackUrl });
         }
 
-        await SignInManager.SignInAsync(user, isPersistent: false);
+        await SignInManager.SignInAsync(user, false);
         RedirectManager.RedirectTo(ReturnUrl);
     }
+
     private ApplicationUser CreateUser()
     {
         try
@@ -198,7 +195,7 @@
         catch
         {
             throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+                                                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
         }
     }
 
@@ -208,26 +205,32 @@
         {
             throw new NotSupportedException(L["The default UI requires a user store with email support."]);
         }
+
         return (IUserEmailStore<ApplicationUser>)UserStore;
     }
+
     public sealed class InputModel
     {
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         public string UserName { get; set; } = "";
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; } = "";
+
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; } = "";
+
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string? ConfirmPassword { get; set; } = "";
+
         [Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to the terms.")]
         public bool AgreeToTerms { get; set; } = true;
     }
