@@ -1,12 +1,8 @@
-﻿@using Severity = Severity
-@using Toolbelt.Blazor.HotKeys2
-@using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences
-@using CleanArchitecture.Blazor.Server.UI.Constants
+﻿@using CleanArchitecture.Blazor.Server.UI.Constants
 @inherits LayoutComponentBase
+@implements IDisposable
 
 @inject LayoutService LayoutService
-@inject HotKeys HotKeys
-@inject IStringLocalizer<SharedResource> L
 
 <PageTitle>@ApplicationSettings.AppName</PageTitle>
 <MudRTLProvider RightToLeft="@LayoutService.IsRTL">
@@ -18,12 +14,9 @@
 
 @code
 {
-
- 
+    
     private MudThemeProvider _mudThemeProvider = null!;
     private bool _defaultDarkMode;
-
-   
 
     public void Dispose()
     {
@@ -63,7 +56,5 @@
     {
         StateHasChanged();
     }
-
-
-     
+    
 }
