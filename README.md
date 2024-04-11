@@ -14,8 +14,10 @@ using .NET Blazor technology.
 
 Experience the application in action in Blazor Server mode by visiting
 
-Login [architecture.blazorserver.com](https://architecture.blazorserver.com/)
-Alternative [architecture.blazors.app](https://architecture.blazors.app/)
+- Login 
+MS SQL Database: [architecture.blazorserver.com](https://architecture.blazorserver.com/)
+
+PostgreSQL Database: [architecture.blazors.app](https://architecture.blazors.app/)
 
 ## Visual Insights
 
