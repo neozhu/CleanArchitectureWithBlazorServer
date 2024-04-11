@@ -14,10 +14,10 @@ using .NET Blazor technology.
 
 Experience the application in action in Blazor Server mode by visiting
 
-- Login 
-MS SQL Database: [architecture.blazorserver.com](https://architecture.blazorserver.com/)
 
-PostgreSQL Database: [architecture.blazors.app](https://architecture.blazors.app/)
+- MS SQL Database: [architecture.blazorserver.com](https://architecture.blazorserver.com/)
+
+- PostgreSQL Database: [architecture.blazors.app](https://architecture.blazors.app/)
 
 ## Visual Insights
 
