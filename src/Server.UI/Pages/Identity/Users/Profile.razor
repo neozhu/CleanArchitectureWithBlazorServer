@@ -19,6 +19,7 @@
 @inject IDispatcher Dispatcher
 @inject IUploadService UploadService
 @inject IIdentityService IdentityService
+@inject IMapper Mapper
 
 
 <PageTitle>@Title</PageTitle>
@@ -192,7 +193,7 @@
 
     public string Id => Guid.NewGuid().ToString();
     private bool IsLoading => UserProfileState.Value.IsLoading;
-    private UserProfile model => UserProfileState.Value.UserProfile;
+    private ChangeUserProfileModel model;
 
 
     private async void ActivePanelIndexChanged(int index)
@@ -237,6 +238,7 @@
     {
         UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         await base.OnInitializedAsync();
+        model =Mapper.Map<ChangeUserProfileModel>( UserProfileState.Value.UserProfile);
         UserProfileState.StateChanged += StateOnStateChanged;
     }
 
@@ -269,7 +271,7 @@
                 user!.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated"], Severity.Info);
-                Dispatcher.Dispatch(new UserProfileUpdateAction { UserProfile = model });
+                Dispatcher.Dispatch(new UserProfileUpdateAction { UserProfile =Mapper.Map<UserProfile>( model) });
             }
         }
     }
@@ -289,7 +291,7 @@
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
                 Snackbar.Add($"{ConstantString.UpdateSuccess}", Severity.Info);
-                Dispatcher.Dispatch(new UserProfileUpdateAction { UserProfile = model });
+                Dispatcher.Dispatch(new UserProfileUpdateAction { UserProfile =Mapper.Map<UserProfile>( model) });
             }
         }
         finally
