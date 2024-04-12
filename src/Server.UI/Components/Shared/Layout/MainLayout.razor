@@ -30,7 +30,6 @@
         if (firstRender)
         {
             await ApplyUserPreferences();
-            await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
             StateHasChanged();
         }
     }
@@ -45,11 +44,6 @@
     {
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         LayoutService.SetBaseTheme(Theme.ApplicationTheme());
-    }
-
-    private async Task OnSystemPreferenceChanged(bool newValue)
-    {
-        await LayoutService.OnSystemPreferenceChanged(newValue);
     }
 
     private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
