@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
@@ -11,6 +11,7 @@ public class DocumentConfiguration : IEntityTypeConfiguration<Document>
     public void Configure(EntityTypeBuilder<Document> builder)
     {
         builder.Property(t => t.DocumentType).HasConversion<string>();
+        builder.Property(x => x.Content).HasMaxLength(4000);
         builder.Ignore(e => e.DomainEvents);
         builder.HasOne(x => x.Owner)
             .WithMany()
