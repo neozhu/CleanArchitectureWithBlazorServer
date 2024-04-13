@@ -12,6 +12,9 @@ public class LoggerConfiguration : IEntityTypeConfiguration<Logger>
         builder.Property(x => x.Level).HasMaxLength(450);
         builder.Property(x => x.Message).HasMaxLength(4000);
         builder.Property(x => x.Exception).HasMaxLength(4000);
+        builder.Property(x => x.MessageTemplate).HasMaxLength(2000);
+        builder.Property(x => x.Properties).HasMaxLength(2000);
+        builder.Property(x => x.LogEvent).HasMaxLength(2000);
         builder.HasIndex(x => new { x.Level });
         builder.HasIndex(x => new { x.Message });
         builder.HasIndex(x => new { x.Exception });
