@@ -83,22 +83,22 @@
                                 </div>
                             </MudItem>
                             <MudItem sm="6" xs="12">
-                                <MudTextField For="@(() => model.TenantName)" @bind-Value="model.TenantName" Label="@L["Tenant Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
+                                <MudTextField For="@(() => model.TenantName)" ShrinkLabel="true" @bind-Value="model.TenantName" Label="@L["Tenant Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                             </MudItem>
                             <MudItem xs="12" sm="6">
                                 <MudTextField For="@(() => model.SuperiorName)" ShrinkLabel="true" @bind-Value="model.SuperiorName" Label="@L["Superior Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                             </MudItem>
                             <MudItem sm="6" xs="12">
-                                <MudTextField For="@(() => model.UserName)" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
+                                <MudTextField For="@(() => model.UserName)" ShrinkLabel="true" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                             </MudItem>
                             <MudItem sm="6" xs="12">
-                                <MudTextField For="@(() => model.Email)" @bind-Value="model.Email" Label="@L["Email"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
+                                <MudTextField For="@(() => model.Email)" ShrinkLabel="true" @bind-Value="model.Email" Label="@L["Email"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                             </MudItem>
                             <MudItem sm="6" xs="12">
-                                <MudTextField For="@(() => model.DisplayName)" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
+                                <MudTextField For="@(() => model.DisplayName)" ShrinkLabel="true" @bind-Value="model.DisplayName" Label="@L["Display Name"]" Variant="Variant.Text"></MudTextField>
                             </MudItem>
                             <MudItem sm="6" xs="12">
-                                <MudTextField For="@(() => model.PhoneNumber)" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
+                                <MudTextField For="@(() => model.PhoneNumber)" ShrinkLabel="true" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
                             </MudItem>
                             <MudItem sm="12" xs="12" Class="d-flex justify-end">
                                 <MudButton ButtonType="ButtonType.Button" Disabled="@_submitting" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">
