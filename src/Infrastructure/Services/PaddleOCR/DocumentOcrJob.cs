@@ -59,17 +59,19 @@ public class DocumentOcrJob : IDocumentOcrJob
                 using var fileContent = new StreamContent(fileStream);
                 fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/png");
                 form.Add(fileContent, "file",
-                    Path.GetFileName(imgFile)); // "image" is the form parameter name for the file
+                    Uri.EscapeDataString(Path.GetFileName(imgFile))); // "image" is the form parameter name for the file
 
                 var response = await client.PostAsync("", form);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     var result = await response.Content.ReadAsStringAsync();
+                    if (result.Length > 4000)
+                    {
+                        result = result.Substring(0, 4000);
+                    }
                     doc.Status = JobStatus.Done;
                     doc.Description = "recognize the result: success";
                     doc.Content = result;
-
-
                     await _context.SaveChangesAsync(cancellationToken);
                     await _notificationService.JobCompleted(doc.Title!);
                     DocumentCacheKey.SharedExpiryTokenSource().Cancel();
@@ -79,10 +81,21 @@ public class DocumentOcrJob : IDocumentOcrJob
                         "Image recognition completed. Id: {id}, Elapsed Time: {elapsedMilliseconds}ms, Status: {StatusCode}",
                         id, elapsedMilliseconds, response.StatusCode);
                 }
+                else
+                {
+                    var result = await response.Content.ReadAsStringAsync();
+                    doc.Status = JobStatus.Pending;
+                    doc.Content = result;
+                    await _context.SaveChangesAsync(cancellationToken);
+                    DocumentCacheKey.SharedExpiryTokenSource().Cancel();
+                    await _notificationService.JobCompleted($"Error: {result}");
+                    _logger.LogError("{id}: Image recognize error {Message}", id, result);
+                }
             }
         }
         catch (Exception ex)
         {
+            await _notificationService.JobCompleted($"Error: {ex.Message}");
             _logger.LogError(ex, "{id}: Image recognize error {Message}", id, ex.Message);
         }
     }
