@@ -272,7 +272,15 @@
         InvokeAsync(async () =>
         {
             await _table.ReloadServerData();
-            Snackbar.Add(string.Format(L["{0} recognize completed."], e), Severity.Success);
+            if (e.StartsWith("Error"))
+            {
+                Snackbar.Add(string.Format(L["{0}"], e), Severity.Error);
+            }
+            else
+            {
+                Snackbar.Add(string.Format(L["{0} recognize completed."], e), Severity.Success);
+            }
+            
         });
     }
 
