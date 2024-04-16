@@ -154,7 +154,8 @@ public static class DependencyInjection
         services.AddScoped<IMailService, MailService>();
 
         // configure your sender and template choices with dependency injection.
-        services.AddFluentEmail("support@blazorserver.com")
+        var defaultFromEmail = configuration.GetValue<string>("SmtpClientOptions:DefaultFromEmail");
+        services.AddFluentEmail(defaultFromEmail??"noreply@blazorserver.com")
             .AddRazorRenderer(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates"))
             .AddMailKitSender(smtpClientOptions);
 
