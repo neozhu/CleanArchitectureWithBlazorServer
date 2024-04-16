@@ -19,7 +19,7 @@
         <PackageReference Include="BlazorTime" Version="1.0.3"/>
         <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.9.1"/>
         <PackageReference Include="MudBlazor" Version="6.19.1"/>
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.3"/>
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.3"/>
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.3"/>
 
