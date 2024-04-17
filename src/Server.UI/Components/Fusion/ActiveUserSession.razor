@@ -3,6 +3,7 @@
 @inherits ComputedStateComponent<string>
 @implements IAsyncDisposable
 @inject IUserSessionTracker IUserSessionTracker
+@inject IStringLocalizer<ActiveUserSession> L
 <AuthorizeView>
     <Authorized>
         @if (!string.IsNullOrEmpty(State.Value))
@@ -15,7 +16,7 @@
 @code {
     [Parameter]
     public string PageComponent { get; set; } = nameof(ActiveUserSession);
-    private string? Message => $"{State.Value} has this dialog open.";
+    private string Message => $"{State.Value} {L["has this dialog open."]}";
     private string userName;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
