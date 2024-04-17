@@ -15,6 +15,7 @@ using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
@@ -24,7 +25,6 @@ using Polly;
 using QuestPDF;
 using QuestPDF.Infrastructure;
 using Stl.Fusion;
-using Stl.Rpc;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Server.UI;
@@ -57,10 +57,12 @@ public static class DependencyInjection
         });
 
 
-
-        var fusion = services.AddFusion();
         // Fusion services
-        fusion.AddService<IUserSessionTracker, UserSessionTracker>();
+        services.AddFusion(fusion => {
+            fusion.AddService<IUserSessionTracker,UserSessionTracker>();
+        });
+ 
+        
 
 
         services.AddHttpClient("ocr", c =>
@@ -147,8 +149,11 @@ public static class DependencyInjection
         // Add additional endpoints required by the Identity /Account Razor components.
         app.MapAdditionalIdentityEndpoints();
         app.UseForwardedHeaders();
-
-
+        app.UseWebSockets(new WebSocketOptions()
+        { // We obviously need this
+            KeepAliveInterval = TimeSpan.FromSeconds(30), // Just in case
+        });
+  
         return app;
     }
 }

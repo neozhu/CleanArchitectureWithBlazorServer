@@ -1,5 +1,7 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Services.Fusion
+@using Stl.Fusion
 @using Stl.Fusion.Blazor
+@using Stl.Fusion.UI
 @inherits ComputedStateComponent<string>
 @implements IAsyncDisposable
 @inject IUserSessionTracker IUserSessionTracker
@@ -10,6 +12,8 @@
         {
             <MudAlert Class="mb-2" Severity="MudBlazor.Severity.Error" Variant="Variant.Filled" Dense="true">@Message</MudAlert>
         }
+        
+        
     </Authorized>
 </AuthorizeView>
 
@@ -20,6 +24,8 @@
     private string userName;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
+    private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthState;
@@ -28,12 +34,23 @@
 
     }
 
-    protected override Task<string> ComputeState(CancellationToken cancellationToken)
-       => IUserSessionTracker.GetActiveUsers(PageComponent, userName, cancellationToken);
+    protected override ComputedState<string>.Options GetStateOptions()
+     => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
+
+    protected override async Task<string> ComputeState(CancellationToken cancellationToken)
+    {
+        var result= await IUserSessionTracker.GetActiveUsers(cancellationToken);
+        if (result.Any())
+        {
+            var users = result.Split(",").Where(x => !x.Equals(userName));
+            return string.Join(", ", users);
+        }
+       
+        return "";
+    } 
 
     public async ValueTask DisposeAsync()
     {
         await IUserSessionTracker.RemoveUser(PageComponent, userName);
-        GC.SuppressFinalize(this);
     }
 }

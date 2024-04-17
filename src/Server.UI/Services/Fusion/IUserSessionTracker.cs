@@ -8,5 +8,5 @@ public interface IUserSessionTracker: IComputeService
     Task AddUser(string pagecomponent, string userName, CancellationToken cancellationToken = default);
     Task RemoveUser(string pagecomponent, string userName, CancellationToken cancellationToken = default);
     [ComputeMethod]
-    Task<string> GetActiveUsers(string pagecomponent, string userName, CancellationToken cancellationToken = default);
+    Task<string> GetActiveUsers( CancellationToken cancellationToken = default);
 }

@@ -1,18 +1,19 @@
 ﻿
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using Fluxor;
 using Stl.Fusion;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 
 public class UserSessionTracker : IUserSessionTracker
 {
-    private readonly IMutableState<string> _state;
-    private readonly ConcurrentDictionary<string, ImmutableHashSet<string>> _pageUserSessions = new();
 
+    private readonly ConcurrentDictionary<string, ImmutableHashSet<string>> _pageUserSessions;
+    private readonly IMutableState<string> _state;
     public UserSessionTracker(IStateFactory stateFactory)
     {
-        _state = stateFactory.NewMutable(string.Empty);
+        _state = stateFactory.NewMutable("");
         _pageUserSessions = new ConcurrentDictionary<string, ImmutableHashSet<string>>();
     }
 
@@ -23,23 +24,26 @@ public class UserSessionTracker : IUserSessionTracker
              updateValueFactory: (_, existingSet) =>
                  existingSet.Add(userName)
          );
-        await GetActiveUsers(pagecomponent, userName, cancellationToken);
-    }
-
-    public virtual async Task<string> GetActiveUsers(string pagecomponent, string userName, CancellationToken cancellationToken = default)
-    {
+        var result = "";
         var users = _pageUserSessions.GetValueOrDefault(pagecomponent);
         if (users is not null)
         {
-            _state.Value = string.Join(", ", users.Where(x => !x.Equals(userName)));
+            result = string.Join(",", users.ToArray());
         }
         else
         {
-            _state.Value = string.Empty;
+            result = string.Empty;
         }
-        return await _state.Use(cancellationToken);
+        _state.Value = result;
+        await GetActiveUsers( cancellationToken);
     }
 
+    public virtual async Task<string> GetActiveUsers( CancellationToken cancellationToken = default)
+    {
+        
+        return await _state.Use(cancellationToken);
+        //return Task.FromResult(result);
+    }
 
     public async Task RemoveUser(string pagecomponent, string userName, CancellationToken cancellationToken = default)
     {
@@ -48,8 +52,18 @@ public class UserSessionTracker : IUserSessionTracker
              updateValueFactory: (_, existingSet) =>
                  existingSet.Remove(userName)
          );
-
-        await GetActiveUsers(pagecomponent, userName, cancellationToken);
+        var result = "";
+        var users = _pageUserSessions.GetValueOrDefault(pagecomponent);
+        if (users is not null)
+        {
+            result = string.Join(",", users.ToArray());
+        }
+        else
+        {
+            result = string.Empty;
+        }
+        _state.Value = result;
+        await GetActiveUsers( cancellationToken);
 
     }
 }
