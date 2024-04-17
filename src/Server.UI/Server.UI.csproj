@@ -14,14 +14,14 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Blazor-ApexCharts" Version="3.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
+        <PackageReference Include="Blazor-ApexCharts" Version="3.2.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
          <PackageReference Include="Stl.Fusion" Version="6.8.11" />
         <PackageReference Include="Stl.Fusion.Blazor" Version="6.8.11" />
-         <PackageReference Include="MemoryPack.Generator" Version="1.10.0">
+         <PackageReference Include="MemoryPack.Generator" Version="1.21.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
