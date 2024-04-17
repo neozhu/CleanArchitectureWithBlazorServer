@@ -9,26 +9,26 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Fluxor.Blazor.Web" Version="5.9.1"/>
-        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.1"/>
-        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.12"/>
-        <PackageReference Include="Hangfire.InMemory" Version="0.8.1"/>
-        <PackageReference Include="Blazor-Analytics" Version="3.12.0"/>
+        <PackageReference Include="Fluxor.Blazor.Web" Version="5.9.1" />
+        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="5.9.1" />
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.12" />
+        <PackageReference Include="Hangfire.InMemory" Version="0.8.1" />
+        <PackageReference Include="Blazor-Analytics" Version="3.12.0" />
 
-        <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2"/>
-        <PackageReference Include="BlazorTime" Version="1.0.3"/>
-        <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.9.1"/>
-        <PackageReference Include="MudBlazor" Version="6.19.1"/>
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.3"/>
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.3"/>
+        <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
+        <PackageReference Include="BlazorTime" Version="1.0.3" />
+        <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.9.2" />
+        <PackageReference Include="MudBlazor" Version="6.19.1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.4" />
 
-        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="4.0.0"/>
+        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="4.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Application\Application.csproj"/>
-        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
+        <ProjectReference Include="..\Application\Application.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
