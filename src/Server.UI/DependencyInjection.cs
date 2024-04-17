@@ -7,6 +7,7 @@ using CleanArchitecture.Blazor.Server.Hubs;
 using CleanArchitecture.Blazor.Server.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
 using CleanArchitecture.Blazor.Server.UI.Services;
+using CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 using CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
@@ -22,6 +23,8 @@ using MudExtensions.Services;
 using Polly;
 using QuestPDF;
 using QuestPDF.Infrastructure;
+using Stl.Fusion;
+using Stl.Rpc;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Server.UI;
@@ -52,6 +55,13 @@ public static class DependencyInjection
             options.ScanAssemblies(Assembly.GetExecutingAssembly());
             options.UseReduxDevTools();
         });
+
+
+
+        var fusion = services.AddFusion();
+        // Fusion services
+        fusion.AddService<IUserSessionTracker, UserSessionTracker>();
+
 
         services.AddHttpClient("ocr", c =>
         {
