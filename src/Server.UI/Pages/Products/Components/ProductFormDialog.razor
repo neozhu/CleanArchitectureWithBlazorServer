@@ -1,3 +1,4 @@
+﻿@using CleanArchitecture.Blazor.Server.UI.Components.Fusion
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Severity = Severity
 @using Size = SixLabors.ImageSharp.Size
@@ -9,8 +10,10 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
+@using Stl.Fusion.Blazor
+@using System.Collections.Immutable
 
-@inherits MudComponentBase
+
 
 @inject IJSRuntime JS
 @inject IStringLocalizer<Products> L
@@ -20,6 +23,7 @@
 
 <MudDialog>
     <DialogContent>
+        <ActiveUserSession PageComponent="@($"{nameof(ProductFormDialog)}/{ Model.Id}")" />
         <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
             <MudGrid>
                 <MudItem xs="12">
@@ -107,6 +111,7 @@
                 </MudItem>
             </MudGrid>
         </MudForm>
+ 
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
@@ -126,7 +131,7 @@
     private bool _saving;
     private bool _saveingnew;
     private bool _uploading;
-
+    
     private const long MaxAllowedSize = 3145728;
 
     private async Task DeleteImage(ProductImage picture)
@@ -259,5 +264,5 @@
     {
         MudDialog.Cancel();
     }
-
+    
 }
