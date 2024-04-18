@@ -223,6 +223,10 @@ Facebook.
 - org chart
 
 
+
+https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/2b33254c-1022-472b-90c2-b0c0e068494f
+
+
 ![image](https://user-images.githubusercontent.com/1549611/185576711-31ab3081-ba22-43f3-b837-c8f1de981442.png)
 
   ![image](doc/orgchart.png)
