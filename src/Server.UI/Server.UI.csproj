@@ -19,13 +19,16 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Stl.Fusion" Version="6.8.11" />
-        <PackageReference Include="Stl.Fusion.Blazor" Version="6.8.11" />
+        <PackageReference Include="ActualLab.Fusion" Version="7.7.9" />
+        <PackageReference Include="ActualLab.Fusion.Blazor" Version="7.7.9" />
         <PackageReference Include="MemoryPack.Generator" Version="1.21.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Stl.Generators" Version="6.8.11" />
+        <PackageReference Include="ActualLab.Generators" Version="7.7.9">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj" />

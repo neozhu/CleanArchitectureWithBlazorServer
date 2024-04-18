@@ -15,7 +15,6 @@ using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
@@ -24,7 +23,7 @@ using MudExtensions.Services;
 using Polly;
 using QuestPDF;
 using QuestPDF.Infrastructure;
-using Stl.Fusion;
+using ActualLab.Fusion;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Server.UI;
