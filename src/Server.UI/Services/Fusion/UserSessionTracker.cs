@@ -1,5 +1,5 @@
 ﻿using System.Collections.Immutable;
-using Stl.Fusion;
+using ActualLab.Fusion;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 
