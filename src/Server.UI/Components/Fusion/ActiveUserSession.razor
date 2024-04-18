@@ -1,0 +1,56 @@
+﻿@using CleanArchitecture.Blazor.Server.UI.Services.Fusion
+@using Stl.Fusion
+@using Stl.Fusion.Blazor
+@using Stl.Fusion.UI
+@inherits ComputedStateComponent<(string PageComponent, string[] UserSessions)[]>
+@implements IAsyncDisposable
+@inject IUserSessionTracker UserSessionTracker
+@inject IStringLocalizer<ActiveUserSession> L
+<AuthorizeView>
+    <Authorized>
+        @if (State.Value.Any())
+        {
+            <MudAlert Class="mb-2" Severity="MudBlazor.Severity.Error" Variant="Variant.Filled" Dense="true">@Message</MudAlert>
+        }
+        
+        
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public string PageComponent { get; set; } = nameof(ActiveUserSession);
+    private string Message => $"{State.Value} {L["has this dialog open."]}";
+    private string userName;
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
+    private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthState;
+        userName = authState.User.GetDisplayName() ?? authState.User.GetUserName();
+        await UserSessionTracker.AddUser(PageComponent ?? nameof(ActiveUserSession), userName);
+
+    }
+
+    protected override ComputedState<(string PageComponent, string[] UserSessions)[]>.Options GetStateOptions()
+     => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
+
+    protected override async Task<(string PageComponent, string[] UserSessions)[]> ComputeState(CancellationToken cancellationToken)
+    {
+        var result = await UserSessionTracker.GetUserSessions(cancellationToken);
+        if (result.Any())
+        {
+
+            return result;
+        }
+       
+        return null;
+    } 
+
+    public async ValueTask DisposeAsync()
+    {
+        await UserSessionTracker.RemoveUser(PageComponent, userName);
+    }
+}
