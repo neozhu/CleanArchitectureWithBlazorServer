@@ -345,7 +345,11 @@
             (string.Format(ConstantString.CreateAnItem, L["Product"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
+        {
             await _table.ReloadServerData();
+            _selectedItems = new();
+        }
+        
     }
 
     private async Task OnClone()
@@ -375,7 +379,7 @@
         if (!state.Canceled)
         {
             await _table.ReloadServerData();
-            _selectedItems = new HashSet<ProductDto>();
+            _selectedItems = new();
         }
 
     }
@@ -397,7 +401,7 @@
         if (!state.Canceled)
         {
             await _table.ReloadServerData();
-            _selectedItems = new HashSet<ProductDto>();
+            _selectedItems = new();
         }
         
     }
@@ -418,7 +422,7 @@
         if (!state.Canceled)
         {
             await _table.ReloadServerData();
-            _selectedItems = new HashSet<ProductDto>();
+            _selectedItems = new();
         }
     }
 
@@ -438,7 +442,7 @@
         if (!state.Canceled)
         {
             await _table.ReloadServerData();
-            _selectedItems = new HashSet<ProductDto>();
+            _selectedItems = new();
         }
     }
 
