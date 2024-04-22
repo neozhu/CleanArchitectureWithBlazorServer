@@ -2,18 +2,22 @@
 @using CleanArchitecture.Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @implements IDisposable
- 
+@inherits FluxorComponent
+@inject IState<UserProfileState> UserProfileState
+@inject IStringLocalizer<SharedResource> L
+@inject IDispatcher Dispatcher
 @code {
 
     [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
-    [Inject] public IDispatcher Dispatcher { get; set; } = null!;
-    [Inject] public IStringLocalizer<SharedResource> L { get; set; } = null!;
+    [Parameter] public EventCallback<UserProfileState> UserProfileStateChanged { get; set; }
+
 
     public void Dispose()
     {
         Client.LoginEvent -= _client_Login;
         Client.LogoutEvent -= _client_Logout;
+        UserProfileState.StateChanged -= OnStateChanged;
         GC.SuppressFinalize(this);
     }
 
@@ -24,7 +28,7 @@
     {
         Client.LoginEvent += _client_Login;
         Client.LogoutEvent += _client_Logout;
-
+        UserProfileState.StateChanged += OnStateChanged;
         var state = await AuthState;
         if (state.User.Identity?.IsAuthenticated ?? false)
         {
@@ -33,7 +37,11 @@
             await Client.StartAsync();
         }
     }
-
+    private void OnStateChanged(object? sender, EventArgs e)
+    {
+        var result = ((IState<UserProfileState>)sender).Value;
+        UserProfileStateChanged.InvokeAsync(result);
+    }
     private void _client_Login(object? sender, UserStateChangeEventArgs args)
     {
         InvokeAsync(() =>

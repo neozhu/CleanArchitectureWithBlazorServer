@@ -25,7 +25,7 @@
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthState;
-        userName = authState.User.GetDisplayName() ?? authState.User.GetUserName();
+        userName = authState.User.GetDisplayName() ?? (authState.User.GetUserName()??string.Empty);
         await UserSessionTracker.AddUserSession(PageComponent ?? nameof(ActiveUserSession), userName);
 
     }

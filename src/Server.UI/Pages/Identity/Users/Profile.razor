@@ -14,7 +14,6 @@
 @inject IValidationService Validator
 @inject IStringLocalizer<Profile> L
 @inject IJSRuntime JS
-@inject IState<UserProfileState> UserProfileState
 @inject IDispatcher Dispatcher
 @inject IUploadService UploadService
 @inject IIdentityService IdentityService
@@ -24,7 +23,7 @@
 
 <ErrorBoundary>
     <ChildContent>
-        @if (model is null || IsLoading)
+        @if (model is null)
         {
             <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
         }
@@ -169,8 +168,8 @@
 </ErrorBoundary>
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [CascadingParameter] private UserProfile? UserProfile { get; set; }
     private UserManager<ApplicationUser> UserManager = null!;
     public string Title { get; set; } = "Profile";
     private MudForm? _form;
@@ -179,7 +178,6 @@
     private ChangePasswordModel _changepassword { get; } = new();
     private readonly List<OrgItem> _orgData = new();
     public string Id => Guid.NewGuid().ToString();
-    private bool IsLoading => UserProfileState.Value.IsLoading;
     private ChangeUserProfileModel model = null!;
 
 
@@ -224,15 +222,13 @@
     protected override async Task OnInitializedAsync()
     {
         UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        model = Mapper.Map<ChangeUserProfileModel>(UserProfileState.Value.UserProfile);
-        UserProfileState.StateChanged += StateOnStateChanged;
+        model = Mapper.Map<ChangeUserProfileModel>(UserProfile);
         await base.OnInitializedAsync();
     }
 
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
-        UserProfileState.StateChanged -= StateOnStateChanged;
     }
 
     private void StateOnStateChanged(object? sender, EventArgs args)
