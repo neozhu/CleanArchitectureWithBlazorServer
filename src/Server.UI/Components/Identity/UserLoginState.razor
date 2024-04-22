@@ -1,12 +1,8 @@
-﻿@using ActualLab.Fusion
-@using Severity = Severity
+﻿@using Severity = Severity
 @using CleanArchitecture.Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-
-@inject Session Session
-
 @implements IDisposable
-<h1>@Session.Id</h1>
+ 
 @code {
 
     [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; } = default!;
@@ -18,7 +14,6 @@
     {
         Client.LoginEvent -= _client_Login;
         Client.LogoutEvent -= _client_Logout;
-        AuthenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
         GC.SuppressFinalize(this);
     }
 
@@ -30,13 +25,12 @@
         Client.LoginEvent += _client_Login;
         Client.LogoutEvent += _client_Logout;
 
-        AuthenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
         var state = await AuthState;
         if (state.User.Identity?.IsAuthenticated ?? false)
         {
-            await Client.StartAsync().ConfigureAwait(false);
             var userName = state.User.Identity.Name;
             SetProfile(userName!);
+            await Client.StartAsync();
         }
     }
 
@@ -57,20 +51,6 @@
             UsersStateContainer.Remove(args.ConnectionId);
         });
     }
-
-    private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
-    {
-        InvokeAsync(async () =>
-        {
-            var state = await authenticationState;
-            if (state.User.Identity?.IsAuthenticated ?? false)
-            {
-                var userName = state.User.Identity.Name;
-                SetProfile(userName!);
-            }
-        });
-    }
-
     private void SetProfile(string userName)
     {
         Dispatcher.Dispatch(new FetchUserDtoAction { UserName = userName });
