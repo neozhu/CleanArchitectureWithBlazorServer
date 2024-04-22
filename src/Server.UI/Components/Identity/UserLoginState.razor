@@ -1,7 +1,6 @@
 ﻿@using Severity = Severity
 @using CleanArchitecture.Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-@implements IDisposable
 @inherits FluxorComponent
 @inject IState<UserProfileState> UserProfileState
 @inject IStringLocalizer<SharedResource> L
@@ -13,8 +12,9 @@
     [Parameter] public EventCallback<UserProfileState> UserProfileStateChanged { get; set; }
 
 
-    public void Dispose()
+    protected override void Dispose(bool disposing)
     {
+        base.Dispose(disposing);
         Client.LoginEvent -= _client_Login;
         Client.LogoutEvent -= _client_Logout;
         UserProfileState.StateChanged -= OnStateChanged;
