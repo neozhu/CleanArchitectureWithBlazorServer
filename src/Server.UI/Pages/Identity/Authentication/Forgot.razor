@@ -83,7 +83,7 @@
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(
             NavigationManager.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
-        await Sender.Publish(new ResetPasswordNotification(callbackUrl, user.Email, user.UserName));
+        await Sender.Publish(new ResetPasswordNotification(callbackUrl, user.Email!, user.UserName!));
         Logger.LogInformation("Rest password email sent to {0}.", Input.Email);
         RedirectManager.RedirectTo(ForgotPasswordConfirmation.PageUrl);
     }

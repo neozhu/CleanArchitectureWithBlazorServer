@@ -125,8 +125,8 @@
         {
             //var user = await UserManager.FindByNameAsync(Input.UserName);
             var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
-            var token = await UserManager.GenerateTwoFactorTokenAsync(user, "Email");
-            await Sender.Publish(new SendFactorCodeNotification(user.Email, user.UserName, token));
+            var token = await UserManager.GenerateTwoFactorTokenAsync(user!, "Email");
+            await Sender.Publish(new SendFactorCodeNotification(user!.Email!, user!.UserName!, token));
             RedirectManager.RedirectTo(LoginWith2fa.PageUrl, new Dictionary<string, object?> { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
         }
         else if (result.IsLockedOut)
