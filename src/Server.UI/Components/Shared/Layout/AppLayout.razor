@@ -36,7 +36,7 @@
                     </ErrorBoundary>
                 </MudContainer>
             </MudMainContent>
-            <UserLoginState/>
+            <UserLoginState UserProfileStateChanged="OnUserProfileStateChanged" />
         </Authorized>
     </AuthorizeView>
 </MudLayout>
@@ -61,7 +61,14 @@
     {
         ResetBoundary();
     }
-
+    private void OnUserProfileStateChanged(UserProfileState state)
+    {
+        if (state.UserProfile is not null)
+        {
+            _userProfile = state.UserProfile;
+        }
+        
+    }
     private void ResetBoundary()
     {
         // On each page navigation, reset any error state

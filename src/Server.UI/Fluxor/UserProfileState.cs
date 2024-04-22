@@ -9,13 +9,12 @@ public class UserProfileState
     public UserProfileState()
     {
         IsLoading = true;
-        UserProfile = new UserProfile { Email = "", UserId = "", UserName = "" };
     }
 
     public UserProfileState(bool loading, UserProfile? userProfile)
     {
         IsLoading = loading;
-        UserProfile = userProfile ?? new UserProfile { Email = "", UserId = "", UserName = "" };
+        UserProfile = userProfile;
     }
 
     public UserProfileState(ApplicationUserDto dto)
@@ -39,6 +38,6 @@ public class UserProfileState
         };
     }
 
-    public UserProfile UserProfile { get; }
+    public UserProfile? UserProfile { get; }
     public bool IsLoading { get; }
 }

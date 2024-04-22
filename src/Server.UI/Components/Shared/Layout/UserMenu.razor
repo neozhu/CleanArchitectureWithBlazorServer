@@ -15,7 +15,7 @@
             <div class="pb-4"
                  style="min-width: 260px;margin-bottom:0px!important">
                 <MudStack Row="true" AlignItems="AlignItems.Center" Class="ma-4">
-                    @if (IsLoading)
+                    @if (IsLoading || UserProfile is null)
                     {
                         <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true"/>
                         <MudStack Justify="Justify.Center" Spacing="0">
@@ -84,5 +84,5 @@
     [Parameter] public EventCallback<EventArgs> OnSettingClick { get; set; }
     [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
     private bool IsLoading => UserProfileState.Value.IsLoading;
-    private UserProfile UserProfile => UserProfileState.Value.UserProfile;
+    private UserProfile? UserProfile => UserProfileState.Value.UserProfile;
 }

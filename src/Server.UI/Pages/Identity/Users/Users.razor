@@ -325,8 +325,8 @@
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-    private UserManager<ApplicationUser> UserManager;
-    private RoleManager<ApplicationRole> RoleManager;
+    private UserManager<ApplicationUser> UserManager = null!;
+    private RoleManager<ApplicationRole> RoleManager = null!;
 
     private int _defaultPageSize = 15;
     private HashSet<ApplicationUserDto> _selectedItems = new();
@@ -640,7 +640,7 @@
         if (!user.IsActive)
         {
             var code = await UserManager.GeneratePasswordResetTokenAsync(user);
-            await SendRestPasswordNotification(code, user.Id, user.Email, user.UserName);
+            await SendRestPasswordNotification(code, user.Id, user.Email!, user.UserName!);
             Snackbar.Add("Email sent. Please check your inbox to set a new password.", Severity.Info);
 
             user.IsActive = true;
