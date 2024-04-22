@@ -61,7 +61,10 @@
             {
                 Labels = new YAxisLabels
                 {
-                    Formatter = @"function (value) {return Number(value).toLocaleString();}"
+                    Formatter = @"function (value, opts) {
+                                    if(value === undefined) { return ''; }
+                                    return Number(value).toLocaleString();
+                                  }"
                 }
             }
         );
@@ -77,8 +80,10 @@
 
         Options.DataLabels = new DataLabels
         {
-            Formatter = @"function(value, opts) {
-                   return  Number(value).toLocaleString();}"
+                Formatter = @"function (value, opts) {
+                                    if(value === undefined) { return ''; }
+                                    return Number(value).toLocaleString();
+                              }"
         };
 
         Options.Tooltip = new Tooltip
