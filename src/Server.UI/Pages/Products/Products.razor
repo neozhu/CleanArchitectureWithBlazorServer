@@ -306,22 +306,16 @@
         }
     }
 
-    //private  async Task OnFilterChanged(string s)
-    //{
-    //      await _table.ReloadServerData();
-    //}
-
     private void ConditionChanged(string s)
     {
         InvokeAsync(_table.ReloadServerData);
     }
 
-    private Task OnSearch(string text)
+    private async Task OnSearch(string text)
     {
-        throw new Exception("OnSearch error!");
-        //_selectedItems = new HashSet<ProductDto>();
-        //Query.Keyword = text;
-        //await _table.ReloadServerData();
+        _selectedItems = new HashSet<ProductDto>();
+        Query.Keyword = text;
+        await _table.ReloadServerData();
     }
 
     private async Task OnChangedListView(ProductListView listview)
@@ -379,7 +373,11 @@
         var state = await dialog.Result;
 
         if (!state.Canceled)
+        {
             await _table.ReloadServerData();
+            _selectedItems = new HashSet<ProductDto>();
+        }
+
     }
 
     private async Task OnEdit(ProductDto dto)
@@ -397,7 +395,11 @@
         var state = await dialog.Result;
 
         if (!state.Canceled)
+        {
             await _table.ReloadServerData();
+            _selectedItems = new HashSet<ProductDto>();
+        }
+        
     }
 
     private async Task OnDelete(ProductDto dto)
@@ -416,6 +418,7 @@
         if (!state.Canceled)
         {
             await _table.ReloadServerData();
+            _selectedItems = new HashSet<ProductDto>();
         }
     }
 
