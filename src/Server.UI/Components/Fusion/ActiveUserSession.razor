@@ -6,21 +6,17 @@
 @implements IAsyncDisposable
 @inject IUserSessionTracker UserSessionTracker
 @inject IStringLocalizer<ActiveUserSession> L
-<AuthorizeView>
-    <Authorized>
-        @if (State.Value.Any())
-        {
-            <MudAlert Class="mb-2" Severity="MudBlazor.Severity.Error" Variant="Variant.Filled" Dense="true">@Message</MudAlert>
-        }
-        
-        
-    </Authorized>
-</AuthorizeView>
+
+@if (!string.IsNullOrEmpty(userName) && State.Value.Any())
+{
+    <MudAlert Class="mb-2" Severity="MudBlazor.Severity.Error" Variant="Variant.Filled" Dense="true">@Message</MudAlert>
+}
+
 
 @code {
     [Parameter]
     public string PageComponent { get; set; } = nameof(ActiveUserSession);
-    private string Message => $"{string.Join(", ",State.Value)} {L["has this dialog open."]}";
+    private string Message => $"{string.Join(", ", State.Value)} {L["has this dialog open."]}";
     private string userName;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
@@ -47,7 +43,7 @@
         }
 
         return Array.Empty<string>();
-    } 
+    }
 
     public async ValueTask DisposeAsync()
     {

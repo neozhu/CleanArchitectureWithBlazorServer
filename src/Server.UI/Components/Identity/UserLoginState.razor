@@ -1,8 +1,12 @@
-﻿@using Severity = Severity
+﻿@using ActualLab.Fusion
+@using Severity = Severity
 @using CleanArchitecture.Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-@implements IDisposable
 
+@inject Session Session
+
+@implements IDisposable
+<h1>@Session.Id</h1>
 @code {
 
     [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; } = default!;
