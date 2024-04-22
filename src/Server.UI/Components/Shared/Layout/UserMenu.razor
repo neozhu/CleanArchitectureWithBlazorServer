@@ -85,4 +85,9 @@
     [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
     private bool IsLoading => UserProfileState.Value.IsLoading;
     private UserProfile? UserProfile => UserProfileState.Value.UserProfile;
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        GC.SuppressFinalize(this);
+    }
 }
