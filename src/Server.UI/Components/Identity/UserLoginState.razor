@@ -1,10 +1,12 @@
-﻿@using Severity = Severity
+﻿@using CleanArchitecture.Blazor.Server.UI.Services.Fusion
+@using Severity = Severity
 @using CleanArchitecture.Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @inherits FluxorComponent
 @inject IState<UserProfileState> UserProfileState
 @inject IStringLocalizer<SharedResource> L
 @inject IDispatcher Dispatcher
+@inject IOnlineUserTracker OnlineUserTracker
 @code {
 
     [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; } = default!;
@@ -32,7 +34,9 @@
         var state = await AuthState;
         if (state.User.Identity?.IsAuthenticated ?? false)
         {
+
             var userName = state.User.Identity.Name;
+            await OnlineUserTracker.AddUser(userName);
             SetProfile(userName!);
             await Client.StartAsync();
         }

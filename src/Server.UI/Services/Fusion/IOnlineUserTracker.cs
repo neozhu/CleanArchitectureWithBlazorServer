@@ -4,7 +4,7 @@ namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 
 public interface IOnlineUserTracker:IComputeService
 {
-    Task AddUser(Session session, string userId);
-    Task RemoveUser(Session session, string userId);
-    Task<List<string>> GetOnlineUsers(Session session);
+    Task AddUser(string userId);
+    Task RemoveUser(string userId);
+    Task<string[]> GetOnlineUsers();
 }
