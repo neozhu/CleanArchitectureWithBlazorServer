@@ -1,4 +1,8 @@
 ﻿@page "/user/profile"
+@using ActualLab.Fusion
+@using ActualLab.Fusion.Blazor
+@using ActualLab.Fusion.UI
+@using CleanArchitecture.Blazor.Server.UI.Services.Fusion
 @using Color = Color
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Severity = Severity
@@ -10,7 +14,9 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using CleanArchitecture.Blazor.Domain.Common.Enums
-@inherits OwningComponentBase
+
+@inherits ComputedStateComponent<string[]>
+@inject IOnlineUserTracker OnlineUserTracker
 @inject IValidationService Validator
 @inject IStringLocalizer<Profile> L
 @inject IJSRuntime JS
@@ -168,7 +174,10 @@
 </ErrorBoundary>
 
 @code {
+    [Inject] protected IServiceProvider Services { get; init; } = null!;
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+    private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
+    [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
     private UserManager<ApplicationUser> UserManager = null!;
     public string Title { get; set; } = "Profile";
@@ -221,14 +230,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        UserManager = Services.GetRequiredService<UserManager<ApplicationUser>>();
         model = Mapper.Map<ChangeUserProfileModel>(UserProfile);
         await base.OnInitializedAsync();
     }
 
-    protected override void Dispose(bool disposing)
+    public async ValueTask DisposeAsync()
     {
-        base.Dispose(disposing);
+
     }
 
     private void StateOnStateChanged(object? sender, EventArgs args)
@@ -308,6 +317,19 @@
             _submitting = false;
         }
     }
+    protected override ComputedState<string[]>.Options GetStateOptions()
+     => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
 
+    protected override async Task<string[]> ComputeState(CancellationToken cancellationToken)
+    {
+        var result = await OnlineUserTracker.GetOnlineUsers(cancellationToken);
+        if (result.Any())
+        {
+
+            return result;
+        }
+
+        return Array.Empty<string>();
+    }
 
 }
