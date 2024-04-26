@@ -16,7 +16,7 @@
     [Parameter]
     public string PageComponent { get; set; } = nameof(ActiveUserSession);
     private string Message => $"{string.Join(", ", State.Value)} {L["has this dialog open."]}";
-    private string userName;
+    private string? userName;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
@@ -44,7 +44,7 @@
         return Array.Empty<string>();
     }
 
-    public async ValueTask DisposeAsync()
+    public override async ValueTask DisposeAsync()
     {
         await UserSessionTracker.RemoveUserSession(PageComponent, userName);
         GC.Collect();

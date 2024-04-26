@@ -11,8 +11,8 @@ public class OnlineUserTracker(IKeyValueStore store) : IOnlineUserTracker
     {
         if (Computed.IsInvalidating())
             _ = GetOnlineUsers();
-
-        await store.Set(_shard, userId, DateTime.UtcNow.ToString());
+        if(!string.IsNullOrEmpty(userId))
+        await store.Set(_shard, $"U/{userId}", DateTime.UtcNow.ToString());
 
     }
 
@@ -20,7 +20,8 @@ public class OnlineUserTracker(IKeyValueStore store) : IOnlineUserTracker
     {
         if (Computed.IsInvalidating())
             return default!;
-        return store.ListKeySuffixes(_shard, "", PageRef.New<string>(int.MaxValue));
+        
+        return store.ListKeySuffixes(_shard,"U", PageRef.New<string>(int.MaxValue));
     }
 
     public async Task RemoveUser(string userId, CancellationToken cancellationToken = default)
@@ -28,6 +29,6 @@ public class OnlineUserTracker(IKeyValueStore store) : IOnlineUserTracker
         if (Computed.IsInvalidating())
             _ = GetOnlineUsers();
 
-        await store.Remove(_shard, userId);
+        await store.Remove(_shard, $"U/{userId}");
     }
 }

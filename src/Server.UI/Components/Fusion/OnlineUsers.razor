@@ -1,0 +1,56 @@
+﻿@using CleanArchitecture.Blazor.Server.UI.Services.Fusion
+@using ActualLab.Fusion
+@using ActualLab.Fusion.Blazor
+@using ActualLab.Fusion.UI
+@inherits ComputedStateComponent<string[]>
+@inject IOnlineUserTracker OnlineUserTracker
+@inject IStringLocalizer<ActiveUserSession> L
+
+@if (onlineUsers is not null && onlineUsers.Any())
+{
+    @foreach (var name in onlineUsers)
+    {
+        @if (name == userName)
+        {
+            <MudChip Text="purple" Color="Color.Primary">@name</MudChip>
+        }
+        else
+        {
+            <MudChip Text="grey">@name</MudChip>
+        }
+       
+    }
+}
+
+
+@code {
+    private string[]? onlineUsers;
+    private string? userName;
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
+    private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthState;
+        userName = authState.User.GetUserName() ?? (authState.User.GetEmail()?? string.Empty);
+        await OnlineUserTracker.AddUser(userName);
+
+    }
+
+    protected override ComputedState<string[]>.Options GetStateOptions()
+     => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
+
+    protected override async Task<string[]> ComputeState(CancellationToken cancellationToken)
+    {
+        var result = await OnlineUserTracker.GetOnlineUsers(cancellationToken);
+        onlineUsers = result;
+        return result;
+    }
+
+    public override async ValueTask DisposeAsync()
+    {
+        await OnlineUserTracker.RemoveUser(userName);
+        GC.Collect();
+    }
+}
