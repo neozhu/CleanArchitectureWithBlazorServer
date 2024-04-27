@@ -1,5 +1,4 @@
 ﻿@page "/system/logs"
-@using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Specifications
@@ -158,8 +157,6 @@
 @code
 {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-
-    [Inject] private IMediator Mediator { get; set; } = default!;
     private string Title { get; set; } = "Logs";
     private string _searchString = string.Empty;
     private MudDataGrid<LogDto> _table = default!;

@@ -1,5 +1,4 @@
 ﻿@page "/identity/users"
-@using Severity = Severity
 @using LazyCache
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -22,15 +21,12 @@
 @attribute [Authorize(Policy = Permissions.Users.View)]
 @inherits OwningComponentBase
 @implements IDisposable
-@inject IMediator Sender
-@inject NavigationManager NavigationManager
 @inject IUsersStateContainer UsersStateContainer
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
 @inject ITenantService TenantsService
 @inject IAppCache Cache
 @inject IExcelService ExcelService
-@inject IMapper Mapper
 @inject IMailService MailService
 @inject IStringLocalizer<Users> L
 @inject ILogger<Users> Logger
@@ -926,21 +922,21 @@
 
     private async Task SendWelcomeNotification(string toEmail, string userName)
     {
-        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
+        var callbackUrl = Navigation.GetUriWithQueryParameters(
+            Navigation.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
-        await Sender.Publish(new SendWelcomeNotification(callbackUrl, toEmail, userName));
+        await Mediator.Publish(new SendWelcomeNotification(callbackUrl, toEmail, userName));
         Logger.LogInformation("{UserName} Activated Successfully!", toEmail);
     }
 
     private async Task SendRestPasswordNotification(string code, string userId, string toEmail, string userName)
     {
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
+        var callbackUrl = Navigation.GetUriWithQueryParameters(
+            Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = userId, ["token"] = code });
-        await Sender.Publish(new ResetPasswordNotification(callbackUrl, toEmail, userName));
+        await Mediator.Publish(new ResetPasswordNotification(callbackUrl, toEmail, userName));
         Logger.LogInformation("Rest password email sent to {0}.", toEmail);
     }
 

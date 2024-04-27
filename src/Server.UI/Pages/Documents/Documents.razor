@@ -1,7 +1,5 @@
 ﻿@page "/pages/documents"
-
 @attribute [Authorize(Policy = Permissions.Documents.View)]
-@using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.GetFileStream
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
@@ -16,9 +14,6 @@
 @implements IDisposable
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject HubClient Client
-@inject IMediator Mediator
-@inject IMapper Mapper
-@inject IJSRuntime JS
 @inject IStringLocalizer<Documents> L
 
 <PageTitle>@Title</PageTitle>

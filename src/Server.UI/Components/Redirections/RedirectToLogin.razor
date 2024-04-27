@@ -1,10 +1,8 @@
-﻿@inject NavigationManager NavigationManager
-
-@code {
+﻿@code {
 
     protected override void OnAfterRender(bool firstRender)
     {
-        NavigationManager.NavigateTo("/pages/authentication/login", true);
+        Navigation.NavigateTo("/pages/authentication/login", true);
     }
 
 }
