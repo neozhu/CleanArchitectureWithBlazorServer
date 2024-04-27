@@ -225,8 +225,6 @@
     private bool _loading;
     private bool _uploading;
     private bool _exporting;
-    [Inject] private IMediator Mediator { get; set; } = default!;
-    [Inject] private IMapper Mapper { get; set; } = default!;
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
 

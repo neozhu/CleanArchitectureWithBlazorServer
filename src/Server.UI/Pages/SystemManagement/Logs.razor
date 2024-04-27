@@ -158,8 +158,6 @@
 @code
 {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-
-    [Inject] private IMediator Mediator { get; set; } = default!;
     private string Title { get; set; } = "Logs";
     private string _searchString = string.Empty;
     private MudDataGrid<LogDto> _table = default!;

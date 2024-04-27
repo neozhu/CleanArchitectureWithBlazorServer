@@ -13,7 +13,6 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<ExternalLogin> Logger
-@inject IMediator Sender
 @inject IStringLocalizer<ExternalLogin> L
 <PageTitle>@L["External Login"]</PageTitle>
 
@@ -168,7 +167,7 @@
             var callbackUrl = NavigationManager.GetUriWithQueryParameters(
                 NavigationManager.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
                 new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = "/" });
-            await Sender.Publish(new UserActivationNotification(callbackUrl, Input.Email, userId, Input.Email));
+            await Mediator.Publish(new UserActivationNotification(callbackUrl, Input.Email, userId, Input.Email));
             RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new Dictionary<string, object?> { ["email"] = Input.Email });
         }
         // If account confirmation is required, we need to show the link if we don't have a real email sender
