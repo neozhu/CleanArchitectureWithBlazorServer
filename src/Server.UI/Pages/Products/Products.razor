@@ -13,10 +13,8 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
 
 @attribute [Authorize(Policy = Permissions.Products.View)]
-@inject IJSRuntime JS
 @inject IStringLocalizer<Products> L
 @inject IMapper Mapper
-@inject IMediator Mediator
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 
 <PageTitle>@Title</PageTitle>

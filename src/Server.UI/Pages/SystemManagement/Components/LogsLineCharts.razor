@@ -26,7 +26,6 @@
 @code
 {
     public List<LogTimeLineDto> Data { get; set; } = new();
-    [Inject] private IMediator Mediator { get; set; } = default!;
     private ApexChart<LogTimeLineDto> Chart { get; set; } = null!;
     private ApexChartOptions<LogTimeLineDto> Options { get; set; } = new();
 
