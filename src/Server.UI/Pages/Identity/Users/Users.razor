@@ -28,7 +28,6 @@
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
 @inject ITenantService TenantsService
-@inject ITenantProvider TenantProvider
 @inject IAppCache Cache
 @inject IExcelService ExcelService
 @inject IMapper Mapper
@@ -392,7 +391,6 @@
                 x.Email!.ToLower().Contains(_searchString) ||
                 x.DisplayName!.ToLower().Contains(_searchString) ||
                 x.PhoneNumber!.ToLower().Contains(_searchString) ||
-                x.TenantName!.ToLower().Contains(_searchString) ||
                 x.Provider!.ToLower().Contains(_searchString);
             var query = UserManager.Users.Where(searchPredicate);
             if (!string.IsNullOrEmpty(_searchRole))
@@ -453,7 +451,6 @@
                 DisplayName = model.DisplayName,
                 UserName = model.UserName,
                 TenantId = model.TenantId,
-                TenantName = model.TenantName,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 SuperiorId = model.SuperiorId,
@@ -512,7 +509,6 @@
             user.UserName = item.UserName;
             user.IsActive = item.IsActive;
             user.TenantId = item.TenantId;
-            user.TenantName = item.TenantName;
             user.SuperiorId = item.SuperiorId;
             var identityResult = await UserManager.UpdateAsync(user);
             if (identityResult.Succeeded)
@@ -849,7 +845,6 @@
                  x.Email!.Contains(_searchString) ||
                  x.DisplayName!.Contains(_searchString) ||
                  x.PhoneNumber!.Contains(_searchString) ||
-                 x.TenantName!.Contains(_searchString) ||
                  x.Provider!.Contains(_searchString)) &&
                 (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole)));
             var items = await UserManager.Users.Where(searchPredicate)
@@ -861,7 +856,7 @@
                     Email = x.Email!,
                     PhoneNumber = x.PhoneNumber,
                     TenantId = x.TenantId,
-                    TenantName = x.TenantName
+                    TenantName = x.Tenant.Name
                 }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                 new Dictionary<string, Func<ApplicationUserDto, object?>>
@@ -894,7 +889,6 @@
             { L["Display Name"], (row, item) => item.DisplayName = row[L["Display Name"]]?.ToString() },
             { L["Email"], (row, item) => item.Email = row[L["Email"]]?.ToString() },
             { L["Phone Number"], (row, item) => item.PhoneNumber = row[L["Phone Number"]]?.ToString() },
-            { L["Tenant Name"], (row, item) => item.TenantName = row[L["Tenant Name"]]?.ToString() },
             { L["Tenant Id"], (row, item) => item.TenantId = row[L["Tenant Id"]]?.ToString() }
         }, L["Users"]);
 
@@ -904,8 +898,6 @@
             {
                 if (!UserManager.Users.Any(x => x.UserName == user.UserName))
                 {
-                    var tenantId = TenantsService.DataSource.Any(x => x.Name == user.TenantName) ? TenantsService.DataSource.First(x => x.Name == user.TenantName).Id : TenantsService.DataSource.First().Id;
-                    user.TenantId = tenantId;
                     var iResult = await UserManager.CreateAsync(user);
                     if (iResult.Succeeded)
                     {
