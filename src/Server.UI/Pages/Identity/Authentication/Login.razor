@@ -11,7 +11,6 @@
 @inject IStringLocalizer<Login> L
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
-@inject IMediator Sender
 
 <PageTitle>@_title</PageTitle>
 
@@ -126,7 +125,7 @@
             //var user = await UserManager.FindByNameAsync(Input.UserName);
             var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
             var token = await UserManager.GenerateTwoFactorTokenAsync(user!, "Email");
-            await Sender.Publish(new SendFactorCodeNotification(user!.Email!, user!.UserName!, token));
+            await Mediator.Publish(new SendFactorCodeNotification(user!.Email!, user!.UserName!, token));
             RedirectManager.RedirectTo(LoginWith2fa.PageUrl, new Dictionary<string, object?> { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
         }
         else if (result.IsLockedOut)

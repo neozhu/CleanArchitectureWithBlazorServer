@@ -1,8 +1,6 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Components.Fusion
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
-@using Severity = Severity
 @using Size = SixLabors.ImageSharp.Size
-@using Color = Color
 @using Image = SixLabors.ImageSharp.Image
 @using SixLabors.ImageSharp.Processing
 @using SixLabors.ImageSharp
@@ -12,13 +10,8 @@
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using System.Collections.Immutable
 
-
-
-@inject IJSRuntime JS
 @inject IStringLocalizer<Products> L
-@inject IValidationService Validator
 @inject IUploadService UploadService
-@inject IMediator Mediator
 
 <MudDialog>
     <DialogContent>

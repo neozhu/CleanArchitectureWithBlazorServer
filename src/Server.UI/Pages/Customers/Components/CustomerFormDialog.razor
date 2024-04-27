@@ -1,7 +1,5 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.Customers.Commands.AddEdit
-@using Severity = MudBlazor.Severity
 @inherits MudComponentBase
-@inject IValidationService Validator
 @inject IStringLocalizer<Customers> L
 
 <MudDialog>
@@ -33,7 +31,6 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
     AddEditCustomerCommandValidator _modelValidator = new();
     [EditorRequired] [Parameter] public AddEditCustomerCommand model { get; set; } = null!;
-    [Inject] private IMediator _mediator { get; set; } = default!;
 
     async Task Submit()
     {
@@ -43,7 +40,7 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
-            var result = await _mediator.Send(model);
+            var result = await Mediator.Send(model);
             if (result.Succeeded)
             {
                 MudDialog.Close(DialogResult.Ok(true));
@@ -68,7 +65,7 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
-            var result = await _mediator.Send(model);
+            var result = await Mediator.Send(model);
             if (result.Succeeded)
             {
                 Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
