@@ -22,7 +22,6 @@
 @attribute [Authorize(Policy = Permissions.Users.View)]
 @inherits OwningComponentBase
 @implements IDisposable
-@inject IMediator Sender
 @inject NavigationManager NavigationManager
 @inject IUsersStateContainer UsersStateContainer
 @inject IBlazorDownloadFileService BlazorDownloadFileService
@@ -930,7 +929,7 @@
             NavigationManager.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
-        await Sender.Publish(new SendWelcomeNotification(callbackUrl, toEmail, userName));
+        await Mediator.Publish(new SendWelcomeNotification(callbackUrl, toEmail, userName));
         Logger.LogInformation("{UserName} Activated Successfully!", toEmail);
     }
 
@@ -940,7 +939,7 @@
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(
             NavigationManager.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = userId, ["token"] = code });
-        await Sender.Publish(new ResetPasswordNotification(callbackUrl, toEmail, userName));
+        await Mediator.Publish(new ResetPasswordNotification(callbackUrl, toEmail, userName));
         Logger.LogInformation("Rest password email sent to {0}.", toEmail);
     }
 

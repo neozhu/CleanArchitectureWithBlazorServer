@@ -9,7 +9,6 @@
 @inject IdentityRedirectManager RedirectManager
 @inject NavigationManager NavigationManager
 @inject ILogger<ConfirmEmail> Logger
-@inject IMediator Sender
 <PageTitle>@L["Confirm email"]</PageTitle>
 <div class="d-flex flex-column gap-y-3">
     <MudText Typo="Typo.h4" GutterBottom="true">@L["Confirm email"]</MudText>
@@ -52,7 +51,7 @@
                     NavigationManager.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
                     new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
-                await Sender.Publish(new SendWelcomeNotification(callbackUrl, user.Email!, user.UserName!));
+                await Mediator.Publish(new SendWelcomeNotification(callbackUrl, user.Email!, user.UserName!));
                 Logger.LogInformation("{UserName} Activated Successfully!", user.Email);
                 user.IsActive = true;
                 await UserManager.UpdateAsync(user);

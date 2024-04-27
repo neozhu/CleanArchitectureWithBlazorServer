@@ -11,12 +11,8 @@
 @using CleanArchitecture.Blazor.Server.UI.Pages.SystemManagement.Components
 
 @attribute [Authorize(Policy = Permissions.Dictionaries.View)]
-
 @inject IStringLocalizer<Dictionaries> L
-@inject IJSRuntime JS
-@inject IMediator Mediator
 @inject IBlazorDownloadFileService BlazorDownloadFileService
-@inject IMapper Mapper
 
 <PageTitle>@Title</PageTitle>
 

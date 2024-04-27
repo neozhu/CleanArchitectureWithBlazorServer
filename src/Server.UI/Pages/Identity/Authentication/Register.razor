@@ -9,7 +9,6 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IStringLocalizer<Register> L
 @inject ILogger<Register> Logger
-@inject IMediator Sender
 @inject IUserStore<ApplicationUser> UserStore
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
@@ -169,7 +168,7 @@
             var callbackUrl = NavigationManager.GetUriWithQueryParameters(
                 NavigationManager.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
                 new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = "/" });
-            await Sender.Publish(new UserActivationNotification(callbackUrl, Input.Email, userId, Input.UserName));
+            await Mediator.Publish(new UserActivationNotification(callbackUrl, Input.Email, userId, Input.UserName));
             RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new Dictionary<string, object?> { ["email"] = Input.Email });
         }
         else if (UserManager.Options.SignIn.RequireConfirmedAccount)

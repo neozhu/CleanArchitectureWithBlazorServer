@@ -5,10 +5,8 @@
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching
 
 @attribute [Authorize(Policy = Permissions.AuditTrails.View)]
-
 @inject IStringLocalizer<AuditTrails> L
 @inject IState<UserProfileState> UserProfileState
-@inject IMediator Mediator
 
 <PageTitle>@Title</PageTitle>
 
