@@ -1,5 +1,4 @@
 ﻿@page "/identity/users"
-@using Severity = Severity
 @using LazyCache
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -28,7 +27,6 @@
 @inject ITenantService TenantsService
 @inject IAppCache Cache
 @inject IExcelService ExcelService
-@inject IMapper Mapper
 @inject IMailService MailService
 @inject IStringLocalizer<Users> L
 @inject ILogger<Users> Logger

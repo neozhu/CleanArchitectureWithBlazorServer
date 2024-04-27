@@ -1,5 +1,4 @@
 ﻿@page "/pages/products"
-@using Severity = Severity
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
@@ -14,7 +13,6 @@
 
 @attribute [Authorize(Policy = Permissions.Products.View)]
 @inject IStringLocalizer<Products> L
-@inject IMapper Mapper
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 
 <PageTitle>@Title</PageTitle>
