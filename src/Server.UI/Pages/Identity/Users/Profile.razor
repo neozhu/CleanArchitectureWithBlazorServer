@@ -201,7 +201,7 @@
             var orgitem = new OrgItem();
             orgitem.Id = item.Id;
             orgitem.Name = item.DisplayName ?? item.UserName;
-            orgitem.Area = item.TenantName;
+            orgitem.Area = item.Tenant?.Name;
             orgitem.ProfileUrl = item.ProfilePictureDataUrl;
             orgitem.ImageUrl = item.ProfilePictureDataUrl;
             if (currerntuserName == item.UserName)

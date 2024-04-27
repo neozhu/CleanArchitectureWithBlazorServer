@@ -134,7 +134,6 @@ public static class DependencyInjection
 
         return services.AddSingleton<ISerializer, SystemTextJsonSerializer>()
             .AddScoped<ICurrentUserService, CurrentUserService>()
-            .AddScoped<ITenantProvider, TenantProvider>()
             .AddScoped<IValidationService, ValidationService>()
             .AddScoped<IDateTime, DateTimeService>()
             .AddScoped<IExcelService, ExcelService>()

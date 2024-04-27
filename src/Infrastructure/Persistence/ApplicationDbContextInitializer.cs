@@ -110,16 +110,21 @@ public class ApplicationDbContextInitializer
         // Default users
         var administrator = new ApplicationUser
         {
-            UserName = UserName.Administrator, Provider = "Local", IsActive = true,
-            TenantId = _context.Tenants.First().Id, TenantName = _context.Tenants.First().Name,
+            UserName = UserName.Administrator,
+            Provider = "Local",
+            IsActive = true,
+            TenantId = _context.Tenants.First().Id,
             DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true,
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80",
             TwoFactorEnabled = false
         };
         var demo = new ApplicationUser
         {
-            UserName = UserName.Demo, IsActive = true, Provider = "Local", TenantId = _context.Tenants.First().Id,
-            TenantName = _context.Tenants.First().Name, DisplayName = UserName.Demo, Email = "neozhu@126.com",
+            UserName = UserName.Demo,
+            IsActive = true,
+            Provider = "Local",
+            TenantId = _context.Tenants.First().Id,
+            DisplayName = UserName.Demo, Email = "neozhu@126.com",
             EmailConfirmed = true,
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80"
         };
@@ -152,28 +157,28 @@ public class ApplicationDbContextInitializer
                 Name = Picklist.Status, Value = "processing", Text = "processing", Description = "Status of workflow"
             });
             _context.KeyValues.Add(new KeyValue
-                { Name = Picklist.Status, Value = "pending", Text = "pending", Description = "Status of workflow" });
+            { Name = Picklist.Status, Value = "pending", Text = "pending", Description = "Status of workflow" });
             _context.KeyValues.Add(new KeyValue
-                { Name = Picklist.Status, Value = "finished", Text = "finished", Description = "Status of workflow" });
+            { Name = Picklist.Status, Value = "finished", Text = "finished", Description = "Status of workflow" });
             _context.KeyValues.Add(new KeyValue
-                { Name = Picklist.Brand, Value = "Apple", Text = "Apple", Description = "Brand of production" });
+            { Name = Picklist.Brand, Value = "Apple", Text = "Apple", Description = "Brand of production" });
             _context.KeyValues.Add(new KeyValue
-                { Name = Picklist.Brand, Value = "MI", Text = "MI", Description = "Brand of production" });
+            { Name = Picklist.Brand, Value = "MI", Text = "MI", Description = "Brand of production" });
             _context.KeyValues.Add(new KeyValue
-                { Name = Picklist.Brand, Value = "Logitech", Text = "Logitech", Description = "Brand of production" });
+            { Name = Picklist.Brand, Value = "Logitech", Text = "Logitech", Description = "Brand of production" });
             _context.KeyValues.Add(new KeyValue
-                { Name = Picklist.Brand, Value = "Linksys", Text = "Linksys", Description = "Brand of production" });
+            { Name = Picklist.Brand, Value = "Linksys", Text = "Linksys", Description = "Brand of production" });
 
             _context.KeyValues.Add(new KeyValue
-                { Name = Picklist.Unit, Value = "EA", Text = "EA", Description = "Unit of product" });
+            { Name = Picklist.Unit, Value = "EA", Text = "EA", Description = "Unit of product" });
             _context.KeyValues.Add(new KeyValue
-                { Name = Picklist.Unit, Value = "KM", Text = "KM", Description = "Unit of product" });
+            { Name = Picklist.Unit, Value = "KM", Text = "KM", Description = "Unit of product" });
             _context.KeyValues.Add(new KeyValue
-                { Name = Picklist.Unit, Value = "PC", Text = "PC", Description = "Unit of product" });
+            { Name = Picklist.Unit, Value = "PC", Text = "PC", Description = "Unit of product" });
             _context.KeyValues.Add(new KeyValue
-                { Name = Picklist.Unit, Value = "KG", Text = "KG", Description = "Unit of product" });
+            { Name = Picklist.Unit, Value = "KG", Text = "KG", Description = "Unit of product" });
             _context.KeyValues.Add(new KeyValue
-                { Name = Picklist.Unit, Value = "ST", Text = "ST", Description = "Unit of product" });
+            { Name = Picklist.Unit, Value = "ST", Text = "ST", Description = "Unit of product" });
             await _context.SaveChangesAsync();
         }
 

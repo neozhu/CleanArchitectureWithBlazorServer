@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Domain.Identity;
@@ -22,10 +22,10 @@ public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<
             {
                 new Claim(ApplicationClaimTypes.TenantId, user.TenantId)
             });
-        if (!string.IsNullOrEmpty(user.TenantName))
+        if (user.Tenant is not null)
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[]
             {
-                new Claim(ApplicationClaimTypes.TenantName, user.TenantName)
+                new Claim(ApplicationClaimTypes.TenantName, user.Tenant.Name)
             });
         if (!string.IsNullOrEmpty(user.SuperiorId))
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[]
