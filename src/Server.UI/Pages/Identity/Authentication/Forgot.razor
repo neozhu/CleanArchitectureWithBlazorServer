@@ -9,7 +9,6 @@
 @inject ILogger<Forgot> Logger
 @inject IdentityRedirectManager RedirectManager
 @inject UserManager<ApplicationUser> UserManager
-@inject NavigationManager NavigationManager
 <PageTitle>@Title</PageTitle>
 
 <EditForm Model="Input" FormName="forgot-password" OnValidSubmit="OnValidSubmitAsync" method="post">
@@ -79,8 +78,8 @@
 
         var code = await UserManager.GeneratePasswordResetTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
+        var callbackUrl = Navigation.GetUriWithQueryParameters(
+            Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
         await Mediator.Publish(new ResetPasswordNotification(callbackUrl, user.Email!, user.UserName!));
         Logger.LogInformation("Rest password email sent to {0}.", Input.Email);

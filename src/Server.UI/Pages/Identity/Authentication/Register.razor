@@ -12,7 +12,6 @@
 @inject IUserStore<ApplicationUser> UserStore
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
-@inject NavigationManager NavigationManager
 <PageTitle>@Title</PageTitle>
 
 <div class="d-flex flex-column gap-y-3">
@@ -165,8 +164,8 @@
         {
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-                NavigationManager.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
+            var callbackUrl = Navigation.GetUriWithQueryParameters(
+                Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
                 new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = "/" });
             await Mediator.Publish(new UserActivationNotification(callbackUrl, Input.Email, userId, Input.UserName));
             RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new Dictionary<string, object?> { ["email"] = Input.Email });
@@ -175,8 +174,8 @@
         {
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-                NavigationManager.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
+            var callbackUrl = Navigation.GetUriWithQueryParameters(
+                Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
                 new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
             RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new Dictionary<string, object?> { ["email"] = Input.Email, ["EmailConfirmationLink"] = callbackUrl });
         }

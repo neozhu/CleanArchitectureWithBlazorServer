@@ -7,7 +7,6 @@
 @inject IStringLocalizer<ConfirmEmail> L
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
-@inject NavigationManager NavigationManager
 @inject ILogger<ConfirmEmail> Logger
 <PageTitle>@L["Confirm email"]</PageTitle>
 <div class="d-flex flex-column gap-y-3">
@@ -47,8 +46,8 @@
             var result = await UserManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
             {
-                var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-                    NavigationManager.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
+                var callbackUrl = Navigation.GetUriWithQueryParameters(
+                    Navigation.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
                     new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
                 await Mediator.Publish(new SendWelcomeNotification(callbackUrl, user.Email!, user.UserName!));

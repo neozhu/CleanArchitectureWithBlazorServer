@@ -22,7 +22,6 @@
 @attribute [Authorize(Policy = Permissions.Users.View)]
 @inherits OwningComponentBase
 @implements IDisposable
-@inject NavigationManager NavigationManager
 @inject IUsersStateContainer UsersStateContainer
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
@@ -925,8 +924,8 @@
 
     private async Task SendWelcomeNotification(string toEmail, string userName)
     {
-        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
+        var callbackUrl = Navigation.GetUriWithQueryParameters(
+            Navigation.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
         await Mediator.Publish(new SendWelcomeNotification(callbackUrl, toEmail, userName));
@@ -936,8 +935,8 @@
     private async Task SendRestPasswordNotification(string code, string userId, string toEmail, string userName)
     {
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
+        var callbackUrl = Navigation.GetUriWithQueryParameters(
+            Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = userId, ["token"] = code });
         await Mediator.Publish(new ResetPasswordNotification(callbackUrl, toEmail, userName));
         Logger.LogInformation("Rest password email sent to {0}.", toEmail);
