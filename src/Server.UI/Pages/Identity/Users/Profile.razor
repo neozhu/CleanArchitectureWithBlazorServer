@@ -1,7 +1,5 @@
 ﻿@page "/user/profile"
-@using Color = Color
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
-@using Severity = Severity
 @using Size = SixLabors.ImageSharp.Size
 @using SixLabors.ImageSharp.Processing
 @using SixLabors.ImageSharp
@@ -11,13 +9,11 @@
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @inherits OwningComponentBase
-@inject IValidationService Validator
 @inject IStringLocalizer<Profile> L
-@inject IJSRuntime JS
 @inject IDispatcher Dispatcher
 @inject IUploadService UploadService
 @inject IIdentityService IdentityService
-@inject IMapper Mapper
+
 
 <PageTitle>@Title</PageTitle>
 

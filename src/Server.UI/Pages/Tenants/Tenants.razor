@@ -6,10 +6,6 @@
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.Delete
 
 @attribute [Authorize(Policy = Permissions.Tenants.View)]
-
-@inject IMediator Mediator
-@inject IMapper Mapper
-@inject IJSRuntime JS
 @inject IStringLocalizer<Tenants> L
 
 <PageTitle>@Title</PageTitle>

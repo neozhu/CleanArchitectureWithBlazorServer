@@ -1,6 +1,4 @@
-﻿@using Color = Color
-@using Severity = Severity
-@using SixLabors.ImageSharp.Processing
+﻿@using SixLabors.ImageSharp.Processing
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats.Png
 @using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
@@ -8,10 +6,7 @@
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @using System.Buffers
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
-@inherits MudComponentBase
 
-@inject IJSRuntime Js
-@inject ISender Mediator
 @inject IUploadService UploadService
 @inject IStringLocalizer<Documents> L
 
@@ -205,7 +200,7 @@
 
     private async Task Clear()
     {
-        await new InputClear(Js).Clear("fileInput");
+        await new InputClear(JS).Clear("fileInput");
         _uploadedFiles = new List<FileUploadProgress>();
     }
 

@@ -23,7 +23,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.4" />
 
-        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="4.1.0" />
+       
     </ItemGroup>
 
     <ItemGroup>
