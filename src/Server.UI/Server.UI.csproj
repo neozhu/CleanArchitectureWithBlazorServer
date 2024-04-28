@@ -14,6 +14,7 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="ActualLab.Fusion.Ext.Services" Version="7.8.8" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="4.1.0.1" />
         <PackageReference Include="Blazor-ApexCharts" Version="3.2.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
