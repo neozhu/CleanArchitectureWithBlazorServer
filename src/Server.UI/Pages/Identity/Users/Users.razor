@@ -1,5 +1,4 @@
 ﻿@page "/identity/users"
-@using Severity = Severity
 @using LazyCache
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -22,16 +21,12 @@
 @attribute [Authorize(Policy = Permissions.Users.View)]
 @inherits OwningComponentBase
 @implements IDisposable
-@inject IMediator Sender
-@inject NavigationManager NavigationManager
 @inject IUsersStateContainer UsersStateContainer
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
 @inject ITenantService TenantsService
-@inject ITenantProvider TenantProvider
 @inject IAppCache Cache
 @inject IExcelService ExcelService
-@inject IMapper Mapper
 @inject IMailService MailService
 @inject IStringLocalizer<Users> L
 @inject ILogger<Users> Logger
@@ -392,7 +387,6 @@
                 x.Email!.ToLower().Contains(_searchString) ||
                 x.DisplayName!.ToLower().Contains(_searchString) ||
                 x.PhoneNumber!.ToLower().Contains(_searchString) ||
-                x.TenantName!.ToLower().Contains(_searchString) ||
                 x.Provider!.ToLower().Contains(_searchString);
             var query = UserManager.Users.Where(searchPredicate);
             if (!string.IsNullOrEmpty(_searchRole))
@@ -453,7 +447,6 @@
                 DisplayName = model.DisplayName,
                 UserName = model.UserName,
                 TenantId = model.TenantId,
-                TenantName = model.TenantName,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 SuperiorId = model.SuperiorId,
@@ -512,7 +505,6 @@
             user.UserName = item.UserName;
             user.IsActive = item.IsActive;
             user.TenantId = item.TenantId;
-            user.TenantName = item.TenantName;
             user.SuperiorId = item.SuperiorId;
             var identityResult = await UserManager.UpdateAsync(user);
             if (identityResult.Succeeded)
@@ -849,7 +841,6 @@
                  x.Email!.Contains(_searchString) ||
                  x.DisplayName!.Contains(_searchString) ||
                  x.PhoneNumber!.Contains(_searchString) ||
-                 x.TenantName!.Contains(_searchString) ||
                  x.Provider!.Contains(_searchString)) &&
                 (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole)));
             var items = await UserManager.Users.Where(searchPredicate)
@@ -861,7 +852,7 @@
                     Email = x.Email!,
                     PhoneNumber = x.PhoneNumber,
                     TenantId = x.TenantId,
-                    TenantName = x.TenantName
+                    TenantName = x.Tenant.Name
                 }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                 new Dictionary<string, Func<ApplicationUserDto, object?>>
@@ -894,7 +885,6 @@
             { L["Display Name"], (row, item) => item.DisplayName = row[L["Display Name"]]?.ToString() },
             { L["Email"], (row, item) => item.Email = row[L["Email"]]?.ToString() },
             { L["Phone Number"], (row, item) => item.PhoneNumber = row[L["Phone Number"]]?.ToString() },
-            { L["Tenant Name"], (row, item) => item.TenantName = row[L["Tenant Name"]]?.ToString() },
             { L["Tenant Id"], (row, item) => item.TenantId = row[L["Tenant Id"]]?.ToString() }
         }, L["Users"]);
 
@@ -904,8 +894,6 @@
             {
                 if (!UserManager.Users.Any(x => x.UserName == user.UserName))
                 {
-                    var tenantId = TenantsService.DataSource.Any(x => x.Name == user.TenantName) ? TenantsService.DataSource.First(x => x.Name == user.TenantName).Id : TenantsService.DataSource.First().Id;
-                    user.TenantId = tenantId;
                     var iResult = await UserManager.CreateAsync(user);
                     if (iResult.Succeeded)
                     {
@@ -934,21 +922,21 @@
 
     private async Task SendWelcomeNotification(string toEmail, string userName)
     {
-        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
+        var callbackUrl = Navigation.GetUriWithQueryParameters(
+            Navigation.ToAbsoluteUri(Login.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
-        await Sender.Publish(new SendWelcomeNotification(callbackUrl, toEmail, userName));
+        await Mediator.Publish(new SendWelcomeNotification(callbackUrl, toEmail, userName));
         Logger.LogInformation("{UserName} Activated Successfully!", toEmail);
     }
 
     private async Task SendRestPasswordNotification(string code, string userId, string toEmail, string userName)
     {
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = NavigationManager.GetUriWithQueryParameters(
-            NavigationManager.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
+        var callbackUrl = Navigation.GetUriWithQueryParameters(
+            Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = userId, ["token"] = code });
-        await Sender.Publish(new ResetPasswordNotification(callbackUrl, toEmail, userName));
+        await Mediator.Publish(new ResetPasswordNotification(callbackUrl, toEmail, userName));
         Logger.LogInformation("Rest password email sent to {0}.", toEmail);
     }
 

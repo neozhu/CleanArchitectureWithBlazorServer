@@ -14,19 +14,19 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="ActualLab.Fusion.Ext.Services" Version="7.7.17" />
+        <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="4.1.0.1" />
         <PackageReference Include="Blazor-ApexCharts" Version="3.2.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="ActualLab.Fusion" Version="7.7.17" />
-        <PackageReference Include="ActualLab.Fusion.Blazor" Version="7.7.17" />
+        <PackageReference Include="ActualLab.Fusion" Version="7.8.8" />
+        <PackageReference Include="ActualLab.Fusion.Blazor" Version="7.8.8" />
         <PackageReference Include="MemoryPack.Generator" Version="1.21.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="ActualLab.Generators" Version="7.7.17">
+        <PackageReference Include="ActualLab.Generators" Version="7.8.8">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

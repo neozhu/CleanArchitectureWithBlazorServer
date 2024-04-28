@@ -2,7 +2,6 @@
 @using CleanArchitecture.Blazor.Server.UI.Services.Navigation
 @inject IMenuService MenuService
 @inject LayoutService LayoutService
-@inject NavigationManager NavigationManager
 @inject IStringLocalizer<NavigationMenu> L
 
 <MudDrawer Breakpoint="Breakpoint.Md"
@@ -127,7 +126,7 @@ else
 
     private bool Expanded(MenuSectionItemModel menu)
     {
-        var href = NavigationManager.Uri[(NavigationManager.BaseUri.Length - 1)..];
+        var href = Navigation.Uri[(Navigation.BaseUri.Length - 1)..];
         return menu is { IsParent: true, MenuItems: not null } &&
                menu.MenuItems.Any(x => !string.IsNullOrEmpty(x.Href) && x.Href.Equals(href));
     }
