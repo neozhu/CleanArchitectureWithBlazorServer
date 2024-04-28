@@ -44,31 +44,27 @@ public class OnlineUserTracker : IOnlineUserTracker
         if (InvalidationMode.IsOn)
             _ = GetOnlineUsers();
 
-
-        if (!string.IsNullOrEmpty(userId))
+        var key = $"{PREFIX}/{userId}";
+        var val = await _store.TryGet<UserProfile>(_shard, key, cancellationToken);
+        if (!val.HasValue)
         {
-            var key = $"{PREFIX}/{userId}";
-            var val = await _store.TryGet<UserProfile>(_shard, key, cancellationToken);
-            if (!val.HasValue)
-            {
-                var userDto = await _userManager.Users.Where(x => x.UserName == userId).Include(x => x.Tenant).Include(x => x.UserRoles).ThenInclude(x => x.Role)
-               .Select(x => _toUserProfile(x)).FirstOrDefaultAsync(cancellationToken);
-                await _store.Set(_shard, key, userDto, cancellationToken);
-            }
-
+            var userDto = await _userManager.Users.Where(x => x.UserName == userId).Include(x => x.Tenant).Include(x => x.UserRoles).ThenInclude(x => x.Role)
+           .Select(x => _toUserProfile(x)).FirstOrDefaultAsync(cancellationToken);
+            await _store.Set(_shard, key, userDto, cancellationToken);
         }
+
+
     }
     public async Task UpdateUser(string userId, CancellationToken cancellationToken = default)
     {
         if (InvalidationMode.IsOn)
             _ = GetOnlineUsers();
-        if (!string.IsNullOrEmpty(userId))
-        {
-            var key = $"{PREFIX}/{userId}";
-            var userDto = await _userManager.Users.Where(x => x.UserName == userId).Include(x => x.Tenant).Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                .Select(x => _toUserProfile(x)).FirstOrDefaultAsync();
-            await _store.Set(_shard, key, userDto);
-        }
+
+        var key = $"{PREFIX}/{userId}";
+        var userDto = await _userManager.Users.Where(x => x.UserName == userId).Include(x => x.Tenant).Include(x => x.UserRoles).ThenInclude(x => x.Role)
+            .Select(x => _toUserProfile(x)).FirstOrDefaultAsync();
+        await _store.Set(_shard, key, userDto);
+
     }
     public async Task<Dictionary<string, UserProfile>> GetOnlineUsers(CancellationToken cancellationToken = default)
     {
