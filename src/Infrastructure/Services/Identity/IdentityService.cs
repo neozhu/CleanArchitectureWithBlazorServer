@@ -7,25 +7,24 @@ using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
-using LazyCache;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 public class IdentityService : IIdentityService
 {
     private readonly IAuthorizationService _authorizationService;
-    private readonly IAppCache _cache;
     private readonly IStringLocalizer<IdentityService> _localizer;
+    private readonly IFusionCache _fusionCache;
     private readonly IMapper _mapper;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public IdentityService(
         IServiceScopeFactory scopeFactory,
-        IApplicationSettings appConfig,
-        IAppCache cache,
+        IFusionCache fusionCache,
         IMapper mapper,
         IStringLocalizer<IdentityService> localizer)
     {
@@ -34,29 +33,29 @@ public class IdentityService : IIdentityService
         _userClaimsPrincipalFactory =
             scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _authorizationService = scope.ServiceProvider.GetRequiredService<IAuthorizationService>();
-        _cache = cache;
+        _fusionCache = fusionCache;
         _mapper = mapper;
         _localizer = localizer;
     }
 
     private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
 
-    private LazyCacheEntryOptions Options =>
-        new LazyCacheEntryOptions().SetAbsoluteExpiration(RefreshInterval, ExpirationMode.LazyExpiration);
+ 
 
     public async Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default)
     {
-        var key = $"GetUserNameAsync:{userId}";
-        var user = await _cache.GetOrAddAsync(key,
-            async () => await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId), Options);
+        var key = $"GetUserNameById:{userId}";
+        var user = await _fusionCache.GetOrSetAsync(key,
+            _ => _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId), RefreshInterval, cancellation);
         return user?.UserName;
     }
 
     public string GetUserName(string userId)
     {
-        var key = $"GetUserName-byId:{userId}";
-        var user = _cache.GetOrAdd(key, () => _userManager.Users.SingleOrDefault(u => u.Id == userId), Options);
-        return user?.UserName ?? string.Empty;
+        var key = $"GetUserNameById:{userId}";
+        var user = _fusionCache.GetOrSet(key,
+             _ => _userManager.Users.SingleOrDefault(u => u.Id == userId), RefreshInterval);
+        return user?.UserName;
     }
 
     public async Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default)
@@ -107,10 +106,10 @@ public class IdentityService : IIdentityService
         CancellationToken cancellation = default)
     {
         var key = GetApplicationUserCacheKey(userName);
-        var result = await _cache.GetOrAddAsync(key,
-            async () => await _userManager.Users.Where(x => x.UserName == userName).Include(x => x.UserRoles)
+        var result = await _fusionCache.GetOrSetAsync(key,
+            _ =>  _userManager.Users.Where(x => x.UserName == userName).Include(x => x.UserRoles)
                 .ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(cancellation), Options);
+                .FirstOrDefaultAsync(cancellation), RefreshInterval,cancellation);
         return result;
     }
 
@@ -127,13 +126,13 @@ public class IdentityService : IIdentityService
                     .ThenInclude(x => x.Role)
                     .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
             };
-        var result = await _cache.GetOrAddAsync(key, () => getUsersByTenantId(tenantId, cancellation), Options);
+        var result = await _fusionCache.GetOrSetAsync(key, _ => getUsersByTenantId(tenantId, cancellation), RefreshInterval,cancellation);
         return result;
     }
 
     public void RemoveApplicationUserCache(string userName)
     {
-        _cache.Remove(GetApplicationUserCacheKey(userName));
+        _fusionCache.Remove(GetApplicationUserCacheKey(userName));
     }
 
     private string GetApplicationUserCacheKey(string userName)

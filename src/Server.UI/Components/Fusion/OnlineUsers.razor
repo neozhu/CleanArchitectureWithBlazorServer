@@ -2,13 +2,13 @@
 @using ActualLab.Fusion
 @using ActualLab.Fusion.Blazor
 @using ActualLab.Fusion.UI
-@inherits ComputedStateComponent<string[]>
+@inherits ComputedStateComponent<Dictionary<string, UserProfile>>
 @inject IOnlineUserTracker OnlineUserTracker
 @inject IStringLocalizer<ActiveUserSession> L
 
 @if (onlineUsers is not null && onlineUsers.Any())
 {
-    @foreach (var name in onlineUsers)
+    @foreach (var name in onlineUsers.Keys)
     {
         @if (name == userName)
         {
@@ -24,7 +24,7 @@
 
 
 @code {
-    private string[]? onlineUsers;
+    private Dictionary<string, UserProfile>? onlineUsers;
     private string? userName;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
@@ -38,10 +38,10 @@
 
     }
 
-    protected override ComputedState<string[]>.Options GetStateOptions()
+    protected override ComputedState<Dictionary<string, UserProfile>>.Options GetStateOptions()
      => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
 
-    protected override async Task<string[]> ComputeState(CancellationToken cancellationToken)
+    protected override async Task<Dictionary<string, UserProfile>> ComputeState(CancellationToken cancellationToken)
     {
         var result = await OnlineUserTracker.GetOnlineUsers(cancellationToken);
         onlineUsers = result;
