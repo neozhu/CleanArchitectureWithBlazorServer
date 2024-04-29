@@ -1,4 +1,5 @@
-﻿@layout MainLayout
+﻿@using CleanArchitecture.Blazor.Server.UI.Components.Fusion
+@layout MainLayout
 @inherits LayoutComponentBase
 
 @inject LayoutService LayoutService
@@ -27,7 +28,6 @@
                     <ErrorBoundary @ref="ErrorBoundary">
                         <ChildContent>
                             <CascadingValue Value="@_userProfile">
-                                
                                 @Body
                             </CascadingValue>
                         </ChildContent>
@@ -37,6 +37,7 @@
                     </ErrorBoundary>
                 </MudContainer>
             </MudMainContent>
+            <OnlineUsersTracker></OnlineUsersTracker>
             <UserLoginState UserProfileStateChanged="OnUserProfileStateChanged" />
         </Authorized>
     </AuthorizeView>

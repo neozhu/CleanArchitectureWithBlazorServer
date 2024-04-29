@@ -2,11 +2,11 @@
 @using ActualLab.Fusion
 @using ActualLab.Fusion.Blazor
 @using ActualLab.Fusion.UI
-@inherits ComputedStateComponent<Dictionary<string, UserProfile>>
+
 @inject IOnlineUserTracker OnlineUserTracker
 @inject IStringLocalizer<ActiveUserSession> L
-
-@if (onlineUsers is not null && onlineUsers.Any())
+@implements IAsyncDisposable
+@* @if (onlineUsers is not null && onlineUsers.Any())
 {
     @foreach (var name in onlineUsers.Keys)
     {
@@ -20,7 +20,7 @@
         }
        
     }
-}
+} *@
 
 
 @code {
@@ -35,20 +35,19 @@
         var authState = await AuthState;
         userName = authState.User.GetUserName() ?? (authState.User.GetEmail()?? string.Empty);
         await OnlineUserTracker.AddUser(userName);
-
     }
 
-    protected override ComputedState<Dictionary<string, UserProfile>>.Options GetStateOptions()
-     => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
+    // protected override ComputedState<Dictionary<string, UserProfile>>.Options GetStateOptions()
+    //  => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
 
-    protected override async Task<Dictionary<string, UserProfile>> ComputeState(CancellationToken cancellationToken)
-    {
-        var result = await OnlineUserTracker.GetOnlineUsers(cancellationToken);
-        onlineUsers = result;
-        return result;
-    }
+    // // protected override async Task<Dictionary<string, UserProfile>> ComputeState(CancellationToken cancellationToken)
+    // // {
+    // //     var result = await OnlineUserTracker.GetOnlineUsers(cancellationToken);
+    // //     onlineUsers = result;
+    // //     return result;
+    // // }
 
-    public override async ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await OnlineUserTracker.RemoveUser(userName);
         GC.Collect();
