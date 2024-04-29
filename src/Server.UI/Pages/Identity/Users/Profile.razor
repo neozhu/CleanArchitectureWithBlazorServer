@@ -160,8 +160,8 @@ else
 
 
 @code {
-        [Inject] protected IServiceProvider Services { get; init; } = null!;
-        [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject] protected IServiceProvider Services { get; init; } = null!;
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
     private UserManager<ApplicationUser> UserManager = null!;
@@ -297,6 +297,6 @@ else
             _submitting = false;
         }
     }
-   
+
 
 }

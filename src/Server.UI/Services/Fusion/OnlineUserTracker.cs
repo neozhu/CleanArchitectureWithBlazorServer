@@ -50,7 +50,10 @@ public class OnlineUserTracker : IOnlineUserTracker
         {
             var userDto = await _userManager.Users.Where(x => x.UserName == userId).Include(x => x.Tenant).Include(x => x.UserRoles).ThenInclude(x => x.Role)
            .Select(x => _toUserProfile(x)).FirstOrDefaultAsync(cancellationToken);
-            await _store.Set(_shard, key, userDto, cancellationToken);
+            if (userDto is not null)
+            {
+                await _store.Set(_shard, key, userDto);
+            }
         }
 
 
@@ -63,8 +66,10 @@ public class OnlineUserTracker : IOnlineUserTracker
         var key = $"{PREFIX}/{userId}";
         var userDto = await _userManager.Users.Where(x => x.UserName == userId).Include(x => x.Tenant).Include(x => x.UserRoles).ThenInclude(x => x.Role)
             .Select(x => _toUserProfile(x)).FirstOrDefaultAsync();
-        await _store.Set(_shard, key, userDto);
-
+        if(userDto is not null)
+        {
+            await _store.Set(_shard, key, userDto);
+        }  
     }
     public async Task<Dictionary<string, UserProfile>> GetOnlineUsers(CancellationToken cancellationToken = default)
     {
@@ -90,5 +95,22 @@ public class OnlineUserTracker : IOnlineUserTracker
             _ = GetOnlineUsers();
 
         await _store.Remove(_shard, $"{PREFIX}/{userId}");
+    }
+
+    public async Task<UserProfile> Get(string userId, CancellationToken cancellationToken = default)
+    {
+        if (InvalidationMode.IsOn)
+            return default!;
+        var key = $"{PREFIX}/{userId}";
+        var val = await _store.TryGet<UserProfile>(_shard, key, cancellationToken);
+        if (val.HasValue)
+        {
+            return val.Value;
+        }
+        else
+        {
+            await _store.Remove(_shard, key);
+            return new UserProfile() { Email="", UserId="", UserName="" };
+        }
     }
 }
