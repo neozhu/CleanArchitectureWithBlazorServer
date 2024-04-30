@@ -149,7 +149,7 @@
     <value>已成功取消分配</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>姓名</value>
+    <value>名称</value>
   </data>
   <data name="Assigned Roles" xml:space="preserve">
     <value>分配的角色</value>
