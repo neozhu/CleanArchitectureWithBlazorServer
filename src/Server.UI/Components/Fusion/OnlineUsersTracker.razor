@@ -29,6 +29,10 @@
         }
     </div>
 }
+@if(State.Error is not null)
+{
+    <MudAlert Severity="Severity.Error">@State.Error.Message</MudAlert>
+}
 
 
 @code {

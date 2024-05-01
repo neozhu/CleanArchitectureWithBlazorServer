@@ -244,17 +244,17 @@ else
                 Snackbar.Add(L["The avatar has been updated"], Severity.Info);
                 Dispatcher.Dispatch(new UserProfileUpdateAction { UserProfile = Mapper.Map<UserProfile>(model) });
                 await OnlineUserTracker.UpdateUser(new UserInfo(model.UserId,
-            model.UserName,
-            model.Email,
-            model.DisplayName,
-            model.ProfilePictureDataUrl,
-            model.SuperiorName,
-            model.SuperiorId,
-            model.TenantId,
-            model.TenantName,
-            model.PhoneNumber,
-            model.AssignedRoles ?? Array.Empty<string>(),
-            UserPresence.Available));
+                                                                model.UserName,
+                                                                model.Email,
+                                                                model.DisplayName,
+                                                                model.ProfilePictureDataUrl,
+                                                                model.SuperiorName,
+                                                                model.SuperiorId,
+                                                                model.TenantId,
+                                                                model.TenantName,
+                                                                model.PhoneNumber,
+                                                                model.AssignedRoles ?? Array.Empty<string>(),
+                                                                UserPresence.Available));
             }
         }
     }
