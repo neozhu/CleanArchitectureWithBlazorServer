@@ -17,6 +17,7 @@
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @using System.Reflection
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
+@using ZiggyCreatures.Caching.Fusion
 
 @attribute [Authorize(Policy = Permissions.Users.View)]
 @inherits OwningComponentBase
@@ -25,7 +26,7 @@
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
 @inject ITenantService TenantsService
-@inject IAppCache Cache
+@inject IFusionCache FusionCache;
 @inject IExcelService ExcelService
 @inject IMailService MailService
 @inject IStringLocalizer<Users> L
@@ -47,7 +48,14 @@
             <div class="d-flex gap-4">
                 <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large"/>
                 <div class="d-flex flex-column">
-                    <MudText Typo="Typo.caption">@Title</MudText>
+                    <MudText Typo="Typo.caption" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
+                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView"  Value="@_selectedTenantId" Dense="true" Label="List View">
+                        <MudSelectItem T="string" Value="@(" ")">@L["ALL"]</MudSelectItem>
+                        @foreach(var item in TenantsService.DataSource)
+                        {
+                            <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
+                        }
+                    </MudSelect>
                 </div>
             </div>
             <div class="flex-grow-1"/>
@@ -215,7 +223,7 @@
                 }
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn Property="x => x.TenantId" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
+        <PropertyColumn Property="x => x.TenantId" HeaderStyle="width:260px" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
             <CellTemplate>
                 <div>
                     <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
@@ -327,12 +335,13 @@
     private HashSet<ApplicationUserDto> _selectedItems = new();
     private readonly ApplicationUserDto _currentDto = new();
     private string _searchString = string.Empty;
+    private string _selectedTenantId = " ";
     private string Title { get; set; } = "Users";
     private List<PermissionModel> _permissions = new();
     private IList<Claim> _assignedClaims = default!;
 
-    private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
-    private LazyCacheEntryOptions Options => new LazyCacheEntryOptions().SetAbsoluteExpiration(RefreshInterval, ExpirationMode.LazyExpiration);
+    private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
+ 
 
     private MudDataGrid<ApplicationUserDto> _table = null!;
     private bool _processing;
@@ -383,17 +392,14 @@
         {
             _loading = true;
             Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
-                x.UserName!.ToLower().Contains(_searchString) ||
-                x.Email!.ToLower().Contains(_searchString) ||
-                x.DisplayName!.ToLower().Contains(_searchString) ||
-                x.PhoneNumber!.ToLower().Contains(_searchString) ||
-                x.Provider!.ToLower().Contains(_searchString);
+                  (x.UserName!.Contains(_searchString) ||
+                 x.Email!.Contains(_searchString) ||
+                 x.DisplayName!.Contains(_searchString) ||
+                 x.PhoneNumber!.Contains(_searchString) ||
+                 x.Provider!.Contains(_searchString)) &&
+                (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole))) &&
+                (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId));
             var query = UserManager.Users.Where(searchPredicate);
-            if (!string.IsNullOrEmpty(_searchRole))
-            {
-                query = query.Where(x => x.UserRoles.Any(y => y.Role.Name == _searchRole));
-            }
-
             var items = await query
                 .Include(x => x.UserRoles)
                 .Include(x => x.Superior)
@@ -407,7 +413,11 @@
             _loading = false;
         }
     }
-
+    private async Task OnChangedListView(string tenantId)
+    {
+        _selectedTenantId = tenantId;
+        await _table.ReloadServerData();
+    }
     private async Task OnSearch(string text)
     {
         if (_loading)
@@ -510,7 +520,7 @@
             if (identityResult.Succeeded)
             {
                 var roles = await UserManager.GetRolesAsync(user!);
-                if (roles.Count > 0 && item.AssignedRoles is not null && item.AssignedRoles.Any())
+                if (roles.Count > 0 )
                 {
                     await UserManager.RemoveFromRolesAsync(user, roles);
                 }
@@ -724,7 +734,7 @@
         }
 
         var key = $"get-claims-by-{dto.Id}";
-        _assignedClaims = await Cache.GetOrAddAsync(key, async () => await GetClaims(dto.Id), Options);
+        _assignedClaims = await FusionCache.GetOrSetAsync(key, _ => GetClaims(dto.Id), RefreshInterval);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
         foreach (var module in modules)
@@ -789,7 +799,7 @@
             Snackbar.Add($"{L["Authorization has been changed"]}", Severity.Info);
             await Task.Delay(300);
             var key = $"get-claims-by-{user.Id}";
-            Cache.Remove(key);
+            FusionCache.Remove(key);
         }
         finally
         {
@@ -823,7 +833,7 @@
             }
 
             var key = $"get-claims-by-{user.Id}";
-            Cache.Remove(key);
+            FusionCache.Remove(key);
         }
         finally
         {
@@ -842,7 +852,8 @@
                  x.DisplayName!.Contains(_searchString) ||
                  x.PhoneNumber!.Contains(_searchString) ||
                  x.Provider!.Contains(_searchString)) &&
-                (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole)));
+                (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole))) &&
+                (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId ==_selectedTenantId));
             var items = await UserManager.Users.Where(searchPredicate)
                 .Select(x => new ApplicationUserDto
                 {
