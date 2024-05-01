@@ -10,7 +10,7 @@ public class UserSessionTracker : IUserSessionTracker
 
     public async Task AddUserSession(string pageComponent, string userName, CancellationToken cancellationToken = default)
     {
-        if (InvalidationMode.IsOn)
+        if (Invalidation.IsActive)
             return;
         if (_pageUserSessions.TryGetValue(pageComponent, out var existingUsers))
         {
@@ -24,7 +24,7 @@ public class UserSessionTracker : IUserSessionTracker
         {
             _pageUserSessions = _pageUserSessions.Add(pageComponent, ImmutableHashSet.Create(userName));
         }
-        using var invalidating = InvalidationMode.Begin();
+        using var invalidating = Invalidation.Begin();
          _ = await GetUserSessions(cancellationToken);
        
     }
@@ -36,7 +36,7 @@ public class UserSessionTracker : IUserSessionTracker
 
     public async Task RemoveUserSession(string pageComponent, string userName, CancellationToken cancellationToken = default)
     {
-        if (InvalidationMode.IsOn)
+        if (Invalidation.IsActive)
             return;
         if (_pageUserSessions.TryGetValue(pageComponent, out var users) && users.Contains(userName))
         {
@@ -51,7 +51,7 @@ public class UserSessionTracker : IUserSessionTracker
             }
         }
 
-        using var invalidating = InvalidationMode.Begin();
+        using var invalidating = Invalidation.Begin();
         _ = await GetUserSessions(cancellationToken);
     }
 }
