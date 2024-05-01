@@ -47,7 +47,7 @@
 {
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public AddEditKeyValueCommand Model { get; set; } = default!;
+    [EditorRequired][Parameter] public AddEditKeyValueCommand Model { get; set; } = default!;
 
     private MudForm? _form;
     private bool _saving;
