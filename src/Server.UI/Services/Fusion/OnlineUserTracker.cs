@@ -41,7 +41,7 @@ public class OnlineUserTracker : IOnlineUserTracker
     private DbShard _shard = DbShard.None;
     public async Task AddUser(string userId, CancellationToken cancellationToken = default)
     {
-        if (InvalidationMode.IsOn)
+        if (Invalidation.IsActive)
             _ = GetOnlineUsers();
 
         var key = $"{PREFIX}/{userId}";
@@ -60,7 +60,7 @@ public class OnlineUserTracker : IOnlineUserTracker
     }
     public async Task UpdateUser(string userId, CancellationToken cancellationToken = default)
     {
-        if (InvalidationMode.IsOn)
+        if (Invalidation.IsActive)
             _ = GetOnlineUsers();
 
         var key = $"{PREFIX}/{userId}";
@@ -73,7 +73,7 @@ public class OnlineUserTracker : IOnlineUserTracker
     }
     public async Task<Dictionary<string, UserProfile>> GetOnlineUsers(CancellationToken cancellationToken = default)
     {
-        if (InvalidationMode.IsOn)
+        if (Invalidation.IsActive)
             return default!;
         var keys = await _store.ListKeySuffixes(_shard, PREFIX, PageRef.New<string>(int.MaxValue));
         var result = new Dictionary<string, UserProfile>();
@@ -91,7 +91,7 @@ public class OnlineUserTracker : IOnlineUserTracker
 
     public async Task RemoveUser(string userId, CancellationToken cancellationToken = default)
     {
-        if (InvalidationMode.IsOn)
+        if (Invalidation.IsActive)
             _ = GetOnlineUsers();
 
         await _store.Remove(_shard, $"{PREFIX}/{userId}");
@@ -99,7 +99,7 @@ public class OnlineUserTracker : IOnlineUserTracker
 
     public async Task<UserProfile> Get(string userId, CancellationToken cancellationToken = default)
     {
-        if (InvalidationMode.IsOn)
+        if (Invalidation.IsActive)
             return default!;
         var key = $"{PREFIX}/{userId}";
         var val = await _store.TryGet<UserProfile>(_shard, key, cancellationToken);
