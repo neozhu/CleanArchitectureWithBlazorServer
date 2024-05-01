@@ -9,7 +9,7 @@ public class OnlineUserTracker : IOnlineUserTracker
 {
 
     private readonly ConcurrentDictionary<string, UserInfo> _store = new();
-    public async Task AddUser(string sessionId,UserInfo userInfo, CancellationToken cancellationToken = default)
+    public async Task AddUser(string sessionId, UserInfo userInfo, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return;
@@ -19,12 +19,27 @@ public class OnlineUserTracker : IOnlineUserTracker
             _ = await GetOnlineUsers(cancellationToken);
         }
     }
+    public async Task UpdateUser(UserInfo userInfo, CancellationToken cancellationToken = default)
+    {
+        if (Invalidation.IsActive)
+            return;
 
+        foreach (var key in _store.Keys)
+        {
+            if (_store[key].Id == userInfo.Id)
+            {
+                _store.TryUpdate(key, userInfo, _store[key]);
+            }
+        }
+        using var invalidating = Invalidation.Begin();
+        _ = await GetOnlineUsers(cancellationToken);
+
+    }
     public virtual Task<UserInfo[]> GetOnlineUsers(CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return default!;
-        return Task.FromResult(_store.Select(x=>x.Value).Distinct().ToArray());
+        return Task.FromResult(_store.Select(x => x.Value).Distinct().ToArray());
     }
 
     public async Task RemoveUser(string sessionId, CancellationToken cancellationToken = default)

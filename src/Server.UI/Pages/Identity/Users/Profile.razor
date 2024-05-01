@@ -1,5 +1,6 @@
 ﻿@page "/user/profile"
 
+@using CleanArchitecture.Blazor.Server.UI.Services.Fusion
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Size = SixLabors.ImageSharp.Size
 @using SixLabors.ImageSharp.Processing
@@ -13,7 +14,7 @@
 @inject IStringLocalizer<Profile> L
 @inject IDispatcher Dispatcher
 @inject IUploadService UploadService
-
+@inject IOnlineUserTracker OnlineUserTracker
 <PageTitle>@Title</PageTitle>
 
 
@@ -242,6 +243,18 @@ else
                 await UserManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated"], Severity.Info);
                 Dispatcher.Dispatch(new UserProfileUpdateAction { UserProfile = Mapper.Map<UserProfile>(model) });
+                await OnlineUserTracker.UpdateUser(new UserInfo(model.UserId,
+            model.UserName,
+            model.Email,
+            model.DisplayName,
+            model.ProfilePictureDataUrl,
+            model.SuperiorName,
+            model.SuperiorId,
+            model.TenantId,
+            model.TenantName,
+            model.PhoneNumber,
+            model.AssignedRoles ?? Array.Empty<string>(),
+            UserPresence.Available));
             }
         }
     }
