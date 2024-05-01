@@ -1,17 +1,36 @@
 ﻿using ActualLab;
 using System.Runtime.Serialization;
 using ActualLab.Fusion;
-using CleanArchitecture.Blazor.Application.Common.Security;
+using ActualLab.Fusion.Blazor;
+using MemoryPack;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 
 public interface IOnlineUserTracker:IComputeService
 {
-    Task AddUser(string userId, CancellationToken cancellationToken = default);
-    Task UpdateUser(string userId, CancellationToken cancellationToken = default);
-    Task RemoveUser(string userId, CancellationToken cancellationToken = default);
-    Task<Dictionary<string, UserProfile>> GetOnlineUsers( CancellationToken cancellationToken=default);
-    Task<UserProfile> Get(string userId, CancellationToken cancellationToken = default);
+    Task AddUser(string sessionId, UserInfo userInfo, CancellationToken cancellationToken = default);
+    Task RemoveUser(string sessionId,CancellationToken cancellationToken = default);
+    [ComputeMethod]
+    Task<UserInfo[]> GetOnlineUsers( CancellationToken cancellationToken=default);
+
 }
 
- 
+[DataContract, MemoryPackable]
+[ParameterComparer(typeof(ByValueParameterComparer))]
+public sealed partial record UserInfo(
+   [property: DataMember] string Id,
+   [property: DataMember] string Name,
+   [property: DataMember] string Email,
+   [property: DataMember] string DisplayName,
+   [property: DataMember] string ProfilePictureDataUrl,
+   [property: DataMember] UserPresence Status
+);
+public enum UserPresence
+{
+    Available,
+    Busy,
+    Donotdisturb,
+    Away,
+    Offline,
+    Statusunknown
+}

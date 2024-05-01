@@ -1,116 +1,41 @@
-﻿using System.Linq.Dynamic.Core;
+﻿using System.Collections.Concurrent;
+using System.Collections.Immutable;
+using System.Linq.Dynamic.Core;
 using ActualLab.Fusion;
-using ActualLab.Fusion.EntityFramework;
-using ActualLab.Fusion.Extensions;
-using CleanArchitecture.Blazor.Application.Common.Security;
-using CleanArchitecture.Blazor.Domain.Identity;
-using Microsoft.AspNetCore.Identity;
-
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 
 public class OnlineUserTracker : IOnlineUserTracker
 {
-    private const string PREFIX = "U";
-    private readonly IKeyValueStore _store;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly Func<ApplicationUser, UserProfile> _toUserProfile;
-    public OnlineUserTracker(IKeyValueStore store, IServiceScopeFactory scopeFactory)
-    {
-        _store = store;
-        var scope = scopeFactory.CreateScope();
-        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        _toUserProfile = user => new UserProfile
-        {
-            UserName = user.UserName,
-            DisplayName = user.DisplayName,
-            Email = user.Email,
-            UserId = user.Id,
-            IsActive = user.IsActive,
-            PhoneNumber = user.PhoneNumber,
-            Provider = user.Provider,
-            ProfilePictureDataUrl = user.ProfilePictureDataUrl,
-            SuperiorId = user.SuperiorId,
-            SuperiorName = user.Superior?.UserName ?? string.Empty,
-            TenantId = user.TenantId,
-            TenantName = user.Tenant?.Name ?? string.Empty,
-            AssignedRoles = user.UserRoles.Any() ? user.UserRoles.Select(x => x.Role.Name!).ToArray() : Array.Empty<string>(),
-            DefaultRole = user.UserRoles.Any() ? user.UserRoles.First().Role.Name : string.Empty
-        };
-    }
-    private DbShard _shard = DbShard.None;
-    public async Task AddUser(string userId, CancellationToken cancellationToken = default)
+
+    private readonly ConcurrentDictionary<string, UserInfo> _store = new();
+    public async Task AddUser(string sessionId,UserInfo userInfo, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
-            _ = GetOnlineUsers();
-
-        var key = $"{PREFIX}/{userId}";
-        var val = await _store.TryGet<UserProfile>(_shard, key, cancellationToken);
-        if (!val.HasValue)
+            return;
+        if (_store.TryAdd(sessionId, userInfo))
         {
-            var userDto = await _userManager.Users.Where(x => x.UserName == userId).Include(x => x.Tenant).Include(x => x.UserRoles).ThenInclude(x => x.Role)
-           .Select(x => _toUserProfile(x)).FirstOrDefaultAsync(cancellationToken);
-            if (userDto is not null)
-            {
-                await _store.Set(_shard, key, userDto);
-            }
+            using var invalidating = Invalidation.Begin();
+            _ = await GetOnlineUsers(cancellationToken);
         }
-
-
     }
-    public async Task UpdateUser(string userId, CancellationToken cancellationToken = default)
-    {
-        if (Invalidation.IsActive)
-            _ = GetOnlineUsers();
 
-        var key = $"{PREFIX}/{userId}";
-        var userDto = await _userManager.Users.Where(x => x.UserName == userId).Include(x => x.Tenant).Include(x => x.UserRoles).ThenInclude(x => x.Role)
-            .Select(x => _toUserProfile(x)).FirstOrDefaultAsync();
-        if(userDto is not null)
-        {
-            await _store.Set(_shard, key, userDto);
-        }  
-    }
-    public async Task<Dictionary<string, UserProfile>> GetOnlineUsers(CancellationToken cancellationToken = default)
+    public virtual Task<UserInfo[]> GetOnlineUsers(CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return default!;
-        var keys = await _store.ListKeySuffixes(_shard, PREFIX, PageRef.New<string>(int.MaxValue));
-        var result = new Dictionary<string, UserProfile>();
-        foreach (var key in keys)
-        {
-            var userProfile = await _store.Get<UserProfile>(_shard, $"{PREFIX}{key}", cancellationToken);
-            if (userProfile != null)
-            {
-                result[key] = userProfile;
-            }
-        }
-
-        return result;
+        return Task.FromResult(_store.Select(x=>x.Value).Distinct().ToArray());
     }
 
-    public async Task RemoveUser(string userId, CancellationToken cancellationToken = default)
+    public async Task RemoveUser(string sessionId, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
-            _ = GetOnlineUsers();
-
-        await _store.Remove(_shard, $"{PREFIX}/{userId}");
-    }
-
-    public async Task<UserProfile> Get(string userId, CancellationToken cancellationToken = default)
-    {
-        if (Invalidation.IsActive)
-            return default!;
-        var key = $"{PREFIX}/{userId}";
-        var val = await _store.TryGet<UserProfile>(_shard, key, cancellationToken);
-        if (val.HasValue)
+            return;
+        var removed = _store.TryRemove(sessionId, out var userInfo);
+        if (removed)
         {
-            return val.Value;
-        }
-        else
-        {
-            await _store.Remove(_shard, key);
-            return new UserProfile() { Email="", UserId="", UserName="" };
+            using var invalidating = Invalidation.Begin();
+            await GetOnlineUsers(cancellationToken);
         }
     }
 }

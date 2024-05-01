@@ -1,5 +1,4 @@
-﻿@using CleanArchitecture.Blazor.Server.UI.Components.Fusion
-@layout MainLayout
+﻿@layout MainLayout
 @inherits LayoutComponentBase
 
 @inject LayoutService LayoutService
@@ -37,7 +36,7 @@
                     </ErrorBoundary>
                 </MudContainer>
             </MudMainContent>
-            <OnlineUsersTracker></OnlineUsersTracker>
+          
             <UserLoginState UserProfileStateChanged="OnUserProfileStateChanged" />
         </Authorized>
     </AuthorizeView>
