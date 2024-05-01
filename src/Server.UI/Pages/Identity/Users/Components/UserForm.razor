@@ -65,6 +65,7 @@
             <PickSuperiorIdAutocomplete For="@(() => Model.SuperiorId)"
                                         OwnerName="@Model.UserName"
                                         Clearable="true"
+                                        TenantId="@Model.TenantId"
                                         Label="@L["Select Superior"]"
                                         @bind-Value="@Model.SuperiorId">
             </PickSuperiorIdAutocomplete>
