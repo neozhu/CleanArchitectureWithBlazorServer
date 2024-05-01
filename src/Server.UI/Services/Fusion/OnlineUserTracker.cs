@@ -23,16 +23,24 @@ public class OnlineUserTracker : IOnlineUserTracker
     {
         if (Invalidation.IsActive)
             return;
-
+        var invalidate = false;
         foreach (var key in _store.Keys)
         {
             if (_store[key].Id == userInfo.Id)
             {
-                _store.TryUpdate(key, userInfo, _store[key]);
+                var updated = _store.TryUpdate(key, userInfo, _store[key]);
+                if (invalidate == false)
+                {
+                    invalidate = updated;
+                }
             }
         }
-        using var invalidating = Invalidation.Begin();
-        _ = await GetOnlineUsers(cancellationToken);
+        if (invalidate)
+        {
+            using var invalidating = Invalidation.Begin();
+            _ = await GetOnlineUsers(cancellationToken);
+        }
+       
 
     }
     public virtual Task<UserInfo[]> GetOnlineUsers(CancellationToken cancellationToken = default)
