@@ -1,5 +1,5 @@
 ﻿@page "/identity/roles"
-@using LazyCache
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using System.Security.Claims
@@ -7,12 +7,12 @@
 @using System.ComponentModel
 @using System.Reflection
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
+@using ZiggyCreatures.Caching.Fusion
 
 @attribute [Authorize(Policy = Permissions.Roles.View)]
 @inherits OwningComponentBase
-
-
-@inject IAppCache Cache
+@inject ITenantService TenantsService
+@inject IFusionCache FusionCache;
 @inject IStringLocalizer<Roles> L
 
 <PageTitle>@Title</PageTitle>
@@ -30,12 +30,19 @@
     <ToolBarContent>
         <div class="d-flex align-start flex-grow-1">
             <div class="d-flex gap-4">
-                <MudIcon Icon="@Icons.Material.Filled.Groups" Size="Size.Large"/>
+                <MudIcon Icon="@Icons.Material.Filled.Groups" Size="Size.Large" />
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption">@Title</MudText>
+                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView" Value="@_selectedTenantId" Dense="true" Label="List View">
+                        <MudSelectItem T="string" Value="@(" ")">@L["ALL"]</MudSelectItem>
+                        @foreach (var item in TenantsService.DataSource)
+                        {
+                            <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
+                        }
+                    </MudSelect>
                 </div>
             </div>
-            <div class="flex-grow-1"/>
+            <div class="flex-grow-1" />
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
@@ -94,7 +101,7 @@
                                                for="@context">
                                         @if (_uploading)
                                         {
-                                            <MudProgressCircular Size="Size.Small" Indeterminate="true"/>
+                                            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
                                             @ConstantString.Uploading
                                         }
                                         else
@@ -176,6 +183,17 @@
                 }
             </CellTemplate>
         </TemplateColumn>
+        <PropertyColumn Property="x => x.TenantId" HeaderStyle="width:260px" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
+            <CellTemplate>
+                <div>
+                    <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.TenantId</MudText>
+                </div>
+            </CellTemplate>
+            <FooterTemplate>
+                @L["Selected"]: @_selectedItems.Count
+            </FooterTemplate>
+        </PropertyColumn>
         <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x => x.Name)]">
             <CellTemplate>
                 <div class="d-flex flex-column">
@@ -183,13 +201,10 @@
                     <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
                 </div>
             </CellTemplate>
-            <FooterTemplate>
-                @L["Selected"]: @_selectedItems.Count
-            </FooterTemplate>
         </PropertyColumn>
     </Columns>
     <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"/>
+        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
 
@@ -201,9 +216,9 @@
     }
 </style>
 
-@code{
+@code {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-    private RoleManager<ApplicationRole> RoleManager=null!;
+    private RoleManager<ApplicationRole> RoleManager = null!;
     private string? Title { get; set; }
     private bool _processing;
     private string _currentRoleName = string.Empty;
@@ -211,9 +226,9 @@
     private HashSet<ApplicationRoleDto> _selectedItems = new();
     private readonly ApplicationRoleDto _currentDto = new();
     private string _searchString = string.Empty;
-
-    private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
-    private LazyCacheEntryOptions Options => new LazyCacheEntryOptions().SetAbsoluteExpiration(RefreshInterval, ExpirationMode.LazyExpiration);
+    private string _selectedTenantId = " ";
+    private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
+ 
 
     private List<PermissionModel> _permissions = new();
     private IList<Claim> _assignedClaims = default!;
@@ -249,14 +264,12 @@
         {
             _loading = true;
             var items = await RoleManager.Roles
-                .Where(x => x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString))
+                .Where(x => (x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString)) && (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId)))
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize)
-                .Select(x => new ApplicationRoleDto
-                    { Id = x.Id, Name = x.Name!, Description = x.Description, NormalizedName = x.NormalizedName })
+                .ProjectTo<ApplicationRoleDto>(Mapper.ConfigurationProvider)
                 .ToListAsync();
-            var total = await RoleManager.Roles.CountAsync(x =>
-                x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString));
+            var total = await RoleManager.Roles.CountAsync(x => (x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString)) && (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId)));
             return new GridData<ApplicationRoleDto> { TotalItems = total, Items = items };
         }
         finally
@@ -264,7 +277,11 @@
             _loading = false;
         }
     }
-
+    private async Task OnChangedListView(string tenantId)
+    {
+        _selectedTenantId = tenantId;
+        await _table.ReloadServerData();
+    }
     private async Task OnSearch(string text)
     {
         if (_loading)
@@ -289,10 +306,11 @@
         if (!result.Canceled)
         {
             var applicationRole = new ApplicationRole
-            {
-                Name = model.Name,
-                Description = model.Description
-            };
+                {
+                    TenantId = model.TenantId,
+                    Name = model.Name,
+                    Description = model.Description
+                };
 
             var state = await RoleManager.CreateAsync(applicationRole);
 
@@ -322,6 +340,7 @@
             var role = await RoleManager.FindByIdAsync(item.Id);
             if (role is not null)
             {
+                role.TenantId = item.TenantId;
                 role.Description = item.Description;
                 role.Name = item.Name;
                 var state = await RoleManager.UpdateAsync(role);
@@ -356,7 +375,7 @@
         }
 
         var key = $"get-claims-by-{dto.Id}";
-        _assignedClaims = await Cache.GetOrAddAsync(key, async () => await GetClaims(dto.Id), Options);
+        _assignedClaims = await FusionCache.GetOrSetAsync(key, _ => GetClaims(dto.Id), RefreshInterval);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
         foreach (var module in modules)
@@ -373,20 +392,20 @@
 
             var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             allPermissions.AddRange(from field in fields
-                select field.GetValue(null)
+                                    select field.GetValue(null)
                 into propertyValue
-                where propertyValue is not null
-                select propertyValue.ToString()
+                                    where propertyValue is not null
+                                    select propertyValue.ToString()
                 into claimValue
-                select new PermissionModel
-                {
-                    RoleId = dto.Id,
-                    ClaimValue = claimValue,
-                    ClaimType = ApplicationClaimTypes.Permission,
-                    Group = moduleName,
-                    Description = moduleDescription,
-                    Assigned = _assignedClaims.Any(x => x.Value == claimValue)
-                });
+                                    select new PermissionModel
+                                        {
+                                            RoleId = dto.Id,
+                                            ClaimValue = claimValue,
+                                            ClaimType = ApplicationClaimTypes.Permission,
+                                            Group = moduleName,
+                                            Description = moduleDescription,
+                                            Assigned = _assignedClaims.Any(x => x.Value == claimValue)
+                                        });
         }
 
         return allPermissions;
@@ -423,7 +442,7 @@
             }
 
             var key = $"get-claims-by-{role.Id}";
-            Cache.Remove(key);
+            FusionCache.Remove(key);
         }
         finally
         {
@@ -460,7 +479,7 @@
             Snackbar.Add($"{L["Authorization has been changed"]}", Severity.Info);
             await Task.Delay(300);
             var key = $"get-claims-by-{role.Id}";
-            Cache.Remove(key);
+            FusionCache.Remove(key);
         }
         finally
         {
@@ -519,7 +538,6 @@
                     return;
                 }
             }
-
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
         }
