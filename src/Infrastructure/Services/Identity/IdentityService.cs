@@ -24,6 +24,7 @@ public class IdentityService : IIdentityService
 
     public IdentityService(
         IServiceScopeFactory scopeFactory,
+        IApplicationSettings appConfig,
         IFusionCache fusionCache,
         IMapper mapper,
         IStringLocalizer<IdentityService> localizer)
@@ -33,29 +34,27 @@ public class IdentityService : IIdentityService
         _userClaimsPrincipalFactory =
             scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _authorizationService = scope.ServiceProvider.GetRequiredService<IAuthorizationService>();
+ 
         _fusionCache = fusionCache;
         _mapper = mapper;
         _localizer = localizer;
     }
 
-    private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
-
- 
+    private TimeSpan RefreshInterval => TimeSpan.FromMinutes(60);
 
     public async Task<string?> GetUserNameAsync(string userId, CancellationToken cancellation = default)
     {
-        var key = $"GetUserNameById:{userId}";
+        var key = $"GetUserNameAsync:{userId}";
         var user = await _fusionCache.GetOrSetAsync(key,
-            _ => _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId), RefreshInterval, cancellation);
+             _ => _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId), RefreshInterval);
         return user?.UserName;
     }
 
     public string GetUserName(string userId)
     {
-        var key = $"GetUserNameById:{userId}";
-        var user = _fusionCache.GetOrSet(key,
-             _ => _userManager.Users.SingleOrDefault(u => u.Id == userId), RefreshInterval);
-        return user?.UserName;
+        var key = $"GetUserName-byId:{userId}";
+        var user = _fusionCache.GetOrSet(key, _ => _userManager.Users.SingleOrDefault(u => u.Id == userId), RefreshInterval);
+        return user?.UserName ?? string.Empty;
     }
 
     public async Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default)
@@ -109,7 +108,7 @@ public class IdentityService : IIdentityService
         var result = await _fusionCache.GetOrSetAsync(key,
             _ =>  _userManager.Users.Where(x => x.UserName == userName).Include(x => x.UserRoles)
                 .ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(cancellation), RefreshInterval,cancellation);
+                .FirstOrDefaultAsync(cancellation), RefreshInterval);
         return result;
     }
 
@@ -126,7 +125,7 @@ public class IdentityService : IIdentityService
                     .ThenInclude(x => x.Role)
                     .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
             };
-        var result = await _fusionCache.GetOrSetAsync(key, _ => getUsersByTenantId(tenantId, cancellation), RefreshInterval,cancellation);
+        var result = await _fusionCache.GetOrSetAsync(key, _=>getUsersByTenantId(tenantId, cancellation), RefreshInterval);
         return result;
     }
 

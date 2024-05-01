@@ -33,7 +33,15 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
         builder.Navigation(e => e.Tenant).AutoInclude();
     }
 }
-
+public class ApplicationRoleConfiguration : IEntityTypeConfiguration<ApplicationRole>
+{
+    public void Configure(EntityTypeBuilder<ApplicationRole> builder)
+    {
+       
+        builder.HasOne(x => x.Tenant).WithMany().HasForeignKey(u => u.TenantId);
+        builder.Navigation(e => e.Tenant).AutoInclude();
+    }
+}
 public class ApplicationRoleClaimConfiguration : IEntityTypeConfiguration<ApplicationRoleClaim>
 {
     public void Configure(EntityTypeBuilder<ApplicationRoleClaim> builder)
