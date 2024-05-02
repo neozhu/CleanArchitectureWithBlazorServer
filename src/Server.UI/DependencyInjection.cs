@@ -32,7 +32,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddServerUI(this IServiceCollection services, IConfiguration config)
     {
-        services.AddRazorComponents().AddInteractiveServerComponents();
+        services.AddRazorComponents().AddInteractiveServerComponents()
+            .AddInteractiveWebAssemblyComponents()
+            ;
         services.AddCascadingAuthenticationState();
         services.AddScoped<IdentityUserAccessor>();
         services.AddScoped<IdentityRedirectManager>();
@@ -57,11 +59,12 @@ public static class DependencyInjection
 
 
         // Fusion services
-        services.AddFusion(fusion => {
-            fusion.AddService<IUserSessionTracker,UserSessionTracker>();
+        services.AddFusion(fusion =>
+        {
+            fusion.AddService<IUserSessionTracker, UserSessionTracker>();
         });
- 
-        
+
+
 
 
         services.AddHttpClient("ocr", c =>
@@ -139,7 +142,10 @@ public static class DependencyInjection
             Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
             AsyncAuthorization = new[] { new HangfireDashboardAsyncAuthorizationFilter() }
         });
-        app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
+        app.MapRazorComponents<App>()
+            .AddInteractiveServerRenderMode()
+            .AddInteractiveWebAssemblyRenderMode()
+            ;
         app.MapHub<ServerHub>(ISignalRHub.Url);
 
         //QuestPDF License configuration
@@ -152,7 +158,7 @@ public static class DependencyInjection
         { // We obviously need this
             KeepAliveInterval = TimeSpan.FromSeconds(30), // Just in case
         });
-  
+
         return app;
     }
 }
