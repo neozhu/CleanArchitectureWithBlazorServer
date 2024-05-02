@@ -2,7 +2,6 @@
 @inject IState<UserProfileState> UserProfileState
 @inject IStringLocalizer<HeaderMenu> L
 
-
 <MudTooltip Arrow="true" Text="@L["User Profile"]">
     <MudMenu AnchorOrigin="Origin.BottomRight"
              Icon="@Icons.Material.Filled.PermIdentity"
@@ -80,12 +79,6 @@
 @code
 {
     [Parameter] public EventCallback<EventArgs> OnSettingClick { get; set; }
-    [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
     private bool IsLoading => UserProfileState.Value.IsLoading;
     private UserProfile? UserProfile => UserProfileState.Value.UserProfile;
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-        GC.SuppressFinalize(this);
-    }
 }
