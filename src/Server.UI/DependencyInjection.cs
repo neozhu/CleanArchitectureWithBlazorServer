@@ -145,6 +145,7 @@ public static class DependencyInjection
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode()
             .AddInteractiveWebAssemblyRenderMode()
+             .AddAdditionalAssemblies(typeof(ServerUiBlazorWasm._Imports).Assembly)
             ;
         app.MapHub<ServerHub>(ISignalRHub.Url);
 
