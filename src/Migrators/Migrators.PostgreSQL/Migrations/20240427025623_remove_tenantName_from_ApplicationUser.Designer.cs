@@ -3,6 +3,7 @@ using System;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240427025623_remove_tenantName_from_ApplicationUser")]
+    partial class remove_tenantName_from_ApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -442,20 +445,12 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("normalized_name");
 
-                    b.Property<string>("TenantId")
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)")
-                        .HasColumnName("tenant_id");
-
                     b.HasKey("Id")
                         .HasName("pk_asp_net_roles");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
-
-                    b.HasIndex("TenantId")
-                        .HasDatabaseName("ix_asp_net_roles_tenant_id");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -815,16 +810,6 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.Navigation("Editor");
 
                     b.Navigation("Owner");
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationRole", b =>
-                {
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .HasConstraintName("fk_asp_net_roles_tenants_tenant_id");
 
                     b.Navigation("Tenant");
                 });

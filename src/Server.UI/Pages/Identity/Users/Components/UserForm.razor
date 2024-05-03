@@ -1,8 +1,6 @@
 ﻿@using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
-@using Severity = Severity
 @using Size = SixLabors.ImageSharp.Size
 @using Image = SixLabors.ImageSharp.Image
-@using Color = Color
 @using SixLabors.ImageSharp.Processing
 @using SixLabors.ImageSharp
 @using SixLabors.ImageSharp.Formats.Png
@@ -10,11 +8,10 @@
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
-@inherits MudComponentBase
+@inherits OwningComponentBase
 @inject IValidationService Validator
 @inject IUploadService UploadService
 @inject ITenantService TenantsService
-@inject RoleManager<ApplicationRole> RoleManager
 @inject IStringLocalizer<Users> L
 
 <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
@@ -49,7 +46,8 @@
                        T="string"
                        Label="@L["Select Tenant"]"
                        Required="true"
-                       @bind-Value="@Model.TenantId">
+                       ValueChanged="OnTenantIdChanged"
+                       Value="@Model.TenantId">
                 @foreach (var item in TenantsService.DataSource)
                 {
                     <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
@@ -67,6 +65,7 @@
             <PickSuperiorIdAutocomplete For="@(() => Model.SuperiorId)"
                                         OwnerName="@Model.UserName"
                                         Clearable="true"
+                                        TenantId="@Model.TenantId"
                                         Label="@L["Select Superior"]"
                                         @bind-Value="@Model.SuperiorId">
             </PickSuperiorIdAutocomplete>
@@ -111,7 +110,7 @@
         public string Key { get; set; } = string.Empty;
         public bool Value { get; set; }
     }
-
+    private RoleManager<ApplicationRole> RoleManager = null!;
     [EditorRequired] [Parameter] public ApplicationUserDto Model { get; set; } = default!;
 
     [EditorRequired] [Parameter] public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
@@ -122,7 +121,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var array = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
+        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        await GetRoles(Model.TenantId);
+    }
+    private async Task GetRoles(string? tenantId)
+    {
+        Roles = new();
+        var array = await RoleManager.Roles.Where(x => x.TenantId == Model.TenantId).Select(x => x.Name).ToListAsync();
         foreach (var role in array)
         {
             if (Model.AssignedRoles != null && Model.AssignedRoles.Contains(role))
@@ -135,7 +140,11 @@
             }
         }
     }
-
+    private async Task OnTenantIdChanged(string tenantId)
+    {
+        Model.TenantId = tenantId;
+        await GetRoles(Model.TenantId);
+    }
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
         var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);

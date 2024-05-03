@@ -15,7 +15,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.AuditTrail", b =>
                 {
@@ -342,11 +342,17 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -465,10 +471,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TenantId")
-                        .HasMaxLength(450)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TenantName")
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
@@ -639,6 +641,15 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.Navigation("Editor");
 
                     b.Navigation("Owner");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationRole", b =>
+                {
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId");
 
                     b.Navigation("Tenant");
                 });

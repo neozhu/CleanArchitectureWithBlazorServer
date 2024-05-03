@@ -14,7 +14,6 @@
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.12" />
         <PackageReference Include="Hangfire.InMemory" Version="0.9.0" />
         <PackageReference Include="Blazor-Analytics" Version="3.12.0" />
-
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="BlazorTime" Version="1.0.3" />
         <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.9.2" />
@@ -22,7 +21,6 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.4" />
-
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="4.1.0.1" />
     </ItemGroup>
 

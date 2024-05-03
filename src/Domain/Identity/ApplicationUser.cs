@@ -19,7 +19,6 @@ public class ApplicationUser : IdentityUser
     public string? Provider { get; set; } = "Local";
     public string? TenantId { get; set; }
     public virtual Tenant? Tenant { get; set; }
-    public string? TenantName { get; set; }
 
     [Column(TypeName = "text")] public string? ProfilePictureDataUrl { get; set; }
 
