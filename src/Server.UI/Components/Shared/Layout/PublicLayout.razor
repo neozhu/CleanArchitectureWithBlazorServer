@@ -60,13 +60,31 @@
         </MudHidden>
         <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
             <LanguageSelector/>
-            <MudTooltip Text="@L["Login"]">
-                <MudButton Variant="Variant.Text" Href="/pages/authentication/login"
-                           StartIcon="@Icons.Material.Rounded.Login"
-                           Style="text-transform:none">
-                    @L["Login"]
-                </MudButton>
-            </MudTooltip>
+            <AuthorizeView>
+                <Authorized>
+                    <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="/" />
+                        <MudTooltip Text="@L["Logout"]">
+                            <MudButton Style="text-transform:none"
+                                       ButtonType="ButtonType.Submit"
+                                       Variant="Variant.Text"
+                                       StartIcon="@Icons.Material.Filled.Logout">
+                                @L["Logout"]
+                            </MudButton>
+                        </MudTooltip>
+                    </form>
+                </Authorized>
+                <NotAuthorized>
+                    <MudTooltip Text="@L["Login"]">
+                        <MudButton Variant="Variant.Text" Href="/pages/authentication/login"
+                                   StartIcon="@Icons.Material.Rounded.Login"
+                                   Style="text-transform:none">
+                            @L["Login"]
+                        </MudButton>
+                    </MudTooltip>
+                </NotAuthorized>
+            </AuthorizeView>
         </MudHidden>
     </MudAppBar>
     <MudMainContent>
