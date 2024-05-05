@@ -1,0 +1,78 @@
+﻿@using CleanArchitecture.Blazor.Server.UI.Services.Fusion
+@using ActualLab.Fusion
+@using ActualLab.Fusion.Blazor
+@using ActualLab.Fusion.UI
+
+@inherits ComputedStateComponent<UserInfo[]>
+@inject IOnlineUserTracker OnlineUserTracker
+@inject IStringLocalizer<ActiveUserSession> L
+@implements IAsyncDisposable
+@if (State.HasValue && State.LastNonErrorValue.Any())
+{
+    <div class="d-flex flex-row gap-2 my-3 gap-2 my-3">
+        @foreach (var user in State.LastNonErrorValue.OrderBy(u => u.Id != userId))
+        {
+            <MudBadge Color="Color.Success" Overlap="true" Bordered="true">
+                @if (string.IsNullOrEmpty(user.ProfilePictureDataUrl))
+                {
+                    <MudAvatar title="@user.Name">
+                        @user.Name.First()
+                    </MudAvatar>
+                }
+                else
+                {
+                    <MudAvatar title="@user.Name">
+                        <MudImage Src="@user.ProfilePictureDataUrl"></MudImage>
+                    </MudAvatar>
+                }
+            </MudBadge>
+        }
+    </div>
+}
+@if(State.Error is not null)
+{
+    <MudAlert Severity="Severity.Error">@State.Error.Message</MudAlert>
+}
+
+
+@code {
+    private Dictionary<string, UserProfile>? onlineUsers;
+    private string sessionId = Guid.NewGuid().ToString();
+    private string? userId;
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
+    private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthState;
+        var user = authState.User.GetUserProfileFromClaim();
+        userId = user.UserId;
+        await OnlineUserTracker.AddUser(sessionId, new UserInfo(user.UserId,
+            user.UserName,
+            user.Email,
+            user.DisplayName,
+            user.ProfilePictureDataUrl,
+            user.SuperiorName,
+            user.SuperiorId,
+            user.TenantId,
+            user.TenantName,
+            user.PhoneNumber,
+            user.AssignedRoles ?? Array.Empty<string>(),
+            UserPresence.Available));
+    }
+
+    protected override ComputedState<UserInfo[]>.Options GetStateOptions()
+     => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
+
+    protected override Task<UserInfo[]> ComputeState(CancellationToken cancellationToken)
+    {
+        return OnlineUserTracker.GetOnlineUsers(cancellationToken);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await OnlineUserTracker.RemoveUser(sessionId);
+        GC.Collect();
+    }
+}

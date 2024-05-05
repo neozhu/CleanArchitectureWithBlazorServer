@@ -87,8 +87,8 @@ public class ApplicationDbContextInitializer
         }
 
         // Default roles
-        var administratorRole = new ApplicationRole(RoleName.Admin) { Description = "Admin Group" };
-        var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
+        var administratorRole = new ApplicationRole(RoleName.Admin) { Description = "Admin Group", TenantId= _context.Tenants.First().Id };
+        var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group", TenantId = _context.Tenants.First().Id };
         var permissions = GetAllPermissions();
         if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
         {

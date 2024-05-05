@@ -91,13 +91,22 @@
         <MudItem xs="12" sm="12">
             <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
             <MudGrid Class="mt-1">
-                @for (var i = 0; i < Roles.Count; i++)
+                @if (Roles.Any())
                 {
-                    var x = i;
-                    <MudItem xs="6" sm="6" Class="py-0 my=0">
-                        <MudCheckBox T="bool" Value="@Roles[x].Value" Label="@Roles[x].Key" ValueChanged="@(s => Roles[x].Value = s)"></MudCheckBox>
-                    </MudItem>
+                    @for (var i = 0; i < Roles.Count; i++)
+                    {
+                        var x = i;
+                        <MudItem xs="6" sm="6" Class="py-0 my=0">
+                            <MudCheckBox T="bool" Value="@Roles[x].Value" Label="@Roles[x].Key" ValueChanged="@(s => Roles[x].Value = s)"></MudCheckBox>
+                        </MudItem>
+                    }
+
                 }
+                else
+                {
+                    <MudAlert Class="flex-grow-1" Severity="Severity.Warning">@L["No roles available for this tenant."]</MudAlert>
+                }
+
             </MudGrid>
         </MudItem>
     </MudGrid>
