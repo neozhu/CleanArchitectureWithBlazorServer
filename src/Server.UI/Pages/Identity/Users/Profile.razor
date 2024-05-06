@@ -12,7 +12,8 @@
 @inject IStringLocalizer<Profile> L
 @inject IDispatcher Dispatcher
 @inject IUploadService UploadService
-
+@inject IActionSubscriber ActionSubscriber
+@inject IState<UserProfileState> UserProfileState
 <PageTitle>@Title</PageTitle>
 
 <ErrorBoundary>
@@ -173,8 +174,8 @@
     private readonly List<OrgItem> _orgData = new();
     public string Id => Guid.NewGuid().ToString();
     private ChangeUserProfileModel model = null!;
-
-
+    private IDisposable StateSubscription;
+    private bool Disposed;
     private async void ActivePanelIndexChanged(int index)
     {
         if (index == 2)
@@ -213,15 +214,25 @@
         await new OrgChart(JS).Create(_orgData);
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override  void OnInitialized()
     {
         UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         model = Mapper.Map<ChangeUserProfileModel>(UserProfile);
-        await base.OnInitializedAsync();
+
+        StateSubscription = StateSubscriber.Subscribe(this, _ =>
+        {
+            if (UserProfileState.Value.UserProfile is not null)
+            {
+                model = Mapper.Map<ChangeUserProfileModel>(UserProfileState.Value.UserProfile);
+            }
+                
+        });
     }
 
     protected override void Dispose(bool disposing)
     {
+        StateSubscription.Dispose();
+        ActionSubscriber?.UnsubscribeFromAllActions(this);
         base.Dispose(disposing);
     }
 
