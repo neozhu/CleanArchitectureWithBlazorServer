@@ -25,6 +25,7 @@ using QuestPDF;
 using QuestPDF.Infrastructure;
 using ActualLab.Fusion;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
+using ActualLab.Fusion.Extensions;
 
 namespace CleanArchitecture.Blazor.Server.UI;
 
@@ -58,7 +59,9 @@ public static class DependencyInjection
 
         // Fusion services
         services.AddFusion(fusion => {
+            fusion.AddInMemoryKeyValueStore();
             fusion.AddService<IUserSessionTracker,UserSessionTracker>();
+            fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
         });
  
         
