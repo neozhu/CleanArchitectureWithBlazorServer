@@ -236,7 +236,6 @@ else
             }
 
         });
-        var d = Services.GetRequiredService<ActualLab.Fusion.IState<UserInfo[]>>();
         _computed =await ActualLab.Fusion.Computed.Capture(() => OnlineUserTracker.GetOnlineUsers());
         _computed.Invalidated += StateOnStateChanged;
     }
