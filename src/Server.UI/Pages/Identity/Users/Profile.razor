@@ -158,6 +158,13 @@ else
         </MudTabPanel>
     </MudTabs>
 }
+@{
+    var v = _computed.ValueOrDefault;
+}
+@foreach(var a in v)
+{
+    @(a.Name + " / " + a.TenantName + "; ")
+}
 
 
 @code {
@@ -176,6 +183,8 @@ else
     private ChangeUserProfileModel model = null!;
     private IDisposable StateSubscription;
     private bool Disposed;
+
+    private ActualLab.Fusion.Computed<UserInfo[]> _computed;
     private async void ActivePanelIndexChanged(int index)
     {
         if (index == 2)
@@ -214,7 +223,7 @@ else
         await new OrgChart(JS).Create(_orgData);
     }
 
-    protected override  void OnInitialized()
+    protected override async Task  OnInitializedAsync()
     {
         UserManager = Services.GetRequiredService<UserManager<ApplicationUser>>();
         model = Mapper.Map<ChangeUserProfileModel>(UserProfile);
@@ -225,8 +234,11 @@ else
             {
                 model = Mapper.Map<ChangeUserProfileModel>(UserProfileState.Value.UserProfile);
             }
-                
+
         });
+        var d = Services.GetRequiredService<ActualLab.Fusion.IState<UserInfo[]>>();
+        _computed =await ActualLab.Fusion.Computed.Capture(() => OnlineUserTracker.GetOnlineUsers());
+        _computed.Invalidated += StateOnStateChanged;
     }
 
     protected override void Dispose(bool disposing)
@@ -236,9 +248,14 @@ else
         base.Dispose(disposing);
     }
 
-    private void StateOnStateChanged(object? sender, EventArgs args)
+    private void StateOnStateChanged(ActualLab.Fusion.IComputed v)
     {
-        InvokeAsync(() => { StateHasChanged(); });
+        
+        InvokeAsync(async() => { StateHasChanged(); 
+            _computed.Invalidate();
+            _computed = await _computed.Update();
+        });
+       
     }
 
     private async Task UploadPhoto(IBrowserFile file)
