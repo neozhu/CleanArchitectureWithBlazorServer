@@ -1,4 +1,5 @@
-﻿@using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences
+﻿@using CleanArchitecture.Blazor.Server.UI.Components.Fusion
+@using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences
 @using System.Globalization
 @inject LayoutService LayoutService
 @inject IStringLocalizer<ThemesMenu> L
@@ -134,6 +135,10 @@
             </MudItem>
 
         </MudGrid>
+        <MudText Typo="Typo.body2">
+            <b>@L["Online Users"]</b>
+        </MudText>
+         <OnlineUsersTracker></OnlineUsersTracker>   
     </div>
 </MudDrawer>
 

@@ -70,10 +70,10 @@
     </DialogActions>
 </MudDialog>
 
-@code{
+@code {
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public AddEditDocumentCommand Model { get; set; } = default!;
+    [EditorRequired][Parameter] public AddEditDocumentCommand Model { get; set; } = default!;
 
     private MudForm? _form;
 
