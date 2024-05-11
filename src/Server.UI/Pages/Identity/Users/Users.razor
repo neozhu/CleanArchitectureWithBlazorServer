@@ -1,4 +1,5 @@
 ﻿@page "/identity/users"
+@using CleanArchitecture.Blazor.Server.UI.Services.Fusion
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
@@ -22,6 +23,7 @@
 @inherits OwningComponentBase
 @implements IDisposable
 @inject IUsersStateContainer UsersStateContainer
+@inject IOnlineUserTracker OnlineUserTracker
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
 @inject ITenantService TenantsService
@@ -532,6 +534,18 @@
                 Snackbar.Add($"{L["The user updated successfully."]}", Severity.Info);
                 await OnRefresh();
                 UserService.Refresh();
+                await OnlineUserTracker.UpdateUser(new UserInfo(item.Id,
+                                                                item.UserName,
+                                                                item.Email,
+                                                                item.DisplayName,
+                                                                item.ProfilePictureDataUrl,
+                                                                item.SuperiorName,
+                                                                item.SuperiorId,
+                                                                item.TenantId,
+                                                                item.TenantName,
+                                                                item.PhoneNumber,
+                                                                item.AssignedRoles ?? Array.Empty<string>(),
+                                                                UserPresence.Available));
             }
             else
             {

@@ -3,7 +3,7 @@
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Delete" Class="mr-3 mb-n1"/>
+            <MudIcon Icon="@Icons.Material.Filled.Delete" Class="mr-3 mb-n1" />
             @ConstantString.DeleteConfirmationTitle
         </MudText>
     </TitleContent>
@@ -20,8 +20,8 @@
 {
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public string? ContentText { get; set; }
-    [EditorRequired] [Parameter] public IRequest<Result<int>> Command { get; set; } = default!;
+    [EditorRequired][Parameter] public string? ContentText { get; set; }
+    [EditorRequired][Parameter] public IRequest<Result<int>> Command { get; set; } = default!;
 
     private async Task Submit()
     {
