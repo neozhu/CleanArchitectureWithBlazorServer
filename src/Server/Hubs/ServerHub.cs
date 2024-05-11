@@ -16,10 +16,19 @@ public class ServerHub : Hub<ISignalRHub>
     public override async Task OnConnectedAsync()
     {
         var connectionId = Context.ConnectionId;
-        var username = Context.User?.Identity?.Name ?? string.Empty;
-        if (!OnlineUsers.ContainsKey(connectionId)) OnlineUsers.TryAdd(connectionId, username);
+        var username = Context.User?.GetDisplayName() ??(Context.User?.Identity?.Name ?? string.Empty);
 
-        await Clients.All.Connect(connectionId, username);
+        if (!OnlineUsers.Any(x => x.Value == username))
+        {
+            await Clients.All.Connect(connectionId, username);
+        }
+        
+        if (!OnlineUsers.ContainsKey(connectionId))
+        {
+            OnlineUsers.TryAdd(connectionId, username);
+        }
+
+       
         await base.OnConnectedAsync();
     }
 
@@ -27,7 +36,13 @@ public class ServerHub : Hub<ISignalRHub>
     {
         var connectionId = Context.ConnectionId;
         //try to remove key from dictionary
-        if (OnlineUsers.TryRemove(connectionId, out var username)) await Clients.All.Disconnect(connectionId, username);
+        if (OnlineUsers.TryRemove(connectionId, out var username))
+        {
+            if (!OnlineUsers.Any(x => x.Value == username))
+            {
+                await Clients.All.Disconnect(connectionId, username);
+            }    
+        }
 
         await base.OnConnectedAsync();
     }
