@@ -36,7 +36,6 @@
         <ProjectReference Include="..\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj" />
         <ProjectReference Include="..\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj" />
         <ProjectReference Include="..\Migrators\Migrators.SqLite\Migrators.SqLite.csproj" />
-        <ProjectReference Include="..\ServerUiBlazorWasm\ServerUiBlazorWasm.csproj" />
         <ProjectReference Include="..\Server\Server.csproj" />
     </ItemGroup>
     <ItemGroup>
