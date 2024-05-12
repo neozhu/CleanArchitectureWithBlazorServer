@@ -1,7 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
-using CleanArchitecture.Blazor.Server;
 using CleanArchitecture.Blazor.Server.UI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +11,6 @@ builder.WebHost.UseStaticWebAssets();
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration)
-    .AddServer(builder.Configuration)
     .AddServerUI(builder.Configuration);
 
 var app = builder.Build();

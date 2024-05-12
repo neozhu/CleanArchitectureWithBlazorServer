@@ -3,8 +3,6 @@ using System.Reflection;
 using BlazorDownloadFile;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
-using CleanArchitecture.Blazor.Server.Hubs;
-using CleanArchitecture.Blazor.Server.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
 using CleanArchitecture.Blazor.Server.UI.Services;
 using CleanArchitecture.Blazor.Server.UI.Services.Fusion;
@@ -26,6 +24,7 @@ using QuestPDF.Infrastructure;
 using ActualLab.Fusion;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 using ActualLab.Fusion.Extensions;
+using CleanArchitecture.Blazor.Server.UI.Middlewares;
 
 namespace CleanArchitecture.Blazor.Server.UI;
 
@@ -63,8 +62,32 @@ public static class DependencyInjection
             fusion.AddService<IUserSessionTracker,UserSessionTracker>();
             fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
         });
- 
-        
+
+
+        services.AddScoped<LocalizationCookiesMiddleware>()
+            .Configure<RequestLocalizationOptions>(options =>
+            {
+                options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
+                options.AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
+                options.FallBackToParentUICultures = true;
+            })
+            .AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
+
+        services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseInMemoryStorage())
+            .AddHangfireServer()
+            .AddMvc();
+
+        services.AddControllers();
+
+        services.AddScoped<IApplicationHubWrapper, ServerHubWrapper>()
+            .AddSignalR();
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
+        services.AddHealthChecks();
 
 
         services.AddHttpClient("ocr", c =>
