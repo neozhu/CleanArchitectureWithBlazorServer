@@ -15,6 +15,9 @@
             </MudText>
         </NavLink>
         <MudSpacer/>
+        <form method="post" hidden>
+            <AntiforgeryToken />
+        </form>
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudTooltip Arrow="true"
                         Text="Navigate to GitHub">
