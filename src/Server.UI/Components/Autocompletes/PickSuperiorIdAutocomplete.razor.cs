@@ -12,7 +12,7 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
     [Inject] private IUserService UserService { get; set; } = default!;
     public PickSuperiorIdAutocomplete()
     {
-        SearchFuncWithCancel = SearchKeyValues;
+        SearchFunc = SearchKeyValues;
         ToStringFunc = ConvertIdToUserName;
         Clearable = true;
         Dense = true;
@@ -28,7 +28,7 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
 
     private Task LoadUserDataAsync()
     {
-        _userList =  UserService.DataSource
+        _userList = UserService.DataSource
             .Where(x => TenantId == null || x.TenantId == TenantId)
             .ToList();
         return Task.CompletedTask;

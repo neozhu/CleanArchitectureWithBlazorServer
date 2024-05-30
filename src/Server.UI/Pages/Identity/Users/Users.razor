@@ -50,11 +50,11 @@
                 <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large"/>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
-                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView"  Value="@_selectedTenantId" Dense="true" Label="List View">
+                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView"  Value="@_selectedTenantId" Dense Label="List View">
                         <MudSelectItem T="string" Value="@(" ")">@L["ALL"]</MudSelectItem>
-                        @foreach(var item in TenantsService.DataSource)
+                        @foreach (var item in TenantsService.DataSource)
                         {
-                            <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
+                                    <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
                         }
                     </MudSelect>
                 </div>
@@ -63,7 +63,7 @@
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudButton DisableElevation Variant="Variant.Outlined"
+                        <MudButton DropShadow="false" Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(OnRefresh)"
@@ -73,104 +73,103 @@
                         </MudButton>
                         @if (_canCreate)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.Add"
-                                       Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       OnClick="OnCreate"
-                                       IconColor="Color.Surface">
+                                    <MudButton DropShadow="false" Variant="Variant.Outlined" Color="Color.Primary"
+                                               StartIcon="@Icons.Material.Filled.Add"
+                                               Size="Size.Small"
+                                               Style="margin-right: 4px; margin-bottom:4px"
+                                               OnClick="OnCreate"
+                                               IconColor="Color.Surface">
                                 @ConstantString.New
-                            </MudButton>
+                                    </MudButton>
                         }
                         @if (_canDelete)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                       StartIcon="@Icons.Material.Filled.Delete"
-                                       Disabled="@(!(_selectedItems.Count > 0))"
-                                       Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       OnClick="OnDeleteChecked"
-                                       IconColor="Color.Surface">
+                                    <MudButton DropShadow="false" Variant="Variant.Outlined" Color="Color.Error"
+                                               StartIcon="@Icons.Material.Filled.Delete"
+                                               Disabled="@(!(_selectedItems.Count > 0))"
+                                               Size="Size.Small"
+                                               Style="margin-right: 4px; margin-bottom:4px"
+                                               OnClick="OnDeleteChecked"
+                                               IconColor="Color.Surface">
                                 @ConstantString.Delete
-                            </MudButton>
+                                    </MudButton>
                         }
                         @if (_canExport)
                         {
-                            <MudLoadingButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                              StartIcon="@Icons.Material.Filled.Download"
-                                              Size="Size.Small"
-                                              @bind-Loading="_exporting" LoadingAdornment="Adornment.Start" OnClick="OnExport"
-                                              Style="margin-right: 4px; margin-bottom:4px"
-                                              IconColor="Color.Surface">
+                                    <MudLoadingButton DropShadow="false" Variant="Variant.Outlined" Color="Color.Primary"
+                                                      StartIcon="@Icons.Material.Filled.Download"
+                                                      Size="Size.Small"
+                                                      @bind-Loading="_exporting" LoadingAdornment="Adornment.Start" OnClick="OnExport"
+                                                      Style="margin-right: 4px; margin-bottom:4px"
+                                                      IconColor="Color.Surface">
                                 @ConstantString.Export
-                            </MudLoadingButton>
+                                    </MudLoadingButton>
                         }
                         @if (_canImport)
                         {
-                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px;">
-                                <ButtonTemplate>
-                                    <MudButton HtmlTag="label"
-                                               Size="Size.Small"
-                                               Variant="Variant.Outlined"
-                                               Color="Color.Primary"
-                                               Disabled="@_loading"
-                                               StartIcon="@Icons.Material.Filled.Upload"
-                                               for="@context">
+                                    <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px;">
+                                        <ButtonTemplate>
+                                            <MudButton HtmlTag="label"
+                                                       Size="Size.Small"
+                                                       Variant="Variant.Outlined"
+                                                       Color="Color.Primary"
+                                                       Disabled="@_loading"
+                                                       StartIcon="@Icons.Material.Filled.Upload">
                                         @if (_uploading)
                                         {
-                                            <MudProgressCircular Size="Size.Small" Indeterminate="true"/>
+                                                            <MudProgressCircular Size="Size.Small" Indeterminate="true"/>
                                             @ConstantString.Uploading
                                         }
                                         else
                                         {
                                             @ConstantString.Import
                                         }
-                                    </MudButton>
-                                </ButtonTemplate>
-                            </MudFileUpload>
+                                            </MudButton>
+                                        </ButtonTemplate>
+                                    </MudFileUpload>
                         }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         @if (_canCreate)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.Add"
-                                       Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       OnClick="OnCreate"
-                                       IconColor="Color.Surface">
+                                    <MudButton DropShadow="false" Variant="Variant.Outlined" Color="Color.Primary"
+                                               StartIcon="@Icons.Material.Filled.Add"
+                                               Size="Size.Small"
+                                               Style="margin-right: 4px; margin-bottom:4px"
+                                               OnClick="OnCreate"
+                                               IconColor="Color.Surface">
                                 @ConstantString.New
-                            </MudButton>
+                                    </MudButton>
                         }
                         @if (_canDelete)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                       StartIcon="@Icons.Material.Filled.Delete"
-                                       Disabled="@(!(_selectedItems.Count > 0))"
-                                       Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       OnClick="OnDeleteChecked"
-                                       IconColor="Color.Surface">
+                                    <MudButton DropShadow="false" Variant="Variant.Outlined" Color="Color.Error"
+                                               StartIcon="@Icons.Material.Filled.Delete"
+                                               Disabled="@(!(_selectedItems.Count > 0))"
+                                               Size="Size.Small"
+                                               Style="margin-right: 4px; margin-bottom:4px"
+                                               OnClick="OnDeleteChecked"
+                                               IconColor="Color.Surface">
                                 @ConstantString.Delete
-                            </MudButton>
+                                    </MudButton>
                         }
                     </MudHidden>
                 </div>
                 @if (_canSearch)
                 {
-                    <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                        <MudSelect T="string" Placeholder="Search for role name" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
+                            <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                                <MudSelect T="string" Placeholder="Search for role name" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
                             @foreach (var str in _roles)
                             {
-                                <MudSelectItem Value="@str">@str</MudSelectItem>
+                                                <MudSelectItem Value="@str">@str</MudSelectItem>
                             }
-                        </MudSelect>
-                        <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                            <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
-                            </MudTextField>
-                        </MudHidden>
-                    </MudStack>
+                                </MudSelect>
+                                <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                                    <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
+                                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                                    </MudTextField>
+                                </MudHidden>
+                            </MudStack>
                 }
 
             </div>
@@ -182,45 +181,45 @@
             <CellTemplate>
                 @if (_canEdit || _canDelete || _canManageRoles || _canRestPassword || _canActive || _canManagePermissions)
                 {
-                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                            <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DropShadow="false" Size="Size.Small"
+                                     Dense
+                                     EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
-                            <MudMenuItem OnAction="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                                            <MudMenuItem OnAction="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                         }
                         @if (_canDelete)
                         {
-                            <MudMenuItem OnAction="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                                            <MudMenuItem OnAction="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
                         @if (_canManagePermissions)
                         {
-                            <MudMenuItem OnAction="@(() => OnSetPermissions(context.Item))">@L["Set Permissions"]</MudMenuItem>
+                                            <MudMenuItem OnAction="@(() => OnSetPermissions(context.Item))">@L["Set Permissions"]</MudMenuItem>
                         }
                         @if (_canActive)
                         {
                             @if (context.Item.IsActive)
                             {
-                                <MudMenuItem OnAction=@(() => OnSetActive(context.Item))>@L["Set Inactive"]</MudMenuItem>
+                                                        <MudMenuItem OnAction=@(() => OnSetActive(context.Item))>@L["Set Inactive"]</MudMenuItem>
                             }
                             else
                             {
-                                <MudMenuItem OnAction=@(() => OnSetActive(context.Item))>@L["Set Active"]</MudMenuItem>
+                                                        <MudMenuItem OnAction=@(() => OnSetActive(context.Item))>@L["Set Active"]</MudMenuItem>
                             }
                         }
                         @if (_canRestPassword)
                         {
-                            <MudMenuItem Disabled="@(!context.Item.IsActive)" OnAction=@(() => OnResetPassword(context.Item))>@L["Reset Password"]</MudMenuItem>
+                                            <MudMenuItem Disabled="@(!context.Item.IsActive)" OnAction=@(() => OnResetPassword(context.Item))>@L["Reset Password"]</MudMenuItem>
                         }
-                    </MudMenu>
+                            </MudMenu>
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled" DisableElevation="true"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
+                            <MudButton Variant="Variant.Filled" DropShadow="false"
+                                       StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                                       Color="Color.Surface">
                         @ConstantString.NoAllowed
-                    </MudButton>
+                            </MudButton>
                 }
             </CellTemplate>
         </TemplateColumn>
@@ -246,7 +245,7 @@
                             }
                             else
                             {
-                                <MudImage Src="@context.Item.ProfilePictureDataUrl"></MudImage>
+                                        <MudImage Src="@context.Item.ProfilePictureDataUrl"></MudImage>
                             }
                         </MudAvatar>
                     </MudBadge>
@@ -278,7 +277,7 @@
                 {
                     foreach (var str in context.Item.AssignedRoles)
                     {
-                        <MudChip Size="Size.Small" Variant="Variant.Text">@str</MudChip>
+                                        <MudChip T="string" Size="Size.Small" Variant="Variant.Text">@str</MudChip>
                     }
                 }
             </CellTemplate>
@@ -288,24 +287,24 @@
                 <div>
                     @if (context.Item.IsActive)
                     {
-                        <MudChip Color="Color.Success" Size="Size.Small" Icon="@Icons.Material.Filled.CheckCircleOutline">@L["Active"]</MudChip>
+                                <MudChip T="string" Color="Color.Success" Size="Size.Small" Icon="@Icons.Material.Filled.CheckCircleOutline">@L["Active"]</MudChip>
                         @if (context.Item.LockoutEnd is not null)
                         {
-                            <div class="d-flex">
-                                <p>@L["Lockout End"]: </p>
-                                <ToLocal DateTime="@context.Item.LockoutEnd.Value.UtcDateTime.ToLocalTime()" Format="dd/mm/yyyy HH:MM:ss"></ToLocal>
-                            </div>
+                                            <div class="d-flex">
+                                                <p>@L["Lockout End"]: </p>
+                                                <ToLocal DateTime="@context.Item.LockoutEnd.Value.UtcDateTime.ToLocalTime()" Format="dd/mm/yyyy HH:MM:ss"></ToLocal>
+                                            </div>
                         }
                     }
                     else
                     {
-                        <MudChip Class="flex-grow-0" Color="Color.Surface" Size="Size.Small" Icon="@Icons.Material.Filled.HighlightOff">@L["Inactive"]</MudChip>
+                                <MudChip T="string" Class="flex-grow-0" Color="Color.Surface" Size="Size.Small" Icon="@Icons.Material.Filled.HighlightOff">@L["Inactive"]</MudChip>
                         @if (context.Item.LockoutEnd is not null)
                         {
-                            <div class="d-flex">
-                                <p>@L["Lockout End"]: </p>
-                                <ToLocal DateTime="@context.Item.LockoutEnd.Value.UtcDateTime.ToLocalTime()" Format="dd/mm/yyyy HH:MM:ss"></ToLocal>
-                            </div>
+                                            <div class="d-flex">
+                                                <p>@L["Lockout End"]: </p>
+                                                <ToLocal DateTime="@context.Item.LockoutEnd.Value.UtcDateTime.ToLocalTime()" Format="dd/mm/yyyy HH:MM:ss"></ToLocal>
+                                            </div>
                         }
                     }
                 </div>
@@ -342,7 +341,7 @@
     private IList<Claim> _assignedClaims = default!;
 
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
- 
+
 
     private MudDataGrid<ApplicationUserDto> _table = null!;
     private bool _processing;
@@ -453,18 +452,18 @@
         if (!result.Canceled)
         {
             var applicationUser = new ApplicationUser
-            {
-                Provider = model.Provider,
-                DisplayName = model.DisplayName,
-                UserName = model.UserName,
-                TenantId = model.TenantId,
-                Email = model.Email,
-                PhoneNumber = model.PhoneNumber,
-                SuperiorId = model.SuperiorId,
-                ProfilePictureDataUrl = model.ProfilePictureDataUrl,
-                EmailConfirmed = true,
-                IsActive = model.IsActive
-            };
+                {
+                    Provider = model.Provider,
+                    DisplayName = model.DisplayName,
+                    UserName = model.UserName,
+                    TenantId = model.TenantId,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    SuperiorId = model.SuperiorId,
+                    ProfilePictureDataUrl = model.ProfilePictureDataUrl,
+                    EmailConfirmed = true,
+                    IsActive = model.IsActive
+                };
             var identityResult = await UserManager.CreateAsync(applicationUser);
             if (!identityResult.Succeeded)
             {
@@ -521,7 +520,7 @@
             if (identityResult.Succeeded)
             {
                 var roles = await UserManager.GetRolesAsync(user!);
-                if (roles.Count > 0 )
+                if (roles.Count > 0)
                 {
                     await UserManager.RemoveFromRolesAsync(user, roles);
                 }
@@ -561,7 +560,7 @@
         {
             { x => x.ContentText, string.Format(deleteContent, dto.UserName) }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, BackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DeleteConfirmationTitle, parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
@@ -622,7 +621,7 @@
         {
             { x => x.ContentText, string.Format(deleteContent, _selectedItems.Count) }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, BackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>(L["Delete"], parameters, options);
         var result = await dialog.Result;
 
@@ -764,20 +763,20 @@
 
             var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             allPermissions.AddRange(from field in fields
-                select field.GetValue(null)
+                                    select field.GetValue(null)
                 into propertyValue
-                where propertyValue is not null
-                select propertyValue.ToString()
+                                    where propertyValue is not null
+                                    select propertyValue.ToString()
                 into claimValue
-                select new PermissionModel
-                {
-                    UserId = dto.Id,
-                    ClaimValue = claimValue,
-                    ClaimType = ApplicationClaimTypes.Permission,
-                    Group = moduleName,
-                    Description = moduleDescription,
-                    Assigned = _assignedClaims.Any(x => x.Value == claimValue)
-                });
+                                    select new PermissionModel
+                                        {
+                                            UserId = dto.Id,
+                                            ClaimValue = claimValue,
+                                            ClaimType = ApplicationClaimTypes.Permission,
+                                            Group = moduleName,
+                                            Description = moduleDescription,
+                                            Assigned = _assignedClaims.Any(x => x.Value == claimValue)
+                                        });
         }
 
         return allPermissions;
@@ -866,21 +865,21 @@
                  x.PhoneNumber!.Contains(_searchString) ||
                  x.Provider!.Contains(_searchString)) &&
                 (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole))) &&
-                (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId ==_selectedTenantId));
+                (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId));
             var items = await UserManager.Users.Where(searchPredicate)
                 .Select(x => new ApplicationUserDto
-                {
-                    Id = x.Id,
-                    UserName = x.UserName!,
-                    DisplayName = x.DisplayName,
-                    Email = x.Email!,
-                    PhoneNumber = x.PhoneNumber,
-                    TenantId = x.TenantId,
-                    TenantName = x.Tenant.Name
-                }).ToListAsync();
+                    {
+                        Id = x.Id,
+                        UserName = x.UserName!,
+                        DisplayName = x.DisplayName,
+                        Email = x.Email!,
+                        PhoneNumber = x.PhoneNumber,
+                        TenantId = x.TenantId,
+                        TenantName = x.Tenant.Name
+                    }).ToListAsync();
             var result = await ExcelService.ExportAsync(items,
                 new Dictionary<string, Func<ApplicationUserDto, object?>>
-                {
+                        {
                     { L["Id"], item => item.Id },
                     { L["User Name"], item => item.UserName },
                     { L["Display Name"], item => item.DisplayName },
@@ -888,7 +887,7 @@
                     { L["Phone Number"], item => item.PhoneNumber },
                     { L["Tenant Id"], item => item.TenantId },
                     { L["Tenant Name"], item => item.TenantName }
-                }, L["Users"]);
+                        }, L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
         }

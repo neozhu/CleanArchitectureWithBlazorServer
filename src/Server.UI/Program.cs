@@ -2,6 +2,7 @@
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using CleanArchitecture.Blazor.Server.UI;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration)
     .AddServerUI(builder.Configuration);
+
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 

@@ -49,13 +49,13 @@ else
             }
         </style>
 
-        <div style="height:100%;width:100%;margin:0;position:fixed;background-color:@(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Background : LayoutService.CurrentTheme.Palette.Background)">
+        <div style="height:100%;width:100%;margin:0;position:fixed;background-color:@(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Background : LayoutService.CurrentTheme.PaletteLight.Background)">
             <div class="loadScreen-animation"></div>
             <div class="loadScreen-animation" style="@Gradient animation-direction:alternate-reverse;animation-duration:2s;"></div>
             <div class="loadScreen-animation" style="@Gradient animation-duration:5s;"></div>
             <div class="loadScreen-animation-cont">
                 <svg viewBox="0 0 100 100">
-                    <g fill="none" stroke="@(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Primary : LayoutService.CurrentTheme.Palette.Primary)" stroke-linecap="round" stroke-linejoin="round" stroke-width="6">
+                    <g fill="none" stroke="@(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Primary : LayoutService.CurrentTheme.PaletteLight.Primary)" stroke-linecap="round" stroke-linejoin="round" stroke-width="6">
                         <!-- left line -->
                         <path d="M 21 40 V 59">
                             <animateTransform
@@ -132,5 +132,5 @@ else
 
     [Parameter] public bool IsLoaded { get; set; }
 
-    private string Gradient => $"background-image: linear-gradient(-120deg, {(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Background : LayoutService.CurrentTheme.Palette.Background)} 50%, {(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Surface : LayoutService.CurrentTheme.Palette.Surface)} 50%);";
+    private string Gradient => $"background-image: linear-gradient(-120deg, {(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Background : LayoutService.CurrentTheme.PaletteLight.Background)} 50%, {(LayoutService.IsDarkMode ? LayoutService.CurrentTheme.PaletteDark.Surface : LayoutService.CurrentTheme.PaletteLight.Surface)} 50%);";
 }

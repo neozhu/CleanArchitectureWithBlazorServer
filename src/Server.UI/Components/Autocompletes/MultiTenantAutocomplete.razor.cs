@@ -24,7 +24,7 @@ public class MultiTenantAutocomplete : MudAutocomplete<string>
 
     public override Task SetParametersAsync(ParameterView parameters)
     {
-        SearchFuncWithCancel = SearchKeyValues;
+        SearchFunc = SearchKeyValues;
         ToStringFunc = ToTenantNameStringFunc;
         Clearable = true;
         Dense = true;

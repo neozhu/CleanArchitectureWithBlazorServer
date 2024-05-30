@@ -22,61 +22,61 @@
     {
         @foreach (var group in Permissions.Where(x => x.Group!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase) || x.Description!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Group).Distinct().ToList())
         {
-            <MudCard class="ma-4">
-                <MudCardHeader>
-                    <CardHeaderContent>
-                        <MudStack Spacing="1">
-                            <MudText Typo="Typo.body1">
+                    <MudCard class="ma-4">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudStack Spacing="1">
+                                    <MudText Typo="Typo.body1">
                                 @L[group]
-                            </MudText>
-                            <MudText Typo="Typo.body2">
+                                    </MudText>
+                                    <MudText Typo="Typo.body2">
                                 @(L[Permissions.First(x => x.Group == group).Description])
-                            </MudText>
-                        </MudStack>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                        <MudTooltip Text="@L["Assign or Unassign all"]">
-                            <MudIconButton Disabled="@Waiting" Icon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Default" OnClick="@(() => OnAssignAll(group))"/>
-                        </MudTooltip>
-                    </CardHeaderActions>
-                </MudCardHeader>
-                <MudCardContent>
+                                    </MudText>
+                                </MudStack>
+                            </CardHeaderContent>
+                            <CardHeaderActions>
+                                <MudTooltip Text="@L["Assign or Unassign all"]">
+                                    <MudIconButton Disabled="@Waiting" Icon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Default" OnClick="@(() => OnAssignAll(group))"/>
+                                </MudTooltip>
+                            </CardHeaderActions>
+                        </MudCardHeader>
+                        <MudCardContent>
                     @for (var i = 0; i < Permissions.Count; i++)
                     {
                         var x = i;
                         if (Permissions[x].Group == group)
                         {
-                            <MudCheckBox Dense="true"
-                                         T="bool"
-                                         Size="Size.Small"
-                                         Value="@Permissions[x].Assigned"
-                                         Label="@L[Permissions[x].ClaimValue]"
-                                         ValueChanged="@(s => OnAssignChanged.InvokeAsync(Permissions[x]))"
-                                         Color="Color.Primary">
-                            </MudCheckBox>
+                                            <MudCheckBox Dense
+                                                         T="bool"
+                                                         Size="Size.Small"
+                                                         Value="@Permissions[x].Assigned"
+                                                         Label="@L[Permissions[x].ClaimValue]"
+                                                         ValueChanged="@(s => OnAssignChanged.InvokeAsync(Permissions[x]))"
+                                                         Color="Color.Primary">
+                                            </MudCheckBox>
                         }
                     }
-                </MudCardContent>
+                        </MudCardContent>
 
-            </MudCard>
+                    </MudCard>
         }
     }
     else
     {
-        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"/>
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"/>
     }
 </MudDrawer>
 
-@code{
-    [EditorRequired] [Parameter] public List<PermissionModel> Permissions { get; set; } = new()!;
+@code {
+    [EditorRequired][Parameter] public List<PermissionModel> Permissions { get; set; } = new()!;
 
-    [EditorRequired] [Parameter] public bool Open { get; set; } = default!;
+    [EditorRequired][Parameter] public bool Open { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public EventCallback<PermissionModel> OnAssignChanged { get; set; }
+    [EditorRequired][Parameter] public EventCallback<PermissionModel> OnAssignChanged { get; set; }
 
-    [EditorRequired] [Parameter] public EventCallback<List<PermissionModel>> OnAssignAllChanged { get; set; }
+    [EditorRequired][Parameter] public EventCallback<List<PermissionModel>> OnAssignAllChanged { get; set; }
 
-    [EditorRequired] [Parameter] public EventCallback<bool> OnOpenChanged { get; set; }
+    [EditorRequired][Parameter] public EventCallback<bool> OnOpenChanged { get; set; }
 
     [Parameter] public bool Waiting { get; set; }
 

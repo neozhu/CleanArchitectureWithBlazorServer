@@ -8,7 +8,7 @@
 
 @if (!string.IsNullOrEmpty(userName) && State.Value.Any())
 {
-    <MudAlert Class="mb-2" Severity="MudBlazor.Severity.Error" Variant="Variant.Filled" Dense="true">@Message</MudAlert>
+        <MudAlert Class="mb-2" Severity="MudBlazor.Severity.Error" Variant="Variant.Filled" Dense>@Message</MudAlert>
 }
 
 
@@ -24,7 +24,7 @@
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthState;
-        userName = authState.User.GetDisplayName() ?? (authState.User.GetUserName()??string.Empty);
+        userName = authState.User.GetDisplayName() ?? (authState.User.GetUserName() ?? string.Empty);
         await UserSessionTracker.AddUserSession(PageComponent ?? nameof(ActiveUserSession), userName);
 
     }

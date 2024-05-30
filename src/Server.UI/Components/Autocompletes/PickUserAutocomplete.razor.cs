@@ -29,7 +29,7 @@ public class PickUserAutocomplete : MudAutocomplete<string>
 
     public override Task SetParametersAsync(ParameterView parameters)
     {
-        SearchFuncWithCancel = SearchKeyValues;
+        SearchFunc = SearchKeyValues;
         Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;

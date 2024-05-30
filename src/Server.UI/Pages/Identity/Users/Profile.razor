@@ -51,7 +51,7 @@ else
                                     <div class="d-flex">
                                         @foreach (var role in model.AssignedRoles)
                                         {
-                                            <MudChip Size="MudBlazor.Size.Small">@role</MudChip>
+                                            <MudChip T="string" Size="MudBlazor.Size.Small">@role</MudChip>
                                         }
                                     </div>
                                 }
@@ -62,8 +62,7 @@ else
                                 <MudFileUpload T="IBrowserFile" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="UploadPhoto" Style="margin-top:-10px;margin-left:-15px">
                                     <ButtonTemplate>
                                         <MudIconButton HtmlTag="label"
-                                                       Icon="@Icons.Material.Filled.PhotoCamera"
-                                                       for="@context">
+                                                       Icon="@Icons.Material.Filled.PhotoCamera">
                                         </MudIconButton>
                                     </ButtonTemplate>
                                 </MudFileUpload>

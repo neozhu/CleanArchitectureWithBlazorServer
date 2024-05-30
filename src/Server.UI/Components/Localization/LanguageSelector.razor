@@ -5,18 +5,18 @@
 @inject LayoutService LayoutService
 @inject IStringLocalizer<HeaderMenu> L
 <MudTooltip Text="@CurrentLanguage">
-    <MudMenu Class="mx-1" Icon="@Icons.Material.Outlined.Translate" Color="Color.Default" Dense="true">
+    <MudMenu Class="mx-1" Icon="@Icons.Material.Outlined.Translate" Color="Color.Default" Dense>
         @if (SupportedLanguages is not null)
         {
             @foreach (var language in SupportedLanguages)
             {
                 if (language.Name == CurrentLanguage)
                 {
-                    <MudMenuItem style="background:var(--mud-palette-primary); color:white">@language.DisplayName</MudMenuItem>
+                                <MudMenuItem style="background:var(--mud-palette-primary); color:white">@language.DisplayName</MudMenuItem>
                 }
                 else
                 {
-                    <MudMenuItem OnAction="() => ChangeLanguageAsync(language.Name)">@language.DisplayName</MudMenuItem>
+                                <MudMenuItem OnAction="() => ChangeLanguageAsync(language.Name)">@language.DisplayName</MudMenuItem>
                 }
             }
         }

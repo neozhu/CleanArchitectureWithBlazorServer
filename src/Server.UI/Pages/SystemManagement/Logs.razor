@@ -29,7 +29,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.BarChart" Size="Size.Large"/>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption" Class="mb-2">@Title</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="LogListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
+                    <MudEnumSelect Style="min-width:120px" TEnum="LogListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense Label="List View">
                     </MudEnumSelect>
                 </div>
             </div>
@@ -37,7 +37,7 @@
 
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
-                    <MudButton DisableElevation Variant="Variant.Outlined"
+                    <MudButton DropShadow="false" Variant="Variant.Outlined"
                                Size="Size.Small"
                                Disabled="@_loading"
                                OnClick="@(OnRefresh)"
@@ -47,23 +47,23 @@
                     </MudButton>
                     @if (_canPurge)
                     {
-                        <MudButton DisableElevation Variant="Variant.Outlined"
-                                   Size="Size.Small"
-                                   Disabled="@(_loading || _clearing)"
-                                   OnClick="@(OnPurge)"
-                                   StartIcon="@Icons.Material.Filled.ClearAll" IconColor="Color.Surface" Color="Color.Secondary"
-                                   Style="margin-right: 4px; margin-bottom:4px">
+                                    <MudButton DropShadow="false" Variant="Variant.Outlined"
+                                               Size="Size.Small"
+                                               Disabled="@(_loading || _clearing)"
+                                               OnClick="@(OnPurge)"
+                                               StartIcon="@Icons.Material.Filled.ClearAll" IconColor="Color.Surface" Color="Color.Secondary"
+                                               Style="margin-right: 4px; margin-bottom:4px">
                             @if (_clearing)
                             {
-                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                                <MudText Class="ms-2">@ConstantString.Waiting</MudText>
+                                                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                                                        <MudText Class="ms-2">@ConstantString.Waiting</MudText>
                             }
                             else
                             {
-                                <MudText> @ConstantString.Clear </MudText>
+                                                        <MudText> @ConstantString.Clear </MudText>
                             }
 
-                        </MudButton>
+                                    </MudButton>
                     }
                 </div>
                 <MudStack Row="true" AlignItems="AlignItems.Stretch">
@@ -91,21 +91,21 @@
                 @switch (context.Item.Level)
                 {
                     case "Information":
-                        <MudChip Color="Color.Info" Size="Size.Small">@context.Item.Level</MudChip>
+                                                <MudChip T="string" Color="Color.Info" Size="Size.Small">@context.Item.Level</MudChip>
                         break;
                     case "Warning":
-                        <MudChip Color="Color.Warning" Size="Size.Small">@context.Item.Level</MudChip>
+                                                <MudChip T="string" Color="Color.Warning" Size="Size.Small">@context.Item.Level</MudChip>
                         break;
                     case "Error":
-                        <MudChip Color="Color.Error" Size="Size.Small">@context.Item.Level</MudChip>
+                                                <MudChip T="string" Color="Color.Error" Size="Size.Small">@context.Item.Level</MudChip>
                         break;
                     case "Critical":
-                        <MudChip Color="Color.Error" Size="Size.Small">@context.Item.Level</MudChip>
+                                                <MudChip T="string" Color="Color.Error" Size="Size.Small">@context.Item.Level</MudChip>
                         break;
                     case "Trace":
                     case "Debug":
                     default:
-                        <MudChip Size="Size.Small">@context.Item.Level</MudChip>
+                                                <MudChip T="string" Size="Size.Small">@context.Item.Level</MudChip>
                         break;
                 }
             </CellTemplate>
@@ -127,8 +127,8 @@
                 <MudText Typo="Typo.body2">@context.Item.Message</MudText>
                 @if (!string.IsNullOrEmpty(context.Item.Exception))
                 {
-                    <MudText Color="Color.Error">@L[_currentDto.GetMemberDescription(x => x.Exception)]</MudText>
-                    <MudText Color="Color.Warning" Typo="Typo.body2">@context.Item.Exception</MudText>
+                                <MudText Color="Color.Error">@L[_currentDto.GetMemberDescription(x => x.Exception)]</MudText>
+                                <MudText Color="Color.Warning" Typo="Typo.body2">@context.Item.Exception</MudText>
                 }
                 <MudText>@L[_currentDto.GetMemberDescription(x => x.ClientIP)]</MudText>
                 <MudText Typo="Typo.body2">@context.Item.ClientIP</MudText>
@@ -230,7 +230,7 @@
         {
             { x => x.ContentText, $"{L["Are you sure you want to erase all the logs?"]}" }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, BackdropClick = true };
         var dialog = DialogService.Show<ConfirmationDialog>
             ($"{L["Erase logs"]}", parameters, options);
         var state = await dialog.Result;

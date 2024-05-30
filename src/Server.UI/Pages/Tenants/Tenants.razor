@@ -32,7 +32,7 @@
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudButton DisableElevation Variant="Variant.Outlined"
+                        <MudButton DropShadow="false" Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(() => OnRefresh())"
@@ -42,62 +42,62 @@
                         </MudButton>
                         @if (_canCreate)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.Add"
-                                       Disabled="@_loading"
-                                       Size="Size.Small"
-                                       OnClick="OnCreate"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       IconColor="Color.Surface">
+                                <MudButton DropShadow="false" Variant="Variant.Outlined" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Add"
+                                           Disabled="@_loading"
+                                           Size="Size.Small"
+                                           OnClick="OnCreate"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           IconColor="Color.Surface">
                                 @ConstantString.New
-                            </MudButton>
+                                </MudButton>
                         }
                         @if (_canDelete)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                       StartIcon="@Icons.Material.Filled.Delete"
-                                       Disabled="@(!(_selectedItems.Count > 0))"
-                                       Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       OnClick="OnDeleteChecked"
-                                       IconColor="Color.Surface">
+                                <MudButton DropShadow="false" Variant="Variant.Outlined" Color="Color.Error"
+                                           StartIcon="@Icons.Material.Filled.Delete"
+                                           Disabled="@(!(_selectedItems.Count > 0))"
+                                           Size="Size.Small"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           OnClick="OnDeleteChecked"
+                                           IconColor="Color.Surface">
                                 @ConstantString.Delete
-                            </MudButton>
+                                </MudButton>
                         }
 
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         @if (_canCreate)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.Add"
-                                       Disabled="@_loading"
-                                       Size="Size.Small"
-                                       OnClick="OnCreate"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       IconColor="Color.Surface">
+                                <MudButton DropShadow="false" Variant="Variant.Outlined" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Add"
+                                           Disabled="@_loading"
+                                           Size="Size.Small"
+                                           OnClick="OnCreate"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           IconColor="Color.Surface">
                                 @ConstantString.New
-                            </MudButton>
+                                </MudButton>
                         }
                         @if (_canDelete)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
-                                       StartIcon="@Icons.Material.Filled.Delete"
-                                       Disabled="@(!(_selectedItems.Count > 0))"
-                                       Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
-                                       OnClick="OnDeleteChecked"
-                                       IconColor="Color.Surface">
+                                <MudButton DropShadow="false" Variant="Variant.Outlined" Color="Color.Error"
+                                           StartIcon="@Icons.Material.Filled.Delete"
+                                           Disabled="@(!(_selectedItems.Count > 0))"
+                                           Size="Size.Small"
+                                           Style="margin-right: 4px; margin-bottom:4px"
+                                           OnClick="OnDeleteChecked"
+                                           IconColor="Color.Surface">
                                 @ConstantString.Delete
-                            </MudButton>
+                                </MudButton>
                         }
                     </MudHidden>
                 </div>
                 @if (_canSearch)
                 {
-                    <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
-                    </MudTextField>
+                        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        </MudTextField>
                 }
 
             </div>
@@ -109,26 +109,26 @@
             <CellTemplate>
                 @if (_canEdit || _canDelete)
                 {
-                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                        <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DropShadow="false" Size="Size.Small"
+                                 Dense
+                                 EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
-                            <MudMenuItem OnAction="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                                    <MudMenuItem OnAction="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                         }
                         @if (_canDelete)
                         {
-                            <MudMenuItem OnAction="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                                    <MudMenuItem OnAction="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
-                    </MudMenu>
+                        </MudMenu>
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled" DisableElevation="true"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
+                        <MudButton Variant="Variant.Filled" DropShadow="false"
+                                   StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                                   Color="Color.Surface">
                         @ConstantString.NoAllowed
-                    </MudButton>
+                        </MudButton>
                 }
             </CellTemplate>
         </TemplateColumn>
@@ -264,7 +264,7 @@
             { x => x.Command, command },
             { x => x.ContentText, string.Format(deleteContent, dto.Id) }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, BackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(L["Delete the Tenant"], parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
@@ -282,7 +282,7 @@
             { x => x.Command, command },
             { x => x.ContentText, string.Format(deleteContent, _selectedItems.Count) }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, BackdropClick = true };
         var dialog = DialogService.Show<DeleteConfirmation>(L["Delete Selected Tenants"], parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
