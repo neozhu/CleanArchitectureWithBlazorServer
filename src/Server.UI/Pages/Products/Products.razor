@@ -175,10 +175,17 @@
             <CellTemplate>
                 @if (_canEdit && _canDelete)
                 {
-                    <MudMenu Label="Open Menu">
-                        <MudMenuItem>Enlist</MudMenuItem>
-                        <MudMenuItem>Barracks</MudMenuItem>
-                        <MudMenuItem>Armory</MudMenuItem>
+                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DropShadow="false" Size="Size.Small"
+                             Dense
+                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                        @if (_canEdit)
+                        {
+                            <MudMenuItem OnAction="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                        }
+                        @if (_canDelete)
+                        {
+                            <MudMenuItem OnAction="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                        }
                     </MudMenu>
                 }
                 else
