@@ -70,14 +70,14 @@
                         <MudFileUpload T="IReadOnlyList<IBrowserFile>" Multiple
                                        SuppressOnChangeWhenInvalid="true"
                                        @bind-Files="Model.UploadPictures" OnFilesChanged="UploadFiles" For="@(() => Model.UploadPictures)">
-                            <ButtonTemplate>
-                                <MudLoadingButton Loading="@_uploading" HtmlTag="label" Disabled="_uploading"
+                            <ActivatorContent>
+                                <MudLoadingButton Loading="@_uploading"   Disabled="_uploading"
                                                   Variant="Variant.Filled"
                                                   Color="Color.Primary"
-                                                  for="@context">
+                                                  >
                                     @(L["Upload picture"])
                                 </MudLoadingButton>
-                            </ButtonTemplate>
+                            </ActivatorContent>
                         </MudFileUpload>
                     </div>
                     <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
@@ -134,7 +134,7 @@
             {
                 { x => x.ContentText, $"{L["Are you sure you want to erase this image?"]}" }
             };
-            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
             var dialog = DialogService.Show<ConfirmationDialog>($"{L["Erase imatge"]}", parameters, options);
             var state = await dialog.Result;
 

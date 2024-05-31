@@ -6,7 +6,7 @@ public class Theme
     {
         var theme = new MudTheme
         {
-            Palette = new PaletteLight
+            PaletteLight = new PaletteLight
             {
                 Primary = "#2d4275",
                 Black = "#0A0E19",
@@ -14,7 +14,6 @@ public class Theme
                 Secondary = "#ff4081ff",
                 AppbarBackground = "rgba(255,255,255,0.8)",
                 AppbarText = "#424242",
-                BackgroundGrey = "#F9FAFC",
                 TextPrimary = "rgba(66,66,66,1)",
                 TextSecondary = "#99a0b0",
                 Dark = "#110E2D",
@@ -35,7 +34,6 @@ public class Theme
                 InfoContrastText = "#f6f6f6",
                 Black = "#27272f",
                 Background = "#0e1824",
-                BackgroundGrey = "#27272f",
                 Surface = "#121e2d",
                 DrawerBackground = "#121e2d",
                 DrawerText = "#8fa6bf",

@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
+﻿using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
@@ -24,17 +24,14 @@ public class PicklistAutocomplete : MudAutocomplete<string>
         PicklistService.OnChange -= PicklistService_OnChange;
         base.Dispose(disposing);
     }
-
-    public override Task SetParametersAsync(ParameterView parameters)
+    public PicklistAutocomplete()
     {
         SearchFunc = SearchKeyValues;
         Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;
-        return base.SetParametersAsync(parameters);
     }
-
-    private Task<IEnumerable<string>> SearchKeyValues(string value)
+    private Task<IEnumerable<string>> SearchKeyValues(string value,CancellationToken cancellation=default)
     {
         // if text is null or empty, show complete list
         return string.IsNullOrEmpty(value)

@@ -42,7 +42,7 @@
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudButton DisableElevation Variant="Variant.Outlined"
+                        <MudButton  Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    OnClick="OnRefresh"
                                    Disabled="@_loading"
@@ -52,7 +52,7 @@
                         </MudButton>
                         @if (_canCreate)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Size="Size.Small"
                                        OnClick="OnCreate"
@@ -63,7 +63,7 @@
                         }
                         @if (_canDelete)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Secondary"
+                            <MudButton  Variant="Variant.Outlined" Color="Color.Secondary"
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        OnClick="OnDeleteChecked"
@@ -75,29 +75,31 @@
                         }
                         @if (_canImport)
                         {
-                            <MudButton Disabled="@_uploading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.Upload"
-                                       Size="Size.Small"
-                                       Style="margin-right:4px; margin-bottom:4px"
-                                       for="importdataInput"
-                                       HtmlTag="label"
-                                       IconColor="Color.Surface">
-                                @if (_uploading)
-                                {
-                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                                    <MudText Class="ms-2"> @ConstantString.Uploading</MudText>
-                                }
-                                else
-                                {
-                                    <MudText>@ConstantString.Import</MudText>
-                                }
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px">
+                                <ActivatorContent>
+                                    <MudButton Size="Size.Small"
+                                               Variant="Variant.Outlined"
+                                               Color="Color.Primary"
+                                               Disabled="@_loading"
+                                               StartIcon="@Icons.Material.Filled.Upload">
+                                        @if (_uploading)
+                                        {
+                                            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                                            @ConstantString.Uploading
+                                        }
+                                        else
+                                        {
+                                            @ConstantString.Import
+                                        }
+                                    </MudButton>
+                                </ActivatorContent>
+                            </MudFileUpload>
 
-                            </MudButton>
-                            <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx"/>
+                            
                         }
                         @if (_canExport)
                         {
-                            <MudButton Disabled="@_downloading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton Disabled="@_downloading"  Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Download"
                                        Size="Size.Small"
                                        Style="margin-right: 4px; margin-bottom:4px"
@@ -118,7 +120,7 @@
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         @if (_canCreate)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Size="Size.Small"
                                        OnClick="OnCreate"
@@ -129,7 +131,7 @@
                         }
                         @if (_canDelete)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Secondary"
+                            <MudButton  Variant="Variant.Outlined" Color="Color.Secondary"
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        OnClick="OnDeleteChecked"
@@ -290,7 +292,7 @@
             { x => x.Command, command },
             { x => x.ContentText, string.Format(deleteContent, item.Name) }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
         var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DeleteConfirmationTitle, parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
@@ -306,7 +308,7 @@
         {
             { x => x.ContentText, string.Format(deleteContent, _selectedItems.Count) }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
         var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DeleteConfirmationTitle, parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
@@ -352,12 +354,12 @@
         _downloading = false;
     }
 
-    private async Task OnImportData(InputFileChangeEventArgs e)
+    private async Task OnImportData(IBrowserFile file)
     {
         _uploading = true;
         var stream = new MemoryStream();
-        await e.File.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
-        var command = new ImportKeyValuesCommand(e.File.Name, stream.ToArray());
+        await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
+        var command = new ImportKeyValuesCommand(file.Name, stream.ToArray());
         var result = await Mediator.Send(command);
         if (result.Succeeded)
         {

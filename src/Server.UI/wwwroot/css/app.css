@@ -1,21 +1,28 @@
 ﻿.mud-input {
-    font-size: var(--mud-typography-default-size);
+    font-size: inherit !important;
 }
 
 .mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
-    font-size: var(--mud-typography-default-size);
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+}
+
+.mud-simple-table table * tr > td, .mud-simple-table table * tr th {
+    font-size: inherit !important;
+    line-height: inherit !important;
 }
 
 .mud-expand-panel .mud-expand-panel-header {
-    font-size: var(--mud-typography-subtitle1-size);
+    font-size: inherit !important;
 }
 
 .mud-button-year {
-    font-size: var(--mud-typography-default-size);
+    font-size: inherit !important;
 }
 
 .mud-table-cell {
-    font-size: var(--mud-typography-default-size);
+    font-size: inherit !important;
 }
 
 .mud-typography-body1 {

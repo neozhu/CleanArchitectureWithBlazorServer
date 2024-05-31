@@ -45,7 +45,7 @@
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudButton DisableElevation Variant="Variant.Outlined"
+                        <MudButton  Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(() => OnRefresh())"
@@ -55,7 +55,7 @@
                         </MudButton>
                         @if (_canCreate)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Size="Size.Small"
                                        Disabled="@_loading"
@@ -64,7 +64,7 @@
                                        IconColor="Color.Surface">
                                 @ConstantString.New
                             </MudButton>
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.ContentCopy"
                                        Size="Size.Small"
                                        Disabled="@(_selectedItems.Count != 1)"
@@ -76,7 +76,7 @@
                         }
                         @if (_canDelete)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                            <MudButton  Variant="Variant.Outlined" Color="Color.Error"
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        Size="Size.Small"
@@ -88,7 +88,7 @@
                         }
                         @if (_canExport)
                         {
-                            <MudLoadingButton @bind-Loading="_exporting" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudLoadingButton @bind-Loading="_exporting"  Variant="Variant.Outlined" Color="Color.Primary"
                                               Label="@ConstantString.Export"
                                               Disabled="@_loading"
                                               StartIcon="@Icons.Custom.FileFormats.FileExcel"
@@ -98,7 +98,7 @@
                                               IconColor="Color.Surface">
                                 @ConstantString.Export
                             </MudLoadingButton>
-                            <MudLoadingButton @bind-Loading="_pdfExporting" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudLoadingButton @bind-Loading="_pdfExporting"  Variant="Variant.Outlined" Color="Color.Primary"
                                               Label="@ConstantString.ExportPDF"
                                               Disabled="@_loading"
                                               StartIcon="@Icons.Material.Filled.PictureAsPdf"
@@ -112,14 +112,14 @@
                         @if (_canImport)
                         {
                             <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px">
-                                <ButtonTemplate>
-                                    <MudButton HtmlTag="label"
+                                <ActivatorContent>
+                                    <MudButton 
                                                Size="Size.Small"
                                                Variant="Variant.Outlined"
                                                Color="Color.Primary"
                                                Disabled="@_loading"
                                                StartIcon="@Icons.Material.Filled.Upload"
-                                               for="@context">
+                                               >
                                         @if (_uploading)
                                         {
                                             <MudProgressCircular Size="Size.Small" Indeterminate="true"/>
@@ -130,14 +130,14 @@
                                             @ConstantString.Import
                                         }
                                     </MudButton>
-                                </ButtonTemplate>
+                                </ActivatorContent>
                             </MudFileUpload>
                         }
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         @if (_canCreate)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Size="Size.Small"
                                        Disabled="@_loading"
@@ -149,7 +149,7 @@
                         }
                         @if (_canDelete)
                         {
-                            <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
+                            <MudButton  Variant="Variant.Outlined" Color="Color.Error"
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        Size="Size.Small"
@@ -177,9 +177,9 @@
             <CellTemplate>
                 @if (_canEdit && _canDelete)
                 {
-                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
+                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
                              Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                             IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
                             <MudMenuItem OnAction="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
@@ -193,7 +193,7 @@
                 else
                 {
                     <MudTooltip Text="@ConstantString.NoAllowed" Delay="300">
-                        <MudIconButton Variant="Variant.Filled" DisableElevation="true" Disabled="true"
+                        <MudIconButton Variant="Variant.Filled" Disabled="true"
                                        Icon="@Icons.Material.Filled.DoNotTouch" Size="Size.Small"
                                        Color="Color.Surface">
                         </MudIconButton>
@@ -411,7 +411,7 @@
             { x => x.ContentText, string.Format(ConstantString.DeleteConfirmation, dto.Name) }
         };
 
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EditTheItem, L["Product"]), parameters, options);
         var state = await dialog.Result;
 
@@ -430,7 +430,7 @@
             { x => x.Command, command },
             { x => x.ContentText, string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count) }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
         var dialog = DialogService.Show<DeleteConfirmation>
             (string.Format(ConstantString.DeleteTheItem, L["Product"]), parameters, options);
         var state = await dialog.Result;

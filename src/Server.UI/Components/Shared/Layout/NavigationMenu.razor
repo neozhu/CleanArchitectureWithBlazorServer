@@ -49,7 +49,7 @@
                                             @if (menuItem.PageStatus != PageStatus.Completed)
                                             {
                                                 <MudSpacer/>
-                                                <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
+                                                <MudChip T="string" Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
                                                     @(L[menuItem.PageStatus.GetDescription()])
                                                 </MudChip>
                                             }
@@ -66,7 +66,7 @@
                                     @if (sectionItem.PageStatus != PageStatus.Completed)
                                     {
                                         <MudSpacer/>
-                                        <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
+                                        <MudChip T="string" Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
                                             @(L[sectionItem.PageStatus.GetDescription()])
                                         </MudChip>
                                     }
