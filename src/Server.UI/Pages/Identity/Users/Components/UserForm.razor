@@ -17,7 +17,6 @@
 <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
     <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden"/>
     <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden"/>
-    <InputFile id="UploadPhoto" OnChange="UploadPhoto" hidden accept=".jpg, .jpeg, .png"/>
     <MudGrid>
         <MudItem sm="12">
             <div class="d-flex justify-center">
@@ -32,13 +31,25 @@
                         <MudImage Src="@Model.ProfilePictureDataUrl"></MudImage>
                     </MudAvatar>
                 }
-                <MudTooltip Text="@L["Click upload a photo."]">
-                    <MudIconButton HtmlTag="label"
-                                   Color="Color.Info"
-                                   Icon="@Icons.Material.Filled.PhotoCamera"
-                                   for="UploadPhoto">
-                    </MudIconButton>
-                </MudTooltip>
+                <MudFileUpload T="IBrowserFile" FilesChanged="UploadPhoto" Accept=".jpg, .jpeg, .png" >
+                    <ActivatorContent>
+                        <MudButton Size="MudBlazor.Size.Small"
+                                   Variant="Variant.Outlined"
+                                   Color="Color.Primary"
+                                   Disabled="@_uploading"
+                                   StartIcon="@Icons.Material.Filled.Upload">
+                            @if (_uploading)
+                            {
+                                <MudProgressCircular Size="MudBlazor.Size.Small" Indeterminate="true" />
+                                @ConstantString.Uploading
+                            }
+                            else
+                            {
+                                @ConstantString.Import
+                            }
+                        </MudButton>
+                    </ActivatorContent>
+                </MudFileUpload>
             </div>
         </MudItem>
         <MudItem sm="6" xs="12">
@@ -126,6 +137,7 @@
 
 
     private MudForm? _form = default!;
+    private bool _uploading;
     private List<CheckItem> Roles { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
@@ -154,27 +166,35 @@
         Model.TenantId = tenantId;
         await GetRoles(Model.TenantId);
     }
-    private async Task UploadPhoto(InputFileChangeEventArgs e)
+    private async Task UploadPhoto(IBrowserFile file)
     {
-        var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
-        var imgStream = new MemoryStream();
-        await filestream.CopyToAsync(imgStream);
-        imgStream.Position = 0;
-        using (var outStream = new MemoryStream())
+        try
         {
-            using (var image = Image.Load(imgStream))
+            _uploading = true;
+            var filestream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
+            var imgStream = new MemoryStream();
+            await filestream.CopyToAsync(imgStream);
+            imgStream.Position = 0;
+            using (var outStream = new MemoryStream())
             {
-                image.Mutate(
-                    i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) }));
-                image.Save(outStream, PngFormat.Instance);
-                var filename = e.File.Name;
-                var fi = new FileInfo(filename);
-                var ext = fi.Extension;
-                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.ProfilePicture, outStream.ToArray()));
-                Model.ProfilePictureDataUrl = result;
-                //Do your validations here
-                Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
+                using (var image = Image.Load(imgStream))
+                {
+                    image.Mutate(
+                        i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) }));
+                    image.Save(outStream, PngFormat.Instance);
+                    var filename = file.Name;
+                    var fi = new FileInfo(filename);
+                    var ext = fi.Extension;
+                    var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.ProfilePicture, outStream.ToArray()));
+                    Model.ProfilePictureDataUrl = result;
+                    //Do your validations here
+                    Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
+                }
             }
+        }
+        finally
+        {
+            _uploading = false;
         }
     }
 

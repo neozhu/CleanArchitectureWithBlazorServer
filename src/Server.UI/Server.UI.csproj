@@ -63,9 +63,5 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
     </ItemGroup>
-    <ItemGroup>
-        <Folder Include="log\" />
-    </ItemGroup>
-
 
 </Project>

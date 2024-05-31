@@ -70,13 +70,13 @@
                         <MudFileUpload T="IReadOnlyList<IBrowserFile>" Multiple
                                        SuppressOnChangeWhenInvalid="true"
                                        @bind-Files="Model.UploadPictures" OnFilesChanged="UploadFiles" For="@(() => Model.UploadPictures)">
-                            <ButtonTemplate>
-                                <MudLoadingButton Loading="@_uploading" HtmlTag="label" Disabled="_uploading"
+                            <ActivatorContent>
+                                <MudLoadingButton Loading="@_uploading"   Disabled="_uploading"
                                                   Variant="Variant.Filled"
                                                   Color="Color.Primary">
                                     @(L["Upload picture"])
                                 </MudLoadingButton>
-                            </ButtonTemplate>
+                            </ActivatorContent>
                         </MudFileUpload>
                     </div>
                     <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>

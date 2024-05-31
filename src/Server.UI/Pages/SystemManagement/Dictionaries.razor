@@ -75,25 +75,25 @@
                         }
                         @if (_canImport)
                         {
-                                    <MudButton Disabled="@_uploading" DropShadow="false" Variant="Variant.Outlined" Color="Color.Primary"
-                                               StartIcon="@Icons.Material.Filled.Upload"
-                                               Size="Size.Small"
-                                               Style="margin-right:4px; margin-bottom:4px"
-                                               for="importdataInput"
-                                               HtmlTag="label"
-                                               IconColor="Color.Surface">
-                                @if (_uploading)
-                                {
-                                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                                                    <MudText Class="ms-2"> @ConstantString.Uploading</MudText>
-                                }
-                                else
-                                {
-                                                    <MudText>@ConstantString.Import</MudText>
-                                }
-
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px">
+                                <ActivatorContent>
+                                    <MudButton Size="Size.Small"
+                                               Variant="Variant.Outlined"
+                                               Color="Color.Primary"
+                                               Disabled="@_loading"
+                                               StartIcon="@Icons.Material.Filled.Upload">
+                                        @if (_uploading)
+                                        {
+                                            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                                            @ConstantString.Uploading
+                                        }
+                                        else
+                                        {
+                                            @ConstantString.Import
+                                        }
                                     </MudButton>
-                                    <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx"/>
+                                </ActivatorContent>
+                            </MudFileUpload>
                         }
                         @if (_canExport)
                         {
@@ -352,12 +352,12 @@
         _downloading = false;
     }
 
-    private async Task OnImportData(InputFileChangeEventArgs e)
+    private async Task OnImportData(IBrowserFile file)
     {
         _uploading = true;
         var stream = new MemoryStream();
-        await e.File.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
-        var command = new ImportKeyValuesCommand(e.File.Name, stream.ToArray());
+        await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
+        var command = new ImportKeyValuesCommand(file.Name, stream.ToArray());
         var result = await Mediator.Send(command);
         if (result.Succeeded)
         {

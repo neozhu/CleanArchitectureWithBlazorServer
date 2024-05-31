@@ -60,11 +60,11 @@ else
 
                             <MudTooltip Text="@L["Click upload a image"]">
                                 <MudFileUpload T="IBrowserFile" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="UploadPhoto" Style="margin-top:-10px;margin-left:-15px">
-                                    <ButtonTemplate>
-                                        <MudIconButton HtmlTag="label"
+                                    <ActivatorContent>
+                                        <MudIconButton 
                                                        Icon="@Icons.Material.Filled.PhotoCamera">
                                         </MudIconButton>
-                                    </ButtonTemplate>
+                                    </ActivatorContent>
                                 </MudFileUpload>
                             </MudTooltip>
 
