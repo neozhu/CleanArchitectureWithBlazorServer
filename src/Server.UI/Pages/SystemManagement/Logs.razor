@@ -37,7 +37,7 @@
 
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
-                    <MudButton DisableElevation Variant="Variant.Outlined"
+                    <MudButton  Variant="Variant.Outlined"
                                Size="Size.Small"
                                Disabled="@_loading"
                                OnClick="@(OnRefresh)"
@@ -47,7 +47,7 @@
                     </MudButton>
                     @if (_canPurge)
                     {
-                        <MudButton DisableElevation Variant="Variant.Outlined"
+                        <MudButton  Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    Disabled="@(_loading || _clearing)"
                                    OnClick="@(OnPurge)"
@@ -230,7 +230,7 @@
         {
             { x => x.ContentText, $"{L["Are you sure you want to erase all the logs?"]}" }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
         var dialog = DialogService.Show<ConfirmationDialog>
             ($"{L["Erase logs"]}", parameters, options);
         var state = await dialog.Result;

@@ -12,7 +12,7 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
     [Inject] private IUserService UserService { get; set; } = default!;
     public PickSuperiorIdAutocomplete()
     {
-        SearchFuncWithCancel = SearchKeyValues;
+        SearchFunc = SearchKeyValues;
         ToStringFunc = ConvertIdToUserName;
         Clearable = true;
         Dense = true;

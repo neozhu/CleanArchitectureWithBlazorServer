@@ -48,10 +48,10 @@ public class LayoutService
         DarkPrimaryColor = UserPreferences.DarkPrimaryColor;
         BorderRadius = UserPreferences.BorderRadius;
         DefaultFontSize = UserPreferences.DefaultFontSize;
-        CurrentTheme.Palette.Primary = PrimaryColor;
+        CurrentTheme.PaletteLight.Primary = PrimaryColor;
         CurrentTheme.PaletteDark.Primary = DarkPrimaryColor;
-        CurrentTheme.Palette.PrimaryDarken = UserPreferences.PrimaryDarken;
-        CurrentTheme.Palette.PrimaryLighten = UserPreferences.PrimaryLighten;
+        CurrentTheme.PaletteLight.PrimaryDarken = UserPreferences.PrimaryDarken;
+        CurrentTheme.PaletteLight.PrimaryLighten = UserPreferences.PrimaryLighten;
         CurrentTheme.PaletteDark.PrimaryDarken = UserPreferences.PrimaryDarken;
         CurrentTheme.PaletteDark.PrimaryLighten = UserPreferences.PrimaryLighten;
         CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
@@ -141,7 +141,7 @@ public class LayoutService
 
         if (!PrimaryColor.IsNullOrEmpty())
         {
-            CurrentTheme.Palette.Primary = PrimaryColor;
+            CurrentTheme.PaletteLight.Primary = PrimaryColor;
             CurrentTheme.PaletteDark.Primary = PrimaryColor;
         }
 
@@ -155,7 +155,7 @@ public class LayoutService
     public async Task SetSecondaryColor(string color)
     {
         SecondaryColor = color;
-        CurrentTheme.Palette.Secondary = SecondaryColor;
+        CurrentTheme.PaletteLight.Secondary = SecondaryColor;
         CurrentTheme.PaletteDark.Secondary = SecondaryColor;
         UserPreferences.SecondaryColor = SecondaryColor;
         await UserPreferencesService.SaveUserPreferences(UserPreferences);
@@ -186,10 +186,10 @@ public class LayoutService
         DarkPrimaryColor = UserPreferences.DarkPrimaryColor;
         BorderRadius = UserPreferences.BorderRadius;
         DefaultFontSize = UserPreferences.DefaultFontSize;
-        CurrentTheme.Palette.Primary = PrimaryColor;
+        CurrentTheme.PaletteLight.Primary = PrimaryColor;
         CurrentTheme.PaletteDark.Primary = DarkPrimaryColor;
-        CurrentTheme.Palette.PrimaryDarken = UserPreferences.PrimaryDarken;
-        CurrentTheme.Palette.PrimaryLighten = UserPreferences.PrimaryLighten;
+        CurrentTheme.PaletteLight.PrimaryDarken = UserPreferences.PrimaryDarken;
+        CurrentTheme.PaletteLight.PrimaryLighten = UserPreferences.PrimaryLighten;
         CurrentTheme.PaletteDark.PrimaryDarken = UserPreferences.PrimaryDarken;
         CurrentTheme.PaletteDark.PrimaryLighten = UserPreferences.PrimaryLighten;
         CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";

@@ -5,8 +5,16 @@ namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
 public class PickUserAutocomplete : MudAutocomplete<string>
 {
-    private List<ApplicationUserDto>? _userList;
-
+ 
+    public PickUserAutocomplete()
+    {
+        SearchFunc = SearchKeyValues;
+        Clearable = true;
+        Dense = true;
+        ResetValueOnEmptyText = true;
+        ShowProgressIndicator = true;
+        MaxItems = 50;
+    }
     [Parameter] public string? TenantId { get; set; }
 
     [Inject] private IUserService UserService { get; set; } = default!;
@@ -26,27 +34,16 @@ public class PickUserAutocomplete : MudAutocomplete<string>
         UserService.OnChange -= TenantsService_OnChange;
         base.Dispose(disposing);
     }
+    
+   
 
-    public override Task SetParametersAsync(ParameterView parameters)
-    {
-        SearchFuncWithCancel = SearchKeyValues;
-        Clearable = true;
-        Dense = true;
-        ResetValueOnEmptyText = true;
-        ShowProgressIndicator = true;
-        MaxItems = 50;
-        _userList = string.IsNullOrEmpty(TenantId)
-            ? UserService.DataSource
-            : UserService.DataSource.Where(x => x.TenantId == TenantId).ToList();
-        return base.SetParametersAsync(parameters);
-    }
-
-    private Task<IEnumerable<string>> SearchKeyValues(string value, CancellationToken cancellation)
+    private Task<IEnumerable<string>> SearchKeyValues(string value,CancellationToken cancellation)
     {
         var result = string.IsNullOrEmpty(value)
-            ? _userList?.Select(x => x.UserName)
-            : _userList?.Where(x => x.UserName.Contains(value, StringComparison.OrdinalIgnoreCase) ||
-                                    x.Email.Contains(value, StringComparison.OrdinalIgnoreCase))
+            ? UserService.DataSource.Where(x=>!string.IsNullOrEmpty(TenantId) && x.TenantId==TenantId || string.IsNullOrEmpty(TenantId)).Select(x => x.UserName)
+            : UserService.DataSource.Where(x => (!string.IsNullOrEmpty(TenantId) && x.TenantId == TenantId || string.IsNullOrEmpty(TenantId)) && 
+                        (x.UserName.Contains(value, StringComparison.OrdinalIgnoreCase) ||
+                                    x.Email.Contains(value, StringComparison.OrdinalIgnoreCase)))
                 .Select(x => x.UserName);
 
         return Task.FromResult(result?.AsEnumerable() ?? new string[] { });
@@ -54,7 +51,7 @@ public class PickUserAutocomplete : MudAutocomplete<string>
 
     private string ToString(string str)
     {
-        var user = _userList?.FirstOrDefault(x =>
+        var user = UserService.DataSource.FirstOrDefault(x =>
             (x.DisplayName != null && x.DisplayName.Contains(str, StringComparison.OrdinalIgnoreCase)) ||
             x.UserName.Contains(str, StringComparison.OrdinalIgnoreCase));
 
