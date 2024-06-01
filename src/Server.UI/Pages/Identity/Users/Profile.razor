@@ -30,7 +30,7 @@ else
              ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
         <MudTabPanel Text="@L["Profile"]">
             <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
-                <MudGrid Justify="Justify.Center" Style="max-width:600px;display:flex;">
+                <MudGrid Justify="Justify.Center" Spacing="2" Style="max-width:600px;display:flex;">
                     <MudItem sm="12" xs="12">
                         <div class="d-flex justify-center">
                             <MudElement Class="d-flex flex-column  align-center">
@@ -107,7 +107,7 @@ else
         </MudTabPanel>
         <MudTabPanel Text="@L["Change Password"]">
             <MudForm Model="@_changepassword" @ref="@_passwordform" Validation="@(Validator.ValidateValue(_changepassword))" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
-                <MudGrid Justify="Justify.Center" Style="max-width:300px">
+                <MudGrid Spacing="2" Justify="Justify.Center" Style="max-width:300px">
                     <MudItem sm="12" xs="12">
                         <MudPasswordField Immediate="true"
                                           Label="@L["Current Password"]"

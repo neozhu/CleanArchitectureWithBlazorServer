@@ -18,7 +18,7 @@
     <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden"/>
     <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden"/>
 
-    <MudGrid>
+    <MudGrid Spacing="2">
         <MudItem sm="12">
             <div class="d-flex justify-center">
 
@@ -92,7 +92,7 @@
         </MudItem>
         <MudItem xs="12" sm="12">
             <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
-            <MudGrid Class="mt-1">
+            <MudGrid Class="mt-1" Spacing="2">
                 @if (Roles.Any())
                 {
                     @for (var i = 0; i < Roles.Count; i++)

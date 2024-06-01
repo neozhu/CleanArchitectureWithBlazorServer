@@ -5,7 +5,7 @@
 <MudDialog>
     <DialogContent>
         <MudForm Model="Model" @ref="_form" Validation="@(Validator.ValidateValue(Model))">
-            <MudGrid>
+            <MudGrid Spacing="2">
                 <MudItem xs="12" md="6">
                     <MudEnumSelect Label="@L[Model.GetMemberDescription(x => x.Name)]" @bind-Value="Model.Name"
                                    For="@(() => Model.Name)"

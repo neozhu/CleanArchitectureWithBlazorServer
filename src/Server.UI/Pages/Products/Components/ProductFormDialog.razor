@@ -17,7 +17,7 @@
     <DialogContent>
         <ActiveUserSession PageComponent="@($"{nameof(ProductFormDialog)}/{ Model.Id}")" />
         <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
-            <MudGrid>
+            <MudGrid Spacing="2">
                 <MudItem xs="12">
                     <MudTextField Label="@L["Product Name"]" @bind-Value="Model.Name"
                                   For="@(() => Model.Name)"
