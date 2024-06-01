@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
@@ -10,7 +10,15 @@ public class MultiTenantAutocomplete : MudAutocomplete<string>
     {
         TenantsService.OnChange += TenantsService_OnChange;
     }
-
+    public MultiTenantAutocomplete()
+    {
+        SearchFunc = SearchKeyValues;
+        ToStringFunc = ToTenantNameStringFunc;
+        Clearable = true;
+        Dense = true;
+        ResetValueOnEmptyText = true;
+        ShowProgressIndicator = true;
+    }
     private void TenantsService_OnChange()
     {
         InvokeAsync(StateHasChanged);
@@ -22,18 +30,7 @@ public class MultiTenantAutocomplete : MudAutocomplete<string>
         base.Dispose(disposing);
     }
 
-    public override Task SetParametersAsync(ParameterView parameters)
-    {
-        SearchFuncWithCancel = SearchKeyValues;
-        ToStringFunc = ToTenantNameStringFunc;
-        Clearable = true;
-        Dense = true;
-        ResetValueOnEmptyText = true;
-        ShowProgressIndicator = true;
-        return base.SetParametersAsync(parameters);
-    }
-
-    private Task<IEnumerable<string>> SearchKeyValues(string value, CancellationToken token)
+    private Task<IEnumerable<string>> SearchKeyValues(string value, CancellationToken cancellation)
     {
         // if text is null or empty, show complete list
         if (string.IsNullOrEmpty(value))
