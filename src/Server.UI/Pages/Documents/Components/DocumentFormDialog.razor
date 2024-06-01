@@ -8,7 +8,7 @@
 <MudDialog>
     <DialogContent>
         <MudForm Model="Model" @ref="_form" Validation="@(Validator.ValidateValue(Model))">
-            <MudGrid>
+            <MudGrid Spacing="2">
                 <MudItem xs="12" sm="6">
                     <MudTextField Label="@L["Title"]" @bind-Value="Model.Title"
                                   For="@(() => Model.Title)"

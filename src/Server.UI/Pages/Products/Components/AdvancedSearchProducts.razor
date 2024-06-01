@@ -4,7 +4,7 @@
 <MudExpansionPanel @bind-Expanded="_advancedSearchExpanded"
                    Style="border-radius: var(--mud-default-borderradius) !important;"
                    Class="mud-elevation-25 pa-2 mb-3" Text="@ConstantString.AdvancedSearch">
-    <MudGrid>
+    <MudGrid Spacing="2">
         <MudItem xs="12" sm="6" md="4">
             <MudTextField @bind-Value="TRequest.Name"
                           Placeholder="@L["Search for product name"]"

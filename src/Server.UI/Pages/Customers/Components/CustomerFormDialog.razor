@@ -5,7 +5,7 @@
 <MudDialog>
     <DialogContent>
         <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
-            <MudGrid>
+            <MudGrid Spacing="2">
                 @*TODO: define mudform that should be edit fields, for example:*@
                 <MudItem xs="12" md="6">
                     <MudTextField Label="@L[model.GetMemberDescription(x => x.Name)]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
