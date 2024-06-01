@@ -6,8 +6,10 @@
 
 <PageTitle>@ApplicationSettings.AppName</PageTitle>
 <MudRTLProvider RightToLeft="@LayoutService.IsRTL">
-    <MudDialogProvider/>
-    <MudSnackbarProvider/>
+    <MudThemeProvider />
+    <MudPopoverProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
     <MudThemeProvider @ref="@_mudThemeProvider" Theme="@LayoutService.CurrentTheme" IsDarkMode="@LayoutService.IsDarkMode" IsDarkModeChanged="@LayoutService.SetDarkMode"/>
     @Body
 </MudRTLProvider>
