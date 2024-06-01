@@ -128,7 +128,7 @@
                  Spacing="3">
 
             <MudItem xs="12">
-                <MudSlider Value="@UserPreferences.DefaultFontSize" Min="0.75" Max="1.125" Immediate="false" Step="0.0625" Color="Color.Primary"
+                <MudSlider Value="@UserPreferences.DefaultFontSize" Min="0.625" Max="1.125" Immediate="false" Step="0.0625" Color="Color.Primary"
                            @oninput="@(e => ChangedFontSize(e))">
                     @($"{UserPreferences.DefaultFontSize.ToString()} rem")
                 </MudSlider>
