@@ -61,9 +61,7 @@ else
                             <MudTooltip Text="@L["Click upload a image"]">
                                 <MudFileUpload T="IBrowserFile" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="UploadPhoto" Style="margin-top:-10px;margin-left:-15px">
                                     <ActivatorContent>
-                                        <MudIconButton  
-                                                       Icon="@Icons.Material.Filled.PhotoCamera"
-                                                        >
+                                        <MudIconButton Icon="@Icons.Material.Filled.PhotoCamera">
                                         </MudIconButton>
                                     </ActivatorContent>
                                 </MudFileUpload>
@@ -216,7 +214,7 @@ else
         await new OrgChart(JS).Create(_orgData);
     }
 
-    protected override  void  OnInitialized()
+    protected override void OnInitialized()
     {
         UserManager = Services.GetRequiredService<UserManager<ApplicationUser>>();
         model = Mapper.Map<ChangeUserProfileModel>(UserProfile);
@@ -238,7 +236,7 @@ else
         base.Dispose(disposing);
     }
 
-    
+
 
     private async Task UploadPhoto(IBrowserFile file)
     {

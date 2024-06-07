@@ -32,19 +32,19 @@
     <ToolBarContent>
         <div class="d-flex align-start flex-grow-1">
             <div class="d-flex gap-4">
-                <MudIcon Icon="@Icons.Material.Filled.DocumentScanner" Size="Size.Large"/>
+                <MudIcon Icon="@Icons.Material.Filled.DocumentScanner" Size="Size.Large" />
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption" Class="mb-2">@L["Documents"]</MudText>
                     <MudEnumSelect Style="min-width:120px" TEnum="DocumentListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
                     </MudEnumSelect>
                 </div>
             </div>
-            <div class="flex-grow-1"/>
+            <div class="flex-grow-1" />
 
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudButton  Variant="Variant.Outlined"
+                        <MudButton Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(() => OnRefresh())"
@@ -54,7 +54,7 @@
                         </MudButton>
                         @if (_canCreate)
                         {
-                            <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Camera"
                                        Size="Size.Small"
                                        Disabled="@_loading"
@@ -66,7 +66,7 @@
                         }
                         @if (_canDelete)
                         {
-                            <MudButton  Variant="Variant.Outlined" Color="Color.Error"
+                            <MudButton Variant="Variant.Outlined" Color="Color.Error"
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        Size="Size.Small"
@@ -80,7 +80,7 @@
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         @if (_canCreate)
                         {
-                            <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Camera"
                                        Size="Size.Small"
                                        Disabled="@_loading"
@@ -128,7 +128,7 @@
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled" 
+                    <MudButton Variant="Variant.Filled"
                                StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
                         @ConstantString.NoAllowed
@@ -209,7 +209,7 @@
         <MudText>@ConstantString.Loading</MudText>
     </LoadingContent>
     <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"/>
+        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
 
@@ -275,7 +275,7 @@
             {
                 Snackbar.Add(string.Format(L["{0} recognize completed."], e), Severity.Success);
             }
-            
+
         });
     }
 
@@ -380,36 +380,23 @@
     private async Task OnDelete(DocumentDto dto)
     {
         var command = new DeleteDocumentCommand(new[] { dto.Id });
-        var parameters = new DialogParameters<DeleteConfirmation>
-        {
-            { x => x.Command, command },
-            { x => x.ContentText, string.Format(ConstantString.DeleteConfirmation, dto.Title) }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true};
-        var dialog = DialogService.Show<DeleteConfirmation>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
-        var state = await dialog.Result;
-        if (!state.Canceled)
+        var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Title);
+        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, string.Format(ConstantString.EditTheItem, L["Document"]), contentText, async () =>
         {
             await _table.ReloadServerData();
-        }
+            _selectedItems.Clear();
+        });
     }
 
     private async Task OnDeleteChecked()
     {
         var command = new DeleteDocumentCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var parameters = new DialogParameters<DeleteConfirmation>
-        {
-            { x => x.Command, command },
-            { x => x.ContentText, string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count) }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
-        var dialog = DialogService.Show<DeleteConfirmation>
-            (string.Format(ConstantString.DeleteTheItem, L["Document"]), parameters, options);
-        var state = await dialog.Result;
-        if (!state.Canceled)
+        var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
+        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, string.Format(ConstantString.DeleteTheItem, L["Document"]), contentText, async () =>
         {
             await _table.ReloadServerData();
-        }
+            _selectedItems.Clear();
+        });
     }
 
     private async Task OnDownload(DocumentDto dto)
