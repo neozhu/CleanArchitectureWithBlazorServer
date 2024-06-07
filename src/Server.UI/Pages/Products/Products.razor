@@ -325,8 +325,9 @@
         Query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
-    private async Task ShowEditFormDialog(string title, DialogParameters parameters, DialogOptions options)
+    private async Task ShowEditFormDialog(string title, DialogParameters parameters)
     {
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<ProductFormDialog>(title, parameters, options);
         var state = await dialog.Result;
 
@@ -345,8 +346,8 @@
             { x => x.Refresh, () => _table.ReloadServerData() },
             { x => x.Model, command }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters, options);
+       
+        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters);
 
     }
 
@@ -369,8 +370,7 @@
             { x => x.Model, command }
         };
 
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters, options);
+        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters);
     }
 
     private async Task OnEdit(ProductDto dto)
@@ -381,9 +381,7 @@
             { x => x.Refresh, () => _table.ReloadServerData() },
             { x => x.Model, command }
         };
-
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), parameters, options);
+        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), parameters);
 
     }
 
