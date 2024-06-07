@@ -114,15 +114,15 @@
                              EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
-                            <MudMenuItem OnAction="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                         }
                         @if (_canDelete)
                         {
-                            <MudMenuItem OnAction="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
                         @if (_canDownload)
                         {
-                            <MudMenuItem Disabled="@_downloading" OnAction="@(() => OnDownload(context.Item))">@ConstantString.Download</MudMenuItem>
+                            <MudMenuItem Disabled="@_downloading" OnClick="@(() => OnDownload(context.Item))">@ConstantString.Download</MudMenuItem>
                         }
                     </MudMenu>
                 }

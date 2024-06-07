@@ -16,7 +16,7 @@
                 }
                 else
                 {
-                    <MudMenuItem OnAction="() => ChangeLanguageAsync(language.Name)">@language.DisplayName</MudMenuItem>
+                    <MudMenuItem OnClick="() => ChangeLanguageAsync(language.Name)">@language.DisplayName</MudMenuItem>
                 }
             }
         }
