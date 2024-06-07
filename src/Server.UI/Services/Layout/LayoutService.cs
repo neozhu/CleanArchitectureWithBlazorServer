@@ -59,12 +59,20 @@ public class LayoutService
             DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.FontSize =
             UserPreferences.ButtonFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Button.LineHeight = UserPreferences.ButtonLineHeight;
         CurrentTheme.Typography.Body1.FontSize =
             UserPreferences.Body1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+
+        CurrentTheme.Typography.Body1.LineHeight = UserPreferences.Body1LineHeight;
+        CurrentTheme.Typography.Body1.LetterSpacing = UserPreferences.Body1LetterSpacing.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Body2.FontSize =
             UserPreferences.Body2FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Body2.LineHeight = UserPreferences.Body1LineHeight;
+        CurrentTheme.Typography.Body2.LetterSpacing = UserPreferences.Body1LetterSpacing.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+
         CurrentTheme.Typography.Caption.FontSize =
             UserPreferences.CaptionFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Caption.LineHeight= UserPreferences.CaptionLineHeight;
         CurrentTheme.Typography.Overline.FontSize =
             UserPreferences.OverlineFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Subtitle1.FontSize =
@@ -197,12 +205,20 @@ public class LayoutService
             DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.FontSize =
             UserPreferences.ButtonFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Button.LineHeight = UserPreferences.ButtonLineHeight;
         CurrentTheme.Typography.Body1.FontSize =
             UserPreferences.Body1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+
+        CurrentTheme.Typography.Body1.LineHeight = UserPreferences.Body1LineHeight;
+        CurrentTheme.Typography.Body1.LetterSpacing = UserPreferences.Body1LetterSpacing.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Body2.FontSize =
             UserPreferences.Body2FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Body2.LineHeight = UserPreferences.Body1LineHeight;
+        CurrentTheme.Typography.Body2.LetterSpacing = UserPreferences.Body1LetterSpacing.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+
         CurrentTheme.Typography.Caption.FontSize =
             UserPreferences.CaptionFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Caption.LineHeight = UserPreferences.CaptionLineHeight;
         CurrentTheme.Typography.Overline.FontSize =
             UserPreferences.OverlineFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Subtitle1.FontSize =

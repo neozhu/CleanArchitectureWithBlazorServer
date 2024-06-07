@@ -42,14 +42,14 @@
 
                 <MudDivider Class="my-2"/>
                 <MudMenuItem Href="/user/profile">
-                    <div class="d-flex">
+                    <div class="d-flex align-center">
                         <MudIcon Class="mx-2"
                                  Icon="@Icons.Material.Filled.Person"/>
                         <MudText>@L["Profile"]</MudText>
                     </div>
                 </MudMenuItem>
-                <MudMenuItem OnAction="OnSettingClick">
-                    <div class="d-flex">
+                <MudMenuItem OnClick="OnSettingClick">
+                    <div class="d-flex align-center">
                         <MudIcon Class="mx-2"
                                  Icon="@Icons.Material.Filled.Settings"/>
                         <MudText>@L["Settings"]</MudText>
@@ -78,7 +78,7 @@
 
 @code
 {
-    [Parameter] public EventCallback<EventArgs> OnSettingClick { get; set; }
+    [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     private bool IsLoading => UserProfileState.Value.IsLoading;
     private UserProfile? UserProfile => UserProfileState.Value.UserProfile;
 }

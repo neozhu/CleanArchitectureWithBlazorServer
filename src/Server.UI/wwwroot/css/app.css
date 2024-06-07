@@ -1,28 +1,43 @@
 ﻿.mud-input {
     font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
 }
 
 .mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
     font-size: inherit !important;
     font-weight: inherit !important;
     line-height: inherit !important;
+    letter-spacing: inherit !important;
 }
 
 .mud-simple-table table * tr > td, .mud-simple-table table * tr th {
     font-size: inherit !important;
+    font-weight: inherit !important;
     line-height: inherit !important;
+    letter-spacing: inherit !important;
 }
 
 .mud-expand-panel .mud-expand-panel-header {
     font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
 }
 
 .mud-button-year {
     font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
 }
 
 .mud-table-cell {
     font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
 }
 
 .mud-typography-body1 {

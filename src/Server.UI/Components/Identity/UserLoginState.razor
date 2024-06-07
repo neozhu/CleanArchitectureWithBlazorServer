@@ -5,23 +5,24 @@
  
 @inject IState<UserProfileState> UserProfileState
 @inject IStringLocalizer<SharedResource> L
-@inject IDispatcher Dispatcher
+
 
 @code {
 
     [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
     [Parameter] public EventCallback<UserProfileState> UserProfileStateChanged { get; set; }
-
-
-    protected override void Dispose(bool disposing)
+    [Inject]
+    private IDispatcher Dispatcher { get; set; } = default!;
+    protected override async ValueTask DisposeAsyncCore(bool disposing)
     {
-        base.Dispose(disposing);
+        await base.DisposeAsyncCore(disposing);
         Client.LoginEvent -= _client_Login;
         Client.LogoutEvent -= _client_Logout;
         UserProfileState.StateChanged -= OnStateChanged;
         GC.SuppressFinalize(this);
     }
+     
 
     [Inject] private HubClient Client { get; set; } = default!;
     [Inject] private IUsersStateContainer UsersStateContainer { get; set; } = default!;

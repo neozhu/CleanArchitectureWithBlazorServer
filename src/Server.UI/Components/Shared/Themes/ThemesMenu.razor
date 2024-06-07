@@ -25,7 +25,7 @@
             <b>@L["Mode"]</b>
         </MudText>
         <MudGrid Class="my-3"
-                 Spacing="3">
+                 Spacing="2">
             <MudItem xs="4">
                 <MudTooltip Duration="1000" Text="@L["Switch to system"]">
                     <MudButton Class="mode-button"
@@ -71,7 +71,7 @@
             <b>@L["Color"]</b>
         </MudText>
         <MudGrid Class="my-3"
-                 Spacing="3">
+                 Spacing="2">
             @if (UserPreferences.IsDarkMode || UserPreferences.DarkLightTheme == DarkLightMode.Dark)
             {
                 @foreach (var color in UserPreferences.DarkPrimaryColors)
@@ -111,7 +111,7 @@
             <b>@L["Border Radius"]</b>
         </MudText>
         <MudGrid Class="my-3"
-                 Spacing="3">
+                 Spacing="2">
 
             <MudItem xs="12">
                 <MudSlider Value="@UserPreferences.BorderRadius" Min="0" Max="@MaxValue" Immediate="false" Step="1" Color="Color.Primary"
@@ -125,7 +125,7 @@
             <b>@L["Default Font Size"]</b>
         </MudText>
         <MudGrid Class="my-3"
-                 Spacing="3">
+                 Spacing="2">
 
             <MudItem xs="12">
                 <MudSlider Value="@UserPreferences.DefaultFontSize" Min="0.625" Max="1.125" Immediate="false" Step="0.0625" Color="Color.Primary"

@@ -45,12 +45,20 @@ public class UserPreferences
     public string SecondaryColor { get; set; } = "#ff4081ff";
     public double BorderRadius { get; set; } = 4;
     public double DefaultFontSize { get; set; } = 0.8125;
+    public double LineHeight => 1.5 * (DefaultFontSize / 0.875);
+    public double LetterSpacing => 0.00938 * (DefaultFontSize / 0.875);
 
     public double Body1FontSize => DefaultFontSize;
-    public double Body2FontSize => DefaultFontSize - 0.125;
+    public double Body1LineHeight => LineHeight;
+    public double Body1LetterSpacing => LetterSpacing;
+    public double Body2FontSize => DefaultFontSize - 0.0625;
+    public double Body2LineHeight => LineHeight;
+    public double Body2LetterSpacing => LetterSpacing;
     public double ButtonFontSize => DefaultFontSize;
+    public double ButtonLineHeight => 1.75 * (DefaultFontSize / 0.875);
     public double CaptionFontSize => DefaultFontSize + 0.0625;
-    public double OverlineFontSize => DefaultFontSize - 0.125;
+    public double CaptionLineHeight => 1.66 * (DefaultFontSize / 0.75);
+    public double OverlineFontSize => DefaultFontSize - 0.0625;
     public double Subtitle1FontSize => DefaultFontSize + 0.125;
     public double Subtitle2FontSize => DefaultFontSize;
     public DarkLightMode DarkLightTheme { get; set; }
