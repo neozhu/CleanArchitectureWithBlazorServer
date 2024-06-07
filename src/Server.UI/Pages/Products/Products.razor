@@ -24,7 +24,6 @@
              @bind-RowsPerPage="_defaultPageSize"
              Height="calc(100vh - 370px)"
              Loading="@_loading"
-             SortLabel="@ConstantString.OrderBy"
              MultiSelection="true"
              @bind-SelectedItems="_selectedItems"
              @bind-SelectedItem="_currentDto"
@@ -346,9 +345,7 @@
             { x => x.Refresh, () => _table.ReloadServerData() },
             { x => x.Model, command }
         };
-       
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters);
-
     }
 
     private async Task OnClone()
@@ -363,13 +360,11 @@
                 Name = copy.Name,
                 Pictures = copy.Pictures
             };
-
         var parameters = new DialogParameters<ProductFormDialog>
         {
             { x => x.Refresh, () => _table.ReloadServerData() },
             { x => x.Model, command }
         };
-
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters);
     }
 
@@ -382,31 +377,32 @@
             { x => x.Model, command }
         };
         await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), parameters);
-
     }
 
     private async Task OnDelete(ProductDto dto)
     {
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Name);
         var command = new DeleteProductCommand(new[] { dto.Id });
-        var confirmed = await DialogServiceHelper.ShowDeleteConfirmationDialog(command, contentText);
-        if (confirmed)
-        {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
-        }
+        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, ConstantString.DeleteConfirmationTitle, contentText,
+            async () =>
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            }
+        );
     }
 
     private async Task OnDeleteChecked()
     {
         var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
         var command = new DeleteProductCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var confirmed = await DialogServiceHelper.ShowDeleteConfirmationDialog(command, contentText);
-        if (confirmed)
-        {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
-        }
+        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, ConstantString.DeleteConfirmationTitle, contentText,
+        async () =>
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            });
+
     }
 
     private async Task OnExport()

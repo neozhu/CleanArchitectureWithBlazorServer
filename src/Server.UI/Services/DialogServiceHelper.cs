@@ -9,16 +9,15 @@ public class DialogServiceHelper
 {
     private readonly IDialogService _dialogService;
     private readonly ISnackbar _snackbar;
-    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public DialogServiceHelper(IDialogService dialogService, ISnackbar snackbar, IStringLocalizer<SharedResource> localizer)
+
+    public DialogServiceHelper(IDialogService dialogService, ISnackbar snackbar)
     {
         _dialogService = dialogService;
         _snackbar = snackbar;
-        _localizer = localizer;
     }
 
-    public async Task<bool> ShowDeleteConfirmationDialog(IRequest<Result<int>> command, string contentText)
+    public async Task ShowDeleteConfirmationDialog(IRequest<Result<int>> command,string title, string contentText, Func<Task> onConfirm, Func<Task>? onCancel = null)
     {
         var parameters = new DialogParameters
         {
@@ -27,13 +26,19 @@ public class DialogServiceHelper
         };
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = _dialogService.Show<DeleteConfirmation>(_localizer["DeleteConfirmationTitle"], parameters, options);
+        var dialog = _dialogService.Show<DeleteConfirmation>(title, parameters, options);
         var result = await dialog.Result;
-
-        return !result.Canceled && result.Data as bool? == true;
+        if (!result.Canceled)
+        {
+            await onConfirm();
+        }
+        else if (onCancel != null)
+        {
+            await onCancel();
+        }
     }
 
-    public async Task<bool> ShowConfirmationDialog(string contentText)
+    public async Task ShowConfirmationDialog(string title, string contentText, Func<Task> onConfirm, Func<Task>? onCancel = null)
     {
         var parameters = new DialogParameters
         {
@@ -41,9 +46,16 @@ public class DialogServiceHelper
         };
 
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = _dialogService.Show<ConfirmationDialog>(_localizer["Confirmation"], parameters, options);
+        var dialog = _dialogService.Show<ConfirmationDialog>(title, parameters, options);
         var result = await dialog.Result;
 
-        return !result.Canceled && result.Data as bool? == true;
+        if (!result.Canceled)
+        {
+            await onConfirm();
+        }
+        else if (onCancel != null)
+        {
+            await onCancel();
+        }
     }
 }
