@@ -33,12 +33,12 @@
         <PackageReference Include="QuestPDF" Version="2024.3.10" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.6.1" />
         <PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="4.0.4" />
-        <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+        <PackageReference Include="Serilog.Sinks.Async" Version="2.0.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
         <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="2.0.3" />
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
         <PackageReference Include="Blazor.Serilog.Sinks.SQLite" Version="1.0.6" />
-        <PackageReference Include="ZiggyCreatures.FusionCache" Version="1.1.0" />
+        <PackageReference Include="ZiggyCreatures.FusionCache" Version="1.2.0" />
 
     </ItemGroup>
     <ItemGroup>

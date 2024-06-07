@@ -63,7 +63,6 @@ public static class DependencyInjection
         services.AddFluxor(options =>
         {
             options.ScanAssemblies(Assembly.GetExecutingAssembly());
-            options.UseReduxDevTools();
         });
 
 
