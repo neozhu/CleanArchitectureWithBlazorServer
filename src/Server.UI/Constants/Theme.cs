@@ -8,50 +8,57 @@ public class Theme
         {
             PaletteLight = new PaletteLight
             {
-                Primary = "#2d4275",
-                Black = "#0A0E19",
-                Success = "#64A70B",
-                Secondary = "#ff4081ff",
-                AppbarBackground = "rgba(255,255,255,0.8)",
+                Primary = "#5052ba",
+                Secondary = "#80838b",
+                Success = "#24ab5e",
+                Info = "#4099f3",
+                Warning = "#f0c42b",
+                Error = "#ed4b42",
+                Black = "#000000",
+                White = "#ffffff",
+                AppbarBackground = "rgba(245, 245, 245, 0.8)",
                 AppbarText = "#424242",
-                TextPrimary = "rgba(66,66,66,1)",
-                TextSecondary = "#99a0b0",
-                Dark = "#110E2D",
-                DarkLighten = "#1A1643",
-                GrayDefault = "#4B5563",
-                GrayLight = "#9CA3AF",
-                GrayLighter = "#adbdccff"
+                Background = "#f5f5f5",
+                Surface = "#ffffff",
+                DrawerBackground = "#ffffff", 
+                TextPrimary = "#202124",
+                TextSecondary = "#545965",
+                TextDisabled = "#80838b",
+                ActionDefault = "#80838b",
+                ActionDisabled = "rgba(128, 131, 139, 0.3)",
+                ActionDisabledBackground = "rgba(128, 131, 139, 0.12)",
+                Divider = "#e2e5e8",
+                DividerLight = "rgba(128, 131, 139, 0.15)",
+                TableLines = "#e2e5e8",
+                LinesDefault = "#e2e5e8",
+                LinesInputs = "#e2e5e8",
             },
             PaletteDark = new PaletteDark
             {
-                Primary = "#8b9ac6",
-                Dark = "#343a40",
-                PrimaryContrastText = "#c3cbe4",
-                Info = "#47bce8",
-                Error = "#f56e50",
-                Success = "#2cb57e",
-                Warning = "#f5bd58",
-                InfoContrastText = "#f6f6f6",
-                Black = "#27272f",
-                Background = "#0e1824",
-                Surface = "#121e2d",
-                DrawerBackground = "#121e2d",
-                DrawerText = "#8fa6bf",
-                DrawerIcon = "rgba(255,255,255, 0.50)",
-                AppbarBackground = "rgba(14,24,36, 0.80)",
-                AppbarText = "rgba(255,255,255, 0.70)",
-                TextPrimary = "rgba(255,255,255,0.6980392156862745)",
-                TextSecondary = "rgba(255,255,255,0.4980392156862745)",
-                ActionDefault = "rgba(195,203,228,.80)",
-                ActionDisabled = "rgba(255,255,255, 0.26)",
-                ActionDisabledBackground = "rgba(255,255,255, 0.12)",
-                DarkDarken = "rgba(21,27,34,0.7)",
-                Divider = "#192a3f",
-                DividerLight = "rgba(255,255,255, 0.06)",
-                TableLines = "#192a3f",
-                LinesDefault = "rgba(255,255,255, 0.12)",
-                LinesInputs = "rgba(255,255,255, 0.3)",
-                TextDisabled = "rgba(255,255,255, 0.2)"
+                Primary = "#5052ba",
+                Secondary = "#80838b",
+                Success = "#24ab5e",
+                Info = "#4099f3",
+                Warning = "#f0c42b",
+                Error = "#ed4b42",
+                Black = "#000000",
+                White = "#ffffff",
+                Background = "#202124",
+                Surface = "#303134",
+                AppbarBackground = "rgba(32, 33, 36, 0.8)",
+                AppbarText = "rgba(255, 255, 255, 0.7)",
+                DrawerBackground = "#303134",
+                TextPrimary = "#e8eaed",
+                TextSecondary = "rgba(255, 255, 255, 0.6)",
+                TextDisabled = "rgba(255, 255, 255, 0.3)",
+                ActionDefault = "#e8eaed",
+                ActionDisabled = "rgba(255, 255, 255, 0.26)",
+                ActionDisabledBackground = "rgba(255, 255, 255, 0.12)",
+                Divider = "#3F4452",
+                DividerLight = "rgba(255, 255, 255, 0.06)",
+                TableLines = "#3F4452",
+                LinesDefault = "#3F4452",
+                LinesInputs = "rgba(255, 255, 255, 0.3)",
             },
             LayoutProperties = new LayoutProperties
             {
@@ -64,50 +71,50 @@ public class Theme
                 {
                     FontSize = ".8125rem",
                     FontWeight = 400,
-                    LineHeight = 1.43,
+                    LineHeight = 1.4,
                     LetterSpacing = "normal",
                     FontFamily = new[] { "Public Sans", "Roboto", "Arial", "sans-serif" }
                 },
                 H1 = new H1
                 {
-                    FontSize = "4rem",
+                    FontSize = "3.5rem",
                     FontWeight = 700,
                     LineHeight = 1.167,
                     LetterSpacing = "-.01562em"
                 },
                 H2 = new H2
                 {
-                    FontSize = "3.75rem",
+                    FontSize = "3rem",
                     FontWeight = 300,
                     LineHeight = 1.2,
                     LetterSpacing = "-.00833em"
                 },
                 H3 = new H3
                 {
-                    FontSize = "3rem",
+                    FontSize = "2rem",
                     FontWeight = 600,
                     LineHeight = 1.167,
                     LetterSpacing = "0"
                 },
                 H4 = new H4
                 {
-                    FontSize = "1.8rem",
+                    FontSize = "1.5rem",
                     FontWeight = 400,
                     LineHeight = 1.235,
                     LetterSpacing = ".00735em"
                 },
                 H5 = new H5
                 {
-                    FontSize = "1.5rem",
+                    FontSize = "1.25rem",
                     FontWeight = 400,
-                    LineHeight = 1.334,
+                    LineHeight = 1.3,
                     LetterSpacing = "0"
                 },
                 H6 = new H6
                 {
                     FontSize = "1.125rem",
                     FontWeight = 600,
-                    LineHeight = 1.6,
+                    LineHeight = 1.5,
                     LetterSpacing = ".0075em"
                 },
                 Button = new Button
