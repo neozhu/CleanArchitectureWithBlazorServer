@@ -12,7 +12,7 @@ public class UserPreferences
     {
         "#2d4275",
         Colors.Green.Default,
-        "#0576b9",
+        "#5052ba",
         "#8421d1",
         "#FF7F00",
         Colors.Red.Default
@@ -22,7 +22,7 @@ public class UserPreferences
     {
         "#8b9ac6",
         "#6c9f77",
-        "#79a5d1",
+        "#5052ba",
         "#776BE7",
         "#d0882c",
         "#f88989"
