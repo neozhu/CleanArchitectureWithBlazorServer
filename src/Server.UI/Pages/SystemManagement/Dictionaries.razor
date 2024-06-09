@@ -40,14 +40,14 @@
             <div class="flex-grow-1"/>
 
             <div class="d-flex flex-column justify-end">
-                <div class="d-flex">
+                <div class="d-flex gap-1">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton  Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    OnClick="OnRefresh"
                                    Disabled="@_loading"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   Style="margin-right: 4px; margin-bottom:4px">
+                                   >
                             @ConstantString.Refresh
                         </MudButton>
                         @if (_canCreate)
@@ -56,7 +56,6 @@
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Size="Size.Small"
                                        OnClick="OnCreate"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        IconColor="Color.Surface">
                                 @ConstantString.New
                             </MudButton>
@@ -68,7 +67,6 @@
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        OnClick="OnDeleteChecked"
                                        Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        IconColor="Color.Surface">
                                 @ConstantString.Delete
                             </MudButton>
@@ -102,7 +100,6 @@
                             <MudButton Disabled="@_downloading"  Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Download"
                                        Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        OnClick="OnExport"
                                        IconColor="Color.Surface">
                                 @if (_downloading)
@@ -124,7 +121,6 @@
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Size="Size.Small"
                                        OnClick="OnCreate"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        IconColor="Color.Surface">
                                 @ConstantString.New
                             </MudButton>
@@ -136,7 +132,6 @@
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        OnClick="OnDeleteChecked"
                                        Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        IconColor="Color.Surface">
                                 @ConstantString.Delete
                             </MudButton>
@@ -285,60 +280,46 @@
 
     private async Task DeleteItem(KeyValueDto item)
     {
-        var deleteContent = ConstantString.DeleteConfirmation;
         var command = new DeleteKeyValueCommand(new[] { item.Id });
-        var parameters = new DialogParameters<DeleteConfirmation>
-        {
-            { x => x.Command, command },
-            { x => x.ContentText, string.Format(deleteContent, item.Name) }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
-        var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DeleteConfirmationTitle, parameters, options);
-        var state = await dialog.Result;
-        if (!state.Canceled)
+        var contentText = string.Format(ConstantString.DeleteConfirmation, item.Name);
+        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await _table.ReloadServerData();
-        }
+        });
     }
 
     private async Task OnDeleteChecked()
     {
-        var deleteContent = ConstantString.DeleteConfirmation;
-        var parameters = new DialogParameters<DeleteConfirmation>
+        var command = new DeleteKeyValueCommand(_selectedItems.Select(x => x.Id).ToArray());
+        var contentText = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
+        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
-            { x => x.ContentText, string.Format(deleteContent, _selectedItems.Count) }
+            await _table.ReloadServerData();
+            _selectedItems.Clear();
+        });
+    }
+    private async Task ShowCreateDialog(AddEditKeyValueCommand command, string title)
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(CreatePicklistDialog.Model), command }
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
-        var dialog = DialogService.Show<DeleteConfirmation>(ConstantString.DeleteConfirmationTitle, parameters, options);
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<CreatePicklistDialog>(title, parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
-            var command = new DeleteKeyValueCommand(_selectedItems.Select(x => x.Id).ToArray());
-            var result = await Mediator.Send(command);
             await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
         }
     }
-
     private async Task OnCreate()
     {
         var command = new AddEditKeyValueCommand
-        {
-            Name = SelectedItem.Name,
-            Description = SelectedItem?.Description
-        };
-        var parameters = new DialogParameters<CreatePicklistDialog>
-        {
-            { x => x.Model, command }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<CreatePicklistDialog>
-            (L["Create a new picklist"], parameters, options);
-        var state = await dialog.Result;
-        if (!state.Canceled)
-        {
-            await _table.ReloadServerData();
-        }
+            {
+                Name = SelectedItem.Name,
+                Description = SelectedItem?.Description
+            };
+        await ShowCreateDialog(command, L["Create a picklist"]);
     }
 
     private async Task OnExport()
