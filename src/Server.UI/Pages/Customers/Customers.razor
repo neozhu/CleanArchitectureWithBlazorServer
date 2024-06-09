@@ -44,14 +44,14 @@
             <div class="flex-grow-1" />
 
             <div class="d-flex flex-column justify-end">
-                <div class="d-flex">
+                <div class="d-flex gap-1">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton DisableElevation Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(()=>OnRefresh())"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   Style="margin-right: 4px; margin-bottom:4px">@ConstantString.Refresh</MudButton>
+                                   >@ConstantString.Refresh</MudButton>
                         @if (_canCreate)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -59,14 +59,12 @@
                                        Size="Size.Small"
                                        Disabled="@_loading"
                                        OnClick="OnCreate"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        IconColor="Color.Surface">@ConstantString.New</MudButton>
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.ContentCopy"
                                        Size="Size.Small"
                                        Disabled="@(_selectedItems.Count!=1)"
                                        OnClick="OnClone"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        IconColor="Color.Surface">@ConstantString.Clone</MudButton>
                         }
                         @if (_canDelete)
@@ -75,7 +73,6 @@
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count>0))"
                                        Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        OnClick="OnDeleteChecked"
                                        IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                         }
@@ -86,7 +83,6 @@
                                               Disabled="@_loading"
                                               StartIcon="@Icons.Custom.FileFormats.FileExcel"
                                               Size="Size.Small"
-                                              Style="margin-right: 4px; margin-bottom:4px"
                                               OnClick="OnExport"
                                               IconColor="Color.Surface">
                                 @ConstantString.Export
@@ -124,7 +120,6 @@
                                        Size="Size.Small"
                                        Disabled="@_loading"
                                        OnClick="OnCreate"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        IconColor="Color.Surface">@ConstantString.New</MudButton>
                         }
                         @if (_canDelete)
@@ -133,7 +128,6 @@
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count>0))"
                                        Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        OnClick="OnDeleteChecked"
                                        IconColor="Color.Surface">@ConstantString.Delete</MudButton>
                         }

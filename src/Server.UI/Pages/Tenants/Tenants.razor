@@ -30,14 +30,14 @@
             </div>
             <div class="flex-grow-1" />
             <div class="d-flex flex-column justify-end">
-                <div class="d-flex">
+                <div class="d-flex gap-1">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(() => OnRefresh())"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   Style="margin-right: 4px; margin-bottom:4px">
+                                   >
                             @ConstantString.Refresh
                         </MudButton>
                         @if (_canCreate)
@@ -47,7 +47,6 @@
                                        Disabled="@_loading"
                                        Size="Size.Small"
                                        OnClick="OnCreate"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        IconColor="Color.Surface">
                                 @ConstantString.New
                             </MudButton>
@@ -58,7 +57,6 @@
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        OnClick="OnDeleteChecked"
                                        IconColor="Color.Surface">
                                 @ConstantString.Delete
@@ -74,7 +72,6 @@
                                        Disabled="@_loading"
                                        Size="Size.Small"
                                        OnClick="OnCreate"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        IconColor="Color.Surface">
                                 @ConstantString.New
                             </MudButton>
@@ -85,7 +82,6 @@
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        OnClick="OnDeleteChecked"
                                        IconColor="Color.Surface">
                                 @ConstantString.Delete

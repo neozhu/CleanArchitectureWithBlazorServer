@@ -61,14 +61,14 @@
             </div>
             <div class="flex-grow-1"/>
             <div class="d-flex flex-column justify-end">
-                <div class="d-flex">
+                <div class="d-flex gap-1">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton  Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(OnRefresh)"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   Style="margin-right: 4px; margin-bottom:4px">
+                                   >
                             @ConstantString.Refresh
                         </MudButton>
                         @if (_canCreate)
@@ -76,7 +76,6 @@
                             <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        OnClick="OnCreate"
                                        IconColor="Color.Surface">
                                 @ConstantString.New
@@ -88,7 +87,6 @@
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        OnClick="OnDeleteChecked"
                                        IconColor="Color.Surface">
                                 @ConstantString.Delete
@@ -100,7 +98,6 @@
                                               StartIcon="@Icons.Material.Filled.Download"
                                               Size="Size.Small"
                                               @bind-Loading="_exporting" LoadingAdornment="Adornment.Start" OnClick="OnExport"
-                                              Style="margin-right: 4px; margin-bottom:4px"
                                               IconColor="Color.Surface">
                                 @ConstantString.Export
                             </MudLoadingButton>
@@ -136,7 +133,6 @@
                             <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        OnClick="OnCreate"
                                        IconColor="Color.Surface">
                                 @ConstantString.New
@@ -148,7 +144,6 @@
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        Size="Size.Small"
-                                       Style="margin-right: 4px; margin-bottom:4px"
                                        OnClick="OnDeleteChecked"
                                        IconColor="Color.Surface">
                                 @ConstantString.Delete
