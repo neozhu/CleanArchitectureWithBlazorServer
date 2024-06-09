@@ -23,16 +23,16 @@
     <ToolBarContent>
         <div class="d-flex align-start flex-grow-1">
             <div class="d-flex gap-4">
-                <MudIcon Icon="@Icons.Material.Filled.Domain" Size="Size.Large"/>
+                <MudIcon Icon="@Icons.Material.Filled.Domain" Size="Size.Large" />
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption">@Title</MudText>
                 </div>
             </div>
-            <div class="flex-grow-1"/>
+            <div class="flex-grow-1" />
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudButton  Variant="Variant.Outlined"
+                        <MudButton Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(() => OnRefresh())"
@@ -42,7 +42,7 @@
                         </MudButton>
                         @if (_canCreate)
                         {
-                            <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Disabled="@_loading"
                                        Size="Size.Small"
@@ -54,7 +54,7 @@
                         }
                         @if (_canDelete)
                         {
-                            <MudButton  Variant="Variant.Outlined" Color="Color.Error"
+                            <MudButton Variant="Variant.Outlined" Color="Color.Error"
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        Size="Size.Small"
@@ -69,7 +69,7 @@
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         @if (_canCreate)
                         {
-                            <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Disabled="@_loading"
                                        Size="Size.Small"
@@ -81,7 +81,7 @@
                         }
                         @if (_canDelete)
                         {
-                            <MudButton  Variant="Variant.Outlined" Color="Color.Error"
+                            <MudButton Variant="Variant.Outlined" Color="Color.Error"
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        Size="Size.Small"
@@ -124,7 +124,7 @@
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled" 
+                    <MudButton Variant="Variant.Filled"
                                StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
                         @ConstantString.NoAllowed
@@ -149,7 +149,7 @@
     </Columns>
 
     <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"/>
+        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
 
@@ -220,75 +220,49 @@
         _searchString = string.Empty;
         await _table.ReloadServerData();
     }
-
-    private async Task OnCreate()
+    private async Task ShowEditDialog(AddEditTenantCommand command, string title)
     {
-        var command = new AddEditTenantCommand();
         var parameters = new DialogParameters<TenantFormDialog>
         {
             { x => x.Model, command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<TenantFormDialog>
-            (L["Create a new Tenant"], parameters, options);
+        var dialog = DialogService.Show<TenantFormDialog>(title, parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
         {
             await _table.ReloadServerData();
         }
+    }
+    private async Task OnCreate()
+    {
+        await ShowEditDialog(new AddEditTenantCommand(), L["Create a new Tenant"]);
     }
 
     private async Task OnEdit(TenantDto dto)
     {
         var command = Mapper.Map<AddEditTenantCommand>(dto);
-        var parameters = new DialogParameters<TenantFormDialog>
-        {
-            { x => x.Model, command }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<TenantFormDialog>
-            (L["Edit the Tenant"], parameters, options);
-        var state = await dialog.Result;
-        if (!state.Canceled)
-        {
-            await _table.ReloadServerData();
-        }
+        await ShowEditDialog(command, L["Edit the Tenant"]);
     }
 
     private async Task OnDelete(TenantDto dto)
     {
-        var deleteContent = ConstantString.DeleteConfirmationWithId;
         var command = new DeleteTenantCommand(new[] { dto.Id });
-        var parameters = new DialogParameters<DeleteConfirmation>
-        {
-            { x => x.Command, command },
-            { x => x.ContentText, string.Format(deleteContent, dto.Id) }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete the Tenant"], parameters, options);
-        var state = await dialog.Result;
-        if (!state.Canceled)
+        var contentText = string.Format(ConstantString.DeleteConfirmationWithId, dto.Id);
+        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, L["Delete the Tenant"], contentText, async () =>
         {
             await _table.ReloadServerData();
-        }
+        });
     }
 
     private async Task OnDeleteChecked()
     {
         var command = new DeleteTenantCommand(_selectedItems.Select(x => x.Id).ToArray());
-        var deleteContent = ConstantString.DeleteConfirmation;
-        var parameters = new DialogParameters<DeleteConfirmation>
-        {
-            { x => x.Command, command },
-            { x => x.ContentText, string.Format(deleteContent, _selectedItems.Count) }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete Selected Tenants"], parameters, options);
-        var state = await dialog.Result;
-        if (!state.Canceled)
+        var contentText = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
+        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, L["Delete Selected Tenants"], contentText, async () =>
         {
             await _table.ReloadServerData();
-            _selectedItems = new HashSet<TenantDto>();
-        }
+            _selectedItems.Clear();
+        });
     }
 }

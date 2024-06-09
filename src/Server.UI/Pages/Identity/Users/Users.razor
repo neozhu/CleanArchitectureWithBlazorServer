@@ -238,7 +238,7 @@
         <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x => x.UserName)]">
             <CellTemplate>
                 <div class="d-flex align-items-center">
-                    <MudBadge Color="@(IsOnline(context.Item.UserName) ? Color.Success : Color.Error)" Overlap="false" Dot="true" Bordered="true">
+                    <MudBadge Color="@(IsOnline(context.Item.DisplayName??context.Item.UserName) ? Color.Success : Color.Error)" Overlap="false" Dot="true" Bordered="true">
                         <MudAvatar>
                             @if (string.IsNullOrEmpty(context.Item.ProfilePictureDataUrl))
                             {
@@ -387,26 +387,30 @@
         return UsersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
     }
 
+    private Expression<Func<ApplicationUser, bool>> CreateSearchPredicate()
+    {
+        return x =>
+            (x.UserName!.Contains(_searchString) ||
+             x.Email!.Contains(_searchString) ||
+             x.DisplayName!.Contains(_searchString) ||
+             x.PhoneNumber!.Contains(_searchString) ||
+             x.Provider!.Contains(_searchString)) &&
+            (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole))) &&
+            (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId));
+    }
     private async Task<GridData<ApplicationUserDto>> ServerReload(GridState<ApplicationUserDto> state)
     {
         try
         {
             _loading = true;
-            Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
-                  (x.UserName!.Contains(_searchString) ||
-                 x.Email!.Contains(_searchString) ||
-                 x.DisplayName!.Contains(_searchString) ||
-                 x.PhoneNumber!.Contains(_searchString) ||
-                 x.Provider!.Contains(_searchString)) &&
-                (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole))) &&
-                (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId));
-            var query = UserManager.Users.Where(searchPredicate);
+            
+            var query = UserManager.Users.Where(CreateSearchPredicate());
             var items = await query
                 .Include(x => x.UserRoles)
                 .Include(x => x.Superior)
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
-            var total = await UserManager.Users.CountAsync(searchPredicate);
+            var total = await UserManager.Users.CountAsync(CreateSearchPredicate());
             return new GridData<ApplicationUserDto> { TotalItems = total, Items = items };
         }
         finally
@@ -439,20 +443,40 @@
     {
         await _table.ReloadServerData();
     }
-
-    private async Task OnCreate()
+    private async Task ShowCreateUserDialog(ApplicationUserDto model, string title)
     {
-        var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleName.Basic } };
         var parameters = new DialogParameters<UserFormDialog>
         {
             { x => x.Model, model }
         };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<UserFormDialog>(L["Create a new user"], parameters, options);
+        var dialog = DialogService.Show<UserFormDialog>(title, parameters, options);
         var result = await dialog.Result;
+
         if (!result.Canceled)
         {
-            var applicationUser = new ApplicationUser
+            await ProcessUserCreation(model);
+        }
+    }
+
+    private async Task ShowEditUserDialog(ApplicationUserDto model, string title)
+    {
+        var parameters = new DialogParameters<UserFormDialog>
+        {
+            { x => x.Model, model }
+        };
+        var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<UserFormDialog>(title, parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            await ProcessUserUpdate(model);
+        }
+    }
+    private async Task ProcessUserCreation(ApplicationUserDto model)
+    {
+        var applicationUser = new ApplicationUser
             {
                 Provider = model.Provider,
                 DisplayName = model.DisplayName,
@@ -465,232 +489,229 @@
                 EmailConfirmed = true,
                 IsActive = model.IsActive
             };
-            var identityResult = await UserManager.CreateAsync(applicationUser);
-            if (!identityResult.Succeeded)
-            {
-                Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-                return;
-            }
 
-            Snackbar.Add($"{L["New user created successfully."]}", Severity.Info);
-            if (model.AssignedRoles is not null && model.AssignedRoles.Length > 0)
-            {
-                await UserManager.AddToRolesAsync(applicationUser, model.AssignedRoles);
-            }
-            else
-            {
-                await UserManager.AddToRoleAsync(applicationUser, RoleName.Basic);
-            }
-
-            if (applicationUser.IsActive)
-            {
-                var code = await UserManager.GeneratePasswordResetTokenAsync(applicationUser);
-                await SendRestPasswordNotification(code, applicationUser.Id, applicationUser.Email, applicationUser.UserName);
-                Snackbar.Add("Recovery email sent. Please check your inbox to set a new password.", Severity.Info);
-            }
-
-            Logger.LogInformation("Create a user succeeded. Username: {@UserName:l}, UserId: {@UserId}", applicationUser.UserName, applicationUser.Id);
-            UserService.Refresh();
-            await OnRefresh();
+        var identityResult = await UserManager.CreateAsync(applicationUser);
+        if (!identityResult.Succeeded)
+        {
+            Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+            return;
         }
+
+        Snackbar.Add($"{L["New user created successfully."]}", Severity.Info);
+        await AssignRolesToUser(applicationUser, model.AssignedRoles);
+        await SendPasswordResetNotificationIfActive(applicationUser, model.IsActive);
+
+        Logger.LogInformation("Create a user succeeded. Username: {@UserName:l}, UserId: {@UserId}", applicationUser.UserName, applicationUser.Id);
+        UserService.Refresh();
+        await OnRefresh();
+    }
+    private async Task ProcessUserUpdate(ApplicationUserDto item)
+    {
+        var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
+        var state = await AuthState;
+        user.Email = item.Email;
+        user.PhoneNumber = item.PhoneNumber;
+        user.ProfilePictureDataUrl = item.ProfilePictureDataUrl;
+        user.DisplayName = item.DisplayName;
+        user.Provider = item.Provider;
+        user.UserName = item.UserName;
+        user.IsActive = item.IsActive;
+        user.TenantId = item.TenantId;
+        user.SuperiorId = item.SuperiorId;
+        var identityResult = await UserManager.UpdateAsync(user);
+        if (identityResult.Succeeded)
+        {
+            var roles = await UserManager.GetRolesAsync(user!);
+            if (roles.Count > 0)
+            {
+                await UserManager.RemoveFromRolesAsync(user, roles);
+            }
+
+            if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
+            {
+                await UserManager.AddToRolesAsync(user, item.AssignedRoles);
+            }
+
+            Snackbar.Add($"{L["The user updated successfully."]}", Severity.Info);
+            await OnRefresh();
+            UserService.Refresh();
+            await OnlineUserTracker.UpdateUser(new UserInfo(item.Id,
+                                                            item.UserName,
+                                                            item.Email,
+                                                            item.DisplayName,
+                                                            item.ProfilePictureDataUrl,
+                                                            item.SuperiorName,
+                                                            item.SuperiorId,
+                                                            item.TenantId,
+                                                            item.TenantName,
+                                                            item.PhoneNumber,
+                                                            item.AssignedRoles ?? Array.Empty<string>(),
+                                                            UserPresence.Available));
+        }
+        else
+        {
+            Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+        }
+    }
+    private async Task AssignRolesToUser(ApplicationUser user, string[]? roles)
+    {
+        if (roles is not null && roles.Length > 0)
+        {
+            await UserManager.AddToRolesAsync(user, roles);
+        }
+        else
+        {
+            await UserManager.AddToRoleAsync(user, RoleName.Basic);
+        }
+    }
+
+    private async Task SendPasswordResetNotificationIfActive(ApplicationUser user, bool isActive)
+    {
+        if (isActive)
+        {
+            var code = await UserManager.GeneratePasswordResetTokenAsync(user);
+            await SendRestPasswordNotification(code, user.Id, user.Email!, user.UserName!);
+            Snackbar.Add("Recovery email sent. Please check your inbox to set a new password.", Severity.Info);
+        }
+    }
+    private async Task OnCreate()
+    {
+        var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleName.Basic } };
+        await ShowCreateUserDialog(model, L["Create a new user"]);
     }
 
     private async Task OnEdit(ApplicationUserDto item)
     {
-        var parameters = new DialogParameters<UserFormDialog>
-        {
-            { x => x.Model, item }
-        };
-        var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<UserFormDialog>(L["Edit the user"], parameters, options);
-        var result = await dialog.Result;
-        if (!result.Canceled)
-        {
-            var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
-            var state = await AuthState;
-            user.Email = item.Email;
-            user.PhoneNumber = item.PhoneNumber;
-            user.ProfilePictureDataUrl = item.ProfilePictureDataUrl;
-            user.DisplayName = item.DisplayName;
-            user.Provider = item.Provider;
-            user.UserName = item.UserName;
-            user.IsActive = item.IsActive;
-            user.TenantId = item.TenantId;
-            user.SuperiorId = item.SuperiorId;
-            var identityResult = await UserManager.UpdateAsync(user);
-            if (identityResult.Succeeded)
-            {
-                var roles = await UserManager.GetRolesAsync(user!);
-                if (roles.Count > 0 )
-                {
-                    await UserManager.RemoveFromRolesAsync(user, roles);
-                }
-
-                if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
-                {
-                    await UserManager.AddToRolesAsync(user, item.AssignedRoles);
-                }
-
-                Snackbar.Add($"{L["The user updated successfully."]}", Severity.Info);
-                await OnRefresh();
-                UserService.Refresh();
-                await OnlineUserTracker.UpdateUser(new UserInfo(item.Id,
-                                                                item.UserName,
-                                                                item.Email,
-                                                                item.DisplayName,
-                                                                item.ProfilePictureDataUrl,
-                                                                item.SuperiorName,
-                                                                item.SuperiorId,
-                                                                item.TenantId,
-                                                                item.TenantName,
-                                                                item.PhoneNumber,
-                                                                item.AssignedRoles ?? Array.Empty<string>(),
-                                                                UserPresence.Available));
-            }
-            else
-            {
-                Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-            }
-        }
+        await ShowEditUserDialog(item, L["Edit the user"]);
     }
-
-    private async Task OnDelete(ApplicationUserDto dto)
+    private async Task ShowDeleteConfirmationDialog(ApplicationUserDto dto)
     {
-        var deleteContent = ConstantString.DeleteConfirmation;
-        var parameters = new DialogParameters<ConfirmationDialog>
+        var contentText = string.Format(ConstantString.DeleteConfirmation, dto.UserName);
+        await DialogServiceHelper.ShowConfirmationDialog(ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
-            { x => x.ContentText, string.Format(deleteContent, dto.UserName) }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
-        var dialog = DialogService.Show<ConfirmationDialog>(ConstantString.DeleteConfirmationTitle, parameters, options);
-        var result = await dialog.Result;
-        if (!result.Canceled)
+            await ProcessUserDeletion(dto);
+        });
+    }
+    private async Task ProcessUserDeletion(ApplicationUserDto dto)
+    {
+        var user = await UserManager.FindByIdAsync(dto.Id) ?? throw new NotFoundException($"The application user [{dto.Id}] was not found.");
+        var identityResult = await UserManager.DeleteAsync(user);
+        if (identityResult.Succeeded)
         {
-            // Requesting the current user id
-            var state = await AuthState;
-            var currentUserId = state.User.GetUserId();
-
-            // Checks if the current user is trying to remove his own account
-            if (currentUserId != null && currentUserId.Equals(dto.Id))
-            {
-                Snackbar.Add("You cannot delete your own account!", Severity.Error);
-                return;
-            }
-
-            // Trying to find the user that needs to be deleted in the database (nullable check)
-            var requestedDeletedUser = await UserManager.FindByIdAsync(dto.Id);
-            if (requestedDeletedUser == null)
-            {
-                Snackbar.Add("The user doesn't seem to exist in the database!", Severity.Error);
-                return;
-            }
-
-            // Trying to remove the requested user
-            var deleteResult = await UserManager.DeleteAsync(requestedDeletedUser);
-            if (!deleteResult.Succeeded)
-            {
-                Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-                return;
-            }
-
-            Logger.LogInformation("Delete the user succeeded. Username: {@UserName:l}, UserId: {@UserId}", requestedDeletedUser.UserName, requestedDeletedUser.Id);
+            Logger.LogInformation("Delete the user succeeded. Username: {@UserName:l}, UserId: {@UserId}", user.UserName, user.Id);
             Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
             await OnRefresh();
             UserService.Refresh();
         }
+        else
+        {
+            Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+        }
+    }
+    private async Task OnDelete(ApplicationUserDto dto)
+    {
+        var state = await AuthState;
+        if (dto.Id == state.User.GetUserId())
+        {
+            Snackbar.Add("You cannot delete your own account!", Severity.Error);
+            return;
+        }
+        await ShowDeleteConfirmationDialog(dto);
+        
     }
 
     private async Task OnDeleteChecked()
     {
         var state = await AuthState;
         var currentUserId = state.User.GetUserId();
-        var isSelectedItemContainCurrentUser = _selectedItems.Any(x => x.Id == currentUserId);
-
-        if (isSelectedItemContainCurrentUser)
+        if (_selectedItems.Any(x => x.Id == currentUserId))
         {
-            if (_selectedItems.Count == 1)
+            Snackbar.Add("You cannot delete your own account!", Severity.Error);
+            return;
+        }
+
+        var deleteContent = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
+        await DialogServiceHelper.ShowConfirmationDialog(L["Delete"], deleteContent, async () =>
+        {
+            await ProcessSelectedUsersDeletion();
+        });
+    }
+    private async Task ProcessSelectedUsersDeletion()
+    {
+        var deleteIds = _selectedItems.Select(x => x.Id).ToArray();
+        var deleteUsers = await UserManager.Users.Where(x => deleteIds.Contains(x.Id)).ToListAsync();
+
+        foreach (var deleteUser in deleteUsers)
+        {
+            var deleteResult = await UserManager.DeleteAsync(deleteUser);
+            if (!deleteResult.Succeeded)
             {
-                Snackbar.Add("You cannot delete your own account!", Severity.Error);
+                Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
                 return;
             }
 
-            _selectedItems.Remove(_selectedItems.First(x => x.Id == currentUserId));
+            Logger.LogInformation("Delete the user succeeded. Username: {@UserName:l}, UserId: {@UserId}", deleteUser.UserName, deleteUser.Id);
         }
 
-        var deleteContent = ConstantString.DeleteConfirmation;
-        var parameters = new DialogParameters<ConfirmationDialog>
-        {
-            { x => x.ContentText, string.Format(deleteContent, _selectedItems.Count) }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
-        var dialog = DialogService.Show<ConfirmationDialog>(L["Delete"], parameters, options);
-        var result = await dialog.Result;
-
-        if (!result.Canceled)
-        {
-            var deleteId = _selectedItems.Select(x => x.Id).ToArray();
-            var deleteUsers = await UserManager.Users.Where(x => deleteId.Contains(x.Id)).ToListAsync();
-
-            foreach (var deleteUser in deleteUsers)
-            {
-                var deleteResult = await UserManager.DeleteAsync(deleteUser);
-                if (!deleteResult.Succeeded)
-                {
-                    Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-                    return;
-                }
-
-                Logger.LogInformation("Delete the user succeeded. Username: {@UserName:l}, UserId: {@UserId}", deleteUser.UserName, deleteUser.Id);
-            }
-
-            Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
-            await OnRefresh();
-            UserService.Refresh();
-        }
+        Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
+        await OnRefresh();
+        UserService.Refresh();
     }
-
     private async Task OnSetActive(ApplicationUserDto item)
     {
         var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
-        if (!user.IsActive)
+        await ToggleUserActiveState(user, item);
+    }
+    private async Task ToggleUserActiveState(ApplicationUser user, ApplicationUserDto item)
+    {
+        if (user.IsActive)
         {
-            var code = await UserManager.GeneratePasswordResetTokenAsync(user);
-            await SendRestPasswordNotification(code, user.Id, user.Email!, user.UserName!);
-            Snackbar.Add("Email sent. Please check your inbox to set a new password.", Severity.Info);
-
-            user.IsActive = true;
-            user.LockoutEnd = null;
-            var identityResult = await UserManager.UpdateAsync(user);
-            if (identityResult.Succeeded)
-            {
-                item.IsActive = true;
-                item.LockoutEnd = null;
-                Snackbar.Add($"{L["The user has been activated."]}", Severity.Info);
-            }
-            else
-            {
-                Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-            }
+            await DeactivateUser(user, item);
         }
         else
         {
-            user.IsActive = false;
-            user.LockoutEnd = DateTimeOffset.MaxValue;
-            var identityResult = await UserManager.UpdateAsync(user);
+            await ActivateUser(user, item);
+        }
+    }
+    private async Task ActivateUser(ApplicationUser user, ApplicationUserDto item)
+    {
+        var code = await UserManager.GeneratePasswordResetTokenAsync(user);
+        await SendRestPasswordNotification(code, user.Id, user.Email!, user.UserName!);
+        Snackbar.Add("Email sent. Please check your inbox to set a new password.", Severity.Info);
 
-            if (identityResult.Succeeded)
-            {
-                item.IsActive = false;
-                item.LockoutEnd = DateTimeOffset.MaxValue;
-                Snackbar.Add($"{L["The user has been inactivated."]}", Severity.Info);
-            }
-            else
-            {
-                Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-            }
+        user.IsActive = true;
+        user.LockoutEnd = null;
+        var identityResult = await UserManager.UpdateAsync(user);
+
+        if (identityResult.Succeeded)
+        {
+            item.IsActive = true;
+            item.LockoutEnd = null;
+            Snackbar.Add($"{L["The user has been activated."]}", Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
         }
     }
 
+    private async Task DeactivateUser(ApplicationUser user, ApplicationUserDto item)
+    {
+        user.IsActive = false;
+        user.LockoutEnd = DateTimeOffset.MaxValue;
+        var identityResult = await UserManager.UpdateAsync(user);
+
+        if (identityResult.Succeeded)
+        {
+            item.IsActive = false;
+            item.LockoutEnd = DateTimeOffset.MaxValue;
+            Snackbar.Add($"{L["The user has been inactivated."]}", Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+        }
+    }
     private async Task OnResetPassword(ApplicationUserDto item)
     {
         var model = new ResetPasswordFormModel { Id = item.Id, DisplayName = item.DisplayName, UserName = item.UserName, ProfilePictureDataUrl = item.ProfilePictureDataUrl };
@@ -703,31 +724,33 @@
         var result = await dialog.Result;
         if (!result.Canceled)
         {
-            var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
-
-            var token = await UserManager.GeneratePasswordResetTokenAsync(user!);
-            var state = await UserManager.ResetPasswordAsync(user!, token, model!.Password!);
-            if (state.Succeeded)
-            {
-                if (user.EmailConfirmed == false)
-                {
-                    user.EmailConfirmed = true;
-                    await UserManager.UpdateAsync(user);
-                }
-
-                Snackbar.Add($"{L["Reset password successfully"]}", Severity.Info);
-            }
-            else
-            {
-                Snackbar.Add($"{string.Join(",", state.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-            }
+            await ProcessPasswordReset(item, model);
         }
     }
+    private async Task ProcessPasswordReset(ApplicationUserDto item, ResetPasswordFormModel model)
+    {
+        var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
+        var token = await UserManager.GeneratePasswordResetTokenAsync(user);
+        var identityResult = await UserManager.ResetPasswordAsync(user, token, model.Password!);
 
+        if (identityResult.Succeeded)
+        {
+            if (!user.EmailConfirmed)
+            {
+                user.EmailConfirmed = true;
+                await UserManager.UpdateAsync(user);
+            }
+
+            Snackbar.Add($"{L["Reset password successfully"]}", Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+        }
+    }
     private async Task OnSetPermissions(ApplicationUserDto item)
     {
         _showPermissionsDrawer = true;
-        _permissions = new List<PermissionModel>();
         _permissions = await GetAllPermissions(item);
     }
 
@@ -739,48 +762,40 @@
 
     private async Task<List<PermissionModel>> GetAllPermissions(ApplicationUserDto dto)
     {
-        async Task<IList<Claim>> GetClaims(string userId)
-        {
-            var user = await UserManager.FindByIdAsync(dto.Id) ?? throw new NotFoundException($"not found application user: {userId}");
-            var claims = await UserManager.GetClaimsAsync(user);
-            return claims;
-        }
-
-        var key = $"get-claims-by-{dto.Id}";
-        _assignedClaims = await FusionCache.GetOrSetAsync(key, _ => GetClaims(dto.Id), RefreshInterval);
+        _assignedClaims = await GetUserClaims(dto.Id);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
+
         foreach (var module in modules)
         {
-            var moduleName = string.Empty;
-            var moduleDescription = string.Empty;
-            if (module.GetCustomAttributes(typeof(DisplayNameAttribute), true)
-                    .FirstOrDefault() is DisplayNameAttribute displayNameAttribute)
-                moduleName = displayNameAttribute.DisplayName;
-
-            if (module.GetCustomAttributes(typeof(DescriptionAttribute), true)
-                    .FirstOrDefault() is DescriptionAttribute descriptionAttribute)
-                moduleDescription = descriptionAttribute.Description;
-
+            var moduleName = module.GetCustomAttributes<DisplayNameAttribute>().FirstOrDefault()?.DisplayName ?? string.Empty;
+            var moduleDescription = module.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
             var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            allPermissions.AddRange(from field in fields
-                select field.GetValue(null)
-                into propertyValue
-                where propertyValue is not null
-                select propertyValue.ToString()
-                into claimValue
-                select new PermissionModel
-                {
-                    UserId = dto.Id,
-                    ClaimValue = claimValue,
-                    ClaimType = ApplicationClaimTypes.Permission,
-                    Group = moduleName,
-                    Description = moduleDescription,
-                    Assigned = _assignedClaims.Any(x => x.Value == claimValue)
-                });
+
+            allPermissions.AddRange(fields.Select(field => field.GetValue(null)?.ToString())
+                .Where(claimValue => claimValue != null)
+                .Select(claimValue => new PermissionModel
+                    {
+                        UserId = dto.Id,
+                        ClaimValue = claimValue,
+                        ClaimType = ApplicationClaimTypes.Permission,
+                        Group = moduleName,
+                        Description = moduleDescription,
+                        Assigned = _assignedClaims.Any(x => x.Value == claimValue)
+                    }));
         }
 
         return allPermissions;
+    }
+
+    private async Task<IList<Claim>> GetUserClaims(string userId)
+    {
+        var key = $"get-claims-by-{userId}";
+        return await FusionCache.GetOrSetAsync(key, async _ =>
+        {
+            var user = await UserManager.FindByIdAsync(userId) ?? throw new NotFoundException($"not found application user: {userId}");
+            return await UserManager.GetClaimsAsync(user);
+        }, RefreshInterval);
     }
 
     private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
@@ -790,34 +805,45 @@
             _processing = true;
             var userId = models.First().UserId;
             var user = await UserManager.FindByIdAsync(userId!) ?? throw new NotFoundException($"not found application user: {userId}");
+
             foreach (var model in models)
             {
-                if (model.Assigned)
-                {
-                    if (model.ClaimType is not null && model.ClaimValue is not null)
-                    {
-                        await UserManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
-                    }
-                }
-                else
-                {
-                    var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
-                    if (removed is not null)
-                    {
-                        await UserManager.RemoveClaimAsync(user, removed);
-                    }
-                }
+                await ProcessPermissionChange(user, model);
             }
 
             Snackbar.Add($"{L["Authorization has been changed"]}", Severity.Info);
-            await Task.Delay(300);
-            var key = $"get-claims-by-{user.Id}";
-            FusionCache.Remove(key);
+            await ClearClaimsCache(user.Id);
         }
         finally
         {
             _processing = false;
         }
+    }
+
+    private async Task ProcessPermissionChange(ApplicationUser user, PermissionModel model)
+    {
+        if (model.Assigned)
+        {
+            if (model.ClaimType is not null && model.ClaimValue is not null)
+            {
+                await UserManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
+            }
+        }
+        else
+        {
+            var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
+            if (removed is not null)
+            {
+                await UserManager.RemoveClaimAsync(user, removed);
+            }
+        }
+    }
+
+    private async Task ClearClaimsCache(string userId)
+    {
+        var key = $"get-claims-by-{userId}";
+        FusionCache.Remove(key);
+        await Task.Delay(300);
     }
 
     private async Task OnAssignChangedHandler(PermissionModel model)
@@ -827,12 +853,15 @@
             _processing = true;
             var userId = model.UserId!;
             var user = await UserManager.FindByIdAsync(userId) ?? throw new NotFoundException($"Application user Not Found {userId}.");
-            ;
+
             model.Assigned = !model.Assigned;
-            if (model is { Assigned: true, ClaimType: not null, ClaimValue: not null })
+            if (model.Assigned)
             {
-                await UserManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
-                Snackbar.Add($"{L["Permission assigned successfully"]}", Severity.Info);
+                if (model.ClaimType is not null && model.ClaimValue is not null)
+                {
+                    await UserManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
+                    Snackbar.Add($"{L["Permission assigned successfully"]}", Severity.Info);
+                }
             }
             else
             {
@@ -845,8 +874,7 @@
                 Snackbar.Add($"{L["Permission removed successfully"]}", Severity.Info);
             }
 
-            var key = $"get-claims-by-{user.Id}";
-            FusionCache.Remove(key);
+            await ClearClaimsCache(user.Id);
         }
         finally
         {
@@ -856,40 +884,24 @@
 
     private async Task OnExport()
     {
+        _exporting = true;
         try
         {
-            _exporting = true;
-            Expression<Func<ApplicationUser, bool>> searchPredicate = x =>
-                (x.UserName!.Contains(_searchString) ||
-                 x.Email!.Contains(_searchString) ||
-                 x.DisplayName!.Contains(_searchString) ||
-                 x.PhoneNumber!.Contains(_searchString) ||
-                 x.Provider!.Contains(_searchString)) &&
-                (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole))) &&
-                (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId ==_selectedTenantId));
+            var searchPredicate = CreateSearchPredicate();
             var items = await UserManager.Users.Where(searchPredicate)
                 .Select(x => new ApplicationUserDto
-                {
-                    Id = x.Id,
-                    UserName = x.UserName!,
-                    DisplayName = x.DisplayName,
-                    Email = x.Email!,
-                    PhoneNumber = x.PhoneNumber,
-                    TenantId = x.TenantId,
-                    TenantName = x.Tenant.Name
-                }).ToListAsync();
-            var result = await ExcelService.ExportAsync(items,
-                new Dictionary<string, Func<ApplicationUserDto, object?>>
-                {
-                    { L["Id"], item => item.Id },
-                    { L["User Name"], item => item.UserName },
-                    { L["Display Name"], item => item.DisplayName },
-                    { L["Email"], item => item.Email },
-                    { L["Phone Number"], item => item.PhoneNumber },
-                    { L["Tenant Id"], item => item.TenantId },
-                    { L["Tenant Name"], item => item.TenantName }
-                }, L["Users"]);
-            var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, "application/octet-stream");
+                    {
+                        Id = x.Id,
+                        UserName = x.UserName!,
+                        DisplayName = x.DisplayName,
+                        Email = x.Email!,
+                        PhoneNumber = x.PhoneNumber,
+                        TenantId = x.TenantId,
+                        TenantName = x.Tenant.Name
+                    }).ToListAsync();
+
+            var result = await ExportUsers(items);
+            await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
         }
         finally
@@ -898,12 +910,53 @@
         }
     }
 
+    private async Task<byte[]> ExportUsers(List<ApplicationUserDto> items)
+    {
+        return await ExcelService.ExportAsync(items,
+            new Dictionary<string, Func<ApplicationUserDto, object?>>
+                {
+                { L["Id"], item => item.Id },
+                { L["User Name"], item => item.UserName },
+                { L["Display Name"], item => item.DisplayName },
+                { L["Email"], item => item.Email },
+                { L["Phone Number"], item => item.PhoneNumber },
+                { L["Tenant Id"], item => item.TenantId },
+                { L["Tenant Name"], item => item.TenantName }
+                }, L["Users"]);
+    }
+
     private async Task OnImportData(IBrowserFile file)
     {
         _uploading = true;
-        var stream = new MemoryStream();
-        await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
-        var result = await ExcelService.ImportAsync(stream.ToArray(), new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
+        try
+        {
+            var stream = new MemoryStream();
+            await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
+            var result = await ImportUsers(stream);
+
+            if (result.Succeeded)
+            {
+                await ProcessImportedUsers(result.Data);
+                await _table.ReloadServerData();
+                Snackbar.Add($"{ConstantString.ImportSuccess}", Severity.Info);
+            }
+            else
+            {
+                foreach (var msg in result.Errors)
+                {
+                    Snackbar.Add($"{msg}", Severity.Error);
+                }
+            }
+        }
+        finally
+        {
+            _uploading = false;
+        }
+    }
+
+    private async Task<IResult<IEnumerable<ApplicationUser>>> ImportUsers(MemoryStream stream)
+    {
+        return await ExcelService.ImportAsync(stream.ToArray(), new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
         {
             { L["User Name"], (row, item) => item.UserName = row[L["User Name"]]?.ToString() },
             { L["Display Name"], (row, item) => item.DisplayName = row[L["Display Name"]]?.ToString() },
@@ -911,37 +964,25 @@
             { L["Phone Number"], (row, item) => item.PhoneNumber = row[L["Phone Number"]]?.ToString() },
             { L["Tenant Id"], (row, item) => item.TenantId = row[L["Tenant Id"]]?.ToString() }
         }, L["Users"]);
+    }
 
-        if (result.Succeeded)
+    private async Task ProcessImportedUsers(IEnumerable<ApplicationUser> users)
+    {
+        foreach (var user in users)
         {
-            foreach (var user in result.Data!)
+            if (!UserManager.Users.Any(x => x.UserName == user.UserName))
             {
-                if (!UserManager.Users.Any(x => x.UserName == user.UserName))
+                var identityResult = await UserManager.CreateAsync(user);
+                if (identityResult.Succeeded)
                 {
-                    var iResult = await UserManager.CreateAsync(user);
-                    if (iResult.Succeeded)
-                    {
-                        await UserManager.AddToRolesAsync(user, new[] { RoleName.Basic });
-                    }
-                    else
-                    {
-                        Snackbar.Add($"{string.Join(',', iResult.Errors.Select(x => x.Description))}", Severity.Error);
-                    }
+                    await UserManager.AddToRolesAsync(user, new[] { RoleName.Basic });
+                }
+                else
+                {
+                    Snackbar.Add($"{string.Join(',', identityResult.Errors.Select(x => x.Description))}", Severity.Error);
                 }
             }
-
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.ImportSuccess}", Severity.Info);
         }
-        else
-        {
-            foreach (var msg in result.Errors)
-            {
-                Snackbar.Add($"{msg}", Severity.Error);
-            }
-        }
-
-        _uploading = false;
     }
 
     private async Task SendWelcomeNotification(string toEmail, string userName)
