@@ -35,6 +35,7 @@ public static class SerilogExtensions
                 .MinimumLevel.Override("ActualLab.Fusion.Interception.ComputeServiceInterceptor", LogEventLevel.Error)
                 .MinimumLevel.Override("ActualLab.Fusion.Extensions.Services.InMemoryKeyValueStore", LogEventLevel.Error)
                 .MinimumLevel.Override("ActualLab.Fusion.Operations.Internal.CompletionProducer", LogEventLevel.Error)
+                .MinimumLevel.Override("ActualLab.Fusion.Internal.ComputedGraphPruner", LogEventLevel.Error)
                 .MinimumLevel.Override("CleanArchitecture.Blazor.Server.UI.Services.Fusion.UserSessionTracker", LogEventLevel.Error)
                 .MinimumLevel.Override("CleanArchitecture.Blazor.Server.UI.Services.Fusion.OnlineUserTracker", LogEventLevel.Error)
                 .Enrich.FromLogContext()
