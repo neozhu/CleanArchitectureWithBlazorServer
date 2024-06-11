@@ -36,13 +36,13 @@
             <div class="flex-grow-1"/>
 
             <div class="d-flex flex-column justify-end">
-                <div class="d-flex">
+                <div class="d-flex gap-1">
                     <MudButton  Variant="Variant.Outlined"
                                Size="Size.Small"
                                Disabled="@_loading"
                                OnClick="@(OnRefresh)"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                               Style="margin-right: 4px; margin-bottom:4px">
+                               >
                         @ConstantString.Refresh
                     </MudButton>
                     @if (_canPurge)
@@ -52,7 +52,7 @@
                                    Disabled="@(_loading || _clearing)"
                                    OnClick="@(OnPurge)"
                                    StartIcon="@Icons.Material.Filled.ClearAll" IconColor="Color.Surface" Color="Color.Secondary"
-                                   Style="margin-right: 4px; margin-bottom:4px">
+                                   >
                             @if (_clearing)
                             {
                                 <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -226,15 +226,9 @@
 
     private async Task OnPurge()
     {
-        var parameters = new DialogParameters<ConfirmationDialog>
-        {
-            { x => x.ContentText, $"{L["Are you sure you want to erase all the logs?"]}" }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-        var dialog = DialogService.Show<ConfirmationDialog>
-            ($"{L["Erase logs"]}", parameters, options);
-        var state = await dialog.Result;
-        if (!state.Canceled)
+        var contentText = $"{L["Are you sure you want to erase all the logs?"]}";
+        var title = $"{L["Erase logs"]}";
+        await DialogServiceHelper.ShowConfirmationDialog(title, contentText, async () =>
         {
             _clearing = true;
             try
@@ -248,6 +242,6 @@
             {
                 _clearing = false;
             }
-        }
+        });
     }
 }
