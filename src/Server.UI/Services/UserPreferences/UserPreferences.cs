@@ -12,7 +12,7 @@ public class UserPreferences
     {
         "#2d4275",
         Colors.Green.Default,
-        "#0576b9",
+        "#5052ba",
         "#8421d1",
         "#FF7F00",
         Colors.Red.Default
@@ -22,7 +22,7 @@ public class UserPreferences
     {
         "#8b9ac6",
         "#6c9f77",
-        "#79a5d1",
+        "#5052ba",
         "#776BE7",
         "#d0882c",
         "#f88989"
@@ -45,7 +45,7 @@ public class UserPreferences
     public string SecondaryColor { get; set; } = "#ff4081ff";
     public double BorderRadius { get; set; } = 4;
     public double DefaultFontSize { get; set; } = 0.8125;
-    public double LineHeight => 1.5 * (DefaultFontSize / 0.875);
+    public double LineHeight => Math.Min(1.7, Math.Max(1.3, 1.5 * (DefaultFontSize / 0.875)));
     public double LetterSpacing => 0.00938 * (DefaultFontSize / 0.875);
 
     public double Body1FontSize => DefaultFontSize;
@@ -57,7 +57,7 @@ public class UserPreferences
     public double ButtonFontSize => DefaultFontSize;
     public double ButtonLineHeight => 1.75 * (DefaultFontSize / 0.875);
     public double CaptionFontSize => DefaultFontSize + 0.0625;
-    public double CaptionLineHeight => 1.66 * (DefaultFontSize / 0.75);
+    public double CaptionLineHeight => Math.Min(1.8, Math.Max(1.4, 1.66 * (DefaultFontSize / 0.75)));
     public double OverlineFontSize => DefaultFontSize - 0.0625;
     public double Subtitle1FontSize => DefaultFontSize + 0.125;
     public double Subtitle2FontSize => DefaultFontSize;
