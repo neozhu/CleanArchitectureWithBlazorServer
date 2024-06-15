@@ -90,9 +90,9 @@
                         }
                         @if (_canImport)
                         {
-                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px">
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" >
                                 <ActivatorContent>
-                                    <MudButton HtmlTag="label"
+                                    <MudButton 
                                                Size="Size.Small"
                                                Variant="Variant.Outlined"
                                                Color="Color.Primary"
@@ -205,7 +205,6 @@
     private CustomerDto _currentDto = new();
     private bool _loading;
     private bool _uploading;
-    private bool _downloading;
     private bool _exporting;
 
 
