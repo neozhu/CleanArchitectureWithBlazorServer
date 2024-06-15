@@ -14,7 +14,6 @@ using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using MudExtensions.Services;
@@ -28,8 +27,17 @@ using CleanArchitecture.Blazor.Server.UI.Middlewares;
 
 namespace CleanArchitecture.Blazor.Server.UI;
 
+/// <summary>
+/// Provides dependency injection configuration for the server UI.
+/// </summary>
 public static class DependencyInjection
 {
+    /// <summary>
+    /// Adds server UI services to the service collection.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="config">The configuration.</param>
+    /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddServerUI(this IServiceCollection services, IConfiguration config)
     {
         services.AddRazorComponents().AddInteractiveServerComponents();
@@ -67,9 +75,10 @@ public static class DependencyInjection
 
 
         // Fusion services
-        services.AddFusion(fusion => {
+        services.AddFusion(fusion =>
+        {
             fusion.AddInMemoryKeyValueStore();
-            fusion.AddService<IUserSessionTracker,UserSessionTracker>();
+            fusion.AddService<IUserSessionTracker, UserSessionTracker>();
             fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
         });
 
@@ -108,7 +117,6 @@ public static class DependencyInjection
         services.AddScoped<LocalTimezoneOffset>();
         services.AddHttpContextAccessor();
         services.AddScoped<HubClient>();
-        services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
         services.AddMudExtensions()
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()
@@ -132,6 +140,12 @@ public static class DependencyInjection
         return services;
     }
 
+    /// <summary>
+    /// Configures the server pipeline.
+    /// </summary>
+    /// <param name="app">The web application.</param>
+    /// <param name="config">The configuration.</param>
+    /// <returns>The configured web application.</returns>
     public static WebApplication ConfigureServer(this WebApplication app, IConfiguration config)
     {
         // Configure the HTTP request pipeline.
@@ -189,7 +203,7 @@ public static class DependencyInjection
         { // We obviously need this
             KeepAliveInterval = TimeSpan.FromSeconds(30), // Just in case
         });
-  
+
         return app;
     }
 }
