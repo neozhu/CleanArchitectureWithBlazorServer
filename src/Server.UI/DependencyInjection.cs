@@ -108,7 +108,6 @@ public static class DependencyInjection
         services.AddScoped<LocalTimezoneOffset>();
         services.AddHttpContextAccessor();
         services.AddScoped<HubClient>();
-        services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
         services.AddMudExtensions()
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()

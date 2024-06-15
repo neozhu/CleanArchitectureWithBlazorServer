@@ -375,7 +375,7 @@
                 .Select(claimValue => new PermissionModel
                     {
                         RoleId = dto.Id,
-                        ClaimValue = claimValue,
+                        ClaimValue = claimValue??string.Empty,
                         ClaimType = ApplicationClaimTypes.Permission,
                         Group = moduleName,
                         Description = moduleDescription,

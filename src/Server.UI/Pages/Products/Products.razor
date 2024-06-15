@@ -48,8 +48,7 @@
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(() => OnRefresh())"
-                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   >
+                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary">
                             @ConstantString.Refresh
                         </MudButton>
                         @if (_canCreate)
@@ -66,7 +65,7 @@
                                        StartIcon="@Icons.Material.Filled.ContentCopy"
                                        Size="Size.Small"
                                        Disabled="@(_selectedItems.Count != 1)"
-                                       OnClick="OnClone" 
+                                       OnClick="OnClone"
                                        IconColor="Color.Surface">
                                 @ConstantString.Clone
                             </MudButton>
@@ -105,7 +104,7 @@
                         }
                         @if (_canImport)
                         {
-                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" >
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                 <ActivatorContent>
                                     <MudButton Size="Size.Small"
                                                Variant="Variant.Outlined"
