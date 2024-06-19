@@ -327,7 +327,7 @@
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     private UserManager<ApplicationUser> UserManager = null!;
     private RoleManager<ApplicationRole> RoleManager = null!;
-
+    private PermissionHelper PermissionHelper = null!;
     private int _defaultPageSize = 15;
     private HashSet<ApplicationUserDto> _selectedItems = new();
     private readonly ApplicationUserDto _currentDto = new();
@@ -385,6 +385,7 @@
     {
         RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
         UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        PermissionHelper = ScopedServices.GetRequiredService<PermissionHelper>();
     }
     private  async Task OnInvalidated(IComputed state)
     {
@@ -763,7 +764,7 @@
     private async Task OnSetPermissions(ApplicationUserDto item)
     {
         _showPermissionsDrawer = true;
-        _permissions = await GetAllPermissions(item);
+        _permissions = await PermissionHelper.GetAllPermissionsByUserId(item.Id);
     }
 
     private Task OnOpenChangedHandler(bool state)
@@ -772,43 +773,7 @@
         return Task.CompletedTask;
     }
 
-    private async Task<List<PermissionModel>> GetAllPermissions(ApplicationUserDto dto)
-    {
-        _assignedClaims = await GetUserClaims(dto.Id);
-        var allPermissions = new List<PermissionModel>();
-        var modules = typeof(Permissions).GetNestedTypes();
-
-        foreach (var module in modules)
-        {
-            var moduleName = module.GetCustomAttributes<DisplayNameAttribute>().FirstOrDefault()?.DisplayName ?? string.Empty;
-            var moduleDescription = module.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
-            var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-
-            allPermissions.AddRange(fields.Select(field => field.GetValue(null)?.ToString())
-                .Where(claimValue => claimValue != null)
-                .Select(claimValue => new PermissionModel
-                    {
-                        UserId = dto.Id,
-                        ClaimValue = claimValue ?? string.Empty,
-                        ClaimType = ApplicationClaimTypes.Permission,
-                        Group = moduleName,
-                        Description = moduleDescription,
-                        Assigned = _assignedClaims.Any(x => x.Value == claimValue)
-                    }));
-        }
-
-        return allPermissions;
-    }
-
-    private async Task<IList<Claim>> GetUserClaims(string userId)
-    {
-        var key = $"get-claims-by-{userId}";
-        return await FusionCache.GetOrSetAsync(key, async _ =>
-        {
-            var user = await UserManager.FindByIdAsync(userId) ?? throw new NotFoundException($"not found application user: {userId}");
-            return await UserManager.GetClaimsAsync(user);
-        }, RefreshInterval);
-    }
+    
 
     private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
     {

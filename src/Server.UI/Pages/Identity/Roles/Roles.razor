@@ -236,7 +236,7 @@
     private bool _showPermissionsDrawer;
     private bool _loading;
     private bool _uploading;
-    private RoleHelper RoleHelper = null!;
+    private PermissionHelper PermissionHelper = null!;
     protected override async Task OnInitializedAsync()
     {
         InitializeServices();
@@ -253,7 +253,7 @@
     private void InitializeServices()
     {
         RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
-        RoleHelper = ScopedServices.GetRequiredService<RoleHelper>();
+        PermissionHelper = ScopedServices.GetRequiredService<PermissionHelper>();
     }
     private async Task<GridData<ApplicationRoleDto>> ServerReload(GridState<ApplicationRoleDto> state)
     {
@@ -352,7 +352,7 @@
     {
         _showPermissionsDrawer = true;
         _currentRoleName = item.Name!;
-        _permissions = await RoleHelper.GetAllPermissions(item.Id);
+        _permissions = await PermissionHelper.GetAllPermissionsByRoleId(item.Id);
     }
 
     
