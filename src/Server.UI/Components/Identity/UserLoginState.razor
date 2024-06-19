@@ -43,7 +43,7 @@
     }
     private void OnStateChanged(object? sender, EventArgs e)
     {
-        var result = ((IState<UserProfileState>)sender).Value;
+        var result = ((IState<UserProfileState>?)sender)?.Value;
         UserProfileStateChanged.InvokeAsync(result);
     }
     private void _client_Login(object? sender, UserStateChangeEventArgs args)
