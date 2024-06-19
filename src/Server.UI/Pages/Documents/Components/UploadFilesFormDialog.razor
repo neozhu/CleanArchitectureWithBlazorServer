@@ -39,7 +39,7 @@
     <DialogActions>
 
         <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!_uploadedFiles.Any())" OnClick="Clear">@ConstantString.Clear</MudButton>
-        <MudFileUpload T="IReadOnlyList<IBrowserFile>" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="LoadFiles" Style="margin-top:0px">
+        <MudFileUpload T="IReadOnlyList<IBrowserFile>" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="LoadFiles" >
             <ActivatorContent>
                 <MudLoadingButton Loading="@_uploading" Variant="Variant.Filled"  
                                   Icon="@Icons.Material.Filled.AttachFile"

@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Caching;
@@ -7,13 +7,8 @@ public static class ProductCacheKey
 {
     public const string GetAllCacheKey = "all-Products";
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromHours(1);
-    private static CancellationTokenSource _tokenSource;
     private static readonly object _tokenLock = new();
-
-    static ProductCacheKey()
-    {
-        _tokenSource = new CancellationTokenSource(RefreshInterval);
-    }
+    private static CancellationTokenSource _tokenSource = new CancellationTokenSource(RefreshInterval);
 
     public static MemoryCacheEntryOptions MemoryCacheEntryOptions =>
         new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
@@ -32,7 +27,12 @@ public static class ProductCacheKey
     {
         lock (_tokenLock)
         {
-            if (_tokenSource.IsCancellationRequested) _tokenSource = new CancellationTokenSource(RefreshInterval);
+            if (_tokenSource.IsCancellationRequested)
+            {
+                _tokenSource.Cancel();
+                _tokenSource.Dispose();
+                _tokenSource = new CancellationTokenSource(RefreshInterval);
+            }
 
             return _tokenSource;
         }
@@ -45,6 +45,7 @@ public static class ProductCacheKey
             if (!_tokenSource.IsCancellationRequested)
             {
                 _tokenSource.Cancel();
+                _tokenSource.Dispose();
                 _tokenSource = new CancellationTokenSource(RefreshInterval);
             }
         }
