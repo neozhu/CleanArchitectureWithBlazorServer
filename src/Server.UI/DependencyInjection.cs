@@ -121,6 +121,7 @@ public static class DependencyInjection
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()
             .AddScoped<DialogServiceHelper>()
+            .AddScoped<RoleHelper>()
             .AddBlazorDownloadFile()
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
             .AddScoped<IMenuService, MenuService>()

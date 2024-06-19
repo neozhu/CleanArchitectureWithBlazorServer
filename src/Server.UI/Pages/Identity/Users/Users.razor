@@ -1,4 +1,5 @@
 ﻿@page "/identity/users"
+@using ActualLab.Fusion
 @using CleanArchitecture.Blazor.Server.UI.Services.Fusion
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -32,6 +33,7 @@
 @inject IMailService MailService
 @inject IStringLocalizer<Users> L
 @inject ILogger<Users> Logger
+ 
 <PageTitle>@Title</PageTitle>
 
 <MudDataGrid @ref="_table"
@@ -311,6 +313,9 @@
     </PagerContent>
 </MudDataGrid>
 
+<h1>@computed?.ValueOrDefault.Length</h1>
+
+
 <PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@_processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></PermissionsDrawer>
 
 <style>
@@ -354,7 +359,8 @@
     private bool _uploading;
     private List<string?> _roles = new();
     private string? _searchRole;
-
+    private Computed<UserInfo[]> computed;
+    private Action<IComputed> invalidatedHandler;
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
@@ -372,13 +378,24 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
-    }
+        computed = await Computed.Capture(() => OnlineUserTracker.GetOnlineUsers());
+        invalidatedHandler = async (IComputed c) => await OnInvalidated(c);
+        computed.Invalidated += invalidatedHandler;
 
+    }
+    private  async Task OnInvalidated(IComputed state)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        computed.Invalidated -= invalidatedHandler;
+    }
     private bool IsOnline(string username)
     {
         return UsersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
     }
-
+   
     private Expression<Func<ApplicationUser, bool>> CreateSearchPredicate()
     {
         return x =>

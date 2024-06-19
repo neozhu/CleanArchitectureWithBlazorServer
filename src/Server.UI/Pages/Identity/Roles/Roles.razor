@@ -236,10 +236,10 @@
     private bool _showPermissionsDrawer;
     private bool _loading;
     private bool _uploading;
-
+    private RoleHelper RoleHelper = null!;
     protected override async Task OnInitializedAsync()
     {
-        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        InitializeServices();
         Title = L[_currentDto.GetClassDescription()];
         var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Roles.Create)).Succeeded;
@@ -250,7 +250,11 @@
         _canImport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
     }
-
+    private void InitializeServices()
+    {
+        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        RoleHelper = ScopedServices.GetRequiredService<RoleHelper>();
+    }
     private async Task<GridData<ApplicationRoleDto>> ServerReload(GridState<ApplicationRoleDto> state)
     {
         try
@@ -348,43 +352,10 @@
     {
         _showPermissionsDrawer = true;
         _currentRoleName = item.Name!;
-        _permissions = await GetAllPermissions(item);
+        _permissions = await RoleHelper.GetAllPermissions(item);
     }
 
-    private async Task<List<PermissionModel>> GetAllPermissions(ApplicationRoleDto dto)
-    {
-        async Task<IList<Claim>> GetClaims(string roleId)
-        {
-            var role = await RoleManager.FindByIdAsync(dto.Id) ?? throw new NotFoundException($"not found application role: {roleId}");
-            var claims = await RoleManager.GetClaimsAsync(role);
-            return claims;
-        }
-
-        var key = $"get-claims-by-{dto.Id}";
-        _assignedClaims = await FusionCache.GetOrSetAsync(key, _ => GetClaims(dto.Id), RefreshInterval);
-        var allPermissions = new List<PermissionModel>();
-        var modules = typeof(Permissions).GetNestedTypes();
-        foreach (var module in modules)
-        {
-            var moduleName = module.GetCustomAttributes<DisplayNameAttribute>().FirstOrDefault()?.DisplayName ?? string.Empty;
-            var moduleDescription = module.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
-            var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-
-            allPermissions.AddRange(fields.Select(field => field.GetValue(null)?.ToString())
-                .Where(claimValue => claimValue != null)
-                .Select(claimValue => new PermissionModel
-                    {
-                        RoleId = dto.Id,
-                        ClaimValue = claimValue??string.Empty,
-                        ClaimType = ApplicationClaimTypes.Permission,
-                        Group = moduleName,
-                        Description = moduleDescription,
-                        Assigned = _assignedClaims.Any(x => x.Value == claimValue)
-                    }));
-        }
-
-        return allPermissions;
-    }
+    
 
     private Task OnOpenChangedHandler(bool state)
     {
