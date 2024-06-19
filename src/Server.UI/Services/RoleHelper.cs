@@ -24,9 +24,9 @@ public class RoleHelper
         _fusionCache = fusionCache;
         _refreshInterval = TimeSpan.FromDays(1);
     }
-    public async Task<List<PermissionModel>> GetAllPermissions(ApplicationRoleDto dto)
+    public async Task<List<PermissionModel>> GetAllPermissions(string roleId)
     {
-        var assignedClaims = await GetUserClaims(dto.Id);
+        var assignedClaims = await GetUserClaims(roleId);
         var allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
 
@@ -37,10 +37,10 @@ public class RoleHelper
             var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
             allPermissions.AddRange(fields.Select(field => field.GetValue(null)?.ToString())
-                .Where(claimValue => claimValue != null)
+                .Where(claimValue => !string.IsNullOrEmpty(claimValue))
                 .Select(claimValue => new PermissionModel
                 {
-                    RoleId = dto.Id,
+                    RoleId = roleId,
                     ClaimValue = claimValue ?? string.Empty,
                     ClaimType = ApplicationClaimTypes.Permission,
                     Group = moduleName,

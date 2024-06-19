@@ -313,7 +313,6 @@
     </PagerContent>
 </MudDataGrid>
 
-<h1>@computed?.ValueOrDefault.Length</h1>
 
 
 <PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@_processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></PermissionsDrawer>
@@ -364,8 +363,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        InitializeServices();
         var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
@@ -382,6 +380,11 @@
         invalidatedHandler = async (IComputed c) => await OnInvalidated(c);
         computed.Invalidated += invalidatedHandler;
 
+    }
+    private void InitializeServices()
+    {
+        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
     }
     private  async Task OnInvalidated(IComputed state)
     {
