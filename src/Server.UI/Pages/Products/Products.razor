@@ -316,8 +316,13 @@
         Query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
-    private async Task ShowEditFormDialog(string title, DialogParameters parameters)
+    private async Task ShowEditFormDialog(string title, AddEditProductCommand command)
     {
+        var parameters = new DialogParameters<ProductFormDialog>
+        {
+            { x => x.Refresh, () => _table.ReloadServerData() },
+            { x => x.Model, command }
+        };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<ProductFormDialog>(title, parameters, options);
         var state = await dialog.Result;
@@ -332,12 +337,8 @@
     private async Task OnCreate()
     {
         var command = new AddEditProductCommand { Pictures = new List<ProductImage>() };
-        var parameters = new DialogParameters<ProductFormDialog>
-        {
-            { x => x.Refresh, () => _table.ReloadServerData() },
-            { x => x.Model, command }
-        };
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters);
+       
+        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
     }
 
     private async Task OnClone()
@@ -352,23 +353,13 @@
                 Name = copy.Name,
                 Pictures = copy.Pictures
             };
-        var parameters = new DialogParameters<ProductFormDialog>
-        {
-            { x => x.Refresh, () => _table.ReloadServerData() },
-            { x => x.Model, command }
-        };
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters);
+        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
     }
 
     private async Task OnEdit(ProductDto dto)
     {
         var command = Mapper.Map<AddEditProductCommand>(dto);
-        var parameters = new DialogParameters<ProductFormDialog>
-        {
-            { x => x.Refresh, () => _table.ReloadServerData() },
-            { x => x.Model, command }
-        };
-        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), parameters);
+        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), command);
     }
 
     private async Task OnDelete(ProductDto dto)
