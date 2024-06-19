@@ -1,6 +1,7 @@
 ﻿@using Toolbelt.Blazor.HotKeys2
 @inject IStringLocalizer<SharedResource> L
 @inject HotKeys HotKeys
+@implements IAsyncDisposable
 
 <MudDialog DisableSidePadding="true">
     <DialogContent>
@@ -33,10 +34,13 @@
     private HotKeysContext? _hotKeysContext;
     private Dictionary<string, string> _pagesFiltered = new();
     private string _search = string.Empty;
-
-    public void Dispose()
+   
+    public async ValueTask DisposeAsync()
     {
-        _hotKeysContext?.Dispose();
+        if (_hotKeysContext != null)
+        {
+            await _hotKeysContext.DisposeAsync();
+        }
     }
 
     protected override void OnInitialized()

@@ -6,7 +6,6 @@
 @inherits ComputedStateComponent<UserInfo[]>
 @inject IOnlineUserTracker OnlineUserTracker
 @inject IStringLocalizer<ActiveUserSession> L
-@implements IAsyncDisposable
 @if (State.HasValue && State.LastNonErrorValue.Any())
 {
     <div class="d-flex flex-row gap-2 my-3 gap-2 my-3">
@@ -36,7 +35,7 @@
 
 
 @code {
-    private Dictionary<string, UserProfile>? onlineUsers;
+
     private string sessionId = Guid.NewGuid().ToString();
     private string? userId;
     [CascadingParameter]
@@ -51,12 +50,12 @@
         await OnlineUserTracker.AddUser(sessionId, new UserInfo(user.UserId,
             user.UserName,
             user.Email,
-            user.DisplayName,
-            user.ProfilePictureDataUrl,
-            user.SuperiorName,
-            user.SuperiorId,
-            user.TenantId,
-            user.TenantName,
+            user.DisplayName ?? string.Empty,
+            user.ProfilePictureDataUrl ?? string.Empty,
+            user.SuperiorName ?? string.Empty,
+            user.SuperiorId ?? string.Empty,
+            user.TenantId ?? string.Empty,
+            user.TenantName ?? string.Empty,
             user.PhoneNumber,
             user.AssignedRoles ?? Array.Empty<string>(),
             UserPresence.Available));
@@ -70,7 +69,7 @@
         return OnlineUserTracker.GetOnlineUsers(cancellationToken);
     }
 
-    public async ValueTask DisposeAsync()
+    public override async ValueTask DisposeAsync()
     {
         await OnlineUserTracker.RemoveUser(sessionId);
         GC.Collect();
