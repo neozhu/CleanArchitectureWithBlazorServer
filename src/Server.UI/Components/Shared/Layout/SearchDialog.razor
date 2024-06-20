@@ -3,7 +3,7 @@
 @inject HotKeys HotKeys
 @implements IAsyncDisposable
 
-<MudDialog DisableSidePadding="true">
+<MudDialog>
     <DialogContent>
         <MudContainer>
             <MudTextField @bind-Value="@_search"
@@ -12,7 +12,7 @@
                           Placeholder="@L["Search..."]"
                           TextChanged="@(SearchPages)"
                           Immediate="true"/>
-            <MudList T="string" Clickable="true"
+            <MudList T="string" 
                      Style="height: 300px; overflow-y: auto">
                 @foreach (var (key, value) in _pagesFiltered)
                 {
