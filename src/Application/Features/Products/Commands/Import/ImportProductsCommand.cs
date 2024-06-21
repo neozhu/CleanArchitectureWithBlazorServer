@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
@@ -19,7 +19,7 @@ public class ImportProductsCommand : ICacheInvalidatorRequest<Result<int>>
     public string FileName { get; }
     public byte[] Data { get; }
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.SharedExpiryTokenSource();
+    public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.GetOrCreateTokenSource();
 }
 
 public record CreateProductsTemplateCommand : IRequest<Result<byte[]>>

@@ -5,41 +5,49 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Caching;
 
 public static class CustomerCacheKey
 {
-    public const string GetAllCacheKey = "all-Customers";
-    private static readonly TimeSpan refreshInterval = TimeSpan.FromHours(3);
-    private static CancellationTokenSource _tokensource;
-
-    static CustomerCacheKey()
-    {
-        _tokensource = new CancellationTokenSource(refreshInterval);
-    }
-
+    private static readonly TimeSpan RefreshInterval = TimeSpan.FromHours(3);
+    private static readonly object TokenLock = new();
+    private static CancellationTokenSource _tokenSource = new (RefreshInterval);
     public static MemoryCacheEntryOptions MemoryCacheEntryOptions =>
-        new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
+        new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(GetOrCreateTokenSource().Token));
 
-    public static string GetPaginationCacheKey(string parameters)
-    {
+    public const string GetAllCacheKey = "all-Customers";
+    public static string GetPaginationCacheKey(string parameters) {
         return $"CustomerCacheKey:CustomersWithPaginationQuery,{parameters}";
     }
-
-    public static string GetByNameCacheKey(string parameters)
-    {
+    public static string GetByNameCacheKey(string parameters) {
         return $"CustomerCacheKey:GetByNameCacheKey,{parameters}";
     }
-
-    public static string GetByIdCacheKey(string parameters)
-    {
+    public static string GetByIdCacheKey(string parameters) {
         return $"CustomerCacheKey:GetByIdCacheKey,{parameters}";
     }
 
-    public static CancellationTokenSource SharedExpiryTokenSource()
+    
+
+    public static CancellationTokenSource GetOrCreateTokenSource()
     {
-        if (_tokensource.IsCancellationRequested) _tokensource = new CancellationTokenSource(refreshInterval);
-        return _tokensource;
+        lock (TokenLock)
+        {
+            if (_tokenSource.IsCancellationRequested)
+            {
+                _tokenSource.Dispose();
+                _tokenSource = new CancellationTokenSource(RefreshInterval);
+            }
+            return _tokenSource;
+        }
     }
 
     public static void Refresh()
     {
-        SharedExpiryTokenSource().Cancel();
+        lock (TokenLock)
+        {
+            if (!_tokenSource.IsCancellationRequested)
+            {
+                _tokenSource.Cancel();
+                _tokenSource.Dispose();
+                _tokenSource = new CancellationTokenSource(RefreshInterval);
+            }
+        }
     }
 }
+
