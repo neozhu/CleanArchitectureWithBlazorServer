@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Pipeline;
@@ -23,7 +23,11 @@ public class CacheInvalidationBehaviour<TRequest, TResponse> : IPipelineBehavior
     {
         _logger.LogTrace("{Name} cache expire with {@Request}", nameof(request), request);
         var response = await next().ConfigureAwait(false);
-        if (!string.IsNullOrEmpty(request.CacheKey)) _cache.Remove(request.CacheKey);
+        if (!string.IsNullOrEmpty(request.CacheKey))
+        {
+            _cache.Remove(request.CacheKey);
+            _logger.LogInformation("Cache with key {CacheKey} invalidated", request.CacheKey);
+        }
         request.SharedExpiryTokenSource?.Cancel();
         return response;
     }
