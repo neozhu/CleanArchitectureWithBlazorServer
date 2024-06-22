@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Clear;
 public class ClearLogsCommand : ICacheInvalidatorRequest<Result>
 {
     public string CacheKey => LogsCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => LogsCacheKey.SharedExpiryTokenSource();
+    public CancellationTokenSource? SharedExpiryTokenSource => LogsCacheKey.GetOrCreateTokenSource();
 }
 
 public class ClearLogsCommandHandler : IRequestHandler<ClearLogsCommand, Result>

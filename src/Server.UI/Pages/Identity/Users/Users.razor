@@ -1,4 +1,5 @@
 ﻿@page "/identity/users"
+@using ActualLab.Fusion
 @using CleanArchitecture.Blazor.Server.UI.Services.Fusion
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -32,6 +33,7 @@
 @inject IMailService MailService
 @inject IStringLocalizer<Users> L
 @inject ILogger<Users> Logger
+ 
 <PageTitle>@Title</PageTitle>
 
 <MudDataGrid @ref="_table"
@@ -47,33 +49,32 @@
     <ToolBarContent>
         <div class="d-flex align-start flex-grow-1">
             <div class="d-flex gap-4">
-                <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large"/>
+                <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large" />
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
-                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView"  Value="@_selectedTenantId" Dense="true" Label="List View">
+                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView" Value="@_selectedTenantId" Dense="true" Label="List View">
                         <MudSelectItem T="string" Value="@(" ")">@L["ALL"]</MudSelectItem>
-                        @foreach(var item in TenantsService.DataSource)
+                        @foreach (var item in TenantsService.DataSource)
                         {
                             <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
                         }
                     </MudSelect>
                 </div>
             </div>
-            <div class="flex-grow-1"/>
+            <div class="flex-grow-1" />
             <div class="d-flex flex-column justify-end">
                 <div class="d-flex gap-1">
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudButton  Variant="Variant.Outlined"
+                        <MudButton Variant="Variant.Outlined"
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(OnRefresh)"
-                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   >
+                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary">
                             @ConstantString.Refresh
                         </MudButton>
                         @if (_canCreate)
                         {
-                            <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Size="Size.Small"
                                        OnClick="OnCreate"
@@ -83,7 +84,7 @@
                         }
                         @if (_canDelete)
                         {
-                            <MudButton  Variant="Variant.Outlined" Color="Color.Error"
+                            <MudButton Variant="Variant.Outlined" Color="Color.Error"
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        Size="Size.Small"
@@ -94,7 +95,7 @@
                         }
                         @if (_canExport)
                         {
-                            <MudLoadingButton  Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudLoadingButton Variant="Variant.Outlined" Color="Color.Primary"
                                               StartIcon="@Icons.Material.Filled.Download"
                                               Size="Size.Small"
                                               @bind-Loading="_exporting" LoadingAdornment="Adornment.Start" OnClick="OnExport"
@@ -104,18 +105,16 @@
                         }
                         @if (_canImport)
                         {
-                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px;">
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                 <ActivatorContent>
-                                    <MudButton 
-                                               Size="Size.Small"
+                                    <MudButton Size="Size.Small"
                                                Variant="Variant.Outlined"
                                                Color="Color.Primary"
                                                Disabled="@_loading"
-                                               StartIcon="@Icons.Material.Filled.Upload"
-                                               >
+                                               StartIcon="@Icons.Material.Filled.Upload">
                                         @if (_uploading)
                                         {
-                                            <MudProgressCircular Size="Size.Small" Indeterminate="true"/>
+                                            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
                                             @ConstantString.Uploading
                                         }
                                         else
@@ -130,7 +129,7 @@
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         @if (_canCreate)
                         {
-                            <MudButton  Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
                                        StartIcon="@Icons.Material.Filled.Add"
                                        Size="Size.Small"
                                        OnClick="OnCreate"
@@ -140,7 +139,7 @@
                         }
                         @if (_canDelete)
                         {
-                            <MudButton  Variant="Variant.Outlined" Color="Color.Error"
+                            <MudButton Variant="Variant.Outlined" Color="Color.Error"
                                        StartIcon="@Icons.Material.Filled.Delete"
                                        Disabled="@(!(_selectedItems.Count > 0))"
                                        Size="Size.Small"
@@ -211,7 +210,7 @@
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled" 
+                    <MudButton Variant="Variant.Filled"
                                StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
                         @ConstantString.NoAllowed
@@ -265,7 +264,7 @@
                 @context.Item.SuperiorName
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Provider" Title="@L[_currentDto.GetMemberDescription(x => x.Provider)]"/>
+        <PropertyColumn Property="x => x.Provider" Title="@L[_currentDto.GetMemberDescription(x => x.Provider)]" />
 
         <PropertyColumn Sortable="false" Property="x => x.AssignedRoles" Title="@L[_currentDto.GetMemberDescription(x => x.AssignedRoles)]">
             <CellTemplate>
@@ -310,9 +309,11 @@
     </Columns>
 
     <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"/>
+        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
+
+
 
 <PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@_processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></PermissionsDrawer>
 
@@ -326,7 +327,7 @@
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     private UserManager<ApplicationUser> UserManager = null!;
     private RoleManager<ApplicationRole> RoleManager = null!;
-
+    private PermissionHelper PermissionHelper = null!;
     private int _defaultPageSize = 15;
     private HashSet<ApplicationUserDto> _selectedItems = new();
     private readonly ApplicationUserDto _currentDto = new();
@@ -337,7 +338,7 @@
     private IList<Claim> _assignedClaims = default!;
 
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
- 
+
 
     private MudDataGrid<ApplicationUserDto> _table = null!;
     private bool _processing;
@@ -357,12 +358,12 @@
     private bool _uploading;
     private List<string?> _roles = new();
     private string? _searchRole;
-
+    private Computed<UserInfo[]> computed;
+    private Action<IComputed> invalidatedHandler;
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        InitializeServices();
         var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
@@ -375,13 +376,30 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
-    }
+        computed = await Computed.Capture(() => OnlineUserTracker.GetOnlineUsers());
+        invalidatedHandler = async (IComputed c) => await OnInvalidated(c);
+        computed.Invalidated += invalidatedHandler;
 
+    }
+    private void InitializeServices()
+    {
+        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        PermissionHelper = ScopedServices.GetRequiredService<PermissionHelper>();
+    }
+    private  async Task OnInvalidated(IComputed state)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        computed.Invalidated -= invalidatedHandler;
+    }
     private bool IsOnline(string username)
     {
         return UsersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
     }
-
+   
     private Expression<Func<ApplicationUser, bool>> CreateSearchPredicate()
     {
         return x =>
@@ -398,7 +416,7 @@
         try
         {
             _loading = true;
-            
+
             var query = UserManager.Users.Where(CreateSearchPredicate());
             var items = await query
                 .Include(x => x.UserRoles)
@@ -533,12 +551,12 @@
             await OnlineUserTracker.UpdateUser(new UserInfo(item.Id,
                                                             item.UserName,
                                                             item.Email,
-                                                            item.DisplayName,
-                                                            item.ProfilePictureDataUrl,
-                                                            item.SuperiorName,
-                                                            item.SuperiorId,
-                                                            item.TenantId,
-                                                            item.TenantName,
+                                                            item.DisplayName ?? string.Empty,
+                                                            item.ProfilePictureDataUrl ?? string.Empty,
+                                                            item.SuperiorName ?? string.Empty,
+                                                            item.SuperiorId ?? string.Empty,
+                                                            item.TenantId ?? string.Empty,
+                                                            item.TenantName ?? string.Empty,
                                                             item.PhoneNumber,
                                                             item.AssignedRoles ?? Array.Empty<string>(),
                                                             UserPresence.Available));
@@ -612,7 +630,7 @@
             return;
         }
         await ShowDeleteConfirmationDialog(dto);
-        
+
     }
 
     private async Task OnDeleteChecked()
@@ -746,7 +764,7 @@
     private async Task OnSetPermissions(ApplicationUserDto item)
     {
         _showPermissionsDrawer = true;
-        _permissions = await GetAllPermissions(item);
+        _permissions = await PermissionHelper.GetAllPermissionsByUserId(item.Id);
     }
 
     private Task OnOpenChangedHandler(bool state)
@@ -755,43 +773,7 @@
         return Task.CompletedTask;
     }
 
-    private async Task<List<PermissionModel>> GetAllPermissions(ApplicationUserDto dto)
-    {
-        _assignedClaims = await GetUserClaims(dto.Id);
-        var allPermissions = new List<PermissionModel>();
-        var modules = typeof(Permissions).GetNestedTypes();
-
-        foreach (var module in modules)
-        {
-            var moduleName = module.GetCustomAttributes<DisplayNameAttribute>().FirstOrDefault()?.DisplayName ?? string.Empty;
-            var moduleDescription = module.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
-            var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-
-            allPermissions.AddRange(fields.Select(field => field.GetValue(null)?.ToString())
-                .Where(claimValue => claimValue != null)
-                .Select(claimValue => new PermissionModel
-                    {
-                        UserId = dto.Id,
-                        ClaimValue = claimValue,
-                        ClaimType = ApplicationClaimTypes.Permission,
-                        Group = moduleName,
-                        Description = moduleDescription,
-                        Assigned = _assignedClaims.Any(x => x.Value == claimValue)
-                    }));
-        }
-
-        return allPermissions;
-    }
-
-    private async Task<IList<Claim>> GetUserClaims(string userId)
-    {
-        var key = $"get-claims-by-{userId}";
-        return await FusionCache.GetOrSetAsync(key, async _ =>
-        {
-            var user = await UserManager.FindByIdAsync(userId) ?? throw new NotFoundException($"not found application user: {userId}");
-            return await UserManager.GetClaimsAsync(user);
-        }, RefreshInterval);
-    }
+    
 
     private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
     {
@@ -883,6 +865,7 @@
         try
         {
             var searchPredicate = CreateSearchPredicate();
+
             var items = await UserManager.Users.Where(searchPredicate)
                 .Select(x => new ApplicationUserDto
                     {
@@ -892,7 +875,7 @@
                         Email = x.Email!,
                         PhoneNumber = x.PhoneNumber,
                         TenantId = x.TenantId,
-                        TenantName = x.Tenant.Name
+                        TenantName = x.Tenant != null ? x.Tenant.Name : string.Empty
                     }).ToListAsync();
 
             var result = await ExportUsers(items);
@@ -909,7 +892,7 @@
     {
         return await ExcelService.ExportAsync(items,
             new Dictionary<string, Func<ApplicationUserDto, object?>>
-                {
+                    {
                 { L["Id"], item => item.Id },
                 { L["User Name"], item => item.UserName },
                 { L["Display Name"], item => item.DisplayName },
@@ -917,7 +900,7 @@
                 { L["Phone Number"], item => item.PhoneNumber },
                 { L["Tenant Id"], item => item.TenantId },
                 { L["Tenant Name"], item => item.TenantName }
-                }, L["Users"]);
+                    }, L["Users"]);
     }
 
     private async Task OnImportData(IBrowserFile file)
@@ -929,13 +912,16 @@
             await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
             var result = await ImportUsers(stream);
 
-            if (result.Succeeded)
+            if (result?.Succeeded == true)
             {
-                await ProcessImportedUsers(result.Data);
-                await _table.ReloadServerData();
+                if (result.Data != null)
+                {
+                    await ProcessImportedUsers(result.Data);
+                    await _table.ReloadServerData();
+                }
                 Snackbar.Add($"{ConstantString.ImportSuccess}", Severity.Info);
             }
-            else
+            else if (result?.Errors != null)
             {
                 foreach (var msg in result.Errors)
                 {
@@ -947,6 +933,7 @@
         {
             _uploading = false;
         }
+
     }
 
     private async Task<IResult<IEnumerable<ApplicationUser>>> ImportUsers(MemoryStream stream)

@@ -173,8 +173,8 @@ else
     private readonly List<OrgItem> _orgData = new();
     public string Id => Guid.NewGuid().ToString();
     private ChangeUserProfileModel model = null!;
-    private IDisposable StateSubscription;
-    private bool Disposed;
+    private IDisposable? StateSubscription;
+
 
     private async void ActivePanelIndexChanged(int index)
     {
@@ -231,7 +231,7 @@ else
 
     protected override void Dispose(bool disposing)
     {
-        StateSubscription.Dispose();
+        if (StateSubscription is not null)   StateSubscription.Dispose();
         ActionSubscriber?.UnsubscribeFromAllActions(this);
         base.Dispose(disposing);
     }
@@ -260,12 +260,12 @@ else
                 await OnlineUserTracker.UpdateUser(new UserInfo(model.UserId,
                                                                 model.UserName,
                                                                 model.Email,
-                                                                model.DisplayName,
+                                                                model.DisplayName ?? "",
                                                                 model.ProfilePictureDataUrl,
-                                                                model.SuperiorName,
-                                                                model.SuperiorId,
-                                                                model.TenantId,
-                                                                model.TenantName,
+                                                                model.SuperiorName ?? "",
+                                                                model.SuperiorId ?? "",
+                                                                model.TenantId ?? "",
+                                                                model.TenantName ?? "",
                                                                 model.PhoneNumber,
                                                                 model.AssignedRoles ?? Array.Empty<string>(),
                                                                 UserPresence.Available));
