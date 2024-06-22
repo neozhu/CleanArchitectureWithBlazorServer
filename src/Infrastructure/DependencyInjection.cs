@@ -216,20 +216,20 @@ public static class DependencyInjection
             })
             .AddMicrosoftAccount(microsoftOptions =>
             {
-                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId");
-                microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret");
+                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId")??string.Empty;
+                microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret") ?? string.Empty;
                 //microsoftOptions.CallbackPath = new PathString("/pages/authentication/ExternalLogin"); # dotn't set this parameter!!
             })
             .AddGoogle(googleOptions =>
                 {
-                    googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId");
-                    googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret");
+                    googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId") ?? string.Empty;
+                    googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret") ?? string.Empty; ;
                 }
             )
             .AddFacebook(facebookOptions =>
             {
-                facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId");
-                facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret");
+                facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId") ?? string.Empty;
+                facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret") ?? string.Empty;
             })
             .AddIdentityCookies(options => { });
 

@@ -10,28 +10,73 @@ public class LayoutService
     private bool _systemPreferences;
     public DarkLightMode DarkModeToggle = DarkLightMode.System;
 
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LayoutService"/> class.
+    /// </summary>
+    /// <param name="userPreferencesService">The user preferences service.</param>
     public LayoutService(IUserPreferencesService userPreferencesService)
     {
         UserPreferencesService = userPreferencesService;
     }
 
+    /// <summary>
+    /// Gets or sets the user preferences.
+    /// </summary>
     public UserPreferences.UserPreferences UserPreferences { get; private set; } = new();
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the layout is right-to-left.
+    /// </summary>
     public bool IsRTL { get; private set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the layout is in dark mode.
+    /// </summary>
     public bool IsDarkMode { get; private set; }
+
+    /// <summary>
+    /// Gets or sets the primary color.
+    /// </summary>
     public string PrimaryColor { get; set; } = "#2d4275";
+
+    /// <summary>
+    /// Gets or sets the dark primary color.
+    /// </summary>
     public string DarkPrimaryColor { get; set; } = "#8b9ac6";
+
+    /// <summary>
+    /// Gets or sets the secondary color.
+    /// </summary>
     public string SecondaryColor { get; set; } = "#ff4081ff";
+
+    /// <summary>
+    /// Gets or sets the border radius.
+    /// </summary>
     public double BorderRadius { get; set; } = 4;
+
+    /// <summary>
+    /// Gets or sets the default font size.
+    /// </summary>
     public double DefaultFontSize { get; set; } = 0.8125;
+
+    /// <summary>
+    /// Gets or sets the current theme.
+    /// </summary>
     public MudTheme CurrentTheme { get; private set; } = new();
 
+    /// <summary>
+    /// Sets the dark mode.
+    /// </summary>
+    /// <param name="value">The value indicating whether dark mode is enabled.</param>
     public void SetDarkMode(bool value)
     {
         UserPreferences.IsDarkMode = value;
     }
 
+    /// <summary>
+    /// Applies the user preferences.
+    /// </summary>
+    /// <param name="isDarkModeDefaultTheme">The value indicating whether dark mode is the default theme.</param>
     public async Task ApplyUserPreferences(bool isDarkModeDefaultTheme)
     {
         UserPreferences = await UserPreferencesService.LoadUserPreferences();
@@ -72,7 +117,7 @@ public class LayoutService
 
         CurrentTheme.Typography.Caption.FontSize =
             UserPreferences.CaptionFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
-        CurrentTheme.Typography.Caption.LineHeight= UserPreferences.CaptionLineHeight;
+        CurrentTheme.Typography.Caption.LineHeight = UserPreferences.CaptionLineHeight;
         CurrentTheme.Typography.Overline.FontSize =
             UserPreferences.OverlineFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Subtitle1.FontSize =
@@ -81,14 +126,25 @@ public class LayoutService
             UserPreferences.Subtitle1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
     }
 
+    /// <summary>
+    /// Event that is raised when a major update occurs.
+    /// </summary>
     public event EventHandler? MajorUpdateOccured;
 
+    /// <summary>
+    /// Raises the MajorUpdateOccured event.
+    /// </summary>
     private void OnMajorUpdateOccured()
     {
         MajorUpdateOccured?.Invoke(this, EventArgs.Empty);
     }
 
-    public Task OnSystemPreferenceChanged(bool newValue)
+    /// <summary>
+    /// Handles the system preference changed event.
+    /// </summary>
+    /// <param name="newValue">The new value of the system preference.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task OnSystemPreferenceChanged(bool newValue)
     {
         _systemPreferences = newValue;
         if (DarkModeToggle == DarkLightMode.System)
@@ -97,9 +153,13 @@ public class LayoutService
             OnMajorUpdateOccured();
         }
 
-        return Task.CompletedTask;
+        await Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Toggles the dark mode.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task ToggleDarkMode()
     {
         switch (DarkModeToggle)
@@ -123,6 +183,10 @@ public class LayoutService
         OnMajorUpdateOccured();
     }
 
+    /// <summary>
+    /// Toggles the right-to-left layout.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task ToggleRightToLeft()
     {
         IsRTL = !IsRTL;
@@ -131,18 +195,30 @@ public class LayoutService
         OnMajorUpdateOccured();
     }
 
+    /// <summary>
+    /// Sets the layout to right-to-left.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task SetRightToLeft()
     {
         if (!IsRTL)
             await ToggleRightToLeft();
     }
 
+    /// <summary>
+    /// Sets the layout to left-to-right.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task SetLeftToRight()
     {
         if (IsRTL)
             await ToggleRightToLeft();
     }
 
+    /// <summary>
+    /// Sets the base theme.
+    /// </summary>
+    /// <param name="theme">The theme to set.</param>
     public void SetBaseTheme(MudTheme theme)
     {
         CurrentTheme = theme;
@@ -159,7 +235,11 @@ public class LayoutService
         OnMajorUpdateOccured();
     }
 
-
+    /// <summary>
+    /// Sets the secondary color.
+    /// </summary>
+    /// <param name="color">The secondary color to set.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task SetSecondaryColor(string color)
     {
         SecondaryColor = color;
@@ -170,6 +250,11 @@ public class LayoutService
         OnMajorUpdateOccured();
     }
 
+    /// <summary>
+    /// Sets the border radius.
+    /// </summary>
+    /// <param name="size">The size of the border radius.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task SetBorderRadius(double size)
     {
         BorderRadius = size;
@@ -179,6 +264,11 @@ public class LayoutService
         OnMajorUpdateOccured();
     }
 
+    /// <summary>
+    /// Updates the user preferences.
+    /// </summary>
+    /// <param name="preferences">The updated user preferences.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdateUserPreferences(UserPreferences.UserPreferences preferences)
     {
         UserPreferences = preferences;

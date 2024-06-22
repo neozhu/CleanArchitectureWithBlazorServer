@@ -1,0 +1,103 @@
+﻿@inherits MudBaseButton
+
+<MudButton OnClick="OnClickAsync" StartIcon="@StartIcon" Disabled="@Disabled" IconColor="@IconColor" Variant="@Variant" Color="@Color" Size="@Size">
+    @if (_loading)
+    {
+        if (LoadingAdornment == Adornment.Start)
+        {
+            <MudProgressCircular Class="me-2" Size="Size.Small" Color="@LoadingCircularColor" Indeterminate="true" />
+        }
+
+        if (LoadingContent != null)
+        {
+            @LoadingContent
+        }
+        else
+        {
+            @Label
+        }
+
+        if (LoadingAdornment == Adornment.End)
+        {
+            <MudProgressCircular Class="ms-2" Size="Size.Small" Color="@LoadingCircularColor" Indeterminate="true" />
+        }
+    }
+    else
+    {
+        @ChildContent
+    }
+</MudButton>
+@code{
+    private bool _loading;
+    /// <summary>
+    /// If applied the text will be added to the component.
+    /// </summary>
+    [Parameter]
+    public string? Label { get; set; }
+    /// <summary>
+    /// The color of the icon. It supports the theme colors.
+    /// </summary>
+    [Parameter]
+    public Color IconColor { get; set; } = Color.Inherit;
+    /// <summary>
+    /// Icon placed before the text if set.
+    /// </summary>
+    [Parameter]
+    public string? StartIcon { get; set; }
+    /// <summary>
+    /// The color of the component. It supports the theme colors.
+    /// </summary>
+    [Parameter]
+    public Color Color { get; set; } = Color.Default;
+    /// <summary>
+    /// Placement of the loading adornment. Default is start.
+    /// </summary>
+    [Parameter]
+    public Adornment LoadingAdornment { get; set; } = Adornment.Start;
+
+    /// <summary>
+    /// The Size of the component.
+    /// </summary>
+    [Parameter]
+    public Size Size { get; set; } = Size.Medium;
+    /// <summary>
+    /// The variant to use.
+    /// </summary>
+    [Parameter]
+    public Variant Variant { get; set; } = Variant.Text;
+    [Parameter]
+    public bool Loading
+    {
+        get => _loading;
+        set
+        {
+            if (_loading == value)
+                return;
+
+            _loading = value;
+            StateHasChanged();
+        }
+    }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }  // Adding ChildContent parameter
+
+    [Parameter]
+    public RenderFragment LoadingContent { get; set; }
+
+    [Parameter]
+    public Color LoadingCircularColor { get; set; } = Color.Primary;
+
+
+
+
+
+    private async Task OnClickAsync()
+    {
+        if (Disabled)
+            return;
+
+        _loading = true;
+        await base.OnClick.InvokeAsync(null);
+        _loading = false;
+    }
+}

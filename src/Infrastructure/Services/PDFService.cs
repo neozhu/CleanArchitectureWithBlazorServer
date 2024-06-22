@@ -28,8 +28,7 @@ public class PDFService : IPDFService
                     page.Margin(MarginPTs);
                     page.PageColor(Colors.White);
                     page.DefaultTextStyle(x =>
-                        x.FontSize(FontSize).FontFamily(FontFamilyName)
-                            .Fallback(TextStyle.Default.FontFamily(ChFontFamilyName)));
+                        x.FontSize(FontSize).FontFamily(FontFamilyName));
 
                     page.Header()
                         .Text(title)
