@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
-using MudExtensions.Services;
 using Polly;
 using QuestPDF;
 using QuestPDF.Infrastructure;
@@ -117,7 +116,7 @@ public static class DependencyInjection
         services.AddScoped<LocalTimezoneOffset>();
         services.AddHttpContextAccessor();
         services.AddScoped<HubClient>();
-        services.AddMudExtensions()
+        services
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()
             .AddScoped<DialogServiceHelper>()

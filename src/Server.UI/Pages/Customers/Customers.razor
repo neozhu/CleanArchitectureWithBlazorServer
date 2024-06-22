@@ -78,7 +78,7 @@
                                 }
                                 @if (_canExport)
                                 {
-                                    <MudLoadingButton @bind-Loading="_exporting"  Variant="Variant.Outlined" Color="Color.Primary"
+                                    <MudLoadingButton Loading="_exporting"  Variant="Variant.Outlined" Color="Color.Primary"
                                                   Label="@ConstantString.Export"
                                                   Disabled="@_loading"
                                                   StartIcon="@Icons.Custom.FileFormats.FileExcel"

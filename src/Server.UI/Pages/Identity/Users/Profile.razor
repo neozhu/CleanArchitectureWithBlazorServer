@@ -107,30 +107,27 @@ else
             <MudForm Model="@_changepassword" @ref="@_passwordform" Validation="@(Validator.ValidateValue(_changepassword))" Style="display: flex; align-content: center;  align-items: center; flex-direction: column;">
                 <MudGrid Spacing="2" Justify="Justify.Center" Style="max-width:300px">
                     <MudItem sm="12" xs="12">
-                        <MudPasswordField Immediate="true"
-                                          Label="@L["Current Password"]"
+                        <MudTextField InputType="InputType.Password"
+                                      Label="@L["Current Password"]"
                                           For="@(() => _changepassword.CurrentPassword)"
                                           @bind-Value="_changepassword.CurrentPassword"
                                           Variant="Variant.Text"
-                                          PasswordMode="true"
                                           Required="true" />
                     </MudItem>
                     <MudItem xs="12">
-                        <MudPasswordField Immediate="true"
+                        <MudTextField InputType="InputType.Password"
                                           Label="@L["New Password"]"
                                           For="@(() => _changepassword.NewPassword)"
                                           @bind-Value="_changepassword.NewPassword"
                                           Variant="Variant.Text"
-                                          PasswordMode="true"
                                           Required="true" />
                     </MudItem>
                     <MudItem xs="12">
-                        <MudPasswordField Immediate="true"
+                        <MudTextField InputType="InputType.Password"
                                           Label="@L["Confirm New Password"]"
                                           For="@(() => _changepassword.ConfirmPassword)"
                                           @bind-Value="_changepassword.ConfirmPassword"
                                           Variant="Variant.Text"
-                                          PasswordMode="true"
                                           Required="true" />
                     </MudItem>
                     <MudItem sm="12" xs="12" Class="d-flex justify-end">

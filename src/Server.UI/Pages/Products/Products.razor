@@ -83,22 +83,18 @@
                         }
                         @if (_canExport)
                         {
-                            <MudLoadingButton @bind-Loading="_exporting" Variant="Variant.Outlined" Color="Color.Primary"
-                                              Label="@ConstantString.Export"
+                            <MudLoadingButton Loading="_exporting" Variant="Variant.Outlined" Color="Color.Primary"
                                               Disabled="@_loading"
-                                              StartIcon="@Icons.Custom.FileFormats.FileExcel"
-                                              Size="Size.Small"
                                               OnClick="OnExport"
-                                              IconColor="Color.Surface">
+                                              StartIcon="@Icons.Custom.FileFormats.FileExcel"
+                                              Size="Size.Small">
                                 @ConstantString.Export
                             </MudLoadingButton>
-                            <MudLoadingButton @bind-Loading="_pdfExporting" Variant="Variant.Outlined" Color="Color.Primary"
-                                              Label="@ConstantString.ExportPDF"
+                            <MudLoadingButton Loading="_pdfExporting" Variant="Variant.Outlined" Color="Color.Primary"
                                               Disabled="@_loading"
-                                              StartIcon="@Icons.Material.Filled.PictureAsPdf"
-                                              Size="Size.Small"
                                               OnClick="OnExportPDF"
-                                              IconColor="Color.Surface">
+                                              StartIcon="@Icons.Custom.FileFormats.FilePdf"
+                                              Size="Size.Small">
                                 @ConstantString.ExportPDF
                             </MudLoadingButton>
                         }
