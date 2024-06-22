@@ -46,7 +46,7 @@
 
     public override async ValueTask DisposeAsync()
     {
-        await UserSessionTracker.RemoveUserSession(PageComponent, userName);
+        await UserSessionTracker.RemoveUserSession(PageComponent, userName??string.Empty);
         GC.Collect();
     }
 }

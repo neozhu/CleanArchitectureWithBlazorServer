@@ -5,9 +5,12 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Updat
 
 public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
 {
-    public UpdateCustomerCommandValidator()
-    {
-        RuleFor(v => v.Id).NotNull();
-        RuleFor(v => v.Name).MaximumLength(256).NotEmpty();
-    }
+        public UpdateCustomerCommandValidator()
+        {
+           RuleFor(v => v.Id).NotNull();
+           RuleFor(v => v.Name).MaximumLength(256).NotEmpty();
+          
+        }
+    
 }
+
