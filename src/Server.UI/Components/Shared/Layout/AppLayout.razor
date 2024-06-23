@@ -102,7 +102,7 @@
                 FullWidth = true
             };
 
-            var commandPalette = await DialogService.ShowAsync<SearchDialog>("", options);
+            var commandPalette = DialogService.Show<SearchDialog>("", options);
             _commandPaletteOpen = true;
 
             await commandPalette.Result;

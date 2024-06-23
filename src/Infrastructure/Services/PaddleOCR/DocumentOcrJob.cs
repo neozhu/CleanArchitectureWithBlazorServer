@@ -50,7 +50,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                 var doc = await _context.Documents.FindAsync(id);
                 if (doc == null) return;
                 await _notificationService.JobStarted(doc.Title!);
-                DocumentCacheKey.SharedExpiryTokenSource().Cancel();
+                DocumentCacheKey.GetOrCreateTokenSource().Cancel();
                 if (string.IsNullOrEmpty(doc.URL)) return;
                 var imgFile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
                 if (!File.Exists(imgFile)) return;
@@ -74,7 +74,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                     doc.Content = result;
                     await _context.SaveChangesAsync(cancellationToken);
                     await _notificationService.JobCompleted(doc.Title!);
-                    DocumentCacheKey.SharedExpiryTokenSource().Cancel();
+                    DocumentCacheKey.GetOrCreateTokenSource().Cancel();
                     _timer.Stop();
                     var elapsedMilliseconds = _timer.ElapsedMilliseconds;
                     _logger.LogInformation(
@@ -87,7 +87,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                     doc.Status = JobStatus.Pending;
                     doc.Content = result;
                     await _context.SaveChangesAsync(cancellationToken);
-                    DocumentCacheKey.SharedExpiryTokenSource().Cancel();
+                    DocumentCacheKey.GetOrCreateTokenSource().Cancel();
                     await _notificationService.JobCompleted($"Error: {result}");
                     _logger.LogError("{id}: Image recognize error {Message}", id, result);
                 }

@@ -17,7 +17,7 @@ public class AddEditTenantCommand : ICacheInvalidatorRequest<Result<string>>
     [Description("Description")] public string? Description { get; set; }
 
     public string CacheKey => TenantCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => TenantCacheKey.SharedExpiryTokenSource();
+    public CancellationTokenSource? SharedExpiryTokenSource => TenantCacheKey.GetOrCreateTokenSource();
 
     private class Mapping : Profile
     {
