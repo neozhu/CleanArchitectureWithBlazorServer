@@ -1,5 +1,8 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Features.Customers.Specifications;
 #nullable disable warnings
+/// <summary>
+/// Specification class for advanced filtering of Customers.
+/// </summary>
 public class CustomerAdvancedSpecification : Specification<Customer>
 {
     public CustomerAdvancedSpecification(CustomerAdvancedFilter filter)

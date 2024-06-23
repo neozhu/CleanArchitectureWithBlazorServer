@@ -78,7 +78,7 @@
                                 }
                                 @if (_canExport)
                                 {
-                                    <MudLoadingButton Loading="_exporting"  Variant="Variant.Outlined" Color="Color.Primary"
+                                    <MudLoadingButton @bind-Loading="_exporting"  Variant="Variant.Outlined" Color="Color.Primary"
                                                   Label="@ConstantString.Export"
                                                   Disabled="@_loading"
                                                   StartIcon="@Icons.Custom.FileFormats.FileExcel"
@@ -148,7 +148,7 @@
                     <CellTemplate>
                         @if (_canEdit || _canDelete)
                         {
-                            <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled"  Size="Size.Small"
+                            <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
                                      Dense="true"
                                      EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                                 @if (_canEdit)
@@ -163,7 +163,7 @@
                         }
                         else
                         {
-                            <MudIconButton Variant="Variant.Filled" 
+                            <MudIconButton Variant="Variant.Filled"  
                                        Disabled="true"
                                        Icon="@Icons.Material.Filled.DoNotTouch"
                                        Size="Size.Small"
@@ -270,13 +270,17 @@
         Query.Keyword  = string.Empty;
         await _table.ReloadServerData();
     }
-    private async Task ShowEditFormDialog(string title, DialogParameters parameters)
+    private async Task ShowEditFormDialog(string title, AddEditCustomerCommand command)
     {
+        var parameters = new DialogParameters<CustomerFormDialog>
+            {
+                { x=>x.model,command },
+            };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<CustomerFormDialog>(title, parameters, options);
         var state = await dialog.Result;
 
-        if (!state.Canceled)
+        if (state != null && !state.Canceled)
         {
             await _table.ReloadServerData();
             _selectedItems.Clear();
@@ -286,11 +290,7 @@
     private async Task OnCreate()
     {
         var command = new AddEditCustomerCommand();
-        var parameters = new DialogParameters<CustomerFormDialog>
-            {
-                { x=>x.model,command },
-            };
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters);
+        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Customer"]), command);
     }
     private async Task OnClone()
     {
@@ -300,20 +300,12 @@
         Description = dto.Description, 
   
         };
-        var parameters = new DialogParameters<CustomerFormDialog>
-            {
-               { x=>x.model,command },
-            };
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters);
+        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Customer"]), command);
     }
     private async Task OnEdit(CustomerDto dto)
     {
         var command = Mapper.Map<AddEditCustomerCommand>(dto);
-        var parameters = new DialogParameters<CustomerFormDialog>
-            {
-                { x=>x.model,command },
-            };
-        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), parameters);
+        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Customer"]), command);
     }
 
     private async Task OnDelete(CustomerDto dto)
