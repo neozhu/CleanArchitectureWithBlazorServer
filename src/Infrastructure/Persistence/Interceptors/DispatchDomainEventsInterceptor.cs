@@ -4,50 +4,112 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 
+
+/// <summary>
+/// Interceptor for dispatching domain events when saving changes in the database.
+/// </summary>
 public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
 {
     private readonly IMediator _mediator;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DispatchDomainEventsInterceptor"/> class.
+    /// </summary>
+    /// <param name="mediator">The mediator instance used for publishing domain events.</param>
     public DispatchDomainEventsInterceptor(IMediator mediator)
     {
         _mediator = mediator;
     }
 
+    /// <inheritdoc/>
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
         InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
-        await DispatchDomainEventsForDelete(eventData.Context);
-        return await base.SavingChangesAsync(eventData, result, cancellationToken);
-    }
+        var context = eventData.Context;
+        if (context == null)
+            return await base.SavingChangesAsync(eventData, result, cancellationToken);
 
-    public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result,
-        CancellationToken cancellationToken = default)
-    {
-        var resultValueTask = await base.SavedChangesAsync(eventData, result, cancellationToken);
-        await DispatchDomainEventsForChanged(eventData.Context);
-        return resultValueTask;
-    }
-
-    public async Task DispatchDomainEventsForDelete(DbContext? context)
-    {
-        if (context == null) return;
-
-        var entities = context.ChangeTracker
+        var domainEventEntities = context.ChangeTracker
             .Entries<BaseEntity>()
             .Where(e => e.Entity.DomainEvents.Any() && e.State == EntityState.Deleted)
-            .Select(e => e.Entity);
+            .Select(e => e.Entity)
+            .ToList();
 
-        var domainEvents = entities
+        var domainEvents = domainEventEntities
             .SelectMany(e => e.DomainEvents)
             .ToList();
 
-        entities.ToList().ForEach(e => e.ClearDomainEvents());
+        if (domainEvents.Any())
+        {
+            await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
+            try
+            {
+                var saveResult = await base.SavingChangesAsync(eventData, result, cancellationToken);
 
-        foreach (var domainEvent in domainEvents)
-            await _mediator.Publish(domainEvent);
+                domainEventEntities.ForEach(e => e.ClearDomainEvents());
+                foreach (var domainEvent in domainEvents)
+                {
+                    await _mediator.Publish(domainEvent, cancellationToken);
+                }
+
+                await transaction.CommitAsync(cancellationToken);
+                return saveResult;
+            }
+            catch
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                throw;
+            }
+        }
+
+        return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    public async Task DispatchDomainEventsForChanged(DbContext? context)
+    /// <inheritdoc/>
+    public override async ValueTask<int> SavedChangesAsync(SaveChangesCompletedEventData eventData, int result,
+        CancellationToken cancellationToken = default)
+    {
+        var context = eventData.Context;
+        if (context == null)
+            return await base.SavedChangesAsync(eventData, result, cancellationToken);
+
+        var domainEventEntities = context.ChangeTracker
+            .Entries<BaseEntity>()
+            .Where(e => e.Entity.DomainEvents.Any() && e.State != EntityState.Deleted)
+            .Select(e => e.Entity)
+            .ToList();
+
+        var domainEvents = domainEventEntities
+            .SelectMany(e => e.DomainEvents)
+            .ToList();
+
+        if (domainEvents.Any())
+        {
+            await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
+            try
+            {
+                var saveResult = await base.SavedChangesAsync(eventData, result, cancellationToken);
+
+                domainEventEntities.ForEach(e => e.ClearDomainEvents());
+                foreach (var domainEvent in domainEvents)
+                {
+                    await _mediator.Publish(domainEvent, cancellationToken);
+                }
+
+                await transaction.CommitAsync(cancellationToken);
+                return saveResult;
+            }
+            catch
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                throw;
+            }
+        }
+
+        return await base.SavedChangesAsync(eventData, result, cancellationToken);
+    }
+
+    private async Task DispatchDomainEvents(DbContext? context)
     {
         if (context == null) return;
 

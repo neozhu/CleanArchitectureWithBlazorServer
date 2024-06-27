@@ -1,4 +1,4 @@
-global using System.ComponentModel;
+﻿global using System.ComponentModel;
 global using System.Data;
 global using System.Globalization;
 global using System.Linq.Dynamic.Core;
@@ -13,6 +13,7 @@ global using CleanArchitecture.Blazor.Application.Common.Extensions;
 global using CleanArchitecture.Blazor.Application.Common.Interfaces;
 global using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 global using CleanArchitecture.Blazor.Application.Common.Models;
+global using CleanArchitecture.Blazor.Application.Common.Security;
 global using CleanArchitecture.Blazor.Domain.Common.Enums;
 global using CleanArchitecture.Blazor.Domain.Common.Events;
 global using CleanArchitecture.Blazor.Domain.Events;

@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
@@ -14,7 +14,7 @@ public class DeleteKeyValueCommand : ICacheInvalidatorRequest<Result<int>>
 
     public int[] Id { get; }
     public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => KeyValueCacheKey.SharedExpiryTokenSource();
+    public CancellationTokenSource? SharedExpiryTokenSource => KeyValueCacheKey.GetOrCreateTokenSource();
 }
 
 public class DeleteKeyValueCommandHandler : IRequestHandler<DeleteKeyValueCommand, Result<int>>
