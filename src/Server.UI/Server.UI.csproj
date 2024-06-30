@@ -24,7 +24,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.6" />
         <PackageReference Include="ActualLab.Fusion.Ext.Services" Version="8.0.8" />
-        <PackageReference Include="MudBlazor" Version="7.0.0-rc.2" />
+        <PackageReference Include="MudBlazor" Version="7.0.0" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="5.0.0" />
         <PackageReference Include="Blazor-ApexCharts" Version="3.3.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">

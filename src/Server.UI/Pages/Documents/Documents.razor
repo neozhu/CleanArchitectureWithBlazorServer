@@ -349,7 +349,7 @@
         var dialog = DialogService.Show<UploadFilesFormDialog>
             (L["Upload Pictures"], parameters, options);
         var state = await dialog.Result;
-        if (!state.Canceled)
+        if (state is not null &&  !state.Canceled)
         {
             await _table.ReloadServerData();
             Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
@@ -368,7 +368,7 @@
 
 
         var state = await dialog.Result;
-        if (!state.Canceled)
+        if (state is not null && !state.Canceled)
         {
             await _table.ReloadServerData();
         }

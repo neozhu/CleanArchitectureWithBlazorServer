@@ -205,7 +205,6 @@
     private CustomerDto _currentDto = new();
     private bool _loading;
     private bool _uploading;
-    private bool _downloading;
     private bool _exporting;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
