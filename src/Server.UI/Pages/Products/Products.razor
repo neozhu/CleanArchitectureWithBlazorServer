@@ -48,8 +48,7 @@
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(() => OnRefresh())"
-                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   >
+                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary">
                             @ConstantString.Refresh
                         </MudButton>
                         @if (_canCreate)
@@ -66,7 +65,7 @@
                                        StartIcon="@Icons.Material.Filled.ContentCopy"
                                        Size="Size.Small"
                                        Disabled="@(_selectedItems.Count != 1)"
-                                       OnClick="OnClone" 
+                                       OnClick="OnClone"
                                        IconColor="Color.Surface">
                                 @ConstantString.Clone
                             </MudButton>
@@ -84,28 +83,24 @@
                         }
                         @if (_canExport)
                         {
-                            <MudLoadingButton @bind-Loading="_exporting" Variant="Variant.Outlined" Color="Color.Primary"
-                                              Label="@ConstantString.Export"
+                            <MudLoadingButton Loading="_exporting" Variant="Variant.Outlined" Color="Color.Primary"
                                               Disabled="@_loading"
-                                              StartIcon="@Icons.Custom.FileFormats.FileExcel"
-                                              Size="Size.Small"
                                               OnClick="OnExport"
-                                              IconColor="Color.Surface">
+                                              StartIcon="@Icons.Custom.FileFormats.FileExcel"
+                                              Size="Size.Small">
                                 @ConstantString.Export
                             </MudLoadingButton>
-                            <MudLoadingButton @bind-Loading="_pdfExporting" Variant="Variant.Outlined" Color="Color.Primary"
-                                              Label="@ConstantString.ExportPDF"
+                            <MudLoadingButton Loading="_pdfExporting" Variant="Variant.Outlined" Color="Color.Primary"
                                               Disabled="@_loading"
-                                              StartIcon="@Icons.Material.Filled.PictureAsPdf"
-                                              Size="Size.Small"
                                               OnClick="OnExportPDF"
-                                              IconColor="Color.Surface">
+                                              StartIcon="@Icons.Custom.FileFormats.FilePdf"
+                                              Size="Size.Small">
                                 @ConstantString.ExportPDF
                             </MudLoadingButton>
                         }
                         @if (_canImport)
                         {
-                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px">
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                 <ActivatorContent>
                                     <MudButton Size="Size.Small"
                                                Variant="Variant.Outlined"
@@ -317,8 +312,13 @@
         Query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
-    private async Task ShowEditFormDialog(string title, DialogParameters parameters)
+    private async Task ShowEditFormDialog(string title, AddEditProductCommand command)
     {
+        var parameters = new DialogParameters<ProductFormDialog>
+        {
+            { x => x.Refresh, () => _table.ReloadServerData() },
+            { x => x.Model, command }
+        };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = DialogService.Show<ProductFormDialog>(title, parameters, options);
         var state = await dialog.Result;
@@ -333,12 +333,8 @@
     private async Task OnCreate()
     {
         var command = new AddEditProductCommand { Pictures = new List<ProductImage>() };
-        var parameters = new DialogParameters<ProductFormDialog>
-        {
-            { x => x.Refresh, () => _table.ReloadServerData() },
-            { x => x.Model, command }
-        };
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters);
+       
+        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
     }
 
     private async Task OnClone()
@@ -353,23 +349,13 @@
                 Name = copy.Name,
                 Pictures = copy.Pictures
             };
-        var parameters = new DialogParameters<ProductFormDialog>
-        {
-            { x => x.Refresh, () => _table.ReloadServerData() },
-            { x => x.Model, command }
-        };
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), parameters);
+        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
     }
 
     private async Task OnEdit(ProductDto dto)
     {
         var command = Mapper.Map<AddEditProductCommand>(dto);
-        var parameters = new DialogParameters<ProductFormDialog>
-        {
-            { x => x.Refresh, () => _table.ReloadServerData() },
-            { x => x.Model, command }
-        };
-        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), parameters);
+        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), command);
     }
 
     private async Task OnDelete(ProductDto dto)

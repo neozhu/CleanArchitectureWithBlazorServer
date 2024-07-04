@@ -67,7 +67,7 @@
                 </MudItem>
                 <MudItem>
                     <div class="d-flex flex-row gap-4 mb-2">
-                        <MudFileUpload T="IReadOnlyList<IBrowserFile>" Multiple
+                        <MudFileUpload T="IReadOnlyList<IBrowserFile>"
                                        SuppressOnChangeWhenInvalid="true"
                                        @bind-Files="Model.UploadPictures" OnFilesChanged="UploadFiles" For="@(() => Model.UploadPictures)">
                             <ActivatorContent>
@@ -138,7 +138,7 @@
             var dialog = DialogService.Show<ConfirmationDialog>($"{L["Erase imatge"]}", parameters, options);
             var state = await dialog.Result;
 
-            if (!state.Canceled)
+            if (state is not null && !state.Canceled)
             {
                 Model.Pictures.Remove(picture);
             }

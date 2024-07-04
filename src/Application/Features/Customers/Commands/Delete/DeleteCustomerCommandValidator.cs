@@ -5,8 +5,12 @@ namespace CleanArchitecture.Blazor.Application.Features.Customers.Commands.Delet
 
 public class DeleteCustomerCommandValidator : AbstractValidator<DeleteCustomerCommand>
 {
-    public DeleteCustomerCommandValidator()
-    {
-        RuleFor(v => v.Id).NotNull().ForEach(v => v.GreaterThan(0));
-    }
+        public DeleteCustomerCommandValidator()
+        {
+          
+            RuleFor(v => v.Id).NotNull().ForEach(v=>v.GreaterThan(0));
+          
+        }
 }
+    
+

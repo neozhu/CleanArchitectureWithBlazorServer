@@ -2,44 +2,65 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Features.Customers.Caching;
-
+/// <summary>
+/// Static class for managing cache keys and expiration for Customer-related data.
+/// </summary>
 public static class CustomerCacheKey
 {
-    public const string GetAllCacheKey = "all-Customers";
-    private static readonly TimeSpan refreshInterval = TimeSpan.FromHours(3);
-    private static CancellationTokenSource _tokensource;
-
-    static CustomerCacheKey()
-    {
-        _tokensource = new CancellationTokenSource(refreshInterval);
-    }
-
+    // Defines the refresh interval for the cache expiration token
+    private static readonly TimeSpan RefreshInterval = TimeSpan.FromMinutes(30);
+    // Object used for locking to ensure thread safety
+    private static readonly object TokenLock = new();
+    // CancellationTokenSource used for managing cache expiration
+    private static CancellationTokenSource _tokenSource = new (RefreshInterval);
+    /// <summary>
+    /// Gets the memory cache entry options with an expiration token.
+    /// </summary>
     public static MemoryCacheEntryOptions MemoryCacheEntryOptions =>
-        new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
+        new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(GetOrCreateTokenSource().Token));
 
-    public static string GetPaginationCacheKey(string parameters)
-    {
+    public const string GetAllCacheKey = "all-Customers";
+    public static string GetPaginationCacheKey(string parameters) {
         return $"CustomerCacheKey:CustomersWithPaginationQuery,{parameters}";
     }
-
-    public static string GetByNameCacheKey(string parameters)
-    {
+    public static string GetByNameCacheKey(string parameters) {
         return $"CustomerCacheKey:GetByNameCacheKey,{parameters}";
     }
-
-    public static string GetByIdCacheKey(string parameters)
-    {
+    public static string GetByIdCacheKey(string parameters) {
         return $"CustomerCacheKey:GetByIdCacheKey,{parameters}";
     }
 
-    public static CancellationTokenSource SharedExpiryTokenSource()
+    
+    /// <summary>
+    /// Gets or creates a new <see cref="CancellationTokenSource"/> with the specified refresh interval.
+    /// </summary>
+    /// <returns>The current or new <see cref="CancellationTokenSource"/>.</returns>
+    public static CancellationTokenSource GetOrCreateTokenSource()
     {
-        if (_tokensource.IsCancellationRequested) _tokensource = new CancellationTokenSource(refreshInterval);
-        return _tokensource;
+        lock (TokenLock)
+        {
+            if (_tokenSource.IsCancellationRequested)
+            {
+                _tokenSource.Dispose();
+                _tokenSource = new CancellationTokenSource(RefreshInterval);
+            }
+            return _tokenSource;
+        }
     }
-
+    /// <summary>
+    /// Refreshes the cache expiration token by cancelling and recreating the <see cref="CancellationTokenSource"/>.
+    /// </summary>
     public static void Refresh()
     {
-        SharedExpiryTokenSource().Cancel();
+        lock (TokenLock)
+        {
+            if (!_tokenSource.IsCancellationRequested)
+            {
+                _tokenSource.Cancel();
+                _tokenSource.Dispose();
+                _tokenSource = new CancellationTokenSource(RefreshInterval);
+            }
+        }
     }
 }
+

@@ -73,7 +73,7 @@
                         }
                         @if (_canImport)
                         {
-                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" Style="margin-top:0px">
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" >
                                 <ActivatorContent>
                                     <MudButton Size="Size.Small"
                                                Variant="Variant.Outlined"
@@ -307,7 +307,7 @@
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<CreatePicklistDialog>(title, parameters, options);
         var state = await dialog.Result;
-        if (!state.Canceled)
+        if (state is not null && !state.Canceled)
         {
             await _table.ReloadServerData();
         }

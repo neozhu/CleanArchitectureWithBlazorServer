@@ -162,7 +162,7 @@
                         }
                     </div>
                     <div class="flex-grow-0">
-                        <MudHighlighter Typo="Typo.body2" Text="@context.Item.Content" HighlightedText="@_searchString" Class="mud-text-secondary"></MudHighlighter>
+                        <MudHighlighter   Text="@context.Item.Content" HighlightedText="@_searchString" Class="mud-text-secondary"></MudHighlighter>
                     </div>
                 </div>
             </CellTemplate>
@@ -349,7 +349,7 @@
         var dialog = DialogService.Show<UploadFilesFormDialog>
             (L["Upload Pictures"], parameters, options);
         var state = await dialog.Result;
-        if (!state.Canceled)
+        if (state is not null &&  !state.Canceled)
         {
             await _table.ReloadServerData();
             Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
@@ -368,7 +368,7 @@
 
 
         var state = await dialog.Result;
-        if (!state.Canceled)
+        if (state is not null && !state.Canceled)
         {
             await _table.ReloadServerData();
         }
