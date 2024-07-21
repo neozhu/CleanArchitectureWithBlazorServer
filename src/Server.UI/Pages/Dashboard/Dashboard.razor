@@ -127,58 +127,8 @@
     </div>
 
     <LandingSection StraightEnd="true" SectionClass="dark-section-text" BackgroundClass="mud-dark">
-        <MudGrid>
-            <MudItem xs="12" sm="12" md="6">
-                <MudText Typo="Typo.h6" Color="Color.Primary">@L["Global scale"]</MudText>
-                <MudText Typo="Typo.h5" Class="white-text">@L["MudBlazor is growing quickly"]</MudText>
-                <MudText Typo="Typo.subtitle1" Class="my-4">
-                    @L["We are growing every day, developers from all over the world are using MudBlazor and are engaged with the community."]
-                    @L["We are dedicated to improving every aspect of MudBlazor to be your number one choice when looking for a Blazor component library."]
-                    @L["Join us and be part of the library’s success!"]
-                </MudText>
-            </MudItem>
-            <MudItem Class="world-map-item" xs="12" sm="12" md="6">
-                <div class="world-map">
-                    <WorldMap/>
-                </div>
-            </MudItem>
-            <MudItem xs="6" sm="3">
-                <div class="global-scale-item">
-                    <MudText Typo="Typo.h3" Color="Color.Primary">@NumericExtensions.RoundedToString(3000)</MudText>
-                    <div class="d-flex align-center">
-                        <MudIcon Icon="@_lpDownloads"/>
-                        <MudText Typo="Typo.body1" Class="ml-4">@L["Total Downloads"]</MudText>
-                    </div>
-                </div>
-            </MudItem>
-            <MudItem xs="6" sm="3">
-                <div class="global-scale-item">
-                    <MudText Typo="Typo.h3" Color="Color.Primary">@NumericExtensions.RoundedToString(1680)</MudText>
-                    <div class="d-flex align-center">
-                        <MudIcon Icon="@_lpGitHub"/>
-                        <MudText Typo="Typo.body1" Class="ml-4">@L["GitHub Stars"]</MudText>
-                    </div>
-                </div>
-            </MudItem>
-            <MudItem xs="6" sm="3">
-                <div class="global-scale-item">
-                    <MudText Typo="Typo.h3" Color="Color.Primary">@NumericExtensions.RoundedToString(200)</MudText>
-                    <div class="d-flex align-center">
-                        <MudIcon Icon="@_lpContributors"/>
-                        <MudText Typo="Typo.body1" Class="ml-4">@L["Contributors"]</MudText>
-                    </div>
-                </div>
-            </MudItem>
-            <MudItem xs="6" sm="3">
-                <div class="global-scale-item">
-                    <MudText Typo="Typo.h3" Color="Color.Primary">@NumericExtensions.RoundedToString(23)</MudText>
-                    <div class="d-flex align-center">
-                        <MudIcon Icon="@_lpDiscord"/>
-                        <MudText Typo="Typo.body1" Class="ml-4">@L["Discord Members"]</MudText>
-                    </div>
-                </div>
-            </MudItem>
-        </MudGrid>
+        <MudText Typo="Typo.h3" Align="Align.Center" Class="mt-16 mb-8">“Never had such a good time making a site“</MudText>
+         <Carousel />
     </LandingSection>
 </MudContainer>
 

@@ -1,0 +1,111 @@
+﻿@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
+@inject IStringLocalizer<Dashboard> L
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <MudCard Elevation="24">
+                <MudCardHeader Class="px-6 pt-6">
+                    <CardHeaderAvatar>
+                        <MudIcon Class="mt-n4" Icon="@Icons.Material.Rounded.FormatQuote" Size="Size.Large" />
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.subtitle2">Brian</MudText>
+                        <MudText Typo="Typo.body2">EvoDynamic</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent Class="pt-0 px-6 pb-6 mud-typography-body1">
+                    @L["Coming of an Angular project back to .NET, Blazor was the ideal choice and MudBlazor was the icing on the cake. . . not \"mud\" but a rich creamy sweet chocolate."]
+                </MudCardContent>
+            </MudCard>
+        </div>
+        <div class="swiper-slide">
+            <MudCard Elevation="24">
+                <MudCardHeader Class="px-6 pt-6">
+                    <CardHeaderAvatar>
+                        <MudIcon Class="mt-n4" Icon="@Icons.Material.Rounded.FormatQuote" Size="Size.Large" />
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.subtitle2">Developer Team</MudText>
+                        <MudText Typo="Typo.body2">Wunderminds</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent Class="pt-0 px-6 pb-6 mud-typography-body1">
+                    @L["Saving us from tons of tiny details and allowing us to deliver sharp looking modern web applications, MudBlazor is the king of open source UI frameworks that no one should miss when building apps with Blazor!"]
+                </MudCardContent>
+            </MudCard>
+        </div>
+        <div class="swiper-slide">
+            <MudCard Elevation="24">
+                <MudCardHeader Class="px-6 pt-6">
+                    <CardHeaderAvatar>
+                        <MudIcon Icon="@Icons.Material.Rounded.FormatQuote" Size="Size.Large" />
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.subtitle2">Wave Master</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent Class="pt-0 px-6 pb-6 mud-typography-body1">
+                    @L["Comprehensive, ambitious, fresh and clean. Some really cool implementations. The development and improvement of components is really fast, and if a course correction is needed, they will do it. Garderoben, henon and all the other contributors are approachable. They are getting stuff done!"]
+                </MudCardContent>
+            </MudCard>
+        </div>
+        <div class="swiper-slide">
+            <MudCard Elevation="24">
+                <MudCardHeader Class="px-6 pt-6">
+                    <CardHeaderAvatar>
+                        <MudIcon Class="mt-n4" Icon="@Icons.Material.Rounded.FormatQuote" Size="Size.Large" />
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.subtitle2">Karakoulak Spyridon</MudText>
+                        <MudText Typo="Typo.body2">Arhs Group</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent Class="pt-0 px-6 pb-6 mud-typography-body1">
+                    @L["Best open source component library for Blazor out there and easy to understand!"]
+                </MudCardContent>
+            </MudCard>
+        </div>
+        <div class="swiper-slide">
+            <MudCard Elevation="24">
+                <MudCardHeader Class="px-6 pt-6">
+                    <CardHeaderAvatar>
+                        <MudIcon Class="mt-n4" Icon="@Icons.Material.Rounded.FormatQuote" Size="Size.Large" />
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.subtitle2">Hayden Ravenscroft</MudText>
+                        <MudText Typo="Typo.body2">Mail Solutions UK Ltd</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent Class="pt-0 px-6 pb-6 mud-typography-body1">
+                    @L["A comprehensive library. Takes the hassle out of designing for Blazor. Used in many ongoing projects at the Mail Solutions Group. The MudBlazor team has a real gem here."]
+                </MudCardContent>
+            </MudCard>
+        </div>
+        <div class="swiper-slide">
+            <MudCard Elevation="24">
+                <MudCardHeader Class="px-6 pt-6">
+                    <CardHeaderAvatar>
+                        <MudIcon Class="mt-n4" Icon="@Icons.Material.Rounded.FormatQuote" Size="Size.Large" />
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.subtitle2">Frederik</MudText>
+                        <MudText Typo="Typo.body2">Xuntar</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent Class="pt-0 px-6 pb-6 mud-typography-body1">
+                    @L["Very practical, convenient and user-friendly library that has massively helped us in developing our applications. Great community as well!"]
+                </MudCardContent>
+            </MudCard>
+        </div>
+     
+    </div>
+</div>
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var result = await (new Swiper(JS)).Initialize(".swiper-container", false);
+        }
+    }
+}
