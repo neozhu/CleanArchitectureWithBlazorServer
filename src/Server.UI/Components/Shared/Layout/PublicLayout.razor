@@ -51,7 +51,7 @@
                 </Authorized>
                 <NotAuthorized>
                     <MudTooltip Text="@L["Login"]">
-                        <MudButton Variant="Variant.Text" Href="/pages/authentication/login"
+                        <MudButton Variant="Variant.Text" OnClick="@(()=>Navigation.NavigateTo(Login.PageUrl,true))"
                                    StartIcon="@Icons.Material.Rounded.Login"
                                    Style="text-transform:none">
                             @L["Login"]
@@ -80,7 +80,7 @@
                 </Authorized>
                 <NotAuthorized>
                     <MudTooltip Text="@L["Login"]">
-                        <MudButton Variant="Variant.Text" Href="/pages/authentication/login"
+                        <MudButton Variant="Variant.Text" OnClick="@(()=>Navigation.NavigateTo(Login.PageUrl,true))"
                                    StartIcon="@Icons.Material.Rounded.Login"
                                    Style="text-transform:none">
                             @L["Login"]
