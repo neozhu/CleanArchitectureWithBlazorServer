@@ -358,8 +358,7 @@
     private bool _uploading;
     private List<string?> _roles = new();
     private string? _searchRole;
-    private Computed<UserInfo[]> computed;
-    private Action<IComputed> invalidatedHandler;
+
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
@@ -376,9 +375,7 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
-        computed = await Computed.Capture(() => OnlineUserTracker.GetOnlineUsers());
-        invalidatedHandler = async (IComputed c) => await OnInvalidated(c);
-        computed.Invalidated += invalidatedHandler;
+       
 
     }
     private void InitializeServices()
@@ -393,7 +390,7 @@
     }
     public void Dispose()
     {
-        computed.Invalidated -= invalidatedHandler;
+       
     }
     private bool IsOnline(string username)
     {
@@ -808,7 +805,7 @@
         }
         else
         {
-            var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
+            var removed = (await UserManager.GetClaimsAsync(user)).FirstOrDefault(x => x.Value == model.ClaimValue);
             if (removed is not null)
             {
                 await UserManager.RemoveClaimAsync(user, removed);
@@ -842,7 +839,7 @@
             }
             else
             {
-                var removed = _assignedClaims.FirstOrDefault(x => x.Value == model.ClaimValue);
+                var removed = (await UserManager.GetClaimsAsync(user)).FirstOrDefault(x => x.Value == model.ClaimValue);
                 if (removed is not null)
                 {
                     await UserManager.RemoveClaimAsync(user, removed);
