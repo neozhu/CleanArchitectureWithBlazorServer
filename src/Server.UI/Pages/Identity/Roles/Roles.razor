@@ -50,8 +50,7 @@
                                    Size="Size.Small"
                                    OnClick="OnRefresh"
                                    Disabled="@_loading"
-                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   >
+                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary">
                             @ConstantString.Refresh
                         </MudButton>
                         @if (_canCreate)
@@ -87,7 +86,7 @@
                         }
                         @if (_canImport)
                         {
-                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx" >
+                            <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                 <ActivatorContent>
                                     <MudButton Size="Size.Small"
                                                Variant="Variant.Outlined"
@@ -355,7 +354,7 @@
         _permissions = await PermissionHelper.GetAllPermissionsByRoleId(item.Id);
     }
 
-    
+
 
     private Task OnOpenChangedHandler(bool state)
     {
@@ -365,10 +364,10 @@
 
     private async Task OnAssignChangedHandler(PermissionModel model)
     {
-        await ProcessPermissionChange(model, async (roleId, claim) =>
+        await ProcessPermissionChange(model, async (roleId, claim, assigned) =>
         {
             var role = await RoleManager.FindByIdAsync(roleId) ?? throw new NotFoundException($"Application role {roleId} Not Found.");
-            if (model.Assigned)
+            if (assigned)
             {
                 await RoleManager.AddClaimAsync(role, claim);
                 Snackbar.Add($"{L["Permission assigned successfully"]}", Severity.Info);
@@ -383,34 +382,45 @@
 
     private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
     {
-        foreach (var model in models)
+        var roleClaimsDict = models.GroupBy(m => m.RoleId)
+                                    .ToDictionary(g => g.Key, g => g.ToList());
+
+        foreach (var roleClaims in roleClaimsDict)
         {
-            await ProcessPermissionChange(model, async (roleId, claim) =>
-            {
-                var role = await RoleManager.FindByIdAsync(roleId) ?? throw new NotFoundException($"Application role {roleId} Not Found.");
-                if (model.Assigned)
-                {
-                    await RoleManager.AddClaimAsync(role, claim);
-                }
-                else
-                {
-                    await RoleManager.RemoveClaimAsync(role, claim);
-                }
-            });
+            var roleId = roleClaims.Key;
+            var claims = roleClaims.Value.Select(m => new Claim(m.ClaimType, m.ClaimValue)).ToList();
+            var assignedClaims = roleClaims.Value.Where(m => m.Assigned).Select(m => new Claim(m.ClaimType, m.ClaimValue)).ToList();
+            var unassignedClaims = roleClaims.Value.Where(m => !m.Assigned).Select(m => new Claim(m.ClaimType, m.ClaimValue)).ToList();
+
+            await ProcessPermissionsBatch(roleId, assignedClaims, unassignedClaims);
         }
         Snackbar.Add($"{L["Authorization has been changed"]}", Severity.Info);
     }
 
-    private async Task ProcessPermissionChange(PermissionModel model, Func<string, Claim, Task> changeAction)
+    private async Task ProcessPermissionsBatch(string roleId, List<Claim> assignedClaims, List<Claim> unassignedClaims)
     {
         _processing = true;
         try
         {
-            var roleId = model.RoleId!;
-            var claim = new Claim(model.ClaimType, model.ClaimValue);
-            model.Assigned = !model.Assigned;
-            await changeAction(roleId, claim);
+            var role = await RoleManager.FindByIdAsync(roleId) ?? throw new NotFoundException($"Application role {roleId} Not Found.");
+
+            // 批量添加和移除声明
+            foreach (var claim in assignedClaims)
+            {
+                await RoleManager.AddClaimAsync(role, claim);
+            }
+
+            foreach (var claim in unassignedClaims)
+            {
+                await RoleManager.RemoveClaimAsync(role, claim);
+            }
+
             FusionCache.Remove($"get-claims-by-{roleId}");
+        }
+        catch (Exception ex)
+        {
+            // Log the exception here
+            throw;
         }
         finally
         {
@@ -418,6 +428,31 @@
         }
     }
 
+    private async Task ProcessPermissionChange(PermissionModel model, Func<string, Claim, bool, Task> changeAction)
+    {
+        _processing = true;
+        try
+        {
+            var roleId = model.RoleId!;
+            var claim = new Claim(model.ClaimType, model.ClaimValue);
+            var assigned = model.Assigned;
+
+            await changeAction(roleId, claim, assigned);
+
+            model.Assigned = !assigned; // Only change after action is performed successfully
+
+            FusionCache.Remove($"get-claims-by-{roleId}");
+        }
+        catch (Exception ex)
+        {
+            // Log the exception here
+            throw;
+        }
+        finally
+        {
+            _processing = false;
+        }
+    }
     private async Task OnDelete(ApplicationRoleDto dto)
     {
         await DialogServiceHelper.ShowConfirmationDialog(ConstantString.DeleteConfirmationTitle, string.Format(ConstantString.DeleteConfirmation, dto.Name), async () =>
@@ -458,7 +493,7 @@
         });
     }
 
-     
+
     private Task OnExport()
     {
         return Task.CompletedTask;
