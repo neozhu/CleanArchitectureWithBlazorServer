@@ -413,14 +413,14 @@
         try
         {
             _loading = true;
-
+            var total = await UserManager.Users.CountAsync(CreateSearchPredicate());
             var query = UserManager.Users.Where(CreateSearchPredicate());
             var items = await query
-                .Include(x => x.UserRoles)
+                .Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
                 .Include(x => x.Superior)
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
-            var total = await UserManager.Users.CountAsync(CreateSearchPredicate());
+           
             return new GridData<ApplicationUserDto> { TotalItems = total, Items = items };
         }
         finally
