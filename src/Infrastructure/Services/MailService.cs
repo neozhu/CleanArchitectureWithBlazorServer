@@ -4,8 +4,6 @@
 using System.Reflection;
 using FluentEmail.Core;
 using FluentEmail.Core.Models;
-using Polly;
-using Polly.Retry;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
@@ -15,7 +13,6 @@ public class MailService : IMailService
     private readonly IApplicationSettings _appConfig;
     private readonly IFluentEmail _fluentEmail;
     private readonly ILogger<MailService> _logger;
-    private readonly AsyncRetryPolicy _policy;
 
     public MailService(
         IApplicationSettings appConfig,
@@ -25,20 +22,14 @@ public class MailService : IMailService
         _appConfig = appConfig;
         _fluentEmail = fluentEmail;
         _logger = logger;
-        _policy = Policy.Handle<Exception>()
-            .WaitAndRetryAsync(2, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt) / 2));
+
     }
 
     public Task<SendResponse> SendAsync(string to, string subject, string body)
     {
         try
         {
-            if (_appConfig.Resilience)
-                return _policy.ExecuteAsync(() => _fluentEmail
-                    .To(to)
-                    .Subject(subject)
-                    .Body(body, true)
-                    .SendAsync());
+
             return _fluentEmail
                 .To(to)
                 .Subject(subject)
@@ -56,13 +47,7 @@ public class MailService : IMailService
     {
         try
         {
-            if (_appConfig.Resilience)
-                return _policy.ExecuteAsync(() => _fluentEmail
-                    .To(to)
-                    .Subject(subject)
-                    .UsingTemplateFromEmbedded(string.Format(TemplatePath, template), model,
-                        Assembly.GetEntryAssembly())
-                    .SendAsync());
+
             return _fluentEmail
                 .To(to)
                 .Subject(subject)
