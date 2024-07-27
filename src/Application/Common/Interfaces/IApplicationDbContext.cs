@@ -15,6 +15,7 @@ public interface IApplicationDbContext
     DbSet<KeyValue> KeyValues { get; set; }
     DbSet<Product> Products { get; set; }
     DbSet<Tenant> Tenants { get; set; }
+    DbSet<Contact> Contacts { get; set; }
     ChangeTracker ChangeTracker { get; }
 
     DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
