@@ -211,7 +211,12 @@ Facebook.
 
 
 ## Tutorial: Removing an cutomer Object from a Project
-[![Everything Is AWESOME](https://www.youtube.com/watch?v=i3p-3I95YqM)](https://www.youtube.com/watch?v=i3p-3I95YqM)
+[![Everything Is AWESOME](doc/remove.png)](https://www.youtube.com/watch?v=i3p-3I95YqM "Everything Is AWESOME")
+
+
+## Tutorial: add an contact Entity in the project
+[![Everything Is AWESOME](doc/create.png)](https://www.youtube.com/watch?v=X1b4hFLs4vo "Everything Is AWESOME")
+
 
 ## Why I chose Blazor Server
 
