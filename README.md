@@ -209,6 +209,10 @@ Facebook.
     - create a new project from Clean Architecture for Blazor Server Solution
       <img width="769" alt="image" src="https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/ed7eb20f-aec2-4f69-95b7-d47c2eb20428">
 
+
+## Tutorial: Removing an cutomer Object from a Project
+[![Everything Is AWESOME](https://www.youtube.com/watch?v=i3p-3I95YqM)](https://www.youtube.com/watch?v=i3p-3I95YqM)
+
 ## Why I chose Blazor Server
 
 - I hate switching between C# and JavaScript at the same time in order to develop a project, which is why I opted for

@@ -16,7 +16,6 @@ global using CleanArchitecture.Blazor.Application.Common.Models;
 global using CleanArchitecture.Blazor.Application.Common.Security;
 global using CleanArchitecture.Blazor.Domain.Common.Enums;
 global using CleanArchitecture.Blazor.Domain.Common.Events;
-global using CleanArchitecture.Blazor.Domain.Events;
 global using CleanArchitecture.Blazor.Domain.Entities;
 global using FluentValidation;
 global using LazyCache;
