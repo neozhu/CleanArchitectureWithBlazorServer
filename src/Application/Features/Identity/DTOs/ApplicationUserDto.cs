@@ -32,13 +32,14 @@ public class ApplicationUserDto
 
     [Description("Default Role")] public string? DefaultRole => AssignedRoles?.FirstOrDefault();
 
-    [Description("Is Active")] public bool IsActive { get; set; }
+    [Description("Active")] public bool IsActive { get; set; }
 
     [Description("Is Live")] public bool IsLive { get; set; }
 
     [Description("Password")] public string? Password { get; set; }
 
     [Description("Confirm Password")] public string? ConfirmPassword { get; set; }
+    [Description("Email Confirmed")] public bool EmailConfirmed { get; set; }
 
     [Description("Status")] public DateTimeOffset? LockoutEnd { get; set; }
 
@@ -72,6 +73,7 @@ public class ApplicationUserDto
         public Mapping()
         {
             CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
+                .ForMember(x => x.EmailConfirmed, s => s.MapFrom(y => y.EmailConfirmed))
                 .ForMember(x => x.SuperiorName, s => s.MapFrom(y => y.Superior!.UserName))
                 .ForMember(x => x.TenantName, s => s.MapFrom(y => y.Tenant!.Name))
                 .ForMember(x => x.AssignedRoles, s => s.MapFrom(y => y.UserRoles.Select(r => r.Role.Name)));
