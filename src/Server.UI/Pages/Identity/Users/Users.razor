@@ -192,7 +192,7 @@
                         {
                             <MudMenuItem OnClick="@(() => OnSetPermissions(context.Item))">@L["Set Permissions"]</MudMenuItem>
                         }
-                        @if (_canSendRestPassword)
+                        @if (_canSendRestPasswordMail)
                         {
                             <MudMenuItem OnClick="@(() => OnSendResetPassword(context.Item))">@L["Send Reset Password Email"]</MudMenuItem>
                         }
@@ -345,7 +345,7 @@
     private bool _canDelete;
     private bool _canManageRoles;
     private bool _canRestPassword;
-    private bool _canSendRestPassword;
+    private bool _canSendRestPasswordMail;
     private bool _canManagePermissions;
     private bool _canImport;
     private bool _canExport;
@@ -366,7 +366,7 @@
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Delete)).Succeeded;
         _canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
         _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
-        _canSendRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.SendRestPassword)).Succeeded;
+        _canSendRestPasswordMail = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.SendRestPasswordMail)).Succeeded;
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;

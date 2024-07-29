@@ -72,7 +72,7 @@ public static partial class Permissions
         public const string Export = "Permissions.Dictionaries.Export";
         public const string ManageRoles = "Permissions.Users.ManageRoles";
         public const string RestPassword = "Permissions.Users.RestPassword";
-        public const string SendRestPassword = "Permissions.Users.SendRestPassword";
+        public const string SendRestPasswordMail = "Permissions.Users.SendRestPasswordMail";
         public const string ManagePermissions = "Permissions.Users.Permissions";
     }
 
