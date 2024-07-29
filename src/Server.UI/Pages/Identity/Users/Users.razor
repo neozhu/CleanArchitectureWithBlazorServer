@@ -175,7 +175,7 @@
         <SelectColumn ShowInFooter="false"></SelectColumn>
         <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
             <CellTemplate>
-                @if (_canEdit || _canDelete || _canManageRoles || _canRestPassword || _canSendRestPassword  || _canManagePermissions)
+                @if (_canEdit || _canDelete || _canManageRoles || _canRestPassword || _canSendRestPasswordMail || _canManagePermissions)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
                              Dense="true"
