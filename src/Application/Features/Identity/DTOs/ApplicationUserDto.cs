@@ -10,7 +10,7 @@ public class ApplicationUserDto
 
     [Description("User Name")] public string UserName { get; set; } = string.Empty;
 
-    [Description("Display Name")] public string? DisplayName { get; set; }
+    [Description("Full Name")] public string? DisplayName { get; set; }
 
     [Description("Provider")] public string? Provider { get; set; } = "Local";
 
@@ -103,7 +103,7 @@ public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>
             .EmailAddress().WithMessage(_localizer["E-mail must be a valid email address"]);
 
         RuleFor(x => x.DisplayName)
-            .MaximumLength(128).WithMessage(_localizer["Display name must be less than 128 characters"]);
+            .MaximumLength(128).WithMessage(_localizer["Full name must be less than 128 characters"]);
 
         RuleFor(x => x.PhoneNumber)
             .MaximumLength(20).WithMessage(_localizer["Phone number must be less than 20 digits"]);

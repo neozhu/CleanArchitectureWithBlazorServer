@@ -259,7 +259,7 @@
                 </div>
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Email" Title="@L["Full Name / Phone Number"]">
+        <PropertyColumn Property="x => x.Email" Title="@L["Full Name"]">
             <CellTemplate>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.body2">@context.Item.DisplayName</MudText>
@@ -660,7 +660,7 @@
             Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = item.Id, ["code"] = code, ["returnUrl"] = "/" });
         await Mediator.Publish(new UserActivationNotification(callbackUrl, item.Email, item.Id, item.UserName));
-        Snackbar.Add(string.Format(L["Verification email sent to {0}"], item.Email), Severity.Info);
+        Snackbar.Add(string.Format(L["Verification email sent to {0}."], item.Email), Severity.Info);
         Logger.LogInformation($"Verification email sent to user {item.UserName} ({item.Id}) with callback URL {callbackUrl}");
     }
     #region change user status to active
@@ -758,7 +758,7 @@
                 await UserManager.UpdateAsync(user);
             }
 
-            Snackbar.Add($"{L["Reset password successfully"]}", Severity.Info);
+            Snackbar.Add($"{L["Reset password successfully."]}", Severity.Info);
         }
         else
         {
@@ -792,7 +792,7 @@
                 await ProcessPermissionChange(user, model);
             }
 
-            Snackbar.Add($"{L["Authorization has been changed"]}", Severity.Info);
+            Snackbar.Add($"{L["Authorization has been changed."]}", Severity.Info);
             await ClearClaimsCache(user.Id);
         }
         finally
@@ -841,7 +841,7 @@
                 if (model.ClaimType is not null && model.ClaimValue is not null)
                 {
                     await UserManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
-                    Snackbar.Add($"{L["Permission assigned successfully"]}", Severity.Info);
+                    Snackbar.Add($"{L["Permission assigned successfully."]}", Severity.Info);
                 }
             }
             else
@@ -852,7 +852,7 @@
                     await UserManager.RemoveClaimAsync(user, removed);
                 }
 
-                Snackbar.Add($"{L["Permission removed successfully"]}", Severity.Info);
+                Snackbar.Add($"{L["Permission removed successfully."]}", Severity.Info);
             }
 
             await ClearClaimsCache(user.Id);
@@ -899,7 +899,7 @@
                             {
                 { L["Id"], item => item.Id },
                 { L["User Name"], item => item.UserName },
-                { L["Display Name"], item => item.DisplayName },
+                { L["Full Name"], item => item.DisplayName },
                 { L["Email"], item => item.Email },
                 { L["Phone Number"], item => item.PhoneNumber },
                 { L["Tenant Id"], item => item.TenantId },
@@ -945,7 +945,7 @@
         return await ExcelService.ImportAsync(stream.ToArray(), new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
         {
             { L["User Name"], (row, item) => item.UserName = row[L["User Name"]]?.ToString() },
-            { L["Display Name"], (row, item) => item.DisplayName = row[L["Display Name"]]?.ToString() },
+            { L["Full Name"], (row, item) => item.DisplayName = row[L["Full Name"]]?.ToString() },
             { L["Email"], (row, item) => item.Email = row[L["Email"]]?.ToString() },
             { L["Phone Number"], (row, item) => item.PhoneNumber = row[L["Phone Number"]]?.ToString() },
             { L["Tenant Id"], (row, item) => item.TenantId = row[L["Tenant Id"]]?.ToString() }
