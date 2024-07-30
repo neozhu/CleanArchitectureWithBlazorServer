@@ -10,7 +10,7 @@ public class ApplicationUserDto
 
     [Description("User Name")] public string UserName { get; set; } = string.Empty;
 
-    [Description("Display Name")] public string? DisplayName { get; set; }
+    [Description("Full Name")] public string? DisplayName { get; set; }
 
     [Description("Provider")] public string? Provider { get; set; } = "Local";
 
@@ -32,13 +32,14 @@ public class ApplicationUserDto
 
     [Description("Default Role")] public string? DefaultRole => AssignedRoles?.FirstOrDefault();
 
-    [Description("Is Active")] public bool IsActive { get; set; }
+    [Description("Active")] public bool IsActive { get; set; }
 
     [Description("Is Live")] public bool IsLive { get; set; }
 
     [Description("Password")] public string? Password { get; set; }
 
     [Description("Confirm Password")] public string? ConfirmPassword { get; set; }
+    [Description("Email Confirmed")] public bool EmailConfirmed { get; set; }
 
     [Description("Status")] public DateTimeOffset? LockoutEnd { get; set; }
 
@@ -72,6 +73,7 @@ public class ApplicationUserDto
         public Mapping()
         {
             CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
+                .ForMember(x => x.EmailConfirmed, s => s.MapFrom(y => y.EmailConfirmed))
                 .ForMember(x => x.SuperiorName, s => s.MapFrom(y => y.Superior!.UserName))
                 .ForMember(x => x.TenantName, s => s.MapFrom(y => y.Tenant!.Name))
                 .ForMember(x => x.AssignedRoles, s => s.MapFrom(y => y.UserRoles.Select(r => r.Role.Name)));
@@ -101,7 +103,7 @@ public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>
             .EmailAddress().WithMessage(_localizer["E-mail must be a valid email address"]);
 
         RuleFor(x => x.DisplayName)
-            .MaximumLength(128).WithMessage(_localizer["Display name must be less than 128 characters"]);
+            .MaximumLength(128).WithMessage(_localizer["Full name must be less than 128 characters"]);
 
         RuleFor(x => x.PhoneNumber)
             .MaximumLength(20).WithMessage(_localizer["Phone number must be less than 20 digits"]);
