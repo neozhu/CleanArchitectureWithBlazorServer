@@ -1,7 +1,6 @@
-﻿@inherits FluxorComponent
-@inject IState<UserProfileState> UserProfileState
-@inject IStringLocalizer<HeaderMenu> L
-
+﻿@inject IStringLocalizer<HeaderMenu> L
+@inject UserProfileStateService UserProfileStateService
+@implements IDisposable
 <MudTooltip Arrow="true" Text="@L["User Profile"]">
     <MudMenu AnchorOrigin="Origin.BottomRight"
              Icon="@Icons.Material.Filled.PermIdentity"
@@ -12,7 +11,7 @@
             <div class="pb-4"
                  style="min-width: 260px;margin-bottom:0px!important">
                 <MudStack Row="true" AlignItems="AlignItems.Center" Class="ma-4">
-                    @if (IsLoading || UserProfile is null)
+                    @if (UserProfile is null || string.IsNullOrEmpty(UserProfile.UserId))
                     {
                         <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true"/>
                         <MudStack Justify="Justify.Center" Spacing="0">
@@ -79,6 +78,14 @@
 @code
 {
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
-    private bool IsLoading => UserProfileState.Value.IsLoading;
-    private UserProfile? UserProfile => UserProfileState.Value.UserProfile;
+    private UserProfile UserProfile => UserProfileStateService.UserProfile;
+    protected override void OnInitialized()
+    {
+        UserProfileStateService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        UserProfileStateService.OnChange -= StateHasChanged;
+    }
 }

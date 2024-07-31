@@ -1,7 +1,8 @@
 ﻿@layout MainLayout
 @inherits LayoutComponentBase
-
+@inject UserProfileStateService UserProfileStateService
 @inject LayoutService LayoutService
+@implements IDisposable
 <MudLayout>
     <AuthorizeView>
         <NotAuthorized>
@@ -15,7 +16,7 @@
                         RightToLeft="@LayoutService.IsRTL"
                         RightToLeftToggle="LayoutService.ToggleRightToLeft"
                         OnSettingClick="@(() => _themingDrawerOpen = true)"/>
-            <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@_userProfile?.AssignedRoles"
+            <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@UserProfile?.AssignedRoles"
                             DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler"/>
             <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
                         ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
@@ -26,7 +27,7 @@
                 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mb-4 mt-4">
                     <ErrorBoundary @ref="ErrorBoundary">
                         <ChildContent>
-                            <CascadingValue Value="@_userProfile">
+                            <CascadingValue Value="@UserProfile">
                                 @Body
                             </CascadingValue>
                         </ChildContent>
@@ -37,7 +38,7 @@
                 </MudContainer>
             </MudMainContent>
           
-            <UserLoginState UserProfileStateChanged="OnUserProfileStateChanged" />
+            <UserLoginState />
         </Authorized>
     </AuthorizeView>
 </MudLayout>
@@ -48,28 +49,29 @@
     private bool _commandPaletteOpen;
     private bool _navigationMenuDrawerOpen = true;
     private bool _themingDrawerOpen;
-    private UserProfile? _userProfile;
+    private UserProfile? UserProfile => UserProfileStateService.UserProfile;
     private ErrorBoundary? ErrorBoundary { set; get; }
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
         var state = await AuthState;
-        _userProfile = state.User.GetUserProfileFromClaim();
+        UserProfileStateService.UserProfile = state.User.GetUserProfileFromClaim();
+    }
+    protected override void OnInitialized()
+    {
+        UserProfileStateService.OnChange += StateHasChanged;
     }
 
+    public void Dispose()
+    {
+        UserProfileStateService.OnChange -= StateHasChanged;
+    }
     protected override void OnParametersSet()
     {
         ResetBoundary();
     }
-    private void OnUserProfileStateChanged(UserProfileState state)
-    {
-        if (state.UserProfile is not null)
-        {
-            _userProfile = state.UserProfile;
-        }
-        
-    }
+    
     private void ResetBoundary()
     {
         // On each page navigation, reset any error state

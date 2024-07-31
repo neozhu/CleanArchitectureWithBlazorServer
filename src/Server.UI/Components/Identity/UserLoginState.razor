@@ -1,50 +1,31 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Services.Fusion
 @using CleanArchitecture.Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-@inherits FluxorComponent
- 
-@inject IState<UserProfileState> UserProfileState
+
+@implements IDisposable
 @inject IStringLocalizer<SharedResource> L
 
 
 @code {
 
-    [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; } = default!;
-    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
-    [Parameter] public EventCallback<UserProfileState> UserProfileStateChanged { get; set; }
-    [Inject]
-    private IDispatcher Dispatcher { get; set; } = default!;
-    protected override async ValueTask DisposeAsyncCore(bool disposing)
+    public void Dispose()
     {
-        await base.DisposeAsyncCore(disposing);
         Client.LoginEvent -= _client_Login;
         Client.LogoutEvent -= _client_Logout;
-        UserProfileState.StateChanged -= OnStateChanged;
         GC.SuppressFinalize(this);
     }
-     
+
 
     [Inject] private HubClient Client { get; set; } = default!;
     [Inject] private IUsersStateContainer UsersStateContainer { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         Client.LoginEvent += _client_Login;
         Client.LogoutEvent += _client_Logout;
-        UserProfileState.StateChanged += OnStateChanged;
-        var state = await AuthState;
-        if (state.User.Identity?.IsAuthenticated ?? false)
-        {
-            var userName = state.User.Identity.Name;
-            SetProfile(userName!);
-            await Client.StartAsync();
-        }
-    }
-    private void OnStateChanged(object? sender, EventArgs e)
-    {
-        var result = ((IState<UserProfileState>?)sender)?.Value;
-        UserProfileStateChanged.InvokeAsync(result);
+        await Client.StartAsync();
+
     }
     private void _client_Login(object? sender, UserStateChangeEventArgs args)
     {
@@ -63,9 +44,6 @@
             UsersStateContainer.Remove(args.ConnectionId);
         });
     }
-    private void SetProfile(string userName)
-    {
-        Dispatcher.Dispatch(new FetchUserDtoAction { UserName = userName });
-    }
+
 
 }

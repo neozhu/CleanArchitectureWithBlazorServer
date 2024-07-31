@@ -435,11 +435,11 @@
         {
             var roleId = model.RoleId!;
             var claim = new Claim(model.ClaimType, model.ClaimValue);
+            model.Assigned = !model.Assigned;
             var assigned = model.Assigned;
-
             await changeAction(roleId, claim, assigned);
-
-            model.Assigned = !assigned; // Only change after action is performed successfully
+           
+           
 
             FusionCache.Remove($"get-claims-by-{roleId}");
         }

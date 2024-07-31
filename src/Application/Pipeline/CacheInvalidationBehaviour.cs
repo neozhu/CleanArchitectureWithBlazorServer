@@ -26,7 +26,7 @@ public class CacheInvalidationBehaviour<TRequest, TResponse> : IPipelineBehavior
         if (!string.IsNullOrEmpty(request.CacheKey))
         {
             _cache.Remove(request.CacheKey);
-            _logger.LogInformation("Cache with key {CacheKey} invalidated", request.CacheKey);
+            _logger.LogTrace("Cache with key {CacheKey} invalidated", request.CacheKey);
         }
         request.SharedExpiryTokenSource?.Cancel();
         return response;

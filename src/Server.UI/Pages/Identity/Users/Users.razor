@@ -1,5 +1,6 @@
 ﻿@page "/identity/users"
 @using ActualLab.Fusion
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
 @using CleanArchitecture.Blazor.Server.UI.Services.Fusion
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -33,7 +34,7 @@
 @inject IMailService MailService
 @inject IStringLocalizer<Users> L
 @inject ILogger<Users> Logger
- 
+
 <PageTitle>@Title</PageTitle>
 
 <MudDataGrid @ref="_table"
@@ -174,7 +175,7 @@
         <SelectColumn ShowInFooter="false"></SelectColumn>
         <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
             <CellTemplate>
-                @if (_canEdit || _canDelete || _canManageRoles || _canRestPassword || _canActive || _canManagePermissions)
+                @if (_canEdit || _canDelete || _canManageRoles || _canRestPassword || _canSendRestPasswordMail || _canManagePermissions)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
                              Dense="true"
@@ -191,16 +192,9 @@
                         {
                             <MudMenuItem OnClick="@(() => OnSetPermissions(context.Item))">@L["Set Permissions"]</MudMenuItem>
                         }
-                        @if (_canActive)
+                        @if (_canSendRestPasswordMail)
                         {
-                            @if (context.Item.IsActive)
-                            {
-                                <MudMenuItem OnClick="@(() => OnSetActive(context.Item))">@L["Set Inactive"]</MudMenuItem>
-                            }
-                            else
-                            {
-                                <MudMenuItem OnClick="@(() => OnSetActive(context.Item))">@L["Set Active"]</MudMenuItem>
-                            }
+                            <MudMenuItem OnClick="@(() => OnSendResetPassword(context.Item))">@L["Send Reset Password Email"]</MudMenuItem>
                         }
                         @if (_canRestPassword)
                         {
@@ -246,12 +240,26 @@
                     </MudBadge>
                     <div class="pl-3">
                         <MudText Class="ml-2 align-self-center">@context.Item.UserName</MudText>
-                        <MudText Typo="Typo.body2" Class="ml-2 align-self-center mud-text-secondary">@context.Item.Email</MudText>
+                        @if (context.Item.EmailConfirmed)
+                        {
+                            <MudText Typo="Typo.body2" Class="ml-2 align-self-center">@context.Item.Email</MudText>
+                        }
+                        else
+                        {
+                            <div class="d-flex flex-row gap-1">
+                                <MudText Typo="Typo.body2" Class="ml-2 align-self-center mud-text-secondary">@context.Item.Email</MudText>
+                                <MudTooltip Text="@L["We send a verification link to this email address. The link expires after 72 hours."]" Delay="300">
+                                    <MudLink OnClick="@(()=>SendVerify(context.Item))">@L["[Verify]"]</MudLink>
+                                </MudTooltip>
+
+                            </div>
+                        }
+
                     </div>
                 </div>
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Email" Title="@L["Display Name / PhoneNumber"]">
+        <PropertyColumn Property="x => x.Email" Title="@L["Full Name"]">
             <CellTemplate>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.body2">@context.Item.DisplayName</MudText>
@@ -280,27 +288,15 @@
         <PropertyColumn Property="x => x.IsActive" Title="@L[_currentDto.GetMemberDescription(x => x.IsActive)]">
             <CellTemplate>
                 <div>
-                    @if (context.Item.IsActive)
+                    @if (!context.Item.IsActive || (context.Item.LockoutEnd is not null && context.Item.LockoutEnd > DateTime.UtcNow))
                     {
-                        <MudChip Color="Color.Success" Size="Size.Small" Icon="@Icons.Material.Filled.CheckCircleOutline">@L["Active"]</MudChip>
-                        @if (context.Item.LockoutEnd is not null)
-                        {
-                            <div class="d-flex">
-                                <p>@L["Lockout End"]: </p>
-                                <ToLocal DateTime="@context.Item.LockoutEnd.Value.UtcDateTime.ToLocalTime()" Format="dd/mm/yyyy HH:MM:ss"></ToLocal>
-                            </div>
-                        }
+                        <MudTooltip Text="@L["Click to change status to active."]" Delay="300">
+                            <MudButton Variant="Variant.Text" OnClick="@(()=>SetActive(context.Item))">@L["Inactive"]</MudButton>
+                        </MudTooltip>
                     }
                     else
                     {
-                        <MudChip Class="flex-grow-0" Color="Color.Surface" Size="Size.Small" Icon="@Icons.Material.Filled.HighlightOff">@L["Inactive"]</MudChip>
-                        @if (context.Item.LockoutEnd is not null)
-                        {
-                            <div class="d-flex">
-                                <p>@L["Lockout End"]: </p>
-                                <ToLocal DateTime="@context.Item.LockoutEnd.Value.UtcDateTime.ToLocalTime()" Format="dd/mm/yyyy HH:MM:ss"></ToLocal>
-                            </div>
-                        }
+                        <MudChip Color="Color.Success" Size="Size.Small" Icon="@Icons.Material.Filled.CheckCircleOutline">@L["Active"]</MudChip>
                     }
                 </div>
             </CellTemplate>
@@ -347,9 +343,9 @@
     private bool _canSearch;
     private bool _canEdit;
     private bool _canDelete;
-    private bool _canActive;
     private bool _canManageRoles;
     private bool _canRestPassword;
+    private bool _canSendRestPasswordMail;
     private bool _canManagePermissions;
     private bool _canImport;
     private bool _canExport;
@@ -368,14 +364,14 @@
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Edit)).Succeeded;
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Delete)).Succeeded;
-        _canActive = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Active)).Succeeded;
         _canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
         _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
+        _canSendRestPasswordMail = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.SendRestPasswordMail)).Succeeded;
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
-       
+
 
     }
     private void InitializeServices()
@@ -384,19 +380,19 @@
         UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         PermissionHelper = ScopedServices.GetRequiredService<PermissionHelper>();
     }
-    private  async Task OnInvalidated(IComputed state)
+    private async Task OnInvalidated(IComputed state)
     {
         await InvokeAsync(StateHasChanged);
     }
     public void Dispose()
     {
-       
+
     }
     private bool IsOnline(string username)
     {
         return UsersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
     }
-   
+
     private Expression<Func<ApplicationUser, bool>> CreateSearchPredicate()
     {
         return x =>
@@ -420,7 +416,7 @@
                 .Include(x => x.Superior)
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
-           
+
             return new GridData<ApplicationUserDto> { TotalItems = total, Items = items };
         }
         finally
@@ -462,8 +458,7 @@
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<UserFormDialog>(title, parameters, options);
         var result = await dialog.Result;
-
-        if (!result.Canceled)
+        if (result is not null && !result.Canceled)
         {
             await ProcessUserCreation(model);
         }
@@ -478,8 +473,7 @@
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<UserFormDialog>(title, parameters, options);
         var result = await dialog.Result;
-
-        if (!result.Canceled)
+        if (result is not null && !result.Canceled)
         {
             await ProcessUserUpdate(model);
         }
@@ -496,7 +490,7 @@
                 PhoneNumber = model.PhoneNumber,
                 SuperiorId = model.SuperiorId,
                 ProfilePictureDataUrl = model.ProfilePictureDataUrl,
-                EmailConfirmed = true,
+                EmailConfirmed = false,
                 IsActive = model.IsActive
             };
 
@@ -509,8 +503,6 @@
 
         Snackbar.Add($"{L["New user created successfully."]}", Severity.Info);
         await AssignRolesToUser(applicationUser, model.AssignedRoles);
-        await SendPasswordResetNotificationIfActive(applicationUser, model.IsActive);
-
         Logger.LogInformation("Create a user succeeded. Username: {@UserName:l}, UserId: {@UserId}", applicationUser.UserName, applicationUser.Id);
         UserService.Refresh();
         await OnRefresh();
@@ -575,15 +567,7 @@
         }
     }
 
-    private async Task SendPasswordResetNotificationIfActive(ApplicationUser user, bool isActive)
-    {
-        if (isActive)
-        {
-            var code = await UserManager.GeneratePasswordResetTokenAsync(user);
-            await SendRestPasswordNotification(code, user.Id, user.Email!, user.UserName!);
-            Snackbar.Add("Recovery email sent. Please check your inbox to set a new password.", Severity.Info);
-        }
-    }
+
     private async Task OnCreate()
     {
         var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleName.Basic } };
@@ -623,7 +607,7 @@
         var state = await AuthState;
         if (dto.Id == state.User.GetUserId())
         {
-            Snackbar.Add("You cannot delete your own account!", Severity.Error);
+            Snackbar.Add(L["You cannot delete your own account!"], Severity.Error);
             return;
         }
         await ShowDeleteConfirmationDialog(dto);
@@ -636,7 +620,7 @@
         var currentUserId = state.User.GetUserId();
         if (_selectedItems.Any(x => x.Id == currentUserId))
         {
-            Snackbar.Add("You cannot delete your own account!", Severity.Error);
+            Snackbar.Add(L["You cannot delete your own account!"], Severity.Error);
             return;
         }
 
@@ -667,11 +651,25 @@
         await OnRefresh();
         UserService.Refresh();
     }
-    private async Task OnSetActive(ApplicationUserDto item)
+    private async Task SendVerify(ApplicationUserDto item)
+    {
+        var user = await UserManager.FindByIdAsync(item.Id) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
+        var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var callbackUrl = Navigation.GetUriWithQueryParameters(
+            Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
+            new Dictionary<string, object?> { ["userId"] = item.Id, ["code"] = code, ["returnUrl"] = "/" });
+        await Mediator.Publish(new UserActivationNotification(callbackUrl, item.Email, item.Id, item.UserName));
+        Snackbar.Add(string.Format(L["Verification email sent to {0}."], item.Email), Severity.Info);
+        Logger.LogInformation($"Verification email sent to user {item.UserName} ({item.Id}) with callback URL {callbackUrl}");
+    }
+    #region change user status to active
+    private async Task SetActive(ApplicationUserDto item)
     {
         var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
         await ToggleUserActiveState(user, item);
     }
+
     private async Task ToggleUserActiveState(ApplicationUser user, ApplicationUserDto item)
     {
         if (user.IsActive)
@@ -685,14 +683,9 @@
     }
     private async Task ActivateUser(ApplicationUser user, ApplicationUserDto item)
     {
-        var code = await UserManager.GeneratePasswordResetTokenAsync(user);
-        await SendRestPasswordNotification(code, user.Id, user.Email!, user.UserName!);
-        Snackbar.Add("Email sent. Please check your inbox to set a new password.", Severity.Info);
-
         user.IsActive = true;
         user.LockoutEnd = null;
         var identityResult = await UserManager.UpdateAsync(user);
-
         if (identityResult.Succeeded)
         {
             item.IsActive = true;
@@ -722,6 +715,19 @@
             Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
         }
     }
+    #endregion
+    private async Task OnSendResetPassword(ApplicationUserDto item)
+    {
+        var user = await UserManager.FindByIdAsync(item.Id) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
+        var code = await UserManager.GeneratePasswordResetTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        var callbackUrl = Navigation.GetUriWithQueryParameters(
+            Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
+            new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
+        await Mediator.Publish(new ResetPasswordNotification(callbackUrl, item.Email, item.UserName));
+        Snackbar.Add(string.Format(L["A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login."],item.UserName), Severity.Info);
+        Logger.LogInformation($"Password reset email sent to user {item.UserName} ({item.Id}) with callback URL {callbackUrl}");
+    }
     private async Task OnResetPassword(ApplicationUserDto item)
     {
         var model = new ResetPasswordFormModel { Id = item.Id, DisplayName = item.DisplayName, UserName = item.UserName, ProfilePictureDataUrl = item.ProfilePictureDataUrl };
@@ -739,6 +745,7 @@
     }
     private async Task ProcessPasswordReset(ApplicationUserDto item, ResetPasswordFormModel model)
     {
+
         var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
         var token = await UserManager.GeneratePasswordResetTokenAsync(user);
         var identityResult = await UserManager.ResetPasswordAsync(user, token, model.Password!);
@@ -751,7 +758,7 @@
                 await UserManager.UpdateAsync(user);
             }
 
-            Snackbar.Add($"{L["Reset password successfully"]}", Severity.Info);
+            Snackbar.Add($"{L["Reset password successfully."]}", Severity.Info);
         }
         else
         {
@@ -770,7 +777,7 @@
         return Task.CompletedTask;
     }
 
-    
+
 
     private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
     {
@@ -785,7 +792,7 @@
                 await ProcessPermissionChange(user, model);
             }
 
-            Snackbar.Add($"{L["Authorization has been changed"]}", Severity.Info);
+            Snackbar.Add($"{L["Authorization has been changed."]}", Severity.Info);
             await ClearClaimsCache(user.Id);
         }
         finally
@@ -834,7 +841,7 @@
                 if (model.ClaimType is not null && model.ClaimValue is not null)
                 {
                     await UserManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
-                    Snackbar.Add($"{L["Permission assigned successfully"]}", Severity.Info);
+                    Snackbar.Add($"{L["Permission assigned successfully."]}", Severity.Info);
                 }
             }
             else
@@ -845,7 +852,7 @@
                     await UserManager.RemoveClaimAsync(user, removed);
                 }
 
-                Snackbar.Add($"{L["Permission removed successfully"]}", Severity.Info);
+                Snackbar.Add($"{L["Permission removed successfully."]}", Severity.Info);
             }
 
             await ClearClaimsCache(user.Id);
@@ -889,15 +896,15 @@
     {
         return await ExcelService.ExportAsync(items,
             new Dictionary<string, Func<ApplicationUserDto, object?>>
-                    {
+                            {
                 { L["Id"], item => item.Id },
                 { L["User Name"], item => item.UserName },
-                { L["Display Name"], item => item.DisplayName },
+                { L["Full Name"], item => item.DisplayName },
                 { L["Email"], item => item.Email },
                 { L["Phone Number"], item => item.PhoneNumber },
                 { L["Tenant Id"], item => item.TenantId },
                 { L["Tenant Name"], item => item.TenantName }
-                    }, L["Users"]);
+                            }, L["Users"]);
     }
 
     private async Task OnImportData(IBrowserFile file)
@@ -938,7 +945,7 @@
         return await ExcelService.ImportAsync(stream.ToArray(), new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
         {
             { L["User Name"], (row, item) => item.UserName = row[L["User Name"]]?.ToString() },
-            { L["Display Name"], (row, item) => item.DisplayName = row[L["Display Name"]]?.ToString() },
+            { L["Full Name"], (row, item) => item.DisplayName = row[L["Full Name"]]?.ToString() },
             { L["Email"], (row, item) => item.Email = row[L["Email"]]?.ToString() },
             { L["Phone Number"], (row, item) => item.PhoneNumber = row[L["Phone Number"]]?.ToString() },
             { L["Tenant Id"], (row, item) => item.TenantId = row[L["Tenant Id"]]?.ToString() }
@@ -974,14 +981,6 @@
         Logger.LogInformation("{UserName} Activated Successfully!", toEmail);
     }
 
-    private async Task SendRestPasswordNotification(string code, string userId, string toEmail, string userName)
-    {
-        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = Navigation.GetUriWithQueryParameters(
-            Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
-            new Dictionary<string, object?> { ["userId"] = userId, ["token"] = code });
-        await Mediator.Publish(new ResetPasswordNotification(callbackUrl, toEmail, userName));
-        Logger.LogInformation("Rest password email sent to {0}.", toEmail);
-    }
+
 
 }
