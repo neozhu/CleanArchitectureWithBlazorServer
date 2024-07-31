@@ -29,7 +29,7 @@ public class AddEditContactCommand: ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<ContactDto,AddEditContactCommand>(MemberList.None);
+            CreateMap<ContactDto, AddEditContactCommand>(MemberList.None);
             CreateMap<AddEditContactCommand,Contact>(MemberList.None);
          
         }
