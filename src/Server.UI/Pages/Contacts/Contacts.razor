@@ -298,12 +298,12 @@
     {
         var dto = _selectedItems.First();
         var command = Mapper.Map<ContactDto, AddEditContactCommand>(dto, opts =>
-       {
+        {
            opts.AfterMap((src, dest) =>
            {
                dest.Id = 0;
            });
-       });
+        });
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Contact"]), command);
     }
     private async Task OnEdit(ContactDto dto)

@@ -40,7 +40,6 @@
     private bool _savingnew = false;
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
-    AddEditContactCommandValidator _modelValidator = new();
     [EditorRequired][Parameter] public AddEditContactCommand model { get; set; } = null!;
     [Inject] private IMediator _mediator { get; set; } = default!;
     async Task Submit()
