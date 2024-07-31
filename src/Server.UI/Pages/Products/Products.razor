@@ -340,15 +340,13 @@
     private async Task OnClone()
     {
         var copy = _selectedItems.First();
-        var command = new AddEditProductCommand
+        var command = Mapper.Map<ProductDto, AddEditProductCommand>(copy, opts =>
+        {
+            opts.AfterMap((src, dest) =>
             {
-                Brand = copy.Brand,
-                Description = copy.Description,
-                Price = copy.Price,
-                Unit = copy.Unit,
-                Name = copy.Name,
-                Pictures = copy.Pictures
-            };
+                dest.Id = 0;
+            });
+        });
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
     }
 

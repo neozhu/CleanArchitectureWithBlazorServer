@@ -67,12 +67,6 @@ public static class DependencyInjection
         services.AddMudBlazorDialog();
         services.AddHotKeys2();
 
-        services.AddFluxor(options =>
-        {
-            options.ScanAssemblies(Assembly.GetExecutingAssembly());
-        });
-
-
         // Fusion services
         services.AddFusion(fusion =>
         {

@@ -23,12 +23,12 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
             config.AddOpenBehavior(typeof(RequestExceptionProcessorBehavior<,>));
             config.AddOpenBehavior(typeof(MemoryCacheBehaviour<,>));
-            config.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
+            //config.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
             config.AddOpenBehavior(typeof(CacheInvalidationBehaviour<,>));
         });
 
         services.AddLazyCache();
-
+        services.AddScoped<UserProfileStateService>();
         return services;
     }
 }
