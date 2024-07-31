@@ -14,8 +14,7 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Fluxor.Blazor.Web" Version="6.0.0" />
-        <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.0.0" />
+
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
         <PackageReference Include="Hangfire.InMemory" Version="0.10.3" />
         <PackageReference Include="Blazor-Analytics" Version="3.12.0" />

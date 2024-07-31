@@ -28,7 +28,7 @@ public static class DependencyInjection
         });
 
         services.AddLazyCache();
-
+        services.AddScoped<UserProfileStateService>();
         return services;
     }
 }

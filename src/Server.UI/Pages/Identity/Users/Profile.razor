@@ -12,11 +12,9 @@
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @inherits OwningComponentBase
 @inject IStringLocalizer<Profile> L
-@inject IDispatcher Dispatcher
 @inject IUploadService UploadService
 @inject IOnlineUserTracker OnlineUserTracker
-@inject IActionSubscriber ActionSubscriber
-@inject IState<UserProfileState> UserProfileState
+@inject UserProfileStateService UserProfileStateService
 <PageTitle>@Title</PageTitle>
 
 
@@ -170,7 +168,7 @@ else
     private readonly List<OrgItem> _orgData = new();
     public string Id => Guid.NewGuid().ToString();
     private ChangeUserProfileModel model = null!;
-    private IDisposable? StateSubscription;
+
 
 
     private async void ActivePanelIndexChanged(int index)
@@ -216,20 +214,11 @@ else
         UserManager = Services.GetRequiredService<UserManager<ApplicationUser>>();
         model = Mapper.Map<ChangeUserProfileModel>(UserProfile);
 
-        StateSubscription = StateSubscriber.Subscribe(this, _ =>
-        {
-            if (UserProfileState.Value.UserProfile is not null)
-            {
-                model = Mapper.Map<ChangeUserProfileModel>(UserProfileState.Value.UserProfile);
-            }
 
-        });
     }
 
     protected override void Dispose(bool disposing)
     {
-        if (StateSubscription is not null)   StateSubscription.Dispose();
-        ActionSubscriber?.UnsubscribeFromAllActions(this);
         base.Dispose(disposing);
     }
 
@@ -253,7 +242,7 @@ else
                 user!.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated"], Severity.Info);
-                Dispatcher.Dispatch(new UserProfileUpdateAction { UserProfile = Mapper.Map<UserProfile>(model) });
+                UserProfileStateService.UpdateUserProfile(user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
                 await OnlineUserTracker.UpdateUser(new UserInfo(model.UserId,
                                                                 model.UserName,
                                                                 model.Email,
@@ -284,8 +273,9 @@ else
                 user.DisplayName = model.DisplayName;
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
+                UserProfileStateService.UpdateUserProfile(user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
                 Snackbar.Add($"{ConstantString.SaveSuccess}", Severity.Info);
-                Dispatcher.Dispatch(new UserProfileUpdateAction { UserProfile = Mapper.Map<UserProfile>(model) });
+              
             }
         }
         finally
