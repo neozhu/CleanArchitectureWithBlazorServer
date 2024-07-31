@@ -3,7 +3,6 @@
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
-using CleanArchitecture.Blazor.Domain.Events;
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.AddEdit;
 
 public class AddEditContactCommand: ICacheInvalidatorRequest<Result<int>>
@@ -29,7 +28,7 @@ public class AddEditContactCommand: ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<ContactDto,AddEditContactCommand>(MemberList.None);
+            CreateMap<ContactDto, AddEditContactCommand>(MemberList.None);
             CreateMap<AddEditContactCommand,Contact>(MemberList.None);
          
         }
