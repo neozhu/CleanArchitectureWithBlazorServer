@@ -35,7 +35,7 @@ public class MenuService : IMenuService
                         },
                         new()
                         {
-                            Title = "Contact",
+                            Title = "Contacts",
                             Href = "/pages/contacts",
                             PageStatus = PageStatus.Completed
                         }
