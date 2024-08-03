@@ -111,10 +111,8 @@
     private void RedirectTo(string redirectionUrl)
     {
         ArgumentNullException.ThrowIfNull(HttpContext);
-
         HttpContext.Response.Headers.Append("blazor-enhanced-nav-redirect-location", redirectionUrl);
         HttpContext.Response.StatusCode = 200;
-
     }
     public async Task OnSubmit()
     {

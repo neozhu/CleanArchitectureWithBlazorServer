@@ -28,6 +28,7 @@ public static class SerilogExtensions
                 .MinimumLevel.Override("Serilog", LogEventLevel.Information)
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore.AddOrUpdate", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.BackgroundJobServer", LogEventLevel.Error)
+                .MinimumLevel.Override("Hangfire.InMemory.InMemoryStorage", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.Server.BackgroundServerProcess", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.Server.ServerHeartbeatProcess", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.Processing.BackgroundExecution", LogEventLevel.Error)
