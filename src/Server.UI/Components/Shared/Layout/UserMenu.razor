@@ -57,7 +57,7 @@
                 <div class="mt-4 mx-4">
                     <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
                         <AntiforgeryToken/>
-                        <input type="hidden" name="ReturnUrl" value="/"/>
+                        <input type="hidden" name="ReturnUrl" value="/pages/authentication/login" />
                         <MudButton Color="Color.Secondary"
                                    ButtonType="ButtonType.Submit"
                                    FullWidth="true"
