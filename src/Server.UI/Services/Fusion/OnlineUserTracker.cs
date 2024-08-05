@@ -25,7 +25,7 @@ public class OnlineUserTracker : IOnlineUserTracker
         var invalidate = false;
         foreach (var key in _store.Keys)
         {
-            if (_store[key].Id == userInfo.Id)
+            if (_store[key].Name == userInfo.Name)
             {
                 var updated = _store.TryUpdate(key, userInfo, _store[key]);
                 if (invalidate == false)
