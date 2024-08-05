@@ -22,7 +22,7 @@
         <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.7" />
         <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.7" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.3" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.4" />
         <PackageReference Include="Hangfire.Core" Version="1.8.14" />
     </ItemGroup>
     <ItemGroup>

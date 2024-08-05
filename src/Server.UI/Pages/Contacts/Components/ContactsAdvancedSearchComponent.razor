@@ -1,7 +1,7 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Pagination
 @inject IStringLocalizer<Contacts> L
 
-<MudExpansionPanel @bind-IsExpanded="_advancedSearchExpanded"
+<MudExpansionPanel @bind-Expanded="_advancedSearchExpanded"
                    Style="border-radius: var(--mud-default-borderradius) !important;"
                    Class="mud-elevation-25 pa-2 mb-3" Text="@ConstantString.AdvancedSearch">
     <MudGrid>
