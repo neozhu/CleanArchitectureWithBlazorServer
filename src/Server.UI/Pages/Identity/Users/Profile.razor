@@ -241,18 +241,10 @@ else
                 await UserManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated"], Severity.Info);
                 UserProfileStateService.UpdateUserProfile(user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
-                await OnlineUserTracker.UpdateUser(new UserInfo(user.Id,
-                                                                user.UserName??"",
-                                                                user.Email ?? "",
-                                                                user.DisplayName ?? "",
-                                                                user.ProfilePictureDataUrl,
-                                                                model.SuperiorName ?? "",
-                                                                user.SuperiorId ?? "",
-                                                                user.TenantId ?? "",
-                                                                model.TenantName ?? "",
-                                                                user.PhoneNumber,
-                                                                model.AssignedRoles ?? Array.Empty<string>(),
-                                                                UserPresence.Available));
+                await OnlineUserTracker.Update(user.Id,
+                                               user.UserName??"",
+                                               user.DisplayName ?? "",
+                                               user.ProfilePictureDataUrl);
             }
         }
     }
@@ -272,18 +264,10 @@ else
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
                 UserProfileStateService.UpdateUserProfile(user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
-                await OnlineUserTracker.UpdateUser(new UserInfo(user.Id,
-                                                               user.UserName ?? "",
-                                                               user.Email ?? "",
-                                                               user.DisplayName ?? "",
-                                                               user.ProfilePictureDataUrl??"",
-                                                               model.SuperiorName ?? "",
-                                                               user.SuperiorId ?? "",
-                                                               user.TenantId ?? "",
-                                                               model.TenantName ?? "",
-                                                               user.PhoneNumber,
-                                                               model.AssignedRoles ?? Array.Empty<string>(),
-                                                               UserPresence.Available));
+                await OnlineUserTracker.Update(user.Id,
+                                               user.UserName ?? "",
+                                               user.DisplayName ?? "",
+                                               user.ProfilePictureDataUrl??"");
                 Snackbar.Add($"{ConstantString.SaveSuccess}", Severity.Info);
               
             }

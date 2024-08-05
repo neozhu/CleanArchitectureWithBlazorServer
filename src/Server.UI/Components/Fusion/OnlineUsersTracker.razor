@@ -45,7 +45,7 @@
     protected override async Task OnInitializedAsync()
     {
         currentUserName = UserProfile.UserName;
-        await OnlineUserTracker.AddUser(sessionId, new UserInfo(UserProfile.UserId,
+        await OnlineUserTracker.Add(sessionId, new UserInfo(UserProfile.UserId,
             UserProfile.UserName,
             UserProfile.Email,
             UserProfile.DisplayName ?? string.Empty,
@@ -69,7 +69,7 @@
 
     public override async ValueTask DisposeAsync()
     {
-        await OnlineUserTracker.RemoveUser(sessionId);
+        await OnlineUserTracker.Remove(sessionId);
         GC.Collect();
     }
 }

@@ -537,18 +537,10 @@
             Snackbar.Add($"{L["The user updated successfully."]}", Severity.Info);
             await OnRefresh();
             UserService.Refresh();
-            await OnlineUserTracker.UpdateUser(new UserInfo(item.Id,
-                                                            item.UserName,
-                                                            item.Email,
-                                                            item.DisplayName ?? string.Empty,
-                                                            item.ProfilePictureDataUrl ?? string.Empty,
-                                                            item.SuperiorName ?? string.Empty,
-                                                            item.SuperiorId ?? string.Empty,
-                                                            item.TenantId ?? string.Empty,
-                                                            item.TenantName ?? string.Empty,
-                                                            item.PhoneNumber,
-                                                            item.AssignedRoles ?? Array.Empty<string>(),
-                                                            UserPresence.Available));
+            await OnlineUserTracker.Update(item.Id,
+                                           item.UserName,
+                                           item.DisplayName ?? string.Empty,
+                                           item.ProfilePictureDataUrl ?? string.Empty);
         }
         else
         {
@@ -725,7 +717,7 @@
             Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
         await Mediator.Publish(new ResetPasswordNotification(callbackUrl, item.Email, item.UserName));
-        Snackbar.Add(string.Format(L["A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login."],item.UserName), Severity.Info);
+        Snackbar.Add(string.Format(L["A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login."], item.UserName), Severity.Info);
         Logger.LogInformation($"Password reset email sent to user {item.UserName} ({item.Id}) with callback URL {callbackUrl}");
     }
     private async Task OnResetPassword(ApplicationUserDto item)
@@ -896,7 +888,7 @@
     {
         return await ExcelService.ExportAsync(items,
             new Dictionary<string, Func<ApplicationUserDto, object?>>
-                            {
+                                        {
                 { L["Id"], item => item.Id },
                 { L["User Name"], item => item.UserName },
                 { L["Full Name"], item => item.DisplayName },
@@ -904,7 +896,7 @@
                 { L["Phone Number"], item => item.PhoneNumber },
                 { L["Tenant Id"], item => item.TenantId },
                 { L["Tenant Name"], item => item.TenantName }
-                            }, L["Users"]);
+                                        }, L["Users"]);
     }
 
     private async Task OnImportData(IBrowserFile file)
