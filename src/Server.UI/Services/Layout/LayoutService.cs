@@ -34,30 +34,7 @@ public class LayoutService
     /// </summary>
     public bool IsDarkMode { get; private set; }
 
-    /// <summary>
-    /// Gets or sets the primary color.
-    /// </summary>
-    public string PrimaryColor { get; set; } = "#2d4275";
-
-    /// <summary>
-    /// Gets or sets the dark primary color.
-    /// </summary>
-    public string DarkPrimaryColor { get; set; } = "#8b9ac6";
-
-    /// <summary>
-    /// Gets or sets the secondary color.
-    /// </summary>
-    public string SecondaryColor { get; set; } = "#ff4081ff";
-
-    /// <summary>
-    /// Gets or sets the border radius.
-    /// </summary>
-    public double BorderRadius { get; set; } = 4;
-
-    /// <summary>
-    /// Gets or sets the default font size.
-    /// </summary>
-    public double DefaultFontSize { get; set; } = 0.8125;
+     
 
     /// <summary>
     /// Gets or sets the current theme.
@@ -89,19 +66,16 @@ public class LayoutService
             _ => IsDarkMode
         };
         IsRTL = UserPreferences.RightToLeft;
-        PrimaryColor = UserPreferences.PrimaryColor;
-        DarkPrimaryColor = UserPreferences.DarkPrimaryColor;
-        BorderRadius = UserPreferences.BorderRadius;
-        DefaultFontSize = UserPreferences.DefaultFontSize;
-        CurrentTheme.PaletteLight.Primary = PrimaryColor;
-        CurrentTheme.PaletteDark.Primary = DarkPrimaryColor;
+ 
+        CurrentTheme.PaletteLight.Primary = UserPreferences.PrimaryColor;
+        CurrentTheme.PaletteDark.Primary = UserPreferences.DarkPrimaryColor;
         CurrentTheme.PaletteLight.PrimaryDarken = UserPreferences.PrimaryDarken;
         CurrentTheme.PaletteLight.PrimaryLighten = UserPreferences.PrimaryLighten;
         CurrentTheme.PaletteDark.PrimaryDarken = UserPreferences.PrimaryDarken;
         CurrentTheme.PaletteDark.PrimaryLighten = UserPreferences.PrimaryLighten;
-        CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
+        CurrentTheme.LayoutProperties.DefaultBorderRadius = UserPreferences.BorderRadius + "px";
         CurrentTheme.Typography.Default.FontSize =
-            DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+            UserPreferences.DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.FontSize =
             UserPreferences.ButtonFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.LineHeight = UserPreferences.ButtonLineHeight;
@@ -222,16 +196,6 @@ public class LayoutService
     public void SetBaseTheme(MudTheme theme)
     {
         CurrentTheme = theme;
-
-        if (!PrimaryColor.IsNullOrEmpty())
-        {
-            CurrentTheme.PaletteLight.Primary = PrimaryColor;
-            CurrentTheme.PaletteDark.Primary = PrimaryColor;
-        }
-
-        CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
-        CurrentTheme.Typography.Default.FontSize =
-            DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem"; //Added
         OnMajorUpdateOccured();
     }
 
@@ -242,10 +206,9 @@ public class LayoutService
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task SetSecondaryColor(string color)
     {
-        SecondaryColor = color;
-        CurrentTheme.PaletteLight.Secondary = SecondaryColor;
-        CurrentTheme.PaletteDark.Secondary = SecondaryColor;
-        UserPreferences.SecondaryColor = SecondaryColor;
+        CurrentTheme.PaletteLight.Secondary = color;
+        CurrentTheme.PaletteDark.Secondary = color;
+        UserPreferences.SecondaryColor = color;
         await UserPreferencesService.SaveUserPreferences(UserPreferences);
         OnMajorUpdateOccured();
     }
@@ -257,9 +220,8 @@ public class LayoutService
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task SetBorderRadius(double size)
     {
-        BorderRadius = size;
-        CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
-        UserPreferences.BorderRadius = BorderRadius;
+        CurrentTheme.LayoutProperties.DefaultBorderRadius = size + "px";
+        UserPreferences.BorderRadius = size;
         await UserPreferencesService.SaveUserPreferences(UserPreferences);
         OnMajorUpdateOccured();
     }
@@ -280,19 +242,15 @@ public class LayoutService
             _ => IsDarkMode
         };
         IsRTL = UserPreferences.RightToLeft;
-        PrimaryColor = UserPreferences.PrimaryColor;
-        DarkPrimaryColor = UserPreferences.DarkPrimaryColor;
-        BorderRadius = UserPreferences.BorderRadius;
-        DefaultFontSize = UserPreferences.DefaultFontSize;
-        CurrentTheme.PaletteLight.Primary = PrimaryColor;
-        CurrentTheme.PaletteDark.Primary = DarkPrimaryColor;
+        CurrentTheme.PaletteLight.Primary = UserPreferences.PrimaryColor;
+        CurrentTheme.PaletteDark.Primary = UserPreferences.DarkPrimaryColor;
         CurrentTheme.PaletteLight.PrimaryDarken = UserPreferences.PrimaryDarken;
         CurrentTheme.PaletteLight.PrimaryLighten = UserPreferences.PrimaryLighten;
         CurrentTheme.PaletteDark.PrimaryDarken = UserPreferences.PrimaryDarken;
         CurrentTheme.PaletteDark.PrimaryLighten = UserPreferences.PrimaryLighten;
-        CurrentTheme.LayoutProperties.DefaultBorderRadius = BorderRadius + "px";
+        CurrentTheme.LayoutProperties.DefaultBorderRadius = UserPreferences.BorderRadius + "px";
         CurrentTheme.Typography.Default.FontSize =
-            DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+            UserPreferences.DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.FontSize =
             UserPreferences.ButtonFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.LineHeight = UserPreferences.ButtonLineHeight;

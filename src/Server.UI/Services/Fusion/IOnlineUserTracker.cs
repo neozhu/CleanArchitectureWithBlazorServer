@@ -8,9 +8,9 @@ namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 
 public interface IOnlineUserTracker : IComputeService
 {
-    Task AddUser(string sessionId, UserInfo userInfo, CancellationToken cancellationToken = default);
-    Task RemoveUser(string sessionId, CancellationToken cancellationToken = default);
-    Task UpdateUser(UserInfo userInfo, CancellationToken cancellationToken = default);
+    Task Add(string sessionId, UserInfo userInfo, CancellationToken cancellationToken = default);
+    Task Remove(string sessionId, CancellationToken cancellationToken = default);
+    Task Update(string userId,string userName,string displayName,string profilePictureDataUrl, CancellationToken cancellationToken = default);
     [ComputeMethod]
     Task<UserInfo[]> GetOnlineUsers(CancellationToken cancellationToken = default);
 
