@@ -4,8 +4,10 @@
 @inject LayoutService LayoutService
 @inject IStringLocalizer<ThemesMenu> L
 
-<MudDrawer Anchor="LayoutService.IsRTL ? Anchor.Left : Anchor.Right"
-           @bind-Open="ThemingDrawerOpen"
+<MudDrawer Anchor="LayoutService.IsRTL ? Anchor.Start : Anchor.End"
+           @bind-Open="@ThemingDrawerOpen"
+           OverlayAutoClose="false"
+           Overlay="false"
            Elevation="1"
            Variant="@DrawerVariant.Temporary"
            Width="260px">
@@ -13,11 +15,11 @@
         <MudText Typo="Typo.body1">
             <b>@L["Themes"]</b>
         </MudText>
-        <MudSpacer/>
+        <MudSpacer />
         <MudIconButton Color="Color.Default"
                        Icon="@Icons.Material.Filled.Close"
-                       OnClick="@(() => ThemingDrawerOpenChanged.InvokeAsync(false))"
-                       Size="Size.Small"/>
+                       OnClick="_ => ThemingDrawerOpenChanged.InvokeAsync(false)"
+                       Size="Size.Small" />
     </MudDrawerHeader>
 
     <div class="ma-6">
@@ -34,7 +36,7 @@
                                Style="background: white;">
                         <ChildContent>
                             <MudIcon Color="Color.Primary"
-                                     Icon="@Icons.Material.Filled.AutoMode"/>
+                                     Icon="@Icons.Material.Filled.AutoMode" />
                         </ChildContent>
                     </MudButton>
                 </MudTooltip>
@@ -47,7 +49,7 @@
                                Style="background: white;">
                         <ChildContent>
                             <MudIcon Color="Color.Primary"
-                                     Icon="@Icons.Material.Filled.WbSunny"/>
+                                     Icon="@Icons.Material.Filled.WbSunny" />
                         </ChildContent>
                     </MudButton>
                 </MudTooltip>
@@ -60,7 +62,7 @@
                                Style="background: #333333;">
                         <ChildContent>
                             <MudIcon Icon="@Icons.Material.Filled.DarkMode"
-                                     Style="color: #c9c9c9"/>
+                                     Style="color: #c9c9c9" />
                         </ChildContent>
                     </MudButton>
                 </MudTooltip>
@@ -138,16 +140,13 @@
         <MudText Typo="Typo.body2">
             <b>@L["Online Users"]</b>
         </MudText>
-         <OnlineUsersTracker></OnlineUsersTracker>   
+        <OnlineUsersTracker></OnlineUsersTracker>
     </div>
 </MudDrawer>
-
-<MudOverlay DarkBackground="false"
-            OnClick="@(() => ThemingDrawerOpenChanged.InvokeAsync(false))"
-            Visible="ThemingDrawerOpen"
-            VisibleChanged="ThemingDrawerOpenChanged"/>
-
-
+<MudOverlay DarkBackground="true" Absolute="true"
+            AutoClose="true"
+            OnClosed="_=> ThemingDrawerOpenChanged.InvokeAsync(false)"
+            @bind-Visible="ThemingDrawerOpen" />
 <style>
 
     .mode-button {
@@ -160,16 +159,24 @@
         height: 15px;
         border-radius: 50%;
         transform: rotate(120deg);
+        transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .oval-selected {
         transform: rotate(0deg);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 为选中的颜色添加阴影 */
     }
 
     .color-button {
         height: 50px;
         border: 1px solid var(--mud-palette-table-lines);
+        transition: border 0.3s, transform 0.3s;
+        cursor: pointer;
     }
+
+   .color-button:hover {
+            transform: scale(1.1);
+   }
 
     .color-button-selected {
         border: 2px solid var(--mud-palette-primary);
@@ -179,13 +186,13 @@
 @code
 {
 
-    [EditorRequired] [Parameter] public bool ThemingDrawerOpen { get; set; }
+    [Parameter] public bool ThemingDrawerOpen { get; set; }
 
-    [EditorRequired] [Parameter] public EventCallback<bool> ThemingDrawerOpenChanged { get; set; }
+    [Parameter] public EventCallback<bool> ThemingDrawerOpenChanged { get; set; }
 
-    [EditorRequired] [Parameter] public UserPreferences UserPreferences { get; set; } = new();
+    [EditorRequired][Parameter] public UserPreferences UserPreferences { get; set; } = new();
 
-    [EditorRequired] [Parameter] public EventCallback<UserPreferences> UserPreferencesChanged { get; set; }
+    [EditorRequired][Parameter] public EventCallback<UserPreferences> UserPreferencesChanged { get; set; }
 
     [Parameter] public double Radius { get; set; }
 
