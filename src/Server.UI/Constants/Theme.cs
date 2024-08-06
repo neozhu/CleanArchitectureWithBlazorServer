@@ -9,7 +9,7 @@ public class Theme
             PaletteLight = new PaletteLight
             {
                 Primary = "#5052ba", 
-                Secondary = "#80838b", 
+                Secondary = "#7575d9", 
                 Success = "#0CAD39", 
                 Info = "#4099f3", 
                 Warning = "#f0c42b", 
@@ -36,7 +36,7 @@ public class Theme
             PaletteDark = new PaletteDark
             {
                 Primary = "#5052ba", 
-                Secondary = "#80838b", 
+                Secondary = "#7575d9", 
                 Success = "#0CAD39", 
                 Info = "#4099f3", 
                 Warning = "#f0c42b",
