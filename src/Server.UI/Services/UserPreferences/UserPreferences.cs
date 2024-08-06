@@ -9,24 +9,24 @@ namespace CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 public class UserPreferences
 {
     public static readonly List<string> PrimaryColors = new()
-    {
-        "#2d4275",
-        Colors.Green.Default,
-        "#5052ba",
-        "#8421d1",
-        "#FF7F00",
-        Colors.Red.Default
-    };
+{
+    "#2d4275", // 蓝色
+    "#6A1B9A", // 深紫色
+    "#AB47BC", // 浅紫色
+    "#FF9800", // 橙色
+    "#F44336", // 红色
+    "#4CAF50"  // 绿色
+};
 
     public static readonly List<string> DarkPrimaryColors = new()
-    {
-        "#8b9ac6",
-        "#6c9f77",
-        "#5052ba",
-        "#776BE7",
-        "#d0882c",
-        "#f88989"
-    };
+{
+    "#0077b6", // 蓝色的暗色调
+    "#8E24AA", // 深紫色的暗色调
+    "#c77dff", // 浅紫色的暗色调
+    "#FB8C00", // 橙色的暗色调
+    "#E53935", // 红色的暗色调
+    "#388E3C"  // 绿色的暗色调
+};
 
     /// <summary>
     ///     Set the direction layout of the docs to RTL or LTR. If true RTL is used

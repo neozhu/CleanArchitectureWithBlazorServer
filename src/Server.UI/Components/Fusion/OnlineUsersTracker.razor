@@ -6,10 +6,11 @@
 @inherits ComputedStateComponent<UserInfo[]>
 @inject IOnlineUserTracker OnlineUserTracker
 @inject IStringLocalizer<ActiveUserSession> L
+@inject UserProfileStateService UserProfileStateService
 @if (State.HasValue && State.LastNonErrorValue.Any())
 {
     <div class="d-flex flex-row gap-2 my-3 gap-2 my-3">
-        @foreach (var user in State.LastNonErrorValue.OrderBy(u => u.Id != userId))
+        @foreach (var user in State.LastNonErrorValue.OrderBy(u => u.Name != currentUserName))
         {
             <MudBadge Color="Color.Success" Overlap="true" Bordered="true">
                 @if (string.IsNullOrEmpty(user.ProfilePictureDataUrl))
@@ -37,27 +38,24 @@
 @code {
 
     private string sessionId = Guid.NewGuid().ToString();
-    private string? userId;
-    [CascadingParameter]
-    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    private string? currentUserName;
+    private UserProfile UserProfile => UserProfileStateService.UserProfile;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
-    private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
+    private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(5);
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthState;
-        var user = authState.User.GetUserProfileFromClaim();
-        userId = user.UserId;
-        await OnlineUserTracker.AddUser(sessionId, new UserInfo(user.UserId,
-            user.UserName,
-            user.Email,
-            user.DisplayName ?? string.Empty,
-            user.ProfilePictureDataUrl ?? string.Empty,
-            user.SuperiorName ?? string.Empty,
-            user.SuperiorId ?? string.Empty,
-            user.TenantId ?? string.Empty,
-            user.TenantName ?? string.Empty,
-            user.PhoneNumber,
-            user.AssignedRoles ?? Array.Empty<string>(),
+        currentUserName = UserProfile.UserName;
+        await OnlineUserTracker.Add(sessionId, new UserInfo(UserProfile.UserId,
+            UserProfile.UserName,
+            UserProfile.Email,
+            UserProfile.DisplayName ?? string.Empty,
+            UserProfile.ProfilePictureDataUrl ?? string.Empty,
+            UserProfile.SuperiorName ?? string.Empty,
+            UserProfile.SuperiorId ?? string.Empty,
+            UserProfile.TenantId ?? string.Empty,
+            UserProfile.TenantName ?? string.Empty,
+            UserProfile.PhoneNumber,
+            UserProfile.AssignedRoles ?? Array.Empty<string>(),
             UserPresence.Available));
     }
 
@@ -71,7 +69,7 @@
 
     public override async ValueTask DisposeAsync()
     {
-        await OnlineUserTracker.RemoveUser(sessionId);
+        await OnlineUserTracker.Remove(sessionId);
         GC.Collect();
     }
 }
