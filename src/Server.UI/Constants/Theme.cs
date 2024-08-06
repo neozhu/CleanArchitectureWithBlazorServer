@@ -13,7 +13,10 @@ public class Theme
                 Success = "#0CAD39", 
                 Info = "#4099f3", 
                 Warning = "#f0c42b", 
-                Error = "#FC0404", 
+                Error = "#e63946",
+                ErrorContrastText = "#ffffff",
+                ErrorDarken = "#b02400",
+                ErrorLighten = "#ff5f4a",
                 Black = "#111", 
                 White = "#ffffff", 
                 AppbarBackground = "rgba(245, 245, 245, 0.8)",
@@ -32,6 +35,7 @@ public class Theme
                 TableLines = "#eff0f2", 
                 LinesDefault = "#e2e5e8", 
                 LinesInputs = "#e2e5e8", 
+                
             },
             PaletteDark = new PaletteDark
             {
@@ -40,7 +44,10 @@ public class Theme
                 Success = "#0CAD39", 
                 Info = "#4099f3", 
                 Warning = "#f0c42b",
-                Error = "#FC0404",
+                Error = "#c1121f",
+                ErrorContrastText = "#ffffff",
+                ErrorDarken = "#a30000",
+                ErrorLighten = "#ff3333",
                 Black = "#000000", 
                 White = "#ffffff", 
                 Background = "#202124", 
