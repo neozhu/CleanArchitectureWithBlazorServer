@@ -8,7 +8,7 @@ public class OnlineUserTracker : IOnlineUserTracker
 {
 
     private readonly ConcurrentDictionary<string, UserInfo> _store = new();
-    public async Task AddUser(string sessionId, UserInfo userInfo, CancellationToken cancellationToken = default)
+    public async Task Add(string sessionId, UserInfo userInfo, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return;
@@ -18,15 +18,21 @@ public class OnlineUserTracker : IOnlineUserTracker
             _ = await GetOnlineUsers(cancellationToken);
         }
     }
-    public async Task UpdateUser(UserInfo userInfo, CancellationToken cancellationToken = default)
+    public async Task Update(string userId, string userName, string displayName, string profilePictureDataUrl, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return;
         var invalidate = false;
         foreach (var key in _store.Keys)
         {
-            if (_store[key].Id == userInfo.Id)
+            if (_store[key].Name == userName)
             {
+                var userInfo = _store[key] with
+                {
+                    Id = userId,
+                    DisplayName = displayName,
+                    ProfilePictureDataUrl = profilePictureDataUrl
+                };
                 var updated = _store.TryUpdate(key, userInfo, _store[key]);
                 if (invalidate == false)
                 {
@@ -49,7 +55,7 @@ public class OnlineUserTracker : IOnlineUserTracker
         return Task.FromResult(_store.Select(x => x.Value).Distinct(new UserInfoEqualityComparer()).ToArray());
     }
 
-    public async Task RemoveUser(string sessionId, CancellationToken cancellationToken = default)
+    public async Task Remove(string sessionId, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return;
@@ -73,7 +79,7 @@ public class UserInfoEqualityComparer : EqualityComparer<UserInfo?>
             return false;
 
         // Check whether the UserInfo properties are equal.
-        return x.Id == y.Id; // Assuming Id is a relevant property for equality
+        return x.Name == y.Name; // Assuming Id is a relevant property for equality
     }
 
     public override int GetHashCode(UserInfo? obj)
