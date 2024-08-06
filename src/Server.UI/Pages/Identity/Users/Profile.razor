@@ -156,9 +156,9 @@ else
 
 @code {
     [Inject] protected IServiceProvider Services { get; init; } = null!;
-    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+    private string _currentUserName => UserProfileStateService.UserProfile.UserName;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
-    [CascadingParameter] private UserProfile? UserProfile { get; set; }
+    private UserProfile? UserProfile => UserProfileStateService.UserProfile;
     private UserManager<ApplicationUser> UserManager = null!;
     public string Title { get; set; } = "Profile";
     private MudForm? _form;
@@ -181,7 +181,7 @@ else
 
     private async Task LoadOrgData()
     {
-        var currerntuserName = (await AuthState).User.GetUserName();
+       
         var list = await UserManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).Include(x => x.Superior).ToListAsync();
 
         foreach (var item in list)
@@ -194,7 +194,7 @@ else
             orgitem.Area = item.Tenant?.Name;
             orgitem.ProfileUrl = item.ProfilePictureDataUrl;
             orgitem.ImageUrl = item.ProfilePictureDataUrl;
-            if (currerntuserName == item.UserName)
+            if (_currentUserName == item.UserName)
                 orgitem.IsLoggedUser = true;
             orgitem.Size = "";
             orgitem.Tags = item.PhoneNumber ?? item.Email;
@@ -213,8 +213,6 @@ else
     {
         UserManager = Services.GetRequiredService<UserManager<ApplicationUser>>();
         model = Mapper.Map<ChangeUserProfileModel>(UserProfile);
-
-
     }
 
     protected override void Dispose(bool disposing)
@@ -234,27 +232,19 @@ else
         {
             using (var image = Image.Load(imgstream))
             {
+                var user = await UserManager.FindByNameAsync(model.UserName) ?? throw new NotFoundException($"The application user [{model.UserName}] was not found.");
                 image.Mutate(i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) }));
                 image.Save(outStream, PngFormat.Instance);
-                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ".png", UploadType.ProfilePicture, outStream.ToArray()));
+                var result = await UploadService.UploadAsync(new UploadRequest(user.Id + ".png", UploadType.ProfilePicture, outStream.ToArray(), true));
                 model.ProfilePictureDataUrl = result;
-                var user = await UserManager.FindByIdAsync(model.UserId!);
-                user!.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
+                user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated"], Severity.Info);
                 UserProfileStateService.UpdateUserProfile(user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
-                await OnlineUserTracker.UpdateUser(new UserInfo(model.UserId,
-                                                                model.UserName,
-                                                                model.Email,
-                                                                model.DisplayName ?? "",
-                                                                model.ProfilePictureDataUrl,
-                                                                model.SuperiorName ?? "",
-                                                                model.SuperiorId ?? "",
-                                                                model.TenantId ?? "",
-                                                                model.TenantName ?? "",
-                                                                model.PhoneNumber,
-                                                                model.AssignedRoles ?? Array.Empty<string>(),
-                                                                UserPresence.Available));
+                await OnlineUserTracker.Update(user.Id,
+                                               user.UserName??"",
+                                               user.DisplayName ?? "",
+                                               user.ProfilePictureDataUrl);
             }
         }
     }
@@ -267,13 +257,17 @@ else
             await _form!.Validate();
             if (_form.IsValid)
             {
-                var state = await AuthState;
-                var user = await UserManager.FindByIdAsync(model.UserId!);
-                user!.PhoneNumber = model.PhoneNumber;
+           
+                var user = await UserManager.FindByNameAsync(_currentUserName) ?? throw new NotFoundException($"The application user [{_currentUserName}] was not found.");
+                user.PhoneNumber = model.PhoneNumber;
                 user.DisplayName = model.DisplayName;
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
                 UserProfileStateService.UpdateUserProfile(user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
+                await OnlineUserTracker.Update(user.Id,
+                                               user.UserName ?? "",
+                                               user.DisplayName ?? "",
+                                               user.ProfilePictureDataUrl??"");
                 Snackbar.Add($"{ConstantString.SaveSuccess}", Severity.Info);
               
             }
@@ -292,8 +286,8 @@ else
             await _passwordform!.Validate();
             if (_passwordform!.IsValid)
             {
-                var user = await UserManager.FindByIdAsync(model.UserId!);
-                var result = await UserManager.ChangePasswordAsync(user!, _changepassword.CurrentPassword, _changepassword.NewPassword);
+                var user = await UserManager.FindByNameAsync(model.UserName) ?? throw new NotFoundException($"The application user [{model.UserName}] was not found."); ;
+                var result = await UserManager.ChangePasswordAsync(user, _changepassword.CurrentPassword, _changepassword.NewPassword);
                 if (result.Succeeded)
                 {
                     Snackbar.Add($"{L["Password changed successfully"]}", Severity.Info);
