@@ -159,16 +159,24 @@
         height: 15px;
         border-radius: 50%;
         transform: rotate(120deg);
+        transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .oval-selected {
         transform: rotate(0deg);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 为选中的颜色添加阴影 */
     }
 
     .color-button {
         height: 50px;
         border: 1px solid var(--mud-palette-table-lines);
+        transition: border 0.3s, transform 0.3s;
+        cursor: pointer;
     }
+
+   .color-button:hover {
+            transform: scale(1.1);
+   }
 
     .color-button-selected {
         border: 2px solid var(--mud-palette-primary);
