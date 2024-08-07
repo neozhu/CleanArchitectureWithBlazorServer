@@ -43,6 +43,7 @@
              Height="calc(100vh - 300px)"
              @bind-RowsPerPage="_defaultPageSize"
              Hover="true"
+             SelectOnRowClick="false"
              MultiSelection="true"
              @bind-SelectedItems="_selectedItems"
              Loading="@_loading"
@@ -291,12 +292,17 @@
                     @if (!context.Item.IsActive || (context.Item.LockoutEnd is not null && context.Item.LockoutEnd > DateTime.UtcNow))
                     {
                         <MudTooltip Text="@L["Click to change status to active."]" Delay="300">
-                            <MudButton Variant="Variant.Text" OnClick="@(()=>SetActive(context.Item))">@L["Inactive"]</MudButton>
+                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Close" ThumbIconColor="Color.Error">
+                            </MudSwitch>
                         </MudTooltip>
                     }
                     else
                     {
-                        <MudChip Color="Color.Success" Size="Size.Small" Icon="@Icons.Material.Filled.CheckCircleOutline">@L["Active"]</MudChip>
+                        <MudTooltip Text="@L["Click to change status to inactive."]" Delay="300">
+                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Done" ThumbIconColor="Color.Success">
+                            </MudSwitch>
+
+                        </MudTooltip>
                     }
                 </div>
             </CellTemplate>

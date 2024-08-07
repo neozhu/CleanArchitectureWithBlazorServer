@@ -274,4 +274,10 @@
   <data name="Full Name" xml:space="preserve">
     <value>ឈ្មោះ​ពេញ</value>
   </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>អសកម្ម</value>
+  </data>
+  <data name="Click to change status to inactive." xml:space="preserve">
+    <value>ចុចដើម្បីប្តូរស្ថានភាពទៅជាអសកម្ម។</value>
+  </data>
 </root>

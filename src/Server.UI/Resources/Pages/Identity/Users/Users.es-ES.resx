@@ -274,4 +274,10 @@
   <data name="Full Name" xml:space="preserve">
     <value>Nombre completo</value>
   </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactiva</value>
+  </data>
+  <data name="Click to change status to inactive." xml:space="preserve">
+    <value>Haga clic para cambiar el estado a inactivo.</value>
+  </data>
 </root>
