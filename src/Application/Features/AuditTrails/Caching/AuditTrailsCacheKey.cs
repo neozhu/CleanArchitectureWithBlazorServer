@@ -6,7 +6,7 @@ namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching;
 public static class AuditTrailsCacheKey
 {
     public const string GetAllCacheKey = "all-audittrails";
-    private static readonly TimeSpan RefreshInterval = TimeSpan.FromMilliseconds(30);
+    private static readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(30);
     private static readonly object _tokenLock = new();
     private static CancellationTokenSource _tokenSource = new(RefreshInterval);
 
