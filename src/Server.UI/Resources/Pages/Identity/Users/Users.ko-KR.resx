@@ -274,4 +274,10 @@
   <data name="Full Name" xml:space="preserve">
     <value>전체 이름</value>
   </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>비활성</value>
+  </data>
+  <data name="Click to change status to inactive." xml:space="preserve">
+    <value>상태를 비활성으로 변경하려면 클릭하세요.</value>
+  </data>
 </root>
