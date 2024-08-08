@@ -58,7 +58,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             [FromForm] string returnUrl) =>
         {
             await signInManager.SignOutAsync();
-            logger.LogInformation("User {UserName} has logged out.", user.Identity?.Name);
+            logger.LogInformation("{UserName} has logged out.", user.Identity?.Name);
             return TypedResults.LocalRedirect($"{returnUrl}");
         });
 
@@ -79,7 +79,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl,
                 signInManager.UserManager.GetUserId(context.User));
-            logger.LogInformation("User {UserName} is linking external login provider {Provider} with redirect URL {RedirectUrl}", context.User.Identity?.Name, provider, redirectUrl);
+            logger.LogInformation("{UserName} is linking external login provider {Provider} with redirect URL {RedirectUrl}", context.User.Identity?.Name, provider, redirectUrl);
             return TypedResults.Challenge(properties, [provider]);
         });
 
