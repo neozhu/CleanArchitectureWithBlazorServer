@@ -274,4 +274,10 @@
   <data name="A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login." xml:space="preserve">
     <value>已通过电子邮件发送 {0} 的新密码。用户在首次登录时需要输入新密码。</value>
   </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>不活跃</value>
+  </data>
+  <data name="Click to change status to inactive." xml:space="preserve">
+    <value>单击可将状态更改为非活动状态。</value>
+  </data>
 </root>

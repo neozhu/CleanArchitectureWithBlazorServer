@@ -1,7 +1,8 @@
 ﻿@code {
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
+        await Task.Yield(); // 确保任务在下一个调度周期执行
         Navigation.NavigateTo("/pages/authentication/login", true);
     }
 

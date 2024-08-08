@@ -21,11 +21,11 @@ public class UserPreferences
     public static readonly List<string> DarkPrimaryColors = new()
     {
         "#0077b6", // 蓝色的暗色调
-        "#8E24AA", // 深紫色的暗色调
+        "#a541be", // 深紫色的暗色调
         "#388E3C",  // 绿色的暗色调
         "#FB8C00", // 橙色的暗色调
-        "#E53935", // 红色的暗色调
-        "#FF1493", // 粉色的暗色调
+        "#ca322d", // 红色的暗色调
+        "#cf2d86", // 粉色的暗色调
     };
 
     /// <summary>
