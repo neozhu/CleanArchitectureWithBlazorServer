@@ -1,8 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
-using CleanArchitecture.Blazor.Application.Features.Contacts.EventHandlers;
 using CleanArchitecture.Blazor.Domain.Identity;
-using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
