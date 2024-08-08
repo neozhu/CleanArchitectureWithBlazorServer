@@ -271,4 +271,10 @@
   <data name="A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login." xml:space="preserve">
     <value>Un nouveau mot de passe pour {0} a été envoyé par e-mail. L'utilisateur devra saisir un nouveau mot de passe lors de la connexion initiale.</value>
   </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Click to change status to inactive." xml:space="preserve">
+    <value>Cliquez pour changer le statut en inactif.</value>
+  </data>
 </root>
