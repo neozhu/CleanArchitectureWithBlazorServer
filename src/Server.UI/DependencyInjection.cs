@@ -13,7 +13,6 @@ using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using Polly;
@@ -23,6 +22,7 @@ using ActualLab.Fusion;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 using ActualLab.Fusion.Extensions;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
+
 
 namespace CleanArchitecture.Blazor.Server.UI;
 
@@ -193,7 +193,6 @@ public static class DependencyInjection
         { // We obviously need this
             KeepAliveInterval = TimeSpan.FromSeconds(30), // Just in case
         });
-
         return app;
     }
 }
