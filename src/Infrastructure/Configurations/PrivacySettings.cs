@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Infrastructure.Configurations;
+﻿namespace CleanArchitecture.Blazor.Infrastructure.Configurations;
 
 /// <summary>
 ///     Represents the privacy settings for the application.
@@ -20,17 +20,4 @@ public class PrivacySettings
     /// </summary>
     public bool LogClientAgents { get; set; } = true;
 
-    /// <summary>
-    ///     Gets or sets a value indicating whether Google Analytics should be used for tracking.
-    /// </summary>
-    public bool UseGoogleAnalytics { get; set; }
-
-    /// <summary>
-    ///     Gets or sets the Google Analytics tracking key.
-    /// </summary>
-    /// <remarks>
-    ///     If <see cref="UseGoogleAnalytics" /> is set to true, this property must contain a valid Google Analytics tracking
-    ///     key.
-    /// </remarks>
-    public string? GoogleAnalyticsKey { get; set; }
 }
