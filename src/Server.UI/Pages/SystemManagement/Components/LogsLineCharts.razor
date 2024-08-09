@@ -7,11 +7,11 @@
 @inject IStringLocalizer<Logs> L
 
 <div class="d-flex flex-grow-1 mb-2">
-    <MudPaper Class="pa-5 flex-grow-1" Elevation="3" Style="@_backgroundColor">
-        <ApexChart @ref="Chart" Options="Options" TItem="LogTimeLineDto" Height="180"
-                   Debug
+    <MudPaper Class="pa-5 flex-grow-1" Elevation="3" >
+        @if (Data.Any())
+        {
+            <ApexChart @ref="Chart"  Options="Options" TItem="LogTimeLineDto" Height="180"
                    Title="@L["Collect logs by day"]">
-
             <ApexPointSeries TItem="LogTimeLineDto"
                              Items="Data"
                              Name="Count"
@@ -19,7 +19,12 @@
                              YValue="@(e => e.total)"
                              YAggregate="@(e => e.Sum(e => e.total))"
                              SeriesType="SeriesType.Bar"/>
-        </ApexChart>
+            </ApexChart>
+        }
+        else
+        {
+           <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="160px" /> 
+        }
     </MudPaper>
 </div>
 
@@ -29,19 +34,18 @@
     private ApexChart<LogTimeLineDto> Chart { get; set; } = null!;
     private ApexChartOptions<LogTimeLineDto> Options { get; set; } = new();
 
-    private string _backgroundColor = "background:#fff";
+
 
     protected override async Task OnInitializedAsync()
     {
         var isDarkMode = LayoutService.IsDarkMode;
         var colors = isDarkMode ? new List<string> { "#0277BD", "#039BE5" } : new List<string> { "#1976D2", "#90CAF9" };
-        _backgroundColor = isDarkMode ? "background:rgb(66, 66, 66)" : "background:#fff";
-
+        Options.Chart.Background = "transparent";
         Options.Theme = new Theme
         {
-            Mode = isDarkMode ? Mode.Dark : Mode.Light
+            Mode = isDarkMode ? Mode.Dark : Mode.Light,
         };
-
+       
         Options.Fill = new Fill
         {
             Type = new List<FillType> { FillType.Gradient },
@@ -61,7 +65,7 @@
                 Labels = new YAxisLabels
                 {
                     Formatter = @"function (value, opts) {
-                                    if(value === undefined) { return ''; }
+                                    if(value == '' || value == null) { return ''; }
                                     return Number(value).toLocaleString();
                                   }"
                 }
@@ -80,7 +84,7 @@
         Options.DataLabels = new DataLabels
         {
                 Formatter = @"function (value, opts) {
-                                    if(value === undefined) { return ''; }
+                                    if(value == '' || value == null) { return ''; }
                                     return Number(value).toLocaleString();
                               }"
         };
@@ -94,9 +98,9 @@
                     return  value}"
             }
         };
-
+     
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
-
+        
         Data = await Mediator.Send(new LogsTimeLineChatDataQuery());
     }
 
@@ -104,9 +108,9 @@
     {
         var isDarkMode = LayoutService.IsDarkMode;
         var colors = isDarkMode ? new List<string> { "#0277BD", "#039BE5" } : new List<string> { "#1976D2", "#90CAF9" };
-        _backgroundColor = isDarkMode ? "background:rgb(66, 66, 66)" : "background:#fff";
         Options.Theme.Mode = isDarkMode ? Mode.Dark : Mode.Light;
         Options.Fill.Gradient.GradientToColors = colors;
+    
         await Chart.UpdateOptionsAsync(true, true, false);
         await Chart.RenderAsync();
         StateHasChanged();

@@ -274,4 +274,10 @@
   <data name="Authorization has been changed." xml:space="preserve">
     <value>Authorization has been changed.</value>
   </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Click to change status to inactive." xml:space="preserve">
+    <value>Click to change status to inactive.</value>
+  </data>
 </root>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
+  <!-- 
         Microsoft ResX Schema 
         
         Version 2.0
@@ -59,145 +59,144 @@
                 : using a System.ComponentModel.TypeConverter
                 : and then encoded with base64 encoding.
         -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
-                id="root" xmlns="">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root" xmlns="">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="Don't have an account?" xml:space="preserve">
+  </resheader>
+  <data name="Don't have an account?" xml:space="preserve">
     <value>アカウントを持っていないのですか？</value>
   </data>
-    <data name="Forgot password?" xml:space="preserve">
+  <data name="Forgot password?" xml:space="preserve">
     <value>パスワードを忘れた？</value>
   </data>
-    <data name="Password" xml:space="preserve">
+  <data name="Password" xml:space="preserve">
     <value>パスワード</value>
   </data>
-    <data name="Password is required!" xml:space="preserve">
+  <data name="Password is required!" xml:space="preserve">
     <value>パスワードが必要です！</value>
   </data>
-    <data name="Password must be at least of length 6" xml:space="preserve">
+  <data name="Password must be at least of length 6" xml:space="preserve">
     <value>パスワードの長さは少なくとも 6 でなければなりません</value>
   </data>
-    <data name="Password must contain at least one capital letter" xml:space="preserve">
+  <data name="Password must contain at least one capital letter" xml:space="preserve">
     <value>パスワードには少なくとも 1 つの大文字が含まれている必要があります</value>
   </data>
-    <data name="Password must contain at least one digit" xml:space="preserve">
+  <data name="Password must contain at least one digit" xml:space="preserve">
     <value>パスワードには少なくとも 1 つの数字が含まれている必要があります</value>
   </data>
-    <data name="Password must contain at least one lowercase letter" xml:space="preserve">
+  <data name="Password must contain at least one lowercase letter" xml:space="preserve">
     <value>パスワードには少なくとも 1 つの小文字が含まれている必要があります</value>
   </data>
-    <data name="Please check your username and password. If you are still unable to log in, contact an administrator."
-          xml:space="preserve">
+  <data name="Please check your username and password. If you are still unable to log in, contact an administrator." xml:space="preserve">
     <value>ユーザー名とパスワードを確認してください。 それでもログインできない場合は、管理者に問い合わせてください。</value>
   </data>
-    <data name="Remember me?" xml:space="preserve">
+  <data name="Remember me?" xml:space="preserve">
     <value>私を覚えてますか？</value>
   </data>
-    <data name="Sign In" xml:space="preserve">
+  <data name="Sign In" xml:space="preserve">
     <value>サインイン</value>
   </data>
-    <data name="Sign Up" xml:space="preserve">
+  <data name="Sign Up" xml:space="preserve">
     <value>サインアップ</value>
   </data>
-    <data name="Username" xml:space="preserve">
+  <data name="Username" xml:space="preserve">
     <value>ユーザー名</value>
   </data>
-    <data name="Username is required!" xml:space="preserve">
+  <data name="Username is required!" xml:space="preserve">
     <value>ユーザー名は必須です!</value>
   </data>
-    <data name="No user found, or no authorization, please contact an administrator." xml:space="preserve">
+  <data name="No user found, or no authorization, please contact an administrator." xml:space="preserve">
     <value>ユーザーが見つからないか、権限がありません。管理者に連絡してください。</value>
   </data>
-    <data name="User name is required!" xml:space="preserve">
+  <data name="User name is required!" xml:space="preserve">
     <value>ユーザー名は必須です!</value>
   </data>
-    <data name="Please check your username and password. If you are still unable to log in, contact your administrator."
-          xml:space="preserve">
+  <data name="Please check your username and password. If you are still unable to log in, contact your administrator." xml:space="preserve">
     <value>ユーザー名とパスワードを確認してください。 それでもログインできない場合は、管理者に問い合わせてください。</value>
   </data>
-    <data name="No user found, or no authorization, please contact the administrator." xml:space="preserve">
+  <data name="No user found, or no authorization, please contact the administrator." xml:space="preserve">
     <value>ユーザーが見つからないか、権限がありません。管理者に連絡してください。</value>
   </data>
-    <data name="User name" xml:space="preserve">
+  <data name="User name" xml:space="preserve">
     <value>ユーザー名</value>
   </data>
-    <data
-        name="Please check your username and password.  If you are still unable to log in, contact your administrator."
-        xml:space="preserve">
+  <data name="Please check your username and password.  If you are still unable to log in, contact your administrator." xml:space="preserve">
     <value>ユーザー名とパスワードを確認してください。 それでもログインできない場合は、管理者に問い合わせてください。</value>
   </data>
-    <data name="Password update successfuly" xml:space="preserve">
+  <data name="Password update successfuly" xml:space="preserve">
     <value>パスワードの更新に成功しました</value>
   </data>
-    <data name="Set new password" xml:space="preserve">
+  <data name="Set new password" xml:space="preserve">
     <value>新しいパスワードを設定する</value>
   </data>
-    <data name="Error: Invalid login attempt." xml:space="preserve">
+  <data name="Error: Invalid login attempt." xml:space="preserve">
     <value>エラー: 無効なログイン試行です。</value>
   </data>
-    <data
-        name="Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps."
-        xml:space="preserve">
+  <data name="Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps." xml:space="preserve">
     <value>エラー: あなたのアカウントではログインが許可されていません。アカウントがアクティブ化されていて、必要な手順がすべて完了していることを確認してください。</value>
+  </data>
+  <data name="Error: User does not exist." xml:space="preserve">
+    <value>エラー: ユーザーが存在しません。</value>
+  </data>
+  <data name="Error: Your account is inactive. Please contact support." xml:space="preserve">
+    <value>エラー: アカウントが非アクティブです。サポートにお問い合わせください。</value>
   </data>
 </root>

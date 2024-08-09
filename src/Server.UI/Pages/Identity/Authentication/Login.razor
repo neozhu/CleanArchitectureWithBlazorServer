@@ -116,25 +116,38 @@
     }
     public async Task OnSubmit()
     {
+        // Check if the user exists
+        var user = await UserManager.FindByNameAsync(Input.UserName);
+        if (user == null)
+        {
+            errorMessage = L["Error: User does not exist."];
+            return;
+        }
+        else if(!user.IsActive)
+        {
+            errorMessage = L["Error: Your account is inactive. Please contact support."];
+            return; 
+        }
+
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
         var result = await SignInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, false);
         if (result.Succeeded)
         {
-            Logger.LogInformation($"{Input.UserName} logged in.");
+            Logger.LogInformation("{UserName} has logged in.",Input.UserName);
             RedirectTo(ReturnUrl??"/");
         }
         else if (result.RequiresTwoFactor)
         {
-            //var user = await UserManager.FindByNameAsync(Input.UserName);
-            var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
-            var token = await UserManager.GenerateTwoFactorTokenAsync(user!, "Email");
-            await Mediator.Publish(new SendFactorCodeNotification(user!.Email!, user!.UserName!, token));
+          
+            var factorUser = (await SignInManager.GetTwoFactorAuthenticationUserAsync()) ?? throw new InvalidOperationException("Unable to load two-factor authentication user.");
+            var token = await UserManager.GenerateTwoFactorTokenAsync(factorUser, "Email");
+            await Mediator.Publish(new SendFactorCodeNotification(factorUser.Email ?? string.Empty, factorUser.UserName ?? string.Empty, token));
             RedirectManager.RedirectTo(LoginWith2fa.PageUrl, new Dictionary<string, object?> { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
         }
         else if (result.IsLockedOut)
         {
-            Logger.LogWarning($"{Input.UserName} account locked out.");
+            Logger.LogWarning("{UserName} has locked out.",Input.UserName);
             RedirectManager.RedirectTo(Lockout.PageUrl);
         }
         else if (result.IsNotAllowed)
