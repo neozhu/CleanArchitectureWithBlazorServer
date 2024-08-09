@@ -7,18 +7,15 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome
-@using System.Security.Claims
-@using System.Text
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Roles.Components
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
-@using System.ComponentModel
 @using System.Linq.Expressions
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
-@using System.Reflection
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
+@using System.Security.Claims
 @using ZiggyCreatures.Caching.Fusion
 
 @attribute [Authorize(Policy = Permissions.Users.View)]
