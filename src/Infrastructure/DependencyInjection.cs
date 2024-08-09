@@ -26,7 +26,6 @@ public static class DependencyInjection
     private const string IDENTITY_SETTINGS_KEY = "IdentitySettings";
     private const string APP_CONFIGURATION_SETTINGS_KEY = "AppConfigurationSettings";
     private const string DATABASE_SETTINGS_KEY = "DatabaseSettings";
-    private const string PRIVACY_SETTINGS_KEY = "PrivacySettings";
     private const string SMTP_CLIENT_OPTIONS_KEY = "SmtpClientOptions";
     private const string USE_IN_MEMORY_DATABASE_KEY = "UseInMemoryDatabase";
     private const string IN_MEMORY_DATABASE_NAME = "BlazorDashboardDb";
@@ -71,10 +70,6 @@ public static class DependencyInjection
 
         services.Configure<DatabaseSettings>(configuration.GetSection(DATABASE_SETTINGS_KEY))
             .AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);
-
-        services.Configure<PrivacySettings>(configuration.GetSection(PRIVACY_SETTINGS_KEY))
-            .AddSingleton(s => s.GetRequiredService<IOptions<PrivacySettings>>().Value);
-
         return services;
     }
 
