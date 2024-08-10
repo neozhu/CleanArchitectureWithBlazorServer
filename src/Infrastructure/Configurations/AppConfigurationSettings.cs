@@ -42,12 +42,12 @@ public class AppConfigurationSettings : IApplicationSettings
     ///     Application framework including the version
     /// </summary>
 
-    public string AppFlavor { get; set; } = "Blazor .NET 7.0";
+    public string AppFlavor { get; set; } = "Blazor .NET 8.0";
 
     /// <summary>
     ///     Application .NET version
     /// </summary>
-    public string AppFlavorSubscript { get; set; } = ".NET 7";
+    public string AppFlavorSubscript { get; set; } = ".NET 8";
 
     /// <summary>
     ///     The name of the company
@@ -57,7 +57,7 @@ public class AppConfigurationSettings : IApplicationSettings
     /// <summary>
     ///     Copyright watermark
     /// </summary>
-    public string Copyright { get; set; } = "@2023 Copyright";
+    public string Copyright { get; set; } = "@2024 Copyright";
 
     /// <summary>
     ///     Current application version

@@ -1,10 +1,11 @@
-﻿using CleanArchitecture.Blazor.Application.Common.Security;
+﻿using System.ComponentModel.DataAnnotations;
+using CleanArchitecture.Blazor.Application.Common.Security;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
 
 public enum AuditTrailListView
 {
-    [Description("All")] All,
+    [Description("الكل")] [Display(Name="الكل")] All,
     [Description("My Change Histories")] My,
     [Description("Created Toady")] CreatedToday,
     [Description("View of the last 30 days")] Last30days

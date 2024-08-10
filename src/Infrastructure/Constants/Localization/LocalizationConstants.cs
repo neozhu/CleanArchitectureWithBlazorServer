@@ -16,6 +16,11 @@ public static class LocalizationConstants
         },
         new()
         {
+            Code = "ar-iq",
+            DisplayName = "Arabic"
+        },
+        new()
+        {
             Code = "de-DE",
             DisplayName = "Deutsch"
         },
@@ -53,11 +58,6 @@ public static class LocalizationConstants
         {
             Code = "zh-CN",
             DisplayName = "中文"
-        },
-        new()
-        {
-            Code = "ar-iq",
-            DisplayName = "Arabic"
         },
         new()
         {

@@ -1,6 +1,7 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.ComponentModel.DataAnnotations;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
@@ -17,7 +18,9 @@ public class AuditTrailDto
 
     [Description("Table Name")] public string? TableName { get; set; }
 
-    [Description("Created DateTime")] public DateTime DateTime { get; set; }
+    [Description("Created DateTime")]
+    [DisplayName("وقت الاضافة")]
+    public DateTime DateTime { get; set; }
 
     [Description("Old Values")] public Dictionary<string, object?>? OldValues { get; set; }
 
