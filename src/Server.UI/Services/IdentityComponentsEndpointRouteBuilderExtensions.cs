@@ -20,6 +20,9 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
     // These endpoints are required by the Identity Razor components defined in the /Components/Account/Pages directory of this project.
     public static IEndpointConventionBuilder MapAdditionalIdentityEndpoints(this IEndpointRouteBuilder endpoints)
     {
+        var loggerFactory = endpoints.ServiceProvider.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger("IEndpointConventionBuilder");
+
         ArgumentNullException.ThrowIfNull(endpoints);
 
         var accountGroup = endpoints.MapGroup("/pages/authentication");
@@ -42,6 +45,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 QueryString.Create(query));
 
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            logger.LogInformation("Redirecting to external login provider {Provider} with return URL {ReturnUrl}", provider, returnUrl);
             return TypedResults.Challenge(properties, [provider]);
         });
 
@@ -52,6 +56,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             [FromForm] string returnUrl) =>
         {
             await signInManager.SignOutAsync();
+            logger.LogInformation("{UserName} has logged out.", user.Identity?.Name);
             return TypedResults.LocalRedirect($"{returnUrl}");
         });
 
@@ -72,11 +77,11 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl,
                 signInManager.UserManager.GetUserId(context.User));
+            logger.LogInformation("{UserName} is linking external login provider {Provider} with redirect URL {RedirectUrl}", context.User.Identity?.Name, provider, redirectUrl);
             return TypedResults.Challenge(properties, [provider]);
         });
 
-        var loggerFactory = endpoints.ServiceProvider.GetRequiredService<ILoggerFactory>();
-        var downloadLogger = loggerFactory.CreateLogger("DownloadPersonalData");
+ 
 
         manageGroup.MapPost("/DownloadPersonalData", async (
             HttpContext context,
@@ -88,7 +93,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 return Results.NotFound($"Unable to load user with ID '{userManager.GetUserId(context.User)}'.");
 
             var userId = await userManager.GetUserIdAsync(user);
-            downloadLogger.LogInformation("User with ID '{UserId}' asked for their personal data.", userId);
+            logger.LogInformation("User with ID '{UserId}' asked for their personal data.", userId);
 
             // Only include personal data for download
             var personalData = new Dictionary<string, string>();

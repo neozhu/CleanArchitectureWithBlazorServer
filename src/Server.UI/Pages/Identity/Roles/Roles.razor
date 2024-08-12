@@ -4,8 +4,6 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using System.Security.Claims
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Roles.Components
-@using System.ComponentModel
-@using System.Reflection
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
 @using ZiggyCreatures.Caching.Fusion
 
@@ -175,7 +173,7 @@
                 }
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn Property="x => x.TenantId" HeaderStyle="width:260px" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
+        <PropertyColumn Property="x => x.TenantId" HeaderStyle="width:280px" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
             <CellTemplate>
                 <div>
                     <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>

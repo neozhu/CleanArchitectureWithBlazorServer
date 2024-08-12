@@ -274,4 +274,10 @@
   <data name="Active" xml:space="preserve">
     <value>Active</value>
   </data>
+  <data name="Click to change status to inactive." xml:space="preserve">
+    <value>Click to change status to inactive.</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
 </root>

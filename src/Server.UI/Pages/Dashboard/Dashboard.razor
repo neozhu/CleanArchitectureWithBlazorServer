@@ -12,7 +12,7 @@
                     <MudText Typo="Typo.h6">@L["Graphite on roof"]</MudText>
                     <div class="d-flex align-center my-1">
                         <MudAvatar Class="me-2 pa-4" Style="background-color: var(--mud-palette-primary-hover);" Size="Size.Small">
-                            <MudIcon Color="Color.Primary" Icon="@Icons.Material.Filled.TrendingDown" Size="Size.Small"/>
+                            <MudIcon Color="Color.Error" Icon="@Icons.Material.Filled.TrendingDown" Size="Size.Small"/>
                         </MudAvatar>
                         <MudText Typo="Typo.subtitle2">+2.6%</MudText>
                     </div>
@@ -36,7 +36,7 @@
                     <MudText Typo="Typo.h6">@L["Global Spread"]</MudText>
                     <div class="d-flex align-center my-1">
                         <MudAvatar Class="me-2 pa-4" Style="background-color: var(--mud-palette-secondary-hover);" Size="Size.Small">
-                            <MudIcon Color="Color.Secondary" Icon="@Icons.Material.Filled.TrendingUp" Size="Size.Small"/>
+                            <MudIcon Color="Color.Primary" Icon="@Icons.Material.Filled.TrendingUp" Size="Size.Small"/>
                         </MudAvatar>
                         <MudText Typo="Typo.subtitle2">+9.6%</MudText>
                     </div>
@@ -91,7 +91,9 @@
                 <MudDivider Class="my-3"/>
                 <MudText Typo="Typo.subtitle2" GutterBottom="true">@L["Reactor Type"]</MudText>
                 <div class="mx-n2 mb-2">
-                    <MudChip T="string" Color="Color.Primary">RBMK-1000</MudChip><MudChip T="string">RBMK-1500</MudChip><MudChip T="string">RBMKP-2400</MudChip>
+                    <MudChip T="string" Color="Color.Primary">RBMK-1000</MudChip>
+                    <MudChip Color="Color.Secondary" T="string">RBMK-1500</MudChip>
+                    <MudChip  Color="Color.Tertiary" T="string">RBMKP-2400</MudChip>
                 </div>
                 <div>
                     <MudButton Variant="Variant.Text" Color="Color.Primary" Class="ml-n2 mb-n2">@L["Read More"]</MudButton>

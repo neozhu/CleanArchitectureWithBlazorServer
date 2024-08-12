@@ -21,9 +21,25 @@ using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
-
 public static class DependencyInjection
 {
+    private const string IDENTITY_SETTINGS_KEY = "IdentitySettings";
+    private const string APP_CONFIGURATION_SETTINGS_KEY = "AppConfigurationSettings";
+    private const string DATABASE_SETTINGS_KEY = "DatabaseSettings";
+    private const string SMTP_CLIENT_OPTIONS_KEY = "SmtpClientOptions";
+    private const string USE_IN_MEMORY_DATABASE_KEY = "UseInMemoryDatabase";
+    private const string IN_MEMORY_DATABASE_NAME = "BlazorDashboardDb";
+    private const string NPGSQL_ENABLE_LEGACY_TIMESTAMP_BEHAVIOR = "Npgsql.EnableLegacyTimestampBehavior";
+    private const string POSTGRESQL_MIGRATIONS_ASSEMBLY = "CleanArchitecture.Blazor.Migrators.PostgreSQL";
+    private const string MSSQL_MIGRATIONS_ASSEMBLY = "CleanArchitecture.Blazor.Migrators.MSSQL";
+    private const string SQLITE_MIGRATIONS_ASSEMBLY = "CleanArchitecture.Blazor.Migrators.SqLite";
+    private const string SMTP_CLIENT_OPTIONS_DEFAULT_FROM_EMAIL = "SmtpClientOptions:DefaultFromEmail";
+    private const string EMAIL_TEMPLATES_PATH = "Resources/EmailTemplates";
+    private const string DEFAULT_FROM_EMAIL = "noreply@blazorserver.com";
+    private const string LOGIN_PATH = "/pages/authentication/login";
+    private const int DEFAULT_LOCKOUT_TIME_SPAN_MINUTES = 5;
+    private const int MAX_FAILED_ACCESS_ATTEMPTS = 10;
+
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
         IConfiguration configuration)
     {
@@ -36,7 +52,6 @@ public static class DependencyInjection
             .AddAuthenticationService(configuration)
             .AddFusionCacheService();
 
-
         services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
 
         return services;
@@ -45,20 +60,16 @@ public static class DependencyInjection
     private static IServiceCollection AddSettings(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<IdentitySettings>(configuration.GetSection(IdentitySettings.Key))
+        services.Configure<IdentitySettings>(configuration.GetSection(IDENTITY_SETTINGS_KEY))
             .AddSingleton(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value)
             .AddSingleton<IIdentitySettings>(s => s.GetRequiredService<IOptions<IdentitySettings>>().Value);
 
-        services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.Key))
+        services.Configure<AppConfigurationSettings>(configuration.GetSection(APP_CONFIGURATION_SETTINGS_KEY))
             .AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value)
             .AddSingleton<IApplicationSettings>(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>().Value);
 
-        services.Configure<DatabaseSettings>(configuration.GetSection(DatabaseSettings.Key))
+        services.Configure<DatabaseSettings>(configuration.GetSection(DATABASE_SETTINGS_KEY))
             .AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);
-
-        services.Configure<PrivacySettings>(configuration.GetSection(PrivacySettings.Key))
-            .AddSingleton(s => s.GetRequiredService<IOptions<PrivacySettings>>().Value);
-
         return services;
     }
 
@@ -68,10 +79,10 @@ public static class DependencyInjection
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>()
             .AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
-        if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+        if (configuration.GetValue<bool>(USE_IN_MEMORY_DATABASE_KEY))
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseInMemoryDatabase("BlazorDashboardDb");
+                options.UseInMemoryDatabase(IN_MEMORY_DATABASE_NAME);
                 options.EnableSensitiveDataLogging();
             });
         else
@@ -96,18 +107,18 @@ public static class DependencyInjection
         switch (dbProvider.ToLowerInvariant())
         {
             case DbProviderKeys.Npgsql:
-                AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+                AppContext.SetSwitch(NPGSQL_ENABLE_LEGACY_TIMESTAMP_BEHAVIOR, true);
                 return builder.UseNpgsql(connectionString,
-                        e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.PostgreSQL"))
+                        e => e.MigrationsAssembly(POSTGRESQL_MIGRATIONS_ASSEMBLY))
                     .UseSnakeCaseNamingConvention();
 
             case DbProviderKeys.SqlServer:
                 return builder.UseSqlServer(connectionString,
-                    e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.MSSQL"));
+                    e => e.MigrationsAssembly(MSSQL_MIGRATIONS_ASSEMBLY));
 
             case DbProviderKeys.SqLite:
                 return builder.UseSqlite(connectionString,
-                    e => e.MigrationsAssembly("CleanArchitecture.Blazor.Migrators.SqLite"));
+                    e => e.MigrationsAssembly(SQLITE_MIGRATIONS_ASSEMBLY));
 
             default:
                 throw new InvalidOperationException($"DB Provider {dbProvider} is not supported.");
@@ -146,16 +157,16 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         var smtpClientOptions = new SmtpClientOptions();
-        configuration.GetSection(nameof(SmtpClientOptions)).Bind(smtpClientOptions);
-        services.Configure<SmtpClientOptions>(configuration.GetSection(nameof(SmtpClientOptions)));
+        configuration.GetSection(SMTP_CLIENT_OPTIONS_KEY).Bind(smtpClientOptions);
+        services.Configure<SmtpClientOptions>(configuration.GetSection(SMTP_CLIENT_OPTIONS_KEY));
 
         services.AddSingleton(smtpClientOptions);
         services.AddScoped<IMailService, MailService>();
 
         // configure your sender and template choices with dependency injection.
-        var defaultFromEmail = configuration.GetValue<string>("SmtpClientOptions:DefaultFromEmail");
-        services.AddFluentEmail(defaultFromEmail??"noreply@blazorserver.com")
-            .AddRazorRenderer(Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates"))
+        var defaultFromEmail = configuration.GetValue<string>(SMTP_CLIENT_OPTIONS_DEFAULT_FROM_EMAIL);
+        services.AddFluentEmail(defaultFromEmail ?? DEFAULT_FROM_EMAIL)
+            .AddRazorRenderer(Path.Combine(Directory.GetCurrentDirectory(), EMAIL_TEMPLATES_PATH))
             .AddMailKitSender(smtpClientOptions);
 
         return services;
@@ -172,17 +183,18 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
         services.Configure<IdentityOptions>(options =>
         {
-            var identitySettings = configuration.GetRequiredSection(IdentitySettings.Key).Get<IdentitySettings>();
+            var identitySettings = configuration.GetRequiredSection(IDENTITY_SETTINGS_KEY).Get<IdentitySettings>();
+            identitySettings = identitySettings ?? new IdentitySettings();
             // Password settings
-            options.Password.RequireDigit = identitySettings!.RequireDigit;
+            options.Password.RequireDigit = identitySettings.RequireDigit;
             options.Password.RequiredLength = identitySettings.RequiredLength;
             options.Password.RequireNonAlphanumeric = identitySettings.RequireNonAlphanumeric;
             options.Password.RequireUppercase = identitySettings.RequireUpperCase;
             options.Password.RequireLowercase = identitySettings.RequireLowerCase;
 
             // Lockout settings
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(identitySettings.DefaultLockoutTimeSpan);
-            options.Lockout.MaxFailedAccessAttempts = 10;
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(DEFAULT_LOCKOUT_TIME_SPAN_MINUTES);
+            options.Lockout.MaxFailedAccessAttempts = MAX_FAILED_ACCESS_ATTEMPTS;
             options.Lockout.AllowedForNewUsers = true;
 
             // Default SignIn settings.
@@ -216,26 +228,25 @@ public static class DependencyInjection
             })
             .AddMicrosoftAccount(microsoftOptions =>
             {
-                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId")??string.Empty;
+                microsoftOptions.ClientId = configuration.GetValue<string>("Authentication:Microsoft:ClientId") ?? string.Empty;
                 microsoftOptions.ClientSecret = configuration.GetValue<string>("Authentication:Microsoft:ClientSecret") ?? string.Empty;
                 //microsoftOptions.CallbackPath = new PathString("/pages/authentication/ExternalLogin"); # dotn't set this parameter!!
             })
             .AddGoogle(googleOptions =>
-                {
-                    googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId") ?? string.Empty;
-                    googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret") ?? string.Empty; ;
-                }
-            )
-            .AddFacebook(facebookOptions =>
             {
-                facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId") ?? string.Empty;
-                facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret") ?? string.Empty;
-            })
+                googleOptions.ClientId = configuration.GetValue<string>("Authentication:Google:ClientId") ?? string.Empty;
+                googleOptions.ClientSecret = configuration.GetValue<string>("Authentication:Google:ClientSecret") ?? string.Empty; ;
+            }
+            )
+            //.AddFacebook(facebookOptions =>
+            //{
+            //    facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId") ?? string.Empty;
+            //    facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret") ?? string.Empty;
+            //})
             .AddIdentityCookies(options => { });
 
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
-        services.ConfigureApplicationCookie(options => { options.LoginPath = "/pages/authentication/login"; });
         services.AddSingleton<UserService>()
             .AddSingleton<IUserService>(sp =>
             {

@@ -30,15 +30,14 @@
         <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.7" />
         <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.7" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-        <PackageReference Include="QuestPDF" Version="2024.7.1" />
+        <PackageReference Include="QuestPDF" Version="2024.7.2" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.6.1" />
         <PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="4.1.1" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.0.0" />
-        <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
-        <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="2.1.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Blazor.Serilog.Sinks.SQLite" Version="1.0.6" />
-        <PackageReference Include="ZiggyCreatures.FusionCache" Version="1.2.0" />
+        <PackageReference Include="ZiggyCreatures.FusionCache" Version="1.3.0" />
 
     </ItemGroup>
     <ItemGroup>

@@ -7,18 +7,15 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome
-@using System.Security.Claims
-@using System.Text
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Roles.Components
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
-@using System.ComponentModel
 @using System.Linq.Expressions
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
-@using System.Reflection
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
+@using System.Security.Claims
 @using ZiggyCreatures.Caching.Fusion
 
 @attribute [Authorize(Policy = Permissions.Users.View)]
@@ -43,6 +40,7 @@
              Height="calc(100vh - 300px)"
              @bind-RowsPerPage="_defaultPageSize"
              Hover="true"
+             SelectOnRowClick="false"
              MultiSelection="true"
              @bind-SelectedItems="_selectedItems"
              Loading="@_loading"
@@ -212,7 +210,7 @@
                 }
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn Property="x => x.TenantId" HeaderStyle="width:260px" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
+        <PropertyColumn Property="x => x.TenantId" HeaderStyle="width:280px" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
             <CellTemplate>
                 <div>
                     <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
@@ -291,12 +289,17 @@
                     @if (!context.Item.IsActive || (context.Item.LockoutEnd is not null && context.Item.LockoutEnd > DateTime.UtcNow))
                     {
                         <MudTooltip Text="@L["Click to change status to active."]" Delay="300">
-                            <MudButton Variant="Variant.Text" OnClick="@(()=>SetActive(context.Item))">@L["Inactive"]</MudButton>
+                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Close" ThumbIconColor="Color.Error">
+                            </MudSwitch>
                         </MudTooltip>
                     }
                     else
                     {
-                        <MudChip Color="Color.Success" Size="Size.Small" Icon="@Icons.Material.Filled.CheckCircleOutline">@L["Active"]</MudChip>
+                        <MudTooltip Text="@L["Click to change status to inactive."]" Delay="300">
+                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Done" ThumbIconColor="Color.Success">
+                            </MudSwitch>
+
+                        </MudTooltip>
                     }
                 </div>
             </CellTemplate>
@@ -537,18 +540,10 @@
             Snackbar.Add($"{L["The user updated successfully."]}", Severity.Info);
             await OnRefresh();
             UserService.Refresh();
-            await OnlineUserTracker.UpdateUser(new UserInfo(item.Id,
-                                                            item.UserName,
-                                                            item.Email,
-                                                            item.DisplayName ?? string.Empty,
-                                                            item.ProfilePictureDataUrl ?? string.Empty,
-                                                            item.SuperiorName ?? string.Empty,
-                                                            item.SuperiorId ?? string.Empty,
-                                                            item.TenantId ?? string.Empty,
-                                                            item.TenantName ?? string.Empty,
-                                                            item.PhoneNumber,
-                                                            item.AssignedRoles ?? Array.Empty<string>(),
-                                                            UserPresence.Available));
+            await OnlineUserTracker.Update(item.Id,
+                                           item.UserName,
+                                           item.DisplayName ?? string.Empty,
+                                           item.ProfilePictureDataUrl ?? string.Empty);
         }
         else
         {
@@ -725,7 +720,7 @@
             Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
         await Mediator.Publish(new ResetPasswordNotification(callbackUrl, item.Email, item.UserName));
-        Snackbar.Add(string.Format(L["A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login."],item.UserName), Severity.Info);
+        Snackbar.Add(string.Format(L["A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login."], item.UserName), Severity.Info);
         Logger.LogInformation($"Password reset email sent to user {item.UserName} ({item.Id}) with callback URL {callbackUrl}");
     }
     private async Task OnResetPassword(ApplicationUserDto item)
@@ -896,7 +891,7 @@
     {
         return await ExcelService.ExportAsync(items,
             new Dictionary<string, Func<ApplicationUserDto, object?>>
-                            {
+                                        {
                 { L["Id"], item => item.Id },
                 { L["User Name"], item => item.UserName },
                 { L["Full Name"], item => item.DisplayName },
@@ -904,7 +899,7 @@
                 { L["Phone Number"], item => item.PhoneNumber },
                 { L["Tenant Id"], item => item.TenantId },
                 { L["Tenant Name"], item => item.TenantName }
-                            }, L["Users"]);
+                                        }, L["Users"]);
     }
 
     private async Task OnImportData(IBrowserFile file)

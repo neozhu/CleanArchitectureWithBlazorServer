@@ -10,22 +10,22 @@ public class UserPreferences
 {
     public static readonly List<string> PrimaryColors = new()
     {
-        "#2d4275",
-        Colors.Green.Default,
-        "#5052ba",
-        "#8421d1",
-        "#FF7F00",
-        Colors.Red.Default
+        "#2d4275", // 蓝色
+        "#6A1B9A", // 深紫色
+        "#4CAF50" , // 绿色
+        "#FF9800", // 橙色
+        "#F44336", // 红色
+        "#FF69B4" // 粉色
     };
 
     public static readonly List<string> DarkPrimaryColors = new()
     {
-        "#8b9ac6",
-        "#6c9f77",
-        "#5052ba",
-        "#776BE7",
-        "#d0882c",
-        "#f88989"
+        "#0077b6", // 蓝色的暗色调
+        "#a541be", // 深紫色的暗色调
+        "#388E3C",  // 绿色的暗色调
+        "#FB8C00", // 橙色的暗色调
+        "#ca322d", // 红色的暗色调
+        "#cf2d86", // 粉色的暗色调
     };
 
     /// <summary>

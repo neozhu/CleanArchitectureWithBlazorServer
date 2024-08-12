@@ -1,8 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Data;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using NpgsqlTypes;
 using Serilog;
@@ -28,6 +30,7 @@ public static class SerilogExtensions
                 .MinimumLevel.Override("Serilog", LogEventLevel.Information)
                 .MinimumLevel.Override("Microsoft.EntityFrameworkCore.AddOrUpdate", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.BackgroundJobServer", LogEventLevel.Error)
+                .MinimumLevel.Override("Hangfire.InMemory.InMemoryStorage", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.Server.BackgroundServerProcess", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.Server.ServerHeartbeatProcess", LogEventLevel.Error)
                 .MinimumLevel.Override("Hangfire.Processing.BackgroundExecution", LogEventLevel.Error)
@@ -41,6 +44,7 @@ public static class SerilogExtensions
                 .MinimumLevel.Override("CleanArchitecture.Blazor.Server.UI.Services.Fusion.OnlineUserTracker", LogEventLevel.Error)
                 .Enrich.FromLogContext()
                 .Enrich.WithUtcTime()
+                .Enrich.WithUserInfo()
                 .WriteTo.Async(wt => wt.File("./log/log-.txt", rollingInterval: RollingInterval.Day))
                 .WriteTo.Async(wt =>
                     wt.Console(
@@ -52,7 +56,6 @@ public static class SerilogExtensions
 
     private static void ApplyConfigPreferences(this LoggerConfiguration serilogConfig, IConfiguration configuration)
     {
-        EnrichWithClientInfo(serilogConfig, configuration);
         WriteToDatabase(serilogConfig, configuration);
     }
 
@@ -78,14 +81,7 @@ public static class SerilogExtensions
         }
     }
 
-    private static void EnrichWithClientInfo(LoggerConfiguration serilogConfig, IConfiguration configuration)
-    {
-        var privacySettings = configuration.GetRequiredSection(PrivacySettings.Key).Get<PrivacySettings>();
-
-        if (privacySettings == null) return;
-        if (privacySettings.LogClientIpAddresses) serilogConfig.Enrich.WithClientIp();
-        if (privacySettings.LogClientAgents) serilogConfig.Enrich.WithRequestHeader("User-Agent");
-    }
+   
 
     private static void WriteToSqlServer(LoggerConfiguration serilogConfig, string? connectionString)
     {
@@ -118,7 +114,7 @@ public static class SerilogExtensions
             {
                 new()
                 {
-                    ColumnName = "ClientIP", PropertyName = "ClientIp", DataType = SqlDbType.NVarChar, DataLength = 64
+                    ColumnName = "ClientIP", PropertyName = "ClientIP", DataType = SqlDbType.NVarChar, DataLength = 64
                 },
                 new()
                 {
@@ -192,7 +188,12 @@ public static class SerilogExtensions
 
     public static LoggerConfiguration WithUtcTime(this LoggerEnrichmentConfiguration enrichmentConfiguration)
     {
+        
         return enrichmentConfiguration.With<UtcTimestampEnricher>();
+    }
+    public static LoggerConfiguration WithUserInfo(this LoggerEnrichmentConfiguration enrichmentConfiguration)
+    {
+        return enrichmentConfiguration.With<UserInfoEnricher>();
     }
 }
 
@@ -201,5 +202,23 @@ internal class UtcTimestampEnricher : ILogEventEnricher
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory pf)
     {
         logEvent.AddOrUpdateProperty(pf.CreateProperty("TimeStamp", logEvent.Timestamp.UtcDateTime));
+    }
+}
+internal class UserInfoEnricher : ILogEventEnricher
+{
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public UserInfoEnricher() : this(new HttpContextAccessor())
+    {
+    }
+    //Dependency injection can be used to retrieve any service required to get a user or any data.
+    //Here, I easily get data from HTTPContext
+    public UserInfoEnricher(IHttpContextAccessor httpContextAccessor)
+    {
+        _httpContextAccessor = httpContextAccessor;
+    }
+    public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
+    {
+       logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(
+                "UserName", _httpContextAccessor.HttpContext?.User?.Identity?.Name ?? ""));
     }
 }
