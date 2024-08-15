@@ -288,15 +288,15 @@
                 <div>
                     @if (!context.Item.IsActive || (context.Item.LockoutEnd is not null && context.Item.LockoutEnd > DateTime.UtcNow))
                     {
-                        <MudTooltip Text="@L["Click to change status to active."]" Delay="300">
-                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Close" ThumbIconColor="Color.Error">
+                        <MudTooltip Text="@(_canDeactivation?L["Click to change status to active."]:L["No permission to change status."])" Delay="300">
+                            <MudSwitch Disabled="@(!_canDeactivation)" T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Close" ThumbIconColor="Color.Error">
                             </MudSwitch>
                         </MudTooltip>
                     }
                     else
                     {
-                        <MudTooltip Text="@L["Click to change status to inactive."]" Delay="300">
-                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Done" ThumbIconColor="Color.Success">
+                        <MudTooltip Text="@(_canDeactivation?L["Click to change status to inactive."]:L["No permission to change status."])" Delay="300">
+                            <MudSwitch Disabled="@(!_canDeactivation)" T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Done" ThumbIconColor="Color.Success">
                             </MudSwitch>
 
                         </MudTooltip>
@@ -352,6 +352,7 @@
     private bool _canManagePermissions;
     private bool _canImport;
     private bool _canExport;
+    private bool _canDeactivation;
     private bool _loading;
     private bool _exporting;
     private bool _uploading;
@@ -373,6 +374,7 @@
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        _canDeactivation = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Deactivation)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
 
 

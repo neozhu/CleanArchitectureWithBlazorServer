@@ -12,7 +12,7 @@
     <div class="d-flex flex-row gap-2 my-3 gap-2 my-3">
         @foreach (var user in State.LastNonErrorValue.OrderBy(u => u.Name != currentUserName))
         {
-            <MudBadge Color="Color.Success" Overlap="true" Bordered="true">
+            <MudBadge Color="Color.Success" Overlap="false" Dot="true" Bordered="true">
                 @if (string.IsNullOrEmpty(user.ProfilePictureDataUrl))
                 {
                     <MudAvatar title="@user.Name">
