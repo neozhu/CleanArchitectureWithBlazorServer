@@ -286,4 +286,10 @@
   <data name="Send Reset Password Email" xml:space="preserve">
     <value>Отправить электронное письмо для сброса пароля</value>
   </data>
+  <data name="No roles available for this tenant." xml:space="preserve">
+    <value>Для этого арендатора нет доступных ролей.</value>
+  </data>
+  <data name="Search by role name" xml:space="preserve">
+    <value>Поиск по названию роли</value>
+  </data>
 </root>
