@@ -131,7 +131,7 @@
 
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, false);
+        var result = await SignInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, true);
         if (result.Succeeded)
         {
             Logger.LogInformation("{UserName} has logged in.",Input.UserName);

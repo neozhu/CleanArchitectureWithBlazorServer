@@ -8,7 +8,7 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="8.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="8.0.8" />
         <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
         <PackageReference Include="ClosedXML" Version="0.104.0-preview2" />
@@ -20,8 +20,8 @@
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
         <PackageReference Include="LazyCache" Version="2.4.0" />
         <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.7" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.8" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.4" />
         <PackageReference Include="Hangfire.Core" Version="1.8.14" />
     </ItemGroup>
