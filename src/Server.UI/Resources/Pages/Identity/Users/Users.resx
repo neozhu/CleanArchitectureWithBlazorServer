@@ -280,4 +280,10 @@
   <data name="Inactive" xml:space="preserve">
     <value>Inactive</value>
   </data>
+  <data name="Send Reset Password Email" xml:space="preserve">
+    <value>Send Reset Password Email</value>
+  </data>
+  <data name="No permission to change status." xml:space="preserve">
+    <value>No permission to change status.</value>
+  </data>
 </root>

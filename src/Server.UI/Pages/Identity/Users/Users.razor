@@ -223,7 +223,7 @@
         </PropertyColumn>
         <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x => x.UserName)]">
             <CellTemplate>
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-center">
                     <MudBadge Color="@(IsOnline(context.Item.DisplayName??context.Item.UserName) ? Color.Success : Color.Error)" Overlap="false" Dot="true" Bordered="true">
                         <MudAvatar>
                             @if (string.IsNullOrEmpty(context.Item.ProfilePictureDataUrl))
@@ -286,19 +286,18 @@
         <PropertyColumn Property="x => x.IsActive" Title="@L[_currentDto.GetMemberDescription(x => x.IsActive)]">
             <CellTemplate>
                 <div>
-                    @if (!context.Item.IsActive || (context.Item.LockoutEnd is not null && context.Item.LockoutEnd > DateTime.UtcNow))
+                    @if (!context.Item.IsActive)
                     {
-                        <MudTooltip Text="@L["Click to change status to active."]" Delay="300">
-                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Close" ThumbIconColor="Color.Error">
+                        <MudTooltip Text="@(_canDeactivation?L["Click to change status to active."]:L["No permission to change status."])" Delay="300">
+                            <MudSwitch Disabled="@(!_canDeactivation)" T="bool" Value="@(context.Item.IsActive)" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Close" ThumbIconColor="Color.Error">
                             </MudSwitch>
                         </MudTooltip>
                     }
                     else
                     {
-                        <MudTooltip Text="@L["Click to change status to inactive."]" Delay="300">
-                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Done" ThumbIconColor="Color.Success">
+                        <MudTooltip Text="@(_canDeactivation?L["Click to change status to inactive."]:L["No permission to change status."])" Delay="300">
+                            <MudSwitch Disabled="@(!_canDeactivation)" T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Done" ThumbIconColor="Color.Success">
                             </MudSwitch>
-
                         </MudTooltip>
                     }
                 </div>
@@ -352,6 +351,7 @@
     private bool _canManagePermissions;
     private bool _canImport;
     private bool _canExport;
+    private bool _canDeactivation;
     private bool _loading;
     private bool _exporting;
     private bool _uploading;
@@ -373,6 +373,7 @@
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        _canDeactivation = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Deactivation)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
 
 
@@ -520,9 +521,14 @@
         user.DisplayName = item.DisplayName;
         user.Provider = item.Provider;
         user.UserName = item.UserName;
-        user.IsActive = item.IsActive;
+
         user.TenantId = item.TenantId;
         user.SuperiorId = item.SuperiorId;
+        if (user.IsActive == false && item.IsActive && user.LockoutEnd is not null)
+        {
+            user.LockoutEnd = null;
+        }
+        user.IsActive = item.IsActive;
         var identityResult = await UserManager.UpdateAsync(user);
         if (identityResult.Succeeded)
         {
@@ -696,13 +702,11 @@
     private async Task DeactivateUser(ApplicationUser user, ApplicationUserDto item)
     {
         user.IsActive = false;
-        user.LockoutEnd = DateTimeOffset.MaxValue;
         var identityResult = await UserManager.UpdateAsync(user);
 
         if (identityResult.Succeeded)
         {
             item.IsActive = false;
-            item.LockoutEnd = DateTimeOffset.MaxValue;
             Snackbar.Add($"{L["The user has been inactivated."]}", Severity.Info);
         }
         else
