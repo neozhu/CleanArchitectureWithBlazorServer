@@ -286,4 +286,10 @@
   <data name="Send Reset Password Email" xml:space="preserve">
     <value>パスワードリセットメールを送信</value>
   </data>
+  <data name="No roles available for this tenant." xml:space="preserve">
+    <value>このテナントに使用できるロールはありません。</value>
+  </data>
+  <data name="Search by role name" xml:space="preserve">
+    <value>役割名で検索</value>
+  </data>
 </root>

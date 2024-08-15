@@ -286,4 +286,10 @@
   <data name="Send Reset Password Email" xml:space="preserve">
     <value>비밀번호 재설정 이메일 보내기</value>
   </data>
+  <data name="No roles available for this tenant." xml:space="preserve">
+    <value>이 테넌트에 대한 역할이 없습니다.</value>
+  </data>
+  <data name="Search by role name" xml:space="preserve">
+    <value>역할 이름으로 검색</value>
+  </data>
 </root>
