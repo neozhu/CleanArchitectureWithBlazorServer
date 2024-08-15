@@ -280,4 +280,10 @@
   <data name="Click to change status to inactive." xml:space="preserve">
     <value>クリックするとステータスが非アクティブに変更されます。</value>
   </data>
+  <data name="No permission to change status." xml:space="preserve">
+    <value>ステータスを変更する権限がありません。</value>
+  </data>
+  <data name="Send Reset Password Email" xml:space="preserve">
+    <value>パスワードリセットメールを送信</value>
+  </data>
 </root>
