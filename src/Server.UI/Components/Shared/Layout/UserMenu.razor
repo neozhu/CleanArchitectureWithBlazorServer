@@ -1,5 +1,8 @@
-﻿@inject IStringLocalizer<HeaderMenu> L
+﻿@using Microsoft.AspNetCore.Antiforgery
+@inject IStringLocalizer<HeaderMenu> L
 @inject UserProfileStateService UserProfileStateService
+@inject IAntiforgery _antiforgery;
+@inject IHttpContextAccessor _httpContextAccessor;
 @implements IDisposable
 <MudTooltip Arrow="true" Text="@L["User Profile"]">
     <MudMenu AnchorOrigin="Origin.BottomRight"
@@ -56,7 +59,7 @@
                 </MudMenuItem>
                 <div class="mt-4 mx-4">
                     <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
-                        <AntiforgeryToken/>
+                        <input type="hidden" name="__RequestVerificationToken" value="@antiforgeryToken" />
                         <input type="hidden" name="ReturnUrl" value="/pages/authentication/login" />
                         <MudButton Color="Color.Secondary"
                                    ButtonType="ButtonType.Submit"
@@ -70,20 +73,29 @@
             </div>
         </ChildContent>
     </MudMenu>
-    <form method="post" hidden>
-        <AntiforgeryToken/>
-    </form>
+
 </MudTooltip>
 
 @code
 {
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     private UserProfile UserProfile => UserProfileStateService.UserProfile;
+    private string? antiforgeryToken = string.Empty;
     protected override void OnInitialized()
     {
         UserProfileStateService.OnChange += StateHasChanged;
+        antiforgeryToken = getAntiforgeryToken();
     }
-
+    private string? getAntiforgeryToken()
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext == null)
+        {
+            throw new InvalidOperationException("HttpContext is not available.");
+        }
+        var tokens = _antiforgery.GetAndStoreTokens(httpContext);
+        return tokens.RequestToken;
+    }
     public void Dispose()
     {
         UserProfileStateService.OnChange -= StateHasChanged;
