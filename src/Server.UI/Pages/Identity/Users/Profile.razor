@@ -181,7 +181,7 @@ else
 
     private async Task LoadOrgData()
     {
-       
+
         var list = await UserManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).Include(x => x.Superior).ToListAsync();
 
         foreach (var item in list)
@@ -235,7 +235,7 @@ else
                 var user = await UserManager.FindByNameAsync(model.UserName) ?? throw new NotFoundException($"The application user [{model.UserName}] was not found.");
                 image.Mutate(i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) }));
                 image.Save(outStream, PngFormat.Instance);
-                var result = await UploadService.UploadAsync(new UploadRequest(user.Id + ".png", UploadType.ProfilePicture, outStream.ToArray(), true));
+                var result = await UploadService.UploadAsync(new UploadRequest($"{user.Id}_{DateTime.UtcNow.Ticks}.png", UploadType.ProfilePicture, outStream.ToArray(), true));
                 model.ProfilePictureDataUrl = result;
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);

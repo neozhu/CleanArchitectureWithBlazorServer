@@ -152,7 +152,7 @@
                 @if (_canSearch)
                 {
                     <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                        <MudSelect T="string" Placeholder="Search for role name" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
+                        <MudSelect T="string" Placeholder="@L["Search by role name"]" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
                             @foreach (var str in _roles)
                             {
                                 <MudSelectItem Value="@str">@str</MudSelectItem>

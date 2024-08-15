@@ -286,4 +286,10 @@
   <data name="Send Reset Password Email" xml:space="preserve">
     <value>Send Reset Password Email</value>
   </data>
+  <data name="No roles available for this tenant." xml:space="preserve">
+    <value>No roles available for this tenant.</value>
+  </data>
+  <data name="Search by role name" xml:space="preserve">
+    <value>Search by role name</value>
+  </data>
 </root>

@@ -286,4 +286,10 @@
   <data name="Send Reset Password Email" xml:space="preserve">
     <value>Envieu un correu electrònic de restabliment de la contrasenya</value>
   </data>
+  <data name="No roles available for this tenant." xml:space="preserve">
+    <value>No hi ha cap funció disponible per a aquest llogater.</value>
+  </data>
+  <data name="Search by role name" xml:space="preserve">
+    <value>Cerca per nom de rol</value>
+  </data>
 </root>
