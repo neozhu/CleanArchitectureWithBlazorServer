@@ -38,7 +38,7 @@ public static class DependencyInjection
     private const string DEFAULT_FROM_EMAIL = "noreply@blazorserver.com";
     private const string LOGIN_PATH = "/pages/authentication/login";
     private const int DEFAULT_LOCKOUT_TIME_SPAN_MINUTES = 5;
-    private const int MAX_FAILED_ACCESS_ATTEMPTS = 10;
+    private const int MAX_FAILED_ACCESS_ATTEMPTS = 5;
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
         IConfiguration configuration)

@@ -280,4 +280,10 @@
   <data name="Click to change status to inactive." xml:space="preserve">
     <value>Klicken Sie, um den Status auf „inaktiv“ zu ändern.</value>
   </data>
+  <data name="No permission to change status." xml:space="preserve">
+    <value>Keine Berechtigung zur Statusänderung.</value>
+  </data>
+  <data name="Send Reset Password Email" xml:space="preserve">
+    <value>E-Mail zum Zurücksetzen des Passworts senden</value>
+  </data>
 </root>
