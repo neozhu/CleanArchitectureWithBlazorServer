@@ -136,14 +136,16 @@
 
         if (result.Succeeded)
         {
-            Logger.LogInformation(
-                "{UserName} logged in with {LoginProvider} provider.",
-                externalLoginInfo.Principal.Identity?.Name,
+            Logger.LogInformation("{UserName} successfully logged in using {LoginProvider} external provider.",
+                externalLoginInfo.Principal.Identity?.Name ?? "Unknown User",
                 externalLoginInfo.LoginProvider);
             RedirectManager.RedirectTo(ReturnUrl);
         }
         else if (result.IsLockedOut)
         {
+            Logger.LogWarning("{UserName} is locked out during login attempt with {LoginProvider} external provider.",
+                externalLoginInfo.Principal.Identity?.Name ?? "Unknown User",
+                externalLoginInfo.LoginProvider);
             RedirectManager.RedirectTo(Lockout.PageUrl);
         }
 
@@ -184,7 +186,9 @@
             return;
         }
 
-        Logger.LogInformation("{UserName} created an account using {Name} provider.", Input.Email, externalLoginInfo.LoginProvider);
+        Logger.LogInformation("A new account was created for user '{UserName}' using the external login provider '{LoginProvider}'.",
+                Input.Email,
+                externalLoginInfo.LoginProvider);
 
         if (UserManager.Options.SignIn.RequireConfirmedEmail)
         {
