@@ -37,7 +37,7 @@ public class UserActivationNotificationHandler : INotificationHandler<UserActiva
                 notification.UserName,
                 notification.Email
             });
-        _logger.LogInformation("Activation email sent to {Email}. sending result {Successful} {Message}",
-            notification.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
+        _logger.LogInformation("Activation email sent to {Email}, Activation Callback URL: {ActivationUrl}. sending result {Successful} {Message}, ",
+            notification.Email, notification.ActivationUrl,sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
     }
 }
