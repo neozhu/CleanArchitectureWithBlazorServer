@@ -36,7 +36,7 @@ public class ResetPasswordNotificationHandler : INotificationHandler<ResetPasswo
                 notification.UserName,
                 notification.Email
             });
-        _logger.LogInformation("Password rest email sent to {Email}. sending result {Successful} {ErrorMessages}",
-            notification.Email, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
+        _logger.LogInformation("Password rest email sent to {Email}. Reset Password Callback URL: {RequestUrl} sending result {Successful} {ErrorMessages}",
+            notification.Email, notification.RequestUrl, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
     }
 }

@@ -141,7 +141,7 @@
                 @if (_canSearch)
                 {
                     <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                        <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search for picklist"]" Value="@_searchPicklist" Clearable="true" ValueChanged="@(s => OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
+                        <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true" ValueChanged="@(s => OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
                         <MudHidden Breakpoint="Breakpoint.SmAndDown">
                             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.End" Style="min-width:260px" FullWidth="true"
                                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
