@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
     <!-- 
         Microsoft ResX Schema 
@@ -170,7 +170,7 @@
     <data name="Product" xml:space="preserve">
     <value>Producte</value>
   </data>
-    <data name="Search for audit type" xml:space="preserve">
+    <data name="Search by audit type" xml:space="preserve">
     <value>Cerca el tipus d'auditoria</value>
   </data>
     <data name="Tenant" xml:space="preserve">

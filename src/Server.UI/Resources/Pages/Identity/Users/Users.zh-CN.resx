@@ -157,7 +157,7 @@
   <data name="Reset password successfully." xml:space="preserve">
     <value>重置密码成功</value>
   </data>
-  <data name="Search for user name" xml:space="preserve">
+  <data name="Search by user name" xml:space="preserve">
     <value>搜索用户名</value>
   </data>
   <data name="Set Active" xml:space="preserve">

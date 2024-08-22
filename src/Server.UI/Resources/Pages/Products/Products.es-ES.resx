@@ -146,19 +146,19 @@
     <data name="Product Pictures" xml:space="preserve">
     <value>Imágenes del producto</value>
   </data>
-    <data name="Search for brand" xml:space="preserve">
+    <data name="Search by brand" xml:space="preserve">
     <value>buscar marca</value>
   </data>
-    <data name="Search for maximum price" xml:space="preserve">
+    <data name="Search by maximum price" xml:space="preserve">
     <value>Buscar precio máximo</value>
   </data>
-    <data name="Search for minimum price" xml:space="preserve">
+    <data name="Search by minimum price" xml:space="preserve">
     <value>Buscar precio mínimo</value>
   </data>
-    <data name="Search for product name" xml:space="preserve">
+    <data name="Search by product name" xml:space="preserve">
     <value>Buscar nombre de producto</value>
   </data>
-    <data name="Search for unit" xml:space="preserve">
+    <data name="Search by unit" xml:space="preserve">
     <value>Buscar unidad</value>
   </data>
     <data name="The recommended size for uploading images is 640X320" xml:space="preserve">

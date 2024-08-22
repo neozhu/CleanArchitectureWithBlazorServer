@@ -142,7 +142,7 @@
   <data name="Roles" xml:space="preserve">
     <value>Roles</value>
   </data>
-  <data name="Search for role name" xml:space="preserve">
+  <data name="Search by role name" xml:space="preserve">
     <value>Buscar nombre de rol</value>
   </data>
   <data name="Set Permissions" xml:space="preserve">
