@@ -146,19 +146,19 @@
     <data name="Product Pictures" xml:space="preserve">
     <value>Imatges del producte</value>
   </data>
-    <data name="Search for brand" xml:space="preserve">
+    <data name="Search by brand" xml:space="preserve">
     <value>Cerca de marca</value>
   </data>
-    <data name="Search for maximum price" xml:space="preserve">
+    <data name="Search by maximum price" xml:space="preserve">
     <value>Cerca el preu màxim</value>
   </data>
-    <data name="Search for minimum price" xml:space="preserve">
+    <data name="Search by minimum price" xml:space="preserve">
     <value>Cerca preu mínim</value>
   </data>
-    <data name="Search for product name" xml:space="preserve">
+    <data name="Search by product name" xml:space="preserve">
     <value>Cerca el nom del producte</value>
   </data>
-    <data name="Search for unit" xml:space="preserve">
+    <data name="Search by unit" xml:space="preserve">
     <value>Cerca la unitat</value>
   </data>
     <data name="The recommended size for uploading images is 640X320" xml:space="preserve">

@@ -51,7 +51,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large" />
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
-                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView" Value="@_selectedTenantId" Dense="true" Label="List View">
+                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView" Value="@_selectedTenantId" Dense="true" Label="@L["List View"]">
                         <MudSelectItem T="string" Value="@(" ")">@L["ALL"]</MudSelectItem>
                         @foreach (var item in TenantsService.DataSource)
                         {
@@ -152,7 +152,7 @@
                 @if (_canSearch)
                 {
                     <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                        <MudSelect T="string" Placeholder="Search for role name" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
+                        <MudSelect T="string" Placeholder="@L["Search by role name"]" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
                             @foreach (var str in _roles)
                             {
                                 <MudSelectItem Value="@str">@str</MudSelectItem>
@@ -373,9 +373,7 @@
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-        _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
-
-
+        _roles = await RoleManager.Roles.Select(x => x.Name).Distinct().ToListAsync();
     }
     private void InitializeServices()
     {

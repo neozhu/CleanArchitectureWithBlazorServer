@@ -170,7 +170,7 @@
     <data name="Product" xml:space="preserve">
     <value>제품</value>
   </data>
-    <data name="Search for audit type" xml:space="preserve">
+    <data name="Search by audit type" xml:space="preserve">
     <value>감사 유형 검색</value>
   </data>
     <data name="Tenant" xml:space="preserve">

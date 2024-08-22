@@ -190,7 +190,7 @@
   <data name="Reset password successfully." xml:space="preserve">
     <value>비밀번호를 재설정했습니다.</value>
   </data>
-  <data name="Search for user name" xml:space="preserve">
+  <data name="Search by user name" xml:space="preserve">
     <value>사용자 이름 검색</value>
   </data>
   <data name="Select Superior" xml:space="preserve">

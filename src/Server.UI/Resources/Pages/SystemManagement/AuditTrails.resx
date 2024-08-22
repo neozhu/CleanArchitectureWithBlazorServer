@@ -146,7 +146,7 @@
     <data name="User Id" xml:space="preserve">
     <value>User Id</value>
   </data>
-    <data name="Search for audit type" xml:space="preserve">
+    <data name="Search by audit type" xml:space="preserve">
     <value>Search for audit type</value>
   </data>
     <data name="Field Name" xml:space="preserve">

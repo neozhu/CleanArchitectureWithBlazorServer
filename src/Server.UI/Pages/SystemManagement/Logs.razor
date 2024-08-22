@@ -29,7 +29,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.BarChart" Size="Size.Large"/>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption" Class="mb-2">@Title</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="LogListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
+                    <MudEnumSelect Style="min-width:120px" TEnum="LogListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
                     </MudEnumSelect>
                 </div>
             </div>
@@ -67,7 +67,7 @@
                     }
                 </div>
                 <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                    <MudEnumSelect TEnum="LogLevel?" Placeholder="@L["Search for level"]" Value="@Query.Level" Clearable="true" ValueChanged="OnChangedLevel" Style="min-width:120px" FullWidth="true"> </MudEnumSelect>
+                    <MudEnumSelect TEnum="LogLevel?" Placeholder="@L["Search by level"]" Value="@Query.Level" Clearable="true" ValueChanged="OnChangedLevel" Style="min-width:120px" FullWidth="true"> </MudEnumSelect>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudTextField T="string" Style="min-width:120px" ValueChanged="@(OnSearch)" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium">
