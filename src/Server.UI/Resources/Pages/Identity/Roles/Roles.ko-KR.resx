@@ -148,7 +148,7 @@
   <data name="Roles" xml:space="preserve">
     <value>역할</value>
   </data>
-  <data name="Search for role name" xml:space="preserve">
+  <data name="Search by role name" xml:space="preserve">
     <value>역할 이름 검색</value>
   </data>
   <data name="Set Permissions" xml:space="preserve">

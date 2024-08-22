@@ -160,7 +160,7 @@
   <data name="Reset password successfully." xml:space="preserve">
     <value>Reset password successfully.</value>
   </data>
-  <data name="Search for user name" xml:space="preserve">
+  <data name="Search by user name" xml:space="preserve">
     <value>Search for user name</value>
   </data>
   <data name="Select Tenant" xml:space="preserve">
