@@ -26,7 +26,7 @@
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
 @inject ITenantService TenantsService
-@inject IFusionCache FusionCache;
+@inject IFusionCache FusionCache
 @inject IExcelService ExcelService
 @inject IMailService MailService
 @inject IStringLocalizer<Users> L
@@ -373,7 +373,7 @@
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
-        _roles = await RoleManager.Roles.Select(x => x.Name).Distinct().ToListAsync();
+        _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
     }
     private void InitializeServices()
     {
