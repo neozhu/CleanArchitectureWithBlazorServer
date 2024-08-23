@@ -26,7 +26,6 @@
         var authState = await AuthState;
         userName = authState.User.GetDisplayName() ?? (authState.User.GetUserName()??string.Empty);
         await UserSessionTracker.AddUserSession(PageComponent ?? nameof(ActiveUserSession), userName);
-
     }
 
     protected override ComputedState<string[]>.Options GetStateOptions()
@@ -38,7 +37,7 @@
         if (result.Any())
         {
 
-            return result.Where(x => x.PageComponent == PageComponent).SelectMany(x => x.UserSessions).Where(x => !x.Equals(userName)).ToArray();
+            return result.Where(x => x.PageComponent == PageComponent).Where(x => x.UserSessions.Any(y => y != userName)).SelectMany(x => x.UserSessions.Where(y => y != userName)).ToArray();
         }
 
         return Array.Empty<string>();
