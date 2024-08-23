@@ -3,6 +3,7 @@
 @using System.Reflection
 @using System.Text
 @using System.ComponentModel
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper
 @using CleanArchitecture.Blazor.Server.UI.Services
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Forms
@@ -57,7 +58,7 @@
 @inject IAuthorizationService AuthService 
 @inject IValidationService Validator
 @inject IJSRuntime JS
-@inject IMediator Mediator
+@inject IScopedMediator Mediator
 @inject IMapper Mapper
 @inject NavigationManager Navigation
 @inject DialogServiceHelper DialogServiceHelper
