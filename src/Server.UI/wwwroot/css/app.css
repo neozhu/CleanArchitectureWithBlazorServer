@@ -1,4 +1,11 @@
-﻿.mud-input {
+﻿.mud-typography-body2 {
+    color: var(--mud-palette-text-secondary);
+}
+
+.mud-typography-subtitle1 {
+    color: var(--mud-palette-text-secondary);
+}
+.mud-input {
     font-size: inherit !important;
     font-weight: inherit !important;
     line-height: inherit !important;
