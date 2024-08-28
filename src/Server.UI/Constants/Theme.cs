@@ -137,7 +137,7 @@ public class Theme
                 Subtitle1 = new Subtitle1
                 {
                     FontSize = "1rem",
-                    FontWeight = 400,
+                    FontWeight = 500,
                     LineHeight = 1.75,
                     LetterSpacing = ".00938em"
                 },
