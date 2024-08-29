@@ -157,7 +157,7 @@
   <data name="Reset password successfully." xml:space="preserve">
     <value>重置密码成功</value>
   </data>
-  <data name="Search for user name" xml:space="preserve">
+  <data name="Search by user name" xml:space="preserve">
     <value>搜索用户名</value>
   </data>
   <data name="Set Active" xml:space="preserve">
@@ -279,5 +279,17 @@
   </data>
   <data name="Click to change status to inactive." xml:space="preserve">
     <value>单击可将状态更改为非活动状态。</value>
+  </data>
+  <data name="No permission to change status." xml:space="preserve">
+    <value>无权更改状态。</value>
+  </data>
+  <data name="Send Reset Password Email" xml:space="preserve">
+    <value>发送重置密码电子邮件</value>
+  </data>
+  <data name="No roles available for this tenant." xml:space="preserve">
+    <value>该租户没有可用的角色。</value>
+  </data>
+  <data name="Search by role name" xml:space="preserve">
+    <value>按角色名称搜索</value>
   </data>
 </root>

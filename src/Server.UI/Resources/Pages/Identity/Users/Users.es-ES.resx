@@ -163,7 +163,7 @@
   <data name="Reset password successfully." xml:space="preserve">
     <value>Restablecer contraseña exitosamente</value>
   </data>
-  <data name="Search for user name" xml:space="preserve">
+  <data name="Search by user name" xml:space="preserve">
     <value>Buscar nombre de usuario</value>
   </data>
   <data name="Set Active" xml:space="preserve">
@@ -279,5 +279,17 @@
   </data>
   <data name="Click to change status to inactive." xml:space="preserve">
     <value>Haga clic para cambiar el estado a inactivo.</value>
+  </data>
+  <data name="No permission to change status." xml:space="preserve">
+    <value>No hay permiso para cambiar el estado.</value>
+  </data>
+  <data name="Send Reset Password Email" xml:space="preserve">
+    <value>Enviar correo electrónico para restablecer contraseña</value>
+  </data>
+  <data name="No roles available for this tenant." xml:space="preserve">
+    <value>No hay roles disponibles para este inquilino.</value>
+  </data>
+  <data name="Search by role name" xml:space="preserve">
+    <value>Buscar por nombre de rol</value>
   </data>
 </root>

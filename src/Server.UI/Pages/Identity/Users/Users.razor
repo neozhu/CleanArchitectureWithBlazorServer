@@ -26,7 +26,7 @@
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
 @inject ITenantService TenantsService
-@inject IFusionCache FusionCache;
+@inject IFusionCache FusionCache
 @inject IExcelService ExcelService
 @inject IMailService MailService
 @inject IStringLocalizer<Users> L
@@ -51,7 +51,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.SwitchAccount" Size="Size.Large" />
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
-                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView" Value="@_selectedTenantId" Dense="true" Label="List View">
+                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView" Value="@_selectedTenantId" Dense="true" Label="@L["List View"]">
                         <MudSelectItem T="string" Value="@(" ")">@L["ALL"]</MudSelectItem>
                         @foreach (var item in TenantsService.DataSource)
                         {
@@ -152,7 +152,7 @@
                 @if (_canSearch)
                 {
                     <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                        <MudSelect T="string" Placeholder="Search for role name" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
+                        <MudSelect T="string" Placeholder="@L["Search by role name"]" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
                             @foreach (var str in _roles)
                             {
                                 <MudSelectItem Value="@str">@str</MudSelectItem>
@@ -374,8 +374,6 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
-
-
     }
     private void InitializeServices()
     {
@@ -721,7 +719,6 @@
             new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
         await Mediator.Publish(new ResetPasswordNotification(callbackUrl, item.Email, item.UserName));
         Snackbar.Add(string.Format(L["A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login."], item.UserName), Severity.Info);
-        Logger.LogInformation($"Password reset email sent to user {item.UserName} ({item.Id}) with callback URL {callbackUrl}");
     }
     private async Task OnResetPassword(ApplicationUserDto item)
     {

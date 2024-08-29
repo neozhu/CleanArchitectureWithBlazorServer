@@ -146,19 +146,19 @@
     <data name="Product Pictures" xml:space="preserve">
     <value>製品写真</value>
   </data>
-    <data name="Search for brand" xml:space="preserve">
+    <data name="Search by brand" xml:space="preserve">
     <value>ブランドを探す</value>
   </data>
-    <data name="Search for maximum price" xml:space="preserve">
+    <data name="Search by maximum price" xml:space="preserve">
     <value>最高価格を検索する</value>
   </data>
-    <data name="Search for minimum price" xml:space="preserve">
+    <data name="Search by minimum price" xml:space="preserve">
     <value>最低価格を検索する</value>
   </data>
-    <data name="Search for product name" xml:space="preserve">
+    <data name="Search by product name" xml:space="preserve">
     <value>製品名で検索してください</value>
   </data>
-    <data name="Search for unit" xml:space="preserve">
+    <data name="Search by unit" xml:space="preserve">
     <value>ユニットの検索</value>
   </data>
     <data name="The recommended size for uploading images is 640X320" xml:space="preserve">

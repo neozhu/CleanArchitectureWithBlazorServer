@@ -170,7 +170,7 @@
     <data name="Product" xml:space="preserve">
     <value>Продукт</value>
   </data>
-    <data name="Search for audit type" xml:space="preserve">
+    <data name="Search by audit type" xml:space="preserve">
     <value>Поиск типа аудита</value>
   </data>
     <data name="Tenant" xml:space="preserve">

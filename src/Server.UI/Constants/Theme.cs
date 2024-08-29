@@ -9,7 +9,7 @@ public class Theme
             PaletteLight = new PaletteLight
             {
                 Primary = "#5052ba", 
-                Secondary = "#7575d9", 
+                Secondary = "#7D7D7D", 
                 Success = "#0CAD39", 
                 Info = "#4099f3", 
                 Warning = "#f0c42b", 
@@ -25,8 +25,8 @@ public class Theme
                 Background = "#f5f5f5", 
                 Surface = "#ffffff", 
                 DrawerBackground = "#ffffff", 
-                TextPrimary = "#1a1823", 
-                TextSecondary = "#80838b", 
+                TextPrimary = "#333333", 
+                TextSecondary = "#555555", 
                 TextDisabled = "#80838b", 
                 ActionDefault = "#80838b", 
                 ActionDisabled = "rgba(128, 131, 139, 0.3)",
@@ -41,7 +41,7 @@ public class Theme
             PaletteDark = new PaletteDark
             {
                 Primary = "#5052ba", 
-                Secondary = "#7575d9", 
+                Secondary = "#A5A5A5", 
                 Success = "#0CAD39", 
                 Info = "#4099f3", 
                 Warning = "#f0c42b",
@@ -57,8 +57,8 @@ public class Theme
                 AppbarBackground = "rgba(32, 33, 36, 0.8)",
                 AppbarText = "rgba(255, 255, 255, 0.7)",
                 DrawerBackground = "#303134",
-                TextPrimary = "#eeeff1", 
-                TextSecondary = "#93929b",
+                TextPrimary = "#E0E0E0", 
+                TextSecondary = "#B0B0B0",
                 TextDisabled = "rgba(255, 255, 255, 0.3)",
                 ActionDefault = "#e8eaed", 
                 ActionDisabled = "rgba(255, 255, 255, 0.26)",
@@ -137,7 +137,7 @@ public class Theme
                 Subtitle1 = new Subtitle1
                 {
                     FontSize = "1rem",
-                    FontWeight = 400,
+                    FontWeight = 500,
                     LineHeight = 1.75,
                     LetterSpacing = ".00938em"
                 },

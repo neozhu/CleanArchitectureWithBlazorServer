@@ -149,19 +149,19 @@
     <data name="Products" xml:space="preserve">
     <value>제품</value>
   </data>
-    <data name="Search for brand" xml:space="preserve">
+    <data name="Search by brand" xml:space="preserve">
     <value>브랜드 검색</value>
   </data>
-    <data name="Search for maximum price" xml:space="preserve">
+    <data name="Search by maximum price" xml:space="preserve">
     <value>최고 가격 검색</value>
   </data>
-    <data name="Search for minimum price" xml:space="preserve">
+    <data name="Search by minimum price" xml:space="preserve">
     <value>최저 가격 검색</value>
   </data>
-    <data name="Search for product name" xml:space="preserve">
+    <data name="Search by product name" xml:space="preserve">
     <value>제품명 검색</value>
   </data>
-    <data name="Search for unit" xml:space="preserve">
+    <data name="Search by unit" xml:space="preserve">
     <value>유닛 검색</value>
   </data>
     <data name="The recommended size for uploading images is 640X320" xml:space="preserve">

@@ -10,7 +10,7 @@
 @attribute [Authorize(Policy = Permissions.Roles.View)]
 @inherits OwningComponentBase
 @inject ITenantService TenantsService
-@inject IFusionCache FusionCache;
+@inject IFusionCache FusionCache
 @inject IStringLocalizer<Roles> L
 
 <PageTitle>@Title</PageTitle>
@@ -31,7 +31,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.Groups" Size="Size.Large" />
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption">@Title</MudText>
-                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView" Value="@_selectedTenantId" Dense="true" Label="List View">
+                    <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView" Value="@_selectedTenantId" Dense="true" Label="@L["List View"]">
                         <MudSelectItem T="string" Value="@(" ")">@L["ALL"]</MudSelectItem>
                         @foreach (var item in TenantsService.DataSource)
                         {
@@ -132,7 +132,7 @@
                 @if (_canSearch)
                 {
                     <MudTextField T="string" Immediate="false" Value="_searchString" FullWidth="false" ValueChanged="@(OnSearch)"
-                                  Placeholder="@(L["Search for role name"])" Adornment="Adornment.End"
+                                  Placeholder="@(L["Search by role name"])" Adornment="Adornment.End"
                                   AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                     </MudTextField>
                 }

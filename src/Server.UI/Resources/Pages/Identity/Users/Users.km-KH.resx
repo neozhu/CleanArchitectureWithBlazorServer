@@ -163,7 +163,7 @@
   <data name="Reset password successfully." xml:space="preserve">
     <value>កំណត់ពាក្យសម្ងាត់ឡើងវិញដោយជោគជ័យ</value>
   </data>
-  <data name="Search for user name" xml:space="preserve">
+  <data name="Search by user name" xml:space="preserve">
     <value>ស្វែងរកឈ្មោះអ្នកប្រើប្រាស់</value>
   </data>
   <data name="Set Active" xml:space="preserve">
@@ -279,5 +279,17 @@
   </data>
   <data name="Click to change status to inactive." xml:space="preserve">
     <value>ចុចដើម្បីប្តូរស្ថានភាពទៅជាអសកម្ម។</value>
+  </data>
+  <data name="No permission to change status." xml:space="preserve">
+    <value>គ្មានការអនុញ្ញាតក្នុងការផ្លាស់ប្តូរស្ថានភាព។</value>
+  </data>
+  <data name="Send Reset Password Email" xml:space="preserve">
+    <value>ផ្ញើអ៊ីមែលកំណត់ពាក្យសម្ងាត់ឡើងវិញ</value>
+  </data>
+  <data name="No roles available for this tenant." xml:space="preserve">
+    <value>មិនមានតួនាទីសម្រាប់ភតិកៈនេះទេ។</value>
+  </data>
+  <data name="Search by role name" xml:space="preserve">
+    <value>ស្វែងរកតាមឈ្មោះតួនាទី</value>
   </data>
 </root>

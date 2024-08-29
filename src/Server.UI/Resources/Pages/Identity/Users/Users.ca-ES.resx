@@ -163,7 +163,7 @@
   <data name="Reset password successfully." xml:space="preserve">
     <value>Restableix la contrasenya correctament</value>
   </data>
-  <data name="Search for user name" xml:space="preserve">
+  <data name="Search by user name" xml:space="preserve">
     <value>Cerca el nom d'usuari</value>
   </data>
   <data name="Set Active" xml:space="preserve">
@@ -279,5 +279,17 @@
   </data>
   <data name="Click to change status to inactive." xml:space="preserve">
     <value>Feu clic per canviar l'estat a inactiu.</value>
+  </data>
+  <data name="No permission to change status." xml:space="preserve">
+    <value>No hi ha permís per canviar l'estat.</value>
+  </data>
+  <data name="Send Reset Password Email" xml:space="preserve">
+    <value>Envieu un correu electrònic de restabliment de la contrasenya</value>
+  </data>
+  <data name="No roles available for this tenant." xml:space="preserve">
+    <value>No hi ha cap funció disponible per a aquest llogater.</value>
+  </data>
+  <data name="Search by role name" xml:space="preserve">
+    <value>Cerca per nom de rol</value>
   </data>
 </root>

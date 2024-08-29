@@ -137,7 +137,7 @@
     <data name="Picklist" xml:space="preserve">
     <value>Auswahlliste</value>
   </data>
-    <data name="Search for role name" xml:space="preserve">
+    <data name="Search by role name" xml:space="preserve">
     <value>Suchen Sie nach dem Rollennamen</value>
   </data>
     <data name="Text" xml:space="preserve">

@@ -7,14 +7,14 @@
     <MudGrid Spacing="2">
         <MudItem xs="12" sm="6" md="4">
             <MudTextField @bind-Value="TRequest.Name"
-                          Placeholder="@L["Search for product name"]"
+                          Placeholder="@L["Search by product name"]"
                           Clearable="true"
                           TextChanged="TextChanged">
             </MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <PicklistAutocomplete Picklist="Picklist.Brand"
-                                  Placeholder="@L["Search for brand"]"
+                                  Placeholder="@L["Search by brand"]"
                                   TextChanged="TextChanged"
                                   ResetValueOnEmptyText="true"
                                   @bind-Value="TRequest.Brand">
@@ -22,7 +22,7 @@
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <PicklistAutocomplete Picklist="Picklist.Unit"
-                                  Placeholder="@L["Search for unit"]"
+                                  Placeholder="@L["Search by unit"]"
                                   TextChanged="TextChanged"
                                   ResetValueOnEmptyText="true"
                                   @bind-Value="TRequest.Unit">
@@ -30,14 +30,14 @@
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <MudNumericField Clearable="true" @bind-Value="TRequest.MinPrice"
-                             Placeholder="@L["Search for minimum price"]"
+                             Placeholder="@L["Search by minimum price"]"
                              TextChanged="TextChanged">
             </MudNumericField>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <MudNumericField @bind-Value="TRequest.MaxPrice"
                              Clearable="true"
-                             Placeholder="@L["Search for maximum price"]"
+                             Placeholder="@L["Search by maximum price"]"
                              TextChanged="TextChanged">
             </MudNumericField>
         </MudItem>

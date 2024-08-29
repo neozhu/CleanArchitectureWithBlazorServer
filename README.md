@@ -22,7 +22,7 @@ Experience the application in action in Blazor Server mode by visiting
 ## Visual Insights
 
 Dive into the application's aesthetics and functionality through screenshots and a video walkthrough.
-[![Everything Is AWESOME](doc/page.png)](https://www.youtube.com/embed/GyZJl_dG-Pg "Everything Is AWESOME")
+[![Everything Is AWESOME](doc/logo.png)](https://www.youtube.com/embed/GyZJl_dG-Pg "Everything Is AWESOME")
 
 ## Development Setup
 

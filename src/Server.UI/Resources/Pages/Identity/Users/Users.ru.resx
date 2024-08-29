@@ -163,7 +163,7 @@
   <data name="Reset password successfully." xml:space="preserve">
     <value>Сбросить пароль успешно</value>
   </data>
-  <data name="Search for user name" xml:space="preserve">
+  <data name="Search by user name" xml:space="preserve">
     <value>Поиск имени пользователя</value>
   </data>
   <data name="Set Active" xml:space="preserve">
@@ -279,5 +279,17 @@
   </data>
   <data name="Click to change status to inactive." xml:space="preserve">
     <value>Нажмите, чтобы изменить статус на неактивный.</value>
+  </data>
+  <data name="No permission to change status." xml:space="preserve">
+    <value>Нет разрешения на изменение статуса.</value>
+  </data>
+  <data name="Send Reset Password Email" xml:space="preserve">
+    <value>Отправить электронное письмо для сброса пароля</value>
+  </data>
+  <data name="No roles available for this tenant." xml:space="preserve">
+    <value>Для этого арендатора нет доступных ролей.</value>
+  </data>
+  <data name="Search by role name" xml:space="preserve">
+    <value>Поиск по названию роли</value>
   </data>
 </root>

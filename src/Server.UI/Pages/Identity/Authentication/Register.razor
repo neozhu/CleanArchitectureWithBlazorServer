@@ -188,7 +188,11 @@
         }
 
         var userId = await UserManager.GetUserIdAsync(user);
-        Logger.LogInformation("{UserName} created a new account with password.", Input.UserName);
+        Logger.LogInformation("New user account created. Username: {UserName}, User ID: {UserId}, Tenant ID: {TenantId}, Assigned Role: {RoleName}.",
+            Input.UserName,
+            userId,
+            Input.TenantId,
+            RoleName.Basic);
         if (UserManager.Options.SignIn.RequireConfirmedEmail)
         {
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);

@@ -137,19 +137,19 @@
     <data name="Unit" xml:space="preserve">
     <value>ឯកតា</value>
   </data>
-    <data name="Search for brand" xml:space="preserve">
+    <data name="Search by brand" xml:space="preserve">
     <value>ស្វែងរកម៉ាក</value>
   </data>
-    <data name="Search for maximum price" xml:space="preserve">
+    <data name="Search by maximum price" xml:space="preserve">
     <value>ស្វែងរកតម្លៃអតិបរមា</value>
   </data>
-    <data name="Search for minimum price" xml:space="preserve">
+    <data name="Search by minimum price" xml:space="preserve">
     <value>ស្វែងរកតម្លៃអប្បបរមា</value>
   </data>
-    <data name="Search for product name" xml:space="preserve">
+    <data name="Search by product name" xml:space="preserve">
     <value>ស្វែងរកឈ្មោះផលិតផល</value>
   </data>
-    <data name="Search for unit" xml:space="preserve">
+    <data name="Search by unit" xml:space="preserve">
     <value>ស្វែងរកឯកតា</value>
   </data>
     <data name="Description" xml:space="preserve">
