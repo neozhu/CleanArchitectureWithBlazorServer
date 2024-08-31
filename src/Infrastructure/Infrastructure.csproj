@@ -37,6 +37,7 @@
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Blazor.Serilog.Sinks.SQLite" Version="1.0.6" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="1.3.0" />
 
     </ItemGroup>
