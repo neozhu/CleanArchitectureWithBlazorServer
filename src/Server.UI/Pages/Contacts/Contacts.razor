@@ -272,44 +272,19 @@
         Query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
-    private async Task ShowEditFormDialog(string title, AddEditContactCommand command)
-    {
-        var parameters = new DialogParameters<ContactFormDialog>
-            {
-                { x=>x.model,command },
-            };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<ContactFormDialog>(title, parameters, options);
-        var state = await dialog.Result;
+     
 
-        if (state != null && !state.Canceled)
-        {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
-        }
-    }
-
-    private async Task OnCreate()
+    private void OnCreate()
     {
-        var command = new AddEditContactCommand();
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Contact"]), command);
+        Navigation.NavigateTo($"/pages/contacts/create");
     }
     private async Task OnClone()
     {
-        var dto = _selectedItems.First();
-        var command = Mapper.Map<ContactDto, AddEditContactCommand>(dto, opts =>
-        {
-           opts.AfterMap((src, dest) =>
-           {
-               dest.Id = 0;
-           });
-        });
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Contact"]), command);
+        
     }
-    private async Task OnEdit(ContactDto dto)
+    private void OnEdit(ContactDto dto)
     {
-        var command = Mapper.Map<AddEditContactCommand>(dto);
-        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Contact"]), command);
+        Navigation.NavigateTo($"/pages/contacts/edit/{dto.Id}");
     }
 
     private async Task OnDelete(ContactDto dto)
