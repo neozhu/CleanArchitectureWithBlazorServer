@@ -9,4 +9,5 @@ public class JSInteropConstants
     public static string PreviewImage = "previewImage";
     public static string CreateOrgChart = "createOrgChart";
     public static string GetTimezoneOffset = "getTimezoneOffset";
+    public static string HistoryGo = "historyGo";
 }
