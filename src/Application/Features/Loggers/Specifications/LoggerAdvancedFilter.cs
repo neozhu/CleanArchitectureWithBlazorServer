@@ -3,7 +3,7 @@
 public enum LogListView
 {
     [Description("All")] All,
-    [Description("Created Toady")] CreatedToday,
+    [Description("Created Today")] CreatedToday,
 
     [Description("View of the last 30 days")]
     Last30days
