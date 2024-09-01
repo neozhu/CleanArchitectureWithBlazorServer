@@ -9,9 +9,7 @@
 @inject IStringLocalizer<Contacts> L
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
-
 <MudContainer Class="p-4 mt-3" MaxWidth="MaxWidth.Small">
-    
     @if (model != null)
     {
         <MudCard>
@@ -42,16 +40,13 @@
                     </MudGrid>
                 </MudForm>
                 <MudCardActions Class="d-flex justify-end gap-2">
-                     
-                        <MudLoadingButton   Color="Color.Primary" DropShadow="false" Loading="@_saving" Variant="Variant.Outlined" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
-             
-            
+                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" Variant="Variant.Outlined" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
                 </MudCardActions>
             </MudCardContent>
         </MudCard>
     }
 </MudContainer>
-<MudImage Src="img/lines.svg" Style="position: absolute; right: 0; bottom: 0; z-index: -2;" />
+
 @code {
     public string? Title { get; private set; }
     [Parameter]
@@ -99,6 +94,6 @@
             _saving = false;
         }
     }
-    
- 
+
+
 }
