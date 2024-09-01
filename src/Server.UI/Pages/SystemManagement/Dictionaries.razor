@@ -163,7 +163,7 @@
         <PropertyColumn Property="x => x.Value" Title="@L[SelectedItem.GetMemberDescription(x => x.Value)]"/>
         <PropertyColumn Property="x => x.Text" Title="@L[SelectedItem.GetMemberDescription(x => x.Text)]"/>
         <PropertyColumn Property="x => x.Description" Title="@L[SelectedItem.GetMemberDescription(x => x.Description)]"/>
-        <TemplateColumn CellStyle="width:60px" Title="@ConstantString.Delete" Sortable="false">
+        <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Delete" Sortable="false">
             <CellTemplate>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Secondary" Disabled="@(!_canDelete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))"/>
             </CellTemplate>
