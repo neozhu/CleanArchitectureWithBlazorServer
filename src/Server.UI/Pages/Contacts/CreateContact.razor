@@ -1,0 +1,87 @@
+﻿@page "/pages/contacts/create"
+
+@using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Create
+@inherits MudComponentBase
+@inject IValidationService Validator
+@inject IStringLocalizer<Contacts> L
+<PageTitle>@Title</PageTitle>
+<Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+<MudContainer Class="p-4 mt-3" MaxWidth="MaxWidth.Small">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">@Title</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
+                <MudGrid>
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Description)]" For="@(() => model.Description)" @bind-Value="model.Description"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Email)]" @bind-Value="model.Email" For="@(() => model.Email)" Required="false" RequiredError="@L["email is required!"]"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.PhoneNumber)]" @bind-Value="model.PhoneNumber" For="@(() => model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required!"]"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Country)]" @bind-Value="model.Country" For="@(() => model.Country)" Required="false" RequiredError="@L["country is required!"]"></MudTextField>
+                    </MudItem>
+
+                </MudGrid>
+            </MudForm>
+            <MudCardActions Class="d-flex justify-end gap-2">
+                <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" Variant="Variant.Outlined" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+            </MudCardActions>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
+
+@code {
+    public string? Title { get; private set; }
+    MudForm? _form;
+    private bool _saving = false;
+    private bool _savingnew = false;
+    private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Contacts", href: "/pages/contacts"),
+        new BreadcrumbItem("Create contact", href:null, disabled:true)
+
+    };
+    private CreateContactCommand model = new();
+    protected override Task OnInitializedAsync()
+    {
+        Title = L["Create contact"];
+        return Task.CompletedTask;
+
+    }
+    async Task Submit()
+    {
+        try
+        {
+            _saving = true;
+            await _form!.Validate().ConfigureAwait(false);
+            if (!_form!.IsValid)
+                return;
+            var result = await Mediator.Send(model);
+            if (result.Succeeded)
+            {
+                Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                Navigation.NavigateTo($"/pages/contacts");
+            }
+            else
+            {
+                Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+            }
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+}

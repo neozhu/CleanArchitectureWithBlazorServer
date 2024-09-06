@@ -11,7 +11,9 @@
     line-height: inherit !important;
     letter-spacing: inherit !important;
 }
-
+.mud-tabs {
+    background-color: var(--mud-palette-drawer-background);
+}
 .mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
     font-size: inherit !important;
     font-weight: inherit !important;
