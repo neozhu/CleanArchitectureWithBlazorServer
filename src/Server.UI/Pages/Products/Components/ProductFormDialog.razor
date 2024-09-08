@@ -40,7 +40,7 @@
                                           ShowProgressIndicator="true"
                                           @bind-Value="Model.Brand">
                         <ProgressIndicatorTemplate>
-                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true"/>
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
                         </ProgressIndicatorTemplate>
                     </PicklistAutocomplete>
                 </MudItem>
@@ -61,49 +61,57 @@
                                           ShowProgressIndicator="true"
                                           @bind-Value="Model.Unit">
                         <ProgressIndicatorTemplate>
-                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true"/>
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
                         </ProgressIndicatorTemplate>
                     </PicklistAutocomplete>
                 </MudItem>
-                <MudItem>
-                    <div class="d-flex flex-row gap-4 mb-2">
-                        <MudFileUpload T="IReadOnlyList<IBrowserFile>"
-                                       SuppressOnChangeWhenInvalid="true"
-                                       @bind-Files="Model.UploadPictures" OnFilesChanged="UploadFiles" For="@(() => Model.UploadPictures)">
+                <MudItem xs="12">
+                    <MudStack Spacing="1" Class="mb-2">
+                        <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
+                        <MudFileUpload T="IReadOnlyList<IBrowserFile>" multiple
+                                       @bind-Files="Model.UploadPictures"
+                                       For="@(() => Model.UploadPictures)"
+                                       OnFilesChanged="UploadFiles" Accept=".pdf,image/*"
+                                       Hidden="@false"
+                                       InputClass="absolute mud-width-full mud-height-full overflow-hidden z-100"
+                                       InputStyle="opacity:0"
+                                       tabindex="-1"
+                                       @ondrop="@ClearDragClass"
+                                       @ondragenter="@SetDragClass"
+                                       @ondragleave="@ClearDragClass"
+                                       @ondragend="@ClearDragClass"
+                                       AppendMultipleFiles>
                             <ActivatorContent>
-                                <MudLoadingButton Loading="@_uploading"   Disabled="_uploading"
-                                                  Variant="Variant.Filled"
-                                                  Color="Color.Primary"
-                                                  >
-                                    @(L["Upload picture"])
-                                </MudLoadingButton>
+                                <MudPaper Class="@_dragClass" Style="width:260px;height:70px;">
+                                    <MudLoadingButton Loading="@_uploading" Disabled="@_uploading" Variant="Variant.Text" Class="align-self-center" Style="text-transform:none"
+                                                      StartIcon="@Icons.Material.Filled.CloudUpload">
+                                        @L["choose image or pdf"]
+                                    </MudLoadingButton>
+                                </MudPaper>
                             </ActivatorContent>
+
                         </MudFileUpload>
-                    </div>
-                    <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
-                    <div class="d-fex">
                         @if (Model.Pictures is not null)
                         {
-                            foreach (var img in Model.Pictures)
-                            {
-                                <div style="float:left; position: relative; width: 160px; height: 80px; margin: 10px;">
-                                    <MudTooltip Delay="500" Text="@img.Name">
-                                        <MudImage ObjectFit="ObjectFit.Cover" Height="80" Width="160" Src="@img.Url" Alt="@img.Name" Elevation="25" Class="mr-2 rounded-lg"/>
-                                    </MudTooltip>
-                                    <div style="position: absolute;top: 0px;left: 0px; z-index: 2990;">
-                                        <MudIconButton OnClick="@(() => PreviewImage(img.Url, Model.Pictures))" Icon="@Icons.Material.Filled.Image" aria-label="preview" Color="Color.Info" Size="MudBlazor.Size.Small"></MudIconButton>
-                                    </div>
-                                    <div style="position: absolute;top: 0px;right: 0px; z-index: 2990;">
-                                        <MudIconButton OnClick="@(() => DeleteImage(img))" Icon="@Icons.Material.Filled.Delete" aria-label="delete" Color="Color.Error" Size="MudBlazor.Size.Small"></MudIconButton>
-                                    </div>
-                                </div>
-                            }
+                            <MudSimpleTable Hover Dense>
+                                <tbody>
+                                    @foreach (var dto in Model.Pictures)
+                                    {
+                                        <tr>
+                                            <td><Thumbnail FileName="@dto.Name" FileUrl="@dto.Url"> </Thumbnail></td>
+                                            <td><FileSizeFormatter FileSizeInBytes="@dto.Size"></FileSizeFormatter></td>
+                                            <td style="width:120px"> <FileDownloadButton Label="@L["View"]" Url="@dto.Url"></FileDownloadButton></td>
+                                            <td style="width:50px"><MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteImage(dto))"></MudIconButton></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </MudSimpleTable>
                         }
-                    </div>
+                    </MudStack>
                 </MudItem>
             </MudGrid>
         </MudForm>
- 
+
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
@@ -115,7 +123,7 @@
 @code {
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public AddEditProductCommand Model { get; set; } = default!;
+    [EditorRequired][Parameter] public AddEditProductCommand Model { get; set; } = default!;
 
     [Parameter] public Action? Refresh { get; set; }
 
@@ -123,7 +131,7 @@
     private bool _saving;
     private bool _saveingnew;
     private bool _uploading;
-    
+
     private const long MaxAllowedSize = 3145728;
 
     private async Task DeleteImage(ProductImage picture)
@@ -134,7 +142,7 @@
             {
                 { x => x.ContentText, $"{L["Are you sure you want to erase this image?"]}" }
             };
-            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
+            var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
             var dialog = DialogService.Show<ConfirmationDialog>($"{L["Erase imatge"]}", parameters, options);
             var state = await dialog.Result;
 
@@ -145,15 +153,18 @@
         }
     }
 
-    private async Task PreviewImage(string url, IEnumerable<ProductImage> images)
-    {
-        await new Fancybox(JS).Preview(url, images);
-    }
+    private const string DefaultDragClass = "pa-4 d-flex align-content-center align-center flex-grow-1 mb-2 flex-wrap border-2 border-dashed";
+    private string _dragClass = DefaultDragClass;
+    private void SetDragClass()
+        => _dragClass = $"{DefaultDragClass} mud-border-primary mud-elevation-25 border-4";
 
+    private void ClearDragClass()
+        => _dragClass = DefaultDragClass;
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
         try
         {
+            ClearDragClass();
             _uploading = true;
             var list = new List<ProductImage>();
             foreach (var file in e.GetMultipleFiles())
@@ -161,21 +172,29 @@
                 try
                 {
                     var filestream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
-                    var imgStream = new MemoryStream();
-                    await filestream.CopyToAsync(imgStream);
-                    imgStream.Position = 0;
-                    using (var outStream = new MemoryStream())
+                    var attachStream = new MemoryStream();
+                    await filestream.CopyToAsync(attachStream);
+                    attachStream.Position = 0;
+                    var filename = file.Name;
+                    var fi = new FileInfo(filename);
+                    var ext = fi.Extension;
+                    if (ext.EndsWith(".pdf"))
                     {
-                        using (var image = Image.Load(imgStream))
+                        var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.Product, attachStream.ToArray()));
+                        list.Add(new ProductImage { Name = filename, Size = attachStream.Length, Url = result });
+                    }
+                    else
+                    {
+                        using (var outStream = new MemoryStream())
                         {
-                            image.Mutate(
-                                i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(640, 320) }));
-                            image.Save(outStream, PngFormat.Instance);
-                            var filename = file.Name;
-                            var fi = new FileInfo(filename);
-                            var ext = fi.Extension;
-                            var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.Product, outStream.ToArray()));
-                            list.Add(new ProductImage { Name = filename, Size = outStream.Length, Url = result });
+                            using (var image = Image.Load(attachStream))
+                            {
+                                image.Mutate(
+                                    i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(640, 320) }));
+                                image.Save(outStream, PngFormat.Instance);
+                                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.Product, outStream.ToArray()));
+                                list.Add(new ProductImage { Name = filename, Size = outStream.Length, Url = result });
+                            }
                         }
                     }
                 }
@@ -256,5 +275,5 @@
     {
         MudDialog.Cancel();
     }
-    
+
 }
