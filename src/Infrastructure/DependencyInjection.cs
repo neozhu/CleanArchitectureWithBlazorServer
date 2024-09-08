@@ -272,8 +272,9 @@ public static class DependencyInjection
             FailSafeMaxDuration = TimeSpan.FromHours(8),
             FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
             // FACTORY TIMEOUTS
-            FactorySoftTimeout = TimeSpan.FromMilliseconds(100),
-            FactoryHardTimeout = TimeSpan.FromMilliseconds(1500)
+            FactorySoftTimeout = TimeSpan.FromMilliseconds(1500),
+            FactoryHardTimeout = TimeSpan.FromMilliseconds(3000),
+            AllowTimedOutFactoryBackgroundCompletion = true,    
         });
         return services;
     }

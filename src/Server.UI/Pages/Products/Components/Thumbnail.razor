@@ -1,0 +1,42 @@
+﻿<div class="d-flex align-content-center align-center gap-2">
+    @if (IsImage)
+    {
+        <MudImage ObjectFit="ObjectFit.ScaleDown" Src="@Url()" Width="50" Height="50" Class="rounded-lg"></MudImage>
+    }else if (IsPdf)
+    {
+        <MudIcon Icon="@Icons.Custom.FileFormats.FilePdf"></MudIcon>
+    }
+    else
+    {
+        <MudIcon Icon="@Icons.Material.Filled.AttachFile"></MudIcon>
+    }
+    <MudText>@FileName</MudText>
+</div>
+
+@code {
+    [Parameter]
+    public string? FileName { get; set; }
+    [Parameter]
+    public string? FileUrl { get; set; }
+
+    private string Url()
+    {
+        var url = FileUrl?.Replace("\\", "/");
+        if (!url.StartsWith('/'))
+        {
+            return '/' + url;
+        }
+        return url;
+    }
+
+    private string GetFileExtension()
+    {
+            return FileName.Split('.').Last();
+    }
+    private bool IsPdf => GetFileExtension().ToLower() == "pdf";
+    
+    private bool IsImage => GetFileExtension().ToLower() == "jpg" || GetFileExtension().ToLower() == "jpeg" || GetFileExtension().ToLower() == "png" || GetFileExtension().ToLower() == "gif" || GetFileExtension().ToLower() == "svg";
+    
+ 
+
+}
