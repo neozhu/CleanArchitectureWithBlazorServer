@@ -1,11 +1,12 @@
 ﻿import {Fancybox} from "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.esm.js";
 
 export function previewImage(url, gallery) {
-
+    console.log(url);
     if (url == null) return;
+    const fileName = getFileName(url);
     if (isImageUrl(url)) {
         let images = [];
-        if (gallery != null) {
+        if (gallery != null && gallery.length > 0) {
             images = gallery.filter(l => isImageUrl(l)).map(x => ({src: x, caption: x.split("/").pop()}));
         } else {
             images = [{src: url, caption: url.split("/").pop()}];
@@ -28,4 +29,7 @@ function isImageUrl(url) {
 }
 function isPDF(url) {
     return url.toLowerCase().endsWith('.pdf');
+}
+function getFileName(url) {
+    return url.split('/').pop();
 }
