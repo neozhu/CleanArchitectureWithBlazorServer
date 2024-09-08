@@ -76,7 +76,7 @@
                  Spacing="2">
             @if (UserPreferences.IsDarkMode || UserPreferences.DarkLightTheme == DarkLightMode.Dark)
             {
-                @foreach (var color in UserPreferences.DarkPrimaryColors)
+                @foreach (var color in UserPreference.DarkPrimaryColors)
                 {
                     <MudItem xs="4">
                         <MudButton Class="@(color == UserPreferences.DarkPrimaryColor ? "color-button color-button-selected" : "color-button")"
@@ -93,7 +93,7 @@
             }
             else
             {
-                @foreach (var color in UserPreferences.PrimaryColors)
+                @foreach (var color in UserPreference.PrimaryColors)
                 {
                     <MudItem xs="4">
                         <MudButton Class="@(color == UserPreferences.PrimaryColor ? "color-button color-button-selected" : "color-button")"
@@ -190,9 +190,9 @@
 
     [Parameter] public EventCallback<bool> ThemingDrawerOpenChanged { get; set; }
 
-    [EditorRequired][Parameter] public UserPreferences UserPreferences { get; set; } = new();
+    [EditorRequired][Parameter] public UserPreference UserPreferences { get; set; } = new();
 
-    [EditorRequired][Parameter] public EventCallback<UserPreferences> UserPreferencesChanged { get; set; }
+    [EditorRequired][Parameter] public EventCallback<UserPreference> UserPreferencesChanged { get; set; }
 
     [Parameter] public double Radius { get; set; }
 
