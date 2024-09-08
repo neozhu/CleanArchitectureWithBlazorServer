@@ -22,7 +22,7 @@ public class LayoutService
     /// <summary>
     /// Gets or sets the user preferences.
     /// </summary>
-    public UserPreferences.UserPreferences UserPreferences { get; private set; } = new();
+    public UserPreferences.UserPreference UserPreferences { get; private set; } = new();
 
     /// <summary>
     /// Gets or sets a value indicating whether the layout is right-to-left.
@@ -231,7 +231,7 @@ public class LayoutService
     /// </summary>
     /// <param name="preferences">The updated user preferences.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task UpdateUserPreferences(UserPreferences.UserPreferences preferences)
+    public async Task UpdateUserPreferences(UserPreferences.UserPreference preferences)
     {
         UserPreferences = preferences;
         IsDarkMode = UserPreferences.DarkLightTheme switch

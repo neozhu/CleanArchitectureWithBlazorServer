@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 
-public class UserPreferences
+public class UserPreference
 {
     public static readonly List<string> PrimaryColors = new()
     {
