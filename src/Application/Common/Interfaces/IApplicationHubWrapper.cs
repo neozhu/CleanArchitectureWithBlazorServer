@@ -3,6 +3,6 @@
 // TODO: can be improved or removed using MediatR?
 public interface IApplicationHubWrapper
 {
-    Task JobStarted(string message);
-    Task JobCompleted(string message);
+    Task JobStarted(int id,string message);
+    Task JobCompleted(int id,string message);
 }

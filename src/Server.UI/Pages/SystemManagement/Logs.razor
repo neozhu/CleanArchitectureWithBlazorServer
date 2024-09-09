@@ -228,7 +228,7 @@
     {
         var contentText = $"{L["Are you sure you want to erase all the logs?"]}";
         var title = $"{L["Erase logs"]}";
-        await DialogServiceHelper.ShowConfirmationDialog(title, contentText, async () =>
+        await DialogServiceHelper.ShowConfirmationDialogAsync(title, contentText, async () =>
         {
             _clearing = true;
             try

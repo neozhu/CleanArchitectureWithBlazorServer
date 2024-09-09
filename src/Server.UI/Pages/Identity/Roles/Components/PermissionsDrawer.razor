@@ -68,7 +68,7 @@
 </MudDrawer>
 
 @code{
-    [EditorRequired] [Parameter] public List<PermissionModel> Permissions { get; set; } = new()!;
+    [EditorRequired] [Parameter] public IList<PermissionModel>? Permissions { get; set; }
 
     [EditorRequired] [Parameter] public bool Open { get; set; } = default!;
 

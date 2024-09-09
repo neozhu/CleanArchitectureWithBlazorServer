@@ -333,7 +333,7 @@
     private string _searchString = string.Empty;
     private string _selectedTenantId = " ";
     private string Title { get; set; } = "Users";
-    private List<PermissionModel> _permissions = new();
+    private IList<PermissionModel> _permissions = new List<PermissionModel>();
     private IList<Claim> _assignedClaims = default!;
 
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
@@ -571,12 +571,16 @@
     {
         await ShowEditUserDialog(item, L["Edit the user"]);
     }
-    private async Task ShowDeleteConfirmationDialog(ApplicationUserDto dto)
+    private async Task ShowDeleteConfirmationDialogAsync(ApplicationUserDto dto)
     {
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.UserName);
-        await DialogServiceHelper.ShowConfirmationDialog(ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
-            await ProcessUserDeletion(dto);
+            await InvokeAsync(async () =>
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            });
         });
     }
     private async Task ProcessUserDeletion(ApplicationUserDto dto)
@@ -603,7 +607,7 @@
             Snackbar.Add(L["You cannot delete your own account!"], Severity.Error);
             return;
         }
-        await ShowDeleteConfirmationDialog(dto);
+        await ShowDeleteConfirmationDialogAsync(dto);
 
     }
 
@@ -618,9 +622,12 @@
         }
 
         var deleteContent = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
-        await DialogServiceHelper.ShowConfirmationDialog(L["Delete"], deleteContent, async () =>
+        await DialogServiceHelper.ShowConfirmationDialogAsync(L["Delete"], deleteContent, async () =>
         {
-            await ProcessSelectedUsersDeletion();
+            await InvokeAsync(async () =>
+            {
+                await ProcessSelectedUsersDeletion();
+            });
         });
     }
     private async Task ProcessSelectedUsersDeletion()
@@ -888,7 +895,7 @@
     {
         return await ExcelService.ExportAsync(items,
             new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                        {
+                                            {
                 { L["Id"], item => item.Id },
                 { L["User Name"], item => item.UserName },
                 { L["Full Name"], item => item.DisplayName },
@@ -896,7 +903,7 @@
                 { L["Phone Number"], item => item.PhoneNumber },
                 { L["Tenant Id"], item => item.TenantId },
                 { L["Tenant Name"], item => item.TenantName }
-                                        }, L["Users"]);
+                                            }, L["Users"]);
     }
 
     private async Task OnImportData(IBrowserFile file)
