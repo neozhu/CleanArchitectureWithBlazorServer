@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Application.Pipeline;
 
@@ -49,8 +49,8 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
             var userName = _currentUserService.UserName;
 
             _logger.LogWarning(
-                "{Name} long running request ({ElapsedMilliseconds} milliseconds) with {@Request} {@UserName} ",
-                requestName, elapsedMilliseconds, request, userName);
+    "Long-running request detected: {RequestName} ({ElapsedMilliseconds}ms) {@Request} by {UserName}",
+    requestName, elapsedMilliseconds, request, userName);
         }
 
         return response;
