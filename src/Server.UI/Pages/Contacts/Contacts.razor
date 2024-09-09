@@ -291,7 +291,7 @@
     {
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Name);
         var command = new DeleteContactCommand(new int[] { dto.Id });
-        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, ConstantString.DeleteConfirmationTitle, contentText,
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText,
             async () =>
             {
                 await _table.ReloadServerData();
@@ -304,7 +304,7 @@
     {
         var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
         var command = new DeleteContactCommand(_selectedItems.Select(x => x.Id).ToArray());
-        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, ConstantString.DeleteConfirmationTitle, contentText,
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText,
             async () =>
             {
                 await _table.ReloadServerData();
