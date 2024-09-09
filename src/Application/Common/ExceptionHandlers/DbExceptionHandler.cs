@@ -1,4 +1,7 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
+﻿using CleanArchitecture.Blazor.Application.Common.Models;
+using Microsoft.Data.SqlClient;
+
+namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 
 public class
     DbExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
@@ -23,35 +26,46 @@ public class
     private static string[] GetErrors(DbUpdateException exception)
     {
         IList<string> errors = new List<string>();
-        if (exception.InnerException != null
-            && exception.InnerException != null
-           )
-            //switch (sqlException.Number)
-            //{
-            //    case 2627: // Unique constraint error
-            //        errors.Add(
-            //            "A Unique Constraint Error Has Occured While Updating the record! Duplicate Record cannot be inserted in the System.");
-            //        break;
-            //    case 544
-            //        : // Cannot insert explicit value for identity column in table 'Departments' when IDENTITY_INSERT is set to OFF
-            //        errors.Add(
-            //            "Cannot insert explicit value for identity column in the system when the id is set to OFF");
-            //        break;
-            //    case 547: // Constraint check violation, Conflict in the database
-            //        errors.Add("A Constraint Check violation Error Has Occured While Updating the record(s)!");
-            //        break;
-            //    case 2601
-            //        : // Duplicated key row error // Constraint violation exception // A custom exception of yours for concurrency issues           
-            //        errors.Add("A Duplicate Key Error Has Occured While Updating the record(s)!");
-            //        break;
-            //    case 201: // Procedure missing parameters            
-            //        errors.Add("A Missing Parameter has led to Error  While Creating the record(s)!");
-            //        break;
-            //}
-            foreach (var result in exception.Entries)
-                errors.Add(
-                    $"A DbUpdateException was caught while saving changes. Type: {result.Entity.GetType().Name} was part of the problem. ");
+
+        // Check if InnerException is a SqlException and cast it
+        if (exception.InnerException is SqlException sqlException)
+        {
+            // Handle specific SQL error numbers
+            switch (sqlException.Number)
+            {
+                case 2627: // Unique constraint error
+                    errors.Add("A unique constraint error occurred. Duplicate records cannot be inserted.");
+                    break;
+                case 544: // Cannot insert explicit value for identity column
+                    errors.Add("Cannot insert explicit value for identity column when IDENTITY_INSERT is set to OFF.");
+                    break;
+                case 547: // Constraint check violation
+                    errors.Add("A constraint check violation occurred while updating the record(s).");
+                    break;
+                case 2601: // Duplicated key row error
+                    errors.Add("A duplicate key error occurred while updating the record(s).");
+                    break;
+                case 201: // Procedure missing parameters
+                    errors.Add("A missing parameter caused an error while creating the record(s).");
+                    break;
+                case 2628: // String or binary data would be truncated
+                    errors.Add("Data too long for one or more fields. The provided string or binary data would be truncated.");
+                    break;
+                    break;
+                default:
+                    errors.Add($"An SQL error occurred. Error number: {sqlException.Number}, Message: {sqlException.Message}");
+                    break;
+            }
+        }
+
+        // Iterate over affected entries
+        foreach (var result in exception.Entries)
+        {
+            errors.Add(
+                $"An error occurred while updating the entity of type {result.Entity.GetType().Name}. Entity state: {result.State}. Details: {exception.InnerException?.Message ?? exception.Message}");
+        }
 
         return errors.ToArray();
     }
+
 }
