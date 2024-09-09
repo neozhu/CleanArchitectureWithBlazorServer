@@ -51,7 +51,6 @@ public class
                 case 2628: // String or binary data would be truncated
                     errors.Add("Data too long for one or more fields. The provided string or binary data would be truncated.");
                     break;
-                    break;
                 default:
                     errors.Add($"An SQL error occurred. Error number: {sqlException.Number}, Message: {sqlException.Message}");
                     break;
