@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Pipeline.PreProcessors;
@@ -19,8 +19,8 @@ public class LoggingPreProcessor<TRequest> : IRequestPreProcessor<TRequest> wher
     {
         var requestName = nameof(TRequest);
         var userName = _currentUserService.UserName;
-        _logger.LogTrace("Request: {Name} with {@Request} by {@UserName}",
-            requestName, request, userName);
+        _logger.LogTrace("Processing request of type {RequestName} with details {@Request} by user {UserName}",
+         requestName, request, userName);
         return Task.CompletedTask;
     }
 }

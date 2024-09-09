@@ -220,7 +220,7 @@
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
 
 
-    private List<PermissionModel> _permissions = new();
+    private IList<PermissionModel> _permissions = new List<PermissionModel>();
     private IList<Claim> _assignedClaims = default!;
     private MudDataGrid<ApplicationRoleDto> _table = null!;
     private bool _canCreate;
@@ -453,7 +453,7 @@
     }
     private async Task OnDelete(ApplicationRoleDto dto)
     {
-        await DialogServiceHelper.ShowConfirmationDialog(ConstantString.DeleteConfirmationTitle, string.Format(ConstantString.DeleteConfirmation, dto.Name), async () =>
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, string.Format(ConstantString.DeleteConfirmation, dto.Name), async () =>
         {
             var deleteRoles = await RoleManager.Roles.Where(x => x.Id == dto.Id).ToListAsync();
             foreach (var role in deleteRoles)
@@ -473,7 +473,7 @@
 
     private async Task OnDeleteChecked()
     {
-        await DialogServiceHelper.ShowConfirmationDialog(ConstantString.DeleteConfirmationTitle, string.Format(ConstantString.DeleteConfirmation, $"{_selectedItems.Count}"), async () =>
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, string.Format(ConstantString.DeleteConfirmation, $"{_selectedItems.Count}"), async () =>
         {
             var deleteId = _selectedItems.Select(x => x.Id).ToArray();
             var deleteRoles = await RoleManager.Roles.Where(x => deleteId.Contains(x.Id)).ToListAsync();

@@ -55,7 +55,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             SignInManager<ApplicationUser> signInManager,
             [FromForm] string returnUrl) =>
         {
-            await signInManager.SignOutAsync();
+            await signInManager.SignOutAsync().ConfigureAwait(false);
             logger.LogInformation("{UserName} has logged out.", user.Identity?.Name);
             return TypedResults.LocalRedirect($"{returnUrl}");
         });
@@ -68,7 +68,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             [FromForm] string provider) =>
         {
             // Clear the existing external cookie to ensure a clean login process
-            await context.SignOutAsync(IdentityConstants.ExternalScheme);
+            await context.SignOutAsync(IdentityConstants.ExternalScheme).ConfigureAwait(false);
 
             var redirectUrl = UriHelper.BuildRelative(
                 context.Request.PathBase,
@@ -88,23 +88,23 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             [FromServices] UserManager<ApplicationUser> userManager,
             [FromServices] AuthenticationStateProvider authenticationStateProvider) =>
         {
-            var user = await userManager.GetUserAsync(context.User);
+            var user = await userManager.GetUserAsync(context.User).ConfigureAwait(false);
             if (user is null)
                 return Results.NotFound($"Unable to load user with ID '{userManager.GetUserId(context.User)}'.");
 
-            var userId = await userManager.GetUserIdAsync(user);
+            var userId = await userManager.GetUserIdAsync(user).ConfigureAwait(false);
             logger.LogInformation("User with ID '{UserId}' asked for their personal data.", userId);
 
             // Only include personal data for download
-            var personalData = new Dictionary<string, string>();
+            var personalData = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             var personalDataProps = typeof(ApplicationUser).GetProperties().Where(
                 prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
             foreach (var p in personalDataProps) personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
 
-            var logins = await userManager.GetLoginsAsync(user);
+            var logins = await userManager.GetLoginsAsync(user).ConfigureAwait(false);
             foreach (var l in logins) personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
 
-            personalData.Add("Authenticator Key", (await userManager.GetAuthenticatorKeyAsync(user))!);
+            personalData.Add("Authenticator Key", (await userManager.GetAuthenticatorKeyAsync(user).ConfigureAwait(false))!);
             var fileBytes = JsonSerializer.SerializeToUtf8Bytes(personalData);
 
             context.Response.Headers.TryAdd("Content-Disposition", "attachment; filename=PersonalData.json");
