@@ -333,7 +333,7 @@
     private async Task OnCreate()
     {
         var command = new AddEditProductCommand { Pictures = new List<ProductImage>() };
-       
+
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
     }
 
@@ -363,10 +363,10 @@
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
-        {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
-        });
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            });
         });
     }
 
@@ -377,10 +377,10 @@
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
-        {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
-        });
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            });
         });
 
     }
