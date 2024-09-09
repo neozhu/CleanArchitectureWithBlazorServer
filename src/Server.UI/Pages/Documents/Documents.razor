@@ -266,11 +266,11 @@
             await _table.ReloadServerData();
             if (e.Message.StartsWith("Error"))
             {
-                Snackbar.Add(string.Format(L["{0}"], e), Severity.Error);
+                Snackbar.Add(string.Format(L["{0}"], e.Id), Severity.Error);
             }
             else
             {
-                Snackbar.Add(string.Format(L["{0} recognize completed."], e), Severity.Success);
+                Snackbar.Add(string.Format(L["{0}: {1} recognize completed."], e.Id,e.Message), Severity.Success);
             }
 
         });
@@ -281,7 +281,7 @@
         InvokeAsync(async () =>
         {
             await _table.ReloadServerData();
-            Snackbar.Add(string.Format(L["{0} job started."], e), Severity.Info);
+            Snackbar.Add(string.Format(L["{0}: {1} job started."], e.Id,e.Message), Severity.Info);
         });
     }
 

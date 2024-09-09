@@ -38,74 +38,68 @@ public sealed class HubClient : IAsyncDisposable
         _hubConnection.ServerTimeout = TimeSpan.FromSeconds(30);
 
         // Observe and await the async result of the event invocation
-        _hubConnection.On<string, string>(nameof(ISignalRHub.Connect),
-            async (connectionId, userName) => await OnLoginEventAsync(this, new UserStateChangeEventArgs(connectionId, userName)).ConfigureAwait(false));
+        _hubConnection.On<string, string>(nameof(ISignalRHub.Connect), OnLoginEventAsync);
 
-        _hubConnection.On<string, string>(nameof(ISignalRHub.Disconnect),
-            async (connectionId, userName) => await OnLogoutEventAsync(this, new UserStateChangeEventArgs(connectionId, userName)).ConfigureAwait(false));
+        _hubConnection.On<string, string>(nameof(ISignalRHub.Disconnect), OnLogoutEventAsync);
 
-        _hubConnection.On<string>(nameof(ISignalRHub.Start),
-            async message => await OnJobStartedEventAsync(this, message).ConfigureAwait(false));
+        _hubConnection.On<int, string>(nameof(ISignalRHub.Start), OnJobStartedEventAsync);
 
-        _hubConnection.On<string>(nameof(ISignalRHub.Completed),
-            async message => await OnJobCompletedEventAsync(this, message).ConfigureAwait(false));
+        _hubConnection.On<int, string>(nameof(ISignalRHub.Completed), OnJobCompletedEventAsync);
 
-        _hubConnection.On<string>(nameof(ISignalRHub.SendNotification),
-            async message => await OnNotificationReceivedEventAsync(this, message).ConfigureAwait(false));
+        _hubConnection.On<string>(nameof(ISignalRHub.SendNotification), OnNotificationReceivedEventAsync);
 
-        _hubConnection.On<string, string>(nameof(ISignalRHub.SendMessage),
-            async (from, message) => await OnMessageReceivedEventAsync(this, new MessageReceivedEventArgs(from, message)).ConfigureAwait(false));
+        _hubConnection.On<string, string>(nameof(ISignalRHub.SendMessage),OnMessageReceivedEventAsync);
 
         _hubConnection.On<string, string, string>(nameof(ISignalRHub.SendPrivateMessage),
-            async (from, to, message) => await OnMessageReceivedEventAsync(this, new MessageReceivedEventArgs(from, message)).ConfigureAwait(false));
+            async (from, to, message) => await OnMessageReceivedEventAsync(from, message).ConfigureAwait(false));
     }
 
     // Handle the result of async event invocations
-    private async Task OnLoginEventAsync(object sender, UserStateChangeEventArgs e)
+    private async Task OnLoginEventAsync(string connectionId, string userName)
     {
         if (LoginEvent != null)
         {
-            await Task.Run(() => LoginEvent?.Invoke(sender, e)).ConfigureAwait(false);
+            await Task.Run(() => LoginEvent?.Invoke(this, new UserStateChangeEventArgs(connectionId, userName))).ConfigureAwait(false);
         }
     }
 
-    private async Task OnLogoutEventAsync(object sender, UserStateChangeEventArgs e)
+    private async Task OnLogoutEventAsync(string connectionId, string userName)
     {
         if (LogoutEvent != null)
         {
-            await Task.Run(() => LogoutEvent?.Invoke(sender, e)).ConfigureAwait(false);
+            await Task.Run(() => LogoutEvent?.Invoke(this, new UserStateChangeEventArgs(connectionId, userName))).ConfigureAwait(false);
         }
     }
 
-    private async Task OnJobStartedEventAsync(object sender, string e)
+    private async Task OnJobStartedEventAsync( int id, string message)
     {
         if (JobStartedEvent != null)
         {
-            await Task.Run(() => JobStartedEvent?.Invoke(sender, new JobStartedEventArgs(e))).ConfigureAwait(false);
+            await Task.Run(() => JobStartedEvent?.Invoke(this, new JobStartedEventArgs(id, message))).ConfigureAwait(false);
         }
     }
 
-    private async Task OnJobCompletedEventAsync(object sender, string e)
+    private async Task OnJobCompletedEventAsync( int id, string message)
     {
         if (JobCompletedEvent != null)
         {
-            await Task.Run(() => JobCompletedEvent?.Invoke(sender, new JobCompletedEventArgs(e))).ConfigureAwait(false);
+            await Task.Run(() => JobCompletedEvent?.Invoke(this, new JobCompletedEventArgs(id, message))).ConfigureAwait(false);
         }
     }
 
-    private async Task OnNotificationReceivedEventAsync(object sender, string e)
+    private async Task OnNotificationReceivedEventAsync( string message)
     {
         if (NotificationReceivedEvent != null)
         {
-            await Task.Run(() => NotificationReceivedEvent?.Invoke(sender, new NotificationReceivedEventArgs(e))).ConfigureAwait(false);
+            await Task.Run(() => NotificationReceivedEvent?.Invoke(this, new NotificationReceivedEventArgs(message))).ConfigureAwait(false);
         }
     }
 
-    private async Task OnMessageReceivedEventAsync(object sender, MessageReceivedEventArgs e)
+    private async Task OnMessageReceivedEventAsync( string from,string message)
     {
         if (MessageReceivedEvent != null)
         {
-            await Task.Run(() => MessageReceivedEvent?.Invoke(sender, new MessageReceivedEventArgs(e.UserId, e.Message))).ConfigureAwait(false);
+            await Task.Run(() => MessageReceivedEvent?.Invoke(this, new MessageReceivedEventArgs(from, message))).ConfigureAwait(false);
         }
     }
 
@@ -173,19 +167,23 @@ public class UserStateChangeEventArgs : EventArgs
 
 public class JobStartedEventArgs : EventArgs
 {
-    public JobStartedEventArgs(string message)
+    public JobStartedEventArgs(int id,string message)
     {
         Message = message;
+        Id=id;
     }
-    public string Message { get; set; }
+    public string Message { get; }
+    public int Id { get; }
 }
 public class JobCompletedEventArgs : EventArgs
 {
-    public JobCompletedEventArgs(string message)
+    public JobCompletedEventArgs(int id,string message)
     {
         Message = message;
+        Id = id;
     }
-    public string Message { get; set; }
+    public string Message { get; }
+    public int Id { get; }
 }
 public class NotificationReceivedEventArgs : EventArgs
 {
