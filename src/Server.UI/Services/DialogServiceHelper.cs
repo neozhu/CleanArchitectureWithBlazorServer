@@ -65,7 +65,7 @@ public class DialogServiceHelper
                 { nameof(ConfirmationDialog.ContentText), contentText }
             };
 
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
         var dialog = await _dialogService.ShowAsync<ConfirmationDialog>(title, parameters, options).ConfigureAwait(false);
         var result = await dialog.Result.ConfigureAwait(false);
 

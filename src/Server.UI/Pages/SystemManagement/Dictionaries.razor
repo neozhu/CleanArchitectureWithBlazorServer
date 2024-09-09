@@ -284,7 +284,11 @@
         var contentText = string.Format(ConstantString.DeleteConfirmation, item.Name);
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
+            await InvokeAsync(async () =>
+        {
             await _table.ReloadServerData();
+            _selectedItems.Clear();
+        });
         });
     }
 
@@ -294,8 +298,11 @@
         var contentText = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
+            await InvokeAsync(async () =>
+        {
             await _table.ReloadServerData();
             _selectedItems.Clear();
+        });
         });
     }
     private async Task ShowCreateDialog(AddEditKeyValueCommand command, string title)

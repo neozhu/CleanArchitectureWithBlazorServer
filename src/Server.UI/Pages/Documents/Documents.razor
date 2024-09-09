@@ -48,8 +48,7 @@
                                    Size="Size.Small"
                                    Disabled="@_loading"
                                    OnClick="@(() => OnRefresh())"
-                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
-                                   >
+                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary">
                             @ConstantString.Refresh
                         </MudButton>
                         @if (_canCreate)
@@ -162,7 +161,7 @@
                         }
                     </div>
                     <div class="flex-grow-0">
-                        <MudHighlighter   Text="@context.Item.Content" HighlightedText="@_searchString" Class="mud-text-secondary"></MudHighlighter>
+                        <MudHighlighter Text="@context.Item.Content" HighlightedText="@_searchString" Class="mud-text-secondary"></MudHighlighter>
                     </div>
                 </div>
             </CellTemplate>
@@ -270,7 +269,7 @@
             }
             else
             {
-                Snackbar.Add(string.Format(L["{0}: {1} recognize completed."], e.Id,e.Message), Severity.Success);
+                Snackbar.Add(string.Format(L["{0}: {1} recognize completed."], e.Id, e.Message), Severity.Success);
             }
 
         });
@@ -281,7 +280,7 @@
         InvokeAsync(async () =>
         {
             await _table.ReloadServerData();
-            Snackbar.Add(string.Format(L["{0}: {1} job started."], e.Id,e.Message), Severity.Info);
+            Snackbar.Add(string.Format(L["{0}: {1} job started."], e.Id, e.Message), Severity.Info);
         });
     }
 
@@ -349,7 +348,7 @@
         var dialog = DialogService.Show<UploadFilesFormDialog>
             (L["Upload Pictures"], parameters, options);
         var state = await dialog.Result;
-        if (state is not null &&  !state.Canceled)
+        if (state is not null && !state.Canceled)
         {
             await _table.ReloadServerData();
             Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
@@ -378,10 +377,14 @@
     {
         var command = new DeleteDocumentCommand(new[] { dto.Id });
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Title);
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, string.Format(ConstantString.EditTheItem, L["Document"]), contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, string.Format(ConstantString.DeleteTheItem, L["Document"]), contentText, async () =>
         {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
+            await InvokeAsync(async () =>
+              {
+                  await _table.ReloadServerData();
+                  _selectedItems.Clear();
+              });
+
         });
     }
 
@@ -391,8 +394,11 @@
         var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, string.Format(ConstantString.DeleteTheItem, L["Document"]), contentText, async () =>
         {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
+           await InvokeAsync(async () =>
+           {
+               await _table.ReloadServerData();
+               _selectedItems.Clear();
+           });
         });
     }
 

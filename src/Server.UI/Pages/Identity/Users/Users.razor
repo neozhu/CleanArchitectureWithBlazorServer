@@ -576,7 +576,11 @@
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.UserName);
         await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
-            await ProcessUserDeletion(dto);
+            await InvokeAsync(async () =>
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            });
         });
     }
     private async Task ProcessUserDeletion(ApplicationUserDto dto)
@@ -620,7 +624,10 @@
         var deleteContent = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
         await DialogServiceHelper.ShowConfirmationDialogAsync(L["Delete"], deleteContent, async () =>
         {
-            await ProcessSelectedUsersDeletion();
+            await InvokeAsync(async () =>
+            {
+                await ProcessSelectedUsersDeletion();
+            });
         });
     }
     private async Task ProcessSelectedUsersDeletion()
@@ -888,7 +895,7 @@
     {
         return await ExcelService.ExportAsync(items,
             new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                        {
+                                            {
                 { L["Id"], item => item.Id },
                 { L["User Name"], item => item.UserName },
                 { L["Full Name"], item => item.DisplayName },
@@ -896,7 +903,7 @@
                 { L["Phone Number"], item => item.PhoneNumber },
                 { L["Tenant Id"], item => item.TenantId },
                 { L["Tenant Name"], item => item.TenantName }
-                                        }, L["Users"]);
+                                            }, L["Users"]);
     }
 
     private async Task OnImportData(IBrowserFile file)

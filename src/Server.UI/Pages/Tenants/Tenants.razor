@@ -247,7 +247,11 @@
         var contentText = string.Format(ConstantString.DeleteConfirmationWithId, dto.Id);
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, L["Delete the Tenant"], contentText, async () =>
         {
+            await InvokeAsync(async () =>
+        {
             await _table.ReloadServerData();
+            _selectedItems.Clear();
+        });
         });
     }
 
@@ -257,8 +261,11 @@
         var contentText = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, L["Delete Selected Tenants"], contentText, async () =>
         {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
+            await InvokeAsync(async () =>
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            });
         });
     }
 }
