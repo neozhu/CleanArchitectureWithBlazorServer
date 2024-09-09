@@ -282,7 +282,7 @@
     {
         var command = new DeleteKeyValueCommand(new[] { item.Id });
         var contentText = string.Format(ConstantString.DeleteConfirmation, item.Name);
-        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await _table.ReloadServerData();
         });
@@ -292,7 +292,7 @@
     {
         var command = new DeleteKeyValueCommand(_selectedItems.Select(x => x.Id).ToArray());
         var contentText = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
-        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await _table.ReloadServerData();
             _selectedItems.Clear();

@@ -21,12 +21,12 @@ public class CacheInvalidationBehaviour<TRequest, TResponse> : IPipelineBehavior
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        _logger.LogTrace("{Name} cache expire with {@Request}", nameof(request), request);
+        _logger.LogTrace("Handling request of type {RequestType} with details {@Request}", nameof(request), request);
         var response = await next().ConfigureAwait(false);
         if (!string.IsNullOrEmpty(request.CacheKey))
         {
             _cache.Remove(request.CacheKey);
-            _logger.LogTrace("Cache with key {CacheKey} invalidated", request.CacheKey);
+            _logger.LogTrace("Cache key {CacheKey} removed from cache", request.CacheKey);
         }
         request.SharedExpiryTokenSource?.Cancel();
         return response;
