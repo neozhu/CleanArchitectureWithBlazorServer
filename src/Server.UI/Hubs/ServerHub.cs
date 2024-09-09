@@ -50,16 +50,16 @@ public class ServerHub : Hub<ISignalRHub>
     public async Task SendPrivateMessage(string to, string message)
     {
         var username = Context.User?.Identity?.Name ?? string.Empty;
-        await Clients.User(to).SendPrivateMessage(username, to, message);
+        await Clients.User(to).SendPrivateMessage(username, to, message).ConfigureAwait(false);
     }
 
     public async Task SendNotification(string message)
     {
-        await Clients.All.SendNotification(message);
+        await Clients.All.SendNotification(message).ConfigureAwait(false);
     }
 
     public async Task Completed(string message)
     {
-        await Clients.All.Completed(message);
+        await Clients.All.Completed(message).ConfigureAwait(false);
     }
 }

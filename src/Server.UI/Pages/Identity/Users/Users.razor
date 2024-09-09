@@ -333,7 +333,7 @@
     private string _searchString = string.Empty;
     private string _selectedTenantId = " ";
     private string Title { get; set; } = "Users";
-    private List<PermissionModel> _permissions = new();
+    private IList<PermissionModel> _permissions = new List<PermissionModel>();
     private IList<Claim> _assignedClaims = default!;
 
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);

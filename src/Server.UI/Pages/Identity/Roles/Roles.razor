@@ -220,7 +220,7 @@
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
 
 
-    private List<PermissionModel> _permissions = new();
+    private IList<PermissionModel> _permissions = new List<PermissionModel>();
     private IList<Claim> _assignedClaims = default!;
     private MudDataGrid<ApplicationRoleDto> _table = null!;
     private bool _canCreate;

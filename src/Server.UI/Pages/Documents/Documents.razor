@@ -259,12 +259,12 @@
         Query = new DocumentsWithPaginationQuery { CurrentUser = UserProfile };
     }
 
-    private void _client_JobCompleted(object? sender, string e)
+    private void _client_JobCompleted(object? sender, JobCompletedEventArgs e)
     {
         InvokeAsync(async () =>
         {
             await _table.ReloadServerData();
-            if (e.StartsWith("Error"))
+            if (e.Message.StartsWith("Error"))
             {
                 Snackbar.Add(string.Format(L["{0}"], e), Severity.Error);
             }
@@ -276,7 +276,7 @@
         });
     }
 
-    private void _client_JobStarted(object? sender, string e)
+    private void _client_JobStarted(object? sender, JobStartedEventArgs e)
     {
         InvokeAsync(async () =>
         {

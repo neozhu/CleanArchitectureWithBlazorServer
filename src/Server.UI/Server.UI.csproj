@@ -5,6 +5,7 @@
         <AssemblyName>CleanArchitecture.Blazor.Server.UI</AssemblyName>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <NoWarn>$(NoWarn);VSTHRD200</NoWarn>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>false</InvariantGlobalization>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
