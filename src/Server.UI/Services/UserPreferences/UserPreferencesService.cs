@@ -34,20 +34,20 @@ public class UserPreferencesService : IUserPreferencesService
 
     public async Task SaveUserPreferences(UserPreference userPreferences)
     {
-        await _localStorage.SetAsync(Key, userPreferences);
+        await _localStorage.SetAsync(Key, userPreferences).ConfigureAwait(false);
     }
 
     public async Task<UserPreference> LoadUserPreferences()
     {
         try
         {
-            var result = await _localStorage.GetAsync<UserPreference>(Key);
+            var result = await _localStorage.GetAsync<UserPreference>(Key).ConfigureAwait(false);
             if (result.Success && result.Value is not null) return result.Value;
             return new UserPreference();
         }
         catch (CryptographicException)
         {
-            await _localStorage.DeleteAsync(Key);
+            await _localStorage.DeleteAsync(Key).ConfigureAwait(false);
             return new UserPreference();
         }
         catch (Exception)

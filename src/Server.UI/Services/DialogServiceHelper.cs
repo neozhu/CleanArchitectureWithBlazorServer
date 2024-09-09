@@ -9,17 +9,15 @@ namespace CleanArchitecture.Blazor.Server.UI.Services;
 public class DialogServiceHelper
 {
     private readonly IDialogService _dialogService;
-    private readonly ISnackbar _snackbar;
+
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DialogServiceHelper"/> class.
     /// </summary>
     /// <param name="dialogService">The dialog service.</param>
-    /// <param name="snackbar">The snackbar.</param>
-    public DialogServiceHelper(IDialogService dialogService, ISnackbar snackbar)
+    public DialogServiceHelper(IDialogService dialogService)
     {
         _dialogService = dialogService;
-        _snackbar = snackbar;
     }
 
     /// <summary>
@@ -31,7 +29,7 @@ public class DialogServiceHelper
     /// <param name="onConfirm">The action to perform on confirmation.</param>
     /// <param name="onCancel">The action to perform on cancellation (optional).</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task ShowDeleteConfirmationDialog(IRequest<Result<int>> command, string title, string contentText, Func<Task> onConfirm, Func<Task>? onCancel = null)
+    public async Task ShowDeleteConfirmationDialogAsync(IRequest<Result<int>> command, string title, string contentText, Func<Task> onConfirm, Func<Task>? onCancel = null)
     {
         var parameters = new DialogParameters
             {
@@ -39,16 +37,16 @@ public class DialogServiceHelper
                 { nameof(DeleteConfirmation.Command), command }
             };
 
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = _dialogService.Show<DeleteConfirmation>(title, parameters, options);
-        var result = await dialog.Result;
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+        var dialog = await _dialogService.ShowAsync<DeleteConfirmation>(title, parameters, options).ConfigureAwait(false);
+        var result = await dialog.Result.ConfigureAwait(false);
         if (result is not null && !result.Canceled)
         {
-            await onConfirm();
+            await onConfirm().ConfigureAwait(false);
         }
         else if (onCancel != null)
         {
-            await onCancel();
+            await onCancel().ConfigureAwait(false);
         }
     }
 
@@ -60,24 +58,24 @@ public class DialogServiceHelper
     /// <param name="onConfirm">The action to perform on confirmation.</param>
     /// <param name="onCancel">The action to perform on cancellation (optional).</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task ShowConfirmationDialog(string title, string contentText, Func<Task> onConfirm, Func<Task>? onCancel = null)
+    public async Task ShowConfirmationDialogAsync(string title, string contentText, Func<Task> onConfirm, Func<Task>? onCancel = null)
     {
         var parameters = new DialogParameters
             {
                 { nameof(ConfirmationDialog.ContentText), contentText }
             };
 
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = _dialogService.Show<ConfirmationDialog>(title, parameters, options);
-        var result = await dialog.Result;
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+        var dialog = await _dialogService.ShowAsync<ConfirmationDialog>(title, parameters, options).ConfigureAwait(false);
+        var result = await dialog.Result.ConfigureAwait(false);
 
-        if (!result.Canceled)
+        if (result is not null && !result.Canceled)
         {
-            await onConfirm();
+            await onConfirm().ConfigureAwait(false);
         }
         else if (onCancel != null)
         {
-            await onCancel();
+            await onCancel().ConfigureAwait(false);
         }
     }
 }
