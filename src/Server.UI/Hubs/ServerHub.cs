@@ -16,15 +16,15 @@ public class ServerHub : Hub<ISignalRHub>
         var connectionId = Context.ConnectionId;
         var username = Context.User?.GetDisplayName() ??(Context.User?.Identity?.Name ?? string.Empty);
         // Notify all clients if this is a new user connecting.
-        if (!OnlineUsers.Any(x => x.Value == username))
+        if (!OnlineUsers.Any(x => x.Value.Equals(username)))
         {
-            await Clients.All.Connect(connectionId, username);
+            await Clients.All.Connect(connectionId, username).ConfigureAwait(false);
         }
         if (!OnlineUsers.ContainsKey(connectionId))
         {
             OnlineUsers.TryAdd(connectionId, username);
         }
-        await base.OnConnectedAsync();
+        await base.OnConnectedAsync().ConfigureAwait(false); 
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
@@ -33,33 +33,33 @@ public class ServerHub : Hub<ISignalRHub>
         // Remove the connection and check if it was the last one for this user.
         if (OnlineUsers.TryRemove(connectionId, out var username))
         {
-            if (!OnlineUsers.Any(x => x.Value == username))
+            if (!OnlineUsers.Any(x => x.Value.Equals(username)))
             {
-                await Clients.All.Disconnect(connectionId, username);
+                await Clients.All.Disconnect(connectionId, username).ConfigureAwait(false);
             }    
         }
-        await base.OnConnectedAsync();
+        await base.OnConnectedAsync().ConfigureAwait(false);
     }
 
     public async Task SendMessage(string message)
     {
         var username = Context.User?.Identity?.Name ?? string.Empty;
-        await Clients.All.SendMessage(username, message);
+        await Clients.All.SendMessage(username, message).ConfigureAwait(false);
     }
 
     public async Task SendPrivateMessage(string to, string message)
     {
         var username = Context.User?.Identity?.Name ?? string.Empty;
-        await Clients.User(to).SendPrivateMessage(username, to, message);
+        await Clients.User(to).SendPrivateMessage(username, to, message).ConfigureAwait(false);
     }
 
     public async Task SendNotification(string message)
     {
-        await Clients.All.SendNotification(message);
+        await Clients.All.SendNotification(message).ConfigureAwait(false);
     }
 
-    public async Task Completed(string message)
+    public async Task Completed(int id,string message)
     {
-        await Clients.All.Completed(message);
+        await Clients.All.Completed(id,message).ConfigureAwait(false);
     }
 }

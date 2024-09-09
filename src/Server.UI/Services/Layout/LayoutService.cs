@@ -118,7 +118,7 @@ public class LayoutService
     /// </summary>
     /// <param name="newValue">The new value of the system preference.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task OnSystemPreferenceChanged(bool newValue)
+    public Task OnSystemPreferenceChanged(bool newValue)
     {
         _systemPreferences = newValue;
         if (DarkModeToggle == DarkLightMode.System)
@@ -127,7 +127,7 @@ public class LayoutService
             OnMajorUpdateOccured();
         }
 
-        await Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -153,7 +153,7 @@ public class LayoutService
         }
 
         UserPreferences.DarkLightTheme = DarkModeToggle;
-        await UserPreferencesService.SaveUserPreferences(UserPreferences);
+        await UserPreferencesService.SaveUserPreferences(UserPreferences).ConfigureAwait(false);
         OnMajorUpdateOccured();
     }
 
@@ -165,7 +165,7 @@ public class LayoutService
     {
         IsRTL = !IsRTL;
         UserPreferences.RightToLeft = IsRTL;
-        await UserPreferencesService.SaveUserPreferences(UserPreferences);
+        await UserPreferencesService.SaveUserPreferences(UserPreferences).ConfigureAwait(false);
         OnMajorUpdateOccured();
     }
 
@@ -176,7 +176,7 @@ public class LayoutService
     public async Task SetRightToLeft()
     {
         if (!IsRTL)
-            await ToggleRightToLeft();
+            await ToggleRightToLeft().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -186,7 +186,7 @@ public class LayoutService
     public async Task SetLeftToRight()
     {
         if (IsRTL)
-            await ToggleRightToLeft();
+            await ToggleRightToLeft().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -209,7 +209,7 @@ public class LayoutService
         CurrentTheme.PaletteLight.Secondary = color;
         CurrentTheme.PaletteDark.Secondary = color;
         UserPreferences.SecondaryColor = color;
-        await UserPreferencesService.SaveUserPreferences(UserPreferences);
+        await UserPreferencesService.SaveUserPreferences(UserPreferences).ConfigureAwait(false);
         OnMajorUpdateOccured();
     }
 
@@ -222,7 +222,7 @@ public class LayoutService
     {
         CurrentTheme.LayoutProperties.DefaultBorderRadius = size + "px";
         UserPreferences.BorderRadius = size;
-        await UserPreferencesService.SaveUserPreferences(UserPreferences);
+        await UserPreferencesService.SaveUserPreferences(UserPreferences).ConfigureAwait(false);
         OnMajorUpdateOccured();
     }
 
@@ -275,7 +275,7 @@ public class LayoutService
             UserPreferences.Subtitle1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
 
 
-        await UserPreferencesService.SaveUserPreferences(UserPreferences);
+        await UserPreferencesService.SaveUserPreferences(UserPreferences).ConfigureAwait(false);
         OnMajorUpdateOccured();
     }
 }

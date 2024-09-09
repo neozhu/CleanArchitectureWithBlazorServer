@@ -20,7 +20,7 @@ public class UserProfileStateService
         }
     }
 
-    public event Action OnChange;
+    public event Action? OnChange;
 
     private void NotifyStateChanged() => OnChange?.Invoke();
 

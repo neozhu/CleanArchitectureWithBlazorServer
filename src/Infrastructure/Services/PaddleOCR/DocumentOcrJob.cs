@@ -49,7 +49,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                 _timer.Start();
                 var doc = await _context.Documents.FindAsync(id);
                 if (doc == null) return;
-                await _notificationService.JobStarted(doc.Title!);
+                await _notificationService.JobStarted(id,doc.Title!);
                 DocumentCacheKey.GetOrCreateTokenSource().Cancel();
                 if (string.IsNullOrEmpty(doc.URL)) return;
                 var imgFile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
@@ -73,7 +73,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                     doc.Description = "recognize the result: success";
                     doc.Content = result;
                     await _context.SaveChangesAsync(cancellationToken);
-                    await _notificationService.JobCompleted(doc.Title!);
+                    await _notificationService.JobCompleted(id,doc.Title!);
                     DocumentCacheKey.GetOrCreateTokenSource().Cancel();
                     _timer.Stop();
                     var elapsedMilliseconds = _timer.ElapsedMilliseconds;
@@ -88,14 +88,14 @@ public class DocumentOcrJob : IDocumentOcrJob
                     doc.Content = result;
                     await _context.SaveChangesAsync(cancellationToken);
                     DocumentCacheKey.GetOrCreateTokenSource().Cancel();
-                    await _notificationService.JobCompleted($"Error: {result}");
+                    await _notificationService.JobCompleted(id,$"Error: {result}");
                     _logger.LogError("{id}: Image recognize error {Message}", id, result);
                 }
             }
         }
         catch (Exception ex)
         {
-            await _notificationService.JobCompleted($"Error: {ex.Message}");
+            await _notificationService.JobCompleted(id,$"Error: {ex.Message}");
             _logger.LogError(ex, "{id}: Image recognize error {Message}", id, ex.Message);
         }
     }

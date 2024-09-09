@@ -1,12 +1,13 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 <div class="d-flex justify-content-between">
-    <div class="d-flex gap-2">
-        <MudButton StartIcon="@Icons.Material.Filled.ArrowBackIos" Variant="Variant.Outlined" OnClick="@GoBack">@ConstantString.GoBack</MudButton>
+    <div class="d-flex align-center gap-2">
         <MudBreadcrumbs Items="@BreadcrumbItems"></MudBreadcrumbs>
     </div>
     <MudSpacer></MudSpacer>
-    <div class="d-flex gap-2">
-        <MudLoadingButton StartIcon="@Icons.Material.Filled.Save" Color="Color.Primary" DropShadow="false" Loading="@Saving" Variant="Variant.Outlined" OnClick="@Save">@ConstantString.Save</MudLoadingButton>
+    <div class="d-flex align-center gap-2">
+        <div>
+             <MudLoadingButton StartIcon="@Icons.Material.Filled.Save" Color="Color.Primary" DropShadow="false" Loading="@Saving" Variant="Variant.Outlined" OnClick="@Save">@ConstantString.Save</MudLoadingButton>
+        </div>
     </div>
 </div>
 

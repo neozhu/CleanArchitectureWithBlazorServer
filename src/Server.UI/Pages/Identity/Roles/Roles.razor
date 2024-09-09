@@ -220,7 +220,7 @@
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
 
 
-    private List<PermissionModel> _permissions = new();
+    private IList<PermissionModel> _permissions = new List<PermissionModel>();
     private IList<Claim> _assignedClaims = default!;
     private MudDataGrid<ApplicationRoleDto> _table = null!;
     private bool _canCreate;
@@ -436,8 +436,8 @@
             model.Assigned = !model.Assigned;
             var assigned = model.Assigned;
             await changeAction(roleId, claim, assigned);
-           
-           
+
+
 
             FusionCache.Remove($"get-claims-by-{roleId}");
         }
@@ -453,41 +453,47 @@
     }
     private async Task OnDelete(ApplicationRoleDto dto)
     {
-        await DialogServiceHelper.ShowConfirmationDialog(ConstantString.DeleteConfirmationTitle, string.Format(ConstantString.DeleteConfirmation, dto.Name), async () =>
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, string.Format(ConstantString.DeleteConfirmation, dto.Name), async () =>
         {
-            var deleteRoles = await RoleManager.Roles.Where(x => x.Id == dto.Id).ToListAsync();
-            foreach (var role in deleteRoles)
+            await InvokeAsync(async () =>
             {
-                var deleteResult = await RoleManager.DeleteAsync(role);
-                if (!deleteResult.Succeeded)
+                var deleteRoles = await RoleManager.Roles.Where(x => x.Id == dto.Id).ToListAsync();
+                foreach (var role in deleteRoles)
                 {
-                    Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-                    return;
+                    var deleteResult = await RoleManager.DeleteAsync(role);
+                    if (!deleteResult.Succeeded)
+                    {
+                        Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+                        return;
+                    }
                 }
-            }
 
-            Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
-            await OnRefresh();
+                Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
+                await OnRefresh();
+            });
         });
     }
 
     private async Task OnDeleteChecked()
     {
-        await DialogServiceHelper.ShowConfirmationDialog(ConstantString.DeleteConfirmationTitle, string.Format(ConstantString.DeleteConfirmation, $"{_selectedItems.Count}"), async () =>
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, string.Format(ConstantString.DeleteConfirmation, $"{_selectedItems.Count}"), async () =>
         {
-            var deleteId = _selectedItems.Select(x => x.Id).ToArray();
-            var deleteRoles = await RoleManager.Roles.Where(x => deleteId.Contains(x.Id)).ToListAsync();
-            foreach (var role in deleteRoles)
+            await InvokeAsync(async () =>
             {
-                var deleteResult = await RoleManager.DeleteAsync(role);
-                if (!deleteResult.Succeeded)
+                var deleteId = _selectedItems.Select(x => x.Id).ToArray();
+                var deleteRoles = await RoleManager.Roles.Where(x => deleteId.Contains(x.Id)).ToListAsync();
+                foreach (var role in deleteRoles)
                 {
-                    Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-                    return;
+                    var deleteResult = await RoleManager.DeleteAsync(role);
+                    if (!deleteResult.Succeeded)
+                    {
+                        Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+                        return;
+                    }
                 }
-            }
-            Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
-            await OnRefresh();
+                Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
+                await OnRefresh();
+            });
         });
     }
 
