@@ -378,7 +378,7 @@
     {
         var command = new DeleteDocumentCommand(new[] { dto.Id });
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Title);
-        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, string.Format(ConstantString.EditTheItem, L["Document"]), contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, string.Format(ConstantString.EditTheItem, L["Document"]), contentText, async () =>
         {
             await _table.ReloadServerData();
             _selectedItems.Clear();
@@ -389,7 +389,7 @@
     {
         var command = new DeleteDocumentCommand(_selectedItems.Select(x => x.Id).ToArray());
         var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
-        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, string.Format(ConstantString.DeleteTheItem, L["Document"]), contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, string.Format(ConstantString.DeleteTheItem, L["Document"]), contentText, async () =>
         {
             await _table.ReloadServerData();
             _selectedItems.Clear();

@@ -26,7 +26,6 @@ public class
     private static string[] GetErrors(DbUpdateException exception)
     {
         IList<string> errors = new List<string>();
-
         if (exception.InnerException is SqlException sqlException)
         {
             // Handle specific SQL error numbers
@@ -76,15 +75,15 @@ public class
                     break;
             }
         }
-
-
-        // Iterate over affected entries
-        foreach (var result in exception.Entries)
+        else
         {
-            errors.Add(
-                $"An error occurred while updating the entity of type {result.Entity.GetType().Name}. Entity state: {result.State}. Details: {exception.InnerException?.Message ?? exception.Message}");
+            // Iterate over affected entries
+            foreach (var result in exception.Entries)
+            {
+                errors.Add(
+                    $"An error occurred while updating the entity of type {result.Entity.GetType().Name}. Entity state: {result.State}. Details: {exception.InnerException?.Message ?? exception.Message}");
+            }
         }
-
         return errors.ToArray();
     }
 
