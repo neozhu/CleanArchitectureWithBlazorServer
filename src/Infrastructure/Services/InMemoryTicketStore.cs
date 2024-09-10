@@ -51,7 +51,7 @@ public class MemoryCacheTicketStore : ITicketStore
 
     public async Task<AuthenticationTicket> RetrieveAsync(string key)
     {
-        var ticket = await _cache.TryGetAsync<AuthenticationTicket>(key);
+        var ticket = await _cache.GetOrDefaultAsync<AuthenticationTicket>(key);
         return ticket;
     }
 

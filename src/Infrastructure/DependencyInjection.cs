@@ -249,7 +249,8 @@ public static class DependencyInjection
             //    facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId") ?? string.Empty;
             //    facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret") ?? string.Empty;
             //})
-            .AddIdentityCookies(options => {});
+            .AddIdentityCookies(options => { });
+
         services.ConfigureApplicationCookie(options =>
         {
             options.ExpireTimeSpan = TimeSpan.FromDays(15);
