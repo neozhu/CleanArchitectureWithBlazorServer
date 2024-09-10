@@ -5,7 +5,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 public interface IUserService
 {
     List<ApplicationUserDto> DataSource { get; }
-    event Action? OnChange;
+    event Func<Task>? OnChange;
     void Initialize();
     void Refresh();
 }

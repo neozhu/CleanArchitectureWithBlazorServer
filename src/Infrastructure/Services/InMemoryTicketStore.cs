@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Caching.Memory;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
@@ -11,49 +12,51 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 ///     And http://www.dotnettips.info/post/2575
 /// </summary>
 #nullable disable warnings
-public class InMemoryTicketStore : ITicketStore
+public class MemoryCacheTicketStore : ITicketStore
 {
-    private readonly IMemoryCache _cache;
+    private const string KeyPrefix = "AuthSessionStore-";
+    private readonly IFusionCache _cache;
 
-    public InMemoryTicketStore(IMemoryCache cache)
+    public MemoryCacheTicketStore()
     {
-        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-        ;
-    }
-
-    public Task RemoveAsync(string key)
-    {
-        _cache.Remove(key);
-
-        return Task.CompletedTask;
-    }
-
-    public Task<AuthenticationTicket> RetrieveAsync(string key)
-    {
-        _cache.TryGetValue(key, out AuthenticationTicket ticket);
-        return Task.FromResult(ticket);
-    }
-
-    public Task RenewAsync(string key, AuthenticationTicket ticket)
-    {
-        var options = new MemoryCacheEntryOptions().SetSize(1);
-        var expiresUtc = ticket.Properties.ExpiresUtc;
-        if (expiresUtc.HasValue) options.SetAbsoluteExpiration(expiresUtc.Value);
-
-        if (ticket.Properties.AllowRefresh ?? false)
-            options.SetSlidingExpiration(TimeSpan.FromMinutes(60)); //TODO: configurable.
-
-        _cache.Set(key, ticket, options);
-
-        return Task.FromResult(0);
+        _cache = new FusionCache(new FusionCacheOptions()
+        {
+            CacheName = "AuthSessionStore",
+            DefaultEntryOptions = new FusionCacheEntryOptions
+            {
+                Duration = TimeSpan.FromDays(15),
+                // FAIL-SAFE OPTIONS
+                IsFailSafeEnabled = true,
+                FailSafeMaxDuration = TimeSpan.FromHours(2),
+                FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
+                // FACTORY TIMEOUTS
+                FactorySoftTimeout = TimeSpan.FromMilliseconds(300),
+                FactoryHardTimeout = TimeSpan.FromMilliseconds(1500)
+            }
+        });
     }
 
     public async Task<string> StoreAsync(AuthenticationTicket ticket)
     {
-        var key = ticket.Principal.Claims
-            .First(c => c.Type == ClaimTypes.Name).Value;
-
+        var guid = Guid.NewGuid();
+        var key = KeyPrefix + guid.ToString();
         await RenewAsync(key, ticket);
         return key;
+    }
+
+    public async Task RenewAsync(string key, AuthenticationTicket ticket)
+    {
+        await _cache.SetAsync(key, ticket);
+    }
+
+    public async Task<AuthenticationTicket> RetrieveAsync(string key)
+    {
+        var ticket = await _cache.GetOrDefaultAsync<AuthenticationTicket>(key);
+        return ticket;
+    }
+
+    public async Task RemoveAsync(string key)
+    {
+        await _cache.RemoveAsync(key);
     }
 }

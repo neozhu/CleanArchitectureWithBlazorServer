@@ -61,4 +61,19 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
     {
         return _userList?.FirstOrDefault(x => x.Id.Equals(id, StringComparison.OrdinalIgnoreCase))?.UserName ?? string.Empty;
     }
+    protected override void OnInitialized()
+    {
+        UserService.OnChange += TenantsService_OnChange;
+    }
+
+    private async Task TenantsService_OnChange()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        UserService.OnChange -= TenantsService_OnChange;
+        base.Dispose(disposing);
+    }
 }
