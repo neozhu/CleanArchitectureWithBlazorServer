@@ -23,7 +23,7 @@ public class PicklistService : IPicklistService
         _mapper = mapper;
     }
 
-    public event Action? OnChange;
+    public event  Func<Task>? OnChange;
     public List<KeyValueDto> DataSource { get; private set; } = new();
 
 

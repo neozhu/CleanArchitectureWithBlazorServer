@@ -207,6 +207,7 @@ public static class DependencyInjection
             // User settings
             options.User.RequireUniqueEmail = true;
             //options.Tokens.EmailConfirmationTokenProvider = "Email";
+            
         });
 
         services.AddScoped<IIdentityService, IdentityService>()
@@ -247,6 +248,12 @@ public static class DependencyInjection
             //})
             .AddIdentityCookies(options => { });
 
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.ExpireTimeSpan = TimeSpan.FromDays(15);
+            options.SlidingExpiration = true;
+            options.SessionStore = new MemoryCacheTicketStore();
+        });
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
         services.AddSingleton<UserService>()

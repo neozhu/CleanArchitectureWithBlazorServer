@@ -14,9 +14,9 @@ public class PicklistAutocomplete : MudAutocomplete<string>
         await base.OnInitializedAsync();
     }
 
-    private void PicklistService_OnChange()
+    private async Task PicklistService_OnChange()
     {
-        InvokeAsync(StateHasChanged);
+       await  InvokeAsync(StateHasChanged);
     }
 
     protected override void Dispose(bool disposing)
@@ -26,12 +26,19 @@ public class PicklistAutocomplete : MudAutocomplete<string>
     }
     public PicklistAutocomplete()
     {
-        SearchFunc = SearchKeyValues;
+        SearchFunc = SearchFunc_;
         Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;
+        ToStringFunc = x =>
+        {
+            if(x!=null && PicklistService!=null)
+                return PicklistService.DataSource.FirstOrDefault(y=>y.Value.Equals(x))?.Text ?? x;
+            return x;
+        };
     }
-    private Task<IEnumerable<string>> SearchKeyValues(string value,CancellationToken cancellation=default)
+   
+    private Task<IEnumerable<string>> SearchFunc_(string value,CancellationToken cancellation=default)
     {
         // if text is null or empty, show complete list
         return string.IsNullOrEmpty(value)
