@@ -53,7 +53,6 @@ public static class DependencyInjection
             .AddMessageServices(configuration);
 
         services
-            .AddSingleton<ITicketStore, MemoryCacheTicketStore>()
             .AddAuthenticationService(configuration)
             .AddFusionCacheService();
 
