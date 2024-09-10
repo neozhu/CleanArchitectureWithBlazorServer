@@ -17,9 +17,11 @@ using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
 using CleanArchitecture.Blazor.Infrastructure.Services.Serialization;
 using FluentEmail.MailKitSmtp;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
@@ -51,6 +53,7 @@ public static class DependencyInjection
             .AddMessageServices(configuration);
 
         services
+            .AddSingleton<ITicketStore, MemoryCacheTicketStore>()
             .AddAuthenticationService(configuration)
             .AddFusionCacheService();
 
@@ -207,6 +210,7 @@ public static class DependencyInjection
             // User settings
             options.User.RequireUniqueEmail = true;
             //options.Tokens.EmailConfirmationTokenProvider = "Email";
+            
         });
 
         services.AddScoped<IIdentityService, IdentityService>()
@@ -245,8 +249,13 @@ public static class DependencyInjection
             //    facebookOptions.AppId = configuration.GetValue<string>("Authentication:Facebook:AppId") ?? string.Empty;
             //    facebookOptions.AppSecret = configuration.GetValue<string>("Authentication:Facebook:AppSecret") ?? string.Empty;
             //})
-            .AddIdentityCookies(options => { });
-
+            .AddIdentityCookies(options => {});
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.ExpireTimeSpan = TimeSpan.FromDays(15);
+            options.SlidingExpiration = true;
+            options.SessionStore = new MemoryCacheTicketStore();
+        });
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
         services.AddSingleton<UserService>()
