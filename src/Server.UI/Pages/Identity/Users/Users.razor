@@ -622,7 +622,7 @@
         }
 
         var deleteContent = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
-        await DialogServiceHelper.ShowConfirmationDialogAsync(L["Delete"], deleteContent, async () =>
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, deleteContent, async () =>
         {
             await InvokeAsync(async () =>
             {
