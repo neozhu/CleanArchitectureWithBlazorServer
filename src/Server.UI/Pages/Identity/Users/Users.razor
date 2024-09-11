@@ -21,7 +21,7 @@
 @attribute [Authorize(Policy = Permissions.Users.View)]
 @inherits OwningComponentBase
 @implements IDisposable
-@inject IUsersStateContainer UsersStateContainer
+
 @inject IOnlineUserTracker OnlineUserTracker
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
@@ -210,11 +210,10 @@
                 }
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn Property="x => x.TenantId" HeaderStyle="width:280px" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
+        <PropertyColumn Property="x => x.TenantName" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
             <CellTemplate>
                 <div>
-                    <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.TenantId</MudText>
+                    <MudText>@context.Item.TenantName</MudText>
                 </div>
             </CellTemplate>
             <FooterTemplate>
@@ -223,45 +222,13 @@
         </PropertyColumn>
         <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x => x.UserName)]">
             <CellTemplate>
-                <div class="d-flex align-items-center">
-                    <MudBadge Color="@(IsOnline(context.Item.DisplayName??context.Item.UserName) ? Color.Success : Color.Error)" Overlap="false" Dot="true" Bordered="true">
-                        <MudAvatar>
-                            @if (string.IsNullOrEmpty(context.Item.ProfilePictureDataUrl))
-                            {
-                                @context.Item.UserName.First()
-                            }
-                            else
-                            {
-                                <MudImage Src="@context.Item.ProfilePictureDataUrl"></MudImage>
-                            }
-                        </MudAvatar>
-                    </MudBadge>
-                    <div class="pl-3">
-                        <MudText Class="ml-2 align-self-center">@context.Item.UserName</MudText>
-                        @if (context.Item.EmailConfirmed)
-                        {
-                            <MudText Typo="Typo.body2" Class="ml-2 align-self-center">@context.Item.Email</MudText>
-                        }
-                        else
-                        {
-                            <div class="d-flex flex-row gap-1">
-                                <MudText Typo="Typo.body2" Class="ml-2 align-self-center mud-text-secondary">@context.Item.Email</MudText>
-                                <MudTooltip Text="@L["We send a verification link to this email address. The link expires after 72 hours."]" Delay="300">
-                                    <MudLink OnClick="@(()=>SendVerify(context.Item))">@L["[Verify]"]</MudLink>
-                                </MudTooltip>
-
-                            </div>
-                        }
-
-                    </div>
-                </div>
+                <UserCard Item="@context.Item" OnSendVerify="@(x=> SendVerify(x))"></UserCard>
             </CellTemplate>
         </PropertyColumn>
         <PropertyColumn Property="x => x.Email" Title="@L["Full Name"]">
             <CellTemplate>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.body2">@context.Item.DisplayName</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.PhoneNumber</MudText>
                 </div>
             </CellTemplate>
         </PropertyColumn>
@@ -389,10 +356,7 @@
     {
 
     }
-    private bool IsOnline(string username)
-    {
-        return UsersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
-    }
+
 
     private Expression<Func<ApplicationUser, bool>> CreateSearchPredicate()
     {
