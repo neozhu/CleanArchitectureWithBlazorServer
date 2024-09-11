@@ -1,0 +1,66 @@
+﻿@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+@inject IUsersStateContainer UsersStateContainer
+@inject IStringLocalizer<Users> L
+@if (Item is not null)
+{
+    <MudStack Row Spacing="2" AlignItems="AlignItems.Center">
+        <MudBadge Color="@(IsOnline() ? Color.Success : Color.Error)" Overlap="false" Dot="true" Bordered="true">
+            <MudAvatar>
+                @if (string.IsNullOrEmpty(Item.ProfilePictureDataUrl))
+                {
+                    <MudText>@Item.UserName.First()</MudText>
+                }
+                else
+                {
+                    <MudImage Src="@Item.ProfilePictureDataUrl"></MudImage>
+                }
+            </MudAvatar>
+        </MudBadge>
+        <MudStack Spacing="0">
+            <MudText>@Item.UserName</MudText>
+            @if (Item.EmailConfirmed)
+            {
+                <MudText Typo="Typo.body2">@Item.Email</MudText>
+            }
+            else
+            {
+                <MudStack Row Spacing="1">
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@Item.Email</MudText>
+                    <MudTooltip Text="@L["We send a verification link to this email address. The link expires after 72 hours."]" Delay="300">
+                        <MudLink OnClick="@(()=>SendVerify())" Style="font-weight:700">@L["[Verify]"]</MudLink>
+                    </MudTooltip>
+                </MudStack>
+            }
+        </MudStack>
+    </MudStack>
+}
+else
+{
+    <MudStack Row Spacing="2" AlignItems="AlignItems.Center">
+        <MudSkeleton SkeletonType="SkeletonType.Circle" Width="40px" Height="40px" />
+        <MudStack Spacing="0">
+            <MudSkeleton SkeletonType="SkeletonType.Text" Width="100px" Height="20px" />
+            <MudSkeleton SkeletonType="SkeletonType.Text" Width="200px" Height="20px" />
+        </MudStack>
+    </MudStack>
+}
+
+@code {
+    [Parameter]
+    public ApplicationUserDto? Item { get; set; }
+    [Parameter]
+    public Func<ApplicationUserDto, Task>? OnSendVerify { get; set; }
+
+    private bool IsOnline()
+    {
+        var username = Item?.DisplayName ?? Item?.UserName;
+        return UsersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private void SendVerify()
+    {
+        if (OnSendVerify is not null && Item is not null)
+            OnSendVerify.Invoke(Item);
+    }
+}
