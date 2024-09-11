@@ -173,21 +173,17 @@
                 }
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn Property="x => x.TenantId" HeaderStyle="width:280px" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
+        <PropertyColumn Property="x => x.TenantName" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
             <CellTemplate>
-                <div>
-                    <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.TenantId</MudText>
-                </div>
+                    <MudText>@context.Item.TenantName</MudText>
             </CellTemplate>
             <FooterTemplate>
                 @L["Selected"]: @_selectedItems.Count
             </FooterTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x => x.Name)]">
+        <PropertyColumn Property="x => x.Description" Title="@L[_currentDto.GetMemberDescription(x => x.Description)]">
             <CellTemplate>
                 <div class="d-flex flex-column">
-                    <MudText Typo="Typo.body2">@context.Item.Name</MudText>
                     <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
                 </div>
             </CellTemplate>

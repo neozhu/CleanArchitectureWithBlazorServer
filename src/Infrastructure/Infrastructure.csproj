@@ -31,7 +31,7 @@
         <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.8" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
         <PackageReference Include="QuestPDF" Version="2024.7.3" />
-        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="6.7.1" />
+        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="7.0.0" />
         <PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="4.1.1" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.0.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
