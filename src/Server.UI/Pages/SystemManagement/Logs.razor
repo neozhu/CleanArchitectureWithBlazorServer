@@ -2,6 +2,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Specifications
+@using CleanArchitecture.Blazor.Server.UI.Components.UtcToLocalTime
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using CleanArchitecture.Blazor.Server.UI.Pages.SystemManagement.Components
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Clear
@@ -83,7 +84,7 @@
         <HierarchyColumn T="LogDto" ButtonDisabledFunc="@(x => string.IsNullOrEmpty(x.Message))"/>
         <PropertyColumn Style="width:130px" Property="x => x.TimeStamp" Title="@L[_currentDto.GetMemberDescription(x => x.TimeStamp)]">
             <CellTemplate>
-                <ToLocal DateTime="@context.Item.TimeStamp.ToLocalTime()" Format="dd/mm/yyyy HH:MM:ss"></ToLocal>
+                <UtcToLocal UTCDateTime="@context.Item.TimeStamp"></UtcToLocal>
             </CellTemplate>
         </PropertyColumn>
         <PropertyColumn Style="width:120px" Property="x => x.Level" Title="@L[_currentDto.GetMemberDescription(x => x.Level)]">
@@ -176,7 +177,7 @@
         var state = await AuthState;
         _canPurge = (await AuthService.AuthorizeAsync(state.User, Permissions.Logs.Purge)).Succeeded;
 
-        _timezoneOffset = await LocalTimezoneOffset.Hours();
+        _timezoneOffset = await LocalTimezoneOffset.HourOffset();
     }
 
 
@@ -189,7 +190,7 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
-            Query.TimeZoneOffset = _timezoneOffset;
+            Query.TimezoneOffset = _timezoneOffset;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
 
             return new GridData<LogDto> { TotalItems = result.TotalItems, Items = result.Items };
