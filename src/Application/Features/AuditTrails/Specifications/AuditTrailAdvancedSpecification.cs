@@ -8,7 +8,7 @@ public class AuditTrailAdvancedSpecification : Specification<AuditTrail>
     {
         var timezoneOffset = filter.TimezoneOffset;
         var utcNow = DateTime.UtcNow;
-        var localNow = utcNow.Date.AddHours(-timezoneOffset);
+        var localNow = utcNow.Date.AddHours(timezoneOffset);
         var startOfTodayLocalAsUtc = localNow;
         var endOfTodayLocalAsUtc = localNow.AddDays(1);
         var startOfLast30DaysLocalAsUtc = localNow.AddDays(-30);
