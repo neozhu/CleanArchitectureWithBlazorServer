@@ -20,7 +20,6 @@
         <PackageReference Include="Hangfire.InMemory" Version="0.10.4" />
         <PackageReference Include="Blazor-Analytics" Version="3.12.0" />
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
-        <PackageReference Include="BlazorTime" Version="1.0.3" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.8" />
         <PackageReference Include="ActualLab.Fusion.Ext.Services" Version="9.2.5" />
