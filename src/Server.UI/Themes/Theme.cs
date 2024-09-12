@@ -24,10 +24,11 @@ public class Theme
                 AppbarText = "#424242",
                 Background = "#f5f5f5", 
                 Surface = "#ffffff", 
-                DrawerBackground = "#ffffff", 
-                TextPrimary = "#333333", 
-                TextSecondary = "#555555", 
-                TextDisabled = "#80838b", 
+                DrawerBackground = "#ffffff",
+                TextPrimary = "#2E2E2E", 
+                TextSecondary = "#6C757D", 
+                SecondaryContrastText = "#F5F5F5", 
+                TextDisabled = "#B0B0B0", 
                 ActionDefault = "#80838b", 
                 ActionDisabled = "rgba(128, 131, 139, 0.3)",
                 ActionDisabledBackground = "rgba(128, 131, 139, 0.12)",
@@ -35,8 +36,9 @@ public class Theme
                 DividerLight = "rgba(128, 131, 139, 0.15)",
                 TableLines = "#eff0f2", 
                 LinesDefault = "#e2e5e8", 
-                LinesInputs = "#e2e5e8", 
-                
+                LinesInputs = "#e2e5e8",
+               
+
             },
             PaletteDark = new PaletteDark
             {
@@ -57,9 +59,10 @@ public class Theme
                 AppbarBackground = "rgba(32, 33, 36, 0.8)",
                 AppbarText = "rgba(255, 255, 255, 0.7)",
                 DrawerBackground = "#303134",
-                TextPrimary = "#E0E0E0", 
-                TextSecondary = "#B0B0B0",
+                TextPrimary = "#DADADA", 
+                TextSecondary = "#A8A8A8",
                 TextDisabled = "rgba(255, 255, 255, 0.3)",
+                SecondaryContrastText = "#D5D5D5",
                 ActionDefault = "#e8eaed", 
                 ActionDisabled = "rgba(255, 255, 255, 0.26)",
                 ActionDisabledBackground = "rgba(255, 255, 255, 0.12)",
@@ -137,9 +140,10 @@ public class Theme
                 Subtitle1 = new Subtitle1
                 {
                     FontSize = "1rem",
-                    FontWeight = 500,
+                    FontWeight = 600,
                     LineHeight = 1.75,
-                    LetterSpacing = ".00938em"
+                    LetterSpacing = ".00938em",
+                    TextTransform = "none"
                 },
                 Subtitle2 = new Subtitle2
                 {
@@ -173,7 +177,7 @@ public class Theme
                 {
                     FontSize = ".75rem",
                     FontWeight = 400,
-                    LineHeight = 2.66,
+                    LineHeight = 2.5,
                     LetterSpacing = ".08333em"
                 }
             },
