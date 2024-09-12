@@ -190,7 +190,7 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
-            Query.TimeZoneOffset = _timezoneOffset;
+            Query.TimezoneOffset = _timezoneOffset;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
 
             return new GridData<LogDto> { TotalItems = result.TotalItems, Items = result.Items };

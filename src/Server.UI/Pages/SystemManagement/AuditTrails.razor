@@ -3,10 +3,12 @@
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications
 @using CleanArchitecture.Blazor.Application.Features.AuditTrails.Caching
+@using CleanArchitecture.Blazor.Server.UI.Components.UtcToLocalTime
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 
 @attribute [Authorize(Policy = Permissions.AuditTrails.View)]
 @inject IStringLocalizer<AuditTrails> L
-
+@inject LocalTimezoneOffset LocalTimezoneOffset
 <PageTitle>@Title</PageTitle>
 
 <MudDataGrid ServerData="@(ServerReload)"
@@ -69,7 +71,7 @@
         <PropertyColumn Property="x => x.PrimaryKey" Title="@L[_currentDto.GetMemberDescription(x => x.PrimaryKey)]"/>
         <PropertyColumn Property="x => x.DateTime" Title="@L[_currentDto.GetMemberDescription(x => x.DateTime)]">
             <CellTemplate>
-                <ToLocal DateTime="@context.Item.DateTime.ToLocalTime()" Format="dd/mm/yyyy HH:MM:ss"></ToLocal>
+                <UtcToLocal UTCDateTime="@context.Item.DateTime"></UtcToLocal>
             </CellTemplate>
         </PropertyColumn>
     </Columns>
@@ -124,8 +126,8 @@
 
 @code
 {
-    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-
+  
+    private int _timezoneOffset;
     public string Title { get; private set; } = "Audit Trails";
     private MudDataGrid<AuditTrailDto> _table = null!;
     private bool _loading;
@@ -139,7 +141,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        var state = await AuthState;
+        _timezoneOffset = await LocalTimezoneOffset.HourOffset();
     }
 
     private async Task<GridData<AuditTrailDto>> ServerReload(GridState<AuditTrailDto> state)
@@ -152,7 +154,7 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
-
+            Query.TimezoneOffset = _timezoneOffset;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
             return new GridData<AuditTrailDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
