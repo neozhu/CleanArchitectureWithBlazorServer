@@ -1,0 +1,38 @@
+﻿@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
+@inject IJSRuntime JSRuntime
+@if (localTime != null)
+{
+    <MudText Class="@Class">@localTime.Value.ToString(Format)</MudText>
+}
+else
+{
+    <span>Fetching local time...</span>
+}
+@code {
+    // Parameter to accept the UTC time that needs to be converted
+    [Parameter]
+    public DateTime UTCDateTime { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Parameter to accept a custom format for displaying the date and time
+    [Parameter]
+    public string Format { get; set; } = "yyyy-MM-dd HH:mm:ss"; // Default format
+
+    // Local time after converting from UTC
+    private DateTime? localTime;
+
+    // This method is called when the component is initialized
+    protected override async Task OnInitializedAsync()
+    {
+        // Call JavaScript function to get the browser's time zone offset in minutes
+        int timezoneOffset = await new LocalTimezoneOffset(JSRuntime).HourOffset();
+
+        // Convert the offset from minutes to hours
+        TimeSpan offset = TimeSpan.FromHours(-timezoneOffset);
+
+        // Convert the UTC time to local time by adding the time zone offset
+        localTime = UTCDateTime.Add(offset);
+    }
+}
