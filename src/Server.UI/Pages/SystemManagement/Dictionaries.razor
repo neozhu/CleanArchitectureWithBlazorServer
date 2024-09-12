@@ -156,7 +156,7 @@
     <Columns>
         <PropertyColumn Property="x => x.Name" Title="@L[SelectedItem.GetMemberDescription(x => x.Name)]">
             <EditTemplate>
-                <MudEnumSelect @bind-Value="@context.Item.Name" TEnum="Picklist" OnClose="@(()=>_table.CommittedItemChanges.InvokeAsync(context.Item))" Required="true">
+                <MudEnumSelect @bind-Value="@context.Item.Name" TEnum="Picklist" OnClose="@(()=>PicklistChanged(context.Item))" Required="true">
                 </MudEnumSelect>
             </EditTemplate>
         </PropertyColumn>
@@ -261,6 +261,10 @@
         KeyValueCacheKey.Refresh();
         _searchString = string.Empty;
         await _table.ReloadServerData();
+    }
+    private void PicklistChanged(KeyValueDto item )
+    {
+        _table.CommittedItemChanges.InvokeAsync(item);
     }
 
     private void CommittedItemChanges(KeyValueDto item)
