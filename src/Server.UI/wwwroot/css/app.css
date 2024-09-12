@@ -1,18 +1,17 @@
-﻿.mud-typography-body2 {
-    color: var(--mud-palette-text-secondary);
-}
-
-.mud-typography-subtitle1 {
-    color: var(--mud-palette-text-secondary);
-}
-.mud-input {
+﻿.mud-input {
     font-size: inherit !important;
     font-weight: inherit !important;
     line-height: inherit !important;
     letter-spacing: inherit !important;
 }
+.mud-chip {
+    font-size: var(--mud-typography-default-size);
+}
+.mud-chip.mud-chip-size-small {
+    font-size: var(--mud-typography-body1-size);
+}
 .mud-tabs {
-    background-color: var(--mud-palette-drawer-background);
+    background-color: var(--mud-palette-surface);
 }
 .mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
     font-size: inherit !important;
@@ -48,7 +47,13 @@
     line-height: inherit !important;
     letter-spacing: inherit !important;
 }
+.mud-typography-body2 {
+    color: var(--mud-palette-text-secondary);
+}
 
+.mud-typography-subtitle2 {
+    color: var(--mud-palette-text-secondary);
+}
 .mud-typography-body1 {
     font-size: var(--mud-typography-body1-size);
 }
