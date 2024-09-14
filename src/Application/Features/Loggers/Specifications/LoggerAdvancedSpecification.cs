@@ -6,11 +6,11 @@ public class LoggerAdvancedSpecification : Specification<Logger>
 {
     public LoggerAdvancedSpecification(LogsWithPaginationQuery filter)
     {
-        var timeZoneOffset = filter.TimeZoneOffset;
+        var timezoneOffset = filter.TimezoneOffset;
         var utcNow = DateTime.UtcNow;
-        var localNow = utcNow.Date.AddHours(timeZoneOffset);
+        var localNow = utcNow.Date.AddHours(timezoneOffset);
         var startOfTodayLocalAsUtc = localNow;
-        var endOfTodayLocalAsUtc = localNow.AddDays(1).AddTicks(-1);
+        var endOfTodayLocalAsUtc = localNow.AddDays(1);
         var startOfLast30DaysLocalAsUtc = localNow.AddDays(-30);
         // 构建查询条件
         Query.Where(p => p.TimeStamp >= startOfTodayLocalAsUtc && p.TimeStamp < endOfTodayLocalAsUtc,

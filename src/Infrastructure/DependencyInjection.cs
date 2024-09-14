@@ -207,6 +207,7 @@ public static class DependencyInjection
             // User settings
             options.User.RequireUniqueEmail = true;
             //options.Tokens.EmailConfirmationTokenProvider = "Email";
+            
         });
 
         services.AddScoped<IIdentityService, IdentityService>()
@@ -247,6 +248,12 @@ public static class DependencyInjection
             //})
             .AddIdentityCookies(options => { });
 
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.ExpireTimeSpan = TimeSpan.FromDays(15);
+            options.SlidingExpiration = true;
+            options.SessionStore = new MemoryCacheTicketStore();
+        });
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
         services.AddSingleton<UserService>()
@@ -272,8 +279,9 @@ public static class DependencyInjection
             FailSafeMaxDuration = TimeSpan.FromHours(8),
             FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
             // FACTORY TIMEOUTS
-            FactorySoftTimeout = TimeSpan.FromMilliseconds(100),
-            FactoryHardTimeout = TimeSpan.FromMilliseconds(1500)
+            FactorySoftTimeout = TimeSpan.FromMilliseconds(1500),
+            FactoryHardTimeout = TimeSpan.FromMilliseconds(3000),
+            AllowTimedOutFactoryBackgroundCompletion = true,    
         });
         return services;
     }

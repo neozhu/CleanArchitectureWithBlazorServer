@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
@@ -24,9 +23,9 @@ public class PickUserAutocomplete : MudAutocomplete<string>
         UserService.OnChange += TenantsService_OnChange;
     }
 
-    private void TenantsService_OnChange()
+    private async Task TenantsService_OnChange()
     {
-        InvokeAsync(StateHasChanged);
+       await InvokeAsync(StateHasChanged);
     }
 
     protected override void Dispose(bool disposing)

@@ -11,7 +11,7 @@ public class LocalTimezoneOffset
         _jsRuntime = jsRuntime;
     }
 
-    public async ValueTask<int> Hours()
+    public async ValueTask<int> HourOffset()
     {
         var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/timezoneoffset.js");
         return await jsmodule.InvokeAsync<int>(JSInteropConstants.GetTimezoneOffset);

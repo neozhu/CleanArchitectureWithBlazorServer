@@ -21,7 +21,7 @@
 @attribute [Authorize(Policy = Permissions.Users.View)]
 @inherits OwningComponentBase
 @implements IDisposable
-@inject IUsersStateContainer UsersStateContainer
+
 @inject IOnlineUserTracker OnlineUserTracker
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
@@ -210,11 +210,10 @@
                 }
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn Property="x => x.TenantId" HeaderStyle="width:280px" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
+        <PropertyColumn Property="x => x.TenantName" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
             <CellTemplate>
                 <div>
-                    <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.TenantId</MudText>
+                    <MudText>@context.Item.TenantName</MudText>
                 </div>
             </CellTemplate>
             <FooterTemplate>
@@ -223,45 +222,13 @@
         </PropertyColumn>
         <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x => x.UserName)]">
             <CellTemplate>
-                <div class="d-flex align-items-center">
-                    <MudBadge Color="@(IsOnline(context.Item.DisplayName??context.Item.UserName) ? Color.Success : Color.Error)" Overlap="false" Dot="true" Bordered="true">
-                        <MudAvatar>
-                            @if (string.IsNullOrEmpty(context.Item.ProfilePictureDataUrl))
-                            {
-                                @context.Item.UserName.First()
-                            }
-                            else
-                            {
-                                <MudImage Src="@context.Item.ProfilePictureDataUrl"></MudImage>
-                            }
-                        </MudAvatar>
-                    </MudBadge>
-                    <div class="pl-3">
-                        <MudText Class="ml-2 align-self-center">@context.Item.UserName</MudText>
-                        @if (context.Item.EmailConfirmed)
-                        {
-                            <MudText Typo="Typo.body2" Class="ml-2 align-self-center">@context.Item.Email</MudText>
-                        }
-                        else
-                        {
-                            <div class="d-flex flex-row gap-1">
-                                <MudText Typo="Typo.body2" Class="ml-2 align-self-center mud-text-secondary">@context.Item.Email</MudText>
-                                <MudTooltip Text="@L["We send a verification link to this email address. The link expires after 72 hours."]" Delay="300">
-                                    <MudLink OnClick="@(()=>SendVerify(context.Item))">@L["[Verify]"]</MudLink>
-                                </MudTooltip>
-
-                            </div>
-                        }
-
-                    </div>
-                </div>
+                <UserCard Item="@context.Item" OnSendVerify="@(x=> SendVerify(x))"></UserCard>
             </CellTemplate>
         </PropertyColumn>
         <PropertyColumn Property="x => x.Email" Title="@L["Full Name"]">
             <CellTemplate>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.body2">@context.Item.DisplayName</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.PhoneNumber</MudText>
                 </div>
             </CellTemplate>
         </PropertyColumn>
@@ -333,7 +300,7 @@
     private string _searchString = string.Empty;
     private string _selectedTenantId = " ";
     private string Title { get; set; } = "Users";
-    private List<PermissionModel> _permissions = new();
+    private IList<PermissionModel> _permissions = new List<PermissionModel>();
     private IList<Claim> _assignedClaims = default!;
 
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
@@ -389,10 +356,7 @@
     {
 
     }
-    private bool IsOnline(string username)
-    {
-        return UsersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
-    }
+
 
     private Expression<Func<ApplicationUser, bool>> CreateSearchPredicate()
     {
@@ -571,12 +535,16 @@
     {
         await ShowEditUserDialog(item, L["Edit the user"]);
     }
-    private async Task ShowDeleteConfirmationDialog(ApplicationUserDto dto)
+    private async Task ShowDeleteConfirmationDialogAsync(ApplicationUserDto dto)
     {
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.UserName);
-        await DialogServiceHelper.ShowConfirmationDialog(ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
-            await ProcessUserDeletion(dto);
+            await InvokeAsync(async () =>
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            });
         });
     }
     private async Task ProcessUserDeletion(ApplicationUserDto dto)
@@ -603,7 +571,7 @@
             Snackbar.Add(L["You cannot delete your own account!"], Severity.Error);
             return;
         }
-        await ShowDeleteConfirmationDialog(dto);
+        await ShowDeleteConfirmationDialogAsync(dto);
 
     }
 
@@ -618,9 +586,12 @@
         }
 
         var deleteContent = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
-        await DialogServiceHelper.ShowConfirmationDialog(L["Delete"], deleteContent, async () =>
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, deleteContent, async () =>
         {
-            await ProcessSelectedUsersDeletion();
+            await InvokeAsync(async () =>
+            {
+                await ProcessSelectedUsersDeletion();
+            });
         });
     }
     private async Task ProcessSelectedUsersDeletion()
@@ -888,7 +859,7 @@
     {
         return await ExcelService.ExportAsync(items,
             new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                        {
+                                            {
                 { L["Id"], item => item.Id },
                 { L["User Name"], item => item.UserName },
                 { L["Full Name"], item => item.DisplayName },
@@ -896,7 +867,7 @@
                 { L["Phone Number"], item => item.PhoneNumber },
                 { L["Tenant Id"], item => item.TenantId },
                 { L["Tenant Name"], item => item.TenantName }
-                                        }, L["Users"]);
+                                            }, L["Users"]);
     }
 
     private async Task OnImportData(IBrowserFile file)

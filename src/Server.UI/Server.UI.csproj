@@ -5,6 +5,7 @@
         <AssemblyName>CleanArchitecture.Blazor.Server.UI</AssemblyName>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <NoWarn>$(NoWarn);VSTHRD200</NoWarn>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>false</InvariantGlobalization>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -16,27 +17,26 @@
     <ItemGroup>
 
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
-        <PackageReference Include="Hangfire.InMemory" Version="0.10.3" />
+        <PackageReference Include="Hangfire.InMemory" Version="0.10.4" />
         <PackageReference Include="Blazor-Analytics" Version="3.12.0" />
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
-        <PackageReference Include="BlazorTime" Version="1.0.3" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.8" />
-        <PackageReference Include="ActualLab.Fusion.Ext.Services" Version="9.1.38" />
-        <PackageReference Include="MudBlazor" Version="7.7.0" />
+        <PackageReference Include="ActualLab.Fusion.Ext.Services" Version="9.2.5" />
+        <PackageReference Include="MudBlazor" Version="7.8.0" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="5.1.0" />
         <PackageReference Include="Blazor-ApexCharts" Version="3.4.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="ActualLab.Fusion" Version="9.1.38" />
-        <PackageReference Include="ActualLab.Fusion.Blazor" Version="9.1.38" />
+        <PackageReference Include="ActualLab.Fusion" Version="9.2.5" />
+        <PackageReference Include="ActualLab.Fusion.Blazor" Version="9.2.5" />
         <PackageReference Include="MemoryPack.Generator" Version="1.21.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="ActualLab.Generators" Version="9.1.38">
+        <PackageReference Include="ActualLab.Generators" Version="9.2.5">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

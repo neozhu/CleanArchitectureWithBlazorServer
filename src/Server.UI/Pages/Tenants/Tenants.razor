@@ -128,15 +128,14 @@
                 }
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn CellStyle="width:300px" Property="x => x.Id" Title="@L[_currentDto.GetMemberDescription(x => x.Id)]">
+        <PropertyColumn  Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x => x.Name)]">
             <FooterTemplate>
                 @L["Selected"]: @_selectedItems.Count
             </FooterTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x => x.Name)]">
+        <PropertyColumn Property="x => x.Description" Title="@L[_currentDto.GetMemberDescription(x => x.Description)]">
             <CellTemplate>
                 <div class="d-flex flex-column">
-                    <MudText Typo="Typo.body2">@context.Item.Name</MudText>
                     <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
                 </div>
             </CellTemplate>
@@ -245,9 +244,13 @@
     {
         var command = new DeleteTenantCommand(new[] { dto.Id });
         var contentText = string.Format(ConstantString.DeleteConfirmationWithId, dto.Id);
-        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, L["Delete the Tenant"], contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, L["Delete the Tenant"], contentText, async () =>
+        {
+            await InvokeAsync(async () =>
         {
             await _table.ReloadServerData();
+            _selectedItems.Clear();
+        });
         });
     }
 
@@ -255,10 +258,13 @@
     {
         var command = new DeleteTenantCommand(_selectedItems.Select(x => x.Id).ToArray());
         var contentText = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
-        await DialogServiceHelper.ShowDeleteConfirmationDialog(command, L["Delete Selected Tenants"], contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, L["Delete Selected Tenants"], contentText, async () =>
         {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
+            await InvokeAsync(async () =>
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            });
         });
     }
 }

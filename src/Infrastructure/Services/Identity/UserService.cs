@@ -27,7 +27,7 @@ public class UserService : IUserService
 
     public List<ApplicationUserDto> DataSource { get; private set; }
 
-    public event Action? OnChange;
+    public event Func<Task>? OnChange;
 
     public void Initialize()
     {

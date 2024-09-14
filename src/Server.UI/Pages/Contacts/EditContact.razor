@@ -68,7 +68,7 @@
         if (contactDto is not null)
         {
             model = Mapper.Map<UpdateContactCommand>(contactDto);
-            _breadcrumbItems.Add(new BreadcrumbItem(contactDto.Name, href: null, disabled: true));
+            _breadcrumbItems.Add(new BreadcrumbItem(contactDto.Name, href: $"/pages/contacts/edit/{model.Id}"));
         }
     }
     async Task Submit()
