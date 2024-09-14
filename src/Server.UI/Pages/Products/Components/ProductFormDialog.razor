@@ -93,15 +93,14 @@
                         </MudFileUpload>
                         @if (Model.Pictures is not null)
                         {
-                            <MudSimpleTable Hover Dense>
+                            <MudSimpleTable Hover Dense Elevation="0">
                                 <tbody>
                                     @foreach (var dto in Model.Pictures)
                                     {
-                                        <tr>
+                                        <tr @onclick="()=>OnDownloadFile(dto.Url)" style="cursor:pointer">
                                             <td><Thumbnail FileName="@dto.Name" FileUrl="@dto.Url"> </Thumbnail></td>
                                             <td><FileSizeFormatter FileSizeInBytes="@dto.Size"></FileSizeFormatter></td>
-                                            <td style="width:120px"> <FileDownloadButton Label="@L["View"]" Url="@dto.Url"></FileDownloadButton></td>
-                                            <td style="width:50px"><MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(()=>DeleteImage(dto))"></MudIconButton></td>
+                                            <td style="width:50px"><MudIconButton Icon="@Icons.Material.Outlined.Delete" title="@ConstantString.Delete" OnClick="@(()=>DeleteImage(dto))"></MudIconButton></td>
                                         </tr>
                                     }
                                 </tbody>
@@ -275,5 +274,9 @@
     {
         MudDialog.Cancel();
     }
-
+    private async Task OnDownloadFile(string? str)
+    {
+        var fileURL = str;
+        await new Fancybox(JS).Preview(str, []);
+    }
 }
