@@ -17,11 +17,11 @@ public class DocumentConfiguration : IEntityTypeConfiguration<Document>
             .WithMany()
             .HasForeignKey(x => x.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict);
-        builder.HasOne(x => x.Editor)
+        builder.HasOne(x => x.LastModifier)
             .WithMany()
             .HasForeignKey(x => x.LastModifiedBy)
             .OnDelete(DeleteBehavior.Restrict);
         builder.Navigation(e => e.Owner).AutoInclude();
-        builder.Navigation(e => e.Editor).AutoInclude();
+        builder.Navigation(e => e.LastModifier).AutoInclude();
     }
 }
