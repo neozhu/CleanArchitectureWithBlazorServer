@@ -10,5 +10,5 @@ public abstract class OwnerPropertyEntity : BaseAuditableEntity
 {
     [ForeignKey("CreatedBy")] public virtual ApplicationUser? Owner { get; set; }
 
-    [ForeignKey("LastModifiedBy")] public virtual ApplicationUser? Editor { get; set; }
+    [ForeignKey("LastModifiedBy")] public virtual ApplicationUser? LastModifier { get; set; }
 }
