@@ -1,51 +1,50 @@
-﻿@page "/pages/contacts/edit/{id:int}"
-
+﻿@page "/pages/Contacts/edit/{id:int}"
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Update
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById
-
-
 @inherits MudComponentBase
 @inject IValidationService Validator
 @inject IStringLocalizer<Contacts> L
+
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
 <MudContainer Class="p-4 mt-3" MaxWidth="MaxWidth.Small">
-    @if (model != null)
-    {
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Typo="Typo.h6">@Title</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
-                    <MudGrid>
-                        <MudItem xs="12" md="6">
-                            <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
-                        </MudItem>
-                        <MudItem xs="12" md="6">
-                            <MudTextField Label="@L[model.GetMemberDescription(x=>x.Description)]" For="@(() => model.Description)" @bind-Value="model.Description"></MudTextField>
-                        </MudItem>
-                        <MudItem xs="12" md="6">
-                            <MudTextField Label="@L[model.GetMemberDescription(x=>x.Email)]" @bind-Value="model.Email" For="@(() => model.Email)" Required="false" RequiredError="@L["email is required!"]"></MudTextField>
-                        </MudItem>
-                        <MudItem xs="12" md="6">
-                            <MudTextField Label="@L[model.GetMemberDescription(x=>x.PhoneNumber)]" @bind-Value="model.PhoneNumber" For="@(() => model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required!"]"></MudTextField>
-                        </MudItem>
-                        <MudItem xs="12" md="6">
-                            <MudTextField Label="@L[model.GetMemberDescription(x=>x.Country)]" @bind-Value="model.Country" For="@(() => model.Country)" Required="false" RequiredError="@L["country is required!"]"></MudTextField>
-                        </MudItem>
+@if (model != null)
+{
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                 <MudText Typo="Typo.h6">@Title</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+        <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
+            <MudGrid>
+                <MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Description)]" Lines="3" For="@(() => model.Description)" @bind-Value="model.Description"></MudTextField>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Email)]" @bind-Value="model.Email" For="@(() => model.Email)" Required="false" RequiredError="@L["email is required!"]"></MudTextField>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.PhoneNumber)]" @bind-Value="model.PhoneNumber" For="@(() => model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required!"]"></MudTextField>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Country)]" @bind-Value="model.Country" For="@(() => model.Country)" Required="false" RequiredError="@L["country is required!"]"></MudTextField>
+                </MudItem> 
 
-                    </MudGrid>
-                </MudForm>
-                <MudCardActions Class="d-flex justify-end gap-2">
+            </MudGrid>
+        </MudForm>
+         <MudCardActions Class="d-flex justify-end gap-2">
                     <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" Variant="Variant.Outlined" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
                 </MudCardActions>
             </MudCardContent>
         </MudCard>
     }
 </MudContainer>
+ 
 
 @code {
     public string? Title { get; private set; }
@@ -57,19 +56,19 @@
     private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "/"),
-        new BreadcrumbItem("Contacts", href: "/pages/contacts"),
-
+        new BreadcrumbItem("Contacts", href: "/pages/Contacts")
     };
-    private UpdateContactCommand? model = null;
+    private UpdateContactCommand? model;
     protected override async Task OnInitializedAsync()
     {
-        Title = L["Edit contact"];
-        var contactDto = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
-        if (contactDto is not null)
+        Title = L["Edit Contact"];
+        var itemDto = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
+        if (itemDto is not null)
         {
-            model = Mapper.Map<UpdateContactCommand>(contactDto);
-            _breadcrumbItems.Add(new BreadcrumbItem(contactDto.Name, href: $"/pages/contacts/edit/{model.Id}"));
+            model = Mapper.Map<UpdateContactCommand>(itemDto);
+            _breadcrumbItems.Add(new BreadcrumbItem(itemDto.Name, href: $"/pages/Contacts/edit/{Id}"));
         }
+
     }
     async Task Submit()
     {
@@ -94,6 +93,4 @@
             _saving = false;
         }
     }
-
-
 }

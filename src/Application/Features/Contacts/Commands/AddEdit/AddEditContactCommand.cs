@@ -10,12 +10,12 @@ public class AddEditContactCommand: ICacheInvalidatorRequest<Result<int>>
       [Description("Id")]
       public int Id { get; set; }
           [Description("Name")]
-    public string Name {get;set;} = String.Empty; 
+    public string Name {get;set;} 
     [Description("Description")]
     public string? Description {get;set;} 
     [Description("Email")]
     public string? Email {get;set;} 
-    [Description("Phone Number")]
+    [Description("Phone number")]
     public string? PhoneNumber {get;set;} 
     [Description("Country")]
     public string? Country {get;set;} 
@@ -28,7 +28,7 @@ public class AddEditContactCommand: ICacheInvalidatorRequest<Result<int>>
     {
         public Mapping()
         {
-            CreateMap<ContactDto, AddEditContactCommand>(MemberList.None);
+            CreateMap<ContactDto,AddEditContactCommand>(MemberList.None);
             CreateMap<AddEditContactCommand,Contact>(MemberList.None);
          
         }
