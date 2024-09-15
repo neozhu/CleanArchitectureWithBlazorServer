@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.Paginati
 
 public class LogsWithPaginationQuery : LoggerAdvancedFilter, ICacheableRequest<PaginatedData<LogDto>>
 {
-    public int TimezoneOffset { get; set; }
+    public int LocalTimezoneOffset { get; set; }
     public LoggerAdvancedSpecification Specification => new(this);
 
     public string CacheKey => LogsCacheKey.GetPaginationCacheKey($"{this}");
@@ -18,7 +18,7 @@ public class LogsWithPaginationQuery : LoggerAdvancedFilter, ICacheableRequest<P
     public override string ToString()
     {
         return
-            $"Listview:{ListView}-{TimezoneOffset},{Level},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
+            $"Listview:{ListView}-{LocalTimezoneOffset},{Level},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
 }
 

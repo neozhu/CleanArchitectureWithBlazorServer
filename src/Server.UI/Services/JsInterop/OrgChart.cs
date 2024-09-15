@@ -13,7 +13,7 @@ public class OrgChart
 
     public async Task<ValueTask> Create(List<OrgItem> data)
     {
-        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/orgchart.js");
+        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/orgchart.js").ConfigureAwait(false);
         return jsmodule.InvokeVoidAsync("createOrgChart", data);
     }
 }

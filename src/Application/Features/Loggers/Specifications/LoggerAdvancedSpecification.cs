@@ -6,7 +6,7 @@ public class LoggerAdvancedSpecification : Specification<Logger>
 {
     public LoggerAdvancedSpecification(LogsWithPaginationQuery filter)
     {
-        var timezoneOffset = filter.TimezoneOffset;
+        var timezoneOffset = filter.LocalTimezoneOffset;
         var utcNow = DateTime.UtcNow;
         var localNow = utcNow.Date.AddHours(timezoneOffset);
         var startOfTodayLocalAsUtc = localNow;

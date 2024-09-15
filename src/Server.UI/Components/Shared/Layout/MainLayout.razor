@@ -1,22 +1,25 @@
 ﻿@inherits LayoutComponentBase
 @using CleanArchitecture.Blazor.Server.UI.Constants
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @implements IDisposable
 
 @inject LayoutService LayoutService
-
+@inject LocalTimezoneOffset LocalTimezoneOffset
 <PageTitle>@ApplicationSettings.AppName</PageTitle>
 <MudRTLProvider RightToLeft="@LayoutService.IsRTL">
     <MudThemeProvider />
     <MudPopoverProvider />
     <MudDialogProvider />
     <MudSnackbarProvider />
-    <MudThemeProvider @ref="@_mudThemeProvider" Theme="@LayoutService.CurrentTheme" IsDarkMode="@LayoutService.IsDarkMode" IsDarkModeChanged="@LayoutService.SetDarkMode"/>
-    @Body
+    <MudThemeProvider @ref="@_mudThemeProvider" Theme="@LayoutService.CurrentTheme" IsDarkMode="@LayoutService.IsDarkMode" IsDarkModeChanged="@LayoutService.SetDarkMode" />
+    <CascadingValue Name="LocalTimezoneOffset" Value="@_localTimezoneOffset">
+        @Body
+    </CascadingValue>
 </MudRTLProvider>
 
 @code
 {
-
+    private int _localTimezoneOffset;
     private MudThemeProvider _mudThemeProvider = null!;
     private bool _defaultDarkMode;
 
@@ -42,8 +45,9 @@
         await LayoutService.ApplyUserPreferences(_defaultDarkMode);
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        _localTimezoneOffset = await LocalTimezoneOffset.HourOffset();
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         LayoutService.SetBaseTheme(Theme.ApplicationTheme());
     }
