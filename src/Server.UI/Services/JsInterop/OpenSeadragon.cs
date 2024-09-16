@@ -14,7 +14,7 @@ public class OpenSeadragon
     public async Task<ValueTask> Open(string url)
     {
         var target = "openseadragon";
-        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/openseadragon.js");
+        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/openseadragon.js").ConfigureAwait(false);
         return jsmodule.InvokeVoidAsync(JSInteropConstants.ShowOpenSeadragon, target, url);
     }
 }
