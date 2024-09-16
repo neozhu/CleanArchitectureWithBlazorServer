@@ -12,4 +12,5 @@ public interface ICacheableRequest<TResponse> : IRequest<TResponse>
 public interface IFusionCacheRequest<TResponse> : IRequest<TResponse>
 {
     string CacheKey => string.Empty;
+    string CacheName => string.Empty;
 }

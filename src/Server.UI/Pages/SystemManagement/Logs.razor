@@ -9,7 +9,6 @@
 
 @attribute [Authorize(Policy = Permissions.Logs.View)]
 @inject IStringLocalizer<Logs> L
-@inject LocalTimezoneOffset LocalTimezoneOffset
 <PageTitle>@Title</PageTitle>
 
 <LogsLineCharts></LogsLineCharts>
@@ -163,7 +162,8 @@
     private MudDataGrid<LogDto> _table = default!;
     private readonly LogDto _currentDto = new();
     private readonly int _defaultPageSize = 15;
-    private int _timezoneOffset;
+    [CascadingParameter(Name = "LocalTimezoneOffset")]
+    private int _localTimezoneOffset { get; set; }
 
     private bool _loading;
     private bool _clearing;
@@ -176,8 +176,6 @@
         Title = L["Logs"];
         var state = await AuthState;
         _canPurge = (await AuthService.AuthorizeAsync(state.User, Permissions.Logs.Purge)).Succeeded;
-
-        _timezoneOffset = await LocalTimezoneOffset.HourOffset();
     }
 
 
@@ -190,7 +188,7 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
-            Query.TimezoneOffset = _timezoneOffset;
+            Query.LocalTimezoneOffset = _localTimezoneOffset;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
 
             return new GridData<LogDto> { TotalItems = result.TotalItems, Items = result.Items };

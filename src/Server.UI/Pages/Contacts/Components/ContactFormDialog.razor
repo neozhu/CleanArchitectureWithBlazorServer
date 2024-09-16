@@ -1,22 +1,14 @@
-﻿@page "/pages/Contacts/create"
-@using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Create
+﻿@using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.AddEdit
 
 @inherits MudComponentBase
 @inject IValidationService Validator
 @inject IStringLocalizer<Contacts> L
 
-<PageTitle>@Title</PageTitle>
-<Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
-<MudContainer Class="p-4 mt-3" MaxWidth="MaxWidth.Small">
-    <MudCard>
-        <MudCardHeader>
-            <CardHeaderContent>
-                 <MudText Typo="Typo.h6">@Title</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
+<MudDialog>
+    <DialogContent>
         <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
             <MudGrid>
+                @*TODO: define mudform that should be edit fields, for example:*@
                 <MudItem xs="12" md="6"> 
                         <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
                 </MudItem> 
@@ -35,31 +27,22 @@
 
             </MudGrid>
         </MudForm>
-         <MudCardActions Class="d-flex justify-end gap-2">
-                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" Variant="Variant.Outlined" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
-                </MudCardActions>
-            </MudCardContent>
-        </MudCard>
-</MudContainer>
- 
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
+        <MudLoadingButton Loading="@_savingnew" OnClick="SaveAndNew">@ConstantString.SaveAndNew</MudLoadingButton>
+        <MudLoadingButton Loading="@_saving"  OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+    </DialogActions>
+</MudDialog>
 
 @code {
-    public string? Title { get; private set; }
     MudForm? _form;
     private bool _saving = false;
     private bool _savingnew = false;
-    private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: "/"),
-        new BreadcrumbItem("Contacts", href: "/pages/Contacts"),
-        new BreadcrumbItem("Create Contact", href:null, disabled:true)
-    };
-    private CreateContactCommand model = new();
-    protected override Task OnInitializedAsync()
-    {
-        Title = L["Create Contact"];
-        return Task.CompletedTask;
-    }
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = default!;
+    AddEditContactCommandValidator _modelValidator = new ();
+    [EditorRequired] [Parameter] public AddEditContactCommand model { get; set; } = null!;
     async Task Submit()
     {
         try
@@ -71,8 +54,8 @@
             var result = await Mediator.Send(model);
             if (result.Succeeded)
             {
+                MudDialog.Close(DialogResult.Ok(true));
                 Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
-                Navigation.NavigateTo($"/pages/Contacts");
             }
             else
             {
@@ -84,4 +67,30 @@
             _saving = false;
         }
     }
+    async Task SaveAndNew()
+    {
+        try
+        {
+            _savingnew = true;
+            await _form!.Validate().ConfigureAwait(false);
+            if (!_form!.IsValid)
+               return;
+            var result = await Mediator.Send(model);
+            if (result.Succeeded)
+            {
+                Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                await Task.Delay(300);
+                model = new AddEditContactCommand() { };
+            }
+            else
+            {
+                Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+            }
+        }
+        finally
+        {
+            _savingnew = false;
+        }
+    }
+    void Cancel() => MudDialog.Cancel();
 }

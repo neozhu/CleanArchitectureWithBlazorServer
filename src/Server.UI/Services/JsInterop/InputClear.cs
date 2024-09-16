@@ -13,7 +13,7 @@ public class InputClear
 
     public async Task<ValueTask> Clear(string targetId)
     {
-        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/clearinput.js");
+        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/clearinput.js").ConfigureAwait(false);
         return jsmodule.InvokeVoidAsync(JSInteropConstants.ClearInput, targetId);
     }
 }

@@ -7,6 +7,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 /// </summary>
 public static class ContactCacheKey
 {
+
+    public const string CacheName = "Contact";
     // Defines the refresh interval for the cache expiration token
     private static readonly TimeSpan RefreshInterval = TimeSpan.FromMinutes(30);
     // Object used for locking to ensure thread safety

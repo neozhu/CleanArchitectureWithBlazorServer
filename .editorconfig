@@ -5,7 +5,7 @@ trim_trailing_whitespace = false
 insert_final_newline = false
 indent_style = space
 indent_size = 4
-
+spelling_languages = en-us
 # Microsoft .NET properties
 csharp_indent_braces = false
 csharp_indent_switch_labels = true
