@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
+﻿namespace CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
 
 public class MenuSectionItemModel
 {
@@ -9,5 +9,5 @@ public class MenuSectionItemModel
     public string[]? Roles { get; set; }
     public PageStatus PageStatus { get; set; } = PageStatus.Completed;
     public bool IsParent { get; set; }
-    public List<MenuSectionSubItemModel>? MenuItems { get; set; }
+    public IList<MenuSectionSubItemModel>? MenuItems { get; set; }
 }
