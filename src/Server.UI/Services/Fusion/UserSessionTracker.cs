@@ -25,7 +25,7 @@ public class UserSessionTracker : IUserSessionTracker
             _pageUserSessions = _pageUserSessions.Add(pageComponent, ImmutableHashSet.Create(userName));
         }
         using var invalidating = Invalidation.Begin();
-         _ = await GetUserSessions(cancellationToken);
+         _ = await GetUserSessions(cancellationToken).ConfigureAwait(false);
        
     }
 
@@ -52,6 +52,6 @@ public class UserSessionTracker : IUserSessionTracker
         }
 
         using var invalidating = Invalidation.Begin();
-        _ = await GetUserSessions(cancellationToken);
+        _ = await GetUserSessions(cancellationToken).ConfigureAwait(false);
     }
 }
