@@ -9,7 +9,7 @@ internal sealed class IdentityUserAccessor(
 {
     public async Task<ApplicationUser> GetRequiredUserAsync(HttpContext context)
     {
-        var user = await userManager.GetUserAsync(context.User);
+        var user = await userManager.GetUserAsync(context.User).ConfigureAwait(false);
 
         if (user is null)
             redirectManager.RedirectToWithStatus("/pages/authentication/InvalidUser",

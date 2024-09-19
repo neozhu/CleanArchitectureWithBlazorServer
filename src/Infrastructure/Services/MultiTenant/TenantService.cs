@@ -24,7 +24,7 @@ public class TenantService : ITenantService
         _mapper = mapper;
     }
 
-    public event Action? OnChange;
+    public event Func<Task>? OnChange;
     public List<TenantDto> DataSource { get; private set; } = new();
 
 

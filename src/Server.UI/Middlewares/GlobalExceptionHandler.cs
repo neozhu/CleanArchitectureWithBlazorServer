@@ -14,7 +14,7 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
         logger.LogError(exception,
             $"Could not process a request on machine {Environment.MachineName}. TraceId: {traceId}");
 
-        await GenerateProblemDetails(httpContext, traceId, exception);
+        await GenerateProblemDetails(httpContext, traceId, exception).ConfigureAwait(false);
 
         return true;
     }
@@ -32,7 +32,7 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
                 {
                     "traceId", traceId
                 }
-            }).ExecuteAsync(httpContext);
+            }).ExecuteAsync(httpContext).ConfigureAwait(false);
     }
 
     private static (int statusCode, string title) MapExceptionWithStatusCode(Exception exception)
