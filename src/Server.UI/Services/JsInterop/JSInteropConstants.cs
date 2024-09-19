@@ -8,6 +8,6 @@ public static class JSInteropConstants
     public const string ClearInput = "clearInput";
     public const string PreviewImage = "previewImage";
     public const string CreateOrgChart = "createOrgChart";
-    public const string GetTimeZoneOffset = "getTimezoneOffset";
+    public const string GetTimeZoneOffset = "getTimeZoneOffset";
     public const string HistoryGo = "historyGo";
 }
