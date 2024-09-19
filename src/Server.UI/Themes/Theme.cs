@@ -1,6 +1,6 @@
 ﻿namespace CleanArchitecture.Blazor.Server.UI.Constants;
 
-public class Theme
+public static class Theme
 {
     public static MudTheme ApplicationTheme()
     {

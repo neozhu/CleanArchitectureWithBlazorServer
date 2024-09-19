@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Security;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
@@ -16,7 +17,7 @@ public class ApplicationUserDto
 
     [Description("Tenant Id")] public string? TenantId { get; set; }
 
-    [Description("Tenant Name")] public string? TenantName { get; set; }
+    [Description("Tenant")] public TenantDto? Tenant { get; set; }
 
     [Description("Profile Photo")] public string? ProfilePictureDataUrl { get; set; }
 
@@ -26,7 +27,7 @@ public class ApplicationUserDto
 
     [Description("Superior Id")] public string? SuperiorId { get; set; }
 
-    [Description("Superior Name")] public string? SuperiorName { get; set; }
+    [Description("Superior")] public ApplicationUserDto? Superior { get; set; }
 
     [Description("Assigned Roles")] public string[]? AssignedRoles { get; set; }
 
@@ -55,9 +56,9 @@ public class ApplicationUserDto
             Provider = Provider,
             UserName = UserName,
             TenantId = TenantId,
-            TenantName = TenantName,
+            TenantName = Tenant?.Name,
             SuperiorId = SuperiorId,
-            SuperiorName = SuperiorName,
+            SuperiorName = Superior?.UserName,
             AssignedRoles = AssignedRoles,
             DefaultRole = DefaultRole
         };
@@ -74,8 +75,6 @@ public class ApplicationUserDto
         {
             CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
                 .ForMember(x => x.EmailConfirmed, s => s.MapFrom(y => y.EmailConfirmed))
-                .ForMember(x => x.SuperiorName, s => s.MapFrom(y => y.Superior!.UserName))
-                .ForMember(x => x.TenantName, s => s.MapFrom(y => y.Tenant!.Name))
                 .ForMember(x => x.AssignedRoles, s => s.MapFrom(y => y.UserRoles.Select(r => r.Role.Name)));
         }
     }

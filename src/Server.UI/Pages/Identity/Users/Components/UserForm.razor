@@ -1,4 +1,5 @@
-﻿@using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
+﻿@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
+@using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Size = SixLabors.ImageSharp.Size
 @using Image = SixLabors.ImageSharp.Image
 @using SixLabors.ImageSharp.Processing
@@ -15,8 +16,8 @@
 @inject IStringLocalizer<Users> L
 
 <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
-    <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden"/>
-    <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden"/>
+    <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden" />
+    <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden" />
 
     <MudGrid Spacing="2">
         <MudItem sm="12">
@@ -40,21 +41,18 @@
                         </ActivatorContent>
                     </MudFileUpload>
                 </MudTooltip>
-               
+
             </div>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudSelect For="@(() => Model.TenantId)"
-                       T="string"
-                       Label="@L["Select Tenant"]"
-                       Required="true"
-                       ValueChanged="OnTenantIdChanged"
-                       Value="@Model.TenantId">
-                @foreach (var item in TenantsService.DataSource)
-                {
-                    <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
-                }
-            </MudSelect>
+            <MultiTenantAutocomplete For="@(() => Model.Tenant)"
+                                     T="TenantDto"
+                                     Label="@L["Select Tenant"]"
+                                     Required="true"
+                                     ValueChanged="@(x=>TenantChanged(x))"
+                                     Value="@Model.Tenant">
+
+            </MultiTenantAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L["Provider"]" Variant="Variant.Text"></MudTextField>
@@ -64,12 +62,12 @@
             <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L["User Name"]" Variant="Variant.Text" Required="true"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <PickSuperiorIdAutocomplete For="@(() => Model.SuperiorId)"
+            <PickSuperiorIdAutocomplete For="@(() => Model.Superior)" T="ApplicationUserDto"
                                         OwnerName="@Model.UserName"
                                         Clearable="true"
-                                        TenantId="@Model.TenantId"
+                                        TenantId="@Model.Tenant?.Id"
                                         Label="@L["Select Superior"]"
-                                        @bind-Value="@Model.SuperiorId">
+                                        @bind-Value="@Model.Superior">
             </PickSuperiorIdAutocomplete>
 
         </MudItem>
@@ -114,7 +112,7 @@
     </MudGrid>
 </MudForm>
 
-@code{
+@code {
 
     public class CheckItem
     {
@@ -122,9 +120,9 @@
         public bool Value { get; set; }
     }
     private RoleManager<ApplicationRole> RoleManager = null!;
-    [EditorRequired] [Parameter] public ApplicationUserDto Model { get; set; } = default!;
+    [EditorRequired][Parameter] public ApplicationUserDto Model { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
+    [EditorRequired][Parameter] public EventCallback<ApplicationUserDto> OnFormSubmit { get; set; }
 
 
     private MudForm? _form = default!;
@@ -151,9 +149,10 @@
             }
         }
     }
-    private async Task OnTenantIdChanged(string tenantId)
+    private async Task TenantChanged(TenantDto? x)
     {
-        Model.TenantId = tenantId;
+        Model.TenantId = x?.Id;
+        Model.Tenant = x;
         await GetRoles(Model.TenantId);
     }
     private async Task UploadPhoto(IBrowserFile file)

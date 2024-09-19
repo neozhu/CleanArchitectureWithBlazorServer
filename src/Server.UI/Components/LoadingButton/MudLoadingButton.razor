@@ -1,6 +1,6 @@
 ﻿@inherits MudBaseButton
 
-<MudButton OnClick="OnClickAsync" StartIcon="@StartIcon" Disabled="@Disabled" IconColor="@IconColor" Variant="@Variant" Color="@Color" Size="@Size">
+<MudButton OnClick="OnClickAsync" StartIcon="@StartIcon" Disabled="@IsDisabled" IconColor="@IconColor" Variant="@Variant" Color="@Color" Size="@Size">
     @if (_loading)
     {
         if (LoadingAdornment == Adornment.Start)
@@ -87,13 +87,17 @@
     [Parameter]
     public Color LoadingCircularColor { get; set; } = Color.Primary;
 
+    /// <summary>
+    /// Determines if the button should be disabled when loading.
+    /// </summary>
+    [Parameter]
+    public bool DisableWhenLoading { get; set; } = true;
 
-
-
+    private bool IsDisabled => Disabled || (Loading && DisableWhenLoading);
 
     private async Task OnClickAsync()
     {
-        if (Disabled)
+        if (IsDisabled)
             return;
 
         _loading = true;

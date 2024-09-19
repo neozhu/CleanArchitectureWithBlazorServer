@@ -33,7 +33,7 @@
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
-                    <PicklistAutocomplete Picklist="Picklist.Brand"
+                    <PicklistAutocomplete Picklist="Picklist.Brand" T="string"
                                           Label="@L["Brand Name"]"
                                           For="@(() => Model.Brand)"
                                           ResetValueOnEmptyText="true"
@@ -54,7 +54,7 @@
                     </MudNumericField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
-                    <PicklistAutocomplete Picklist="Picklist.Unit"
+                    <PicklistAutocomplete Picklist="Picklist.Unit" T="string"
                                           Label="@L["Unit"]"
                                           For="@(() => Model.Unit)"
                                           ResetValueOnEmptyText="true"

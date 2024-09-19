@@ -293,27 +293,17 @@
         }
     }
 
-    private async Task OnCreate()
+    private void OnCreate()
     {
-        var command = new AddEditContactCommand();
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Contact"]), command);
+        Navigation.NavigateTo($"/pages/contacts/create");
     }
     private async Task OnClone()
     {
-        var dto = _selectedItems.First();
-        var command = Mapper.Map<ContactDto, AddEditContactCommand>(dto, opts =>
-        {
-           opts.AfterMap((src, dest) =>
-           {
-               dest.Id = 0;
-           });
-        });
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Contact"]), command);
+
     }
-    private async Task OnEdit(ContactDto dto)
+    private void OnEdit(ContactDto dto)
     {
-        var command = Mapper.Map<AddEditContactCommand>(dto);
-        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Contact"]), command);
+        Navigation.NavigateTo($"/pages/contacts/edit/{dto.Id}");
     }
 
     private async Task OnDelete(ContactDto dto)
