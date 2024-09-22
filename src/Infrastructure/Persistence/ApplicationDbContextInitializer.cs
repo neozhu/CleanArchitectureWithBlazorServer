@@ -4,6 +4,7 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
@@ -28,7 +29,7 @@ public class ApplicationDbContextInitializer
     {
         try
         {
-            if (_context.Database.IsSqlServer() || _context.Database.IsNpgsql() || _context.Database.IsSqlite())
+            if (_context.Database.IsRelational())
                 await _context.Database.MigrateAsync();
         }
         catch (Exception ex)
@@ -42,7 +43,10 @@ public class ApplicationDbContextInitializer
     {
         try
         {
-            await TrySeedAsync();
+            await SeedTenantsAsync();
+            await SeedRolesAsync();
+            await SeedUsersAsync();
+            await SeedDataAsync();
             _context.ChangeTracker.Clear();
         }
         catch (Exception ex)
@@ -76,136 +80,228 @@ public class ApplicationDbContextInitializer
         return allPermissions;
     }
 
-    private async Task TrySeedAsync()
+    
+
+
+    private async Task SeedTenantsAsync()
     {
-        // Default tenants
-        if (!_context.Tenants.Any())
-        {
-            _context.Tenants.Add(new Tenant { Name = "Master", Description = "Master Site" });
-            _context.Tenants.Add(new Tenant { Name = "Slave", Description = "Slave Site" });
-            await _context.SaveChangesAsync();
-        }
+        if (await _context.Tenants.AnyAsync()) return;
 
-        // Default roles
-        var administratorRole = new ApplicationRole(RoleName.Admin) { Description = "Admin Group", TenantId= _context.Tenants.First().Id };
-        var userRole = new ApplicationRole(RoleName.Basic) { Description = "Basic Group", TenantId = _context.Tenants.First().Id };
+        _logger.LogInformation("Seeding tenants...");
+        var tenants = new[]
+        {
+                new Tenant { Name = "Master", Description = "Master Site" },
+                new Tenant { Name = "Slave", Description = "Slave Site" }
+            };
+
+        await _context.Tenants.AddRangeAsync(tenants);
+        await _context.SaveChangesAsync();
+    }
+
+    private async Task SeedRolesAsync()
+    {
+        var adminRoleName = RoleName.Admin;
+        var userRoleName = RoleName.Basic;
+
+        if (await _roleManager.RoleExistsAsync(adminRoleName)) return;
+
+        _logger.LogInformation("Seeding roles...");
+        var administratorRole = new ApplicationRole(adminRoleName)
+        {
+            Description = "Admin Group",
+            TenantId = (await _context.Tenants.FirstAsync()).Id
+        };
+        var userRole = new ApplicationRole(userRoleName)
+        {
+            Description = "Basic Group",
+            TenantId = (await _context.Tenants.FirstAsync()).Id
+        };
+
+        await _roleManager.CreateAsync(administratorRole);
+        await _roleManager.CreateAsync(userRole);
+
         var permissions = GetAllPermissions();
-        if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
+
+        foreach (var permission in permissions)
         {
-            await _roleManager.CreateAsync(administratorRole);
+            var claim = new Claim(ApplicationClaimTypes.Permission, permission);
+            await _roleManager.AddClaimAsync(administratorRole, claim);
 
-            foreach (var permission in permissions)
-                await _roleManager.AddClaimAsync(administratorRole,
-                    new Claim(ApplicationClaimTypes.Permission, permission));
+            if (permission.StartsWith("Permissions.Products"))
+            {
+                await _roleManager.AddClaimAsync(userRole, claim);
+            }
         }
+    }
 
-        if (_roleManager.Roles.All(r => r.Name != userRole.Name))
-        {
-            await _roleManager.CreateAsync(userRole);
-            foreach (var permission in permissions)
-                if (permission.StartsWith("Permissions.Products"))
-                    await _roleManager.AddClaimAsync(userRole, new Claim(ApplicationClaimTypes.Permission, permission));
-        }
+    private async Task SeedUsersAsync()
+    {
+        if (await _userManager.Users.AnyAsync()) return;
 
-        // Default users
-        var administrator = new ApplicationUser
+        _logger.LogInformation("Seeding users...");
+        var adminUser = new ApplicationUser
         {
             UserName = UserName.Administrator,
             Provider = "Local",
             IsActive = true,
-            TenantId = _context.Tenants.First().Id,
-            DisplayName = UserName.Administrator, Email = "new163@163.com", EmailConfirmed = true,
+            TenantId = (await _context.Tenants.FirstAsync()).Id,
+            DisplayName = UserName.Administrator,
+            Email = "admin@example.com",
+            EmailConfirmed = true,
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80",
             TwoFactorEnabled = false
         };
-        var demo = new ApplicationUser
+
+        var demoUser = new ApplicationUser
         {
             UserName = UserName.Demo,
             IsActive = true,
             Provider = "Local",
-            TenantId = _context.Tenants.First().Id,
-            DisplayName = UserName.Demo, Email = "neozhu@126.com",
+            TenantId = (await _context.Tenants.FirstAsync()).Id,
+            DisplayName = UserName.Demo,
+            Email = "demo@example.com",
             EmailConfirmed = true,
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80"
         };
 
+        await _userManager.CreateAsync(adminUser, UserName.DefaultPassword);
+        await _userManager.AddToRoleAsync(adminUser, RoleName.Admin);
 
-        if (_userManager.Users.All(u => u.UserName != administrator.UserName))
+        await _userManager.CreateAsync(demoUser, UserName.DefaultPassword);
+        await _userManager.AddToRoleAsync(demoUser, RoleName.Basic);
+    }
+
+    private async Task SeedDataAsync()
+    {
+        if (await _context.KeyValues.AnyAsync()) return;
+
+        _logger.LogInformation("Seeding key values...");
+        var keyValues = new[]
         {
-            await _userManager.CreateAsync(administrator, UserName.DefaultPassword);
-            await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name! });
-            //await _userManager.SetTwoFactorEnabledAsync(administrator, true);
-        }
+                new KeyValue
+                {
+                    Name = Picklist.Status,
+                    Value = "initialization",
+                    Text = "Initialization",
+                    Description = "Status of workflow"
+                },
+                new KeyValue
+                {
+                    Name = Picklist.Status,
+                    Value = "processing",
+                    Text = "Processing",
+                    Description = "Status of workflow"
+                },
+                new KeyValue
+                {
+                    Name = Picklist.Status,
+                    Value = "pending",
+                    Text = "Pending",
+                    Description = "Status of workflow"
+                },
+                new KeyValue
+                {
+                    Name = Picklist.Status,
+                    Value = "done",
+                    Text = "Done",
+                    Description = "Status of workflow"
+                },
+                new KeyValue
+                {
+                    Name = Picklist.Brand,
+                    Value = "Apple",
+                    Text = "Apple",
+                    Description = "Brand of production"
+                },
+                new KeyValue
+                {
+                    Name = Picklist.Brand,
+                    Value = "Google",
+                    Text = "Google",
+                    Description = "Brand of production"
+                },
+                new KeyValue
+                {
+                    Name = Picklist.Brand,
+                    Value = "Microsoft",
+                    Text = "Microsoft",
+                    Description = "Brand of production"
+                },
+                new KeyValue
+                {
+                    Name = Picklist.Unit,
+                    Value = "EA",
+                    Text = "EA",
+                    Description = "Unit of product"
+                },
+                new KeyValue
+                {
+                    Name = Picklist.Unit,
+                    Value = "KM",
+                    Text = "KM",
+                    Description = "Unit of product"
+                },
+                new KeyValue
+                {
+                    Name = Picklist.Unit,
+                    Value = "PC",
+                    Text = "PC",
+                    Description = "Unit of product"
+                },
+                new KeyValue
+                {
+                    Name = Picklist.Unit,
+                    Value = "L",
+                    Text = "L",
+                    Description = "Unit of product"
+                }
+            };
 
-        if (_userManager.Users.All(u => u.UserName != demo.UserName))
+        await _context.KeyValues.AddRangeAsync(keyValues);
+        await _context.SaveChangesAsync();
+
+        if (await _context.Products.AnyAsync()) return;
+
+        _logger.LogInformation("Seeding products...");
+        var products = new[]
         {
-            await _userManager.CreateAsync(demo, UserName.DefaultPassword);
-            await _userManager.AddToRolesAsync(demo, new[] { userRole.Name! });
-        }
-
-        // Default data
-        // Seed, if necessary
-        if (!_context.KeyValues.Any())
-        {
-            _context.KeyValues.Add(new KeyValue
-            {
-                Name = Picklist.Status, Value = "initialization", Text = "initialization",
-                Description = "Status of workflow"
-            });
-            _context.KeyValues.Add(new KeyValue
-            {
-                Name = Picklist.Status, Value = "processing", Text = "processing", Description = "Status of workflow"
-            });
-            _context.KeyValues.Add(new KeyValue
-            { Name = Picklist.Status, Value = "pending", Text = "pending", Description = "Status of workflow" });
-            _context.KeyValues.Add(new KeyValue
-            { Name = Picklist.Status, Value = "finished", Text = "finished", Description = "Status of workflow" });
-            _context.KeyValues.Add(new KeyValue
-            { Name = Picklist.Brand, Value = "Apple", Text = "Apple", Description = "Brand of production" });
-            _context.KeyValues.Add(new KeyValue
-            { Name = Picklist.Brand, Value = "MI", Text = "MI", Description = "Brand of production" });
-            _context.KeyValues.Add(new KeyValue
-            { Name = Picklist.Brand, Value = "Logitech", Text = "Logitech", Description = "Brand of production" });
-            _context.KeyValues.Add(new KeyValue
-            { Name = Picklist.Brand, Value = "Linksys", Text = "Linksys", Description = "Brand of production" });
-
-            _context.KeyValues.Add(new KeyValue
-            { Name = Picklist.Unit, Value = "EA", Text = "EA", Description = "Unit of product" });
-            _context.KeyValues.Add(new KeyValue
-            { Name = Picklist.Unit, Value = "KM", Text = "KM", Description = "Unit of product" });
-            _context.KeyValues.Add(new KeyValue
-            { Name = Picklist.Unit, Value = "PC", Text = "PC", Description = "Unit of product" });
-            _context.KeyValues.Add(new KeyValue
-            { Name = Picklist.Unit, Value = "KG", Text = "KG", Description = "Unit of product" });
-            _context.KeyValues.Add(new KeyValue
-            { Name = Picklist.Unit, Value = "ST", Text = "ST", Description = "Unit of product" });
-            await _context.SaveChangesAsync();
-        }
-
-        if (!_context.Products.Any())
-        {
-            _context.Products.Add(new Product
-            {
-                Brand = "Apple", Name = "IPhone 13 Pro",
-                Description =
+                new Product
+                {
+                    Brand = "Apple",
+                    Name = "IPhone 13 Pro",
+                    Description =
                     "Apple iPhone 13 Pro smartphone. Announced Sep 2021. Features 6.1″ display, Apple A15 Bionic chipset, 3095 mAh battery, 1024 GB storage.",
-                Unit = "EA", Price = 999.98m
-            });
-            _context.Products.Add(new Product
-            {
-                Brand = "MI", Name = "MI 12 Pro",
-                Description =
-                    "Xiaomi 12 Pro Android smartphone. Announced Dec 2021. Features 6.73″ display, Snapdragon 8 Gen 1 chipset, 4600 mAh battery, 256 GB storage.",
-                Unit = "EA", Price = 199.00m
-            });
-            _context.Products.Add(new Product
-            {
-                Brand = "Logitech", Name = "MX KEYS Mini",
-                Description =
-                    "Logitech MX Keys Mini Introducing MX Keys Mini – a smaller, smarter, and mightier keyboard made for creators. Type with confidence on a keyboard crafted for efficiency, stability, and...",
-                Unit = "PA", Price = 99.90m
-            });
-            await _context.SaveChangesAsync();
-        }
+                    Unit = "EA",
+                    Price = 999.98m
+                },
+                new Product
+                {
+                    Brand = "Sony",
+                    Name = "WH-1000XM4",
+                    Description = "Sony WH-1000XM4 Wireless Noise-Canceling Over-Ear Headphones. Features industry-leading noise cancellation, up to 30 hours of battery life, touch sensor controls.",
+                    Unit = "EA",
+                    Price = 349.99m
+                },
+                new Product
+                {
+                    Brand = "Nintendo",
+                    Name = "Switch OLED Model",
+                    Description = "Nintendo Switch OLED Model console. Released October 2021. Features 7″ OLED screen, 64GB internal storage, enhanced audio, dock with wired LAN port.",
+                    Unit = "EA",
+                    Price = 349.99m
+                },
+                new Product
+                {
+                    Brand = "Apple",
+                    Name = "MacBook Air M1",
+                    Description = "Apple MacBook Air with M1 chip. Features 13.3″ Retina display, Apple M1 chip with 8‑core CPU, 8GB RAM, 256GB SSD storage, up to 18 hours of battery life.",
+                    Unit = "EA",
+                    Price = 999.99m
+                }
+
+            };
+
+        await _context.Products.AddRangeAsync(products);
+        await _context.SaveChangesAsync();
     }
 }
