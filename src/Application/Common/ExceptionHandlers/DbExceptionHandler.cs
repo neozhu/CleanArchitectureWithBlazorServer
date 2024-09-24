@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Text.RegularExpressions;
+using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using Npgsql;
 
@@ -49,7 +50,7 @@ public class DbExceptionHandler<TRequest, TResponse, TException> : IRequestExcep
         {
             case 2627: // Unique constraint error
             case 2601: // Duplicated key row error
-                errors.Add("A record with the same unique value already exists. Duplicate records are not allowed.");
+                errors.Add($"A record with the same unique value already exists. Duplicate value: '{ExtractDuplicateKeyValue(sqlException.Message)}'. Duplicate records are not allowed.");
                 break;
             case 515: // Cannot insert the value NULL into column
                 errors.Add("A required field is missing. Please ensure that all required fields are filled.");
@@ -58,7 +59,8 @@ public class DbExceptionHandler<TRequest, TResponse, TException> : IRequestExcep
                 errors.Add("The operation failed because this record is referenced by another record. Please remove any related records first before deleting.");
                 break;
             case 2628: // String or binary data would be truncated
-                errors.Add("The data entered is too long for one or more fields. Please shorten the input.");
+                var (columnName, truncatedValue) = ExtractTruncatedColumnInfo(sqlException.Message);
+                errors.Add($"The data entered for column '{columnName}' is too long. Truncated value: '{truncatedValue}'. Please shorten the input.");
                 break;
             case 1205: // Deadlock victim
                 errors.Add("A deadlock occurred, and your request was chosen as the victim. Please try again.");
@@ -140,5 +142,22 @@ public class DbExceptionHandler<TRequest, TResponse, TException> : IRequestExcep
         }
 
         return errors.ToArray();
+    }
+
+
+    private static string ExtractDuplicateKeyValue(string message)
+    {
+        var match = Regex.Match(message, @"duplicate key value is \(([^)]+)\)");
+        return match.Success ? match.Groups[1].Value : "unknown value";
+    }
+    private static (string columnName, string truncatedValue) ExtractTruncatedColumnInfo(string message)
+    {
+        var columnMatch = Regex.Match(message, @"column '([^']+)'");
+        var valueMatch = Regex.Match(message, @"Truncated value: '([^']+)'");
+
+        string columnName = columnMatch.Success ? columnMatch.Groups[1].Value : "unknown column";
+        string truncatedValue = valueMatch.Success ? valueMatch.Groups[1].Value : "unknown value";
+
+        return (columnName, truncatedValue);
     }
 }
