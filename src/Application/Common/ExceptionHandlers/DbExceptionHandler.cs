@@ -48,7 +48,7 @@ public class DbExceptionHandler<TRequest, TResponse, TException> : IRequestExcep
         return new[]
         {
             $"A unique constraint violation occurred on constraint in table '{tableName}'. " +
-            $"({properties}). Please ensure the values are unique."
+            $"'{properties}'. Please ensure the values are unique."
         };
     }
     private  string[] GetCannotInsertNullExceptionErrors(CannotInsertNullException exception)
