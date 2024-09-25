@@ -92,6 +92,7 @@ public static class DependencyInjection
             {
                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
                 m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
+                m.UseExceptionProcessor(databaseSettings.DBProvider);
                 m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
             });
 
@@ -113,14 +114,39 @@ public static class DependencyInjection
                 return builder.UseNpgsql(connectionString,
                         e => e.MigrationsAssembly(POSTGRESQL_MIGRATIONS_ASSEMBLY))
                     .UseSnakeCaseNamingConvention();
+                  
 
             case DbProviderKeys.SqlServer:
                 return builder.UseSqlServer(connectionString,
                     e => e.MigrationsAssembly(MSSQL_MIGRATIONS_ASSEMBLY));
+            
 
             case DbProviderKeys.SqLite:
                 return builder.UseSqlite(connectionString,
                     e => e.MigrationsAssembly(SQLITE_MIGRATIONS_ASSEMBLY));
+
+            default:
+                throw new InvalidOperationException($"DB Provider {dbProvider} is not supported.");
+        }
+    }
+
+    private static DbContextOptionsBuilder UseExceptionProcessor(this DbContextOptionsBuilder builder, string dbProvider)
+    {
+     
+        switch (dbProvider.ToLowerInvariant())
+        {
+            case DbProviderKeys.Npgsql:
+                EntityFramework.Exceptions.PostgreSQL.ExceptionProcessorExtensions.UseExceptionProcessor(builder);
+                return builder;
+
+            case DbProviderKeys.SqlServer:
+                EntityFramework.Exceptions.SqlServer.ExceptionProcessorExtensions.UseExceptionProcessor(builder);
+                return builder;
+
+
+            case DbProviderKeys.SqLite:
+                EntityFramework.Exceptions.Sqlite.ExceptionProcessorExtensions.UseExceptionProcessor(builder);
+                return builder;
 
             default:
                 throw new InvalidOperationException($"DB Provider {dbProvider} is not supported.");
