@@ -10,6 +10,9 @@
     <ItemGroup>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="8.0.8" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
         <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
         <PackageReference Include="ClosedXML" Version="0.104.0-preview2" />

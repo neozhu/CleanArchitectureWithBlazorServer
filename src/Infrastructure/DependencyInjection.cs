@@ -113,10 +113,12 @@ public static class DependencyInjection
                 return builder.UseNpgsql(connectionString,
                         e => e.MigrationsAssembly(POSTGRESQL_MIGRATIONS_ASSEMBLY))
                     .UseSnakeCaseNamingConvention();
+                  
 
             case DbProviderKeys.SqlServer:
                 return builder.UseSqlServer(connectionString,
                     e => e.MigrationsAssembly(MSSQL_MIGRATIONS_ASSEMBLY));
+            
 
             case DbProviderKeys.SqLite:
                 return builder.UseSqlite(connectionString,
