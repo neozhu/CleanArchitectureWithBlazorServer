@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Text.Json;
@@ -12,6 +12,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
+        builder.HasIndex(x => x.Name).IsUnique();
+        builder.Property(x=>x.Name).HasMaxLength(80).IsRequired();
         builder.Ignore(e => e.DomainEvents);
         builder.Property(e => e.Pictures)
             .HasConversion(

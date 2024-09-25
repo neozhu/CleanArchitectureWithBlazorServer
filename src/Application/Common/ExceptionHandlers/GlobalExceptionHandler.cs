@@ -1,14 +1,14 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 
 public class
-    ServerExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
+    GlobalExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
     where TRequest : IRequest<Result<int>>
     where TResponse : Result<int>
-    where TException : ServerException
+    where TException : Exception
 {
-    private readonly ILogger<ServerExceptionHandler<TRequest, TResponse, TException>> _logger;
+    private readonly ILogger<GlobalExceptionHandler<TRequest, TResponse, TException>> _logger;
 
-    public ServerExceptionHandler(ILogger<ServerExceptionHandler<TRequest, TResponse, TException>> logger)
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler<TRequest, TResponse, TException>> logger)
     {
         _logger = logger;
     }

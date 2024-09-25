@@ -22,6 +22,7 @@ public static class SerilogExtensions
 {
     public static void RegisterSerilog(this WebApplicationBuilder builder)
     {
+        Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine(msg));
         builder.Host.UseSerilog((context, configuration) =>
             configuration.ReadFrom.Configuration(context.Configuration)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
@@ -94,7 +95,8 @@ public static class SerilogExtensions
             AutoCreateSqlDatabase = false,
             AutoCreateSqlTable = false,
             BatchPostingLimit = 100,
-            BatchPeriod = new TimeSpan(0, 0, 20)
+            BatchPeriod = new TimeSpan(0, 0, 20),
+            
         };
 
         ColumnOptions columnOpts = new()
@@ -114,20 +116,19 @@ public static class SerilogExtensions
             {
                 new()
                 {
-                    ColumnName = "ClientIP", PropertyName = "ClientIP", DataType = SqlDbType.NVarChar, DataLength = 64
+                    ColumnName = "ClientIP", PropertyName = "ClientIP",AllowNull=true, DataType = SqlDbType.NVarChar, DataLength = 64
                 },
                 new()
                 {
-                    ColumnName = "UserName", PropertyName = "UserName", DataType = SqlDbType.NVarChar, DataLength = 64
+                    ColumnName = "UserName", PropertyName = "UserName",AllowNull=true, DataType = SqlDbType.NVarChar
                 },
                 new()
                 {
-                    ColumnName = "ClientAgent", PropertyName = "ClientAgent", DataType = SqlDbType.NVarChar,
-                    DataLength = -1
+                    ColumnName = "ClientAgent", PropertyName = "ClientAgent",AllowNull=true, DataType = SqlDbType.NVarChar
                 }
             },
             TimeStamp = { ConvertToUtc = true, ColumnName = "TimeStamp" },
-            LogEvent = { DataLength = 2048 }
+            LogEvent = { DataLength = -1 }
         };
         columnOpts.PrimaryKey = columnOpts.Id;
         columnOpts.TimeStamp.NonClusteredIndex = true;
