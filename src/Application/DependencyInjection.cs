@@ -20,12 +20,11 @@ public static class DependencyInjection
             config.NotificationPublisher = new ParallelNoWaitPublisher();
             config.AddRequestPreProcessor(typeof(IRequestPreProcessor<>), typeof(ValidationPreProcessor<>));
             config.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
-            config.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
             config.AddOpenBehavior(typeof(RequestExceptionProcessorBehavior<,>));
             config.AddOpenBehavior(typeof(MemoryCacheBehaviour<,>));
             config.AddOpenBehavior(typeof(FusionCacheBehaviour<,>));
-            //config.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
             config.AddOpenBehavior(typeof(CacheInvalidationBehaviour<,>));
+
         });
 
         services.AddLazyCache();

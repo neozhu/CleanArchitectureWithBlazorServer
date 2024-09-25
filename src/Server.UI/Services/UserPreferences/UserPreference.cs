@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Drawing;
-using System.Globalization;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 
