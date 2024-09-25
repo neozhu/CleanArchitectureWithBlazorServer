@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Layout;
 
