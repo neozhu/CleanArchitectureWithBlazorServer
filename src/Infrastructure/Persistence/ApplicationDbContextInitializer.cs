@@ -80,7 +80,7 @@ public class ApplicationDbContextInitializer
         return allPermissions;
     }
 
-    
+
 
 
     private async Task SeedTenantsAsync()
@@ -173,11 +173,12 @@ public class ApplicationDbContextInitializer
 
     private async Task SeedDataAsync()
     {
-        if (await _context.KeyValues.AnyAsync()) return;
-
-        _logger.LogInformation("Seeding key values...");
-        var keyValues = new[]
+        if (!await _context.KeyValues.AnyAsync())
         {
+
+            _logger.LogInformation("Seeding key values...");
+            var keyValues = new[]
+            {
                 new KeyValue
                 {
                     Name = Picklist.Status,
@@ -257,14 +258,16 @@ public class ApplicationDbContextInitializer
                 }
             };
 
-        await _context.KeyValues.AddRangeAsync(keyValues);
-        await _context.SaveChangesAsync();
+            await _context.KeyValues.AddRangeAsync(keyValues);
+            await _context.SaveChangesAsync();
+        }
 
-        if (await _context.Products.AnyAsync()) return;
-
-        _logger.LogInformation("Seeding products...");
-        var products = new[]
+        if (!await _context.Products.AnyAsync())
         {
+
+            _logger.LogInformation("Seeding products...");
+            var products = new[]
+            {
                 new Product
                 {
                     Brand = "Apple",
@@ -301,7 +304,8 @@ public class ApplicationDbContextInitializer
 
             };
 
-        await _context.Products.AddRangeAsync(products);
-        await _context.SaveChangesAsync();
+            await _context.Products.AddRangeAsync(products);
+            await _context.SaveChangesAsync();
+        }
     }
 }
