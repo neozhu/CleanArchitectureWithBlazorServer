@@ -53,10 +53,12 @@ public class DbExceptionHandler<TRequest, TResponse, TException> : IRequestExcep
                 errors.Add($"A record with the same unique value already exists. Duplicate value: '{ExtractDuplicateKeyValue(sqlException.Message)}'. Duplicate records are not allowed.");
                 break;
             case 515: // Cannot insert the value NULL into column
-                errors.Add("A required field is missing. Please ensure that all required fields are filled.");
+                var (t1, c1) = ExtractNullColumnInfo(sqlException.Message);
+                errors.Add($"A required field '{c1}' in table '{t1}' is missing. Please ensure that all required fields are filled.");
                 break;
             case 547: // Constraint check violation (e.g., foreign key violation)
-                errors.Add("The operation failed because this record is referenced by another record. Please remove any related records first before deleting.");
+                var (t2, c2) = ExtractConstraintInfo(sqlException.Message);
+                errors.Add($"The operation failed because this record is referenced by another record in table '{t2}' (column: '{c2}'). Please remove any related records first before deleting.");
                 break;
             case 2628: // String or binary data would be truncated
                 var (columnName, truncatedValue) = ExtractTruncatedColumnInfo(sqlException.Message);
@@ -87,10 +89,12 @@ public class DbExceptionHandler<TRequest, TResponse, TException> : IRequestExcep
                 errors.Add("A record with the same unique value already exists. Duplicate records are not allowed.");
                 break;
             case PostgresErrorCodes.NotNullViolation:
-                errors.Add("A required field is missing. Please ensure that all required fields are filled.");
+                var (t1, c1) = ExtractPGNullColumnInfo(pgException.Message);
+                errors.Add($"A required field '{c1}' in table '{t1}' is missing. Please ensure that all required fields are filled.");
                 break;
             case PostgresErrorCodes.ForeignKeyViolation:
-                errors.Add("The operation failed because this record is referenced by another record. Please remove any related records first before deleting.");
+                var (t2, constraint) = ExtractForeignKeyViolationInfo(pgException.Message);
+                errors.Add($"The operation failed because this record is referenced by another record in table '{t2}' (constraint: '{constraint}'). Please remove any related records first before deleting.");
                 break;
             case PostgresErrorCodes.StringDataRightTruncation:
                 errors.Add("The data entered is too long for one or more fields. Please shorten the input.");
@@ -159,5 +163,45 @@ public class DbExceptionHandler<TRequest, TResponse, TException> : IRequestExcep
         string truncatedValue = valueMatch.Success ? valueMatch.Groups[1].Value : "unknown value";
 
         return (columnName, truncatedValue);
+    }
+    private static ( string table, string column) ExtractConstraintInfo(string message)
+    {
+        var tableMatch = Regex.Match(message, @"table ""([^""]+)""");
+        var columnMatch = Regex.Match(message, @"column '([^']+)'");
+
+        string table = tableMatch.Success ? tableMatch.Groups[1].Value : "unknown table";
+        string column = columnMatch.Success ? columnMatch.Groups[1].Value : "unknown column";
+
+        return (table, column);
+    }
+    private static (string table, string column) ExtractNullColumnInfo(string message)
+    {
+        var tableMatch = Regex.Match(message, @"table '([^']+)'");
+        var columnMatch = Regex.Match(message, @"column '([^']+)'");
+
+        string table = tableMatch.Success ? tableMatch.Groups[1].Value : "unknown table";
+        string column = columnMatch.Success ? columnMatch.Groups[1].Value : "unknown column";
+
+        return (table, column);
+    }
+
+    private static (string table, string column) ExtractPGNullColumnInfo(string message)
+    {
+        var tableMatch = Regex.Match(message, @"column ""([^""]+)"" of relation ""([^""]+)""");
+
+        string column = tableMatch.Success ? tableMatch.Groups[1].Value : "unknown column";
+        string table = tableMatch.Success ? tableMatch.Groups[2].Value : "unknown table";
+
+        return (table, column);
+    }
+    private static (string table, string constraint) ExtractForeignKeyViolationInfo(string message)
+    {
+        var tableMatch = Regex.Match(message, @"table ""([^""]+)""");
+        var constraintMatch = Regex.Match(message, @"constraint ""([^""]+)""");
+
+        string table = tableMatch.Success ? tableMatch.Groups[1].Value : "unknown table";
+        string constraint = constraintMatch.Success ? constraintMatch.Groups[1].Value : "unknown constraint";
+
+        return (table, constraint);
     }
 }
