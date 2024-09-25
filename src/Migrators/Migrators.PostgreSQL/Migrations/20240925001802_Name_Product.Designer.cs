@@ -3,6 +3,7 @@ using System;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240925001802_Name_Product")]
+    partial class Name_Product
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -293,8 +296,8 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnName("client_ip");
 
                     b.Property<string>("Exception")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("text")
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)")
                         .HasColumnName("exception");
 
                     b.Property<string>("Level")
@@ -304,23 +307,23 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnName("level");
 
                     b.Property<string>("LogEvent")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("text")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
                         .HasColumnName("log_event");
 
                     b.Property<string>("Message")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("text")
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)")
                         .HasColumnName("message");
 
                     b.Property<string>("MessageTemplate")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("text")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
                         .HasColumnName("message_template");
 
                     b.Property<string>("Properties")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("text")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
                         .HasColumnName("properties");
 
                     b.Property<DateTime>("TimeStamp")
@@ -335,8 +338,14 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.HasKey("Id")
                         .HasName("pk_loggers");
 
+                    b.HasIndex("Exception")
+                        .HasDatabaseName("ix_loggers_exception");
+
                     b.HasIndex("Level")
                         .HasDatabaseName("ix_loggers_level");
+
+                    b.HasIndex("Message")
+                        .HasDatabaseName("ix_loggers_message");
 
                     b.HasIndex("TimeStamp")
                         .HasDatabaseName("ix_loggers_time_stamp");
