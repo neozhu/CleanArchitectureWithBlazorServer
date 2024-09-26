@@ -1,0 +1,25 @@
+﻿﻿<MudGrid Class="ma-0 pa-0" Spacing="0">
+    <MudItem xs="2">
+        <MudText Typo="Typo.body2">@Label</MudText>
+    </MudItem>
+    <MudItem xs="10" Class="d-flex flex-row gap-1">
+        @if (CheckBox)
+        {
+            <MudCheckBox Disabled="true" Value="@(Convert.ToBoolean(Value))"></MudCheckBox>
+        }
+        else
+        {
+            <MudText Typo="Typo.body2">@Value</MudText>
+        }
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public string? Label { get; set; }
+    [Parameter]
+    public object? Value { get; set; }
+    [Parameter]
+    public bool CheckBox { get; set; }
+  
+}

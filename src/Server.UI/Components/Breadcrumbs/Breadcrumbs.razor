@@ -4,10 +4,31 @@
         <MudBreadcrumbs Items="@BreadcrumbItems"></MudBreadcrumbs>
     </div>
     <MudSpacer></MudSpacer>
-    <div class="d-flex align-center gap-2">
-        <div>
-             <MudLoadingButton StartIcon="@Icons.Material.Filled.Save" Color="Color.Primary" DropShadow="false" Loading="@Saving" Variant="Variant.Outlined" OnClick="@Save">@ConstantString.Save</MudLoadingButton>
-        </div>
+    <div class="d-flex align-center gap-1">
+
+        @if (OnSaveButtonClick.HasDelegate)
+        {
+            <MudLoadingButton StartIcon="@Icons.Material.Filled.Save" Color="Color.Primary" DropShadow="false" Loading="@Saving" Variant="Variant.Outlined" OnClick="@Save">@ConstantString.Save</MudLoadingButton>
+        }
+        @if (OnGoEditClick.HasDelegate)
+        {
+            <MudButton StartIcon="@Icons.Material.Filled.Edit" Color="Color.Info" Variant="Variant.Outlined" OnClick="@GoEdit">@ConstantString.Edit</MudButton>
+        }
+        @if (OnDeleteClick.HasDelegate || OnPrintClick.HasDelegate)
+        {
+            <MudMenu Icon="@Icons.Material.Filled.MoreVert" AnchorOrigin="Origin.BottomLeft"
+                     AriaLabel="@ConstantString.More">
+                @if (OnDeleteClick.HasDelegate)
+                {
+                    <MudMenuItem OnClick="Delete"> @ConstantString.Delete</MudMenuItem>
+                }
+                @if (OnPrintClick.HasDelegate)
+                {
+                    <MudMenuItem OnClick="Print"> @ConstantString.Print</MudMenuItem>
+                }
+            </MudMenu>
+        }
+
     </div>
 </div>
 
@@ -18,10 +39,16 @@
     public bool Saving { get; set; }
     [Parameter]
     public EventCallback OnSaveButtonClick { get; set; }
+    [Parameter]
+    public EventCallback OnGoEditClick { get; set; }
+    [Parameter]
+    public EventCallback OnDeleteClick { get; set; }
+    [Parameter]
+    public EventCallback OnPrintClick { get; set; }
 
     private async Task GoBack()
     {
-       await  new HistoryGo(JS).GoBack();
+        await new HistoryGo(JS).GoBack();
     }
 
     private async Task Save()
@@ -29,6 +56,27 @@
         if (OnSaveButtonClick.HasDelegate)
         {
             await OnSaveButtonClick.InvokeAsync();
+        }
+    }
+    private async Task GoEdit()
+    {
+        if (OnGoEditClick.HasDelegate)
+        {
+            await OnGoEditClick.InvokeAsync();
+        }
+    }
+    private async Task Delete()
+    {
+        if (OnDeleteClick.HasDelegate)
+        {
+            await OnDeleteClick.InvokeAsync();
+        }
+    }
+    private async Task Print()
+    {
+        if (OnPrintClick.HasDelegate)
+        {
+            await OnPrintClick.InvokeAsync();
         }
     }
 }
