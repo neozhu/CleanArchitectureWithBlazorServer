@@ -60,6 +60,11 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
     </ItemGroup>
+    <ItemGroup>
+      <Content Update="Pages\Contacts\ViewContact.razor">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </Content>
+    </ItemGroup>
 
 
 </Project>
