@@ -7,11 +7,23 @@ public class GlobalExceptionHandler<TRequest, TResponse, TException> : IRequestE
 {
     private readonly ILogger<GlobalExceptionHandler<TRequest, TResponse, TException>> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GlobalExceptionHandler{TRequest, TResponse, TException}"/> class.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
     public GlobalExceptionHandler(ILogger<GlobalExceptionHandler<TRequest, TResponse, TException>> logger)
     {
         _logger = logger;
     }
 
+    /// <summary>
+    /// Handles the exception and sets the failure result.
+    /// </summary>
+    /// <param name="request">The request.</param>
+    /// <param name="exception">The exception.</param>
+    /// <param name="state">The request exception handler state.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state,
         CancellationToken cancellationToken)
     {
