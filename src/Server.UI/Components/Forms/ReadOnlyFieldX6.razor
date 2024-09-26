@@ -1,0 +1,16 @@
+﻿﻿<MudGrid Class="ma-0 pa-0" Spacing="0">
+    <MudItem xs="4">
+        <MudText Typo="Typo.body2">@Label</MudText>
+    </MudItem>
+    <MudItem xs="8" Class="d-flex flex-row gap-1">
+        <MudText Typo="Typo.body2">@Value</MudText>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public string? Label { get; set; }
+    [Parameter]
+    public string? Value { get; set; }
+  
+}

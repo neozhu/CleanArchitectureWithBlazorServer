@@ -4,10 +4,21 @@
         <MudBreadcrumbs Items="@BreadcrumbItems"></MudBreadcrumbs>
     </div>
     <MudSpacer></MudSpacer>
-    <div class="d-flex align-center gap-2">
-        <div>
-             <MudLoadingButton StartIcon="@Icons.Material.Filled.Save" Color="Color.Primary" DropShadow="false" Loading="@Saving" Variant="Variant.Outlined" OnClick="@Save">@ConstantString.Save</MudLoadingButton>
-        </div>
+    <div class="d-flex align-center gap-1">
+     
+            @if (OnSaveButtonClick.HasDelegate)
+            {
+                <MudLoadingButton StartIcon="@Icons.Material.Filled.Save" Color="Color.Primary" DropShadow="false" Loading="@Saving" Variant="Variant.Outlined" OnClick="@Save">@ConstantString.Save</MudLoadingButton>
+            }
+            @if (OnGoEditClick.HasDelegate)
+            {
+                <MudButton StartIcon="@Icons.Material.Filled.Edit" Color="Color.Info" Variant="Variant.Outlined" OnClick="@GoEdit">@ConstantString.Edit</MudButton>
+            }
+            @if (OnDeleteClick.HasDelegate)
+            {
+                <MudButton StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Outlined" OnClick="@Delete">@ConstantString.Delete</MudButton>
+            }
+     
     </div>
 </div>
 
@@ -18,6 +29,10 @@
     public bool Saving { get; set; }
     [Parameter]
     public EventCallback OnSaveButtonClick { get; set; }
+    [Parameter]
+    public EventCallback OnGoEditClick { get; set; }
+    [Parameter]
+    public EventCallback OnDeleteClick { get; set; }
 
     private async Task GoBack()
     {
@@ -29,6 +44,20 @@
         if (OnSaveButtonClick.HasDelegate)
         {
             await OnSaveButtonClick.InvokeAsync();
+        }
+    }
+    private async Task GoEdit()
+    {
+        if (OnGoEditClick.HasDelegate)
+        {
+            await OnGoEditClick.InvokeAsync();
+        }
+    }
+    private async Task Delete()
+    {
+        if (OnDeleteClick.HasDelegate)
+        {
+            await OnDeleteClick.InvokeAsync();
         }
     }
 }
