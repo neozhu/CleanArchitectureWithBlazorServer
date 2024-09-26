@@ -10,7 +10,7 @@
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs BreadcrumbItems="_breadcrumbItems" OnGoEditClick="GoEdit" OnDeleteClick="Delete"></Breadcrumbs>
 <MudContainer Class="p-4 mt-3" MaxWidth="MaxWidth.Medium">
-    @if (model != null)
+    @if (dto != null)
     {
         <MudCard>
             <MudCardHeader>
@@ -19,21 +19,21 @@
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent>
-                <MudGrid>
+                <MudGrid Spacing="3" Class="readonly-grid">
                     <MudItem xs="12" md="6">
-                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x => x.Name)]" Value="@model.Name"></ReadOnlyFieldX6>
+                        <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.Name)]" Value="@dto.Name"></ReadOnlyFieldX6>
                     </MudItem>
-                    <MudItem xs="12" md="6">
-                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x => x.Email)]" Value="@model.Email"></ReadOnlyFieldX6>
+                    <MudItem xs="12" md="6" >
+                        <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.Email)]" Value="@dto.Email"></ReadOnlyFieldX6>
                     </MudItem>
-                    <MudItem xs="12" md="6">
-                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x => x.PhoneNumber)]" Value="@model.PhoneNumber"></ReadOnlyFieldX6>
+                    <MudItem xs="12" md="6" >
+                        <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.PhoneNumber)]" Value="@dto.PhoneNumber"></ReadOnlyFieldX6>
                     </MudItem>
-                    <MudItem xs="12" md="6">
-                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x => x.Country)]" Value="@model.Country"></ReadOnlyFieldX6>
+                    <MudItem xs="12" md="6" >
+                        <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.Country)]" Value="@dto.Country"></ReadOnlyFieldX6>
                     </MudItem>
                     <MudItem xs="12" md="12">
-                        <ReadOnlyFieldX12 Label="@L[model.GetMemberDescription(x => x.Description)]" Value="@model.Description"></ReadOnlyFieldX12>
+                        <ReadOnlyFieldX12 Label="@L[dto.GetMemberDescription(x => x.Description)]" Value="@dto.Description"></ReadOnlyFieldX12>
                     </MudItem>
                 </MudGrid>
             </MudCardContent>
@@ -41,7 +41,7 @@
     }
 </MudContainer>
 
-
+ 
 @code {
     public string? Title { get; private set; }
     [Parameter]
@@ -53,15 +53,14 @@
         new BreadcrumbItem("Home", href: "/"),
         new BreadcrumbItem("Contacts", href: "/pages/Contacts")
     };
-    private ContactDto? model;
+    private ContactDto? dto;
     protected override async Task OnInitializedAsync()
     {
         Title = L["Contact"];
-        var itemDto = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
-        if (itemDto is not null)
+        dto = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
+        if (dto is not null)
         {
-            model = itemDto;
-            _breadcrumbItems.Add(new BreadcrumbItem(itemDto.Name,null,disabled:true));
+            _breadcrumbItems.Add(new BreadcrumbItem(dto.Name, null, disabled: true));
             
         }
 
@@ -72,8 +71,8 @@
     }
     async Task Delete()
     {
-        var contentText = string.Format(ConstantString.DeleteConfirmation, model.Name);
-        var command = new DeleteContactCommand(new int[] { model.Id });
+        var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Name);
+        var command = new DeleteContactCommand(new int[] { dto.Id });
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(() =>
