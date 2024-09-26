@@ -3,13 +3,13 @@
 
 namespace CleanArchitecture.Blazor.Application.Pipeline;
 
-public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class GlobalExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly ILogger<TRequest> _logger;
 
-    public UnhandledExceptionBehaviour(ILogger<TRequest> logger, ICurrentUserService currentUserService)
+    public GlobalExceptionBehaviour(ILogger<TRequest> logger, ICurrentUserService currentUserService)
     {
         _logger = logger;
         _currentUserService = currentUserService;
@@ -26,8 +26,12 @@ public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavio
         {
             var requestName = typeof(TRequest).Name;
             var userName = _currentUserService.UserName;
-            _logger.LogError(ex, "An error occurred while processing the request {RequestName} by user {UserName}. Error: {ErrorMessage}, Request details: {@Request}",
-            requestName, userName, ex.Message, request);
+            _logger.LogError(ex,
+                "Request: {RequestName} by User: {UserName} failed. Error: {ErrorMessage}. Request Details: {@Request}",
+                requestName,
+                userName,
+                ex.Message,
+                request);
             throw;
         }
     }
