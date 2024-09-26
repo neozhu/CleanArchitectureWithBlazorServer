@@ -1,10 +1,8 @@
 ﻿@page "/pages/Contacts/view/{id:int}"
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Delete
-@using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Update
 @using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById
 @inherits MudComponentBase
-@inject IValidationService Validator
 @inject IStringLocalizer<Contacts> L
 
 <PageTitle>@Title</PageTitle>
@@ -46,8 +44,6 @@
     public string? Title { get; private set; }
     [Parameter]
     public int Id { get; set; }
-    private bool _saving = false;
-    private bool _savingnew = false;
     private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "/"),
