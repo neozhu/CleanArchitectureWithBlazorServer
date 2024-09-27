@@ -7,10 +7,10 @@
 
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs BreadcrumbItems="_breadcrumbItems" OnGoEditClick="GoEdit" OnDeleteClick="Delete"></Breadcrumbs>
-<MudContainer Class="p-4 mt-3" MaxWidth="MaxWidth.Medium">
+<MudContainer Class="mt-3" MaxWidth="MaxWidth.Medium">
     @if (dto != null)
     {
-        <MudCard>
+        <MudCard Class="pa-2">
             <MudCardHeader>
                 <CardHeaderContent>
                     <MudText Typo="Typo.h6">@Title</MudText>
@@ -35,6 +35,7 @@
                     </MudItem>
                 </MudGrid>
             </MudCardContent>
+            <MudCardActions></MudCardActions>
         </MudCard>
     }
 </MudContainer>

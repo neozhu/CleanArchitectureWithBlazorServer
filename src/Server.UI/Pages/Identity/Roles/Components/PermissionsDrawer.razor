@@ -16,7 +16,7 @@
                       Variant="Variant.Text"
                       Adornment="Adornment.End"
                       AdornmentIcon="@Icons.Material.Filled.Search"
-                      AdornmentColor="Color.Secondary"/>
+                      AdornmentColor="Color.Secondary" />
     </MudStack>
     @if (Permissions.Any())
     {
@@ -36,7 +36,7 @@
                     </CardHeaderContent>
                     <CardHeaderActions>
                         <MudTooltip Text="@L["Assign or Unassign all"]">
-                            <MudIconButton Disabled="@Waiting" Icon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Default" OnClick="@(() => OnAssignAll(group))"/>
+                            <MudIconButton Disabled="@Waiting" Icon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Default" OnClick="@(() => OnAssignAll(group))" />
                         </MudTooltip>
                     </CardHeaderActions>
                 </MudCardHeader>
@@ -46,14 +46,16 @@
                         var x = i;
                         if (Permissions[x].Group == group)
                         {
-                            <MudCheckBox Dense="true"
-                                         T="bool"
-                                         Size="Size.Small"
-                                         Value="@Permissions[x].Assigned"
-                                         Label="@L[Permissions[x].ClaimValue]"
-                                         ValueChanged="@(s => OnAssignChanged.InvokeAsync(Permissions[x]))"
-                                         Color="Color.Primary">
-                            </MudCheckBox>
+                            <MudTooltip Delay="400" Text="@L[Permissions[x].HelpText??Permissions[x].Name]" title="@L[Permissions[x].HelpText??Permissions[x].Name]">
+                                <MudCheckBox Dense="true"
+                                             T="bool"
+                                             Size="Size.Small"
+                                             Value="@Permissions[x].Assigned"
+                                             Label="@L[Permissions[x].Name]"
+                                             ValueChanged="@(s => OnAssignChanged.InvokeAsync(Permissions[x]))"
+                                             Color="Color.Primary">
+                                </MudCheckBox>
+                            </MudTooltip>
                         }
                     }
                 </MudCardContent>
@@ -63,20 +65,20 @@
     }
     else
     {
-        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7"/>
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
     }
 </MudDrawer>
 
-@code{
-    [EditorRequired] [Parameter] public IList<PermissionModel>? Permissions { get; set; }
+@code {
+    [EditorRequired][Parameter] public IList<PermissionModel>? Permissions { get; set; }
 
-    [EditorRequired] [Parameter] public bool Open { get; set; } = default!;
+    [EditorRequired][Parameter] public bool Open { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public EventCallback<PermissionModel> OnAssignChanged { get; set; }
+    [EditorRequired][Parameter] public EventCallback<PermissionModel> OnAssignChanged { get; set; }
 
-    [EditorRequired] [Parameter] public EventCallback<List<PermissionModel>> OnAssignAllChanged { get; set; }
+    [EditorRequired][Parameter] public EventCallback<List<PermissionModel>> OnAssignAllChanged { get; set; }
 
-    [EditorRequired] [Parameter] public EventCallback<bool> OnOpenChanged { get; set; }
+    [EditorRequired][Parameter] public EventCallback<bool> OnOpenChanged { get; set; }
 
     [Parameter] public bool Waiting { get; set; }
 
