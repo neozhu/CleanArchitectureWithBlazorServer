@@ -7,8 +7,8 @@
 
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
-<MudContainer Class="p-4 mt-3" MaxWidth="MaxWidth.Medium">
-    <MudCard>
+<MudContainer Class="mt-3" MaxWidth="MaxWidth.Medium">
+    <MudCard Class="pa-2">
         <MudCardHeader>
             <CardHeaderContent>
                 <MudText Typo="Typo.h6">@Title</MudText>
@@ -34,10 +34,11 @@
                     </MudItem>
                 </MudGrid>
             </MudForm>
-            <MudCardActions Class="d-flex justify-end gap-2">
-                <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" Variant="Variant.Outlined" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
-            </MudCardActions>
+          
         </MudCardContent>
+        <MudCardActions Class="d-flex justify-end gap-2">
+            <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" Variant="Variant.Outlined" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        </MudCardActions>
     </MudCard>
 </MudContainer>
 
