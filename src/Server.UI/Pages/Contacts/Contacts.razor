@@ -29,6 +29,7 @@
              Loading="@_loading"
              MultiSelection="true"
              T="ContactDto"
+             SelectOnRowClick="false"
              RowClick="@(s=>OnView(s.Item))"
              @bind-SelectedItems="_selectedItems"
              @bind-SelectedItem="_currentDto"
