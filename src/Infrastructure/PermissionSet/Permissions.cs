@@ -26,8 +26,9 @@ public static partial class Permissions
         return permissions;
     }
 
-    [DisplayName("Audit Trails")]
-    [Description("Audit Trails Permissions")]
+
+    [DisplayName("Audit Permissions")]
+    [Description("Set permissions for audit operations.")]
     public static class AuditTrails
     {
         public const string View = "Permissions.AuditTrails.View";
@@ -35,8 +36,8 @@ public static partial class Permissions
         public const string Export = "Permissions.AuditTrails.Export";
     }
 
-    [DisplayName("Logs")]
-    [Description("Logs Permissions")]
+    [DisplayName("Log Permissions")]
+    [Description("Set permissions for log operations.")]
     public static class Logs
     {
         public const string View = "Permissions.Logs.View";
@@ -46,8 +47,8 @@ public static partial class Permissions
     }
 
 
-    [DisplayName("Picklist")]
-    [Description("Picklist Permissions")]
+    [DisplayName("Picklist Permissions")]
+    [Description("Set permissions for picklist operations.")]
     public static class Dictionaries
     {
         public const string View = "Permissions.Dictionaries.View";
@@ -59,8 +60,8 @@ public static partial class Permissions
         public const string Import = "Permissions.Dictionaries.Import";
     }
 
-    [DisplayName("Users")]
-    [Description("Users Permissions")]
+    [DisplayName("User Permissions")]
+    [Description("Set permissions for user operations.")]
     public static class Users
     {
         public const string View = "Permissions.Users.View";
@@ -77,8 +78,8 @@ public static partial class Permissions
         public const string Deactivation = "Permissions.Users.Activation/Deactivation";
     }
 
-    [DisplayName("Roles")]
-    [Description("Roles Permissions")]
+    [DisplayName("Role Permissions")]
+    [Description("Set permissions for role operations.")]
     public static class Roles
     {
         public const string View = "Permissions.Roles.View";
@@ -92,8 +93,8 @@ public static partial class Permissions
         public const string ManageNavigation = "Permissions.Roles.Navigation";
     }
 
-    [DisplayName("Multi-Tenant")]
-    [Description("Multi-Tenant Permissions")]
+    [DisplayName("Tenant Permissions")]
+    [Description("Set permissions for tenant operations.")]
     public static class Tenants
     {
         public const string View = "Permissions.Tenants.View";
@@ -103,27 +104,17 @@ public static partial class Permissions
         public const string Search = "Permissions.Tenants.Search";
     }
 
-    [DisplayName("Role Claims")]
-    [Description("Role Claims Permissions")]
-    public static class RoleClaims
-    {
-        public const string View = "Permissions.RoleClaims.View";
-        public const string Create = "Permissions.RoleClaims.Create";
-        public const string Edit = "Permissions.RoleClaims.Edit";
-        public const string Delete = "Permissions.RoleClaims.Delete";
-        public const string Search = "Permissions.RoleClaims.Search";
-    }
 
 
-    [DisplayName("Dashboard")]
-    [Description("Dashboard Permissions")]
+    [DisplayName("Dashboard Permissions")]
+    [Description("Set permissions for dashboard operations.")]
     public static class Dashboards
     {
         public const string View = "Permissions.Dashboards.View";
     }
 
-    [DisplayName("Job")]
-    [Description("Job Permissions")]
+    [DisplayName("Job Permissions")]
+    [Description("Set permissions for job operations.")]
     public static class Hangfire
     {
         public const string View = "Permissions.Hangfire.View";

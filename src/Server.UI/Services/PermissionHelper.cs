@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using ZiggyCreatures.Caching.Fusion;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 
@@ -39,17 +40,26 @@ public class PermissionHelper
             var moduleDescription = module.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
             var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            allPermissions = allPermissions.Concat(fields.Select(field => field.GetValue(null)?.ToString())
-                .Where(claimValue => claimValue != null)
-                .Select(claimValue => new PermissionModel
+            allPermissions = allPermissions.Concat(fields.Select(field =>
+            {
+                var claimValue = field.GetValue(null)?.ToString();
+                // Convert field name from PascalCase/CamelCase to space-separated words with first letter capitalized
+                var name = System.Text.RegularExpressions.Regex.Replace(field.Name, "(\\B[A-Z])", " $1").Trim().ToLower();
+                name = char.ToUpper(name[0]) + name.Substring(1); // Capitalize the first letter
+                var helpText = field.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty; // Get the description attribute
+
+                return new PermissionModel
                 {
                     UserId = userId,
                     ClaimValue = claimValue ?? string.Empty,
                     ClaimType = ApplicationClaimTypes.Permission,
                     Group = moduleName,
+                    Name = name, // Assigning the field name
+                    HelpText = helpText, // Assigning the description as HelpText
                     Description = moduleDescription,
                     Assigned = assignedClaims.Any(x => x.Value.Equals(claimValue))
-                })).ToList();
+                };
+            }).Where(pm => !string.IsNullOrEmpty(pm.ClaimValue))).ToList();
         }
 
         return allPermissions;
@@ -78,17 +88,26 @@ public class PermissionHelper
             var moduleDescription = module.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
             var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
-            allPermissions = allPermissions.Concat(fields.Select(field => field.GetValue(null)?.ToString())
-                .Where(claimValue => !string.IsNullOrEmpty(claimValue))
-                .Select(claimValue => new PermissionModel
+            allPermissions = allPermissions.Concat(fields.Select(field =>
+            {
+                var claimValue = field.GetValue(null)?.ToString();
+                // Convert field name from PascalCase/CamelCase to space-separated words with first letter capitalized
+                var name = System.Text.RegularExpressions.Regex.Replace(field.Name, "(\\B[A-Z])", " $1").Trim().ToLower(); 
+                name = char.ToUpper(name[0]) + name.Substring(1); // Capitalize the first letter
+                var helpText = field.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty; // Get the description attribute
+
+                return new PermissionModel
                 {
                     RoleId = roleId,
                     ClaimValue = claimValue ?? string.Empty,
                     ClaimType = ApplicationClaimTypes.Permission,
                     Group = moduleName,
+                    Name = name, // Assigning the field name
+                    HelpText = helpText, // Assigning the description as HelpText
                     Description = moduleDescription,
                     Assigned = assignedClaims.Any(x => x.Value.Equals(claimValue))
-                })).ToList();
+                };
+            }).Where(pm => !string.IsNullOrEmpty(pm.ClaimValue))).ToList();
         }
 
         return allPermissions;
