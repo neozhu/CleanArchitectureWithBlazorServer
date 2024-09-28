@@ -25,7 +25,7 @@ public class PermissionHelper
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         _fusionCache = fusionCache;
-        _refreshInterval = TimeSpan.FromDays(1);
+        _refreshInterval = TimeSpan.FromSeconds(30);
     }
 
     public async Task<IList<PermissionModel>> GetAllPermissionsByUserId(string userId)
@@ -72,7 +72,20 @@ public class PermissionHelper
         {
             var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(false)
                        ?? throw new NotFoundException($"not found application user: {userId}");
-            return await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
+            var userClaims= await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
+            var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+            var roleClaims = new List<Claim>();
+            foreach (var roleName in roles)
+            {
+                var role = await _roleManager.FindByNameAsync(roleName).ConfigureAwait(false)
+                            ?? throw new NotFoundException($"not found application role: {roleName}");
+                var claims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
+                roleClaims.AddRange(claims);
+            }
+            var allClaims = userClaims.Concat(roleClaims).Distinct(new ClaimComparer()).ToList();
+
+            return allClaims;
+
         }, _refreshInterval).ConfigureAwait(false);
     }
 
@@ -122,5 +135,19 @@ public class PermissionHelper
                        ?? throw new NotFoundException($"not found application role: {roleId}");
             return await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
         }, _refreshInterval).ConfigureAwait(false);
+    }
+
+
+    public class ClaimComparer : IEqualityComparer<Claim>
+    {
+        public bool Equals(Claim x, Claim y)
+        {
+            return x.Type.Equals(y.Type) && x.Value.Equals(y.Value);
+        }
+
+        public int GetHashCode(Claim obj)
+        {
+            return HashCode.Combine(obj.Type, obj.Value);
+        }
     }
 }
