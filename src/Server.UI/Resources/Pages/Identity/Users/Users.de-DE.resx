@@ -292,4 +292,10 @@
   <data name="Search by role name" xml:space="preserve">
     <value>Suche nach Rollennamen</value>
   </data>
+  <data name="Superior" xml:space="preserve">
+    <value>Übergeordneter</value>
+  </data>
+  <data name="Tenant" xml:space="preserve">
+    <value>Mieter</value>
+  </data>
 </root>

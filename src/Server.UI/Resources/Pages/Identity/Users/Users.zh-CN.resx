@@ -292,4 +292,10 @@
   <data name="Search by role name" xml:space="preserve">
     <value>按角色名称搜索</value>
   </data>
+  <data name="Tenant" xml:space="preserve">
+    <value>租户</value>
+  </data>
+  <data name="Superior" xml:space="preserve">
+    <value>上级</value>
+  </data>
 </root>
