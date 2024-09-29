@@ -24,7 +24,7 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<AuditTrail> AuditTrails { get; set; }
     public DbSet<Document> Documents { get; set; }
 
-    public DbSet<KeyValue> KeyValues { get; set; }
+    public DbSet<PicklistSet> PicklistSets { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Contact> Contacts { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }

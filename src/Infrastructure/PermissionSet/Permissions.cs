@@ -49,15 +49,15 @@ public static partial class Permissions
 
     [DisplayName("Picklist Permissions")]
     [Description("Set permissions for picklist operations.")]
-    public static class Dictionaries
+    public static class PicklistSets
     {
-        public const string View = "Permissions.Dictionaries.View";
-        public const string Create = "Permissions.Dictionaries.Create";
-        public const string Edit = "Permissions.Dictionaries.Edit";
-        public const string Delete = "Permissions.Dictionaries.Delete";
-        public const string Search = "Permissions.Dictionaries.Search";
-        public const string Export = "Permissions.Dictionaries.Export";
-        public const string Import = "Permissions.Dictionaries.Import";
+        public const string View = "Permissions.PicklistSets.View";
+        public const string Create = "Permissions.PicklistSets.Create";
+        public const string Edit = "Permissions.PicklistSets.Edit";
+        public const string Delete = "Permissions.PicklistSets.Delete";
+        public const string Search = "Permissions.PicklistSets.Search";
+        public const string Export = "Permissions.PicklistSets.Export";
+        public const string Import = "Permissions.PicklistSets.Import";
     }
 
     [DisplayName("User Permissions")]
