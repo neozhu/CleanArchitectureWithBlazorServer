@@ -116,7 +116,7 @@ public class MenuService : IMenuService
                         new()
                         {
                             Title = "Picklist",
-                            Href = "/system/picklist",
+                            Href = "/system/picklistset",
                             PageStatus = PageStatus.Completed
                         },
                         new()

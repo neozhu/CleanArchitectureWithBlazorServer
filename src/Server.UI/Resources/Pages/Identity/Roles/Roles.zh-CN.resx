@@ -233,7 +233,7 @@
     <value>权限删除成功</value>
   </data>
   <data name="Picklist" xml:space="preserve">
-    <value>选择列表</value>
+    <value>选项列表</value>
   </data>
   <data name="Picklist Permissions" xml:space="preserve">
     <value>选项列表权限</value>

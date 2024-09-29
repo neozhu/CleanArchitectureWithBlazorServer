@@ -176,54 +176,6 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                     b.ToTable("Documents");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.KeyValue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("Text")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Value")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name", "Value")
-                        .IsUnique()
-                        .HasFilter("[Value] IS NOT NULL");
-
-                    b.ToTable("KeyValues");
-                });
-
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Logger", b =>
                 {
                     b.Property<int>("Id")
@@ -279,6 +231,54 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                     b.HasIndex("TimeStamp");
 
                     b.ToTable("Loggers");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.PicklistSet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Text")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name", "Value")
+                        .IsUnique()
+                        .HasFilter("[Value] IS NOT NULL");
+
+                    b.ToTable("PicklistSets");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Product", b =>

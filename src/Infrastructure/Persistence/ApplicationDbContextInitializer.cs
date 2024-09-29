@@ -173,83 +173,83 @@ public class ApplicationDbContextInitializer
 
     private async Task SeedDataAsync()
     {
-        if (!await _context.KeyValues.AnyAsync())
+        if (!await _context.PicklistSets.AnyAsync())
         {
 
             _logger.LogInformation("Seeding key values...");
             var keyValues = new[]
             {
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Status,
                     Value = "initialization",
                     Text = "Initialization",
                     Description = "Status of workflow"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Status,
                     Value = "processing",
                     Text = "Processing",
                     Description = "Status of workflow"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Status,
                     Value = "pending",
                     Text = "Pending",
                     Description = "Status of workflow"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Status,
                     Value = "done",
                     Text = "Done",
                     Description = "Status of workflow"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Brand,
                     Value = "Apple",
                     Text = "Apple",
                     Description = "Brand of production"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Brand,
                     Value = "Google",
                     Text = "Google",
                     Description = "Brand of production"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Brand,
                     Value = "Microsoft",
                     Text = "Microsoft",
                     Description = "Brand of production"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Unit,
                     Value = "EA",
                     Text = "EA",
                     Description = "Unit of product"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Unit,
                     Value = "KM",
                     Text = "KM",
                     Description = "Unit of product"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Unit,
                     Value = "PC",
                     Text = "PC",
                     Description = "Unit of product"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Unit,
                     Value = "L",
@@ -258,7 +258,7 @@ public class ApplicationDbContextInitializer
                 }
             };
 
-            await _context.KeyValues.AddRangeAsync(keyValues);
+            await _context.PicklistSets.AddRangeAsync(keyValues);
             await _context.SaveChangesAsync();
         }
 

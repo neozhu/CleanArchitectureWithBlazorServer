@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
-using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEdit;
-using CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete;
+using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.AddEdit;
+using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.Delete;
 using CleanArchitecture.Blazor.Domain.Entities;
 using FluentAssertions;
 using NUnit.Framework;
@@ -15,7 +15,7 @@ public class DeleteKeyValueTests : TestBase
     [Test]
     public void ShouldRequireValidKeyValueId()
     {
-        var command = new DeleteKeyValueCommand(new[] { 99 });
+        var command = new DeletePicklistSetCommand(new[] { 99 });
 
         FluentActions.Invoking(() =>
             SendAsync(command)).Should().ThrowAsync<NotFoundException>();
@@ -24,7 +24,7 @@ public class DeleteKeyValueTests : TestBase
     [Test]
     public async Task ShouldDeleteKeyValue()
     {
-        var addCommand = new AddEditKeyValueCommand
+        var addCommand = new AddEditPicklistSetCommand
         {
             Name = Picklist.Brand,
             Text = "Word",
@@ -33,7 +33,7 @@ public class DeleteKeyValueTests : TestBase
         };
         var result = await SendAsync(addCommand);
 
-        await SendAsync(new DeleteKeyValueCommand(new[] { result.Data }));
+        await SendAsync(new DeletePicklistSetCommand(new[] { result.Data }));
 
         var item = await FindAsync<Document>(result.Data);
 

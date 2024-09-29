@@ -215,64 +215,6 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.ToTable("documents", (string)null);
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.KeyValue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("created");
-
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)")
-                        .HasColumnName("created_by");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("description");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("last_modified");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)")
-                        .HasColumnName("last_modified_by");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Text")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("text");
-
-                    b.Property<string>("Value")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("value");
-
-                    b.HasKey("Id")
-                        .HasName("pk_key_values");
-
-                    b.HasIndex("Name", "Value")
-                        .IsUnique()
-                        .HasDatabaseName("ix_key_values_name_value");
-
-                    b.ToTable("key_values", (string)null);
-                });
-
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Logger", b =>
                 {
                     b.Property<int>("Id")
@@ -342,6 +284,64 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasDatabaseName("ix_loggers_time_stamp");
 
                     b.ToTable("loggers", (string)null);
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.PicklistSet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("description");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("last_modified");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Text")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("text");
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id")
+                        .HasName("pk_picklist_sets");
+
+                    b.HasIndex("Name", "Value")
+                        .IsUnique()
+                        .HasDatabaseName("ix_picklist_sets_name_value");
+
+                    b.ToTable("picklist_sets", (string)null);
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Product", b =>
