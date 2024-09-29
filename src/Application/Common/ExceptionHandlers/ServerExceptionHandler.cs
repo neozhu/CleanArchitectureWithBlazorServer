@@ -17,6 +17,7 @@ public class
         CancellationToken cancellationToken)
     {
         state.SetHandled((TResponse)Result<int>.Failure(exception.Message));
+        _logger.LogError(exception, exception.Message);
         return Task.CompletedTask;
     }
 }

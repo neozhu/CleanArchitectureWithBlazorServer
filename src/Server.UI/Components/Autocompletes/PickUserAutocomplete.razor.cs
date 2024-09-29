@@ -1,13 +1,15 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
-public class PickUserAutocomplete : MudAutocomplete<string>
+public class PickUserAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
 {
  
     public PickUserAutocomplete()
     {
         SearchFunc = SearchKeyValues;
+        ToStringFunc = dto => dto?.UserName;
         Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;
@@ -36,24 +38,18 @@ public class PickUserAutocomplete : MudAutocomplete<string>
     
    
 
-    private Task<IEnumerable<string>> SearchKeyValues(string value,CancellationToken cancellation)
+    private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string value,CancellationToken cancellation)
     {
-        var result = string.IsNullOrEmpty(value)
-            ? UserService.DataSource.Where(x=>!string.IsNullOrEmpty(TenantId) && x.TenantId==TenantId || string.IsNullOrEmpty(TenantId)).Select(x => x.UserName)
-            : UserService.DataSource.Where(x => (!string.IsNullOrEmpty(TenantId) && x.TenantId == TenantId || string.IsNullOrEmpty(TenantId)) && 
+        IEnumerable<ApplicationUserDto> result = UserService.DataSource.Where(x => x.TenantId.Equals(TenantId));
+
+        if (!string.IsNullOrEmpty(value))
+        {
+            result = UserService.DataSource.Where(x => x.TenantId.Equals(TenantId) &&
                         (x.UserName.Contains(value, StringComparison.OrdinalIgnoreCase) ||
-                                    x.Email.Contains(value, StringComparison.OrdinalIgnoreCase)))
-                .Select(x => x.UserName);
-
-        return Task.FromResult(result?.AsEnumerable() ?? new string[] { });
+                        x.Email.Contains(value, StringComparison.OrdinalIgnoreCase)));
+        }
+        return Task.FromResult(result);
     }
 
-    private string ToString(string str)
-    {
-        var user = UserService.DataSource.FirstOrDefault(x =>
-            (x.DisplayName != null && x.DisplayName.Contains(str, StringComparison.OrdinalIgnoreCase)) ||
-            x.UserName.Contains(str, StringComparison.OrdinalIgnoreCase));
-
-        return user?.DisplayName ?? str;
-    }
+     
 }

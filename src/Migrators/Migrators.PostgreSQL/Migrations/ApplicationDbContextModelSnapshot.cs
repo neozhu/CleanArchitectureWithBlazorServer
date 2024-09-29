@@ -293,8 +293,8 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnName("client_ip");
 
                     b.Property<string>("Exception")
-                        .HasMaxLength(4000)
-                        .HasColumnType("character varying(4000)")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
                         .HasColumnName("exception");
 
                     b.Property<string>("Level")
@@ -304,23 +304,23 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnName("level");
 
                     b.Property<string>("LogEvent")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
                         .HasColumnName("log_event");
 
                     b.Property<string>("Message")
-                        .HasMaxLength(4000)
-                        .HasColumnType("character varying(4000)")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
                         .HasColumnName("message");
 
                     b.Property<string>("MessageTemplate")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
                         .HasColumnName("message_template");
 
                     b.Property<string>("Properties")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
                         .HasColumnName("properties");
 
                     b.Property<DateTime>("TimeStamp")
@@ -335,14 +335,8 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.HasKey("Id")
                         .HasName("pk_loggers");
 
-                    b.HasIndex("Exception")
-                        .HasDatabaseName("ix_loggers_exception");
-
                     b.HasIndex("Level")
                         .HasDatabaseName("ix_loggers_level");
-
-                    b.HasIndex("Message")
-                        .HasDatabaseName("ix_loggers_message");
 
                     b.HasIndex("TimeStamp")
                         .HasDatabaseName("ix_loggers_time_stamp");
@@ -388,8 +382,9 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnName("last_modified_by");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)")
                         .HasColumnName("name");
 
                     b.Property<string>("Pictures")
@@ -407,6 +402,10 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_products");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_products_name");
 
                     b.ToTable("products", (string)null);
                 });
@@ -821,7 +820,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_documents_users_created_by");
 
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Editor")
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifiedBy")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -832,7 +831,7 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasForeignKey("TenantId")
                         .HasConstraintName("fk_documents_tenants_tenant_id");
 
-                    b.Navigation("Editor");
+                    b.Navigation("LastModifier");
 
                     b.Navigation("Owner");
 

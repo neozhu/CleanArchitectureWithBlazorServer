@@ -6,7 +6,7 @@ public class LoggerAdvancedSpecification : Specification<Logger>
 {
     public LoggerAdvancedSpecification(LogsWithPaginationQuery filter)
     {
-        var timezoneOffset = filter.TimezoneOffset;
+        var timezoneOffset = filter.LocalTimezoneOffset;
         var utcNow = DateTime.UtcNow;
         var localNow = utcNow.Date.AddHours(timezoneOffset);
         var startOfTodayLocalAsUtc = localNow;
@@ -17,7 +17,6 @@ public class LoggerAdvancedSpecification : Specification<Logger>
                 filter.ListView == LogListView.CreatedToday)
             .Where(p => p.TimeStamp >= startOfLast30DaysLocalAsUtc, filter.ListView == LogListView.Last30days)
             .Where(p => p.Level == filter.Level.ToString(), filter.Level is not null)
-            .Where(x => x.Message.Contains(filter.Keyword) || x.Exception.Contains(filter.Keyword),
-                !string.IsNullOrEmpty(filter.Keyword));
+            .Where(x =>x.Message.Contains(filter.Keyword),!string.IsNullOrEmpty(filter.Keyword));
     }
 }

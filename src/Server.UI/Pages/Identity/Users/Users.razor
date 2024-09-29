@@ -210,10 +210,10 @@
                 }
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn Property="x => x.TenantName" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
+        <PropertyColumn Property="x => x.Tenant" Title="@L[_currentDto.GetMemberDescription(x => x.Tenant)]">
             <CellTemplate>
                 <div>
-                    <MudText>@context.Item.TenantName</MudText>
+                    <MudText>@context.Item.Tenant?.Name</MudText>
                 </div>
             </CellTemplate>
             <FooterTemplate>
@@ -232,9 +232,9 @@
                 </div>
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.SuperiorId" Title="@L[_currentDto.GetMemberDescription(x => x.SuperiorName)]">
+        <PropertyColumn Property="x => x.Superior" Title="@L[_currentDto.GetMemberDescription(x => x.Superior)]">
             <CellTemplate>
-                @context.Item.SuperiorName
+                @context.Item.Superior?.UserName
             </CellTemplate>
         </PropertyColumn>
         <PropertyColumn Property="x => x.Provider" Title="@L[_currentDto.GetMemberDescription(x => x.Provider)]" />
@@ -453,7 +453,7 @@
                 TenantId = model.TenantId,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
-                SuperiorId = model.SuperiorId,
+                SuperiorId = model.Superior?.Id,
                 ProfilePictureDataUrl = model.ProfilePictureDataUrl,
                 EmailConfirmed = false,
                 IsActive = model.IsActive
@@ -841,8 +841,8 @@
                         DisplayName = x.DisplayName,
                         Email = x.Email!,
                         PhoneNumber = x.PhoneNumber,
-                        TenantId = x.TenantId,
-                        TenantName = x.Tenant != null ? x.Tenant.Name : string.Empty
+                        SuperiorId = x.SuperiorId,
+                        TenantId = x.TenantId
                     }).ToListAsync();
 
             var result = await ExportUsers(items);
@@ -866,7 +866,7 @@
                 { L["Email"], item => item.Email },
                 { L["Phone Number"], item => item.PhoneNumber },
                 { L["Tenant Id"], item => item.TenantId },
-                { L["Tenant Name"], item => item.TenantName }
+                { L["Superior Id"], item => item.SuperiorId }
                                             }, L["Users"]);
     }
 
@@ -911,7 +911,8 @@
             { L["Full Name"], (row, item) => item.DisplayName = row[L["Full Name"]]?.ToString() },
             { L["Email"], (row, item) => item.Email = row[L["Email"]]?.ToString() },
             { L["Phone Number"], (row, item) => item.PhoneNumber = row[L["Phone Number"]]?.ToString() },
-            { L["Tenant Id"], (row, item) => item.TenantId = row[L["Tenant Id"]]?.ToString() }
+            { L["Tenant Id"], (row, item) => item.TenantId = row[L["Tenant Id"]]?.ToString() },
+            { L["Superior Id"], (row, item) => item.SuperiorId = row[L["Superior Id"]]?.ToString() }
         }, L["Users"]);
     }
 

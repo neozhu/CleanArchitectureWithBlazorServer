@@ -6,6 +6,8 @@ public class PermissionModel
     public string Group { get; set; } = "Permission";
     public required string ClaimType { get; set; }
     public required string ClaimValue { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? HelpText { get; set; }
     public bool Assigned { get; set; }
 
     public string? RoleId { get; set; }

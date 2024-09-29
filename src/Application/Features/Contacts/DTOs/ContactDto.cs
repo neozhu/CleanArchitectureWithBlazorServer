@@ -8,16 +8,16 @@ public class ContactDto
 {
     [Description("Id")]
     public int Id { get; set; }
-    [Description("Name")]
-    public string Name { get; set; } = String.Empty;
+        [Description("Name")]
+    public string Name {get;set;} 
     [Description("Description")]
-    public string? Description { get; set; }
+    public string? Description {get;set;} 
     [Description("Email")]
-    public string? Email { get; set; }
-    [Description("Phone Number")]
-    public string? PhoneNumber { get; set; }
+    public string? Email {get;set;} 
+    [Description("Phone number")]
+    public string? PhoneNumber {get;set;} 
     [Description("Country")]
-    public string? Country { get; set; }
+    public string? Country {get;set;} 
 
 
     private class Mapping : Profile

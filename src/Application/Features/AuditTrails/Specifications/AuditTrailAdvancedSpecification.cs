@@ -6,7 +6,7 @@ public class AuditTrailAdvancedSpecification : Specification<AuditTrail>
 {
     public AuditTrailAdvancedSpecification(AuditTrailsWithPaginationQuery filter)
     {
-        var timezoneOffset = filter.TimezoneOffset;
+        var timezoneOffset = filter.LocalTimezoneOffset;
         var utcNow = DateTime.UtcNow;
         var localNow = utcNow.Date.AddHours(timezoneOffset);
         var startOfTodayLocalAsUtc = localNow;

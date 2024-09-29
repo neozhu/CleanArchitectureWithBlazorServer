@@ -1,6 +1,6 @@
 ﻿namespace CleanArchitecture.Blazor.Server.UI.Constants;
 
-public class Theme
+public static class Theme
 {
     public static MudTheme ApplicationTheme()
     {
@@ -26,7 +26,7 @@ public class Theme
                 Surface = "#ffffff", 
                 DrawerBackground = "#ffffff",
                 TextPrimary = "#2E2E2E", 
-                TextSecondary = "#6C757D", 
+                TextSecondary = "#76818c", 
                 SecondaryContrastText = "#F5F5F5", 
                 TextDisabled = "#B0B0B0", 
                 ActionDefault = "#80838b", 

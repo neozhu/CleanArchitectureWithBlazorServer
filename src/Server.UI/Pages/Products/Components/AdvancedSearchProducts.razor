@@ -14,6 +14,7 @@
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
             <PicklistAutocomplete Picklist="Picklist.Brand"
+                                    T="string"
                                   Placeholder="@L["Search by brand"]"
                                   TextChanged="TextChanged"
                                   ResetValueOnEmptyText="true"
@@ -21,7 +22,7 @@
             </PicklistAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6" md="4">
-            <PicklistAutocomplete Picklist="Picklist.Unit"
+            <PicklistAutocomplete Picklist="Picklist.Unit" T="string"
                                   Placeholder="@L["Search by unit"]"
                                   TextChanged="TextChanged"
                                   ResetValueOnEmptyText="true"

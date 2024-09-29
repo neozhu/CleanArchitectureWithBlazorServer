@@ -28,6 +28,9 @@
              Height="calc(100vh - 330px)"
              Loading="@_loading"
              MultiSelection="true"
+             T="ContactDto"
+             SelectOnRowClick="false"
+             RowClick="@(s=>OnView(s.Item))"
              @bind-SelectedItems="_selectedItems"
              @bind-SelectedItem="_currentDto"
              Hover="true" @ref="_table">
@@ -37,7 +40,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.Window" Size="Size.Large" />
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.caption" Class="mb-2">@Title</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="ContactListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
+                    <MudEnumSelect Style="min-width:120px" TEnum="ContactListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
                     </MudEnumSelect>
                 </div>
             </div>
@@ -213,6 +216,8 @@
     private Task<AuthenticationState> AuthState { get; set; } = default!;
     [CascadingParameter]
     private UserProfile? UserProfile { get; set; }
+    [CascadingParameter(Name = "LocalTimezoneOffset")]
+    private int _localTimezoneOffset { get; set; }
 
     private ContactsWithPaginationQuery Query { get; set; } = new();
     [Inject]
@@ -245,6 +250,7 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
+            Query.LocalTimezoneOffset = _localTimezoneOffset;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
             return new GridData<ContactDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
@@ -272,8 +278,26 @@
         Query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
+    private async Task ShowEditFormDialog(string title, AddEditContactCommand command)
+    {
+        var parameters = new DialogParameters<ContactFormDialog>
+            {
+                { x=>x.model,command },
+            };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var dialog = DialogService.Show<ContactFormDialog>(title, parameters, options);
+        var state = await dialog.Result;
 
-
+        if (state != null && !state.Canceled)
+        {
+            await _table.ReloadServerData();
+            _selectedItems.Clear();
+        }
+    }
+    private void OnView(ContactDto dto)
+    {
+        Navigation.NavigateTo($"/pages/contacts/view/{dto.Id}");
+    }
     private void OnCreate()
     {
         Navigation.NavigateTo($"/pages/contacts/create");
@@ -293,11 +317,11 @@
         var command = new DeleteContactCommand(new int[] { dto.Id });
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
-             await InvokeAsync(async () =>
-             {
-                  await _table.ReloadServerData();
-                  _selectedItems.Clear();
-             });
+            await InvokeAsync(async () =>
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            });
         });
     }
 
@@ -308,10 +332,10 @@
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
-        {
-            await _table.ReloadServerData();
-            _selectedItems.Clear();
-        });
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            });
         });
     }
 

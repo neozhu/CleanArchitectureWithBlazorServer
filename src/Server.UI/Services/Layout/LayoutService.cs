@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Layout;
 
@@ -56,7 +55,7 @@ public class LayoutService
     /// <param name="isDarkModeDefaultTheme">The value indicating whether dark mode is the default theme.</param>
     public async Task ApplyUserPreferences(bool isDarkModeDefaultTheme)
     {
-        UserPreferences = await UserPreferencesService.LoadUserPreferences();
+        UserPreferences = await UserPreferencesService.LoadUserPreferences().ConfigureAwait(false);
 
         IsDarkMode = UserPreferences.DarkLightTheme switch
         {

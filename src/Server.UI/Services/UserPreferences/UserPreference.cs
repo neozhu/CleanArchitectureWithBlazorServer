@@ -2,7 +2,7 @@
 // MudBlazor licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Globalization;
+using System.Drawing;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 
@@ -65,19 +65,94 @@ public class UserPreference
 
     private string AdjustBrightness(string hexColor, double factor)
     {
-        if (hexColor.StartsWith("#")) hexColor = hexColor.Substring(1); // 删除#前缀，如果存在
+        if (string.IsNullOrWhiteSpace(hexColor))
+            throw new ArgumentException("Color code cannot be null or empty.", nameof(hexColor));
 
-        if (hexColor.Length != 6) throw new ArgumentException("Invalid hex color code. It must be 6 characters long.");
+        // 使用 ColorTranslator 解析十六进制颜色
+        var color = ColorTranslator.FromHtml(hexColor);
 
-        var r = int.Parse(hexColor.Substring(0, 2), NumberStyles.HexNumber);
-        var g = int.Parse(hexColor.Substring(2, 2), NumberStyles.HexNumber);
-        var b = int.Parse(hexColor.Substring(4, 2), NumberStyles.HexNumber);
+        // 将 RGB 转换为 HSL
+        double h, s, l;
+        ColorToHsl(color, out h, out s, out l);
 
-        var newR = (int)Math.Clamp(r * factor, 0, 255);
-        var newG = (int)Math.Clamp(g * factor, 0, 255);
-        var newB = (int)Math.Clamp(b * factor, 0, 255);
+        // 调整亮度
+        l = Math.Clamp(l * factor, 0.0, 1.0);
 
-        return $"#{newR:X2}{newG:X2}{newB:X2}";
+        // 将 HSL 转换回 Color
+        var adjustedColor = HslToColor(h, s, l);
+
+        // 返回十六进制表示
+        return ColorTranslator.ToHtml(adjustedColor);
+    }
+
+    private void ColorToHsl(System.Drawing.Color color, out double h, out double s, out double l)
+    {
+        // 归一化 RGB 值到 0-1
+        double r = color.R / 255.0;
+        double g = color.G / 255.0;
+        double b = color.B / 255.0;
+
+        double max = Math.Max(r, Math.Max(g, b));
+        double min = Math.Min(r, Math.Min(g, b));
+
+        h = s = l = (max + min) / 2.0;
+
+        if (max == min)
+        {
+            // 无色相
+            h = s = 0.0;
+        }
+        else
+        {
+            double delta = max - min;
+            s = l > 0.5 ? delta / (2.0 - max - min) : delta / (max + min);
+
+            if (max == r)
+                h = (g - b) / delta + (g < b ? 6.0 : 0.0);
+            else if (max == g)
+                h = (b - r) / delta + 2.0;
+            else
+                h = (r - g) / delta + 4.0;
+
+            h /= 6.0;
+        }
+    }
+
+    private System.Drawing.Color HslToColor(double h, double s, double l)
+    {
+        double r, g, b;
+
+        if (s == 0.0)
+        {
+            // 灰色
+            r = g = b = l;
+        }
+        else
+        {
+            Func<double, double, double, double> hue2rgb = (p, q, t) =>
+            {
+                if (t < 0.0) t += 1.0;
+                if (t > 1.0) t -= 1.0;
+                if (t < 1.0 / 6.0) return p + (q - p) * 6.0 * t;
+                if (t < 1.0 / 2.0) return q;
+                if (t < 2.0 / 3.0) return p + (q - p) * (2.0 / 3.0 - t) * 6.0;
+                return p;
+            };
+
+            double q = l < 0.5 ? l * (1.0 + s) : l + s - l * s;
+            double p = 2.0 * l - q;
+
+            r = hue2rgb(p, q, h + 1.0 / 3.0);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1.0 / 3.0);
+        }
+
+        // 将归一化的值转换回 0-255 并创建 Color 对象
+        return System.Drawing.Color.FromArgb(
+            (int)Math.Round(r * 255.0),
+            (int)Math.Round(g * 255.0),
+            (int)Math.Round(b * 255.0)
+        );
     }
 }
 

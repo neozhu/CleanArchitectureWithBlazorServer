@@ -225,7 +225,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Exception")
-                        .HasMaxLength(4000)
+                        .HasMaxLength(2147483647)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Level")
@@ -234,19 +234,19 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LogEvent")
-                        .HasMaxLength(2000)
+                        .HasMaxLength(2147483647)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Message")
-                        .HasMaxLength(4000)
+                        .HasMaxLength(2147483647)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MessageTemplate")
-                        .HasMaxLength(2000)
+                        .HasMaxLength(2147483647)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Properties")
-                        .HasMaxLength(2000)
+                        .HasMaxLength(2147483647)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("TimeStamp")
@@ -258,11 +258,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Exception");
-
                     b.HasIndex("Level");
-
-                    b.HasIndex("Message");
 
                     b.HasIndex("TimeStamp");
 
@@ -298,7 +294,8 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(450)
+                        .IsRequired()
+                        .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Pictures")
@@ -312,6 +309,9 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -645,7 +645,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Editor")
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifiedBy")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -654,7 +654,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .WithMany()
                         .HasForeignKey("TenantId");
 
-                    b.Navigation("Editor");
+                    b.Navigation("LastModifier");
 
                     b.Navigation("Owner");
 

@@ -73,14 +73,6 @@ public class IdentityService : IIdentityService
         return result.Succeeded;
     }
 
-    public async Task<Result> DeleteUserAsync(string userId, CancellationToken cancellation = default)
-    {
-        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation) ??
-                   throw new NotFoundException(_localizer["User Not Found."]);
-        var result = await _userManager.DeleteAsync(user);
-        return result.ToApplicationResult();
-    }
-
     public async Task<IDictionary<string, string?>> FetchUsers(string roleName,
         CancellationToken cancellation = default)
     {
@@ -91,15 +83,6 @@ public class IdentityService : IIdentityService
         return result;
     }
 
-    public async Task UpdateLiveStatus(string userId, bool isLive, CancellationToken cancellation = default)
-    {
-        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId && x.IsLive != isLive);
-        if (user is not null)
-        {
-            user.IsLive = isLive;
-            var result = await _userManager.UpdateAsync(user);
-        }
-    }
 
     public async Task<ApplicationUserDto?> GetApplicationUserDto(string userName,
         CancellationToken cancellation = default)
