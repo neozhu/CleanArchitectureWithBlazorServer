@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
+﻿using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
@@ -50,7 +50,7 @@ public class PicklistAutocomplete<T> : MudAutocomplete<string>
                 .Select(x => x.Value ?? string.Empty));
     }
 
-    private static bool Contains(KeyValueDto model, string value)
+    private static bool Contains(PicklistSetDto model, string value)
     {
         return (model.Value != null && model.Value.Contains(value, StringComparison.InvariantCultureIgnoreCase))
                || (model.Text != null && model.Text.Contains(value, StringComparison.InvariantCultureIgnoreCase));
