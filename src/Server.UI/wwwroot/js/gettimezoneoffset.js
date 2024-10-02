@@ -1,5 +1,4 @@
 ﻿export function getTimezoneOffset(timezone) {
-    console.log(timezone);
     if (timezone) {
         const date = new Date();
         // Get the time in the specified timezone
