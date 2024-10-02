@@ -157,7 +157,7 @@ else
 @code {
     [Inject] protected IServiceProvider Services { get; init; } = null!;
     private string _currentUserName => UserProfileStateService.UserProfile.UserName;
-    private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
+    
     private UserProfile? UserProfile => UserProfileStateService.UserProfile;
     private UserManager<ApplicationUser> UserManager = null!;
     public string Title { get; set; } = "Profile";

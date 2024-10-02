@@ -56,22 +56,23 @@
     protected override async Task OnInitializedAsync()
     {
         var state = await AuthState;
+        UserProfileStateService.OnChange += UserProfileStateService_OnChange;
         UserProfileStateService.UserProfile = state.User.GetUserProfileFromClaim();
     }
-    protected override void OnInitialized()
-    {
-        UserProfileStateService.OnChange += StateHasChanged;
-    }
+     
 
     public void Dispose()
     {
-        UserProfileStateService.OnChange -= StateHasChanged;
+        UserProfileStateService.OnChange -= UserProfileStateService_OnChange;
     }
     protected override void OnParametersSet()
     {
         ResetBoundary();
     }
-    
+    private async Task UserProfileStateService_OnChange()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
     private void ResetBoundary()
     {
         // On each page navigation, reset any error state
