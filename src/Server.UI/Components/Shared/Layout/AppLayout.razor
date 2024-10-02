@@ -16,7 +16,7 @@
                         RightToLeft="@LayoutService.IsRTL"
                         RightToLeftToggle="LayoutService.ToggleRightToLeft"
                         OnSettingClick="@(() => _themingDrawerOpen = true)"/>
-            <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@UserProfile?.AssignedRoles"
+            <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@(UserProfile?.AssignedRoles??[])"
                             DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler"/>
             <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
                         ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
@@ -49,7 +49,7 @@
     private bool _commandPaletteOpen;
     private bool _navigationMenuDrawerOpen = true;
     private bool _themingDrawerOpen;
-    private UserProfile? UserProfile => UserProfileStateService.UserProfile;
+    private UserProfile? UserProfile;
     private ErrorBoundary? ErrorBoundary { set; get; }
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
 
@@ -57,7 +57,9 @@
     {
         var state = await AuthState;
         UserProfileStateService.OnChange += UserProfileStateService_OnChange;
-        UserProfileStateService.UserProfile = state.User.GetUserProfileFromClaim();
+        await UserProfileStateService.InitializeAsync(state.User.Identity.Name);
+        UserProfile = UserProfileStateService.UserProfile;
+
     }
      
 

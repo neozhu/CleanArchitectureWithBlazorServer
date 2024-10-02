@@ -156,9 +156,9 @@ else
 
 @code {
     [Inject] protected IServiceProvider Services { get; init; } = null!;
-    private string _currentUserName => UserProfileStateService.UserProfile.UserName;
-    
-    private UserProfile? UserProfile => UserProfileStateService.UserProfile;
+    private string _currentUserName = string.Empty;
+
+    private UserProfile? UserProfile { get; set; }
     private UserManager<ApplicationUser> UserManager = null!;
     public string Title { get; set; } = "Profile";
     private MudForm? _form;
@@ -169,7 +169,7 @@ else
     public string Id => Guid.NewGuid().ToString();
     private ChangeUserProfileModel model = null!;
 
-
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
 
     private async void ActivePanelIndexChanged(int index)
     {
@@ -209,10 +209,14 @@ else
         await new OrgChart(JS).Create(_orgData);
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         UserManager = Services.GetRequiredService<UserManager<ApplicationUser>>();
-        model = Mapper.Map<ChangeUserProfileModel>(UserProfile);
+        var state = await AuthState;
+        _currentUserName = state.User.Identity.Name;
+        await UserProfileStateService.InitializeAsync(state.User.Identity.Name);
+
+        model = Mapper.Map<ChangeUserProfileModel>(UserProfileStateService.UserProfile);
     }
 
     protected override void Dispose(bool disposing)
@@ -240,7 +244,7 @@ else
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated"], Severity.Info);
-                UserProfileStateService.UpdateUserProfile(user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
+                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
                 await OnlineUserTracker.Update(user.Id,
                                                user.UserName??"",
                                                user.DisplayName ?? "",
@@ -263,7 +267,7 @@ else
                 user.DisplayName = model.DisplayName;
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
-                UserProfileStateService.UpdateUserProfile(user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
+                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
                 await OnlineUserTracker.Update(user.Id,
                                                user.UserName ?? "",
                                                user.DisplayName ?? "",
