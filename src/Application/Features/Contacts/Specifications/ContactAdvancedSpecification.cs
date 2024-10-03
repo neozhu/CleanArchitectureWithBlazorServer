@@ -9,12 +9,20 @@ public class ContactAdvancedSpecification : Specification<Contact>
     {
         var timezoneOffset = filter.LocalTimezoneOffset;
         var utcNow = DateTime.UtcNow;
-        var localNow = utcNow.Date.AddHours(timezoneOffset);
-        var startOfTodayLocalAsUtc = localNow;
-        var endOfTodayLocalAsUtc = localNow.AddDays(1);
-        var startOfLast30DaysLocalAsUtc = localNow.AddDays(-30);
+        // Corrected: Add the time zone offset to UTC time to get local time
+        var localNow = utcNow.AddHours(timezoneOffset);
 
-       Query.Where(q => q.Name != null)
+        // Calculate the start and end of today in local time
+        var startOfTodayLocal = localNow.Date;
+        var endOfTodayLocal = startOfTodayLocal.AddDays(1);
+        var startOfLast30DaysLocal = startOfTodayLocal.AddDays(-30);
+
+        // Convert local times back to UTC to match the TimeStamp's time zone
+        var startOfTodayLocalAsUtc = startOfTodayLocal.AddHours(-timezoneOffset);
+        var endOfTodayLocalAsUtc = endOfTodayLocal.AddHours(-timezoneOffset);
+        var startOfLast30DaysLocalAsUtc = startOfLast30DaysLocal.AddHours(-timezoneOffset);
+
+        Query.Where(q => q.Name != null)
              .Where(filter.Keyword,!string.IsNullOrEmpty(filter.Keyword))
              .Where(q => q.CreatedBy == filter.CurrentUser.UserId, filter.ListView == ContactListView.My && filter.CurrentUser is not null)
              .Where(q => q.Created >= startOfTodayLocalAsUtc && q.Created <= endOfTodayLocalAsUtc, filter.ListView == ContactListView.CreatedToday)
