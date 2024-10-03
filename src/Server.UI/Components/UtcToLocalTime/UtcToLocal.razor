@@ -2,11 +2,11 @@
 @inject IJSRuntime JSRuntime
 @if (localTime != null)
 {
-    <MudText Class="@Class">@localTime.Value.ToString(Format)</MudText>
+   <MudText Class="@Class">@localTime.Value.ToString(Format)</MudText>
 }
 else
 {
-    <span>Fetching local time...</span>
+    <MudText Class="@Class">@UTCDateTime.ToString(Format)</MudText>
 }
 @code {
     // Parameter to accept the UTC time that needs to be converted
@@ -30,9 +30,10 @@ else
         int timezoneOffset = await new LocalTimezoneOffset(JSRuntime).HourOffset();
 
         // Convert the offset from minutes to hours
-        TimeSpan offset = TimeSpan.FromHours(-timezoneOffset);
+        TimeSpan offset = TimeSpan.FromHours(timezoneOffset);
 
         // Convert the UTC time to local time by adding the time zone offset
         localTime = UTCDateTime.Add(offset);
+
     }
 }
