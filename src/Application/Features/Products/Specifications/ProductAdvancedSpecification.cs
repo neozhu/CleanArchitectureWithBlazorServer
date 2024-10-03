@@ -19,9 +19,9 @@ public class ProductAdvancedSpecification : Specification<Product>
         var endOfTodayLocalAsUtc = endOfTodayLocal.AddHours(-timezoneOffset);
         var startOfLast30DaysLocalAsUtc = startOfLast30DaysLocal.AddHours(-timezoneOffset);
         Query.Where(x => x.Name != null)
-            .Where(x => x.Name!.Contains(filter.Keyword) || x.Description!.Contains(filter.Keyword) ||
-                        x.Brand!.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword))
-            .Where(x => x.Name!.Contains(filter.Name), !string.IsNullOrEmpty(filter.Name))
+            .Where(x => x.Name.Contains(filter.Keyword) || x.Description.Contains(filter.Keyword) ||
+                        x.Brand.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword))
+            .Where(x => x.Name.Contains(filter.Name), !string.IsNullOrEmpty(filter.Name))
             .Where(x => x.Unit == filter.Unit, !string.IsNullOrEmpty(filter.Unit))
             .Where(x => x.Brand == filter.Brand, !string.IsNullOrEmpty(filter.Brand))
             .Where(x => x.Price <= filter.MaxPrice, filter.MaxPrice is not null)
