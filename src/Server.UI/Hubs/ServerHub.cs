@@ -10,11 +10,11 @@ namespace CleanArchitecture.Blazor.Server.UI.Hubs;
 [Authorize(AuthenticationSchemes = "Identity.Application")]
 public class ServerHub : Hub<ISignalRHub>
 {
-    private static readonly ConcurrentDictionary<string, string> OnlineUsers = new();
+    private static readonly ConcurrentDictionary<string, string> OnlineUsers = new(StringComparer.Ordinal);
     public override async Task OnConnectedAsync()
     {
         var connectionId = Context.ConnectionId;
-        var username = Context.User?.GetDisplayName() ??(Context.User?.Identity?.Name ?? string.Empty);
+        var username =Context.User?.Identity?.Name ?? string.Empty;
         // Notify all clients if this is a new user connecting.
         if (!OnlineUsers.Any(x => x.Value.Equals(username)))
         {
