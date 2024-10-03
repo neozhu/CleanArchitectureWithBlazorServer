@@ -29,7 +29,7 @@
         }
     </div>
 }
-@if(State.Error is not null)
+@if (State.Error is not null)
 {
     <MudAlert Severity="Severity.Error">@State.Error.Message</MudAlert>
 }
@@ -39,24 +39,30 @@
 
     private string sessionId = Guid.NewGuid().ToString();
     private string? currentUserName;
-    private UserProfile UserProfile => UserProfileStateService.UserProfile;
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(5);
     protected override async Task OnInitializedAsync()
     {
-        currentUserName = UserProfile.UserName;
-        await OnlineUserTracker.Add(sessionId, new UserInfo(UserProfile.UserId,
-            UserProfile.UserName,
-            UserProfile.Email,
-            UserProfile.DisplayName ?? string.Empty,
-            UserProfile.ProfilePictureDataUrl ?? string.Empty,
-            UserProfile.SuperiorName ?? string.Empty,
-            UserProfile.SuperiorId ?? string.Empty,
-            UserProfile.TenantId ?? string.Empty,
-            UserProfile.TenantName ?? string.Empty,
-            UserProfile.PhoneNumber,
-            UserProfile.AssignedRoles ?? Array.Empty<string>(),
-            UserPresence.Available));
+        var state = await AuthState;
+        if (!string.IsNullOrEmpty(state.User.Identity?.Name))
+        {
+            await UserProfileStateService.InitializeAsync(state.User.Identity.Name);
+            var userProfile = UserProfileStateService.UserProfile;
+            currentUserName = userProfile.UserName;
+            await OnlineUserTracker.Add(sessionId, new UserInfo(userProfile.UserId,
+                userProfile.UserName,
+                userProfile.Email,
+                userProfile.DisplayName ?? string.Empty,
+                userProfile.ProfilePictureDataUrl ?? string.Empty,
+                userProfile.SuperiorName ?? string.Empty,
+                userProfile.SuperiorId ?? string.Empty,
+                userProfile.TenantId ?? string.Empty,
+                userProfile.TenantName ?? string.Empty,
+                userProfile.PhoneNumber,
+                userProfile.AssignedRoles ?? Array.Empty<string>(),
+                UserPresence.Available));
+        }
     }
 
     protected override ComputedState<UserInfo[]>.Options GetStateOptions()

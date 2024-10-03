@@ -34,6 +34,7 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
+            _localTimezoneOffset = await LocalTimezoneOffset.HourOffset();
             await ApplyUserPreferences();
             StateHasChanged();
         }
@@ -45,11 +46,11 @@
         await LayoutService.ApplyUserPreferences(_defaultDarkMode);
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        _localTimezoneOffset = await LocalTimezoneOffset.HourOffset();
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         LayoutService.SetBaseTheme(Theme.ApplicationTheme());
+        return Task.CompletedTask;
     }
 
     private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
