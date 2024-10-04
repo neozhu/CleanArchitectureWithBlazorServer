@@ -26,15 +26,20 @@
     private async Task Submit()
     {
         var result = await Mediator.Send(Command);
-        if (result.Succeeded)
-        {
-            Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
-            MudDialog.Close(DialogResult.Ok(true));
-        }
-        else
-        {
-            Snackbar.Add($"{result.ErrorMessage}", Severity.Error);
-        }
+        await result.MatchAsync(
+          async data=>
+          {
+              Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
+              MudDialog.Close(DialogResult.Ok(true));
+              return data;
+          },
+          errors =>
+          {
+              Snackbar.Add($"{errors}", Severity.Error);
+              return Task.FromResult(0);
+          }
+        );
+        
     }
 
     private void Cancel()
