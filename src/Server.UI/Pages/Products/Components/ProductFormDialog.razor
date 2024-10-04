@@ -227,16 +227,18 @@
                 return;
 
             var result = await Mediator.Send(Model);
-
-            if (result.Succeeded)
+            result.Match(
+            data=>
             {
                 MudDialog.Close(DialogResult.Ok(true));
                 Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
-            }
-            else
+                return data;
+            },
+            errors=>
             {
-                Snackbar.Add(result.ErrorMessage, Severity.Error);
-            }
+                Snackbar.Add(errors, Severity.Error);
+                return 0;
+            });
         }
         finally
         {
@@ -253,16 +255,19 @@
             if (!_form!.IsValid)
                 return;
             var result = await Mediator.Send(Model);
-            if (result.Succeeded)
+            result.Match(
+            data=>
             {
                 Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
                 Refresh?.Invoke();
                 Model = new AddEditProductCommand();
-            }
-            else
+                return data;
+            },
+            errors=>
             {
                 Snackbar.Add(result.ErrorMessage, Severity.Error);
-            }
+                return 0;
+            });
         }
         finally
         {
