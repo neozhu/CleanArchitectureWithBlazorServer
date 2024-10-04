@@ -68,17 +68,15 @@
         {
             model = Mapper.Map<UpdateContactCommand>(data);
             return data;
-        }).Match(
-                data =>
-                {
-                    _breadcrumbItems.Add(new BreadcrumbItem(data.Name, href: $"/pages/Contacts/edit/{Id}"));
-                    return data;
-                },
-                errors =>
-                {
-                    Snackbar.Add($"{errors}", Severity.Error);
-                    return null;
-                });
+        }).Match(data =>
+        {
+            _breadcrumbItems.Add(new BreadcrumbItem(data.Name, href: $"/pages/Contacts/edit/{Id}"));
+            return data;
+        }, errors =>
+        {
+            Snackbar.Add($"{errors}", Severity.Error);
+            return null;
+        });
 
 
     }
