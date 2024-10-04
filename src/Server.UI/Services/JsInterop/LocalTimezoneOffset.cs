@@ -16,9 +16,9 @@ public class LocalTimezoneOffset
         var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/gettimezoneoffset.js").ConfigureAwait(false);
         return await jsmodule.InvokeAsync<int>(JSInteropConstants.GetTimezoneOffset).ConfigureAwait(false);
     }
-    public async ValueTask<int> HourOffset(string timezone)
+    public async ValueTask<int> HourOffsetByTimeZone(string timezone)
     {
         var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/gettimezoneoffset.js").ConfigureAwait(false);
-        return await jsmodule.InvokeAsync<int>(JSInteropConstants.GetTimezoneOffset,timezone).ConfigureAwait(false);
+        return await jsmodule.InvokeAsync<int>(JSInteropConstants.GetTimezoneOffsetByTimeZone,timezone).ConfigureAwait(false);
     }
 }

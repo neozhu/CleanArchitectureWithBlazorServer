@@ -4,7 +4,6 @@
 @implements IDisposable
 
 @inject LayoutService LayoutService
-@inject LocalTimezoneOffset LocalTimezoneOffset
 <PageTitle>@ApplicationSettings.AppName</PageTitle>
 <MudRTLProvider RightToLeft="@LayoutService.IsRTL">
     <MudThemeProvider />
@@ -34,7 +33,7 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            _localTimezoneOffset = await LocalTimezoneOffset.HourOffset();
+            _localTimezoneOffset = await new LocalTimezoneOffset(JS).HourOffset();
             await ApplyUserPreferences();
             StateHasChanged();
         }
@@ -48,6 +47,7 @@
 
     protected override Task OnInitializedAsync()
     {
+ 
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         LayoutService.SetBaseTheme(Theme.ApplicationTheme());
         return Task.CompletedTask;
