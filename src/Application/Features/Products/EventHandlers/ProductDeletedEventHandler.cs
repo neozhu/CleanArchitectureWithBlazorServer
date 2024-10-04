@@ -16,10 +16,7 @@ public class ProductDeletedEventHandler : INotificationHandler<DeletedEvent<Prod
 
     public Task Handle(DeletedEvent<Product> notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Handled domain event '{EventType}' with notification: {@Notification} in {ElapsedMilliseconds} ms",
-            notification.GetType().Name,
-            notification,
-            _timer.ElapsedMilliseconds);
+        _logger.LogInformation("Handled domain event '{EventType}' with notification: {@Notification} ", notification.GetType().Name, notification);
         return Task.CompletedTask;
     }
 }
