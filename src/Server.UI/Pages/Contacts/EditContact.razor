@@ -79,14 +79,17 @@
             if (!_form!.IsValid)
                 return;
             var result = await Mediator.Send(model);
-            if (result.Succeeded)
+            result.Match(
+            data=>
             {
                 Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
-            }
-            else
+                return data;
+            },
+            errors=>
             {
                 Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
-            }
+                return 0;
+            });
         }
         finally
         {
