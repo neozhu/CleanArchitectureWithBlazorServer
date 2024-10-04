@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
@@ -12,7 +12,7 @@ public class GetAllProductsQuery : ICacheableRequest<IEnumerable<ProductDto>>
     public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
 }
 
-public class GetProductQuery : ICacheableRequest<ProductDto>
+public class GetProductQuery : ICacheableRequest<ProductDto?>
 {
     public required int Id { get; set; }
 
@@ -22,7 +22,7 @@ public class GetProductQuery : ICacheableRequest<ProductDto>
 
 public class GetAllProductsQueryHandler :
     IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDto>>,
-    IRequestHandler<GetProductQuery, ProductDto>
+    IRequestHandler<GetProductQuery, ProductDto?>
 
 {
     private readonly IApplicationDbContext _context;
@@ -42,19 +42,18 @@ public class GetAllProductsQueryHandler :
 
     public async Task<IEnumerable<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
-        //TODO:Implementing GetAllProductsQueryHandler method 
         var data = await _context.Products
             .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         return data;
     }
 
-    public async Task<ProductDto> Handle(GetProductQuery request, CancellationToken cancellationToken)
+    public async Task<ProductDto?> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Products.Where(x => x.Id == request.Id)
                        .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
-                       .FirstOrDefaultAsync(cancellationToken) ??
-                   throw new NotFoundException($"Product with id: {request.Id} not found.");
+                       .FirstOrDefaultAsync(cancellationToken);
+                 
         return data;
     }
 }

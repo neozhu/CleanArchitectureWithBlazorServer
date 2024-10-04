@@ -19,7 +19,9 @@ public class PicklistSetChangedEventHandler : INotificationHandler<UpdatedEvent<
 
     public Task Handle(UpdatedEvent<PicklistSet> notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("KeyValue Changed {DomainEvent},{@Entity}", nameof(notification), notification.Entity);
+        _logger.LogInformation("Handled domain event '{EventType}' with notification: {@Notification} ",
+             notification.GetType().Name,
+             notification);
         _picklistService.Refresh();
         return Task.CompletedTask;
     }

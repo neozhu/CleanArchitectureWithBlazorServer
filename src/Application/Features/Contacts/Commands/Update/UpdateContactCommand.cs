@@ -51,8 +51,12 @@ public class UpdateContactCommand: ICacheInvalidatorRequest<Result<int>>
         public async Task<Result<int>> Handle(UpdateContactCommand request, CancellationToken cancellationToken)
         {
 
-           var item =await _context.Contacts.FindAsync( new object[] { request.Id }, cancellationToken)?? throw new NotFoundException($"Contact with id: [{request.Id}] not found.");
-           item = _mapper.Map(request, item);
+        var item = await _context.Contacts.FindAsync(request.Id, cancellationToken);
+        if (item == null)
+        {
+            return await Result<int>.FailureAsync($"Contact with id: [{request.Id}] not found.");
+        }
+        item = _mapper.Map(request, item);
 		    // raise a update domain event
 		   item.AddDomainEvent(new ContactUpdatedEvent(item));
            await _context.SaveChangesAsync(cancellationToken);
