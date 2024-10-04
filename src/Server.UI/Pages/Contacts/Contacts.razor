@@ -360,7 +360,7 @@
         },
         errors =>
         {
-            Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
+            Snackbar.Add($"{errors}", MudBlazor.Severity.Error);
             return Task.FromResult(Array.Empty<byte>());
         });
         _exporting = false;
