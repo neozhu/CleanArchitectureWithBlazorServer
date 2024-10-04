@@ -16,6 +16,7 @@
 @inject IBlazorDownloadFileService BlazorDownloadFileService
 
 <PageTitle>@Title</PageTitle>
+
 <AdvancedSearchProducts TRequest="Query" OnConditionChanged="ConditionChanged"></AdvancedSearchProducts>
 <MudDataGrid ServerData="@(ServerReload)"
              FixedHeader="true"
