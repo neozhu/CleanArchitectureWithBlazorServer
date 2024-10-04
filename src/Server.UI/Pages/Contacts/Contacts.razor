@@ -351,15 +351,18 @@
                 SortDirection = (_table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? true) ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString()
             };
         var result = await Mediator.Send(request);
-        if (result.Succeeded)
+        await result.MatchAsync<byte[]>(
+          async data =>
         {
             var downloadresult = await BlazorDownloadFileService.DownloadFile($"{L["Contacts"]}.xlsx", result.Data, contentType: "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
-        }
-        else
+            return data;
+        },
+        errors =>
         {
-            Snackbar.Add($"{result.ErrorMessage}", MudBlazor.Severity.Error);
-        }
+            Snackbar.Add($"{errors}", MudBlazor.Severity.Error);
+            return Task.FromResult(Array.Empty<byte>());
+        });
         _exporting = false;
     }
     private async Task OnImportData(IBrowserFile file)
@@ -369,18 +372,20 @@
         await file.OpenReadStream().CopyToAsync(stream);
         var command = new ImportContactsCommand(file.Name, stream.ToArray());
         var result = await Mediator.Send(command);
-        if (result.Succeeded)
-        {
-            await _table.ReloadServerData();
-            Snackbar.Add($"{ConstantString.ImportSuccess}", MudBlazor.Severity.Info);
-        }
-        else
-        {
-            foreach (var msg in result.Errors)
-            {
-                Snackbar.Add($"{msg}", MudBlazor.Severity.Error);
-            }
-        }
+        await result.MatchAsync(
+         async data =>
+         {
+             await _table.ReloadServerData();
+             Snackbar.Add($"{ConstantString.ImportSuccess}", MudBlazor.Severity.Info);
+             return data;
+         },
+         errors =>
+         {
+             Snackbar.Add($"{errors}", MudBlazor.Severity.Error);
+             return Task.FromResult(0);
+         }
+         );
+
         _uploading = false;
     }
 
