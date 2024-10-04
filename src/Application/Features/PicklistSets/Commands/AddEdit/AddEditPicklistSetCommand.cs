@@ -50,12 +50,15 @@ public class AddEditPicklistSetCommandHandler : IRequestHandler<AddEditPicklistS
     {
         if (request.Id > 0)
         {
-            var keyValue = await _context.PicklistSets.FindAsync(new object[] { request.Id }, cancellationToken);
-            _ = keyValue ?? throw new NotFoundException($"KeyValue Pair  {request.Id} Not Found.");
-            keyValue = _mapper.Map(request, keyValue);
-            keyValue.AddDomainEvent(new UpdatedEvent<PicklistSet>(keyValue));
+            var item = await _context.PicklistSets.FindAsync(request.Id, cancellationToken);
+            if (item == null)
+            {
+                return await Result<int>.FailureAsync($"Picklist with id: [{request.Id}] not found.");
+            }
+            item = _mapper.Map(request, item);
+            item.AddDomainEvent(new UpdatedEvent<PicklistSet>(item));
             await _context.SaveChangesAsync(cancellationToken);
-            return await Result<int>.SuccessAsync(keyValue.Id);
+            return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {

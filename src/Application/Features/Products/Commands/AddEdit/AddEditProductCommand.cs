@@ -50,8 +50,11 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
     {
         if (request.Id > 0)
         {
-            var item = await _context.Products.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken) ??
-                       throw new NotFoundException($"Product with id: {request.Id} not found.");
+            var item = await _context.Products.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            if (item == null)
+            {
+                return await Result<int>.FailureAsync($"Prduct with id: [{request.Id}] not found.");
+            }
             item = _mapper.Map(request, item);
             item.AddDomainEvent(new UpdatedEvent<Product>(item));
             await _context.SaveChangesAsync(cancellationToken);
