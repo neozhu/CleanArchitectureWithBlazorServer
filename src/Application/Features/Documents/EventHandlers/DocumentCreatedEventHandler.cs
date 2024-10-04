@@ -25,12 +25,15 @@ public class DocumentCreatedEventHandler : INotificationHandler<CreatedEvent<Doc
     public Task Handle(CreatedEvent<Document> notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation(
-            "Document upload successful. Beginning document recognition process for Document Id: {DocumentId}",
+            "Document upload successful. Beginning OCR recognition process for Document Id: {DocumentId}",
             notification.Entity.Id);
-        var domainEvent = notification.Entity;
-        var id = domainEvent.Id;
-        var ocrJob = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IDocumentOcrJob>();
-        BackgroundJob.Enqueue(() => ocrJob.Do(id));
+
+        using (var scope = _scopeFactory.CreateScope())
+        {
+            var ocrJob = scope.ServiceProvider.GetRequiredService<IDocumentOcrJob>();
+            BackgroundJob.Enqueue(() => ocrJob.Do(notification.Entity.Id));
+        }
+
         return Task.CompletedTask;
     }
 }
