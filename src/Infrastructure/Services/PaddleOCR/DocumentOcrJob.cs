@@ -47,57 +47,91 @@ public class DocumentOcrJob : IDocumentOcrJob
             using (var client = _httpClientFactory.CreateClient("ocr"))
             {
                 _timer.Start();
+
                 var doc = await _context.Documents.FindAsync(id);
-                if (doc == null) return;
-                await _notificationService.JobStarted(id,doc.Title!);
-                DocumentCacheKey.GetOrCreateTokenSource().Cancel();
-                if (string.IsNullOrEmpty(doc.URL)) return;
+                if (doc == null)
+                {
+                    _logger.LogWarning("Document with Id {Id} not found.", id);
+                    return;
+                }
+
+                await _notificationService.JobStarted(id, doc.Title!);
+                CancelCacheToken();
+
+                if (string.IsNullOrEmpty(doc.URL))
+                {
+                    _logger.LogWarning("Document URL is null or empty for Id {Id}.", id);
+                    return;
+                }
+
                 var imgFile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
-                if (!File.Exists(imgFile)) return;
+                if (!File.Exists(imgFile))
+                {
+                    _logger.LogWarning("Image file not found for Document Id {Id}, URL: {URL}", id, doc.URL);
+                    return;
+                }
+
                 using var form = new MultipartFormDataContent();
                 using var fileStream = new FileStream(imgFile, FileMode.Open);
                 using var fileContent = new StreamContent(fileStream);
                 fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/png");
-                form.Add(fileContent, "file",
-                    Uri.EscapeDataString(Path.GetFileName(imgFile))); // "image" is the form parameter name for the file
+                form.Add(fileContent, "file", Uri.EscapeDataString(Path.GetFileName(imgFile)));
 
                 var response = await client.PostAsync("", form);
-                if (response.StatusCode == HttpStatusCode.OK)
+
+                if (response.IsSuccessStatusCode)
                 {
                     var result = await response.Content.ReadAsStringAsync();
                     if (result.Length > 4000)
                     {
                         result = result.Substring(0, 4000);
                     }
+
                     doc.Status = JobStatus.Done;
-                    doc.Description = "recognize the result: success";
+                    doc.Description = "Recognition result: success";
                     doc.Content = result;
+
                     await _context.SaveChangesAsync(cancellationToken);
-                    await _notificationService.JobCompleted(id,doc.Title!);
-                    DocumentCacheKey.GetOrCreateTokenSource().Cancel();
+                    await _notificationService.JobCompleted(id, doc.Title!);
+                    CancelCacheToken();
+
                     _timer.Stop();
-                    var elapsedMilliseconds = _timer.ElapsedMilliseconds;
                     _logger.LogInformation(
-                        "Image recognition completed. Id: {id}, Elapsed Time: {elapsedMilliseconds}ms, Status: {StatusCode}",
-                        id, elapsedMilliseconds, response.StatusCode);
+                        "Image recognition completed successfully {@Document}. Id: {Id}, Elapsed Time: {ElapsedMilliseconds}ms", doc,
+                        id, _timer.ElapsedMilliseconds);
                 }
                 else
                 {
                     var result = await response.Content.ReadAsStringAsync();
                     doc.Status = JobStatus.Pending;
                     doc.Content = result;
+
                     await _context.SaveChangesAsync(cancellationToken);
-                    DocumentCacheKey.GetOrCreateTokenSource().Cancel();
-                    await _notificationService.JobCompleted(id,$"Error: {result}");
-                    _logger.LogError("{id}: Image recognize error {Message}", id, result);
+                    await _notificationService.JobCompleted(id, $"Error: {result}");
+                    CancelCacheToken();
+
+                    _logger.LogError("Image recognition failed for Id: {Id}, Status Code: {StatusCode}, Message: {Message}",
+                        id, response.StatusCode, result);
                 }
             }
         }
         catch (Exception ex)
         {
-            await _notificationService.JobCompleted(id,$"Error: {ex.Message}");
-            _logger.LogError(ex, "{id}: Image recognize error {Message}", id, ex.Message);
+            await _notificationService.JobCompleted(id, $"Error: {ex.Message}");
+            _logger.LogError(ex, "Image recognition error for Id: {Id}, Message: {Message}", id, ex.Message);
         }
+        finally
+        {
+            if (_timer.IsRunning)
+            {
+                _timer.Stop();
+            }
+        }
+    }
+
+    private void CancelCacheToken()
+    {
+        DocumentCacheKey.GetOrCreateTokenSource().Cancel();
     }
 }
 #pragma warning disable CS8981
