@@ -9,16 +9,14 @@ namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Pagi
 
 public class AuditTrailsWithPaginationQuery : AuditTrailAdvancedFilter, ICacheableRequest<PaginatedData<AuditTrailDto>>
 {
-    public int LocalTimezoneOffset { get; set; }
     public AuditTrailAdvancedSpecification Specification => new(this);
-
     public string CacheKey => AuditTrailsCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => AuditTrailsCacheKey.MemoryCacheEntryOptions;
 
     public override string ToString()
     {
         return
-            $"Listview:{ListView}-{LocalTimezoneOffset},AuditType:{AuditType},Search:{Keyword},Sort:{SortDirection},OrderBy:{OrderBy},{PageNumber},{PageSize}";
+            $"Listview:{ListView}-{LocalTimezoneOffset.TotalHours},AuditType:{AuditType},Search:{Keyword},Sort:{SortDirection},OrderBy:{OrderBy},{PageNumber},{PageSize}";
     }
 }
 

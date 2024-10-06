@@ -163,7 +163,7 @@
     private readonly LogDto _currentDto = new();
     private readonly int _defaultPageSize = 15;
     [CascadingParameter(Name = "LocalTimezoneOffset")]
-    private int _localTimezoneOffset { get; set; }
+    private TimeSpan _localTimezoneOffset { get; set; }
 
     private bool _loading;
     private bool _clearing;

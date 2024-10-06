@@ -18,7 +18,7 @@
 
 @code
 {
-    private int _localTimezoneOffset;
+    private TimeSpan _localTimezoneOffset;
     private MudThemeProvider _mudThemeProvider = null!;
     private bool _defaultDarkMode;
 
@@ -33,7 +33,7 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            _localTimezoneOffset = await new LocalTimezoneOffset(JS).HourOffset();
+            _localTimezoneOffset = await new LocalTimezoneOffset(JS).GetLocalOffset();
             await ApplyUserPreferences();
             StateHasChanged();
         }
