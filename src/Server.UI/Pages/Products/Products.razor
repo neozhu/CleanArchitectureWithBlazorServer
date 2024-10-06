@@ -237,7 +237,7 @@
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
     [CascadingParameter(Name = "LocalTimezoneOffset")]
-    private int _localTimezoneOffset { get; set; }
+    private TimeSpan _localTimezoneOffset { get; set; }
     public string? Title { get; private set; }
     private HashSet<ProductDto> _selectedItems = new();
     private MudDataGrid<ProductDto> _table = default!;

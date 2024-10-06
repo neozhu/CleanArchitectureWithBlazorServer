@@ -217,7 +217,7 @@
     [CascadingParameter]
     private UserProfile? UserProfile { get; set; }
     [CascadingParameter(Name = "LocalTimezoneOffset")]
-    private int _localTimezoneOffset { get; set; }
+    private TimeSpan _localTimezoneOffset { get; set; }
 
     private ContactsWithPaginationQuery Query { get; set; } = new();
     [Inject]

@@ -27,13 +27,10 @@ else
     protected override async Task OnInitializedAsync()
     {
         // Call JavaScript function to get the browser's time zone offset in minutes
-        int timezoneOffset = await new LocalTimezoneOffset(JSRuntime).HourOffset();
-
-        // Convert the offset from minutes to hours
-        TimeSpan offset = TimeSpan.FromHours(timezoneOffset);
+        var timezoneOffset = await new LocalTimezoneOffset(JSRuntime).GetLocalOffset();
 
         // Convert the UTC time to local time by adding the time zone offset
-        localTime = UTCDateTime.Add(offset);
+        localTime = UTCDateTime.Add(timezoneOffset);
 
     }
 }

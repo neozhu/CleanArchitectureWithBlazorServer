@@ -220,7 +220,7 @@
 
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
     [CascadingParameter(Name = "LocalTimezoneOffset")]
-    private int _localTimezoneOffset { get; set; }
+    private TimeSpan _localTimezoneOffset { get; set; }
     private string? Title { get; set; }
 
     private HashSet<DocumentDto> _selectedItems = new();
