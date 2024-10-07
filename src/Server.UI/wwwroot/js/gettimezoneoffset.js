@@ -1,5 +1,5 @@
 ﻿export function getTimezoneOffset() {
-    return Math.round(-new Date().getTimezoneOffset() / 60);
+    return -new Date().getTimezoneOffset(); // Return offset in minutes, considering the negative direction
 }
 
 export function getTimezoneOffsetByTimeZone(timezone) {
@@ -23,9 +23,8 @@ export function getTimezoneOffsetByTimeZone(timezone) {
         const hours = parseInt(offsetMatch[1], 10);
         const minutes = offsetMatch[2] ? parseInt(offsetMatch[2], 10) : 0;
 
-        // Calculate total offset in hours, considering minutes as part of the hour
-        // If hours are negative, minutes should also contribute negatively
-        return hours + (minutes / 60) * (hours < 0 ? -1 : 1);
+        // Calculate total offset in minutes, considering minutes as part of the hour
+        return (hours * 60) + (minutes * (hours < 0 ? -1 : 1));
     }
 
     // If no offset information is found, return 0 as a default
