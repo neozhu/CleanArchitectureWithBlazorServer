@@ -346,7 +346,21 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedBy")
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
@@ -421,6 +435,13 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("DisplayName")
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
@@ -437,6 +458,17 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 
                     b.Property<bool>("IsLive")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("LanguageCode")
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
@@ -465,7 +497,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 
                     b.Property<string>("ProfilePictureDataUrl")
                         .HasMaxLength(450)
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Provider")
                         .HasMaxLength(450)
@@ -487,6 +519,10 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TenantId")
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TimeZoneId")
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
