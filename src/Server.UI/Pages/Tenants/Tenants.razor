@@ -157,7 +157,6 @@
 @code
 {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-
     public string? Title { get; private set; }
     private int _defaultPageSize = 15;
     private HashSet<TenantDto> _selectedItems = new();

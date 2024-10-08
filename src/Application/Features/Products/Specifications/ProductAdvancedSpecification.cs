@@ -5,8 +5,8 @@ public class ProductAdvancedSpecification : Specification<Product>
     public ProductAdvancedSpecification(ProductAdvancedFilter filter)
     {
         DateTime today = DateTime.UtcNow;
-        var todayrange = today.GetDateRange("TODAY",filter.LocalTimezoneOffset);
-        var last30daysrange = today.GetDateRange("LAST_30_DAYS", filter.LocalTimezoneOffset);
+        var todayrange = today.GetDateRange("TODAY",filter.CurrentUser.LocalTimeOffset);
+        var last30daysrange = today.GetDateRange("LAST_30_DAYS", filter.CurrentUser.LocalTimeOffset);
         Query.Where(x => x.Name != null)
             .Where(x => x.Name.Contains(filter.Keyword) || x.Description.Contains(filter.Keyword) ||
                         x.Brand.Contains(filter.Keyword), !string.IsNullOrEmpty(filter.Keyword))

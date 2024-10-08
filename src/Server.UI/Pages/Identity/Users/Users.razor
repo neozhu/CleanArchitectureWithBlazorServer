@@ -16,6 +16,7 @@
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
 @using System.Security.Claims
+@using System.Globalization
 @using ZiggyCreatures.Caching.Fusion
 
 @attribute [Authorize(Policy = Permissions.Users.View)]
@@ -456,7 +457,9 @@
                 SuperiorId = model.Superior?.Id,
                 ProfilePictureDataUrl = model.ProfilePictureDataUrl,
                 EmailConfirmed = false,
-                IsActive = model.IsActive
+                IsActive = model.IsActive,
+                LanguageCode = model.LanguageCode,
+                TimeZoneId = model.TimeZoneId
             };
 
         var identityResult = await UserManager.CreateAsync(applicationUser);
@@ -485,6 +488,8 @@
         user.IsActive = item.IsActive;
         user.TenantId = item.TenantId;
         user.SuperiorId = item.SuperiorId;
+        user.LanguageCode = item.LanguageCode;
+        user.TimeZoneId = item.TimeZoneId;
         var identityResult = await UserManager.UpdateAsync(user);
         if (identityResult.Succeeded)
         {
@@ -523,11 +528,17 @@
             await UserManager.AddToRoleAsync(user, RoleName.Basic);
         }
     }
-
-
     private async Task OnCreate()
     {
-        var model = new ApplicationUserDto { Provider = "Local", Email = "", UserName = "", AssignedRoles = new[] { RoleName.Basic } };
+        var model = new ApplicationUserDto
+            {
+                Provider = "Local",
+                Email = "",
+                UserName = "",
+                AssignedRoles = new[] { RoleName.Basic },
+                TimeZoneId = TimeZoneInfo.Local.Id,
+                LanguageCode = CultureInfo.CurrentCulture.Name
+            };
         await ShowCreateUserDialog(model, L["Create a new user"]);
     }
 
@@ -859,7 +870,7 @@
     {
         return await ExcelService.ExportAsync(items,
             new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                            {
+                                                {
                 { L["Id"], item => item.Id },
                 { L["User Name"], item => item.UserName },
                 { L["Full Name"], item => item.DisplayName },
@@ -867,7 +878,7 @@
                 { L["Phone Number"], item => item.PhoneNumber },
                 { L["Tenant Id"], item => item.TenantId },
                 { L["Superior Id"], item => item.SuperiorId }
-                                            }, L["Users"]);
+                                                }, L["Users"]);
     }
 
     private async Task OnImportData(IBrowserFile file)

@@ -1,4 +1,4 @@
-﻿@page "/pages/authentication/register"
+﻿@page "/pages/register"
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -7,135 +7,40 @@
 @using System.Text
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
 @using System.ComponentModel.DataAnnotations
-
-@inject UserManager<ApplicationUser> UserManager
+@using System.Globalization
+@inherits OwningComponentBase
 @inject IStringLocalizer<Register> L
 @inject ILogger<Register> Logger
-@inject IUserStore<ApplicationUser> UserStore
-@inject SignInManager<ApplicationUser> SignInManager
-@inject IdentityRedirectManager RedirectManager
 @inject ITenantService TenantsService
 <PageTitle>@Title</PageTitle>
 
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
-        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
+        <EditForm Model="Input" OnValidSubmit="RegisterUser">
             <DataAnnotationsValidator />
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign Up"]</MudText>
             <MudText>
                 @L["Have an account?"] <MudLink Href="@Login.PageUrl">@L["Sign In"]</MudLink>
             </MudText>
-            <StatusMessage Error="true" Message="@message"></StatusMessage>
-            <div class="mud-input-control mud-input-input-control my-4">
-                <div class="mud-input-control-input-container">
-                    <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputSelect @bind-Value="Input.TenantId" class="mud-input-slot mud-input-root mud-input-root-outlined" style="padding: 18.5px 14px;
-                                                                                                                                       width:100%; 
-                                                                                                                                       appearance: none;
-                                                                                                                                       background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNiAxNic+PHBhdGggZmlsbD0nbm9uZScgc3Ryb2tlPScjMzQzYTQwJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS13aWR0aD0nMicgZD0nTTIgNWw2IDYgNi02Jy8+PC9zdmc+') no-repeat right 10px center;
-                                                                                                                                        background-size: 10px;" aria-required="true">
-                            @foreach (var tenant in TenantsService.DataSource)
-                            {
-                                <option value="@tenant.Id">@tenant.Name</option>
-                            }
-                        </InputSelect>
-                        <div class="mud-input-outlined-border"></div>
-                    </div>
-                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="TenantId">@L["Tenant"]</label>
-                </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.TenantId" class="mud-input-error" />
-                    </div>
-                </div>
-            </div>
 
-            <div class="mud-input-control mud-input-input-control my-4">
-                <div class="mud-input-control-input-container">
-                    <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText @bind-Value="Input.UserName" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="user name" />
-                        <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
-                        <!--!-->
-                        <div class="mud-input-outlined-border"></div>
-                    </div>
-                    <!--!-->
-                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="userName">@L["User Name"]</label>
-                </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.UserName" class="mud-input-error" />
-                    </div>
-                </div>
-            </div>
+            <MudStack Spacing="2">
+                <StatusMessage Message="@message" Error="true" />
+                <MultiTenantAutocomplete For="@(() => Input.Tenant)"
+                                         Variant="Variant.Outlined"
+                                         T="TenantDto"
+                                         Label="@L["Tenant"]"
+                                         Required="true"
+                                         @bind-Value="@Input.Tenant">
 
-            <div class="mud-input-control mud-input-input-control my-4">
-                <div class="mud-input-control-input-container">
-                    <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText @bind-Value="Input.Email" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="user name" />
-                        <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
-                        <!--!-->
-                        <div class="mud-input-outlined-border"></div>
-                    </div>
-                    <!--!-->
-                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="userName">@L["E-mail"]</label>
-                </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.Email" class="mud-input-error" />
-                    </div>
-                </div>
-            </div>
-
-            <div class="mud-input-control mud-input-input-control my-4">
-                <div class="mud-input-control-input-container">
-                    <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText type="password" @bind-Value="Input.Password" class="mud-input-slot mud-input-root mud-input-root-outlined" autocomplete="current-password" aria-required="true" placeholder="password" />
-                        <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
-                        <!--!-->
-                        <div class="mud-input-outlined-border"></div>
-                    </div>
-                    <!--!-->
-                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="password">@L["Password"]</label>
-                </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.Password" class="mud-input-error" />
-                    </div>
-                </div>
-            </div>
-            <div class="mud-input-control mud-input-input-control my-4">
-                <div class="mud-input-control-input-container">
-                    <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText type="password" @bind-Value="Input.ConfirmPassword" class="mud-input-slot mud-input-root mud-input-root-outlined" autocomplete="current-password" aria-required="true" placeholder="Confirm password" />
-                        <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
-                        <!--!-->
-                        <div class="mud-input-outlined-border"></div>
-                    </div>
-                    <!--!-->
-                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="password">@L["Confirm Password"]</label>
-                </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.ConfirmPassword" class="mud-input-error" />
-                    </div>
-                </div>
-            </div>
-
-            <div Class="d-flex justify-space-between align-center mb-1">
-                <label class="form-label">
-                    <InputCheckbox @bind-Value="Input.AgreeToTerms" class="form-check-input" />
-                    @L["I agree to the terms and privacy"]
-                </label>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.AgreeToTerms" class="mud-input-error" />
-                    </div>
-                </div>
-            </div>
+                </MultiTenantAutocomplete>
+                <MudTextField For="@(() => Input.UserName)" @bind-Value="Input.UserName" Label="@L["User Name"]" Variant="Variant.Outlined" Required="true"></MudTextField>
+                <MudTextField For="@(() => Input.Email)" @bind-Value="Input.Email" Label="@L["E-mail"]" Variant="Variant.Outlined" Required="true"></MudTextField>
+                <MudTextField For="@(() => Input.Password)" @bind-Value="Input.Password" InputType="InputType.Password" Label="@L["Password"]" Variant="Variant.Outlined" Required="true"></MudTextField>
+                <MudTextField For="@(() => Input.ConfirmPassword)" @bind-Value="Input.ConfirmPassword" InputType="InputType.Password" Label="@L["Confirm Password"]" Variant="Variant.Outlined" Required="true"></MudTextField>
+                <TimeZoneAutocomplete T="string" For="@(() => Input.TimeZoneId)" @bind-Value="Input.TimeZoneId" Label="@L["Time Zone"]" Variant="Variant.Outlined"></TimeZoneAutocomplete>
+                <LanguageAutocomplete T="string" For="@(() => Input.LanguageCode)" @bind-Value="Input.LanguageCode" Label="@L["Time Zone"]" Variant="Variant.Outlined"></LanguageAutocomplete>
+                <MudCheckBox For="@(() => Input.AgreeToTerms)" @bind-Value="Input.AgreeToTerms" Label="@L["I agree to the terms and privacy"]"></MudCheckBox>
+            </MudStack>
 
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
@@ -149,8 +54,12 @@
 </div>
 
 @code {
+    UserManager<ApplicationUser> UserManager;
+    IUserStore<ApplicationUser> UserStore;
+    SignInManager<ApplicationUser> SignInManager;
 
-    public const string PageUrl = "/pages/authentication/register";
+
+    public const string PageUrl = "/pages/register";
     private string Title = "Sign Up";
 
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
@@ -158,18 +67,25 @@
 
 
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
-
+    private void InitializeServices()
+    {
+        UserStore = ScopedServices.GetRequiredService<IUserStore<ApplicationUser>>();
+        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        SignInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
+    }
     protected override void OnInitialized()
     {
         Title = L["Sign Up"];
-
+        InitializeServices();
 
     }
 
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
-        user.TenantId = Input.TenantId;
+        user.TenantId = Input.Tenant.Id;
+        user.LanguageCode = Input.LanguageCode;
+        user.TimeZoneId = Input.TimeZoneId;
         await UserStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -191,7 +107,7 @@
         Logger.LogInformation("New user account created. Username: {UserName}, User ID: {UserId}, Tenant ID: {TenantId}, Assigned Role: {RoleName}.",
             Input.UserName,
             userId,
-            Input.TenantId,
+            Input.Tenant.Id,
             RoleName.Basic);
         if (UserManager.Options.SignIn.RequireConfirmedEmail)
         {
@@ -201,20 +117,11 @@
                 Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
                 new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = "/" });
             await Mediator.Publish(new UserActivationNotification(callbackUrl, Input.Email, userId, Input.UserName));
-            RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new Dictionary<string, object?> { ["email"] = Input.Email });
+            Navigation.NavigateTo(RegisterConfirmation.PageUrl);
         }
-        else if (UserManager.Options.SignIn.RequireConfirmedAccount)
-        {
-            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Navigation.GetUriWithQueryParameters(
-                Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
-                new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
-            RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new Dictionary<string, object?> { ["email"] = Input.Email, ["EmailConfirmationLink"] = callbackUrl });
-        }
-
-        await SignInManager.SignInAsync(user, false);
-        RedirectManager.RedirectTo(ReturnUrl);
+        
+        await SignInManager.SignInAsync(user, true);
+        Navigation.NavigateTo(ReturnUrl??"/");
     }
 
     private ApplicationUser CreateUser()
@@ -265,9 +172,13 @@
         [Range(typeof(bool), "true", "true", ErrorMessage = "You must agree to the terms.")]
         public bool AgreeToTerms { get; set; } = true;
 
+        [Display(Name = "Time Zone")]
+        public string? TimeZoneId { get; set; } = TimeZoneInfo.Local.Id;
+        [Display(Name = "Language")]
+        public string? LanguageCode { get; set; } = CultureInfo.CurrentCulture.Name;
         [Required]
-        [Display(Name = "Tenant Id")]
-        public string TenantId { get; set; } = "";
+        [Display(Name = "Tenant")]
+        public TenantDto? Tenant { get; set; }
     }
 
 }
