@@ -1,6 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
-
-namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
+﻿namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
 public class TimeZoneAutocomplete<T> : MudAutocomplete<string>
 {
@@ -12,7 +10,7 @@ public class TimeZoneAutocomplete<T> : MudAutocomplete<string>
         ResetValueOnEmptyText = true;
         ToStringFunc = x =>
         {
-            var timeZone = TimeZones.FirstOrDefault(tz => tz.Id == x);
+            var timeZone = TimeZones.FirstOrDefault(tz => tz.Id.Equals(x));
             return timeZone != null ? timeZone.DisplayName : x;
         };
     }

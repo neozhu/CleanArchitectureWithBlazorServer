@@ -1,24 +1,19 @@
 ﻿using System.Globalization;
-using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
 public class LanguageAutocomplete<T> : MudAutocomplete<string>
 {
     private List<CultureInfo> Languages { get;  set; }= CultureInfo.GetCultures(CultureTypes.SpecificCultures).ToList();
-
-
-
-    public LanguageAutocomplete<T>()
+    public LanguageAutocomplete()
     {
-
         SearchFunc = SearchFunc_;
         Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;
         ToStringFunc = x =>
         {
-            var language = Languages.FirstOrDefault(lang => lang.Name == x);
+            var language = Languages.FirstOrDefault(lang => lang.Name.Equals(x));
             return language != null ? $"{language.DisplayName} ({language.Name})" : x;
         };
     }
