@@ -57,7 +57,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
         var tenantId = _currentUserService.TenantId;
         var now = _dateTime.Now;
 
-        foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
+        foreach (var entry in context.ChangeTracker.Entries<IAuditableEntity>())
         {
             switch (entry.State)
             {
@@ -83,7 +83,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
         }
     }
 
-    private static void SetCreationAuditInfo(BaseAuditableEntity entity, string userId, string tenantId, DateTime now)
+    private static void SetCreationAuditInfo(IAuditableEntity entity, string userId, string tenantId, DateTime now)
     {
         entity.CreatedBy = userId;
         entity.Created = now;
@@ -91,7 +91,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
         if (entity is IMayHaveTenant mayTenant) mayTenant.TenantId = tenantId;
     }
 
-    private static void SetModificationAuditInfo(BaseAuditableEntity entity, string userId, DateTime now)
+    private static void SetModificationAuditInfo(IAuditableEntity entity, string userId, DateTime now)
     {
         entity.LastModifiedBy = userId;
         entity.LastModified = now;

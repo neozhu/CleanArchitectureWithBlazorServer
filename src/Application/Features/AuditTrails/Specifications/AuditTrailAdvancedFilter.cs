@@ -12,7 +12,6 @@ public enum AuditTrailListView
 
 public class AuditTrailAdvancedFilter : PaginationFilter
 {
-    public TimeSpan LocalTimezoneOffset { get; set; }
     public AuditType? AuditType { get; set; }
     public AuditTrailListView ListView { get; set; } = AuditTrailListView.All;
     public UserProfile? CurrentUser { get; set; }

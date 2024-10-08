@@ -149,6 +149,8 @@ public class ApplicationDbContextInitializer
             Email = "admin@example.com",
             EmailConfirmed = true,
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80",
+            LanguageCode="en-US",
+            TimeZoneId= "Asia/Shanghai",
             TwoFactorEnabled = false
         };
 
@@ -161,6 +163,8 @@ public class ApplicationDbContextInitializer
             DisplayName = UserName.Demo,
             Email = "demo@example.com",
             EmailConfirmed = true,
+            LanguageCode = "de-DE",
+            TimeZoneId = "Europe/Berlin",
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80"
         };
 

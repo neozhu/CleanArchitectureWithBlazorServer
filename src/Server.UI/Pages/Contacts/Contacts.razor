@@ -216,8 +216,7 @@
     private Task<AuthenticationState> AuthState { get; set; } = default!;
     [CascadingParameter]
     private UserProfile? UserProfile { get; set; }
-    [CascadingParameter(Name = "LocalTimezoneOffset")]
-    private TimeSpan _localTimezoneOffset { get; set; }
+
 
     private ContactsWithPaginationQuery Query { get; set; } = new();
     [Inject]
@@ -250,7 +249,6 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
-            Query.LocalTimezoneOffset = _localTimezoneOffset;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
             return new GridData<ContactDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }

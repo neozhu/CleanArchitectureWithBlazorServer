@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.PaginationQuery;
-using CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
 #nullable disable warnings
@@ -8,8 +7,8 @@ public class AuditTrailAdvancedSpecification : Specification<AuditTrail>
     public AuditTrailAdvancedSpecification(AuditTrailsWithPaginationQuery filter)
     {
         DateTime today = DateTime.UtcNow;
-        var todayrange = today.GetDateRange("TODAY", filter.LocalTimezoneOffset);
-        var last30daysrange = today.GetDateRange("LAST_30_DAYS",filter.LocalTimezoneOffset);
+        var todayrange = today.GetDateRange("TODAY", filter.CurrentUser.LocalTimeOffset);
+        var last30daysrange = today.GetDateRange("LAST_30_DAYS",filter.CurrentUser.LocalTimeOffset);
 
 
 
