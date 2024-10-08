@@ -24,6 +24,7 @@
             </MudText>
 
             <MudStack Spacing="2">
+                <StatusMessage Message="@message" Error="true" />
                 <MultiTenantAutocomplete For="@(() => Input.Tenant)"
                                          Variant="Variant.Outlined"
                                          T="TenantDto"
