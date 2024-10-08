@@ -17,7 +17,7 @@ public class LogsWithPaginationQuery : LoggerAdvancedFilter, ICacheableRequest<P
     public override string ToString()
     {
         return
-            $"Listview:{ListView}-{LocalTimezoneOffset.TotalHours},{Level},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
+            $"Listview:{ListView}-{LocalTimeOffset.TotalHours},{Level},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
 }
 

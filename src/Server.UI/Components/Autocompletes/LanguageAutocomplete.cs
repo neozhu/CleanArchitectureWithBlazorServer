@@ -1,20 +1,20 @@
-﻿using System.Globalization;
+﻿using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
 public class LanguageAutocomplete<T> : MudAutocomplete<string>
 {
-    private List<CultureInfo> Languages { get;  set; }= CultureInfo.GetCultures(CultureTypes.SpecificCultures).ToList();
+    
+    private List<LanguageCode> Languages { get; set; }= LocalizationConstants.SupportedLanguages.ToList();
     public LanguageAutocomplete()
     {
         SearchFunc = SearchFunc_;
-        Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;
         ToStringFunc = x =>
         {
-            var language = Languages.FirstOrDefault(lang => lang.Name.Equals(x));
-            return language != null ? $"{language.DisplayName} ({language.Name})" : x;
+            var language = Languages.FirstOrDefault(lang =>lang.Code.Equals(x, StringComparison.OrdinalIgnoreCase));
+            return language != null ? $"{language.DisplayName}" : x;
         };
     }
 
@@ -22,15 +22,16 @@ public class LanguageAutocomplete<T> : MudAutocomplete<string>
     {
         // 如果输入为空，返回完整的语言列表；否则进行模糊搜索
         return string.IsNullOrEmpty(value)
-            ? Task.FromResult(Languages.Select(lang => lang.Name).AsEnumerable())
+            ? Task.FromResult(Languages.Select(lang => lang.Code).AsEnumerable())
             : Task.FromResult(Languages
                 .Where(lang => Contains(lang, value))
-                .Select(lang => lang.Name));
+                .Select(lang => lang.Code));
     }
 
-    private static bool Contains(CultureInfo language, string value)
+    private static bool Contains(LanguageCode language, string value)
     {
-        return language.DisplayName.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
-               language.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase);
+        return language.Code.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
+                language.DisplayName.Contains(value, StringComparison.InvariantCultureIgnoreCase);
     }
+    
 }

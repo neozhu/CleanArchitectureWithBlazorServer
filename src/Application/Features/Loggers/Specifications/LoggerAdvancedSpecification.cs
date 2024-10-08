@@ -7,8 +7,8 @@ public class LoggerAdvancedSpecification : Specification<Logger>
     public LoggerAdvancedSpecification(LogsWithPaginationQuery filter)
     {
         DateTime today = DateTime.UtcNow;
-        var todayrange = today.GetDateRange("TODAY", filter.LocalTimezoneOffset);
-        var last30daysrange = today.GetDateRange("LAST_30_DAYS", filter.LocalTimezoneOffset);
+        var todayrange = today.GetDateRange("TODAY", filter.LocalTimeOffset);
+        var last30daysrange = today.GetDateRange("LAST_30_DAYS", filter.LocalTimeOffset);
         // Build query conditions
         Query.Where(p => p.TimeStamp >= todayrange.Start && p.TimeStamp < todayrange.End.AddDays(1),
                 filter.ListView == LogListView.TODAY)

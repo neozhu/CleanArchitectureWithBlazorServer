@@ -12,7 +12,7 @@ public enum LogListView
 
 public class LoggerAdvancedFilter : PaginationFilter
 {
-    public TimeSpan LocalTimezoneOffset { get; set; }
+    public TimeSpan LocalTimeOffset { get; set; }
     public LogLevel? Level { get; set; }
     public LogListView ListView { get; set; } = LogListView.LAST_30_DAYS;
 }

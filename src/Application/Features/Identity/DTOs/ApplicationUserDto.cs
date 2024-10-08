@@ -45,6 +45,10 @@ public class ApplicationUserDto
     [Description("Status")] public DateTimeOffset? LockoutEnd { get; set; }
     [Description("Time Zone")]
     public string? TimeZoneId { get; set; }
+    [Description("Local Time Offset")]
+    public TimeSpan LocalTimeOffset => string.IsNullOrEmpty(TimeZoneId)
+    ? TimeZoneInfo.Local.BaseUtcOffset
+    : TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId).BaseUtcOffset;
     [Description("Language")]
     public string? LanguageCode { get; set; }
     public UserProfile ToUserProfile()
@@ -79,6 +83,7 @@ public class ApplicationUserDto
         public Mapping()
         {
             CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
+                .ForMember(x => x.LocalTimeOffset, s => s.Ignore())
                 .ForMember(x => x.EmailConfirmed, s => s.MapFrom(y => y.EmailConfirmed))
                 .ForMember(x => x.AssignedRoles, s => s.MapFrom(y => y.UserRoles.Select(r => r.Role.Name)));
         }

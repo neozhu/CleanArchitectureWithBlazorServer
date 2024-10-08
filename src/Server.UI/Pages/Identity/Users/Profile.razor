@@ -250,7 +250,7 @@ else
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated"], Severity.Info);
-                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
+                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber,user.TimeZoneId, user.LanguageCode);
                 await OnlineUserTracker.Update(user.Id,
                                                user.UserName??"",
                                                user.DisplayName ?? "",
@@ -275,7 +275,7 @@ else
                 user.LanguageCode = model.LanguageCode;
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
-                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
+                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber,user.TimeZoneId, user.LanguageCode);
                 await OnlineUserTracker.Update(user.Id,
                                                user.UserName ?? "",
                                                user.DisplayName ?? "",

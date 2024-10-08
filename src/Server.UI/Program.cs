@@ -2,6 +2,7 @@
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Server.UI;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.RegisterSerilog();
 builder.WebHost.UseStaticWebAssets();
