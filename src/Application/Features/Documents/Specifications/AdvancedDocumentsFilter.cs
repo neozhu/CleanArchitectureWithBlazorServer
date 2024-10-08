@@ -14,7 +14,6 @@ public enum DocumentListView
 
 public class AdvancedDocumentsFilter : PaginationFilter
 {
-    public TimeSpan LocalTimezoneOffset { get; set; }
     public DocumentListView ListView { get; set; } = DocumentListView.All;
     public UserProfile? CurrentUser { get; set; }
 }
