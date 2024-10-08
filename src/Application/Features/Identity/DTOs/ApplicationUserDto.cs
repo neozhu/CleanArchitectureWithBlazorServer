@@ -43,7 +43,10 @@ public class ApplicationUserDto
     [Description("Email Confirmed")] public bool EmailConfirmed { get; set; }
 
     [Description("Status")] public DateTimeOffset? LockoutEnd { get; set; }
-
+    [Description("Time Zone")]
+    public string? TimeZoneId { get; set; }
+    [Description("Language")]
+    public string? LanguageCode { get; set; }
     public UserProfile ToUserProfile()
     {
         return new UserProfile
@@ -60,7 +63,9 @@ public class ApplicationUserDto
             SuperiorId = SuperiorId,
             SuperiorName = Superior?.UserName,
             AssignedRoles = AssignedRoles,
-            DefaultRole = DefaultRole
+            DefaultRole = DefaultRole,
+            TimeZoneId = TimeZoneId,
+            LanguageCode = LanguageCode
         };
     }
 
