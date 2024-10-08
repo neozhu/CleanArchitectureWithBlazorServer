@@ -6,11 +6,9 @@ public class AdvancedDocumentsSpecification : Specification<Document>
 {
     public AdvancedDocumentsSpecification(AdvancedDocumentsFilter filter)
     {
-
         DateTime today = DateTime.UtcNow;
-        var todayrange = today.GetDateRange("TODAY", filter.LocalTimezoneOffset);
-        var last30daysrange = today.GetDateRange("LAST_30_DAYS", filter.LocalTimezoneOffset);
-
+        var todayrange = today.GetDateRange("TODAY", filter.CurrentUser.LocalTimeOffset);
+        var last30daysrange = today.GetDateRange("LAST_30_DAYS", filter.CurrentUser.LocalTimeOffset);
         Query.Where(p =>
                     (p.CreatedBy == filter.CurrentUser.UserId && p.IsPublic == false) ||
                     (p.IsPublic == true && p.TenantId == filter.CurrentUser.TenantId),

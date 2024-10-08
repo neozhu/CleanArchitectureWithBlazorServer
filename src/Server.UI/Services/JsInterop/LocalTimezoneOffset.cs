@@ -2,11 +2,11 @@
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 
-public class LocalTimezoneOffset
+public class LocalTimeOffset
 {
     private readonly IJSRuntime _jsRuntime;
 
-    public LocalTimezoneOffset(IJSRuntime jsRuntime)
+    public LocalTimeOffset(IJSRuntime jsRuntime)
     {
         _jsRuntime = jsRuntime;
     }

@@ -105,7 +105,7 @@ public static class DependencyInjection
             c.BaseAddress = new Uri("http://10.33.1.150:8000/ocr/predict-by-file");
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }).AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(30)));
-        services.AddScoped<LocalTimezoneOffset>();
+        services.AddScoped<LocalTimeOffset>();
         services.AddHttpContextAccessor();
         services.AddScoped<HubClient>();
         services

@@ -12,8 +12,8 @@ public class ContactAdvancedSpecification : Specification<Contact>
     {
 
         DateTime today = DateTime.UtcNow;
-        var todayrange = today.GetDateRange(ContactListView.TODAY.ToString(), filter.LocalTimezoneOffset);
-        var last30daysrange = today.GetDateRange(ContactListView.LAST_30_DAYS.ToString(),filter.LocalTimezoneOffset);
+        var todayrange = today.GetDateRange(ContactListView.TODAY.ToString(), filter.CurrentUser.LocalTimeOffset);
+        var last30daysrange = today.GetDateRange(ContactListView.LAST_30_DAYS.ToString(),filter.CurrentUser.LocalTimeOffset);
 
         Query.Where(q => q.Name != null)
              .Where(filter.Keyword,!string.IsNullOrEmpty(filter.Keyword))

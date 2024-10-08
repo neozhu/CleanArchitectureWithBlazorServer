@@ -236,8 +236,6 @@
 
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
-    [CascadingParameter(Name = "LocalTimezoneOffset")]
-    private TimeSpan _localTimezoneOffset { get; set; }
     public string? Title { get; private set; }
     private HashSet<ProductDto> _selectedItems = new();
     private MudDataGrid<ProductDto> _table = default!;
@@ -280,7 +278,6 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
-            Query.LocalTimezoneOffset = _localTimezoneOffset;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
 
             return new GridData<ProductDto> { TotalItems = result.TotalItems, Items = result.Items };
