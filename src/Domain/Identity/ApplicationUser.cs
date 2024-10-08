@@ -2,10 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel.DataAnnotations.Schema;
+using CleanArchitecture.Blazor.Domain.Common.Entities;
 
 namespace CleanArchitecture.Blazor.Domain.Identity;
 
-public class ApplicationUser : IdentityUser
+public class ApplicationUser : IdentityUser, IAuditableEntity
 {
     public ApplicationUser()
     {
@@ -20,7 +21,7 @@ public class ApplicationUser : IdentityUser
     public string? TenantId { get; set; }
     public virtual Tenant? Tenant { get; set; }
 
-    [Column(TypeName = "text")] public string? ProfilePictureDataUrl { get; set; }
+    public string? ProfilePictureDataUrl { get; set; }
 
     public bool IsActive { get; set; }
     public bool IsLive { get; set; }
@@ -33,4 +34,11 @@ public class ApplicationUser : IdentityUser
 
     public string? SuperiorId { get; set; } = null;
     public ApplicationUser? Superior { get; set; } = null;
+    public DateTime? Created { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTime? LastModified { get; set; }
+    public string? LastModifiedBy { get; set; }
+
+    public string? TimeZoneId { get; set; }
+    public string? LanguageCode { get; set; }
 }

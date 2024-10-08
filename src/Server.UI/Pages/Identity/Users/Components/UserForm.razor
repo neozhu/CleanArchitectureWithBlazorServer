@@ -47,7 +47,7 @@
         <MudItem sm="6" xs="12">
             <MultiTenantAutocomplete For="@(() => Model.Tenant)"
                                      T="TenantDto"
-                                     Label="@L["Select Tenant"]"
+                                     Label="@L["Tenant"]"
                                      Required="true"
                                      ValueChanged="@(x=>TenantChanged(x))"
                                      Value="@Model.Tenant">
@@ -55,24 +55,28 @@
             </MultiTenantAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L["Provider"]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L["Provider"]" Variant="Variant.Text" ReadOnly></MudTextField>
         </MudItem>
 
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L["User Name"]" Variant="Variant.Text" Required="true"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
+            <div class="d-fex">
+                <MudCheckBox For="@(() => Model.IsActive)" @bind-Value="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
+            </div>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L["Full Name"]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" sm="6">
             <PickSuperiorIdAutocomplete For="@(() => Model.Superior)" T="ApplicationUserDto"
                                         OwnerName="@Model.UserName"
                                         Clearable="true"
                                         TenantId="@Model.Tenant?.Id"
-                                        Label="@L["Select Superior"]"
+                                        Label="@L["Superior"]"
                                         @bind-Value="@Model.Superior">
             </PickSuperiorIdAutocomplete>
-
-        </MudItem>
-        <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L["Full Name"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L["E-mail"]" Variant="Variant.Text" Required="true"></MudTextField>
@@ -80,14 +84,14 @@
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
         </MudItem>
-
-
-        <MudItem xs="12" sm="6">
-            <MudText Typo="Typo.caption">@L["Status"]</MudText>
-            <div class="d-fex">
-                <MudCheckBox For="@(() => Model.IsActive)" @bind-Value="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
-            </div>
+        <MudItem sm="6" xs="12">
+            <TimeZoneAutocomplete T="string" For="@(() => Model.TimeZoneId)" ShrinkLabel="true" @bind-Value="Model.TimeZoneId" Label="@L["Time Zone"]" Variant="Variant.Text"></TimeZoneAutocomplete>
         </MudItem>
+        <MudItem sm="6" xs="12">
+            <LanguageAutocomplete T="string" For="@(() => Model.LanguageCode)" ShrinkLabel="true" @bind-Value="Model.LanguageCode" Label="@L["Language"]" Variant="Variant.Text"></LanguageAutocomplete>
+        </MudItem>
+
+
         <MudItem xs="12" sm="12">
             <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
             <MudGrid Class="mt-1" Spacing="2">
