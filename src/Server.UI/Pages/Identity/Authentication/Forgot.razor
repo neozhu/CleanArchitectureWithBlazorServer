@@ -1,22 +1,40 @@
-﻿@page "/pages/forgot-password"
+﻿@page "/pages/authentication/forgot-password"
 @using CleanArchitecture.Blazor.Domain.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using System.Text
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.ResetPassword
 @using System.ComponentModel.DataAnnotations
-@inherits OwningComponentBase
+
 @inject IStringLocalizer<Forgot> L
 @inject ILogger<Forgot> Logger
+@inject IdentityRedirectManager RedirectManager
+@inject UserManager<ApplicationUser> UserManager
 <PageTitle>@Title</PageTitle>
 
-<EditForm Model="Input"  OnValidSubmit="OnValidSubmitAsync">
+<EditForm Model="Input" FormName="forgot-password" OnValidSubmit="OnValidSubmitAsync" method="post">
     <DataAnnotationsValidator/>
 
     <MudText Typo="Typo.h4" GutterBottom="true">@L["Forgot Password?"]</MudText>
     <MudText Typo="Typo.body1">@L["No worries! Just enter your email address below and we'll send you a link to reset your password."]</MudText>
-    <StatusMessage Message="@Message" Error="true" />
-    <MudTextField For="(()=>Input.Email)" Variant="Variant.Outlined" Label="@L["E-mail"]" @bind-Value="Input.Email" Required></MudTextField>
-     
+    <StatusMessage Message="@Message" Error="true"/>
+    <div class="mud-input-control mud-input-input-control my-4">
+        <div class="mud-input-control-input-container">
+            <!--!--><!--!-->
+            <div class="mud-input mud-input-outlined mud-shrink">
+                <InputText @bind-Value="Input.Email" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="email" aria-required="true" placeholder="name@example.com"/>
+                <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
+                <!--!-->
+                <div class="mud-input-outlined-border"></div>
+            </div>
+            <!--!-->
+            <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="userName">@L["E-mail"]</label>
+        </div>
+        <div class="mud-input-helper-text mud-input-error">
+            <div class="d-flex">
+                <ValidationMessage For="() => Input.Email" class="mud-input-error"/>
+            </div>
+        </div>
+    </div>
     <MudButton Variant="Variant.Filled"
                Color="Color.Primary"
                Size="Size.Large"
@@ -28,21 +46,18 @@
 </EditForm>
 
 @code {
-    public const string PageUrl = "/pages/forgot-password";
+    public const string PageUrl = "/pages/authentication/forgot-password";
     public string Title = "Forgot Password";
-    UserManager<ApplicationUser> UserManager;
+
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
     private readonly string _resetPasswordToken = string.Empty;
     private string _inputToken = string.Empty;
     private string? Message;
-    private void InitializeServices()
-    {
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-    }
+
     protected override Task OnInitializedAsync()
     {
         Title = L["Forgot Password"];
-        InitializeServices();
+
         return base.OnInitializedAsync();
     }
 
@@ -68,7 +83,7 @@
             new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
         await Mediator.Publish(new ResetPasswordNotification(callbackUrl, user.Email!, user.UserName!));
         Logger.LogInformation("Rest password email sent to {0}.", Input.Email);
-        Navigation.NavigateTo(ForgotPasswordConfirmation.PageUrl);
+        RedirectManager.RedirectTo(ForgotPasswordConfirmation.PageUrl);
     }
 
 
