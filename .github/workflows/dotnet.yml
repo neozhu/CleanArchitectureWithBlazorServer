@@ -13,14 +13,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    services:
-      sqldb:
-        image: mcr.microsoft.com/mssql/server
-        ports:
-          - 1433:1433
-        env:
-          SA_PASSWORD: Your_password123
-          ACCEPT_EULA: Y
+  
           
     steps:
     - uses: actions/checkout@v4
@@ -33,8 +26,4 @@ jobs:
       run: dotnet restore CleanArchitecture.Blazor.sln
     - name: Build
       run: dotnet build CleanArchitecture.Blazor.sln --configuration Debug --no-restore
-    # - name: Test
-    #   run: dotnet test CleanArchitecture.Blazor.sln --no-build --configuration Release --filter "FullyQualifiedName!~AcceptanceTests"
-      env:
-        DatabaseSettings__DBProvider: mssql
-        ConnectionStrings__ConnectionString: Server=sqldb;Database=BlazorDashboardDb.Test;User=sa;Password=Your_password123;MultipleActiveResultSets=true;Encrypt=false;
+   
