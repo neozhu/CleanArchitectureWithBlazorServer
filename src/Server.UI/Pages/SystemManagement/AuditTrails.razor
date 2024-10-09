@@ -125,22 +125,17 @@
 
 @code
 {
-  
-    private int _timezoneOffset;
     public string Title { get; private set; } = "Audit Trails";
     private MudDataGrid<AuditTrailDto> _table = null!;
     private bool _loading;
     private int _defaultPageSize = 15;
-
     private readonly AuditTrailDto _currentDto = new();
-
     private AuditTrailsWithPaginationQuery Query { get; } = new();
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
-    [CascadingParameter(Name = "LocalTimezoneOffset")]
-    private TimeSpan _localTimezoneOffset { get; set; }
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
+        return Task.CompletedTask;
     }
 
     private async Task<GridData<AuditTrailDto>> ServerReload(GridState<AuditTrailDto> state)
@@ -153,7 +148,7 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
-            Query.LocalTimezoneOffset = _localTimezoneOffset;
+
             var result = await Mediator.Send(Query).ConfigureAwait(false);
             return new GridData<AuditTrailDto> { TotalItems = result.TotalItems, Items = result.Items };
         }

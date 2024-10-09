@@ -14,6 +14,4 @@ public class ProductAdvancedFilter : PaginationFilter
 
     public UserProfile?
         CurrentUser { get; set; } // <-- This CurrentUser property gets its value from the information of
-
-    public TimeSpan LocalTimezoneOffset { get; set; }
 }

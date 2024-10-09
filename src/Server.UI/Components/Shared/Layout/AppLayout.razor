@@ -73,6 +73,7 @@
     }
     private async Task UserProfileStateService_OnChange()
     {
+        UserProfile = UserProfileStateService.UserProfile;
         await InvokeAsync(StateHasChanged);
     }
     private void ResetBoundary()

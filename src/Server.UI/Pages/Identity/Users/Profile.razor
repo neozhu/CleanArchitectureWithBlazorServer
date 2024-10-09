@@ -85,6 +85,12 @@ else
                     <MudItem sm="6" xs="12">
                         <MudTextField For="@(() => model.PhoneNumber)" ShrinkLabel="true" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
                     </MudItem>
+                    <MudItem sm="6" xs="12">
+                        <TimeZoneAutocomplete T="string" For="@(() => model.TimeZoneId)" ShrinkLabel="true" @bind-Value="model.TimeZoneId" Label="@L["Time Zone"]" Variant="Variant.Text"></TimeZoneAutocomplete>
+                    </MudItem>
+                    <MudItem sm="6" xs="12">
+                        <LanguageAutocomplete T="string" For="@(() => model.LanguageCode)" ShrinkLabel="true" @bind-Value="model.LanguageCode" Label="@L["Language"]" Variant="Variant.Text"></LanguageAutocomplete>
+                    </MudItem>
                     <MudItem sm="12" xs="12" Class="d-flex justify-end">
                         <MudButton ButtonType="ButtonType.Button" Disabled="@_submitting" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">
                             @if (_submitting)
@@ -244,7 +250,7 @@ else
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated"], Severity.Info);
-                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
+                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber,user.TimeZoneId, user.LanguageCode);
                 await OnlineUserTracker.Update(user.Id,
                                                user.UserName??"",
                                                user.DisplayName ?? "",
@@ -265,9 +271,11 @@ else
                 var user = await UserManager.FindByNameAsync(_currentUserName) ?? throw new NotFoundException($"The application user [{_currentUserName}] was not found.");
                 user.PhoneNumber = model.PhoneNumber;
                 user.DisplayName = model.DisplayName;
+                user.TimeZoneId = model.TimeZoneId;
+                user.LanguageCode = model.LanguageCode;
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
-                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
+                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber,user.TimeZoneId, user.LanguageCode);
                 await OnlineUserTracker.Update(user.Id,
                                                user.UserName ?? "",
                                                user.DisplayName ?? "",
