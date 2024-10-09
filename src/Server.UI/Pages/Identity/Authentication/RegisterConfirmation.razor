@@ -37,7 +37,7 @@ else
     {
         if (Email is null)
         {
-            RedirectManager.RedirectTo("");
+            RedirectManager.RedirectTo("/");
         }
 
         var user = await UserManager.FindByEmailAsync(Email);

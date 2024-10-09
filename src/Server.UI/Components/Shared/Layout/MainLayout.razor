@@ -11,17 +11,15 @@
     <MudDialogProvider />
     <MudSnackbarProvider />
     <MudThemeProvider @ref="@_mudThemeProvider" Theme="@LayoutService.CurrentTheme" IsDarkMode="@LayoutService.IsDarkMode" IsDarkModeChanged="@LayoutService.SetDarkMode" />
-    <CascadingValue Name="LocalTimezoneOffset" Value="@_localTimezoneOffset">
+
         @Body
-    </CascadingValue>
+
 </MudRTLProvider>
 
 @code
 {
-    private TimeSpan _localTimezoneOffset;
     private MudThemeProvider _mudThemeProvider = null!;
     private bool _defaultDarkMode;
-
     public void Dispose()
     {
         LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
@@ -33,7 +31,6 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            _localTimezoneOffset = await new LocalTimezoneOffset(JS).GetLocalOffset();
             await ApplyUserPreferences();
             StateHasChanged();
         }
