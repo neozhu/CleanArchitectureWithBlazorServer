@@ -84,7 +84,13 @@
     protected override void OnInitialized()
     {
         UserProfileStateService.OnChange += UserProfileStateService_OnChange;
-        antiforgeryToken = getAntiforgeryToken();
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            antiforgeryToken = getAntiforgeryToken();
+        }
     }
     private string? getAntiforgeryToken()
     {
