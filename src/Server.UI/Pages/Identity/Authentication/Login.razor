@@ -108,6 +108,7 @@
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
         }
     }
+
     private void RedirectTo(string redirectionUrl)
     {
         ArgumentNullException.ThrowIfNull(HttpContext);
@@ -134,8 +135,13 @@
         var result = await SignInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, true);
         if (result.Succeeded)
         {
+            // Set the language cookie if user.LanguageCode is not null or empty
             Logger.LogInformation("{UserName} has logged in.",Input.UserName);
-            RedirectTo(ReturnUrl??"/");
+            // Determine the language code (use user's language preference or a default value)
+            string languageCode = user.LanguageCode ?? "en-US"; 
+            // Redirect to the desired URL with the culture as a query parameter
+            string redirectUrl = $"{ReturnUrl ?? "/"}?culture={languageCode}";
+            RedirectTo(redirectUrl);
         }
         else if (result.RequiresTwoFactor)
         {

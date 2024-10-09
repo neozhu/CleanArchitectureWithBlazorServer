@@ -9,6 +9,7 @@ else
     <MudText Class="@Class">@UTCDateTime.ToString(Format)</MudText>
 }
 @code {
+    [CascadingParameter] private UserProfile? UserProfile { get; set; }
     // Parameter to accept the UTC time that needs to be converted
     [Parameter]
     public DateTime UTCDateTime { get; set; }
@@ -24,13 +25,12 @@ else
     private DateTime? localTime;
 
     // This method is called when the component is initialized
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        // Call JavaScript function to get the browser's time zone offset in minutes
-        var timezoneOffset = await new LocalTimezoneOffset(JSRuntime).GetLocalOffset();
-
+        var timeOffset = UserProfile?.LocalTimeOffset ?? TimeZoneInfo.Local.BaseUtcOffset;
         // Convert the UTC time to local time by adding the time zone offset
-        localTime = UTCDateTime.Add(timezoneOffset);
+        localTime = UTCDateTime.Add(timeOffset);
+        return Task.CompletedTask;
 
     }
 }

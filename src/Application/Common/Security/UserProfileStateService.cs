@@ -55,11 +55,13 @@ public class UserProfileStateService
 
     private void NotifyStateChanged() => OnChange?.Invoke();
 
-    public void UpdateUserProfile(string userName,string? profilePictureDataUrl, string? fullName,string? phoneNumber)
+    public void UpdateUserProfile(string userName,string? profilePictureDataUrl, string? fullName,string? phoneNumber,string? timeZoneId,string? languageCode)
     {
         _userProfile.ProfilePictureDataUrl = profilePictureDataUrl;
         _userProfile.DisplayName = fullName;
         _userProfile.PhoneNumber = phoneNumber;
+        _userProfile.TimeZoneId = timeZoneId;
+        _userProfile.LanguageCode = languageCode;
         RemoveApplicationUserCache(userName);
         NotifyStateChanged();
     }

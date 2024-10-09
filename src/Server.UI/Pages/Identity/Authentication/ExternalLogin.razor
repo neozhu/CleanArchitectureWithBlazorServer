@@ -3,10 +3,12 @@
 @using System.Text
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Infrastructure.Constants.Localization
 @using CleanArchitecture.Blazor.Infrastructure.Constants.Role
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
 @using System.ComponentModel.DataAnnotations
+@using System.Globalization
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -63,6 +65,52 @@
                 <div class="mud-input-helper-text mud-input-error">
                     <div class="d-flex">
                         <ValidationMessage For="() => Input.Email" class="mud-input-error"/>
+                    </div>
+                </div>
+            </div>
+            <div class="mud-input-control mud-input-input-control my-4">
+                <div class="mud-input-control-input-container">
+                    <div class="mud-input mud-input-outlined mud-shrink">
+                        <InputSelect @bind-Value="Input.TimeZoneId" class="mud-input-slot mud-input-root mud-input-root-outlined" style="padding: 18.5px 14px;
+                                                                                                                                       width:100%; 
+                                                                                                                                       appearance: none;
+                                                                                                                                       background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNiAxNic+PHBhdGggZmlsbD0nbm9uZScgc3Ryb2tlPScjMzQzYTQwJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS13aWR0aD0nMicgZD0nTTIgNWw2IDYgNi02Jy8+PC9zdmc+') no-repeat right 10px center;
+                                                                                                                                       background-size: 10px;" aria-required="true">
+                            @foreach (var item in TimeZoneInfo.GetSystemTimeZones().ToList())
+                            {
+                                <option value="@item.Id">@item.DisplayName</option>
+                            }
+                        </InputSelect>
+                        <div class="mud-input-outlined-border"></div>
+                    </div>
+                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="TenantId">@L["Time Zone"]</label>
+                </div>
+                <div class="mud-input-helper-text mud-input-error">
+                    <div class="d-flex">
+                        <ValidationMessage For="() => Input.TimeZoneId" class="mud-input-error" />
+                    </div>
+                </div>
+            </div>
+            <div class="mud-input-control mud-input-input-control my-4">
+                <div class="mud-input-control-input-container">
+                    <div class="mud-input mud-input-outlined mud-shrink">
+                        <InputSelect @bind-Value="Input.LanguageCode" class="mud-input-slot mud-input-root mud-input-root-outlined" style="padding: 18.5px 14px;
+                                                                                                                                       width:100%; 
+                                                                                                                                       appearance: none;
+                                                                                                                                       background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNiAxNic+PHBhdGggZmlsbD0nbm9uZScgc3Ryb2tlPScjMzQzYTQwJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS13aWR0aD0nMicgZD0nTTIgNWw2IDYgNi02Jy8+PC9zdmc+') no-repeat right 10px center;
+                                                                                                                                       background-size: 10px;" aria-required="true">
+                            @foreach (var item in LocalizationConstants.SupportedLanguages.ToList())
+                            {
+                                <option value="@item.Code">@item.DisplayName</option>
+                            }
+                        </InputSelect>
+                        <div class="mud-input-outlined-border"></div>
+                    </div>
+                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="TenantId">@L["Language"]</label>
+                </div>
+                <div class="mud-input-helper-text mud-input-error">
+                    <div class="d-flex">
+                        <ValidationMessage For="() => Input.LanguageCode" class="mud-input-error" />
                     </div>
                 </div>
             </div>
@@ -161,6 +209,8 @@
         var emailStore = GetEmailStore();
         var user = CreateUser();
         user.TenantId=Input.TenantId;
+        user.TimeZoneId=Input.TimeZoneId;
+        user.LanguageCode=Input.LanguageCode;
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
         user.Provider = externalLoginInfo.LoginProvider;
@@ -198,7 +248,7 @@
                 Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
                 new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = "/" });
             await Mediator.Publish(new UserActivationNotification(callbackUrl, Input.Email, userId, Input.Email));
-            RedirectManager.RedirectTo(RegisterConfirmation.PageUrl, new Dictionary<string, object?> { ["email"] = Input.Email });
+            RedirectManager.RedirectTo(RegisterConfirmation.PageUrl);
         }
         // If account confirmation is required, we need to show the link if we don't have a real email sender
         else if (UserManager.Options.SignIn.RequireConfirmedAccount)
@@ -242,6 +292,10 @@
     {
         [Required] [EmailAddress] public string Email { get; set; } = "";
         [Required] public string TenantId { get; set; } = "";
+        [Display(Name = "Time Zone")]
+        public string? TimeZoneId { get; set; } = TimeZoneInfo.Local.Id;
+        [Display(Name = "Language")]
+        public string? LanguageCode { get; set; } = CultureInfo.CurrentCulture.Name;
     }
 
 }

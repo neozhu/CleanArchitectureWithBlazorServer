@@ -16,7 +16,7 @@ public class AuditTrailsWithPaginationQuery : AuditTrailAdvancedFilter, ICacheab
     public override string ToString()
     {
         return
-            $"Listview:{ListView}-{LocalTimezoneOffset.TotalHours},AuditType:{AuditType},Search:{Keyword},Sort:{SortDirection},OrderBy:{OrderBy},{PageNumber},{PageSize}";
+            $"Listview:{ListView}-{CurrentUser?.UserId},AuditType:{AuditType},Search:{Keyword},Sort:{SortDirection},OrderBy:{OrderBy},{PageNumber},{PageSize}";
     }
 }
 
