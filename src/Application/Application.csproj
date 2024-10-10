@@ -22,7 +22,6 @@
         <PackageReference Include="LazyCache" Version="2.4.0" />
         <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0-rc.2.24474.3" />
-      
         <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.0-rc.2.24474.3" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.5" />
