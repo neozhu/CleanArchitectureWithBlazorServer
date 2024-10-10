@@ -157,14 +157,13 @@
 @code
 {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [CascadingParameter] private UserProfile? UserProfile { get; set; }
     private string Title { get; set; } = "Logs";
     private string _searchString = string.Empty;
     private MudDataGrid<LogDto> _table = default!;
     private readonly LogDto _currentDto = new();
     private readonly int _defaultPageSize = 15;
-    [CascadingParameter(Name = "LocalTimezoneOffset")]
-    private int _localTimezoneOffset { get; set; }
-
+    private TimeSpan _localTimeOffset => UserProfile?.LocalTimeOffset ?? TimeSpan.Zero;
     private bool _loading;
     private bool _clearing;
     private bool _canPurge;
@@ -188,7 +187,7 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
-            Query.LocalTimezoneOffset = _localTimezoneOffset;
+            Query.LocalTimeOffset = _localTimeOffset;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
 
             return new GridData<LogDto> { TotalItems = result.TotalItems, Items = result.Items };

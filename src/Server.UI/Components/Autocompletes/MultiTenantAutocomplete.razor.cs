@@ -12,7 +12,6 @@ public class MultiTenantAutocomplete<T> : MudAutocomplete<TenantDto>
     {
         SearchFunc = SearchKeyValues;
         ToStringFunc = dto => dto?.Name;
-        Clearable = true;
         Dense = true;
         ResetValueOnEmptyText = true;
         ShowProgressIndicator = true;

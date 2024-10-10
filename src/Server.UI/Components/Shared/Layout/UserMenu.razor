@@ -83,8 +83,14 @@
     private string? antiforgeryToken = string.Empty;
     protected override void OnInitialized()
     {
-        UserProfileStateService.OnChange += StateHasChanged;
-        antiforgeryToken = getAntiforgeryToken();
+        UserProfileStateService.OnChange += UserProfileStateService_OnChange;
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            antiforgeryToken = getAntiforgeryToken();
+        }
     }
     private string? getAntiforgeryToken()
     {
@@ -98,6 +104,10 @@
     }
     public void Dispose()
     {
-        UserProfileStateService.OnChange -= StateHasChanged;
+        UserProfileStateService.OnChange -= UserProfileStateService_OnChange;
+    }
+    private async Task UserProfileStateService_OnChange()
+    {
+        await InvokeAsync(StateHasChanged);
     }
 }

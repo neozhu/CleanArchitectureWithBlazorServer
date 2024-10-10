@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
-using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
+using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using CleanArchitecture.Blazor.Domain.Entities;
 using NUnit.Framework;
@@ -31,7 +31,7 @@ public class MappingTests
 
     [Test]
     [TestCase(typeof(Document), typeof(DocumentDto), true)]
-    [TestCase(typeof(KeyValue), typeof(KeyValueDto), true)]
+    [TestCase(typeof(PicklistSet), typeof(PicklistSetDto), true)]
     [TestCase(typeof(Product), typeof(ProductDto), true)]
     public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination, bool inverseMap = false)
     {

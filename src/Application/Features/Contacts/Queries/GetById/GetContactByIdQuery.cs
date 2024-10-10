@@ -7,7 +7,7 @@ using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById;
 
-public class GetContactByIdQuery : ICacheableRequest<ContactDto>
+public class GetContactByIdQuery : ICacheableRequest<Result<ContactDto>>
 {
    public required int Id { get; set; }
    public string CacheKey => ContactCacheKey.GetByIdCacheKey($"{Id}");
@@ -15,7 +15,7 @@ public class GetContactByIdQuery : ICacheableRequest<ContactDto>
 }
 
 public class GetContactByIdQueryHandler :
-     IRequestHandler<GetContactByIdQuery, ContactDto>
+     IRequestHandler<GetContactByIdQuery, Result<ContactDto>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -32,11 +32,11 @@ public class GetContactByIdQueryHandler :
         _localizer = localizer;
     }
 
-    public async Task<ContactDto> Handle(GetContactByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<ContactDto>> Handle(GetContactByIdQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Contacts.ApplySpecification(new ContactByIdSpecification(request.Id))
                      .ProjectTo<ContactDto>(_mapper.ConfigurationProvider)
-                     .FirstAsync(cancellationToken) ?? throw new NotFoundException($"Contact with id: [{request.Id}] not found.");
-        return data;
+                     .FirstAsync(cancellationToken);
+        return await Result<ContactDto>.SuccessAsync(data);
     }
 }

@@ -292,4 +292,10 @@
   <data name="Search by role name" xml:space="preserve">
     <value>역할 이름으로 검색</value>
   </data>
+  <data name="Superior" xml:space="preserve">
+    <value>우수한</value>
+  </data>
+  <data name="Tenant" xml:space="preserve">
+    <value>임차인</value>
+  </data>
 </root>

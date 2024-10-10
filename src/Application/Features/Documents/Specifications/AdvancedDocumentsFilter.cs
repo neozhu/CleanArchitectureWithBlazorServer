@@ -6,15 +6,14 @@ public enum DocumentListView
 {
     [Description("All")] All,
     [Description("My Document")] My,
-    [Description("Created Today")] CreatedToday,
+    [Description("Created Today")] TODAY,
 
     [Description("Created within the last 30 days")]
-    Created30Days
+    LAST_30_DAYS
 }
 
 public class AdvancedDocumentsFilter : PaginationFilter
 {
-    public int LocalTimezoneOffset { get; set; }
     public DocumentListView ListView { get; set; } = DocumentListView.All;
     public UserProfile? CurrentUser { get; set; }
 }

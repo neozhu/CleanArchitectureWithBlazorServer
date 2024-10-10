@@ -16,7 +16,7 @@
                         RightToLeft="@LayoutService.IsRTL"
                         RightToLeftToggle="LayoutService.ToggleRightToLeft"
                         OnSettingClick="@(() => _themingDrawerOpen = true)"/>
-            <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@UserProfile?.AssignedRoles"
+            <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@(UserProfile?.AssignedRoles??[])"
                             DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler"/>
             <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
                         ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
@@ -49,29 +49,33 @@
     private bool _commandPaletteOpen;
     private bool _navigationMenuDrawerOpen = true;
     private bool _themingDrawerOpen;
-    private UserProfile? UserProfile => UserProfileStateService.UserProfile;
+    private UserProfile? UserProfile;
     private ErrorBoundary? ErrorBoundary { set; get; }
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
         var state = await AuthState;
-        UserProfileStateService.UserProfile = state.User.GetUserProfileFromClaim();
+        UserProfileStateService.OnChange += UserProfileStateService_OnChange;
+        await UserProfileStateService.InitializeAsync(state.User.Identity.Name);
+        UserProfile = UserProfileStateService.UserProfile;
+
     }
-    protected override void OnInitialized()
-    {
-        UserProfileStateService.OnChange += StateHasChanged;
-    }
+     
 
     public void Dispose()
     {
-        UserProfileStateService.OnChange -= StateHasChanged;
+        UserProfileStateService.OnChange -= UserProfileStateService_OnChange;
     }
     protected override void OnParametersSet()
     {
         ResetBoundary();
     }
-    
+    private async Task UserProfileStateService_OnChange()
+    {
+        UserProfile = UserProfileStateService.UserProfile;
+        await InvokeAsync(StateHasChanged);
+    }
     private void ResetBoundary()
     {
         // On each page navigation, reset any error state

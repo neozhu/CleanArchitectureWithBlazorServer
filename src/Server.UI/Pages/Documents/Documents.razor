@@ -217,10 +217,7 @@
 
 @code {
     [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; } = default!;
-
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
-    [CascadingParameter(Name = "LocalTimezoneOffset")]
-    private int _localTimezoneOffset { get; set; }
     private string? Title { get; set; }
 
     private HashSet<DocumentDto> _selectedItems = new();
@@ -304,7 +301,6 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault() == null ? SortDirection.Descending.ToString() : state.SortDefinitions.First().Descending ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
-            Query.LocalTimezoneOffset = _localTimezoneOffset;
             var result = await Mediator.Send(Query);
             return new GridData<DocumentDto> { TotalItems = result.TotalItems, Items = result.Items };
         }

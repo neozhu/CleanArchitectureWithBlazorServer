@@ -12,7 +12,7 @@ public static class LocalizationConstants
         new()
         {
             Code = "en-US",
-            DisplayName = "English"
+            DisplayName = "English (United States)"
         },
         new()
         {
@@ -22,47 +22,47 @@ public static class LocalizationConstants
         new()
         {
             Code = "de-DE",
-            DisplayName = "Deutsch"
+            DisplayName = "Deutsch (Deutschland)"
         },
         new()
         {
             Code = "ru-RU",
-            DisplayName = "Russian"
+            DisplayName = "русский (Россия)"
         },
         new()
         {
             Code = "fr-FR",
-            DisplayName = "French"
+            DisplayName = "français (France)"
         },
         new()
         {
             Code = "ja-JP",
-            DisplayName = "Japanese"
+            DisplayName = "日本語 (日本)"
         },
         new()
         {
             Code = "km-KH",
-            DisplayName = "Khmer"
+            DisplayName = "ខ្មែរ (កម្ពុជា)"
         },
         new()
         {
             Code = "ca-ES",
-            DisplayName = "Catalan"
+            DisplayName = "català (Espanya)"
         },
         new()
         {
             Code = "es-ES",
-            DisplayName = "Spanish"
+            DisplayName = "español (España)"
         },
         new()
         {
             Code = "zh-CN",
-            DisplayName = "中文"
+            DisplayName = "中文（简体，中国）"
         },
         new()
         {
             Code = "ko-kr",
-            DisplayName = "Korean"
+            DisplayName = "한국어(대한민국)"
         }
     };
 }

@@ -17,7 +17,7 @@ public class DocumentsWithPaginationQuery : AdvancedDocumentsFilter, ICacheableR
     public override string ToString()
     {
         return
-            $"CurrentUserId:{CurrentUser?.UserId},ListView:{ListView}-{LocalTimezoneOffset},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
+            $"CurrentUserId:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
 }
 

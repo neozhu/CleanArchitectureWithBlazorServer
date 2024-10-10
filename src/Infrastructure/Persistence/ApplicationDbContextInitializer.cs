@@ -149,6 +149,8 @@ public class ApplicationDbContextInitializer
             Email = "admin@example.com",
             EmailConfirmed = true,
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80",
+            LanguageCode="en-US",
+            TimeZoneId= "Asia/Shanghai",
             TwoFactorEnabled = false
         };
 
@@ -161,6 +163,8 @@ public class ApplicationDbContextInitializer
             DisplayName = UserName.Demo,
             Email = "demo@example.com",
             EmailConfirmed = true,
+            LanguageCode = "de-DE",
+            TimeZoneId = "Europe/Berlin",
             ProfilePictureDataUrl = "https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80"
         };
 
@@ -173,83 +177,83 @@ public class ApplicationDbContextInitializer
 
     private async Task SeedDataAsync()
     {
-        if (!await _context.KeyValues.AnyAsync())
+        if (!await _context.PicklistSets.AnyAsync())
         {
 
             _logger.LogInformation("Seeding key values...");
             var keyValues = new[]
             {
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Status,
                     Value = "initialization",
                     Text = "Initialization",
                     Description = "Status of workflow"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Status,
                     Value = "processing",
                     Text = "Processing",
                     Description = "Status of workflow"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Status,
                     Value = "pending",
                     Text = "Pending",
                     Description = "Status of workflow"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Status,
                     Value = "done",
                     Text = "Done",
                     Description = "Status of workflow"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Brand,
                     Value = "Apple",
                     Text = "Apple",
                     Description = "Brand of production"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Brand,
                     Value = "Google",
                     Text = "Google",
                     Description = "Brand of production"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Brand,
                     Value = "Microsoft",
                     Text = "Microsoft",
                     Description = "Brand of production"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Unit,
                     Value = "EA",
                     Text = "EA",
                     Description = "Unit of product"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Unit,
                     Value = "KM",
                     Text = "KM",
                     Description = "Unit of product"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Unit,
                     Value = "PC",
                     Text = "PC",
                     Description = "Unit of product"
                 },
-                new KeyValue
+                new PicklistSet
                 {
                     Name = Picklist.Unit,
                     Value = "L",
@@ -258,7 +262,7 @@ public class ApplicationDbContextInitializer
                 }
             };
 
-            await _context.KeyValues.AddRangeAsync(keyValues);
+            await _context.PicklistSets.AddRangeAsync(keyValues);
             await _context.SaveChangesAsync();
         }
 

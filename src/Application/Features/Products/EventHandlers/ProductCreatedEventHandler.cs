@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
@@ -22,9 +22,8 @@ public class ProductCreatedEventHandler : INotificationHandler<CreatedEvent<Prod
     public async Task Handle(CreatedEvent<Product> notification, CancellationToken cancellationToken)
     {
         _timer.Start();
-        await Task.Delay(5000, cancellationToken);
+        await Task.Delay(3000, cancellationToken);
         _timer.Stop();
-        _logger.LogInformation("Domain Event: {DomainEvent},{ElapsedMilliseconds}ms", notification.GetType().FullName,
-            _timer.ElapsedMilliseconds);
+        _logger.LogInformation("Handled domain event '{EventType}' with notification: {@Notification} in {ElapsedMilliseconds} ms", notification.GetType().Name, notification, _timer.ElapsedMilliseconds);
     }
 }

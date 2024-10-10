@@ -11,16 +11,15 @@ public enum ContactListView
     [Description("My")]
     My,
     [Description("Created Toady")]
-    CreatedToday,
+    TODAY,
     [Description("Created within the last 30 days")]
-    Created30Days
+    LAST_30_DAYS
 }
 /// <summary>
 /// A class for applying advanced filtering options to Contact lists.
 /// </summary>
 public class ContactAdvancedFilter: PaginationFilter
 {
-    public int LocalTimezoneOffset { get; set; }
     public ContactListView ListView { get; set; } = ContactListView.All;
     public UserProfile? CurrentUser { get; set; }
 }

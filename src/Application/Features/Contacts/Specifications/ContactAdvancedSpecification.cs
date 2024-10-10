@@ -1,4 +1,7 @@
-﻿namespace CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
+﻿using CleanArchitecture.Blazor.Application.Features.Documents.Specifications;
+using CleanArchitecture.Blazor.Application.Features.Products.Specifications;
+
+namespace CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 #nullable disable warnings
 /// <summary>
 /// Specification class for advanced filtering of Contacts.
@@ -7,18 +10,16 @@ public class ContactAdvancedSpecification : Specification<Contact>
 {
     public ContactAdvancedSpecification(ContactAdvancedFilter filter)
     {
-        var timezoneOffset = filter.LocalTimezoneOffset;
-        var utcNow = DateTime.UtcNow;
-        var localNow = utcNow.Date.AddHours(timezoneOffset);
-        var startOfTodayLocalAsUtc = localNow;
-        var endOfTodayLocalAsUtc = localNow.AddDays(1);
-        var startOfLast30DaysLocalAsUtc = localNow.AddDays(-30);
 
-       Query.Where(q => q.Name != null)
+        DateTime today = DateTime.UtcNow;
+        var todayrange = today.GetDateRange(ContactListView.TODAY.ToString(), filter.CurrentUser.LocalTimeOffset);
+        var last30daysrange = today.GetDateRange(ContactListView.LAST_30_DAYS.ToString(),filter.CurrentUser.LocalTimeOffset);
+
+        Query.Where(q => q.Name != null)
              .Where(filter.Keyword,!string.IsNullOrEmpty(filter.Keyword))
              .Where(q => q.CreatedBy == filter.CurrentUser.UserId, filter.ListView == ContactListView.My && filter.CurrentUser is not null)
-             .Where(q => q.Created >= startOfTodayLocalAsUtc && q.Created <= endOfTodayLocalAsUtc, filter.ListView == ContactListView.CreatedToday)
-             .Where(q => q.Created >= startOfLast30DaysLocalAsUtc, filter.ListView == ContactListView.Created30Days);
-       
+             .Where(x => x.Created >= todayrange.Start && x.Created < todayrange.End.AddDays(1), filter.ListView == ContactListView.TODAY)
+             .Where(x => x.Created >= last30daysrange.Start, filter.ListView == ContactListView.LAST_30_DAYS);
+
     }
 }

@@ -50,27 +50,30 @@ public class AddEditContactCommand: ICacheInvalidatorRequest<Result<int>>
             _localizer = localizer;
             _mapper = mapper;
         }
-        public async Task<Result<int>> Handle(AddEditContactCommand request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(AddEditContactCommand request, CancellationToken cancellationToken)
+    {
+        if (request.Id > 0)
         {
-            if (request.Id > 0)
+            var item = await _context.Contacts.FindAsync(request.Id , cancellationToken);
+            if (item == null)
             {
-                var item = await _context.Contacts.FindAsync(new object[] { request.Id }, cancellationToken) ?? throw new NotFoundException($"Contact with id: [{request.Id}] not found.");
-                item = _mapper.Map(request, item);
-				// raise a update domain event
-				item.AddDomainEvent(new ContactUpdatedEvent(item));
-                await _context.SaveChangesAsync(cancellationToken);
-                return await Result<int>.SuccessAsync(item.Id);
+                return await Result<int>.FailureAsync($"Contact with id: [{request.Id}] not found.");
             }
-            else
-            {
-                var item = _mapper.Map<Contact>(request);
-                // raise a create domain event
-				item.AddDomainEvent(new ContactCreatedEvent(item));
-                _context.Contacts.Add(item);
-                await _context.SaveChangesAsync(cancellationToken);
-                return await Result<int>.SuccessAsync(item.Id);
-            }
-           
+            item = _mapper.Map(request, item);
+            // raise a update domain event
+            item.AddDomainEvent(new ContactUpdatedEvent(item));
+            await _context.SaveChangesAsync(cancellationToken);
+            return await Result<int>.SuccessAsync(item.Id);
         }
+        else
+        {
+            var item = _mapper.Map<Contact>(request);
+            // raise a create domain event
+            item.AddDomainEvent(new ContactCreatedEvent(item));
+            _context.Contacts.Add(item);
+            await _context.SaveChangesAsync(cancellationToken);
+            return await Result<int>.SuccessAsync(item.Id);
+        }
+    }
     }
 

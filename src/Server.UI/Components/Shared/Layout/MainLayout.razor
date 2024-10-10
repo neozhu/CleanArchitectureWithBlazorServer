@@ -4,7 +4,6 @@
 @implements IDisposable
 
 @inject LayoutService LayoutService
-@inject LocalTimezoneOffset LocalTimezoneOffset
 <PageTitle>@ApplicationSettings.AppName</PageTitle>
 <MudRTLProvider RightToLeft="@LayoutService.IsRTL">
     <MudThemeProvider />
@@ -12,17 +11,15 @@
     <MudDialogProvider />
     <MudSnackbarProvider />
     <MudThemeProvider @ref="@_mudThemeProvider" Theme="@LayoutService.CurrentTheme" IsDarkMode="@LayoutService.IsDarkMode" IsDarkModeChanged="@LayoutService.SetDarkMode" />
-    <CascadingValue Name="LocalTimezoneOffset" Value="@_localTimezoneOffset">
+
         @Body
-    </CascadingValue>
+
 </MudRTLProvider>
 
 @code
 {
-    private int _localTimezoneOffset;
     private MudThemeProvider _mudThemeProvider = null!;
     private bool _defaultDarkMode;
-
     public void Dispose()
     {
         LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
@@ -45,11 +42,12 @@
         await LayoutService.ApplyUserPreferences(_defaultDarkMode);
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        _localTimezoneOffset = await LocalTimezoneOffset.HourOffset();
+ 
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         LayoutService.SetBaseTheme(Theme.ApplicationTheme());
+        return Task.CompletedTask;
     }
 
     private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)

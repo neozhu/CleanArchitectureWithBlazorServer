@@ -18,4 +18,10 @@ public class UserProfile
     public bool IsActive { get; set; }
     public string? TenantId { get; set; }
     public string? TenantName { get; set; }
+
+    public string? TimeZoneId { get; set; }
+    public string? LanguageCode { get; set; }
+    public TimeSpan LocalTimeOffset => string.IsNullOrEmpty(TimeZoneId)
+    ? TimeZoneInfo.Local.BaseUtcOffset
+    : TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId).BaseUtcOffset;
 }

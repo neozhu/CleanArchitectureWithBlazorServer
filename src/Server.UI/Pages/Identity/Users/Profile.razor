@@ -85,6 +85,12 @@ else
                     <MudItem sm="6" xs="12">
                         <MudTextField For="@(() => model.PhoneNumber)" ShrinkLabel="true" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
                     </MudItem>
+                    <MudItem sm="6" xs="12">
+                        <TimeZoneAutocomplete T="string" For="@(() => model.TimeZoneId)" ShrinkLabel="true" @bind-Value="model.TimeZoneId" Label="@L["Time Zone"]" Variant="Variant.Text"></TimeZoneAutocomplete>
+                    </MudItem>
+                    <MudItem sm="6" xs="12">
+                        <LanguageAutocomplete T="string" For="@(() => model.LanguageCode)" ShrinkLabel="true" @bind-Value="model.LanguageCode" Label="@L["Language"]" Variant="Variant.Text"></LanguageAutocomplete>
+                    </MudItem>
                     <MudItem sm="12" xs="12" Class="d-flex justify-end">
                         <MudButton ButtonType="ButtonType.Button" Disabled="@_submitting" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">
                             @if (_submitting)
@@ -156,9 +162,9 @@ else
 
 @code {
     [Inject] protected IServiceProvider Services { get; init; } = null!;
-    private string _currentUserName => UserProfileStateService.UserProfile.UserName;
-    private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
-    private UserProfile? UserProfile => UserProfileStateService.UserProfile;
+    private string _currentUserName = string.Empty;
+
+    private UserProfile? UserProfile { get; set; }
     private UserManager<ApplicationUser> UserManager = null!;
     public string Title { get; set; } = "Profile";
     private MudForm? _form;
@@ -169,7 +175,7 @@ else
     public string Id => Guid.NewGuid().ToString();
     private ChangeUserProfileModel model = null!;
 
-
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
 
     private async void ActivePanelIndexChanged(int index)
     {
@@ -209,10 +215,14 @@ else
         await new OrgChart(JS).Create(_orgData);
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         UserManager = Services.GetRequiredService<UserManager<ApplicationUser>>();
-        model = Mapper.Map<ChangeUserProfileModel>(UserProfile);
+        var state = await AuthState;
+        _currentUserName = state.User.Identity.Name;
+        await UserProfileStateService.InitializeAsync(state.User.Identity.Name);
+
+        model = Mapper.Map<ChangeUserProfileModel>(UserProfileStateService.UserProfile);
     }
 
     protected override void Dispose(bool disposing)
@@ -240,7 +250,7 @@ else
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated"], Severity.Info);
-                UserProfileStateService.UpdateUserProfile(user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
+                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber,user.TimeZoneId, user.LanguageCode);
                 await OnlineUserTracker.Update(user.Id,
                                                user.UserName??"",
                                                user.DisplayName ?? "",
@@ -261,9 +271,11 @@ else
                 var user = await UserManager.FindByNameAsync(_currentUserName) ?? throw new NotFoundException($"The application user [{_currentUserName}] was not found.");
                 user.PhoneNumber = model.PhoneNumber;
                 user.DisplayName = model.DisplayName;
+                user.TimeZoneId = model.TimeZoneId;
+                user.LanguageCode = model.LanguageCode;
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
-                UserProfileStateService.UpdateUserProfile(user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber);
+                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber,user.TimeZoneId, user.LanguageCode);
                 await OnlineUserTracker.Update(user.Id,
                                                user.UserName ?? "",
                                                user.DisplayName ?? "",

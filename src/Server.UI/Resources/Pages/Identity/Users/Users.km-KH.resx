@@ -292,4 +292,10 @@
   <data name="Search by role name" xml:space="preserve">
     <value>ស្វែងរកតាមឈ្មោះតួនាទី</value>
   </data>
+  <data name="Superior" xml:space="preserve">
+    <value>ឧត្តម</value>
+  </data>
+  <data name="Tenant" xml:space="preserve">
+    <value>អ្នកជួល</value>
+  </data>
 </root>

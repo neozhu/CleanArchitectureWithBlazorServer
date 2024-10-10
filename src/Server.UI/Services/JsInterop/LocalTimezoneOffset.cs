@@ -2,18 +2,26 @@
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 
-public class LocalTimezoneOffset
+public class LocalTimeOffset
 {
     private readonly IJSRuntime _jsRuntime;
 
-    public LocalTimezoneOffset(IJSRuntime jsRuntime)
+    public LocalTimeOffset(IJSRuntime jsRuntime)
     {
         _jsRuntime = jsRuntime;
     }
 
-    public async ValueTask<int> HourOffset()
+    public async ValueTask<TimeSpan> GetLocalOffset()
     {
-        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/timezoneoffset.js").ConfigureAwait(false);
-        return await jsmodule.InvokeAsync<int>(JSInteropConstants.GetTimeZoneOffset).ConfigureAwait(false);
+        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/gettimezoneoffset.js").ConfigureAwait(false);
+        var minutesOffset = await jsmodule.InvokeAsync<int>(JSInteropConstants.GetTimezoneOffset).ConfigureAwait(false);
+        return TimeSpan.FromMinutes(minutesOffset);
+    }
+
+    public async ValueTask<TimeSpan> GetOffsetForTimezone(string timezone)
+    {
+        var jsmodule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/gettimezoneoffset.js").ConfigureAwait(false);
+        var minutesOffset = await jsmodule.InvokeAsync<int>(JSInteropConstants.GetTimezoneOffsetByTimeZone, timezone).ConfigureAwait(false);
+        return TimeSpan.FromMinutes(minutesOffset);
     }
 }

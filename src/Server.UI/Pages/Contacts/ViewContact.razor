@@ -21,13 +21,13 @@
                     <MudItem xs="12" md="6">
                         <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.Name)]" Value="@dto.Name"></ReadOnlyFieldX6>
                     </MudItem>
-                    <MudItem xs="12" md="6" >
+                    <MudItem xs="12" md="6">
                         <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.Email)]" Value="@dto.Email"></ReadOnlyFieldX6>
                     </MudItem>
-                    <MudItem xs="12" md="6" >
+                    <MudItem xs="12" md="6">
                         <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.PhoneNumber)]" Value="@dto.PhoneNumber"></ReadOnlyFieldX6>
                     </MudItem>
-                    <MudItem xs="12" md="6" >
+                    <MudItem xs="12" md="6">
                         <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.Country)]" Value="@dto.Country"></ReadOnlyFieldX6>
                     </MudItem>
                     <MudItem xs="12" md="12">
@@ -40,7 +40,7 @@
     }
 </MudContainer>
 
- 
+
 @code {
     public string? Title { get; private set; }
     [Parameter]
@@ -54,12 +54,21 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L["Contact"];
-        dto = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
-        if (dto is not null)
+        var result = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
+        result.Map(data =>
         {
-            _breadcrumbItems.Add(new BreadcrumbItem(dto.Name, null, disabled: true));
-            
-        }
+            dto = data;
+            return data;
+        }).Match(data =>
+        {
+            _breadcrumbItems.Add(new BreadcrumbItem(data.Name, null, disabled: true));
+            return data;
+
+        }, errors =>
+        {
+            Snackbar.Add(errors, MudBlazor.Severity.Error);
+            return null;
+        });
 
     }
     void GoEdit()
