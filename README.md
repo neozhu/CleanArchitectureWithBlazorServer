@@ -49,10 +49,12 @@ Explore the application's features and design through screenshots and a video wa
 
 To get started with development, ensure you have the following tools and environments set up:
 
-- Microsoft Visual Studio Community 2022 (64-bit)
-- Docker
-- .NET 8.0
-- Unit Test Framework
+
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+- [Microsoft Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) or [Rider](https://www.jetbrains.com/rider/)
+- [Docker](https://www.docker.com/)
+
+
 
 
 ## Authentication Setup
