@@ -12,7 +12,6 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration)
     .AddServerUI(builder.Configuration);
-builder.Services.AddGoogleAnalyticsInterop();
 var app = builder.Build();
 
 app.ConfigureServer(builder.Configuration);
