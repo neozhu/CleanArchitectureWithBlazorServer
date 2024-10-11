@@ -18,12 +18,12 @@
 
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
         <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
-        <PackageReference Include="Blazor-Analytics" Version="3.12.0" />
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.10" />
         <PackageReference Include="ActualLab.Fusion.Ext.Services" Version="9.5.26" />
         <PackageReference Include="MudBlazor" Version="7.8.0" />
+        <PackageReference Include="Soenneker.Blazor.Google.Analytics" Version="2.1.202" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="5.1.0" />
         <PackageReference Include="Blazor-ApexCharts" Version="3.5.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">

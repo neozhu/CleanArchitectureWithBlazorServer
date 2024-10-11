@@ -1,8 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @using CleanArchitecture.Blazor.Server.UI.Constants
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
+@using Soenneker.Blazor.Google.Analytics.Abstract
 @implements IDisposable
-
+@inject IGoogleAnalyticsInterop GoogleAnalyticsInterop
 @inject LayoutService LayoutService
 <PageTitle>@ApplicationSettings.AppName</PageTitle>
 <MudRTLProvider RightToLeft="@LayoutService.IsRTL">
@@ -42,12 +43,12 @@
         await LayoutService.ApplyUserPreferences(_defaultDarkMode);
     }
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
  
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         LayoutService.SetBaseTheme(Theme.ApplicationTheme());
-        return Task.CompletedTask;
+        await GoogleAnalyticsInterop.Init("G-X1CWBPHV76");
     }
 
     private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
