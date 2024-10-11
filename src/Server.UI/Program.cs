@@ -1,7 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Server.UI;
-using Soenneker.Blazor.Google.Analytics.Registrars;
 
 
 var builder = WebApplication.CreateBuilder(args);
