@@ -11,7 +11,6 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration)
     .AddServerUI(builder.Configuration);
-
 var app = builder.Build();
 
 app.ConfigureServer(builder.Configuration);
