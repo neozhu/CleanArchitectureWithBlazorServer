@@ -68,6 +68,7 @@
 
 .mud-grid.readonly-grid > .mud-grid-item {
     border-bottom: 1px solid var(--mud-palette-table-lines);
+    padding-bottom:2px;
 }
 
 #blazor-error-ui {
