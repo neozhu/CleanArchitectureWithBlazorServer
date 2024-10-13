@@ -298,4 +298,22 @@
   <data name="Tenant" xml:space="preserve">
     <value>Арендатор</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="Last Modified By" xml:space="preserve">
+    <value>Последнее изменение</value>
+  </data>
+  <data name="Last Modified" xml:space="preserve">
+    <value>Последнее изменение</value>
+  </data>
+  <data name="Created By" xml:space="preserve">
+    <value>Создано</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Создано</value>
+  </data>
+  <data name="Time Zone" xml:space="preserve">
+    <value>Часовой пояс</value>
+  </data>
 </root>
