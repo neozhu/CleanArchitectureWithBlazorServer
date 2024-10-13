@@ -1,18 +1,15 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @inject IJSRuntime JSRuntime
-@if (localTime != null)
+@if (UTCDateTime != null && localTime!=null)
 {
    <MudText Class="@Class">@localTime.Value.ToString(Format)</MudText>
 }
-else
-{
-    <MudText Class="@Class">@UTCDateTime.ToString(Format)</MudText>
-}
+
 @code {
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
     // Parameter to accept the UTC time that needs to be converted
     [Parameter]
-    public DateTime UTCDateTime { get; set; }
+    public DateTime? UTCDateTime { get; set; }
 
     [Parameter]
     public string? Class { get; set; }
@@ -27,9 +24,11 @@ else
     // This method is called when the component is initialized
     protected override Task OnInitializedAsync()
     {
-        var timeOffset = UserProfile?.LocalTimeOffset ?? TimeZoneInfo.Local.BaseUtcOffset;
-        // Convert the UTC time to local time by adding the time zone offset
-        localTime = UTCDateTime.Add(timeOffset);
+        if (UTCDateTime!=null){
+            var timeOffset = UserProfile?.LocalTimeOffset ?? TimeZoneInfo.Local.BaseUtcOffset;
+            // Convert the UTC time to local time by adding the time zone offset
+            localTime = UTCDateTime.Value.Add(timeOffset);
+        }
         return Task.CompletedTask;
 
     }
