@@ -1,6 +1,7 @@
 ﻿@page "/identity/users"
 @using ActualLab.Fusion
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
+@using CleanArchitecture.Blazor.Server.UI.Components.UtcToLocalTime
 @using CleanArchitecture.Blazor.Server.UI.Services.Fusion
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -272,7 +273,11 @@
                 </div>
             </CellTemplate>
         </PropertyColumn>
-
+        <PropertyColumn Property="x => x.Created" Title="@L[_currentDto.GetMemberDescription(x => x.Created)]">
+            <CellTemplate>
+                <UtcToLocal UTCDateTime="@context.Item.Created"></UtcToLocal>
+            </CellTemplate>
+        </PropertyColumn>
     </Columns>
 
     <PagerContent>
@@ -292,6 +297,7 @@
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
+    [CascadingParameter] public UserProfile? UserProfile { get; set; }
     private UserManager<ApplicationUser> UserManager = null!;
     private RoleManager<ApplicationRole> RoleManager = null!;
     private PermissionHelper PermissionHelper = null!;
@@ -305,7 +311,7 @@
     private IList<Claim> _assignedClaims = default!;
 
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
-
+   
 
     private MudDataGrid<ApplicationUserDto> _table = null!;
     private bool _processing;
@@ -342,6 +348,8 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
+
+       //var list= await  UserManager.Users.Include(x=>x.LastModifiedByUser).Include(x=>x.CreatedByUser).ToListAsync();
     }
     private void InitializeServices()
     {
@@ -377,8 +385,11 @@
             _loading = true;
             var total = await UserManager.Users.CountAsync(CreateSearchPredicate());
             var query = UserManager.Users.Where(CreateSearchPredicate());
+      
             var items = await query
                 .Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
+                .Include(x=>x.CreatedByUser)
+                .Include(x=>x.LastModifiedByUser)
                 .Include(x => x.Superior)
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
@@ -419,7 +430,8 @@
     {
         var parameters = new DialogParameters<UserFormDialog>
         {
-            { x => x.Model, model }
+            { x => x.Model, model },
+            { x => x.UserProfile, UserProfile }
         };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<UserFormDialog>(title, parameters, options);
@@ -434,7 +446,8 @@
     {
         var parameters = new DialogParameters<UserFormDialog>
         {
-            { x => x.Model, model }
+            { x => x.Model, model },
+            { x => x.UserProfile, UserProfile }
         };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<UserFormDialog>(title, parameters, options);
@@ -487,7 +500,7 @@
         user.UserName = item.UserName;
         user.IsActive = item.IsActive;
         user.TenantId = item.TenantId;
-        user.SuperiorId = item.SuperiorId;
+        user.SuperiorId = item.Superior?.Id;
         user.LanguageCode = item.LanguageCode;
         user.TimeZoneId = item.TimeZoneId;
         var identityResult = await UserManager.UpdateAsync(user);

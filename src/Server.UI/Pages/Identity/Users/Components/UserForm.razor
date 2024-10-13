@@ -47,7 +47,7 @@
         <MudItem sm="6" xs="12">
             <MultiTenantAutocomplete For="@(() => Model.Tenant)"
                                      T="TenantDto"
-                                     Label="@L["Tenant"]"
+                                     Label="@L[Model.GetMemberDescription(x=>x.Tenant)]"
                                      Required="true"
                                      ValueChanged="@(x=>TenantChanged(x))"
                                      Value="@Model.Tenant">
@@ -55,45 +55,45 @@
             </MultiTenantAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L["Provider"]" Variant="Variant.Text" ReadOnly></MudTextField>
+            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L[Model.GetMemberDescription(x=>x.Provider)]" Variant="Variant.Text" ReadOnly></MudTextField>
         </MudItem>
 
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L["User Name"]" Variant="Variant.Text" Required="true"></MudTextField>
+            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L[Model.GetMemberDescription(x=>x.UserName)]" Variant="Variant.Text" Required="true"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <div class="d-fex">
-                <MudCheckBox For="@(() => Model.IsActive)" @bind-Value="Model.IsActive" Label="@L["Is Active"]"></MudCheckBox>
+                <MudCheckBox For="@(() => Model.IsActive)" @bind-Value="Model.IsActive" Label="@L[Model.GetMemberDescription(x=>x.IsActive)]"></MudCheckBox>
             </div>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L["Full Name"]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L[Model.GetMemberDescription(x=>x.DisplayName)]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <PickSuperiorIdAutocomplete For="@(() => Model.Superior)" T="ApplicationUserDto"
                                         OwnerName="@Model.UserName"
                                         Clearable="true"
                                         TenantId="@Model.Tenant?.Id"
-                                        Label="@L["Superior"]"
+                                        Label="@L[Model.GetMemberDescription(x=>x.Superior)]"
                                         @bind-Value="@Model.Superior">
             </PickSuperiorIdAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L["E-mail"]" Variant="Variant.Text" Required="true"></MudTextField>
+            <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L[Model.GetMemberDescription(x=>x.Email)]" Variant="Variant.Text" Required="true"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L[Model.GetMemberDescription(x=>x.PhoneNumber)]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <TimeZoneAutocomplete T="string" For="@(() => Model.TimeZoneId)" ShrinkLabel="true" @bind-Value="Model.TimeZoneId" Label="@L["Time Zone"]" Variant="Variant.Text"></TimeZoneAutocomplete>
+            <TimeZoneAutocomplete T="string" For="@(() => Model.TimeZoneId)" ShrinkLabel="true" @bind-Value="Model.TimeZoneId" Label="@L[Model.GetMemberDescription(x=>x.TimeZoneId)]" Variant="Variant.Text"></TimeZoneAutocomplete>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <LanguageAutocomplete T="string" For="@(() => Model.LanguageCode)" ShrinkLabel="true" @bind-Value="Model.LanguageCode" Label="@L["Language"]" Variant="Variant.Text"></LanguageAutocomplete>
+            <LanguageAutocomplete T="string" For="@(() => Model.LanguageCode)" ShrinkLabel="true" @bind-Value="Model.LanguageCode" Label="@L[Model.GetMemberDescription(x=>x.LanguageCode)]" Variant="Variant.Text"></LanguageAutocomplete>
         </MudItem>
 
 
         <MudItem xs="12" sm="12">
-            <MudText Typo="Typo.caption">@L["Assign Roles"]</MudText>
+            <MudText Typo="Typo.body1">@L["Assign Roles"]</MudText>
             <MudGrid Class="mt-1" Spacing="2">
                 @if (Roles.Any())
                 {
@@ -113,11 +113,24 @@
 
             </MudGrid>
         </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField For="@(() => Model.CreatedBy)" Disabled ShrinkLabel="true" Value="Model.CreatedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.CreatedBy)]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField T="string" Disabled ShrinkLabel="true" Value="@(Model.Created.ToLocalTime(UserProfile.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.Created)]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField For="@(() => Model.LastModifiedBy)" Disabled ShrinkLabel="true" Value="Model.LastModifiedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.LastModifiedBy)]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField T="string" Disabled ShrinkLabel="true" Value="@(Model.LastModified.ToLocalTime(UserProfile.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.LastModified)]" Variant="Variant.Text"></MudTextField>
+        </MudItem>
     </MudGrid>
 </MudForm>
 
 @code {
-
+    [Parameter]
+    public UserProfile? UserProfile { get; set; }
     public class CheckItem
     {
         public string Key { get; set; } = string.Empty;
