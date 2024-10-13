@@ -298,4 +298,22 @@
   <data name="Tenant" xml:space="preserve">
     <value>Llogater</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Llengua</value>
+  </data>
+  <data name="Last Modified By" xml:space="preserve">
+    <value>Última modificació per</value>
+  </data>
+  <data name="Last Modified" xml:space="preserve">
+    <value>Última modificació</value>
+  </data>
+  <data name="Created By" xml:space="preserve">
+    <value>Creat per</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Creat</value>
+  </data>
+  <data name="Time Zone" xml:space="preserve">
+    <value>Zona horària</value>
+  </data>
 </root>

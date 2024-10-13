@@ -298,4 +298,22 @@
   <data name="Tenant" xml:space="preserve">
     <value>임차인</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>언어</value>
+  </data>
+  <data name="Last Modified By" xml:space="preserve">
+    <value>마지막 수정자</value>
+  </data>
+  <data name="Last Modified" xml:space="preserve">
+    <value>마지막 수정자</value>
+  </data>
+  <data name="Created By" xml:space="preserve">
+    <value>생성자</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>생성됨</value>
+  </data>
+  <data name="Time Zone" xml:space="preserve">
+    <value>시간대</value>
+  </data>
 </root>

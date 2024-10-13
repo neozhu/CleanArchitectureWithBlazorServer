@@ -298,4 +298,22 @@
   <data name="Tenant" xml:space="preserve">
     <value>អ្នកជួល</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>ភាសា</value>
+  </data>
+  <data name="Last Modified By" xml:space="preserve">
+    <value>កែប្រែចុងក្រោយដោយ</value>
+  </data>
+  <data name="Last Modified" xml:space="preserve">
+    <value>កែប្រែចុងក្រោយ</value>
+  </data>
+  <data name="Created By" xml:space="preserve">
+    <value>បង្កើតដោយ</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>បានបង្កើត</value>
+  </data>
+  <data name="Time Zone" xml:space="preserve">
+    <value>តំបន់ពេលវេលា</value>
+  </data>
 </root>

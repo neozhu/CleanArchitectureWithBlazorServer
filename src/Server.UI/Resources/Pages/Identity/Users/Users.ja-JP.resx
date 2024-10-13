@@ -298,4 +298,22 @@
   <data name="Tenant" xml:space="preserve">
     <value>テナント</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="Last Modified By" xml:space="preserve">
+    <value>最終更新者</value>
+  </data>
+  <data name="Last Modified" xml:space="preserve">
+    <value>最終更新者</value>
+  </data>
+  <data name="Created By" xml:space="preserve">
+    <value>作成者</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>作成日時</value>
+  </data>
+  <data name="Time Zone" xml:space="preserve">
+    <value>タイムゾーン</value>
+  </data>
 </root>
