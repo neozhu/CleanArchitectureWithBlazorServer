@@ -298,4 +298,22 @@
   <data name="Superior" xml:space="preserve">
     <value>上级</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Last Modified By" xml:space="preserve">
+    <value>上次修改者</value>
+  </data>
+  <data name="Last Modified" xml:space="preserve">
+    <value>上次修改</value>
+  </data>
+  <data name="Created By" xml:space="preserve">
+    <value>创建者</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>创建时间</value>
+  </data>
+  <data name="Time Zone" xml:space="preserve">
+    <value>时区</value>
+  </data>
 </root>

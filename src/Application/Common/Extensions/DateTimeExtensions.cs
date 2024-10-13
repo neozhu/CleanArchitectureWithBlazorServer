@@ -150,4 +150,24 @@ public static class DateTimeExtensions
         }
         return startOfMonth;
     }
+
+
+    /// <summary>
+    /// Converts the given UTC DateTime? to local time based on the provided time offset, and formats the result.
+    /// </summary>
+    /// <param name="utcTime">The UTC time to be converted. This is a nullable DateTime.</param>
+    /// <param name="localTimeOffset">The local time offset, typically derived from the user's profile.</param>
+    /// <param name="formatter">The date/time format string. Defaults to "yyyy-MM-dd HH:mm:ss".</param>
+    /// <returns>The converted and formatted local time as a string. If the input is null, it returns null.</returns>
+    public static string? ToLocalTime(this DateTime? utcTime, TimeSpan localTimeOffset, string formatter = "yyyy-MM-dd HH:mm:ss")
+    {
+        if (utcTime == null)
+            return null;
+
+        // Add the local time offset to the UTC time to get the local time
+        var localTime = utcTime.Value + localTimeOffset;
+
+        // Format the local time according to the given formatter
+        return localTime.ToString(formatter);
+    }
 }
