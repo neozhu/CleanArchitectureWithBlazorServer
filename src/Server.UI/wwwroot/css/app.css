@@ -1,4 +1,9 @@
-﻿.mud-input {
+﻿.mud-main-content {
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+}
+.mud-input {
     font-size: inherit !important;
     font-weight: inherit !important;
     line-height: inherit !important;
@@ -68,6 +73,7 @@
 
 .mud-grid.readonly-grid > .mud-grid-item {
     border-bottom: 1px solid var(--mud-palette-table-lines);
+    padding-bottom:2px;
 }
 
 #blazor-error-ui {

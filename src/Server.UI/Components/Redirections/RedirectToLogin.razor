@@ -2,8 +2,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Yield(); // 确保任务在下一个调度周期执行
-        Navigation.NavigateTo("/pages/authentication/login", true);
+        var uri = new Uri(Navigation.Uri);
+        var returnUrl = uri.PathAndQuery.TrimStart('/');
+        Navigation.NavigateTo($"/pages/authentication/login?returnUrl={returnUrl}", true);
     }
 
 }

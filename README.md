@@ -6,22 +6,43 @@
 [![Docker Image CI](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/docker-image.yml/badge.svg)](https://github.com/neozhu/CleanArchitectureWithBlazorServer/actions/workflows/docker-image.yml)
 [![Nuget](https://img.shields.io/nuget/dt/CleanArchitecture.Blazor.Solution.Template?label=Downloads)](https://www.nuget.org/packages/CleanArchitecture.Blazor.Solution.Template)
 
-This repository hosts a Blazor Server application designed with Clean Architecture principles, featuring a sophisticated
-user interface and an efficient code generator. This setup allows for the swift creation of remarkable web applications
-using .NET Blazor technology.
+This repository hosts a Blazor Server application designed using Clean Architecture principles, featuring a sophisticated user interface and an efficient code generator. Blazor Server combines the power of C# with a modern web development experience, eliminating the need to switch between languages like JavaScript and C#. This setup not only simplifies development but also enables fast, responsive, and highly interactive web applications. Leveraging Blazor's real-time communication capabilities and .NET's robust ecosystem, developers can rapidly create feature-rich, scalable applications with a seamless user experience.
 
 ## Explore the Live Demo
 
-Experience the application in action in Blazor Server mode by visiting
-
+Experience the application in action in Blazor Server mode by visiting:
 
 - MS SQL Database: [architecture.blazorserver.com](https://architecture.blazorserver.com/)
 
 - PostgreSQL Database: [architecture.blazors.app](https://architecture.blazors.app/)
 
+
+## Projects Based on This Template
+
+
+Here are some projects that have been developed based on this Clean Architecture Blazor Server template:
+
+![HSE Management System Screenshot](/doc/094346.png)
+1. **HSE Management System (Workflow Application)**
+   - [GitHub Repository](https://github.com/neozhu/workflow)
+
+![The DPP Application Screenshot](/doc/094553.png)
+2. **The DPP Application (EU Digital Product Passport)**
+   - [Live Demo](https://materialpassport.blazorserver.com/)
+
+![Visitor Management Screenshot](https://user-images.githubusercontent.com/1549611/183225025-96295845-add4-4b00-89d5-8d280a08c192.png)
+3. **Visitor Management**
+   - [GitHub Repository](https://github.com/neozhu/visitormanagement)
+
+![School Bus Transport Management System Screenshot](https://private-user-images.githubusercontent.com/1549611/375740905-a79a8c54-82bd-475a-95f9-c20fe368179d.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3Mjg2NDcyMTYsIm5iZiI6MTcyODY0NjkxNiwicGF0aCI6Ii8xNTQ5NjExLzM3NTc0MDkwNS1hNzlhOGM1NC04MmJkLTQ3NWEtOTVmOS1jMjBmZTM2ODE3OWQucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI0MTAxMSUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNDEwMTFUMTE0MTU2WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9MjhjN2E3NGQzOWQwNWViOGRiODI4ZTc5NzM0ZGIwMjkyZjNhM2E5N2NjMThjMjA3MTI4OTk0MWI3MWQyZGRlYiZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.mxFhPZCC3D9GtnB4fqwOsBlAljhplgl7LHCIVEaSX7w)
+4. **School Bus Transport Management System**
+   - [GitHub Repository](https://github.com/neozhu/schoolbus)
+
+
+
 ## Visual Insights
 
-Dive into the application's aesthetics and functionality through screenshots and a video walkthrough.
+Explore the application's features and design through screenshots and a video walkthrough.
 [![Everything Is AWESOME](doc/logo.png)](https://www.youtube.com/watch?v=hCsHSNAs-70 "Everything Is AWESOME")
 
 ## Development Setup
@@ -31,12 +52,10 @@ To get started with development, ensure you have the following tools and environ
 - Microsoft Visual Studio Community 2022 (64-bit)
 - Docker
 - .NET 8.0
-- Unit Test
+- Unit Test Framework
 
-This streamlined overview provides all the essential information about the Blazor Server application's repository, live
-demo, visual insights, and required development environment.
 
-## Setup Multiple authentication providers
+## Authentication Setup
 
 Use the following topics to configure your application to use the respective providers:
 
@@ -100,6 +119,7 @@ Replace placeholder values (<Your...>) with your actual configuration details.
 For easier management, use a docker-compose.yml file:
 
 ```yml
+```yaml
 version: '3.8'
 services:
   blazorserverapp:
@@ -127,9 +147,21 @@ services:
     volumes:
       - files_volume:/app/Files
 
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrongPassword!
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
 volumes:
   files_volume:
+  mssql_data:
 ```
+
 
 ### Notes:
 
@@ -162,9 +194,23 @@ Facebook.
     - cmd: `dotnet user-secrets init`
     - cmd: `dotnet user-secrets -p Server.UI.csproj set "Kestrel:Certificates:Development:Password" "Password@123"`
 
-## Code Generator Extension for visual studio.net 2022
+## Code Generator Extension for Visual Studio 2022
+
+The [CleanArchitecture CodeGenerator for Blazor App](https://github.com/neozhu/CleanArchitectureCodeGenerator) is a powerful Visual Studio extension that helps developers streamline the creation of Blazor applications based on Clean Architecture principles.
+
 
 <div><video controls src="https://user-images.githubusercontent.com/1549611/197116874-f28414ca-7fc1-463a-b887-0754a5bb3e01.mp4" muted="false"></video></div>
+
+### Features of CodeGenerator
+
+- Automatically generates standard code for:
+  - Application Layer
+  - Domain Events
+  - Blazor UI Layer
+- Simplifies the process of adding new entities and business logic.
+- Enhances productivity by minimizing repetitive coding tasks.
+
+
 
 ### Install CleanArchitecture CodeGenerator For Blazor App
 
@@ -172,24 +218,7 @@ Facebook.
   ![image](https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/555d274c-8f62-438b-ac7a-6d327e4c23c8)
 - Download to Install
 
-### CleanArchitecture CodeGenerator For Blazor App Repo
-
-- https://github.com/neozhu/CleanArchitectureCodeGenerator
-- The code generator can automatically generate the standard code
-    - Application Layer Code
-
-- ![image](https://user-images.githubusercontent.com/1549611/181414766-84850a90-3a21-47ed-afcf-1b5cdd602edf.png)
-    - Domain Event
-
-- ![image](https://user-images.githubusercontent.com/1549611/183537303-058d6f49-fc45-4b77-8924-cc2e8266cad7.png)
-    - Blazor UI Layer Code
-
-- ![image](https://user-images.githubusercontent.com/1549611/181414818-5c1c2dfc-5560-4ab2-8773-dc7c816730d4.png)
-    - Task List
-
-- ![image](https://user-images.githubusercontent.com/1549611/183537444-3d1b2980-b131-4e9d-bfe1-7b475f760b57.png)
-    - Test Explorer
-- ![image](https://user-images.githubusercontent.com/1549611/183799080-380e1f01-ef80-4568-80d2-517514aa59e5.png)
+ 
 
 ## How to install solution templates
 
@@ -220,8 +249,7 @@ Facebook.
 
 ## Why I chose Blazor Server
 
-- I hate switching between C# and JavaScript at the same time in order to develop a project, which is why I opted for
-  Blazor Server.
+I prefer Blazor Server because I dislike switching between C# and JavaScript during development. Blazor Server allows me to focus on C#.
 
 ## Characteristic
 - Real-Time Updates

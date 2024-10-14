@@ -2,7 +2,6 @@
 @using CleanArchitecture.Blazor.Server.UI.Constants
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @implements IDisposable
-
 @inject LayoutService LayoutService
 <PageTitle>@ApplicationSettings.AppName</PageTitle>
 <MudRTLProvider RightToLeft="@LayoutService.IsRTL">
@@ -44,10 +43,9 @@
 
     protected override Task OnInitializedAsync()
     {
- 
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         LayoutService.SetBaseTheme(Theme.ApplicationTheme());
-        return Task.CompletedTask;
+        return base.OnInitializedAsync();
     }
 
     private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)

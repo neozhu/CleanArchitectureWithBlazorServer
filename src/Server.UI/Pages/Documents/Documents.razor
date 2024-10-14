@@ -174,17 +174,17 @@
                 </div>
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Owner" Title="@L[_currentDto.GetMemberDescription(x => x.Owner)]">
+        <PropertyColumn Property="x => x.CreatedByUser" Title="@L[_currentDto.GetMemberDescription(x => x.CreatedByUser)]">
             <CellTemplate>
-                @if (UserProfile?.UserId == context.Item.Owner?.Id)
+                @if (UserProfile?.UserId == context.Item.CreatedByUser?.Id)
                 {
                     <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary"> Me </MudChip>
                 }
                 else
                 {
                     <div class="d-flex flex-column">
-                        <MudText>@context.Item.Owner?.DisplayName</MudText>
-                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Owner?.Email</MudText>
+                        <MudText>@context.Item.CreatedByUser?.DisplayName</MudText>
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.CreatedByUser?.Email</MudText>
                     </div>
                 }
             </CellTemplate>
