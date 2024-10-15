@@ -12,6 +12,7 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
+using CleanArchitecture.Blazor.Infrastructure.Persistence.Validators;
 using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
@@ -201,12 +202,27 @@ public static class DependencyInjection
     private static IServiceCollection AddAuthenticationService(this IServiceCollection services,
         IConfiguration configuration)
     {
+        
+       
         services.AddIdentityCore<ApplicationUser>()
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddSignInManager()
             .AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>()
             .AddDefaultTokenProviders();
+
+        // Add the custom role validator MultiTenantRoleValidator to override the default validation logic.
+        // Ensures role names are unique within each tenant.
+        services.AddScoped<IRoleValidator<ApplicationRole>, MultiTenantRoleValidator>();
+
+        // Find the default RoleValidator<ApplicationRole> registration in the service collection.
+        var defaultRoleValidator = services.FirstOrDefault(descriptor => descriptor.ImplementationType == typeof(RoleValidator<ApplicationRole>));
+
+        // If the default role validator is found, remove it to ensure only MultiTenantRoleValidator is used.
+        if (defaultRoleValidator != null)
+        {
+            services.Remove(defaultRoleValidator);
+        }
         services.Configure<IdentityOptions>(options =>
         {
             var identitySettings = configuration.GetRequiredSection(IDENTITY_SETTINGS_KEY).Get<IdentitySettings>();
