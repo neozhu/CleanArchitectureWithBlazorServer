@@ -3,6 +3,7 @@ using System;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241013032450_CreatedByUser_ApplicationUser")]
+    partial class CreatedByUser_ApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -488,11 +491,11 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasName("pk_asp_net_roles");
 
                     b.HasIndex("NormalizedName")
+                        .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.HasIndex("TenantId", "Name")
-                        .IsUnique()
-                        .HasDatabaseName("ix_asp_net_roles_tenant_id_name");
+                    b.HasIndex("TenantId")
+                        .HasDatabaseName("ix_asp_net_roles_tenant_id");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -866,26 +869,26 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Document", b =>
                 {
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "CreatedByUser")
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Owner")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_documents_asp_net_users_created_by");
+                        .HasConstraintName("fk_documents_users_created_by");
 
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifiedByUser")
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifiedBy")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_documents_asp_net_users_last_modified_by");
+                        .HasConstraintName("fk_documents_users_last_modified_by");
 
                     b.HasOne("CleanArchitecture.Blazor.Domain.Entities.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId")
                         .HasConstraintName("fk_documents_tenants_tenant_id");
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("LastModifier");
 
-                    b.Navigation("LastModifiedByUser");
+                    b.Navigation("Owner");
 
                     b.Navigation("Tenant");
                 });

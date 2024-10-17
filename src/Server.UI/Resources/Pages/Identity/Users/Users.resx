@@ -298,4 +298,22 @@
   <data name="Superior" xml:space="preserve">
     <value>Superior</value>
   </data>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="Created By" xml:space="preserve">
+    <value>Created By</value>
+  </data>
+  <data name="Last Modified" xml:space="preserve">
+    <value>Last Modified</value>
+  </data>
+  <data name="Last Modified By" xml:space="preserve">
+    <value>Last Modified By</value>
+  </data>
+  <data name="Time Zone" xml:space="preserve">
+    <value>Time Zone</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
 </root>

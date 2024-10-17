@@ -1,11 +1,11 @@
-@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+﻿@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @inherits MudComponentBase
 
 @inject IStringLocalizer<Users> L
 
 <MudDialog>
     <DialogContent>
-        <UserForm @ref="@_userForm" Model="Model" OnFormSubmit="OnFormSubmitHandler"></UserForm>
+        <UserForm UserProfile="@UserProfile" @ref="@_userForm" Model="Model" OnFormSubmit="OnFormSubmitHandler"></UserForm>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
@@ -15,8 +15,9 @@
 
 @code{
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
-
+    [Parameter] public UserProfile? UserProfile { get; set; }
     [Parameter] public ApplicationUserDto Model { get; set; } = default!;
+    
 
     private UserForm? _userForm;
 

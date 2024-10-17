@@ -27,4 +27,5 @@ public class ApplicationRole : IdentityRole, IAuditableEntity
     public string? CreatedBy { get; set; }
     public DateTime? LastModified { get; set; }
     public string? LastModifiedBy { get; set; }
+
 }

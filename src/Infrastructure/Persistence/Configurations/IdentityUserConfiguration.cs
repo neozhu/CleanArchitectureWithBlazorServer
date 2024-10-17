@@ -30,6 +30,8 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 
         builder.HasOne(x => x.Superior).WithMany().HasForeignKey(u => u.SuperiorId);
         builder.HasOne(x => x.Tenant).WithMany().HasForeignKey(u => u.TenantId);
+        builder.HasOne(x=>x.CreatedByUser).WithMany().HasForeignKey(x=>x.CreatedBy);
+        builder.HasOne(x => x.LastModifiedByUser).WithMany().HasForeignKey(x => x.LastModifiedBy);
         builder.Navigation(e => e.Tenant).AutoInclude();
     }
 }
@@ -37,7 +39,8 @@ public class ApplicationRoleConfiguration : IEntityTypeConfiguration<Application
 {
     public void Configure(EntityTypeBuilder<ApplicationRole> builder)
     {
-       
+        builder.HasIndex(x => x.NormalizedName).HasDatabaseName("RoleNameIndex").IsUnique(false);
+        builder.HasIndex(x=>new { x.TenantId, x.Name }).IsUnique();
         builder.HasOne(x => x.Tenant).WithMany().HasForeignKey(u => u.TenantId);
         builder.Navigation(e => e.Tenant).AutoInclude();
     }

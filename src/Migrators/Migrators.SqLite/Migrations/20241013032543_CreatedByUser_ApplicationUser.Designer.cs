@@ -3,6 +3,7 @@ using System;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241013032543_CreatedByUser_ApplicationUser")]
+    partial class CreatedByUser_ApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -379,10 +382,10 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
+                        .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.HasIndex("TenantId", "Name")
-                        .IsUnique();
+                    b.HasIndex("TenantId");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -680,12 +683,12 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Document", b =>
                 {
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "CreatedByUser")
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Owner")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifiedByUser")
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifier")
                         .WithMany()
                         .HasForeignKey("LastModifiedBy")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -694,9 +697,9 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .WithMany()
                         .HasForeignKey("TenantId");
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("LastModifier");
 
-                    b.Navigation("LastModifiedByUser");
+                    b.Navigation("Owner");
 
                     b.Navigation("Tenant");
                 });

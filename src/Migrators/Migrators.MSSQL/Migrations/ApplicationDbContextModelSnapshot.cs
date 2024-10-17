@@ -17,7 +17,7 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -397,11 +397,11 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasDatabaseName("RoleNameIndex");
 
-                    b.HasIndex("TenantId");
+                    b.HasIndex("TenantId", "Name")
+                        .IsUnique()
+                        .HasFilter("[TenantId] IS NOT NULL AND [Name] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -556,6 +556,10 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LastModifiedBy");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -702,12 +706,12 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Document", b =>
                 {
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Owner")
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifier")
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifiedByUser")
                         .WithMany()
                         .HasForeignKey("LastModifiedBy")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -716,9 +720,9 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                         .WithMany()
                         .HasForeignKey("TenantId");
 
-                    b.Navigation("LastModifier");
+                    b.Navigation("CreatedByUser");
 
-                    b.Navigation("Owner");
+                    b.Navigation("LastModifiedByUser");
 
                     b.Navigation("Tenant");
                 });
@@ -745,6 +749,14 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", b =>
                 {
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy");
+
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastModifiedBy");
+
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Superior")
                         .WithMany()
                         .HasForeignKey("SuperiorId");
@@ -752,6 +764,10 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                     b.HasOne("CleanArchitecture.Blazor.Domain.Entities.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastModifiedByUser");
 
                     b.Navigation("Superior");
 

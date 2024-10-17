@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
@@ -28,7 +28,7 @@ public class DocumentDto
 
     [Description("Content")] public string? Content { get; set; }
 
-    [Description("Owner")] public ApplicationUserDto? Owner { get; set; }
+    [Description("Created By User")] public ApplicationUserDto? CreatedByUser { get; set; }
 
     private class Mapping : Profile
     {
@@ -38,7 +38,8 @@ public class DocumentDto
                 .ForMember(x => x.TenantName, s => s.MapFrom(y => y.Tenant!.Name));
             CreateMap<DocumentDto, Document>(MemberList.None)
                 .ForMember(x => x.Tenant, s => s.Ignore())
-                .ForMember(x => x.Owner, s => s.Ignore());
+                .ForMember(x => x.CreatedByUser, s => s.Ignore())
+                .ForMember(x => x.LastModifiedByUser, s => s.Ignore());
         }
     }
 }
