@@ -154,31 +154,6 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
         return await UpdateUserAsync(user);
     }
 
-    /// <summary>
-    /// Removes the specified user from the given roles.
-    /// </summary>
-    /// <param name="user">The user to remove from roles.</param>
-    /// <param name="roles">The roles to remove the user from.</param>
-    /// <returns>The <see cref="IdentityResult"/> of the operation.</returns>
-    public override async Task<IdentityResult> RemoveFromRolesAsync(ApplicationUser user, IEnumerable<string> roles)
-    {
-        // Validate the user parameter
-        if (user == null) throw new ArgumentNullException(nameof(user));
-        if (roles == null) throw new ArgumentNullException(nameof(roles));
-
-        foreach (var roleName in roles)
-        {
-            // Remove the user from each role
-            var result = await RemoveFromRoleAsync(user, roleName);
-            if (!result.Succeeded)
-            {
-                return result;
-            }
-        }
-
-        return IdentityResult.Success;
-    }
-
     private IUserRoleStore<ApplicationUser> GetUserRoleStore()
     {
         return Store as IUserRoleStore<ApplicationUser>
