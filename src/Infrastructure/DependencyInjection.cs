@@ -12,7 +12,6 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
-using CleanArchitecture.Blazor.Infrastructure.Persistence.Validators;
 using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
@@ -202,8 +201,9 @@ public static class DependencyInjection
     private static IServiceCollection AddAuthenticationService(this IServiceCollection services,
         IConfiguration configuration)
     {
-        
-       
+
+        services.AddScoped<IUserStore<ApplicationUser>, MultiTenantUserStore>();
+        services.AddScoped<UserManager<ApplicationUser>, MultiTenantUserManager>();
         services.AddIdentityCore<ApplicationUser>()
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()

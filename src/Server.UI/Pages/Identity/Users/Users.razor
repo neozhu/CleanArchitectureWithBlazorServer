@@ -1,6 +1,7 @@
 ﻿@page "/identity/users"
 @using ActualLab.Fusion
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
+@using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant
 @using CleanArchitecture.Blazor.Server.UI.Components.UtcToLocalTime
 @using CleanArchitecture.Blazor.Server.UI.Services.Fusion
 @using Microsoft.AspNetCore.WebUtilities
@@ -536,10 +537,6 @@
         {
             await UserManager.AddToRolesAsync(user, roles);
         }
-        else
-        {
-            await UserManager.AddToRoleAsync(user, RoleName.Basic);
-        }
     }
     private async Task OnCreate()
     {
@@ -548,7 +545,7 @@
                 Provider = "Local",
                 Email = "",
                 UserName = "",
-                AssignedRoles = new[] { RoleName.Basic },
+                AssignedRoles = Array.Empty<string>(),
                 TimeZoneId = TimeZoneInfo.Local.Id,
                 LanguageCode = CultureInfo.CurrentCulture.Name
             };
