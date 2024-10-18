@@ -1,6 +1,7 @@
 ﻿@page "/identity/users"
 @using ActualLab.Fusion
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
+@using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant
 @using CleanArchitecture.Blazor.Server.UI.Components.UtcToLocalTime
 @using CleanArchitecture.Blazor.Server.UI.Services.Fusion
 @using Microsoft.AspNetCore.WebUtilities
@@ -311,7 +312,7 @@
     private IList<Claim> _assignedClaims = default!;
 
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
-   
+
 
     private MudDataGrid<ApplicationUserDto> _table = null!;
     private bool _processing;
@@ -349,7 +350,7 @@
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
 
-       //var list= await  UserManager.Users.Include(x=>x.LastModifiedByUser).Include(x=>x.CreatedByUser).ToListAsync();
+        //var list= await  UserManager.Users.Include(x=>x.LastModifiedByUser).Include(x=>x.CreatedByUser).ToListAsync();
     }
     private void InitializeServices()
     {
@@ -385,11 +386,11 @@
             _loading = true;
             var total = await UserManager.Users.CountAsync(CreateSearchPredicate());
             var query = UserManager.Users.Where(CreateSearchPredicate());
-      
+
             var items = await query
                 .Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
-                .Include(x=>x.CreatedByUser)
-                .Include(x=>x.LastModifiedByUser)
+                .Include(x => x.CreatedByUser)
+                .Include(x => x.LastModifiedByUser)
                 .Include(x => x.Superior)
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
@@ -491,7 +492,12 @@
     private async Task ProcessUserUpdate(ApplicationUserDto item)
     {
         var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
-        var state = await AuthState;
+        var roles = await UserManager.GetRolesAsync(user);
+        if (roles.Count > 0)
+        {
+            await UserManager.RemoveFromRolesAsync(user, roles);
+        }
+
         user.Email = item.Email;
         user.PhoneNumber = item.PhoneNumber;
         user.ProfilePictureDataUrl = item.ProfilePictureDataUrl;
@@ -506,12 +512,6 @@
         var identityResult = await UserManager.UpdateAsync(user);
         if (identityResult.Succeeded)
         {
-            var roles = await UserManager.GetRolesAsync(user!);
-            if (roles.Count > 0)
-            {
-                await UserManager.RemoveFromRolesAsync(user, roles);
-            }
-
             if (item.AssignedRoles is not null && item.AssignedRoles.Length > 0)
             {
                 await UserManager.AddToRolesAsync(user, item.AssignedRoles);
@@ -536,10 +536,6 @@
         {
             await UserManager.AddToRolesAsync(user, roles);
         }
-        else
-        {
-            await UserManager.AddToRoleAsync(user, RoleName.Basic);
-        }
     }
     private async Task OnCreate()
     {
@@ -548,7 +544,7 @@
                 Provider = "Local",
                 Email = "",
                 UserName = "",
-                AssignedRoles = new[] { RoleName.Basic },
+                AssignedRoles = Array.Empty<string>(),
                 TimeZoneId = TimeZoneInfo.Local.Id,
                 LanguageCode = CultureInfo.CurrentCulture.Name
             };
@@ -883,7 +879,7 @@
     {
         return await ExcelService.ExportAsync(items,
             new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                                {
+                                                    {
                 { L["Id"], item => item.Id },
                 { L["User Name"], item => item.UserName },
                 { L["Full Name"], item => item.DisplayName },
@@ -891,7 +887,7 @@
                 { L["Phone Number"], item => item.PhoneNumber },
                 { L["Tenant Id"], item => item.TenantId },
                 { L["Superior Id"], item => item.SuperiorId }
-                                                }, L["Users"]);
+                                                    }, L["Users"]);
     }
 
     private async Task OnImportData(IBrowserFile file)
