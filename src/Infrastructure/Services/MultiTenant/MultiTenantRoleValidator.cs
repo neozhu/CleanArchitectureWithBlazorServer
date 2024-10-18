@@ -1,6 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Domain.Identity;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Validators;
+namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 /// <summary>
 /// A custom role validator to enforce multi-tenant uniqueness for roles.
 /// Ensures that role names are unique within a specific tenant.
