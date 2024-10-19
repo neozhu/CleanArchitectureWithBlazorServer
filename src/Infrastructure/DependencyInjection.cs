@@ -208,7 +208,7 @@ public static class DependencyInjection
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddSignInManager()
-            .AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>()
+            .AddClaimsPrincipalFactory<MultiTenantUserClaimsPrincipalFactory>()
             .AddDefaultTokenProviders();
 
         // Add the custom role validator MultiTenantRoleValidator to override the default validation logic.
