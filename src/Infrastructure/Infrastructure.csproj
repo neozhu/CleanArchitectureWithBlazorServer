@@ -8,9 +8,6 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-
-       
-
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.0-rc.2.24474.3" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.0-rc.2.24474.3" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.0-rc.2.24474.3" />
@@ -23,9 +20,6 @@
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Blazor.Serilog.Sinks.SQLite" Version="1.0.6" />
         <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0-dev-00310" />
-        
-    
-
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Application\Application.csproj" />

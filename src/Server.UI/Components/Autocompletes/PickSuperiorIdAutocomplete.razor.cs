@@ -30,7 +30,7 @@ public class PickSuperiorIdAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
 
     private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string value, CancellationToken cancellation)
     {
-        IEnumerable<ApplicationUserDto> result= UserService.DataSource.Where(x => x.TenantId.Equals(TenantId) &&   !x.UserName.Equals(OwnerName));
+        IEnumerable<ApplicationUserDto> result= UserService.DataSource.Where(x => (x.TenantId!=null && x.TenantId.Equals(TenantId)) &&   !x.UserName.Equals(OwnerName));
         if (!string.IsNullOrWhiteSpace(value))
         {
             result = UserService.DataSource.Where(x => x.TenantId.Equals(TenantId) && !x.UserName.Equals(OwnerName) && (x.UserName.Contains(value, StringComparison.OrdinalIgnoreCase) ||
