@@ -58,7 +58,7 @@
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 
     [EditorRequired] [Parameter] public AddEditDocumentCommand Model { get; set; } = default!;
-    private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload;
+    private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload=default!;
     private bool _processing;
     private bool _uploading;
     private List<FileUploadProgress> _uploadedFiles = new();

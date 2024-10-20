@@ -159,15 +159,15 @@ public static class DateTimeExtensions
     /// <param name="localTimeOffset">The local time offset, typically derived from the user's profile.</param>
     /// <param name="formatter">The date/time format string. Defaults to "yyyy-MM-dd HH:mm:ss".</param>
     /// <returns>The converted and formatted local time as a string. If the input is null, it returns null.</returns>
-    public static string? ToLocalTime(this DateTime? utcTime, TimeSpan localTimeOffset, string formatter = "yyyy-MM-dd HH:mm:ss")
+    public static string? ToLocalTime(this DateTime? utcTime, TimeSpan? localTimeOffset, string formatter = "yyyy-MM-dd HH:mm:ss")
     {
-        if (utcTime == null)
+        if (utcTime == null || localTimeOffset==null)
             return null;
 
         // Add the local time offset to the UTC time to get the local time
         var localTime = utcTime.Value + localTimeOffset;
 
         // Format the local time according to the given formatter
-        return localTime.ToString(formatter);
+        return localTime.Value.ToString(formatter);
     }
 }

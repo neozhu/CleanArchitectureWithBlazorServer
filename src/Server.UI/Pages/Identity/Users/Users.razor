@@ -309,7 +309,6 @@
     private string _selectedTenantId = " ";
     private string Title { get; set; } = "Users";
     private IList<PermissionModel> _permissions = new List<PermissionModel>();
-    private IList<Claim> _assignedClaims = default!;
 
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
 

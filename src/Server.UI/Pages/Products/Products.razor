@@ -324,7 +324,7 @@
         var dialog = DialogService.Show<ProductFormDialog>(title, parameters, options);
         var state = await dialog.Result;
 
-        if (!state.Canceled)
+        if (state is not null && !state.Canceled)
         {
             await _table.ReloadServerData();
             _selectedItems.Clear();

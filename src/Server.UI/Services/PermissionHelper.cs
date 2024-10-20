@@ -92,17 +92,19 @@ public class PermissionHelper
             var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(false)
                        ?? throw new NotFoundException($"not found application user: {userId}");
             var userClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
-            var roles = (await _userManager.GetRolesAsync(user).ConfigureAwait(false)).ToList();
-            var roleClaims = new List<Claim>();
-            var tenantRoles = await _roleManager.Roles.Where(x => roles.Contains(x.Name) && x.TenantId == user.TenantId).ToListAsync().ConfigureAwait(false);
-            foreach (var role in tenantRoles)
+            var roles = (await _userManager.GetRolesAsync(user).ConfigureAwait(false)).ToArray();
+            if (roles is not null && roles.Any())
             {
-                var claims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
-                roleClaims.AddRange(claims);
+                var roleClaims = new List<Claim>();
+                var tenantRoles = _roleManager.Roles.Where(x => roles.Contains(x.Name) && x.TenantId == user.TenantId);
+                foreach (var role in tenantRoles)
+                {
+                    var claims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
+                    roleClaims.AddRange(claims);
+                }
+                userClaims = userClaims.Concat(roleClaims).Distinct(new ClaimComparer()).ToList();
             }
-            var allClaims = userClaims.Concat(roleClaims).Distinct(new ClaimComparer()).ToList();
-
-            return allClaims;
+            return userClaims;
 
         }, _refreshInterval).ConfigureAwait(false);
     }
@@ -170,8 +172,10 @@ public class PermissionHelper
     /// </summary>
     public class ClaimComparer : IEqualityComparer<Claim>
     {
-        public bool Equals(Claim x, Claim y)
+        public bool Equals(Claim? x, Claim? y)
         {
+            if (ReferenceEquals(x, y)) return true;
+            if (x is null || y is null) return false;
             return x.Type.Equals(y.Type) && x.Value.Equals(y.Value);
         }
 

@@ -215,10 +215,7 @@
     private string _searchString = string.Empty;
     private string _selectedTenantId = " ";
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
-
-
     private IList<PermissionModel> _permissions = new List<PermissionModel>();
-    private IList<Claim> _assignedClaims = default!;
     private MudDataGrid<ApplicationRoleDto> _table = null!;
     private bool _canCreate;
     private bool _canSearch;
@@ -320,7 +317,7 @@
         var dialog = DialogService.Show<RoleFormDialog>(title, parameters, options);
         var result = await dialog.Result;
 
-        if (!result.Canceled)
+        if (result is not null && !result.Canceled)
         {
             var applicationRole = new ApplicationRole
                 {
@@ -378,11 +375,11 @@
     private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
     {
         var roleClaimsDict = models.GroupBy(m => m.RoleId)
-                                    .ToDictionary(g => g.Key, g => g.ToList());
+                                    .ToDictionary(g => g.Key!, g => g.ToList());
 
         foreach (var roleClaims in roleClaimsDict)
         {
-            var roleId = roleClaims.Key;
+            var roleId = roleClaims.Key!;
             var claims = roleClaims.Value.Select(m => new Claim(m.ClaimType, m.ClaimValue)).ToList();
             var assignedClaims = roleClaims.Value.Where(m => m.Assigned).Select(m => new Claim(m.ClaimType, m.ClaimValue)).ToList();
             var unassignedClaims = roleClaims.Value.Where(m => !m.Assigned).Select(m => new Claim(m.ClaimType, m.ClaimValue)).ToList();
