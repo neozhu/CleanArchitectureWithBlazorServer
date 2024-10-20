@@ -75,6 +75,8 @@ public class LayoutService
         CurrentTheme.LayoutProperties.DefaultBorderRadius = UserPreferences.BorderRadius + "px";
         CurrentTheme.Typography.Default.FontSize =
             UserPreferences.DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Input.FontSize =
+            UserPreferences.DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.FontSize =
             UserPreferences.ButtonFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.LineHeight = UserPreferences.ButtonLineHeight;
@@ -230,7 +232,7 @@ public class LayoutService
     /// </summary>
     /// <param name="preferences">The updated user preferences.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task UpdateUserPreferences(UserPreferences.UserPreference preferences)
+    public async Task UpdateUserPreferences(UserPreference preferences)
     {
         UserPreferences = preferences;
         IsDarkMode = UserPreferences.DarkLightTheme switch
@@ -249,6 +251,8 @@ public class LayoutService
         CurrentTheme.PaletteDark.PrimaryLighten = UserPreferences.PrimaryLighten;
         CurrentTheme.LayoutProperties.DefaultBorderRadius = UserPreferences.BorderRadius + "px";
         CurrentTheme.Typography.Default.FontSize =
+            UserPreferences.DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Input.FontSize =
             UserPreferences.DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.FontSize =
             UserPreferences.ButtonFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
