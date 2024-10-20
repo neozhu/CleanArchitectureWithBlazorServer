@@ -18,7 +18,7 @@
                       AdornmentIcon="@Icons.Material.Filled.Search"
                       AdornmentColor="Color.Secondary" />
     </MudStack>
-    @if (Permissions.Any())
+    @if (Permissions != null && Permissions.Any())
     {
         @foreach (var group in Permissions.Where(x => x.Group!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase) || x.Description!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Group).Distinct().ToList())
         {
@@ -87,7 +87,7 @@
     private async Task OnAssignAll(string? groupName)
     {
         var list = new List<PermissionModel>();
-        foreach (var t in Permissions.Where(t => t.Group == groupName))
+        foreach (var t in Permissions!.Where(t => t.Group == groupName))
         {
             t.Assigned = !t.Assigned;
             list.Add(t);

@@ -55,7 +55,6 @@
     public int Id { get; set; }
     MudForm? _form;
     private bool _saving = false;
-    private bool _savingnew = false;
     private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "/"),
@@ -77,7 +76,7 @@
         }, errors =>
         {
             Snackbar.Add($"{errors}", Severity.Error);
-            return null;
+            return null!;
         });
 
 
@@ -90,7 +89,7 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
-            var result = await Mediator.Send(model);
+            var result = await Mediator.Send(model!);
             result.Match(
             data =>
             {

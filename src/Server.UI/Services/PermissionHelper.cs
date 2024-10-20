@@ -172,8 +172,10 @@ public class PermissionHelper
     /// </summary>
     public class ClaimComparer : IEqualityComparer<Claim>
     {
-        public bool Equals(Claim x, Claim y)
+        public bool Equals(Claim? x, Claim? y)
         {
+            if (ReferenceEquals(x, y)) return true;
+            if (x is null || y is null) return false;
             return x.Type.Equals(y.Type) && x.Value.Equals(y.Value);
         }
 

@@ -219,8 +219,8 @@ else
     {
         UserManager = Services.GetRequiredService<UserManager<ApplicationUser>>();
         var state = await AuthState;
-        _currentUserName = state.User.Identity.Name;
-        await UserProfileStateService.InitializeAsync(state.User.Identity.Name);
+        _currentUserName = state.User.Identity?.Name??string.Empty;
+        await UserProfileStateService.InitializeAsync(state.User.Identity?.Name??string.Empty);
 
         model = Mapper.Map<ChangeUserProfileModel>(UserProfileStateService.UserProfile);
     }
@@ -250,7 +250,7 @@ else
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
                 Snackbar.Add(L["The avatar has been updated"], Severity.Info);
-                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber,user.TimeZoneId, user.LanguageCode);
+                UserProfileStateService.UpdateUserProfile(user.UserName!,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber,user.TimeZoneId, user.LanguageCode);
                 await OnlineUserTracker.Update(user.Id,
                                                user.UserName??"",
                                                user.DisplayName ?? "",
@@ -275,7 +275,7 @@ else
                 user.LanguageCode = model.LanguageCode;
                 user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
                 await UserManager.UpdateAsync(user);
-                UserProfileStateService.UpdateUserProfile(user.UserName,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber,user.TimeZoneId, user.LanguageCode);
+                UserProfileStateService.UpdateUserProfile(user.UserName!,user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber,user.TimeZoneId, user.LanguageCode);
                 await OnlineUserTracker.Update(user.Id,
                                                user.UserName ?? "",
                                                user.DisplayName ?? "",

@@ -210,7 +210,6 @@
     private ContactDto _currentDto = new();
     private bool _loading;
     private bool _uploading;
-    private bool _downloading;
     private bool _exporting;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
@@ -300,9 +299,9 @@
     {
         Navigation.NavigateTo($"/pages/contacts/create");
     }
-    private async Task OnClone()
+    private Task OnClone()
     {
-
+        throw new NotImplementedException();
     }
     private void OnEdit(ContactDto dto)
     {

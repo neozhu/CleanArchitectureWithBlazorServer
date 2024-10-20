@@ -10,7 +10,7 @@ public class AddEditContactCommand: ICacheInvalidatorRequest<Result<int>>
       [Description("Id")]
       public int Id { get; set; }
           [Description("Name")]
-    public string Name {get;set;} 
+    public string? Name {get;set;} 
     [Description("Description")]
     public string? Description {get;set;} 
     [Description("Email")]

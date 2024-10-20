@@ -67,7 +67,7 @@
         }, errors =>
         {
             Snackbar.Add(errors, MudBlazor.Severity.Error);
-            return null;
+            return null!;
         });
 
     }
@@ -77,7 +77,7 @@
     }
     async Task Delete()
     {
-        var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Name);
+        var contentText = string.Format(ConstantString.DeleteConfirmation, dto!.Name);
         var command = new DeleteContactCommand(new int[] { dto.Id });
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
