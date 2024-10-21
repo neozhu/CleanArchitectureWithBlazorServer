@@ -44,15 +44,14 @@
                     <MudButton Variant="Variant.Outlined"
                                Disabled="@_loading"
                                OnClick="@(() => OnRefresh())"
-                               StartIcon="@Icons.Material.Outlined.Refresh" IconColor="Color.Surface">
+                               StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
                     @if (_canCreate)
                     {
                         <MudButton Variant="Variant.Outlined"
                         StartIcon="@Icons.Material.Outlined.Add"
-                        OnClick="OnCreate"
-                        IconColor="Color.Surface">
+                        OnClick="OnCreate">
                             @ConstantString.New
                         </MudButton>
                     }

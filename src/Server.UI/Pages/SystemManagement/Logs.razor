@@ -37,7 +37,7 @@
                 <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
                     <MudButton Variant="Variant.Outlined"
                                OnClick="@(() => OnRefresh())"
-                               StartIcon="@Icons.Material.Outlined.Refresh" IconColor="Color.Surface">
+                               StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
                     @if (_canPurge)
@@ -45,7 +45,7 @@
                         <MudButton Variant="Variant.Outlined"
                                    Disabled="@(_clearing)"
                                    OnClick="@(OnPurge)"
-                                   StartIcon="@Icons.Material.Outlined.ClearAll" IconColor="Color.Error" Color="Color.Error">
+                                   StartIcon="@Icons.Material.Outlined.ClearAll">
                             @L["Clear Logs"]
                         </MudButton>
                     }

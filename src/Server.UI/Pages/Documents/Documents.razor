@@ -44,15 +44,14 @@
                     <MudButton Variant="Variant.Outlined"
                                Disabled="@_loading"
                                OnClick="@(() => OnRefresh())"
-                               StartIcon="@Icons.Material.Outlined.Refresh" IconColor="Color.Surface">
+                               StartIcon="@Icons.Material.Outlined.Refresh" >
                         @ConstantString.Refresh
                     </MudButton>
                     @if (_canCreate)
                     {
                         <MudButton Variant="Variant.Outlined"
                                    StartIcon="@Icons.Material.Outlined.Camera"
-                                   OnClick="OnCreate"
-                                   IconColor="Color.Surface">
+                                   OnClick="OnCreate">
                             @L["Upload Pictures"]
                         </MudButton>
                     }
@@ -61,8 +60,7 @@
                         <MudButton Variant="Variant.Outlined" Color="Color.Error"
                                    StartIcon="@Icons.Material.Outlined.Delete"
                                    Disabled="@(!(_selectedItems.Count > 0))"
-                                   OnClick="OnDeleteChecked"
-                                   IconColor="Color.Surface">
+                                   OnClick="OnDeleteChecked">
                             @ConstantString.Delete
                         </MudButton>
                     }
