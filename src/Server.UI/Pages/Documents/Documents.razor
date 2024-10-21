@@ -56,15 +56,16 @@
                             @L["Upload Pictures"]
                         </MudButton>
                     }
-                    <MudMenu Variant="Variant.Outlined" TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
-                        @if (_canDelete)
-                        {
-                            <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                                         OnClick="OnDeleteChecked">
-                                @ConstantString.Delete
-                            </MudMenuItem>
-                        }
-                    </MudMenu>
+                    @if (_canDelete)
+                    {
+                        <MudButton Variant="Variant.Outlined" Color="Color.Error"
+                                   StartIcon="@Icons.Material.Outlined.Delete"
+                                   Disabled="@(!(_selectedItems.Count > 0))"
+                                   OnClick="OnDeleteChecked"
+                                   IconColor="Color.Surface">
+                            @ConstantString.Delete
+                        </MudButton>
+                    }
                 </MudToolBar>
                 <MudStack Row Spacing="1">
                     @if (_canSearch)
@@ -373,11 +374,11 @@
         var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, string.Format(ConstantString.DeleteTheItem, L["Document"]), contentText, async () =>
         {
-           await InvokeAsync(async () =>
-           {
-               await _table.ReloadServerData();
-               _selectedItems.Clear();
-           });
+            await InvokeAsync(async () =>
+        {
+            await _table.ReloadServerData();
+            _selectedItems.Clear();
+        });
         });
     }
 
