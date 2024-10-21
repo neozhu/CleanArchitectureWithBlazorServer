@@ -30,74 +30,55 @@
              ColumnResizeMode="ResizeMode.Column"
              Hover="true" @ref="_table">
     <ToolBarContent>
-        <div class="d-flex align-start flex-grow-1">
-            <div class="d-flex gap-4">
-                <MudIcon Icon="@Icons.Material.Filled.DocumentScanner" Size="Size.Large" />
-                <div class="d-flex flex-column">
-                    <MudText Typo="Typo.caption" Class="mb-2">@L["Documents"]</MudText>
+        <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
+            <MudStack Row AlignItems="AlignItems.Start">
+                <MudIcon Icon="@Icons.Material.Filled.Window" Size="Size.Large" />
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.caption" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
                     <MudEnumSelect Style="min-width:120px" TEnum="DocumentListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
                     </MudEnumSelect>
-                </div>
-            </div>
-            <div class="flex-grow-1" />
-
-            <div class="d-flex flex-column justify-end">
-                <div class="d-flex gap-1">
-                    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                </MudStack>
+            </MudStack>
+            <MudStack Spacing="0" AlignItems="AlignItems.End">
+                <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
+                    <MudButton Variant="Variant.Outlined"
+                               Disabled="@_loading"
+                               OnClick="@(() => OnRefresh())"
+                               StartIcon="@Icons.Material.Outlined.Refresh" IconColor="Color.Surface">
+                        @ConstantString.Refresh
+                    </MudButton>
+                    @if (_canCreate)
+                    {
                         <MudButton Variant="Variant.Outlined"
-                                   Size="Size.Small"
-                                   Disabled="@_loading"
-                                   OnClick="@(() => OnRefresh())"
-                                   StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary">
-                            @ConstantString.Refresh
+                                   StartIcon="@Icons.Material.Outlined.Camera"
+                                   OnClick="OnCreate"
+                                   IconColor="Color.Surface">
+                            @L["Upload Pictures"]
                         </MudButton>
-                        @if (_canCreate)
-                        {
-                            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.Camera"
-                                       Size="Size.Small"
-                                       Disabled="@_loading"
-                                       OnClick="OnCreate"
-                                       IconColor="Color.Surface">
-                                @L["Upload Pictures"]
-                            </MudButton>
-                        }
-                        @if (_canDelete)
-                        {
-                            <MudButton Variant="Variant.Outlined" Color="Color.Error"
-                                       StartIcon="@Icons.Material.Filled.Delete"
-                                       Disabled="@(!(_selectedItems.Count > 0))"
-                                       Size="Size.Small"
-                                       OnClick="OnDeleteChecked"
-                                       IconColor="Color.Surface">
-                                @ConstantString.Delete
-                            </MudButton>
-                        }
-                    </MudHidden>
-                    <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
-                        @if (_canCreate)
-                        {
-                            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
-                                       StartIcon="@Icons.Material.Filled.Camera"
-                                       Size="Size.Small"
-                                       Disabled="@_loading"
-                                       OnClick="OnCreate"
-                                       IconColor="Color.Surface">
-                                @L["Upload Pictures"]
-                            </MudButton>
-                        }
+                    }
+                    @if (_canDelete)
+                    {
+                        <MudButton Variant="Variant.Outlined" Color="Color.Error"
+                                   StartIcon="@Icons.Material.Outlined.Delete"
+                                   Disabled="@(!(_selectedItems.Count > 0))"
+                                   OnClick="OnDeleteChecked"
+                                   IconColor="Color.Surface">
+                            @ConstantString.Delete
+                        </MudButton>
+                    }
+                </MudToolBar>
+                <MudStack Row Spacing="1">
+                    @if (_canSearch)
+                    {
+                        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        </MudTextField>
+                    }
+                </MudStack>
+            </MudStack>
+        </MudStack>
 
-                    </MudHidden>
-                </div>
-                @if (_canSearch)
-                {
-                    <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
-                    </MudTextField>
-                }
 
-            </div>
-        </div>
     </ToolBarContent>
     <Columns>
         <SelectColumn ShowInFooter="false"> </SelectColumn>
@@ -393,11 +374,11 @@
         var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, string.Format(ConstantString.DeleteTheItem, L["Document"]), contentText, async () =>
         {
-           await InvokeAsync(async () =>
-           {
-               await _table.ReloadServerData();
-               _selectedItems.Clear();
-           });
+            await InvokeAsync(async () =>
+        {
+            await _table.ReloadServerData();
+            _selectedItems.Clear();
+        });
         });
     }
 
