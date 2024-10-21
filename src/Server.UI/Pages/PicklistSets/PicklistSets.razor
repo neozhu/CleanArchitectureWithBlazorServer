@@ -7,6 +7,7 @@
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.Import
+@using CleanArchitecture.Blazor.Application.Features.PicklistSets.Specifications
 @using CleanArchitecture.Blazor.Server.UI.Pages.PicklistSets.Components
 
 @attribute [Authorize(Policy = Permissions.PicklistSets.View)]
@@ -34,10 +35,11 @@
                 <MudIcon Icon="@Icons.Material.Filled.ViewList" Size="Size.Large" />
                 <MudStack Spacing="0">
                     <MudText Typo="Typo.caption" Class="mb-2">@Title</MudText>
-              
+                    <MudEnumSelect Style="min-width:120px" TEnum="PickListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
+                    </MudEnumSelect>
                 </MudStack>
             </MudStack>
-            <MudStack Spacing="0">
+            <MudStack Spacing="0" AlignItems="AlignItems.End">
                 <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
                     <MudButton Variant="Variant.Outlined"
                                Disabled="@_loading"
@@ -48,9 +50,9 @@
                     @if (_canCreate)
                     {
                         <MudButton Variant="Variant.Outlined"
-                                   StartIcon="@Icons.Material.Outlined.Add"
-                                   OnClick="OnCreate"
-                                   IconColor="Color.Surface">
+                        StartIcon="@Icons.Material.Outlined.Add"
+                        OnClick="OnCreate"
+                        IconColor="Color.Surface">
                             @ConstantString.New
                         </MudButton>
                     }
@@ -58,14 +60,14 @@
                         @if (_canDelete)
                         {
                             <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                                         OnClick="OnDeleteChecked">
+                            OnClick="OnDeleteChecked">
                                 @ConstantString.Delete
                             </MudMenuItem>
                         }
                         @if (_canExport)
                         {
                             <MudMenuItem Disabled="@_exporting"
-                                         OnClick="OnExport">
+                            OnClick="OnExport">
                                 @ConstantString.Export
                             </MudMenuItem>
                         }
@@ -75,8 +77,8 @@
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                     <ActivatorContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
-                                                   Variant="Variant.Text"
-                                                   Disabled="@_uploading">
+                                        Variant="Variant.Text"
+                                        Disabled="@_uploading">
                                             @ConstantString.Import
                                         </MudButton>
                                     </ActivatorContent>
@@ -90,7 +92,7 @@
                     {
                         <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true" ValueChanged="@(s => OnSearch(s))" Style="width:160px" FullWidth="true"> </MudEnumSelect>
                         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                         </MudTextField>
                     }
                 </MudStack>
@@ -104,12 +106,12 @@
                 </MudEnumSelect>
             </EditTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Value" Title="@L[SelectedItem.GetMemberDescription(x => x.Value)]"/>
-        <PropertyColumn Property="x => x.Text" Title="@L[SelectedItem.GetMemberDescription(x => x.Text)]"/>
-        <PropertyColumn Property="x => x.Description" Title="@L[SelectedItem.GetMemberDescription(x => x.Description)]"/>
+        <PropertyColumn Property="x => x.Value" Title="@L[SelectedItem.GetMemberDescription(x => x.Value)]" />
+        <PropertyColumn Property="x => x.Text" Title="@L[SelectedItem.GetMemberDescription(x => x.Text)]" />
+        <PropertyColumn Property="x => x.Description" Title="@L[SelectedItem.GetMemberDescription(x => x.Description)]" />
         <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Delete" Sortable="false">
             <CellTemplate>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" title="@ConstantString.Delete" Disabled="@(!_canDelete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" title="@ConstantString.Delete" Disabled="@(!_canDelete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
             </CellTemplate>
             <EditTemplate>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" title="@ConstantString.Delete" Disabled="@(!_canDelete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
@@ -117,19 +119,19 @@
         </TemplateColumn>
     </Columns>
     <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"/>
+        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
 
 <style>
     .mud-table-toolbar {
-        height: 120px !important;
+    height: 120px !important;
     }
 </style>
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
-
+    [CascadingParameter] private UserProfile? UserProfile { get; set; }
     private MudDataGrid<PicklistSetDto> _table = null!;
     public string Title { get; set; } = "Picklist";
     private IList<PicklistSetDto> _keyValueList = new List<PicklistSetDto>();
@@ -170,16 +172,14 @@
         try
         {
             _loading = true;
-            var request = new PicklistSetsWithPaginationQuery
-            {
-                Keyword = _searchString,
-                Picklist = _searchPicklist,
-                OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id",
-                SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
-                PageNumber = state.Page + 1,
-                PageSize = state.PageSize
-            };
-            var result = await Mediator.Send(request).ConfigureAwait(false);
+            Query.CurrentUser = UserProfile;
+            Query.Keyword = _searchString;
+            Query.Picklist = _searchPicklist;
+            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
+            Query.PageNumber = state.Page + 1;
+            Query.PageSize = state.PageSize;
+            var result = await Mediator.Send(Query).ConfigureAwait(false);
             return new GridData<PicklistSetDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -187,7 +187,11 @@
             _loading = false;
         }
     }
-
+    private async Task OnChangedListView(PickListView listview)
+    {
+        Query.ListView = listview;
+        await _table.ReloadServerData();
+    }
     private async Task OnSearch(string text)
     {
         _searchString = text;
@@ -206,7 +210,7 @@
         _searchString = string.Empty;
         await _table.ReloadServerData();
     }
-    private void PicklistChanged(PicklistSetDto item )
+    private void PicklistChanged(PicklistSetDto item)
     {
         _table.CommittedItemChanges.InvokeAsync(item);
     }
@@ -281,9 +285,9 @@
     {
         _exporting = true;
         var request = new ExportPicklistSetsQuery
-        {
-            Keyword = _searchString
-        };
+            {
+                Keyword = _searchString
+            };
         var result = await Mediator.Send(request);
         var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Picklist"]}.xlsx", result, "application/octet-stream");
         Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);

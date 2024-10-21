@@ -16,7 +16,7 @@ public class PicklistSetsWithPaginationQuery : PicklistSetAdvancedFilter, ICache
 
     public override string ToString()
     {
-        return $"Picklist:{Picklist},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
+        return $"ListView:{ListView}-{Picklist}-{CurrentUser?.UserId},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
 }
 
