@@ -293,6 +293,7 @@ public static class DependencyInjection
             options.ExpireTimeSpan = TimeSpan.FromDays(15);
             options.SlidingExpiration = true;
             options.SessionStore = new MemoryCacheTicketStore();
+            options.LoginPath = LOGIN_PATH;
         });
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
