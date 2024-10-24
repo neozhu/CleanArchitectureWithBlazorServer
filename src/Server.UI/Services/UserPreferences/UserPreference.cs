@@ -48,7 +48,7 @@ public class UserPreference
     public double LineHeight => Math.Min(1.7, Math.Max(1.3, 1.5 * (DefaultFontSize / 0.875)));
     public double LetterSpacing => 0.00938 * (DefaultFontSize / 0.875);
 
-    public double Body1FontSize => DefaultFontSize;
+    public double Body1FontSize => DefaultFontSize + 0.0625;
     public double Body1LineHeight => LineHeight;
     public double Body1LetterSpacing => LetterSpacing;
     public double Body2FontSize => DefaultFontSize - 0.0625;
@@ -59,8 +59,8 @@ public class UserPreference
     public double CaptionFontSize => DefaultFontSize + 0.0625;
     public double CaptionLineHeight => Math.Min(1.8, Math.Max(1.4, 1.66 * (DefaultFontSize / 0.75)));
     public double OverlineFontSize => DefaultFontSize - 0.0625;
-    public double Subtitle1FontSize => DefaultFontSize + 0.125;
-    public double Subtitle2FontSize => DefaultFontSize;
+    public double Subtitle1FontSize => DefaultFontSize + 0.1875;
+    public double Subtitle2FontSize => DefaultFontSize - 0.0625;
     public DarkLightMode DarkLightTheme { get; set; }
 
     private string AdjustBrightness(string hexColor, double factor)

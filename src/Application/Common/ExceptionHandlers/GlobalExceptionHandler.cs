@@ -38,7 +38,7 @@ public class GlobalExceptionHandler<TRequest, TResponse, TException> : IRequestE
                 .MakeGenericType(resultType)
                 .GetMethod("Failure", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string[]) }, null);
 
-            var failureResultObj = failureMethod.Invoke(null, new object[] { new[] { exception.Message } });
+            var failureResultObj = failureMethod?.Invoke(null, new object[] { new[] { exception.Message } });
 
             failureResult = (TResponse)(failureResultObj ?? throw new ArgumentNullException(nameof(failureResultObj)));
         }

@@ -117,13 +117,13 @@
             <MudTextField For="@(() => Model.CreatedBy)" Disabled ShrinkLabel="true" Value="Model.CreatedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.CreatedBy)]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudTextField T="string" Disabled ShrinkLabel="true" Value="@(Model.Created.ToLocalTime(UserProfile.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.Created)]" Variant="Variant.Text"></MudTextField>
+            <MudTextField T="string" Disabled ShrinkLabel="true" Value="@(Model.Created.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.Created)]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
             <MudTextField For="@(() => Model.LastModifiedBy)" Disabled ShrinkLabel="true" Value="Model.LastModifiedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.LastModifiedBy)]" Variant="Variant.Text"></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudTextField T="string" Disabled ShrinkLabel="true" Value="@(Model.LastModified.ToLocalTime(UserProfile.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.LastModified)]" Variant="Variant.Text"></MudTextField>
+            <MudTextField T="string" Disabled ShrinkLabel="true" Value="@(Model.LastModified.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.LastModified)]" Variant="Variant.Text"></MudTextField>
         </MudItem>
     </MudGrid>
 </MudForm>

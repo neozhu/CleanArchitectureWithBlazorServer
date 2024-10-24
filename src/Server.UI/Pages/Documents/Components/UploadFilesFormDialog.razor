@@ -39,11 +39,11 @@
     <DialogActions>
 
         <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Clear" Disabled="@(!_uploadedFiles.Any())" OnClick="Clear">@ConstantString.Clear</MudButton>
-        <MudFileUpload T="IReadOnlyList<IBrowserFile>" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="LoadFiles" >
+        <MudFileUpload @ref="@_fileUpload" T="IReadOnlyList<IBrowserFile>" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="LoadFiles">
             <ActivatorContent>
                 <MudLoadingButton Loading="@_uploading" Variant="Variant.Filled"  
-                                  StartIcon="@Icons.Material.Filled.AttachFile"
-                                  >
+                StartIcon="@Icons.Material.Filled.AttachFile"
+                >
                     @L["Choose files"]
                 </MudLoadingButton>
             </ActivatorContent>
@@ -58,15 +58,17 @@
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
 
     [EditorRequired] [Parameter] public AddEditDocumentCommand Model { get; set; } = default!;
-
+    private MudFileUpload<IReadOnlyList<IBrowserFile>> _fileUpload=default!;
     private bool _processing;
     private bool _uploading;
     private List<FileUploadProgress> _uploadedFiles = new();
 
     private async void LoadFiles(IReadOnlyList<IBrowserFile> files)
     {
+        if (files is null || !files.Any()) return;
         try
         {
+
             _uploading = true;
             var startIndex = _uploadedFiles.Count;
             // Add all files to the UI
@@ -180,11 +182,13 @@
                         Snackbar.Add($"{e.Message}", Severity.Error);
                     }
                 }
-
-                var uploadCommand = new UploadDocumentCommand(list);
-                await Mediator.Send(uploadCommand);
-                await Clear();
-                MudDialog.Close(DialogResult.Ok(true));
+                if (list.Any()){
+                    var uploadCommand = new UploadDocumentCommand(list);
+                    await Mediator.Send(uploadCommand);
+                    await Clear();
+                    MudDialog.Close(DialogResult.Ok(true));
+                }
+                
             }
         }
         finally
@@ -198,10 +202,10 @@
         MudDialog.Cancel();
     }
 
-    private async Task Clear()
+    private  Task Clear()
     {
-        await new InputClear(JS).Clear("fileInput");
-        _uploadedFiles = new List<FileUploadProgress>();
+        _uploadedFiles.Clear();
+        return _fileUpload?.ClearAsync()??Task.CompletedTask;
     }
 
     private record FileUploadProgress(string FileName, long Size, IBrowserFile File)

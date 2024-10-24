@@ -90,6 +90,8 @@ public class ApplicationUserDto
         return AssignedRoles?.Contains(role) ?? false;
     }
 
+#pragma warning disable CS8619
+#pragma warning disable CS8601
     private class Mapping : Profile
     {
         public Mapping()

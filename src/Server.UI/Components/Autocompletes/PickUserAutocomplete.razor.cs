@@ -40,11 +40,11 @@ public class PickUserAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
 
     private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string value,CancellationToken cancellation)
     {
-        IEnumerable<ApplicationUserDto> result = UserService.DataSource.Where(x => x.TenantId.Equals(TenantId));
+        IEnumerable<ApplicationUserDto> result = UserService.DataSource.Where(x =>x.TenantId!=null && x.TenantId.Equals(TenantId));
 
         if (!string.IsNullOrEmpty(value))
         {
-            result = UserService.DataSource.Where(x => x.TenantId.Equals(TenantId) &&
+            result = UserService.DataSource.Where(x => x.TenantId != null&&  x.TenantId.Equals(TenantId) &&
                         (x.UserName.Contains(value, StringComparison.OrdinalIgnoreCase) ||
                         x.Email.Contains(value, StringComparison.OrdinalIgnoreCase)));
         }

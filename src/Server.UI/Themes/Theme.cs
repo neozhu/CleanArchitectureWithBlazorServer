@@ -87,6 +87,14 @@ public static class Theme
                     LetterSpacing = "normal",
                     FontFamily = new[] { "Public Sans", "Roboto", "Arial", "sans-serif" }
                 },
+                Input =new Input
+                {
+                    FontSize = ".8125rem",
+                    FontWeight = 400,
+                    LineHeight = 1.5,
+                    LetterSpacing = "normal",
+                    FontFamily = new[] { "Public Sans", "Roboto", "Arial", "sans-serif" }
+                },
                 H1 = new H1
                 {
                     FontSize = "3.5rem",

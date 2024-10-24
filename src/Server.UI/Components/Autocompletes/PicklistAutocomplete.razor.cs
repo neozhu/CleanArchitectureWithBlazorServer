@@ -33,7 +33,8 @@ public class PicklistAutocomplete<T> : MudAutocomplete<string>
         ToStringFunc = x =>
         {
             if(x!=null && PicklistService!=null)
-                return PicklistService.DataSource.FirstOrDefault(y=>y.Value.Equals(x))?.Text ?? x;
+                return PicklistService.DataSource.FirstOrDefault(y=>y.Value!=null &&
+                                  y.Value.Equals(x))?.Text ?? x;
             return x;
         };
     }

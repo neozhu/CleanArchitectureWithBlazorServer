@@ -201,12 +201,28 @@ public static class DependencyInjection
     private static IServiceCollection AddAuthenticationService(this IServiceCollection services,
         IConfiguration configuration)
     {
+
+        services.AddScoped<IUserStore<ApplicationUser>, MultiTenantUserStore>();
+        services.AddScoped<UserManager<ApplicationUser>, MultiTenantUserManager>();
         services.AddIdentityCore<ApplicationUser>()
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddSignInManager()
-            .AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>()
+            .AddClaimsPrincipalFactory<MultiTenantUserClaimsPrincipalFactory>()
             .AddDefaultTokenProviders();
+
+        // Add the custom role validator MultiTenantRoleValidator to override the default validation logic.
+        // Ensures role names are unique within each tenant.
+        services.AddScoped<IRoleValidator<ApplicationRole>, MultiTenantRoleValidator>();
+
+        // Find the default RoleValidator<ApplicationRole> registration in the service collection.
+        var defaultRoleValidator = services.FirstOrDefault(descriptor => descriptor.ImplementationType == typeof(RoleValidator<ApplicationRole>));
+
+        // If the default role validator is found, remove it to ensure only MultiTenantRoleValidator is used.
+        if (defaultRoleValidator != null)
+        {
+            services.Remove(defaultRoleValidator);
+        }
         services.Configure<IdentityOptions>(options =>
         {
             var identitySettings = configuration.GetRequiredSection(IDENTITY_SETTINGS_KEY).Get<IdentitySettings>();
@@ -277,6 +293,7 @@ public static class DependencyInjection
             options.ExpireTimeSpan = TimeSpan.FromDays(15);
             options.SlidingExpiration = true;
             options.SessionStore = new MemoryCacheTicketStore();
+            options.LoginPath = LOGIN_PATH;
         });
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
@@ -303,8 +320,8 @@ public static class DependencyInjection
             FailSafeMaxDuration = TimeSpan.FromHours(8),
             FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
             // FACTORY TIMEOUTS
-            FactorySoftTimeout = TimeSpan.FromMilliseconds(1500),
-            FactoryHardTimeout = TimeSpan.FromMilliseconds(3000),
+            FactorySoftTimeout = TimeSpan.FromSeconds(10),
+            FactoryHardTimeout = TimeSpan.FromSeconds(30),
             AllowTimedOutFactoryBackgroundCompletion = true,    
         });
         return services;

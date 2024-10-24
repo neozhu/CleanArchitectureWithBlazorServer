@@ -282,6 +282,6 @@
     private async Task OnDownloadFile(string? str)
     {
         var fileURL = str;
-        await new Fancybox(JS).Preview(str, []);
+        await new Fancybox(JS).Preview(str??string.Empty, []);
     }
 }

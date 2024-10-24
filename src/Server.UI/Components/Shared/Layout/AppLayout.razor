@@ -57,7 +57,7 @@
     {
         var state = await AuthState;
         UserProfileStateService.OnChange += UserProfileStateService_OnChange;
-        await UserProfileStateService.InitializeAsync(state.User.Identity.Name);
+        await UserProfileStateService.InitializeAsync(state.User.Identity?.Name??string.Empty);
         UserProfile = UserProfileStateService.UserProfile;
 
     }

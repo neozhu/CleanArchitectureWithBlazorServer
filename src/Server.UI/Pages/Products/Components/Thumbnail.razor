@@ -21,7 +21,7 @@
 
     private string Url()
     {
-        var url = FileUrl?.Replace("\\", "/");
+        var url = FileUrl?.Replace("\\", "/")??string.Empty;
         if (!url.StartsWith('/'))
         {
             return '/' + url;
@@ -31,7 +31,7 @@
 
     private string GetFileExtension()
     {
-            return FileName.Split('.').Last();
+        return FileName==null?string.Empty:FileName.Split('.').Last();
     }
     private bool IsPdf => GetFileExtension().ToLower() == "pdf";
     

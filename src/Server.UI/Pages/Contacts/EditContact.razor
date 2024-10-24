@@ -2,6 +2,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Update
 @using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById
+@using CleanArchitecture.Blazor.Server.UI.Components.Fusion
 @inherits MudComponentBase
 @inject IValidationService Validator
 @inject IStringLocalizer<Contacts> L
@@ -18,6 +19,7 @@
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent>
+                <ActiveUserSession PageComponent="@($"{nameof(EditContact)}/{ model.Id}")" />
                 <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
                     <MudGrid Spacing="2">
                         <MudItem xs="12" md="6">
@@ -53,7 +55,6 @@
     public int Id { get; set; }
     MudForm? _form;
     private bool _saving = false;
-    private bool _savingnew = false;
     private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "/"),
@@ -75,7 +76,7 @@
         }, errors =>
         {
             Snackbar.Add($"{errors}", Severity.Error);
-            return null;
+            return null!;
         });
 
 
@@ -88,7 +89,7 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
-            var result = await Mediator.Send(model);
+            var result = await Mediator.Send(model!);
             result.Match(
             data =>
             {
