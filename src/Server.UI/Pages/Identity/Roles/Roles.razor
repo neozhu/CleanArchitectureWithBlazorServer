@@ -3,12 +3,14 @@
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using System.Security.Claims
+@using CleanArchitecture.Blazor.Infrastructure.Persistence
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Roles.Components
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
+@using System.Linq.Expressions
 @using ZiggyCreatures.Caching.Fusion
 
 @attribute [Authorize(Policy = Permissions.Roles.View)]
-@inherits OwningComponentBase
+@inherits OwningComponentBase<ApplicationDbContext>
 @inject ITenantService TenantsService
 @inject IFusionCache FusionCache
 @inject IStringLocalizer<Roles> L
@@ -211,13 +213,17 @@
         try
         {
             _loading = true;
+            Expression<Func<ApplicationRole, bool>> filterPredicate = x =>
+           (x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString)) &&
+           (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId));
+
             var items = await RoleManager.Roles
-                .Where(x => (x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString)) && (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId)))
+                .Where(filterPredicate)
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize)
                 .ProjectTo<ApplicationRoleDto>(Mapper.ConfigurationProvider)
                 .ToListAsync();
-            var total = await RoleManager.Roles.CountAsync(x => (x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString)) && (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId)));
+            var total = await RoleManager.Roles.CountAsync(filterPredicate);
             return new GridData<ApplicationRoleDto> { TotalItems = total, Items = items };
         }
         finally

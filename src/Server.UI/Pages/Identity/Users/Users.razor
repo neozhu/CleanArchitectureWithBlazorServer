@@ -1,6 +1,7 @@
 ﻿@page "/identity/users"
 @using ActualLab.Fusion
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
+@using CleanArchitecture.Blazor.Infrastructure.Persistence
 @using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant
 @using CleanArchitecture.Blazor.Server.UI.Components.UtcToLocalTime
 @using CleanArchitecture.Blazor.Server.UI.Services.Fusion
@@ -22,7 +23,7 @@
 @using ZiggyCreatures.Caching.Fusion
 
 @attribute [Authorize(Policy = Permissions.Users.View)]
-@inherits OwningComponentBase
+@inherits OwningComponentBase<ApplicationDbContext>
 @implements IDisposable
 
 @inject IOnlineUserTracker OnlineUserTracker
@@ -338,16 +339,15 @@
         try
         {
             _loading = true;
-            var total = await UserManager.Users.CountAsync(CreateSearchPredicate());
-            var query = UserManager.Users.Where(CreateSearchPredicate());
-
-            var items = await query
-                .Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
-                .Include(x => x.CreatedByUser)
-                .Include(x => x.LastModifiedByUser)
-                .Include(x => x.Superior)
-                .EfOrderBySortDefinitions(state)
-                .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
+            var searchPredicate = CreateSearchPredicate();
+            var total = await UserManager.Users.CountAsync(searchPredicate);
+            var items =await UserManager.Users.Where(searchPredicate)
+                    .Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
+                    .Include(x => x.CreatedByUser)
+                    .Include(x => x.LastModifiedByUser)
+                    .Include(x => x.Superior)
+                    .EfOrderBySortDefinitions(state)
+                    .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
 
             return new GridData<ApplicationUserDto> { TotalItems = total, Items = items };
         }
