@@ -103,7 +103,7 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
             });
         }
 
-        if (await IsInRoleAsync(user, role.Name, tenantId))
+        if (await IsInRoleAsync(user, role.Name))
         {
             return IdentityResult.Failed(new IdentityError
             {
@@ -123,21 +123,19 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
     /// </summary>
     /// <param name="user">The user to check.</param>
     /// <param name="roleName">The name of the role to check.</param>
-    /// <param name="tenantId">The tenant ID.</param>
     /// <returns><c>true</c> if the user is in the role, otherwise <c>false</c>.</returns>
-    public async Task<bool> IsInRoleAsync(ApplicationUser user, string roleName, string tenantId)
+    public override async Task<bool> IsInRoleAsync(ApplicationUser user, string roleName)
     {
         if (user == null) throw new ArgumentNullException(nameof(user));
         if (string.IsNullOrEmpty(roleName)) throw new ArgumentException("Value cannot be null or empty.", nameof(roleName));
 
         var normalizedRoleName = NormalizeName(roleName);
-        var roles = await GetUserRoleStore().GetRolesAsync(user, CancellationToken.None);
-
         return await _roleManager.Roles.AnyAsync(r =>
             r.NormalizedName == normalizedRoleName &&
-            r.TenantId == tenantId &&
+            r.TenantId == user.TenantId &&
             Context.UserRoles.Any(ur => ur.UserId == user.Id && ur.RoleId == r.Id));
     }
+    
 
     /// <summary>
     /// Removes the specified user from the given role.

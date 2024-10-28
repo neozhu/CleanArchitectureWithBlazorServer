@@ -1,6 +1,9 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Constants
+@using Microsoft.AspNetCore.Components.Authorization
 @inherits LayoutComponentBase
 @inject IStringLocalizer<SharedResource> L
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 <MudRTLProvider>
     <MudThemeProvider Theme="Theme.ApplicationTheme()"/>
     <MudLayout>
@@ -16,7 +19,7 @@
                 </MudContainer>
             </NotAuthorized>
             <Authorized>
-                <RedirectToHome/>
+                <MudText Typo="Typo.body2">@L["Welcome back! You are already logged in. Redirecting to the home page..."]</MudText>
             </Authorized>
         </AuthorizeView>
     </MudLayout>
@@ -24,5 +27,15 @@
 
 @code
 {
+    protected override async Task OnInitializedAsync()
+    {
+        // Check if the user is already authenticated
+        var user = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            NavigationManager.NavigateTo("/");
+        }
 
+        await base.OnInitializedAsync();
+    }
 }
