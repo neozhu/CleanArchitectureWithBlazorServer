@@ -1,4 +1,4 @@
-﻿namespace CleanArchitecture.Blazor.Server.UI.Constants;
+﻿namespace CleanArchitecture.Blazor.Server.UI.Themes;
 
 public static class Theme
 {
@@ -79,14 +79,13 @@ public static class Theme
             },
             Typography = new Typography
             {
-                Input = new InputTypography { },
                 Default = new DefaultTypography
                 {
                     FontSize = ".8125rem",
                     FontWeight = "400",
                     LineHeight = "1.4",
                     LetterSpacing = "normal",
-                    FontFamily = new[] { "Public Sans", "Roboto", "Arial", "sans-serif" }
+                    FontFamily = ["Public Sans", "Roboto", "Arial", "sans-serif"]
                 },
                 H1 = new H1Typography
                 {
@@ -140,11 +139,11 @@ public static class Theme
                 },
                 Subtitle1 = new Subtitle1Typography
                 {
-                    FontSize = "1rem",
-                    FontWeight = "600",
-                    LineHeight = "1.75",
-                    LetterSpacing = ".00938em",
-                    TextTransform = "none"
+                    FontSize = ".8125rem",
+                    FontWeight = "400",
+                    LineHeight = "1.5",
+                    LetterSpacing = "normal",
+                    FontFamily = ["Public Sans", "Roboto", "Arial", "sans-serif"]
                 },
                 Subtitle2 = new Subtitle2Typography
                 {

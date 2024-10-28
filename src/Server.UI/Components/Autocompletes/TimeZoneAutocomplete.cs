@@ -1,8 +1,7 @@
 ﻿namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
-public class TimeZoneAutocomplete<T> : MudAutocomplete<string>
+public class TimeZoneAutocomplete : MudAutocomplete<string>
 {
-    private List<TimeZoneInfo> TimeZones { get; set; }= TimeZoneInfo.GetSystemTimeZones().ToList();
     public TimeZoneAutocomplete()
     {
         SearchFunc = SearchFunc_;
@@ -14,6 +13,8 @@ public class TimeZoneAutocomplete<T> : MudAutocomplete<string>
             return timeZone != null ? timeZone.DisplayName : x;
         };
     }
+
+    private List<TimeZoneInfo> TimeZones { get; set; } = TimeZoneInfo.GetSystemTimeZones().ToList();
 
     private Task<IEnumerable<string>> SearchFunc_(string value, CancellationToken cancellation = default)
     {

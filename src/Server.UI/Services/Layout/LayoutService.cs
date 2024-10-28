@@ -75,7 +75,7 @@ public class LayoutService
         CurrentTheme.LayoutProperties.DefaultBorderRadius = UserPreferences.BorderRadius + "px";
         CurrentTheme.Typography.Default.FontSize =
             UserPreferences.DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
-        CurrentTheme.Typography.Input.FontSize =
+        CurrentTheme.Typography.Subtitle1.FontSize =
             UserPreferences.DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.FontSize =
             UserPreferences.ButtonFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
@@ -252,7 +252,7 @@ public class LayoutService
         CurrentTheme.LayoutProperties.DefaultBorderRadius = UserPreferences.BorderRadius + "px";
         CurrentTheme.Typography.Default.FontSize =
             UserPreferences.DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
-        CurrentTheme.Typography.Input.FontSize =
+        CurrentTheme.Typography.Subtitle1.FontSize =
             UserPreferences.DefaultFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.FontSize =
             UserPreferences.ButtonFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
