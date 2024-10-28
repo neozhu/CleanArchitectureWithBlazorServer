@@ -20,6 +20,7 @@ using Toolbelt.Blazor.Extensions.DependencyInjection;
 using ActualLab.Fusion.Extensions;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using Polly;
+using System;
 
 
 namespace CleanArchitecture.Blazor.Server.UI;
@@ -155,10 +156,13 @@ public static class DependencyInjection
         app.UseAuthorization();
         app.UseAntiforgery();
         app.UseHttpsRedirection();
-        app.UseStaticFiles();
+        app.MapStaticAssets();
+        
 
         if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
             Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
+
+
 
         app.UseStaticFiles(new StaticFileOptions
         {
