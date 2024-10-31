@@ -17,7 +17,6 @@ using QuestPDF;
 using QuestPDF.Infrastructure;
 using ActualLab.Fusion;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
-using ActualLab.Fusion.Extensions;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using Polly;
 
@@ -66,12 +65,9 @@ public static class DependencyInjection
         services.AddHotKeys2();
 
         // Fusion services
-        services.AddFusion(fusion =>
-        {
-            fusion.AddInMemoryKeyValueStore();
-            fusion.AddService<IUserSessionTracker, UserSessionTracker>();
-            fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
-        });
+        var fusion = services.AddFusion();
+        fusion.AddService<IUserSessionTracker, UserSessionTracker>();
+        fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
 
 
         services.AddScoped<LocalizationCookiesMiddleware>()
@@ -150,7 +146,6 @@ public static class DependencyInjection
 
         app.UseStatusCodePagesWithRedirects("/404");
         app.MapHealthChecks("/health");
-
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseAntiforgery();
