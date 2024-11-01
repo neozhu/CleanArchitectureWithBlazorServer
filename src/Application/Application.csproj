@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <RootNamespace>CleanArchitecture.Blazor.Application</RootNamespace>
         <AssemblyName>CleanArchitecture.Blazor.Application</AssemblyName>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -8,7 +8,8 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="BouncyCastle.Cryptography" Version="2.4.0" />
+        <PackageReference Include="BouncyCastle.Cryptography" Version="2.5.0-beta.105" />
+       
         <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
         <PackageReference Include="ClosedXML" Version="0.104.1" />
@@ -20,13 +21,12 @@
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
         <PackageReference Include="LazyCache" Version="2.4.0" />
         <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.10" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.5" />
-        <PackageReference Include="Hangfire.Core" Version="1.8.14" />
-        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
-        <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
-        <PackageReference Include="ZiggyCreatures.FusionCache" Version="1.4.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0-rc.2.24474.3" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.0-rc.2.24474.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.8" />
+        <PackageReference Include="Hangfire.Core" Version="1.8.15" />
+        <PackageReference Include="ZiggyCreatures.FusionCache" Version="1.4.1" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Domain\Domain.csproj" />
