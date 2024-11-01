@@ -42,7 +42,7 @@
             </MudStack>
             <MudStack Spacing="0" AlignItems="AlignItems.End">
                 <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
-                    <MudButton Variant="Variant.Outlined"
+                    <MudButton 
                                Disabled="@_loading"
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
@@ -50,13 +50,13 @@
                     </MudButton>
                     @if (_canCreate)
                     {
-                        <MudButton Variant="Variant.Outlined" 
+                        <MudButton  
                                    StartIcon="@Icons.Material.Outlined.Add"
                                    OnClick="OnCreate">
                             @ConstantString.New
                         </MudButton>
                     }
-                    <MudMenu Variant="Variant.Outlined" TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
+                    <MudMenu  TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
                         @if (_canCreate)
                         {
                             <MudMenuItem Disabled="@(_selectedItems.Count != 1)" OnClick="OnClone">@ConstantString.Clone</MudMenuItem>

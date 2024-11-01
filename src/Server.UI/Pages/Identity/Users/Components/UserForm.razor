@@ -55,11 +55,11 @@
             </MultiTenantAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L[Model.GetMemberDescription(x=>x.Provider)]" Variant="Variant.Text" ReadOnly></MudTextField>
+            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L[Model.GetMemberDescription(x=>x.Provider)]"  ReadOnly></MudTextField>
         </MudItem>
 
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L[Model.GetMemberDescription(x=>x.UserName)]" Variant="Variant.Text" Required="true"></MudTextField>
+            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L[Model.GetMemberDescription(x=>x.UserName)]"  Required="true"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <div class="d-fex">
@@ -67,7 +67,7 @@
             </div>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L[Model.GetMemberDescription(x=>x.DisplayName)]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L[Model.GetMemberDescription(x=>x.DisplayName)]" ></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <PickSuperiorIdAutocomplete For="@(() => Model.Superior)" T="ApplicationUserDto"
@@ -79,16 +79,16 @@
             </PickSuperiorIdAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L[Model.GetMemberDescription(x=>x.Email)]" Variant="Variant.Text" Required="true"></MudTextField>
+            <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L[Model.GetMemberDescription(x=>x.Email)]"  Required="true"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L[Model.GetMemberDescription(x=>x.PhoneNumber)]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L[Model.GetMemberDescription(x=>x.PhoneNumber)]" ></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <TimeZoneAutocomplete T="string" For="@(() => Model.TimeZoneId)" ShrinkLabel="true" @bind-Value="Model.TimeZoneId" Label="@L[Model.GetMemberDescription(x=>x.TimeZoneId)]" Variant="Variant.Text"></TimeZoneAutocomplete>
+            <TimeZoneAutocomplete T="string" For="@(() => Model.TimeZoneId)"  @bind-Value="Model.TimeZoneId" Label="@L[Model.GetMemberDescription(x=>x.TimeZoneId)]" ></TimeZoneAutocomplete>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <LanguageAutocomplete T="string" For="@(() => Model.LanguageCode)" ShrinkLabel="true" @bind-Value="Model.LanguageCode" Label="@L[Model.GetMemberDescription(x=>x.LanguageCode)]" Variant="Variant.Text"></LanguageAutocomplete>
+            <LanguageAutocomplete T="string" For="@(() => Model.LanguageCode)"  @bind-Value="Model.LanguageCode" Label="@L[Model.GetMemberDescription(x=>x.LanguageCode)]" ></LanguageAutocomplete>
         </MudItem>
 
 
@@ -114,16 +114,16 @@
             </MudGrid>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudTextField For="@(() => Model.CreatedBy)" Disabled ShrinkLabel="true" Value="Model.CreatedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.CreatedBy)]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => Model.CreatedBy)" Disabled  Value="Model.CreatedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.CreatedBy)]" ></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudTextField T="string" Disabled ShrinkLabel="true" Value="@(Model.Created.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.Created)]" Variant="Variant.Text"></MudTextField>
+            <MudTextField T="string" Disabled  Value="@(Model.Created.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.Created)]" ></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudTextField For="@(() => Model.LastModifiedBy)" Disabled ShrinkLabel="true" Value="Model.LastModifiedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.LastModifiedBy)]" Variant="Variant.Text"></MudTextField>
+            <MudTextField For="@(() => Model.LastModifiedBy)" Disabled  Value="Model.LastModifiedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.LastModifiedBy)]" ></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudTextField T="string" Disabled ShrinkLabel="true" Value="@(Model.LastModified.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.LastModified)]" Variant="Variant.Text"></MudTextField>
+            <MudTextField T="string" Disabled  Value="@(Model.LastModified.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.LastModified)]" ></MudTextField>
         </MudItem>
     </MudGrid>
 </MudForm>

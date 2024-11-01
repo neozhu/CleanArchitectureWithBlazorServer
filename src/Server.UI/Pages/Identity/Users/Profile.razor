@@ -68,31 +68,31 @@ else
                         </div>
                     </MudItem>
                     <MudItem sm="6" xs="12">
-                        <MudTextField For="@(() => model.TenantName)" ShrinkLabel="true" @bind-Value="model.TenantName" Label="@L["Tenant Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
+                        <MudTextField For="@(() => model.TenantName)"  @bind-Value="model.TenantName" Label="@L["Tenant Name"]"  ReadOnly="true"></MudTextField>
                     </MudItem>
                     <MudItem xs="12" sm="6">
-                        <MudTextField For="@(() => model.SuperiorName)" ShrinkLabel="true" @bind-Value="model.SuperiorName" Label="@L["Superior Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
+                        <MudTextField For="@(() => model.SuperiorName)"  @bind-Value="model.SuperiorName" Label="@L["Superior Name"]"  ReadOnly="true"></MudTextField>
                     </MudItem>
                     <MudItem sm="6" xs="12">
-                        <MudTextField For="@(() => model.UserName)" ShrinkLabel="true" @bind-Value="model.UserName" Label="@L["User Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
+                        <MudTextField For="@(() => model.UserName)"  @bind-Value="model.UserName" Label="@L["User Name"]"  ReadOnly="true"></MudTextField>
                     </MudItem>
                     <MudItem sm="6" xs="12">
-                        <MudTextField For="@(() => model.Email)" ShrinkLabel="true" @bind-Value="model.Email" Label="@L["Email"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
+                        <MudTextField For="@(() => model.Email)"  @bind-Value="model.Email" Label="@L["Email"]"  ReadOnly="true"></MudTextField>
                     </MudItem>
                     <MudItem sm="6" xs="12">
-                        <MudTextField For="@(() => model.DisplayName)" ShrinkLabel="true" @bind-Value="model.DisplayName" Label="@L["Full Name"]" Variant="Variant.Text"></MudTextField>
+                        <MudTextField For="@(() => model.DisplayName)"  @bind-Value="model.DisplayName" Label="@L["Full Name"]" ></MudTextField>
                     </MudItem>
                     <MudItem sm="6" xs="12">
-                        <MudTextField For="@(() => model.PhoneNumber)" ShrinkLabel="true" @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" Variant="Variant.Text"></MudTextField>
+                        <MudTextField For="@(() => model.PhoneNumber)"  @bind-Value="model.PhoneNumber" Label="@L["Phone Number"]" ></MudTextField>
                     </MudItem>
                     <MudItem sm="6" xs="12">
-                        <TimeZoneAutocomplete T="string" For="@(() => model.TimeZoneId)" ShrinkLabel="true" @bind-Value="model.TimeZoneId" Label="@L["Time Zone"]" Variant="Variant.Text"></TimeZoneAutocomplete>
+                        <TimeZoneAutocomplete T="string" For="@(() => model.TimeZoneId)"  @bind-Value="model.TimeZoneId" Label="@L["Time Zone"]" ></TimeZoneAutocomplete>
                     </MudItem>
                     <MudItem sm="6" xs="12">
-                        <LanguageAutocomplete T="string" For="@(() => model.LanguageCode)" ShrinkLabel="true" @bind-Value="model.LanguageCode" Label="@L["Language"]" Variant="Variant.Text"></LanguageAutocomplete>
+                        <LanguageAutocomplete T="string" For="@(() => model.LanguageCode)"  @bind-Value="model.LanguageCode" Label="@L["Language"]" ></LanguageAutocomplete>
                     </MudItem>
                     <MudItem sm="12" xs="12" Class="d-flex justify-end">
-                        <MudButton ButtonType="ButtonType.Button" Disabled="@_submitting" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">
+                        <MudButton ButtonType="ButtonType.Button" Disabled="@_submitting"  Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">
                             @if (_submitting)
                             {
                                 <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
@@ -115,7 +115,7 @@ else
                                       Label="@L["Current Password"]"
                                           For="@(() => _changepassword.CurrentPassword)"
                                           @bind-Value="_changepassword.CurrentPassword"
-                                          Variant="Variant.Text"
+                                          
                                           Required="true" />
                     </MudItem>
                     <MudItem xs="12">
@@ -123,7 +123,7 @@ else
                                           Label="@L["New Password"]"
                                           For="@(() => _changepassword.NewPassword)"
                                           @bind-Value="_changepassword.NewPassword"
-                                          Variant="Variant.Text"
+                                          
                                           Required="true" />
                     </MudItem>
                     <MudItem xs="12">
@@ -131,11 +131,11 @@ else
                                           Label="@L["Confirm New Password"]"
                                           For="@(() => _changepassword.ConfirmPassword)"
                                           @bind-Value="_changepassword.ConfirmPassword"
-                                          Variant="Variant.Text"
+                                          
                                           Required="true" />
                     </MudItem>
                     <MudItem sm="12" xs="12" Class="d-flex justify-end">
-                        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await ChangePassword())">
+                        <MudButton ButtonType="ButtonType.Button"  Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await ChangePassword())">
                             @if (_submitting)
                             {
                                 <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
