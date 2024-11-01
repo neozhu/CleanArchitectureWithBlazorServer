@@ -3,25 +3,25 @@
 @using ActualLab.Fusion.Blazor
 @using ActualLab.Fusion.UI
 
-@inherits ComputedStateComponent<UserInfo[]>
+@inherits ComputedStateComponent<List<SessionInfo>>
 @inject IOnlineUserTracker OnlineUserTracker
 @inject IStringLocalizer<ActiveUserSession> L
 @inject UserProfileStateService UserProfileStateService
 @if (State.HasValue && State.LastNonErrorValue.Any())
 {
     <div class="d-flex flex-row gap-2 my-3 gap-2 my-3">
-        @foreach (var user in State.LastNonErrorValue.OrderBy(u => u.Name != currentUserName))
+        @foreach (var user in State.LastNonErrorValue.OrderBy(u => u.UserId != currentUserId))
         {
             <MudBadge Color="Color.Success" Overlap="false" Dot="true" Bordered="true">
                 @if (string.IsNullOrEmpty(user.ProfilePictureDataUrl))
                 {
-                    <MudAvatar title="@user.Name">
-                        @user.Name.First()
+                    <MudAvatar title="@user.UserName">
+                        @user.UserName.First()
                     </MudAvatar>
                 }
                 else
                 {
-                    <MudAvatar title="@user.Name">
+                    <MudAvatar title="@user.UserName">
                         <MudImage Src="@user.ProfilePictureDataUrl"></MudImage>
                     </MudAvatar>
                 }
@@ -38,7 +38,7 @@
 @code {
 
     private string sessionId = Guid.NewGuid().ToString();
-    private string? currentUserName;
+    private string? currentUserId;
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(5);
@@ -49,33 +49,28 @@
         {
             await UserProfileStateService.InitializeAsync(state.User.Identity.Name);
             var userProfile = UserProfileStateService.UserProfile;
-            currentUserName = userProfile.UserName;
-            await OnlineUserTracker.Add(sessionId, new UserInfo(userProfile.UserId,
+            currentUserId = userProfile.UserId;
+            await OnlineUserTracker.Initial(new SessionInfo(userProfile.UserId,
                 userProfile.UserName,
-                userProfile.Email,
                 userProfile.DisplayName ?? string.Empty,
+                "",
+                userProfile.TenantId,
                 userProfile.ProfilePictureDataUrl ?? string.Empty,
-                userProfile.SuperiorName ?? string.Empty,
-                userProfile.SuperiorId ?? string.Empty,
-                userProfile.TenantId ?? string.Empty,
-                userProfile.TenantName ?? string.Empty,
-                userProfile.PhoneNumber,
-                userProfile.AssignedRoles ?? Array.Empty<string>(),
                 UserPresence.Available));
         }
     }
 
-    protected override ComputedState<UserInfo[]>.Options GetStateOptions()
+    protected override ComputedState<List<SessionInfo>>.Options GetStateOptions()
      => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
 
-    protected override Task<UserInfo[]> ComputeState(CancellationToken cancellationToken)
+    protected override Task<List<SessionInfo>> ComputeState(CancellationToken cancellationToken)
     {
         return OnlineUserTracker.GetOnlineUsers(cancellationToken);
     }
 
     public override async ValueTask DisposeAsync()
     {
-        await OnlineUserTracker.Remove(sessionId);
+        await OnlineUserTracker.Logout();
         GC.Collect();
     }
 }
