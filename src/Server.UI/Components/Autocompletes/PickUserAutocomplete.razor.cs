@@ -3,9 +3,8 @@ using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
-public class PickUserAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
+public class PickUserAutocomplete : MudAutocomplete<ApplicationUserDto>
 {
- 
     public PickUserAutocomplete()
     {
         SearchFunc = SearchKeyValues;
@@ -16,6 +15,7 @@ public class PickUserAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
         ShowProgressIndicator = true;
         MaxItems = 50;
     }
+
     [Parameter] public string? TenantId { get; set; }
 
     [Inject] private IUserService UserService { get; set; } = default!;
@@ -27,29 +27,24 @@ public class PickUserAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
 
     private async Task TenantsService_OnChange()
     {
-       await InvokeAsync(StateHasChanged);
+        await InvokeAsync(StateHasChanged);
     }
 
-    protected override void Dispose(bool disposing)
+    protected override async ValueTask DisposeAsyncCore()
     {
         UserService.OnChange -= TenantsService_OnChange;
-        base.Dispose(disposing);
+        await base.DisposeAsyncCore();
     }
-    
-   
 
-    private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string value,CancellationToken cancellation)
+    private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string value, CancellationToken cancellation)
     {
-        IEnumerable<ApplicationUserDto> result = UserService.DataSource.Where(x =>x.TenantId!=null && x.TenantId.Equals(TenantId));
+        var result = UserService.DataSource.Where(x => x.TenantId != null && x.TenantId.Equals(TenantId));
 
         if (!string.IsNullOrEmpty(value))
-        {
-            result = UserService.DataSource.Where(x => x.TenantId != null&&  x.TenantId.Equals(TenantId) &&
-                        (x.UserName.Contains(value, StringComparison.OrdinalIgnoreCase) ||
-                        x.Email.Contains(value, StringComparison.OrdinalIgnoreCase)));
-        }
+            result = UserService.DataSource.Where(x => x.TenantId != null && x.TenantId.Equals(TenantId) &&
+                                                       (x.UserName.Contains(value,
+                                                            StringComparison.OrdinalIgnoreCase) ||
+                                                        x.Email.Contains(value, StringComparison.OrdinalIgnoreCase)));
         return Task.FromResult(result);
     }
-
-     
 }
