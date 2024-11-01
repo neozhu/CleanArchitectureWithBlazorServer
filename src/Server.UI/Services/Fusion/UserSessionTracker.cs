@@ -1,7 +1,5 @@
 ﻿using System.Collections.Immutable;
-using System.Net.Http;
 using ActualLab.Fusion;
-using Microsoft.AspNetCore.Http;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 
