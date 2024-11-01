@@ -54,8 +54,8 @@ else
 
     private bool IsOnline()
     {
-        var username = Item?.DisplayName ?? Item?.UserName;
-        return UsersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(username, StringComparison.OrdinalIgnoreCase));
+        var userId = Item?.Id;
+        return UsersStateContainer.UsersByConnectionId.Any(x => x.Value.Equals(userId, StringComparison.OrdinalIgnoreCase));
     }
 
     private void SendVerify()
