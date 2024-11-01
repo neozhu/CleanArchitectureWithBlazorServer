@@ -8,11 +8,11 @@
 
         @if (OnSaveButtonClick.HasDelegate)
         {
-            <MudLoadingButton StartIcon="@Icons.Material.Filled.Save" Color="Color.Primary" DropShadow="false" Loading="@Saving" Variant="Variant.Outlined" OnClick="@Save">@ConstantString.Save</MudLoadingButton>
+            <MudLoadingButton StartIcon="@Icons.Material.Filled.Save" Color="Color.Primary" DropShadow="false" Loading="@Saving"  OnClick="@Save">@ConstantString.Save</MudLoadingButton>
         }
         @if (OnGoEditClick.HasDelegate)
         {
-            <MudButton StartIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" Variant="Variant.Outlined" OnClick="@GoEdit">@ConstantString.Edit</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="@GoEdit">@ConstantString.Edit</MudButton>
         }
         @if (OnDeleteClick.HasDelegate || OnPrintClick.HasDelegate)
         {
