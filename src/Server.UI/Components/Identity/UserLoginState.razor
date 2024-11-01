@@ -17,7 +17,6 @@
 
 
     [Inject] private HubClient Client { get; set; } = default!;
-    [Inject] private IUsersStateContainer UsersStateContainer { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -32,7 +31,6 @@
         InvokeAsync(() =>
         {
             Snackbar.Add(string.Format(L["{0} has logged in."], args.UserName), Severity.Info);
-            UsersStateContainer.AddOrUpdate(args.ConnectionId, args.UserName);
         });
     }
 
@@ -41,7 +39,7 @@
         InvokeAsync(() =>
         {
             Snackbar.Add(string.Format(L["{0} has logged out."], args.UserName));
-            UsersStateContainer.Remove(args.ConnectionId);
+
         });
     }
 
