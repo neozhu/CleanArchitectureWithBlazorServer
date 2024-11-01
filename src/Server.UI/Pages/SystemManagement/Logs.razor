@@ -35,14 +35,14 @@
             </MudStack>
             <MudStack Spacing="0" AlignItems="AlignItems.End">
                 <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
-                    <MudButton Variant="Variant.Outlined"
+                    <MudButton 
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
                     @if (_canPurge)
                     {
-                        <MudButton Variant="Variant.Outlined"
+                        <MudButton 
                                    Disabled="@(_clearing)"
                                    OnClick="@(OnPurge)"
                                    StartIcon="@Icons.Material.Outlined.ClearAll">
