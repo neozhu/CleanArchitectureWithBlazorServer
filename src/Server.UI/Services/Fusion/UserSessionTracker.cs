@@ -70,10 +70,10 @@ public class UserSessionTracker : IUserSessionTracker
         _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
     }
 
-    public virtual async Task RemoveAllSessions(string userId, CancellationToken cancellationToken = default)
+    public virtual  Task RemoveAllSessions(string userId, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
-            return;
+            return Task.CompletedTask;
 
         foreach (var pageComponent in _pageUserSessions.Keys.ToList())
         {
@@ -96,6 +96,7 @@ public class UserSessionTracker : IUserSessionTracker
                 }
             }
         }
+        return Task.CompletedTask;
     }
     private  Task<SessionInfo> GetSessionInfo()
     {
