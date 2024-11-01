@@ -6,16 +6,16 @@
 @inject IUserSessionTracker UserSessionTracker
 @inject IStringLocalizer<ActiveUserSession> L
 
-@if (!string.IsNullOrEmpty(userName) && State.Value.Any())
+@if (!string.IsNullOrEmpty(currentUserId) && State.Value.Any())
 {
-    <MudAlert Class="mb-2" Severity="MudBlazor.Severity.Error" Variant="Variant.Filled" Dense="true">@Message</MudAlert>
+    <MudAlert Class="mb-2" Severity="MudBlazor.Severity.Error" Variant="Variant.Outlined" Dense="true">@Message</MudAlert>
 }
 
 @code {
     [Parameter]
     public string PageComponent { get; set; } = nameof(ActiveUserSession);
     private string Message => $"{string.Join(", ", State.Value)} {L["has this dialog open."]}";
-    private string? userName;
+    private string? currentUserId;
     [CascadingParameter]
     private Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
@@ -23,8 +23,10 @@
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthState;
-        userName = authState.User.GetDisplayName() ?? (authState.User.GetUserName()??string.Empty);
-        await UserSessionTracker.AddUserSession(PageComponent ?? nameof(ActiveUserSession), userName);
+        currentUserId = authState.User.GetUserId() ?? string.Empty;
+        await UserSessionTracker.AddUserSession(PageComponent ?? nameof(ActiveUserSession));
+
+
     }
 
     protected override ComputedState<string[]>.Options GetStateOptions()
@@ -32,11 +34,11 @@
 
     protected override async Task<string[]> ComputeState(CancellationToken cancellationToken)
     {
-        var result = await UserSessionTracker.GetUserSessions(cancellationToken);
+        var result = await UserSessionTracker.GetUserSessions(PageComponent,cancellationToken);
         if (result.Any())
         {
 
-            return result.Where(x => x.PageComponent == PageComponent).Where(x => x.UserSessions.Any(y => y != userName)).SelectMany(x => x.UserSessions.Where(y => y != userName)).ToArray();
+            return result.Where(x => x.UserId!=currentUserId).Select(x=>x.DisplayName??x.UserName).ToArray();
         }
 
         return Array.Empty<string>();
@@ -44,7 +46,7 @@
 
     public override async ValueTask DisposeAsync()
     {
-        await UserSessionTracker.RemoveUserSession(PageComponent, userName??string.Empty);
+        await UserSessionTracker.RemoveUserSession(PageComponent);
         GC.Collect();
     }
 }
