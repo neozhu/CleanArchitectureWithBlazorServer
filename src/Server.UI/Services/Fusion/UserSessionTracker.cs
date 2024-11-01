@@ -3,21 +3,33 @@ using ActualLab.Fusion;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 
+/// <summary>
+/// Tracks user sessions for different page components.
+/// </summary>
 public class UserSessionTracker : IUserSessionTracker
 {
-    public UserSessionTracker(IHttpContextAccessor  httpContextAccessor)
+    private volatile ImmutableDictionary<string, ImmutableHashSet<SessionInfo>> _pageUserSessions = ImmutableDictionary<string, ImmutableHashSet<SessionInfo>>.Empty;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserSessionTracker"/> class.
+    /// </summary>
+    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
+    public UserSessionTracker(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    private volatile ImmutableDictionary<string, ImmutableHashSet<SessionInfo>> _pageUserSessions = ImmutableDictionary<string, ImmutableHashSet<SessionInfo>>.Empty;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
+    /// <summary>
+    /// Adds a user session for the specified page component.
+    /// </summary>
+    /// <param name="pageComponent">The page component.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     public virtual async Task AddUserSession(string pageComponent, CancellationToken cancellationToken = default)
     {
-
         if (Invalidation.IsActive)
             return;
+
         var sessionInfo = await GetSessionInfo().ConfigureAwait(false);
         ImmutableInterlocked.AddOrUpdate(
             ref _pageUserSessions,
@@ -29,7 +41,13 @@ public class UserSessionTracker : IUserSessionTracker
         _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
     }
 
-    public virtual  Task<List<SessionInfo>> GetUserSessions(string pageComponent,CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Gets the user sessions for the specified page component.
+    /// </summary>
+    /// <param name="pageComponent">The page component.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A list of session information.</returns>
+    public virtual Task<List<SessionInfo>> GetUserSessions(string pageComponent, CancellationToken cancellationToken = default)
     {
         if (_pageUserSessions.TryGetValue(pageComponent, out var sessions))
         {
@@ -39,10 +57,16 @@ public class UserSessionTracker : IUserSessionTracker
         return Task.FromResult(new List<SessionInfo>());
     }
 
+    /// <summary>
+    /// Removes a user session for the specified page component.
+    /// </summary>
+    /// <param name="pageComponent">The page component.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     public virtual async Task RemoveUserSession(string pageComponent, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return;
+
         var sessionInfo = await GetSessionInfo().ConfigureAwait(false);
 
         if (_pageUserSessions.TryGetValue(pageComponent, out var users) && users.Contains(sessionInfo))
@@ -68,7 +92,12 @@ public class UserSessionTracker : IUserSessionTracker
         _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
     }
 
-    public virtual  Task RemoveAllSessions(string userId, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Removes all sessions for the specified user.
+    /// </summary>
+    /// <param name="userId">The user identifier.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public virtual Task RemoveAllSessions(string userId, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return Task.CompletedTask;
@@ -96,7 +125,13 @@ public class UserSessionTracker : IUserSessionTracker
         }
         return Task.CompletedTask;
     }
-    private  Task<SessionInfo> GetSessionInfo()
+
+    /// <summary>
+    /// Gets the session information from the current HTTP context.
+    /// </summary>
+    /// <returns>The session information.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the HTTP context is not available.</exception>
+    private Task<SessionInfo> GetSessionInfo()
     {
         var httpContext = _httpContextAccessor.HttpContext;
         if (httpContext == null)
@@ -109,7 +144,6 @@ public class UserSessionTracker : IUserSessionTracker
         var userName = _httpContextAccessor.HttpContext?.User?.GetUserName();
         var displayName = _httpContextAccessor.HttpContext?.User?.GetDisplayName();
         var tenantId = _httpContextAccessor.HttpContext?.User?.GetTenantId();
-        return Task.FromResult(new SessionInfo(userId, userName, displayName, ipAddress,tenantId,"", UserPresence.Available));
+        return Task.FromResult(new SessionInfo(userId, userName, displayName, ipAddress, tenantId, "", UserPresence.Available));
     }
-
 }

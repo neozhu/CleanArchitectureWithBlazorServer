@@ -5,21 +5,33 @@ using ActualLab.Fusion;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 
+/// <summary>
+/// Tracks online users and manages their sessions.
+/// </summary>
 public class OnlineUserTracker : IOnlineUserTracker
 {
+    private volatile ImmutableHashSet<SessionInfo> _activeUserSessions = ImmutableHashSet<SessionInfo>.Empty;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OnlineUserTracker"/> class.
+    /// </summary>
+    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
     public OnlineUserTracker(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    private volatile ImmutableHashSet<SessionInfo> _activeUserSessions =  ImmutableHashSet<SessionInfo>.Empty;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public virtual async Task Initial( SessionInfo sessionInfo, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Initializes the session for a user.
+    /// </summary>
+    /// <param name="sessionInfo">The session information.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public virtual async Task Initial(SessionInfo sessionInfo, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return;
-        if (!_activeUserSessions.Any(x=>x.UserId==sessionInfo.UserId))
+        if (!_activeUserSessions.Any(x => x.UserId == sessionInfo.UserId))
         {
             _activeUserSessions = _activeUserSessions.Add(sessionInfo);
             using var invalidating = Invalidation.Begin();
@@ -27,6 +39,10 @@ public class OnlineUserTracker : IOnlineUserTracker
         }
     }
 
+    /// <summary>
+    /// Logs out the current user.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
     public virtual async Task Logout(CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
@@ -41,6 +57,11 @@ public class OnlineUserTracker : IOnlineUserTracker
         }
     }
 
+    /// <summary>
+    /// Clears all sessions for a specific user.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     public virtual async Task Clear(string userId, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
@@ -54,6 +75,14 @@ public class OnlineUserTracker : IOnlineUserTracker
         }
     }
 
+    /// <summary>
+    /// Updates the session information for a specific user.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="userName">The user name.</param>
+    /// <param name="displayName">The display name.</param>
+    /// <param name="profilePictureDataUrl">The profile picture data URL.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     public virtual async Task Update(string userId, string userName, string displayName, string profilePictureDataUrl, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
@@ -61,13 +90,18 @@ public class OnlineUserTracker : IOnlineUserTracker
         var userSessions = _activeUserSessions.Where(s => s.UserId == userId).ToList();
         foreach (var session in userSessions)
         {
-             var updatedSession = new SessionInfo(userId, userName, displayName, session.IPAddress, session.TenantId, profilePictureDataUrl, session.Status);
+            var updatedSession = new SessionInfo(userId, userName, displayName, session.IPAddress, session.TenantId, profilePictureDataUrl, session.Status);
             _activeUserSessions = _activeUserSessions.Remove(session).Add(updatedSession);
             using var invalidating = Invalidation.Begin();
             _ = await GetOnlineUsers(cancellationToken).ConfigureAwait(false);
         }
     }
 
+    /// <summary>
+    /// Gets the list of online users.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A list of online user sessions.</returns>
     public virtual Task<List<SessionInfo>> GetOnlineUsers(CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
@@ -76,8 +110,11 @@ public class OnlineUserTracker : IOnlineUserTracker
         return Task.FromResult(_activeUserSessions.ToList());
     }
 
-
-
+    /// <summary>
+    /// Gets the session information for the current user.
+    /// </summary>
+    /// <returns>The session information.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the HTTP context is not available.</exception>
     private Task<SessionInfo> GetSessionInfo()
     {
         var httpContext = _httpContextAccessor.HttpContext;
@@ -93,6 +130,4 @@ public class OnlineUserTracker : IOnlineUserTracker
         var tenantId = _httpContextAccessor.HttpContext?.User?.GetTenantId();
         return Task.FromResult(new SessionInfo(userId, userName, displayName, ipAddress, tenantId, "", UserPresence.Available));
     }
-
-    
 }
