@@ -19,6 +19,7 @@ using ActualLab.Fusion;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using Polly;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 
 
 namespace CleanArchitecture.Blazor.Server.UI;
@@ -68,7 +69,7 @@ public static class DependencyInjection
         var fusion = services.AddFusion();
         fusion.AddService<IUserSessionTracker, UserSessionTracker>();
         fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
-
+        services.AddScoped<CircuitHandler, UserSessionCircuitHandler>();
 
         services.AddScoped<LocalizationCookiesMiddleware>()
             .Configure<RequestLocalizationOptions>(options =>

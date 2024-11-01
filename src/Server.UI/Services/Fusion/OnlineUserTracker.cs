@@ -1,152 +1,98 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Collections.Immutable;
 using System.Linq.Dynamic.Core;
 using ActualLab.Fusion;
+
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 
 public class OnlineUserTracker : IOnlineUserTracker
 {
-    // A concurrent dictionary to store user information by session ID.
-    private readonly ConcurrentDictionary<string, UserInfo> _store = new();
-
-    /// <summary>
-    /// Adds a user session to the tracker.
-    /// </summary>
-    /// <param name="sessionId">The session ID.</param>
-    /// <param name="userInfo">The user information to be added.</param>
-    /// <param name="cancellationToken">Optional cancellation token.</param>
-    public async Task Add(string sessionId, UserInfo userInfo, CancellationToken cancellationToken = default)
+    public OnlineUserTracker(IHttpContextAccessor httpContextAccessor)
     {
-        // If the invalidation is active, skip adding.
-        if (Invalidation.IsActive)
-            return;
-
-        // Try to add the user information into the store.
-        if (_store.TryAdd(sessionId, userInfo))
-        {
-            using var invalidating = Invalidation.Begin();
-            // Get the updated online users list asynchronously.
-            _ = await GetOnlineUsers(cancellationToken).ConfigureAwait(false);
-        }
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    /// <summary>
-    /// Updates a user's information in the tracker.
-    /// </summary>
-    /// <param name="userId">The user's ID.</param>
-    /// <param name="userName">The user's name.</param>
-    /// <param name="displayName">The display name.</param>
-    /// <param name="profilePictureDataUrl">The profile picture URL.</param>
-    /// <param name="cancellationToken">Optional cancellation token.</param>
-    public async Task Update(string userId, string userName, string displayName, string profilePictureDataUrl, CancellationToken cancellationToken = default)
+    private volatile ImmutableHashSet<SessionInfo> _activeUserSessions =  ImmutableHashSet<SessionInfo>.Empty;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public virtual async Task Initial( SessionInfo sessionInfo, CancellationToken cancellationToken = default)
     {
-        // If invalidation is active, skip updating.
         if (Invalidation.IsActive)
             return;
-
-        var invalidate = false;
-
-        // Loop through the store's keys and update user information based on user name.
-        foreach (var key in _store.Keys)
+        if (!_activeUserSessions.Any(x=>x.UserId==sessionInfo.UserId))
         {
-            // Use string.Equals with explicit comparison to avoid using '=='
-            if (string.Equals(_store[key].Name, userName, StringComparison.Ordinal))
-            {
-                // Update the user information.
-                var userInfo = _store[key] with
-                {
-                    Id = userId,
-                    DisplayName = displayName,
-                    ProfilePictureDataUrl = profilePictureDataUrl
-                };
-
-                // Try to update the entry in the dictionary.
-                var updated = _store.TryUpdate(key, userInfo, _store[key]);
-                if (!invalidate)
-                {
-                    invalidate = updated;
-                }
-            }
-        }
-
-        // If any user information was updated, invalidate and get the updated list.
-        if (invalidate)
-        {
+            _activeUserSessions = _activeUserSessions.Add(sessionInfo);
             using var invalidating = Invalidation.Begin();
             _ = await GetOnlineUsers(cancellationToken).ConfigureAwait(false);
         }
     }
 
-    /// <summary>
-    /// Retrieves the list of online users.
-    /// </summary>
-    /// <param name="cancellationToken">Optional cancellation token.</param>
-    /// <returns>A task containing the array of online users.</returns>
-    public virtual Task<UserInfo[]> GetOnlineUsers(CancellationToken cancellationToken = default)
+    public virtual async Task Logout(CancellationToken cancellationToken = default)
     {
-        // Return an empty array if invalidation is active to avoid null return values.
-        if (Invalidation.IsActive)
-            return Task.FromResult(Array.Empty<UserInfo>()); // Avoid returning null
-
-        // Return the distinct list of online users.
-        return Task.FromResult(_store.Select(x => x.Value).Distinct(new UserInfoEqualityComparer()).ToArray());
-    }
-
-    /// <summary>
-    /// Removes a user session from the tracker.
-    /// </summary>
-    /// <param name="sessionId">The session ID to remove.</param>
-    /// <param name="cancellationToken">Optional cancellation token.</param>
-    public async Task Remove(string sessionId, CancellationToken cancellationToken = default)
-    {
-        // If invalidation is active, skip removal.
         if (Invalidation.IsActive)
             return;
-
-        // Try to remove the session from the store.
-        var removed = _store.TryRemove(sessionId, out var userInfo);
-
-        // If removed, invalidate and update the list.
-        if (removed)
+        var sessionInfo = await GetSessionInfo().ConfigureAwait(false);
+        var userSessions = _activeUserSessions.Where(s => s.UserId == sessionInfo.UserId).ToList();
+        foreach (var session in userSessions)
         {
+            _activeUserSessions = _activeUserSessions.Remove(session);
             using var invalidating = Invalidation.Begin();
-            await GetOnlineUsers(cancellationToken).ConfigureAwait(false);
+            _ = await GetOnlineUsers(cancellationToken).ConfigureAwait(false);
         }
     }
-}
 
-public class UserInfoEqualityComparer : EqualityComparer<UserInfo?>
-{
-    /// <summary>
-    /// Compares two UserInfo objects for equality based on their name.
-    /// </summary>
-    /// <param name="x">First UserInfo object.</param>
-    /// <param name="y">Second UserInfo object.</param>
-    /// <returns>True if the names are equal, otherwise false.</returns>
-    public override bool Equals(UserInfo? x, UserInfo? y)
+    public virtual async Task Clear(string userId, CancellationToken cancellationToken = default)
     {
-        // Check if both references point to the same object.
-        if (ReferenceEquals(x, y)) return true;
-
-        // Return false if either object is null.
-        if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
-            return false;
-
-        // Compare the names of the UserInfo objects.
-        return string.Equals(x.Name, y.Name, StringComparison.Ordinal); // Use string.Equals for better control.
+        if (Invalidation.IsActive)
+            return;
+        var userSessions = _activeUserSessions.Where(s => s.UserId == userId).ToList();
+        foreach (var session in userSessions)
+        {
+            _activeUserSessions = _activeUserSessions.Remove(session);
+            using var invalidating = Invalidation.Begin();
+            _ = await GetOnlineUsers(cancellationToken).ConfigureAwait(false);
+        }
     }
 
-    /// <summary>
-    /// Returns the hash code for a UserInfo object based on the Id.
-    /// </summary>
-    /// <param name="obj">The UserInfo object.</param>
-    /// <returns>The hash code based on the user's Id.</returns>
-    public override int GetHashCode(UserInfo? obj)
+    public virtual async Task Update(string userId, string userName, string displayName, string profilePictureDataUrl, CancellationToken cancellationToken = default)
     {
-        // Return 0 if the object is null.
-        if (ReferenceEquals(obj, null)) return 0;
-
-        // Use StringComparer to compute the hash code of the Id.
-        return StringComparer.Ordinal.GetHashCode(obj.Id ?? string.Empty);
+        if (Invalidation.IsActive)
+            return;
+        var userSessions = _activeUserSessions.Where(s => s.UserId == userId).ToList();
+        foreach (var session in userSessions)
+        {
+             var updatedSession = new SessionInfo(userId, userName, displayName, session.IPAddress, session.TenantId, profilePictureDataUrl, session.Status);
+            _activeUserSessions = _activeUserSessions.Remove(session).Add(updatedSession);
+            using var invalidating = Invalidation.Begin();
+            _ = await GetOnlineUsers(cancellationToken).ConfigureAwait(false);
+        }
     }
+
+    public virtual Task<List<SessionInfo>> GetOnlineUsers(CancellationToken cancellationToken = default)
+    {
+        if (Invalidation.IsActive)
+            return Task.FromResult(new List<SessionInfo>());
+
+        return Task.FromResult(_activeUserSessions.ToList());
+    }
+
+
+
+    private Task<SessionInfo> GetSessionInfo()
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext == null)
+        {
+            throw new InvalidOperationException("HttpContext is not available.");
+        }
+        var httpUser = _httpContextAccessor.HttpContext?.User;
+        var ipAddress = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        var userId = _httpContextAccessor.HttpContext?.User?.GetUserId();
+        var userName = _httpContextAccessor.HttpContext?.User?.GetUserName();
+        var displayName = _httpContextAccessor.HttpContext?.User?.GetDisplayName();
+        var tenantId = _httpContextAccessor.HttpContext?.User?.GetTenantId();
+        return Task.FromResult(new SessionInfo(userId, userName, displayName, ipAddress, tenantId, "", UserPresence.Available));
+    }
+
+    
 }
