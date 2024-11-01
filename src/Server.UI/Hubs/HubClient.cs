@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -35,7 +36,8 @@ public sealed class HubClient : IAsyncDisposable
                 options.Cookies = container;
             }).WithAutomaticReconnect().Build();
 
-        _hubConnection.ServerTimeout = TimeSpan.FromSeconds(30);
+        _hubConnection.ServerTimeout = TimeSpan.FromSeconds(20);
+        _hubConnection.KeepAliveInterval = TimeSpan.FromSeconds(10);
 
         // Observe and await the async result of the event invocation
         _hubConnection.On<string, string>(nameof(ISignalRHub.Connect), OnLoginEventAsync);
@@ -52,6 +54,8 @@ public sealed class HubClient : IAsyncDisposable
 
         _hubConnection.On<string, string, string>(nameof(ISignalRHub.SendPrivateMessage),
             async (from, to, message) => await OnMessageReceivedEventAsync(from, message).ConfigureAwait(false));
+
+   
     }
 
     // Handle the result of async event invocations
@@ -102,7 +106,7 @@ public sealed class HubClient : IAsyncDisposable
             await Task.Run(() => MessageReceivedEvent?.Invoke(this, new MessageReceivedEventArgs(from, message))).ConfigureAwait(false);
         }
     }
-
+    
     public async ValueTask DisposeAsync()
     {
         try
@@ -114,7 +118,7 @@ public sealed class HubClient : IAsyncDisposable
             await _hubConnection.DisposeAsync().ConfigureAwait(false);
         }
     }
-
+    
     // Event handlers
     public event EventHandler<UserStateChangeEventArgs>? LoginEvent;
     public event EventHandler<UserStateChangeEventArgs>? LogoutEvent;
