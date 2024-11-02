@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Blazor.Application.Common.Security;
 
 namespace CleanArchitecture.Blazor.Application.Pipeline;
 

@@ -3,7 +3,6 @@
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Pagination;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Export;
 

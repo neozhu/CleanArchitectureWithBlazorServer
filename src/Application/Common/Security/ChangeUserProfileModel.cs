@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit;
-using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+﻿using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 public class ChangeUserProfileModel

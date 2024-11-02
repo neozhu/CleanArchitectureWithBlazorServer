@@ -8,10 +8,7 @@ public class PickSuperiorIdAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
  
     [Parameter] public string? TenantId { get; set; }
     [Parameter] public string? OwnerName { get; set; }
-
     [Inject] private IUserService UserService { get; set; } = default!;
- 
-
     public PickSuperiorIdAutocomplete()
     {
   
@@ -23,11 +20,6 @@ public class PickSuperiorIdAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
         ShowProgressIndicator = true;
         MaxItems = 200;
     }
-
-
-
-   
-
     private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string value, CancellationToken cancellation)
     {
         IEnumerable<ApplicationUserDto> result= UserService.DataSource.Where(x => (x.TenantId!=null && x.TenantId.Equals(TenantId)) &&   !x.UserName.Equals(OwnerName));
@@ -38,8 +30,6 @@ public class PickSuperiorIdAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
         }
         return Task.FromResult(result);
     }
-
-    
     protected override void OnInitialized()
     {
         UserService.OnChange += TenantsService_OnChange;
@@ -49,7 +39,6 @@ public class PickSuperiorIdAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
     {
         await InvokeAsync(StateHasChanged);
     }
-
     protected override void Dispose(bool disposing)
     {
         UserService.OnChange -= TenantsService_OnChange;

@@ -5,8 +5,7 @@ namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
 public class PickUserAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
 {
- 
-    public PickUserAutocomplete()
+     public PickUserAutocomplete()
     {
         SearchFunc = SearchKeyValues;
         ToStringFunc = dto => dto?.UserName;
@@ -35,9 +34,6 @@ public class PickUserAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
         UserService.OnChange -= TenantsService_OnChange;
         base.Dispose(disposing);
     }
-    
-   
-
     private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string value,CancellationToken cancellation)
     {
         IEnumerable<ApplicationUserDto> result = UserService.DataSource.Where(x =>x.TenantId!=null && x.TenantId.Equals(TenantId));
