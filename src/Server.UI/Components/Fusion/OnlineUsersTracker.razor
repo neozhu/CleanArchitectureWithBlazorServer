@@ -70,7 +70,9 @@
 
     public override async ValueTask DisposeAsync()
     {
-        await OnlineUserTracker.Logout();
+        if (!string.IsNullOrEmpty(currentUserId)){
+            await OnlineUserTracker.Clear(currentUserId);
+        }
         GC.Collect();
     }
 }
