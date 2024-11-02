@@ -39,23 +39,7 @@ public class OnlineUserTracker : IOnlineUserTracker
         }
     }
 
-    /// <summary>
-    /// Logs out the current user.
-    /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    public virtual async Task Logout(CancellationToken cancellationToken = default)
-    {
-        if (Invalidation.IsActive)
-            return;
-        var sessionInfo = await GetSessionInfo().ConfigureAwait(false);
-        var userSessions = _activeUserSessions.Where(s => s.UserId == sessionInfo.UserId).ToList();
-        foreach (var session in userSessions)
-        {
-            _activeUserSessions = _activeUserSessions.Remove(session);
-            using var invalidating = Invalidation.Begin();
-            _ = await GetOnlineUsers(cancellationToken).ConfigureAwait(false);
-        }
-    }
+
 
     /// <summary>
     /// Clears all sessions for a specific user.
@@ -108,26 +92,5 @@ public class OnlineUserTracker : IOnlineUserTracker
             return Task.FromResult(new List<SessionInfo>());
 
         return Task.FromResult(_activeUserSessions.ToList());
-    }
-
-    /// <summary>
-    /// Gets the session information for the current user.
-    /// </summary>
-    /// <returns>The session information.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when the HTTP context is not available.</exception>
-    private Task<SessionInfo> GetSessionInfo()
-    {
-        var httpContext = _httpContextAccessor.HttpContext;
-        if (httpContext == null)
-        {
-            throw new InvalidOperationException("HttpContext is not available.");
-        }
-        var httpUser = _httpContextAccessor.HttpContext?.User;
-        var ipAddress = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-        var userId = _httpContextAccessor.HttpContext?.User?.GetUserId();
-        var userName = _httpContextAccessor.HttpContext?.User?.GetUserName();
-        var displayName = _httpContextAccessor.HttpContext?.User?.GetDisplayName();
-        var tenantId = _httpContextAccessor.HttpContext?.User?.GetTenantId();
-        return Task.FromResult(new SessionInfo(userId, userName, displayName, ipAddress, tenantId, "", UserPresence.Available));
     }
 }
