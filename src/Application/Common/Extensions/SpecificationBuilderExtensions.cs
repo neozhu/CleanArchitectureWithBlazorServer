@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CleanArchitecture.Blazor.Application.Common.Extensions;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 
 /// <summary>
 /// Provides extension methods for <see cref="ISpecificationBuilder{T}"/> to simplify query building.

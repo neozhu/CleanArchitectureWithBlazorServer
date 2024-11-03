@@ -1,6 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
-
-namespace CleanArchitecture.Blazor.Application.Common.Security;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public class UserProfile
 {

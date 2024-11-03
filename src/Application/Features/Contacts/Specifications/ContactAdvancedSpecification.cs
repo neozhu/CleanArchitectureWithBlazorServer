@@ -1,7 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.Documents.Specifications;
-using CleanArchitecture.Blazor.Application.Features.Products.Specifications;
-
-namespace CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
+﻿namespace CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 #nullable disable warnings
 /// <summary>
 /// Specification class for advanced filtering of Contacts.

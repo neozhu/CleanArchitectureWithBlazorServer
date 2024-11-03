@@ -5,7 +5,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Models;
 
 public class UploadRequest
 {
-    public UploadRequest(string fileName, UploadType uploadType, byte[] data, bool overwrite=false)
+    public UploadRequest(string fileName, UploadType uploadType, byte[] data, bool overwrite = false)
     {
         FileName = fileName;
         UploadType = uploadType;
@@ -18,4 +18,5 @@ public class UploadRequest
     public UploadType UploadType { get; set; }
     public bool Overwrite { get; set; }
     public byte[] Data { get; set; }
+    public string? Folder { get; set; }
 }

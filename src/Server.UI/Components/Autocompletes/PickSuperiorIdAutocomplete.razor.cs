@@ -15,7 +15,6 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<ApplicationUserDto>
         ShowProgressIndicator = true;
         MaxItems = 200;
     }
-
     [Parameter] public string? TenantId { get; set; }
     [Parameter] public string? OwnerName { get; set; }
 
@@ -32,18 +31,14 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<ApplicationUserDto>
                                                         x.Email.Contains(value, StringComparison.OrdinalIgnoreCase)));
         return Task.FromResult(result);
     }
-
-
     protected override void OnInitialized()
     {
         UserService.OnChange += TenantsService_OnChange;
     }
-
     private async Task TenantsService_OnChange()
     {
         await InvokeAsync(StateHasChanged);
     }
-
     protected override async ValueTask DisposeAsyncCore()
     {
         UserService.OnChange -= TenantsService_OnChange;
