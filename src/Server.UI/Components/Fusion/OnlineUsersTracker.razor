@@ -45,7 +45,7 @@
     protected override async Task OnInitializedAsync()
     {
         var state = await AuthState;
-        if (!string.IsNullOrEmpty(state.User.Identity?.Name))
+        if (state.User.Identity != null && state.User.Identity.IsAuthenticated && !string.IsNullOrEmpty(state.User.Identity.Name))
         {
             await UserProfileStateService.InitializeAsync(state.User.Identity.Name);
             var userProfile = UserProfileStateService.UserProfile;

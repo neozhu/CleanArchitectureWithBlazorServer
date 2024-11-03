@@ -15,18 +15,21 @@
     [Parameter]
     public string PageComponent { get; set; } = nameof(ActiveUserSession);
     private string Message => $"{string.Join(", ", State.Value)} {L["has this dialog open."]}";
-    private string? currentUserId;
-    [CascadingParameter]
-    private Task<AuthenticationState> AuthState { get; set; } = default!;
+    private string? currentUserId => UserProfile?.UserId;
+    [CascadingParameter] private UserProfile? UserProfile { get; set; }
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthState;
-        currentUserId = authState.User.GetUserId();
-        if (!string.IsNullOrEmpty(currentUserId))
+        if (UserProfile != null && !string.IsNullOrEmpty(UserProfile.UserId))
         {
-            await UserSessionTracker.AddUserSession(PageComponent);
+            await UserSessionTracker.AddUserSession(PageComponent,new SessionInfo(UserProfile.UserId,
+                UserProfile.UserName,
+                UserProfile.DisplayName ?? string.Empty,
+                "",
+                UserProfile.TenantId ?? string.Empty,
+                UserProfile.ProfilePictureDataUrl ?? string.Empty,
+                UserPresence.Available));
         }
 
 
@@ -51,7 +54,7 @@
     {
         if (!string.IsNullOrEmpty(currentUserId))
         {
-            await UserSessionTracker.RemoveUserSession(PageComponent);
+            await UserSessionTracker.RemoveUserSession(PageComponent,currentUserId);
         }
         GC.Collect();
     }
