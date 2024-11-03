@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using ActualLab.Fusion;
+using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 
@@ -133,17 +134,19 @@ public class UserSessionTracker : IUserSessionTracker
     /// <exception cref="InvalidOperationException">Thrown when the HTTP context is not available.</exception>
     private Task<SessionInfo> GetSessionInfo()
     {
-        var httpContext = _httpContextAccessor.HttpContext;
-        if (httpContext == null)
+        if (_httpContextAccessor.HttpContext != null && (_httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated??false))
         {
-            throw new InvalidOperationException("HttpContext is not available.");
+            var httpUser = _httpContextAccessor.HttpContext?.User;
+            var ipAddress = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            var userId = _httpContextAccessor.HttpContext?.User?.GetUserId();
+            var userName = _httpContextAccessor.HttpContext?.User?.GetUserName();
+            var displayName = _httpContextAccessor.HttpContext?.User?.GetDisplayName();
+            var tenantId = _httpContextAccessor.HttpContext?.User?.GetTenantId();
+            return Task.FromResult(new SessionInfo(userId, userName, displayName, ipAddress, tenantId, "", UserPresence.Available));
         }
-        var httpUser = _httpContextAccessor.HttpContext?.User;
-        var ipAddress = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-        var userId = _httpContextAccessor.HttpContext?.User?.GetUserId();
-        var userName = _httpContextAccessor.HttpContext?.User?.GetUserName();
-        var displayName = _httpContextAccessor.HttpContext?.User?.GetDisplayName();
-        var tenantId = _httpContextAccessor.HttpContext?.User?.GetTenantId();
-        return Task.FromResult(new SessionInfo(userId, userName, displayName, ipAddress, tenantId, "", UserPresence.Available));
+        else
+        {
+            return Task.FromResult(new SessionInfo("","","","","","", UserPresence.Statusunknown));
+        }
     }
 }
