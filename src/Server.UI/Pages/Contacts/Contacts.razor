@@ -241,13 +241,13 @@
     {
         var parameters = new DialogParameters<ContactFormDialog>
             {
-                { x=>x.model,command },
+                { x=> x.Model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<ContactFormDialog>(title, parameters, options);
+        var dialog = await DialogService.ShowAsync<ContactFormDialog>(title, parameters, options);
         var state = await dialog.Result;
 
-        if (state != null && !state.Canceled)
+        if (state is { Canceled: false })
         {
             await _table.ReloadServerData();
             _selectedItems.Clear();
