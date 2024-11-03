@@ -34,7 +34,7 @@ Here are some projects that have been developed based on this Clean Architecture
 3. **Visitor Management**
    - [GitHub Repository](https://github.com/neozhu/visitormanagement)
 
-[![School Bus Transport Management System Screenshot](https://private-user-images.githubusercontent.com/1549611/375740905-a79a8c54-82bd-475a-95f9-c20fe368179d.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3Mjk3NzUyNDAsIm5iZiI6MTcyOTc3NDk0MCwicGF0aCI6Ii8xNTQ5NjExLzM3NTc0MDkwNS1hNzlhOGM1NC04MmJkLTQ3NWEtOTVmOS1jMjBmZTM2ODE3OWQucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI0MTAyNCUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNDEwMjRUMTMwMjIwWiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9ZDA2NjU3ZjVlZjFhMTgwOWRkM2ZlMzMzOTZkNGU2MGQ5MDI4YjBlNmU5YTA0NmM0NDVhYzgwNzgxZTU2MWY5YSZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.cHwoUvOuhpSke0wr6ziUSbW-5hC24D2vlN4BSWzTBwc)](https://schoolbus.blazorserver.com/)
+[![School Bus Transport Management System Screenshot](https://github.com/user-attachments/assets/0874eb1d-ce6a-4bdc-b716-9fb7dbce2186)](https://schoolbus.blazorserver.com/)
 4. **School Bus Transport Management System**
    - [GitHub Repository](https://github.com/neozhu/schoolbus)
 

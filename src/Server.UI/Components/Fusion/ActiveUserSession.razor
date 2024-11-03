@@ -23,8 +23,11 @@
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthState;
-        currentUserId = authState.User.GetUserId() ?? string.Empty;
-        await UserSessionTracker.AddUserSession(PageComponent ?? nameof(ActiveUserSession));
+        currentUserId = authState.User.GetUserId();
+        if (!string.IsNullOrEmpty(currentUserId))
+        {
+            await UserSessionTracker.AddUserSession(PageComponent);
+        }
 
 
     }
@@ -46,7 +49,10 @@
 
     public override async ValueTask DisposeAsync()
     {
-        await UserSessionTracker.RemoveUserSession(PageComponent);
+        if (!string.IsNullOrEmpty(currentUserId))
+        {
+            await UserSessionTracker.RemoveUserSession(PageComponent);
+        }
         GC.Collect();
     }
 }
