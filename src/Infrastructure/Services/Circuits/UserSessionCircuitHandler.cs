@@ -65,16 +65,15 @@ public class UserSessionCircuitHandler : CircuitHandler
     /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task OnConnectionDownAsync(Circuit circuit, CancellationToken cancellationToken)
     {
-        var httpContextAccessor = _serviceProvider.GetRequiredService<IHttpContextAccessor>();
+        var currentUserAccessor = _serviceProvider.GetRequiredService<ICurrentUserAccessor>();
         var userSessionTracker = _serviceProvider.GetRequiredService<IUserSessionTracker>();
         var onlineUserTracker = _serviceProvider.GetRequiredService<IOnlineUserTracker>();
         var usersStateContainer = _serviceProvider.GetRequiredService<IUsersStateContainer>();
         var currentUserContextSetter = _serviceProvider.GetRequiredService<ICurrentUserContextSetter>();
-        var userId = (httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false) ? httpContextAccessor.HttpContext?.User.GetUserId() : string.Empty;
-        if (!string.IsNullOrEmpty(userId))
+        if (currentUserAccessor.SessionInfo!=null)
         {
-            await userSessionTracker.RemoveAllSessions(userId, cancellationToken);
-            await onlineUserTracker.Clear(userId, cancellationToken);
+            await userSessionTracker.RemoveAllSessions(currentUserAccessor.SessionInfo.UserId, cancellationToken);
+            await onlineUserTracker.Clear(currentUserAccessor.SessionInfo.UserId, cancellationToken);
             usersStateContainer.Remove(circuit.Id);
         }
 
