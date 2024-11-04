@@ -3,7 +3,6 @@ using BlazorDownloadFile;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
 using CleanArchitecture.Blazor.Server.UI.Services;
-using CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 using CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
@@ -15,11 +14,9 @@ using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using QuestPDF;
 using QuestPDF.Infrastructure;
-using ActualLab.Fusion;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using Polly;
-using Microsoft.AspNetCore.Components.Server.Circuits;
 
 
 namespace CleanArchitecture.Blazor.Server.UI;
@@ -66,12 +63,6 @@ public static class DependencyInjection
         services.AddMudBlazorSnackbar();
         services.AddMudBlazorDialog();
         services.AddHotKeys2();
-
-        // Fusion services
-        var fusion = services.AddFusion();
-        fusion.AddService<IUserSessionTracker, UserSessionTracker>();
-        fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
-        services.AddScoped<CircuitHandler, UserSessionCircuitHandler>();
 
         services.AddScoped<LocalizationCookiesMiddleware>()
             .Configure<RequestLocalizationOptions>(options =>

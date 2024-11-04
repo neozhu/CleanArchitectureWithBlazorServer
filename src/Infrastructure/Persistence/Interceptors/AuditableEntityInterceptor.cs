@@ -10,7 +10,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 /// </summary>
 public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
-    private readonly ICurrentUserService _currentUserService;
+    private readonly ICurrentUserAccessor  _currentUserAccessor;
     private readonly IDateTime _dateTime;
     private List<AuditTrail> _temporaryAuditTrailList = new();
 
@@ -19,9 +19,9 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
     /// </summary>
     /// <param name="currentUserService">The current user service.</param>
     /// <param name="dateTime">The date and time service.</param>
-    public AuditableEntityInterceptor(ICurrentUserService currentUserService, IDateTime dateTime)
+    public AuditableEntityInterceptor(ICurrentUserAccessor  currentUserAccessor, IDateTime dateTime)
     {
-        _currentUserService = currentUserService;
+        _currentUserAccessor = currentUserAccessor;
         _dateTime = dateTime;
     }
 
@@ -53,8 +53,8 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
 
     private void UpdateAuditableEntities(DbContext context)
     {
-        var userId = _currentUserService.UserId;
-        var tenantId = _currentUserService.TenantId;
+        var userId = _currentUserAccessor.SessionInfo?.UserId;
+        var tenantId = _currentUserAccessor.SessionInfo?.TenantId;
         var now = _dateTime.Now;
 
         foreach (var entry in context.ChangeTracker.Entries<IAuditableEntity>())
@@ -109,7 +109,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
 
     private List<AuditTrail> GenerateAuditTrails(DbContext context)
     {
-        var userId = _currentUserService.UserId;
+        var userId = _currentUserAccessor.SessionInfo?.UserId;
         var now = _dateTime.Now;
         var auditTrails = new List<AuditTrail>();
 

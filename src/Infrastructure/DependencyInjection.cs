@@ -2,9 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
+using ActualLab.Fusion;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
+using CleanArchitecture.Blazor.Application.Features.Fusion;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
@@ -12,11 +14,13 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
+using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
 using CleanArchitecture.Blazor.Infrastructure.Services.Serialization;
 using FluentEmail.MailKitSmtp;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -52,7 +56,9 @@ public static class DependencyInjection
 
         services
             .AddAuthenticationService(configuration)
-            .AddFusionCacheService();
+            .AddFusionCacheService()
+            .AddSessionInfoService()
+            .AddFusionService();
 
         services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
         services.AddScoped<IScopedMediator, ScopedMediator>();
@@ -170,7 +176,6 @@ public static class DependencyInjection
             });
 
         return services.AddSingleton<ISerializer, SystemTextJsonSerializer>()
-            .AddScoped<ICurrentUserService, CurrentUserService>()
             .AddScoped<IValidationService, ValidationService>()
             .AddScoped<IDateTime, DateTimeService>()
             .AddScoped<IExcelService, ExcelService>()
@@ -325,5 +330,21 @@ public static class DependencyInjection
             AllowTimedOutFactoryBackgroundCompletion = true,    
         });
         return services;
+    }
+
+    private static IServiceCollection AddSessionInfoService(this IServiceCollection services)
+    {
+        services.AddScoped<ICurrentUserContext, CurrentUserContext>();
+        services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
+        services.AddScoped<ICurrentUserContextSetter, CurrentUserContextSetter>();
+        services.AddScoped<CircuitHandler, UserSessionCircuitHandler>();
+        return services;
+    }
+
+    private static void AddFusionService(this IServiceCollection services)
+    {
+        var fusion = services.AddFusion();
+        fusion.AddService<IUserSessionTracker, UserSessionTracker>();
+        fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
     }
 }
