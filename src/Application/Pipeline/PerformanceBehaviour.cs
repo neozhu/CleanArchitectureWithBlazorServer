@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Pipeline;
 
@@ -11,15 +12,15 @@ namespace CleanArchitecture.Blazor.Application.Pipeline;
 public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly ICurrentUserService _currentUserService;
+    private readonly ICurrentUserAccessor _currentUserAccessor;
     private readonly ILogger<PerformanceBehaviour<TRequest, TResponse>> _logger;
 
     public PerformanceBehaviour(
         ILogger<PerformanceBehaviour<TRequest, TResponse>> logger,
-        ICurrentUserService currentUserService)
+        ICurrentUserAccessor currentUserAccessor)
     {
         _logger = logger;
-        _currentUserService = currentUserService;
+        _currentUserAccessor = currentUserAccessor;
     }
 
     /// <summary>
@@ -46,7 +47,7 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
         if (elapsedMilliseconds > 500)
         {
             var requestName = typeof(TRequest).Name;
-            var userName = _currentUserService.UserName;
+            var userName = _currentUserAccessor.SessionInfo?.UserName;
 
             _logger.LogWarning(
     "Long-running request detected: {RequestName} ({ElapsedMilliseconds}ms) {@Request} by {UserName}",

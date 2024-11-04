@@ -1,20 +1,10 @@
 ﻿using System.Runtime.Serialization;
-using ActualLab.Fusion;
 using ActualLab.Fusion.Blazor;
 using MemoryPack;
 using MessagePack;
+using KeyAttribute = MessagePack.KeyAttribute;
 
-namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
-
-public interface IUserSessionTracker: IComputeService
-{
-    Task AddUserSession(string pageComponent, SessionInfo sessionInfo, CancellationToken cancellationToken = default);
-    Task RemoveUserSession(string pageComponent,string userId,  CancellationToken cancellationToken = default);
-    Task RemoveAllSessions(string userId, CancellationToken cancellationToken = default);
-   
-    [ComputeMethod]
-    Task<List<SessionInfo>> GetUserSessions(string pageComponent,CancellationToken cancellationToken = default);
-}
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 [DataContract, MemoryPackable, MessagePackObject]
 [ParameterComparer(typeof(ByValueParameterComparer))]
 public sealed partial record SessionInfo(
