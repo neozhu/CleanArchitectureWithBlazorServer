@@ -1,5 +1,5 @@
-﻿using CleanArchitecture.Blazor.Infrastructure.Extensions;
-using CleanArchitecture.Blazor.Infrastructure.Services.Fusion;
+﻿using CleanArchitecture.Blazor.Application.Features.Fusion;
+using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Http;
 

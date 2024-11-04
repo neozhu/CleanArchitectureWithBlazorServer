@@ -1,6 +1,7 @@
 ﻿using ActualLab.Fusion;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Services.Fusion;
+namespace CleanArchitecture.Blazor.Application.Features.Fusion;
 
 public interface IUserSessionTracker: IComputeService
 {

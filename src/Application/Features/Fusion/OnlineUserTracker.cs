@@ -1,9 +1,8 @@
 ﻿using System.Collections.Immutable;
-using System.Linq.Dynamic.Core;
 using ActualLab.Fusion;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
-
-namespace CleanArchitecture.Blazor.Infrastructure.Services.Fusion;
+namespace CleanArchitecture.Blazor.Application.Features.Fusion;
 
 /// <summary>
 /// Tracks online users and manages their sessions.
