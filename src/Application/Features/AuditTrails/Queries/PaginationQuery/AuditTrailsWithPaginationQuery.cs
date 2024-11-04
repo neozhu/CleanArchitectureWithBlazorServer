@@ -23,16 +23,13 @@ public class AuditTrailsWithPaginationQuery : AuditTrailAdvancedFilter, ICacheab
 public class AuditTrailsQueryHandler : IRequestHandler<AuditTrailsWithPaginationQuery, PaginatedData<AuditTrailDto>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserService _currentUserService;
     private readonly IMapper _mapper;
 
     public AuditTrailsQueryHandler(
-        ICurrentUserService currentUserService,
         IApplicationDbContext context,
         IMapper mapper
     )
     {
-        _currentUserService = currentUserService;
         _context = context;
         _mapper = mapper;
     }
