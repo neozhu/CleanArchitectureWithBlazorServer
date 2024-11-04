@@ -3,7 +3,7 @@ using System.Linq.Dynamic.Core;
 using ActualLab.Fusion;
 
 
-namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
+namespace CleanArchitecture.Blazor.Infrastructure.Services.Fusion;
 
 /// <summary>
 /// Tracks online users and manages their sessions.
@@ -11,15 +11,13 @@ namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 public class OnlineUserTracker : IOnlineUserTracker
 {
     private volatile ImmutableHashSet<SessionInfo> _activeUserSessions = ImmutableHashSet<SessionInfo>.Empty;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OnlineUserTracker"/> class.
     /// </summary>
     /// <param name="httpContextAccessor">The HTTP context accessor.</param>
-    public OnlineUserTracker(IHttpContextAccessor httpContextAccessor)
+    public OnlineUserTracker()
     {
-        _httpContextAccessor = httpContextAccessor;
     }
 
     /// <summary>
@@ -27,11 +25,11 @@ public class OnlineUserTracker : IOnlineUserTracker
     /// </summary>
     /// <param name="sessionInfo">The session information.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    public virtual async Task Initial(SessionInfo sessionInfo, CancellationToken cancellationToken = default)
+    public virtual async Task Initial(SessionInfo? sessionInfo, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return;
-        if (!_activeUserSessions.Any(x => x.UserId == sessionInfo.UserId))
+        if (sessionInfo!=null && !_activeUserSessions.Any(x => x.UserId == sessionInfo.UserId))
         {
             _activeUserSessions = _activeUserSessions.Add(sessionInfo);
             using var invalidating = Invalidation.Begin();

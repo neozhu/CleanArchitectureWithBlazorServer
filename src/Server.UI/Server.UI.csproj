@@ -25,9 +25,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="ActualLab.Fusion" Version="9.5.59" />
-        <PackageReference Include="ActualLab.Fusion.Blazor" Version="9.5.59" />
-        <PackageReference Include="ActualLab.Generators" Version="9.5.59"/>
+     
           
     </ItemGroup>
     <ItemGroup>

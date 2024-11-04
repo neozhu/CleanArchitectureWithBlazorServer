@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
@@ -8,14 +8,14 @@ namespace CleanArchitecture.Blazor.Application.Pipeline;
 public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly ICurrentUserService _currentUserService;
+    private readonly ICurrentUserAccessor _currentUserAccessor;
     private readonly IIdentityService _identityService;
 
     public AuthorizationBehaviour(
-        ICurrentUserService currentUserService,
+        ICurrentUserAccessor  currentUserAccessor,
         IIdentityService identityService)
     {
-        _currentUserService = currentUserService;
+        _currentUserAccessor = currentUserAccessor;
         _identityService = identityService;
     }
 
@@ -26,7 +26,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
         if (authorizeAttributes.Any())
         {
             // Must be authenticated user
-            var userId = _currentUserService.UserId;
+            var userId = _currentUserAccessor.SessionInfo?.UserId;
             if (string.IsNullOrEmpty(userId)) throw new UnauthorizedAccessException();
 
             // DefaultRole-based authorization

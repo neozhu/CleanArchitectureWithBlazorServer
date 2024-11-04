@@ -1,8 +1,8 @@
 ﻿using System.Collections.Immutable;
 using ActualLab.Fusion;
-using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 
-namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
+
+namespace CleanArchitecture.Blazor.Infrastructure.Services.Fusion;
 
 /// <summary>
 /// Tracks user sessions for different page components.
@@ -10,15 +10,13 @@ namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 public class UserSessionTracker : IUserSessionTracker
 {
     private volatile ImmutableDictionary<string, ImmutableHashSet<SessionInfo>> _pageUserSessions = ImmutableDictionary<string, ImmutableHashSet<SessionInfo>>.Empty;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserSessionTracker"/> class.
     /// </summary>
-    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
-    public UserSessionTracker(IHttpContextAccessor httpContextAccessor)
+    public UserSessionTracker()
     {
-        _httpContextAccessor = httpContextAccessor;
+
     }
 
     /// <summary>
