@@ -16,7 +16,6 @@ public class ClearLogsCommandHandler : IRequestHandler<ClearLogsCommand, Result>
 
 {
     private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserService _currentUserService;
     private readonly IStringLocalizer<ClearLogsCommandHandler> _localizer;
     private readonly ILogger<ClearLogsCommandHandler> _logger;
     private readonly IMapper _mapper;
@@ -25,22 +24,20 @@ public class ClearLogsCommandHandler : IRequestHandler<ClearLogsCommand, Result>
         IApplicationDbContext context,
         IStringLocalizer<ClearLogsCommandHandler> localizer,
         ILogger<ClearLogsCommandHandler> logger,
-        IMapper mapper,
-        ICurrentUserService currentUserService
+        IMapper mapper
     )
     {
         _context = context;
         _localizer = localizer;
         _logger = logger;
         _mapper = mapper;
-        _currentUserService = currentUserService;
     }
 
     public async Task<Result> Handle(ClearLogsCommand request, CancellationToken cancellationToken)
     {
         _context.Loggers.RemoveRange(_context.Loggers);
         await _context.SaveChangesAsync(cancellationToken);
-        _logger.LogInformation("Logs have been erased by {@UserName:l}", _currentUserService.UserName);
+        _logger.LogInformation("Logs have been erased");
         return await Result.SuccessAsync();
     }
 }

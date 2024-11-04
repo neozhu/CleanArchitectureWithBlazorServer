@@ -1,9 +1,11 @@
-﻿@using CleanArchitecture.Blazor.Server.UI.Services.Fusion
-@using ActualLab.Fusion
+﻿@using ActualLab.Fusion
 @using ActualLab.Fusion.Blazor
 @using ActualLab.Fusion.UI
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Features.Fusion
 @inherits ComputedStateComponent<string[]>
 @inject IUserSessionTracker UserSessionTracker
+@inject ICurrentUserAccessor CurrentUserAccessor
 @inject IStringLocalizer<ActiveUserSession> L
 
 @if (!string.IsNullOrEmpty(currentUserId) && State.Value.Any())
@@ -15,21 +17,14 @@
     [Parameter]
     public string PageComponent { get; set; } = nameof(ActiveUserSession);
     private string Message => $"{string.Join(", ", State.Value)} {L["has this dialog open."]}";
-    private string? currentUserId => UserProfile?.UserId;
-    [CascadingParameter] private UserProfile? UserProfile { get; set; }
+    private string? currentUserId => CurrentUserAccessor.SessionInfo?.UserId;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
     protected override async Task OnInitializedAsync()
     {
-        if (UserProfile != null && !string.IsNullOrEmpty(UserProfile.UserId))
+        if (CurrentUserAccessor.SessionInfo != null)
         {
-            await UserSessionTracker.AddUserSession(PageComponent,new SessionInfo(UserProfile.UserId,
-                UserProfile.UserName,
-                UserProfile.DisplayName ?? string.Empty,
-                "",
-                UserProfile.TenantId ?? string.Empty,
-                UserProfile.ProfilePictureDataUrl ?? string.Empty,
-                UserPresence.Available));
+            await UserSessionTracker.AddUserSession(PageComponent, CurrentUserAccessor.SessionInfo);
         }
 
 

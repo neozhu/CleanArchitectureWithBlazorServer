@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Identity;
@@ -60,13 +61,13 @@ public class Testing
         // Replace service registration for ICurrentUserService
         // Remove existing registration
         var currentUserServiceDescriptor = services.FirstOrDefault(d =>
-            d.ServiceType == typeof(ICurrentUserService));
+            d.ServiceType == typeof(ICurrentUserAccessor));
 
         services.Remove(currentUserServiceDescriptor);
 
         // Register testing version
         services.AddScoped(provider =>
-            Mock.Of<ICurrentUserService>(s => s.UserId == _currentUserId));
+            Mock.Of<ICurrentUserAccessor>(s => s.SessionInfo.UserId == _currentUserId));
 
 
         _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
