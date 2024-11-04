@@ -96,10 +96,10 @@ public class UserSessionTracker : IUserSessionTracker
     /// </summary>
     /// <param name="userId">The user identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    public virtual Task RemoveAllSessions(string userId, CancellationToken cancellationToken = default)
+    public virtual async Task RemoveAllSessions(string userId, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
-            return Task.CompletedTask;
+            return;
 
         foreach (var pageComponent in _pageUserSessions.Keys.ToList())
         {
@@ -121,8 +121,10 @@ public class UserSessionTracker : IUserSessionTracker
                         (key, existingUsers) => updatedUsers);
                 }
             }
+            using var invalidating = Invalidation.Begin();
+                _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
         }
-        return Task.CompletedTask;
+        
     }
 
      
