@@ -16,7 +16,7 @@ public static partial class ContactMapper
     public static partial UpdateContactCommand ToCommand(ContactDto dto);
     public static partial Contact Map(AddEditContactCommand command);
     public static partial Contact Map(CreateContactCommand command);
-    public static partial void MapToExisting(UpdateContactCommand command, Contact contact);
-    public static partial void MapToExisting(AddEditContactCommand command, Contact contact);
+    public static partial void MapTo(UpdateContactCommand command, Contact contact);
+    public static partial void MapTo(AddEditContactCommand command, Contact contact);
     public static partial IQueryable<ContactDto> ProjectTo(this IQueryable<Contact> q);
 }
