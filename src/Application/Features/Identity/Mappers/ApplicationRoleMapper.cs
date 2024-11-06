@@ -8,5 +8,7 @@ public static partial class ApplicationRoleMapper
 {
     [MapProperty("Tenant.Name", "TenantName")]
     public static partial ApplicationRoleDto ToApplicationRoleDto(ApplicationRole role);
-   
+    [MapProperty("Tenant.Name", "TenantName")]
+    public static partial IQueryable<ApplicationRoleDto> ProjectTo(this IQueryable<ApplicationRole> q);
+
 }
