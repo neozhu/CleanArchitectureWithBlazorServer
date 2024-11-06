@@ -58,6 +58,27 @@ public static class QueryableExtensions
         return new PaginatedData<TResult>(data, count, pageNumber, pageSize);
     }
 
+    public static async Task<PaginatedData<TResult>> ProjectToPaginatedDataAsync<T, TResult>(
+        this IOrderedQueryable<T> query, ISpecification<T> spec, int pageNumber, int pageSize,
+        Func<T, TResult> mapperFunc, CancellationToken cancellationToken = default) where T : class, IEntity
+    {
+        var specificationEvaluator = SpecificationEvaluator.Default;
+        var queryWithSpec = specificationEvaluator.GetQuery(query.AsNoTracking(), spec);
+
+        var countTask = queryWithSpec.CountAsync(cancellationToken);
+        var dataTask = queryWithSpec
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        await Task.WhenAll(countTask, dataTask);
+
+        var count = countTask.Result;
+        var data = dataTask.Result.Select(x => mapperFunc(x)).ToList();
+
+        return new PaginatedData<TResult>(data, count, pageNumber, pageSize);
+    }
+
 
     /// <summary>
     /// Filters the queryable data based on the specified keyword.
