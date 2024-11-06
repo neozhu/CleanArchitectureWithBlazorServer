@@ -263,7 +263,7 @@
             { nameof(CreatePicklistDialog.Model), command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<CreatePicklistDialog>(title, parameters, options);
+        var dialog = await DialogService.ShowAsync<CreatePicklistDialog>(title, parameters, options);
         var state = await dialog.Result;
         if (state is not null && !state.Canceled)
         {

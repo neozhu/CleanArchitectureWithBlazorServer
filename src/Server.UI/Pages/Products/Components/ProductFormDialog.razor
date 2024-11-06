@@ -120,7 +120,7 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 
     [EditorRequired][Parameter] public AddEditProductCommand Model { get; set; } = default!;
 
@@ -142,7 +142,7 @@
                 { x => x.ContentText, $"{L["Are you sure you want to erase this image?"]}" }
             };
             var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-            var dialog = DialogService.Show<ConfirmationDialog>($"{L["Erase imatge"]}", parameters, options);
+            var dialog = await DialogService.ShowAsync<ConfirmationDialog>($"{L["Erase imatge"]}", parameters, options);
             var state = await dialog.Result;
 
             if (state is not null && !state.Canceled)
