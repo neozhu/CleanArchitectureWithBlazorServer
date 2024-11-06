@@ -1,6 +1,7 @@
 ﻿@page "/pages/documents"
 @attribute [Authorize(Policy = Permissions.Documents.View)]
 @using CleanArchitecture.Blazor.Application.Features.Documents.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Documents.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.GetFileStream
 @using CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.Documents.Specifications
@@ -335,7 +336,7 @@
 
     private async Task OnEdit(DocumentDto dto)
     {
-        var command = Mapper.Map<AddEditDocumentCommand>(dto);
+        var command = DocumentMapper.ToEditCommand(dto);
         var parameters = new DialogParameters<DocumentFormDialog>
         {
             { nameof(DocumentFormDialog.Model), command }
