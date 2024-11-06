@@ -1,12 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Features.Identity.Mappers;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
-using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Localization;
 using ZiggyCreatures.Caching.Fusion;
@@ -18,7 +16,6 @@ public class IdentityService : IIdentityService
     private readonly IAuthorizationService _authorizationService;
     private readonly IStringLocalizer<IdentityService> _localizer;
     private readonly IFusionCache _fusionCache;
-    private readonly IMapper _mapper;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly UserManager<ApplicationUser> _userManager;
 
@@ -26,17 +23,13 @@ public class IdentityService : IIdentityService
         IServiceScopeFactory scopeFactory,
         IApplicationSettings appConfig,
         IFusionCache fusionCache,
-        IMapper mapper,
         IStringLocalizer<IdentityService> localizer)
     {
         var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        _userClaimsPrincipalFactory =
-            scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
+        _userClaimsPrincipalFactory =scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _authorizationService = scope.ServiceProvider.GetRequiredService<IAuthorizationService>();
- 
         _fusionCache = fusionCache;
-        _mapper = mapper;
         _localizer = localizer;
     }
 
@@ -90,7 +83,7 @@ public class IdentityService : IIdentityService
         var key = GetApplicationUserCacheKey(userName);
         var result = await _fusionCache.GetOrSetAsync(key,
             _ =>  _userManager.Users.Where(x => x.UserName == userName).Include(x => x.UserRoles)
-                .ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
+                .ThenInclude(x => x.Role).ProjectTo()
                 .FirstOrDefaultAsync(cancellation), RefreshInterval);
         return result;
     }
@@ -103,10 +96,10 @@ public class IdentityService : IIdentityService
             {
                 if (string.IsNullOrEmpty(tenantId))
                     return await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                        .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
+                        .ProjectTo().ToListAsync();
                 return await _userManager.Users.Where(x => x.TenantId == tenantId).Include(x => x.UserRoles)
                     .ThenInclude(x => x.Role)
-                    .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
+                    .ProjectTo().ToListAsync();
             };
         var result = await _fusionCache.GetOrSetAsync(key, _=>getUsersByTenantId(tenantId, cancellation), RefreshInterval);
         return result;
