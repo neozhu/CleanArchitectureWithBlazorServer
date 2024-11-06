@@ -22,6 +22,7 @@
         <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" />
         <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.10" />
+        <PackageReference Include="Riok.Mapperly" Version="4.1.0" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.5" />
         <PackageReference Include="Hangfire.Core" Version="1.8.14" />
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
@@ -29,7 +30,7 @@
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="1.4.0" />
         <PackageReference Include="ActualLab.Fusion" Version="9.5.59" />
         <PackageReference Include="ActualLab.Fusion.Blazor" Version="9.5.59" />
-        <PackageReference Include="ActualLab.Generators" Version="9.5.59"/>
+        <PackageReference Include="ActualLab.Generators" Version="9.5.59" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Domain\Domain.csproj" />

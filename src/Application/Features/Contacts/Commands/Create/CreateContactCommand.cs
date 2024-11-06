@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
+using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Create;
 
@@ -22,34 +23,22 @@ public class CreateContactCommand: ICacheInvalidatorRequest<Result<int>>
 
       public string CacheKey => ContactCacheKey.GetAllCacheKey;
       public CancellationTokenSource? SharedExpiryTokenSource => ContactCacheKey.GetOrCreateTokenSource();
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-             CreateMap<ContactDto,CreateContactCommand>(MemberList.None);
-             CreateMap<CreateContactCommand,Contact>(MemberList.None);
-        }
-    }
+    
 }
     
     public class CreateContactCommandHandler : IRequestHandler<CreateContactCommand, Result<int>>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<CreateContactCommand> _localizer;
+
         public CreateContactCommandHandler(
-            IApplicationDbContext context,
-            IStringLocalizer<CreateContactCommand> localizer,
-            IMapper mapper
+            IApplicationDbContext context
             )
         {
             _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
         }
         public async Task<Result<int>> Handle(CreateContactCommand request, CancellationToken cancellationToken)
         {
-           var item = _mapper.Map<Contact>(request);
+           var item =ContactMapper.Map(request);
            // raise a create domain event
 	       item.AddDomainEvent(new ContactCreatedEvent(item));
            _context.Contacts.Add(item);

@@ -22,17 +22,11 @@ public class DeleteContactCommandHandler :
 
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-    private readonly IStringLocalizer<DeleteContactCommandHandler> _localizer;
     public DeleteContactCommandHandler(
-        IApplicationDbContext context,
-        IStringLocalizer<DeleteContactCommandHandler> localizer,
-         IMapper mapper
+        IApplicationDbContext context
         )
     {
         _context = context;
-        _localizer = localizer;
-        _mapper = mapper;
     }
     public async Task<Result<int>> Handle(DeleteContactCommand request, CancellationToken cancellationToken)
     {

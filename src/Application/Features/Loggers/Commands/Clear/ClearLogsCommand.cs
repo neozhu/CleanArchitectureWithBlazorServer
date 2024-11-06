@@ -16,27 +16,20 @@ public class ClearLogsCommandHandler : IRequestHandler<ClearLogsCommand, Result>
 
 {
     private readonly IApplicationDbContext _context;
-    private readonly IStringLocalizer<ClearLogsCommandHandler> _localizer;
     private readonly ILogger<ClearLogsCommandHandler> _logger;
-    private readonly IMapper _mapper;
 
     public ClearLogsCommandHandler(
         IApplicationDbContext context,
-        IStringLocalizer<ClearLogsCommandHandler> localizer,
-        ILogger<ClearLogsCommandHandler> logger,
-        IMapper mapper
+        ILogger<ClearLogsCommandHandler> logger
     )
     {
         _context = context;
-        _localizer = localizer;
         _logger = logger;
-        _mapper = mapper;
     }
 
     public async Task<Result> Handle(ClearLogsCommand request, CancellationToken cancellationToken)
     {
-        _context.Loggers.RemoveRange(_context.Loggers);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.Loggers.ExecuteDeleteAsync();
         _logger.LogInformation("Logs have been erased");
         return await Result.SuccessAsync();
     }
