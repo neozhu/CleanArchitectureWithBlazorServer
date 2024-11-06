@@ -1,5 +1,6 @@
 ﻿@page "/identity/users"
 @using ActualLab.Fusion
+@using CleanArchitecture.Blazor.Application.Features.Identity.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Fusion
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
 @using CleanArchitecture.Blazor.Infrastructure.Persistence
@@ -340,16 +341,16 @@
         {
             _loading = true;
             var searchPredicate = CreateSearchPredicate();
-            var total = await UserManager.Users.CountAsync(searchPredicate);
-            var items =await UserManager.Users.Where(searchPredicate)
+            var count =await  UserManager.Users.CountAsync(searchPredicate);
+            var data = await UserManager.Users.Where(searchPredicate)
                     .Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
                     .Include(x => x.CreatedByUser)
                     .Include(x => x.LastModifiedByUser)
                     .Include(x => x.Superior)
                     .EfOrderBySortDefinitions(state)
-                    .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider).ToListAsync();
-
-            return new GridData<ApplicationUserDto> { TotalItems = total, Items = items };
+                    .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo().ToListAsync();
+    
+            return new GridData<ApplicationUserDto> { TotalItems = count, Items = data };
         }
         finally
         {
