@@ -3,7 +3,7 @@ using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
-public class PickUserAutocomplete : MudAutocomplete<ApplicationUserDto>
+public class PickUserAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
 {
     public PickUserAutocomplete()
     {

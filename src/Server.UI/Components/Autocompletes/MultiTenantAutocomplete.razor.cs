@@ -3,7 +3,7 @@ using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
-public class MultiTenantAutocomplete : MudAutocomplete<TenantDto>
+public class MultiTenantAutocomplete<T> : MudAutocomplete<TenantDto>
 {
     public MultiTenantAutocomplete()
     {

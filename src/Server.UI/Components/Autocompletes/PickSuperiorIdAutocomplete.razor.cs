@@ -3,7 +3,7 @@ using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
-public class PickSuperiorIdAutocomplete : MudAutocomplete<ApplicationUserDto>
+public class PickSuperiorIdAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
 {
     public PickSuperiorIdAutocomplete()
     {

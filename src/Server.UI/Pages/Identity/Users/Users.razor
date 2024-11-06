@@ -389,7 +389,7 @@
             { x => x.UserProfile, UserProfile }
         };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<UserFormDialog>(title, parameters, options);
+        var dialog = await DialogService.ShowAsync<UserFormDialog>(title, parameters, options);
         var result = await dialog.Result;
         if (result is not null && !result.Canceled)
         {
@@ -405,7 +405,7 @@
             { x => x.UserProfile, UserProfile }
         };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<UserFormDialog>(title, parameters, options);
+        var dialog = await DialogService.ShowAsync<UserFormDialog>(title, parameters, options);
         var result = await dialog.Result;
         if (result is not null && !result.Canceled)
         {
@@ -673,7 +673,7 @@
             { x => x.Model, model }
         };
         var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = DialogService.Show<ResetPasswordDialog>(L["Set Password"], parameters, options);
+        var dialog = await DialogService.ShowAsync<ResetPasswordDialog>(L["Set Password"], parameters, options);
         var result = await dialog.Result;
         if (result is not null && !result.Canceled)
         {

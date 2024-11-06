@@ -2,7 +2,7 @@
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
-public class LanguageAutocomplete : MudAutocomplete<string>
+public class LanguageAutocomplete<T> : MudAutocomplete<string>
 {
     public LanguageAutocomplete()
     {

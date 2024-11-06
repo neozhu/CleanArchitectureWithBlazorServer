@@ -1,6 +1,6 @@
 ﻿namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
-public class TimeZoneAutocomplete : MudAutocomplete<string>
+public class TimeZoneAutocomplete<T> : MudAutocomplete<string>
 {
     public TimeZoneAutocomplete()
     {

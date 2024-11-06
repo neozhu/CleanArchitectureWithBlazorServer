@@ -2,7 +2,7 @@
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
-public class PicklistAutocomplete : MudAutocomplete<string>
+public class PicklistAutocomplete<T> : MudAutocomplete<string>
 {
     public PicklistAutocomplete()
     {
