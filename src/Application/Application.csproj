@@ -15,7 +15,6 @@
         <PackageReference Include="jcamp.FluentEmail.Core" Version="3.8.0" />
         <PackageReference Include="jcamp.FluentEmail.MailKit" Version="3.8.0" />
         <PackageReference Include="jcamp.FluentEmail.Razor" Version="3.8.0" />
-        <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="FluentValidation" Version="11.10.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
         <PackageReference Include="LazyCache" Version="2.4.0" />

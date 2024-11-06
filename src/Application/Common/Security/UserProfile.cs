@@ -23,3 +23,9 @@ public class UserProfile
     ? TimeZoneInfo.Local.BaseUtcOffset
     : TimeZoneInfo.FindSystemTimeZoneById(TimeZoneId).BaseUtcOffset;
 }
+
+[Mapper]
+public static partial class UserProfileMapper
+{
+    public static partial ChangeUserProfileModel ToChangeUserProfileModel(UserProfile entity);
+}

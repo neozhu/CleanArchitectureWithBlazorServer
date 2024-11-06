@@ -20,20 +20,8 @@ public class AddEditContactCommand : ICacheInvalidatorRequest<Result<int>>
     public string? PhoneNumber { get; set; }
     [Description("Country")]
     public string? Country { get; set; }
-
-
     public string CacheKey => ContactCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => ContactCacheKey.GetOrCreateTokenSource();
-
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<ContactDto, AddEditContactCommand>(MemberList.None);
-            CreateMap<AddEditContactCommand, Contact>(MemberList.None);
-
-        }
-    }
 }
 
 public class AddEditContactCommandHandler : IRequestHandler<AddEditContactCommand, Result<int>>
