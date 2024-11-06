@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit;
+﻿using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using Riok.Mapperly.Abstractions;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Mappers;
+#pragma warning disable RMG020
+#pragma warning disable RMG012
 [Mapper]
 public static partial class TenantMapper
 {

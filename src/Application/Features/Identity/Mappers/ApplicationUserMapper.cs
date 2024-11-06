@@ -1,10 +1,11 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Mappers;
 using CleanArchitecture.Blazor.Domain.Identity;
-using DocumentFormat.OpenXml.Drawing;
 using Riok.Mapperly.Abstractions;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.Mappers;
+#pragma warning disable RMG020
+#pragma warning disable RMG012
 [Mapper]
 [UseStaticMapper(typeof(TenantMapper))]
 public static partial class ApplicationUserMapper
