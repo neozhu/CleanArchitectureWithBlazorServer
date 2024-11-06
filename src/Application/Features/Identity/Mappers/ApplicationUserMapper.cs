@@ -1,5 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+﻿using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Mappers;
 using CleanArchitecture.Blazor.Domain.Identity;
 using Riok.Mapperly.Abstractions;
@@ -11,13 +10,24 @@ namespace CleanArchitecture.Blazor.Application.Features.Identity.Mappers;
 [UseStaticMapper(typeof(TenantMapper))]
 public static partial class ApplicationUserMapper
 {
-    [MapPropertyFromSource(nameof(ApplicationUser.CreatedByUser), Use = nameof(mapWithoutRelatedProperties))]
-    [MapPropertyFromSource(nameof(ApplicationUser.LastModifiedByUser), Use = nameof(mapWithoutRelatedProperties))]
-    [MapPropertyFromSource(nameof(ApplicationUser.Superior), Use = nameof(mapWithoutRelatedProperties))]
+    [MapPropertyFromSource(nameof(ApplicationUser.CreatedByUser), Use = nameof(MapWithoutRelatedProperties))]
+    [MapPropertyFromSource(nameof(ApplicationUser.LastModifiedByUser), Use = nameof(MapWithoutRelatedProperties))]
+    [MapPropertyFromSource(nameof(ApplicationUser.Superior), Use = nameof(MapWithoutRelatedProperties))]
+    [MapProperty(nameof(ApplicationUser.UserRoles), nameof(ApplicationUserDto.AssignedRoles), Use = nameof(MapAssignedRoles))]
     public static partial ApplicationUserDto ToApplicationUserDto(ApplicationUser user);
 
     [MapperIgnoreSource(nameof(ApplicationUser.CreatedByUser))]
     [MapperIgnoreSource(nameof(ApplicationUser.LastModifiedByUser))]
     [MapperIgnoreSource(nameof(ApplicationUser.Superior))]
-    private static partial ApplicationUserDto mapWithoutRelatedProperties(ApplicationUser user);
+    private static partial ApplicationUserDto MapWithoutRelatedProperties(ApplicationUser user);
+    [MapPropertyFromSource(nameof(ApplicationUser.CreatedByUser), Use = nameof(MapWithoutRelatedProperties))]
+    [MapPropertyFromSource(nameof(ApplicationUser.LastModifiedByUser), Use = nameof(MapWithoutRelatedProperties))]
+    [MapPropertyFromSource(nameof(ApplicationUser.Superior), Use = nameof(MapWithoutRelatedProperties))]
+    [MapProperty(nameof(ApplicationUser.UserRoles), nameof(ApplicationUserDto.AssignedRoles), Use = nameof(MapAssignedRoles))]
+    public static partial IQueryable<ApplicationUserDto> ProjectTo(this IQueryable<ApplicationUser> q);
+
+    private static string[] MapAssignedRoles(ICollection<ApplicationUserRole> roles)
+    {
+        return roles.Select(r => r.Role.Name!).ToArray();
+    }
 }
