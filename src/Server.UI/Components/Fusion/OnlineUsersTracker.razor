@@ -1,12 +1,14 @@
-﻿@using CleanArchitecture.Blazor.Server.UI.Services.Fusion
-@using ActualLab.Fusion
+﻿@using ActualLab.Fusion
 @using ActualLab.Fusion.Blazor
 @using ActualLab.Fusion.UI
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Features.Fusion
+
 
 @inherits ComputedStateComponent<List<SessionInfo>>
 @inject IOnlineUserTracker OnlineUserTracker
 @inject IStringLocalizer<ActiveUserSession> L
-@inject UserProfileStateService UserProfileStateService
+@inject ICurrentUserAccessor SessionInfoAccessor
 @if (State.HasValue && State.LastNonErrorValue.Any())
 {
     <div class="d-flex flex-row gap-2 my-3 gap-2 my-3">
@@ -44,19 +46,10 @@
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(5);
     protected override async Task OnInitializedAsync()
     {
-        var state = await AuthState;
-        if (!string.IsNullOrEmpty(state.User.Identity?.Name))
+        if (SessionInfoAccessor.SessionInfo!=null)
         {
-            await UserProfileStateService.InitializeAsync(state.User.Identity.Name);
-            var userProfile = UserProfileStateService.UserProfile;
-            currentUserId = userProfile.UserId;
-            await OnlineUserTracker.Initial(new SessionInfo(userProfile.UserId,
-                userProfile.UserName,
-                userProfile.DisplayName ?? string.Empty,
-                "",
-                userProfile.TenantId,
-                userProfile.ProfilePictureDataUrl ?? string.Empty,
-                UserPresence.Available));
+            currentUserId = SessionInfoAccessor.SessionInfo?.UserId;
+            await OnlineUserTracker.Initial(SessionInfoAccessor.SessionInfo);
         }
     }
 

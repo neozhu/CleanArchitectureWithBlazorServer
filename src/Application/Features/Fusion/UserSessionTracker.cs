@@ -1,8 +1,9 @@
 ﻿using System.Collections.Immutable;
 using ActualLab.Fusion;
-using CleanArchitecture.Blazor.Infrastructure.Constants.User;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
-namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
+
+namespace CleanArchitecture.Blazor.Application.Features.Fusion;
 
 /// <summary>
 /// Tracks user sessions for different page components.
@@ -10,15 +11,13 @@ namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 public class UserSessionTracker : IUserSessionTracker
 {
     private volatile ImmutableDictionary<string, ImmutableHashSet<SessionInfo>> _pageUserSessions = ImmutableDictionary<string, ImmutableHashSet<SessionInfo>>.Empty;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserSessionTracker"/> class.
     /// </summary>
-    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
-    public UserSessionTracker(IHttpContextAccessor httpContextAccessor)
+    public UserSessionTracker()
     {
-        _httpContextAccessor = httpContextAccessor;
+
     }
 
     /// <summary>
@@ -26,14 +25,12 @@ public class UserSessionTracker : IUserSessionTracker
     /// </summary>
     /// <param name="pageComponent">The page component.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    public virtual async Task AddUserSession(string pageComponent, CancellationToken cancellationToken = default)
+    public virtual async Task AddUserSession(string pageComponent,SessionInfo sessionInfo, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return;
 
-        var sessionInfo = await GetSessionInfo().ConfigureAwait(false);
-        if (sessionInfo != null)
-        {
+  
             ImmutableInterlocked.AddOrUpdate(
                 ref _pageUserSessions,
                 pageComponent,
@@ -42,7 +39,7 @@ public class UserSessionTracker : IUserSessionTracker
 
             using var invalidating = Invalidation.Begin();
             _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
-        }
+        
     }
 
     /// <summary>
@@ -66,15 +63,14 @@ public class UserSessionTracker : IUserSessionTracker
     /// </summary>
     /// <param name="pageComponent">The page component.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    public virtual async Task RemoveUserSession(string pageComponent, CancellationToken cancellationToken = default)
+    public virtual async Task RemoveUserSession(string pageComponent, string userId, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return;
 
-        var sessionInfo = await GetSessionInfo().ConfigureAwait(false);
-        
-        if (sessionInfo!=null && _pageUserSessions.TryGetValue(pageComponent, out var users) && users.Contains(sessionInfo))
+        if (_pageUserSessions.TryGetValue(pageComponent, out var users) && users.Any(x => x.UserId == userId))
         {
+            var sessionInfo = users.First(x => x.UserId == userId);
             var updatedUsers = users.Remove(sessionInfo);
 
             // Use atomic update to prevent concurrency issues
@@ -90,10 +86,9 @@ public class UserSessionTracker : IUserSessionTracker
                     updatedUsers,
                     (key, existingUsers) => updatedUsers);
             }
+            using var invalidating = Invalidation.Begin();
+            _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
         }
-
-        using var invalidating = Invalidation.Begin();
-        _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -101,10 +96,10 @@ public class UserSessionTracker : IUserSessionTracker
     /// </summary>
     /// <param name="userId">The user identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    public virtual Task RemoveAllSessions(string userId, CancellationToken cancellationToken = default)
+    public virtual async Task RemoveAllSessions(string userId, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
-            return Task.CompletedTask;
+            return;
 
         foreach (var pageComponent in _pageUserSessions.Keys.ToList())
         {
@@ -126,31 +121,11 @@ public class UserSessionTracker : IUserSessionTracker
                         (key, existingUsers) => updatedUsers);
                 }
             }
+            using var invalidating = Invalidation.Begin();
+                _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
         }
-        return Task.CompletedTask;
+        
     }
 
-    /// <summary>
-    /// Gets the session information from the current HTTP context.
-    /// </summary>
-    /// <returns>The session information.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when the HTTP context is not available.</exception>
-    private Task<SessionInfo?> GetSessionInfo()
-    {
-        if (_httpContextAccessor.HttpContext != null && (_httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated ?? false))
-        {
-            var httpUser = _httpContextAccessor.HttpContext?.User;
-            var ipAddress = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-            var userId = _httpContextAccessor.HttpContext?.User?.GetUserId();
-            var userName = _httpContextAccessor.HttpContext?.User?.GetUserName();
-            var displayName = _httpContextAccessor.HttpContext?.User?.GetDisplayName();
-            var tenantId = _httpContextAccessor.HttpContext?.User?.GetTenantId();
-
-            if (userId != null && userName != null && displayName != null && ipAddress != null && tenantId != null)
-            {
-                return Task.FromResult<SessionInfo?>(new SessionInfo(userId, userName, displayName, ipAddress, tenantId, "", UserPresence.Available));
-            }
-        }
-        return Task.FromResult<SessionInfo?>(null);
-    }
+     
 }
