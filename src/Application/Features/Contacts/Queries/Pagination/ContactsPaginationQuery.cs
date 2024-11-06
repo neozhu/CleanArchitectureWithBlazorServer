@@ -4,6 +4,7 @@
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
+using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Pagination;
 
@@ -22,24 +23,18 @@ public class ContactsWithPaginationQueryHandler :
          IRequestHandler<ContactsWithPaginationQuery, PaginatedData<ContactDto>>
 {
         private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<ContactsWithPaginationQueryHandler> _localizer;
 
         public ContactsWithPaginationQueryHandler(
-            IApplicationDbContext context,
-            IMapper mapper,
-            IStringLocalizer<ContactsWithPaginationQueryHandler> localizer
+            IApplicationDbContext context
             )
         {
             _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
         }
 
         public async Task<PaginatedData<ContactDto>> Handle(ContactsWithPaginationQuery request, CancellationToken cancellationToken)
         {
            var data = await _context.Contacts.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                                    .ProjectToPaginatedDataAsync<Contact, ContactDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
+                                    .ProjectToPaginatedDataAsync(request.Specification, request.PageNumber, request.PageSize,ContactMapper.ToDto, cancellationToken);
             return data;
         }
 }
