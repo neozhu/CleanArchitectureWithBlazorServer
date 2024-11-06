@@ -68,7 +68,7 @@
         var result = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
         result.Map(data =>
         {
-            model = ContactMapper.ToCommand(data);
+            model = ContactMapper.ToUpdateCommand(data);
             return data;
         }).Match(data =>
         {
