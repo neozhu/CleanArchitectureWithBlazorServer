@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
@@ -12,13 +12,13 @@ namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Behaviours;
 
 public class RequestLoggerTests
 {
-    private readonly Mock<ICurrentUserService> _currentUserService;
+    private readonly Mock<ICurrentUserAccessor> _currentUserAccessor;
     private readonly Mock<IIdentityService> _identityService;
     private readonly Mock<ILogger<AddEditProductCommand>> _logger;
 
     public RequestLoggerTests()
     {
-        _currentUserService = new Mock<ICurrentUserService>();
+        _currentUserAccessor = new Mock<ICurrentUserAccessor>();
         _identityService = new Mock<IIdentityService>();
         _logger = new Mock<ILogger<AddEditProductCommand>>();
     }
@@ -26,18 +26,18 @@ public class RequestLoggerTests
     [Test]
     public async Task ShouldCallGetUserNameAsyncOnceIfAuthenticated()
     {
-        _currentUserService.Setup(x => x.UserId).Returns("Administrator");
-        var requestLogger = new LoggingPreProcessor<AddEditProductCommand>(_logger.Object, _currentUserService.Object);
+        _currentUserAccessor.Setup(x => x.SessionInfo).Returns(new SessionInfo("Administrator", "Administrator", "","","","", UserPresence.Available));
+        var requestLogger = new LoggingPreProcessor<AddEditProductCommand>(_logger.Object, _currentUserAccessor.Object);
         await requestLogger.Process(
             new AddEditProductCommand { Brand = "Brand", Name = "Brand", Price = 1.0m, Unit = "EA" },
             new CancellationToken());
-        _currentUserService.Verify(i => i.UserName, Times.Once);
+        _currentUserAccessor.Verify(i => i.SessionInfo, Times.Once);
     }
 
     [Test]
     public async Task ShouldNotCallGetUserNameAsyncOnceIfUnauthenticated()
     {
-        var requestLogger = new LoggingPreProcessor<AddEditProductCommand>(_logger.Object, _currentUserService.Object);
+        var requestLogger = new LoggingPreProcessor<AddEditProductCommand>(_logger.Object, _currentUserAccessor.Object);
         await requestLogger.Process(
             new AddEditProductCommand { Brand = "Brand", Name = "Brand", Price = 1.0m, Unit = "EA" },
             new CancellationToken());

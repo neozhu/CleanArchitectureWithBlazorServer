@@ -1,8 +1,9 @@
 ﻿using System.Collections.Immutable;
 using ActualLab.Fusion;
-using CleanArchitecture.Blazor.Infrastructure.Constants.User;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
-namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
+
+namespace CleanArchitecture.Blazor.Application.Features.Fusion;
 
 /// <summary>
 /// Tracks user sessions for different page components.
@@ -10,15 +11,13 @@ namespace CleanArchitecture.Blazor.Server.UI.Services.Fusion;
 public class UserSessionTracker : IUserSessionTracker
 {
     private volatile ImmutableDictionary<string, ImmutableHashSet<SessionInfo>> _pageUserSessions = ImmutableDictionary<string, ImmutableHashSet<SessionInfo>>.Empty;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserSessionTracker"/> class.
     /// </summary>
-    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
-    public UserSessionTracker(IHttpContextAccessor httpContextAccessor)
+    public UserSessionTracker()
     {
-        _httpContextAccessor = httpContextAccessor;
+
     }
 
     /// <summary>
@@ -97,10 +96,10 @@ public class UserSessionTracker : IUserSessionTracker
     /// </summary>
     /// <param name="userId">The user identifier.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    public virtual Task RemoveAllSessions(string userId, CancellationToken cancellationToken = default)
+    public virtual async Task RemoveAllSessions(string userId, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
-            return Task.CompletedTask;
+            return;
 
         foreach (var pageComponent in _pageUserSessions.Keys.ToList())
         {
@@ -122,8 +121,10 @@ public class UserSessionTracker : IUserSessionTracker
                         (key, existingUsers) => updatedUsers);
                 }
             }
+            using var invalidating = Invalidation.Begin();
+                _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
         }
-        return Task.CompletedTask;
+        
     }
 
      
