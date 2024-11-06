@@ -1,9 +1,10 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Products.Mappers;
 using CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
@@ -20,13 +21,11 @@ public class ExportProductsQueryHandler :
     private readonly IApplicationDbContext _context;
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ExportProductsQueryHandler> _localizer;
-    private readonly IMapper _mapper;
     private readonly IPDFService _pdfService;
     private readonly ISerializer _serializer;
 
     public ExportProductsQueryHandler(
         IApplicationDbContext context,
-        IMapper mapper,
         ISerializer serializer,
         IExcelService excelService,
         IPDFService pdfService,
@@ -34,7 +33,6 @@ public class ExportProductsQueryHandler :
     )
     {
         _context = context;
-        _mapper = mapper;
         _serializer = serializer;
         _excelService = excelService;
         _pdfService = pdfService;
@@ -45,7 +43,7 @@ public class ExportProductsQueryHandler :
     {
         var data = await _context.Products.ApplySpecification(request.Specification)
             .AsNoTracking()
-            .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+            .ProjectTo()
             .ToListAsync(cancellationToken);
 
 

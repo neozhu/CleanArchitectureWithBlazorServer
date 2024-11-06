@@ -29,32 +29,26 @@ public static class QueryableExtensions
         return SpecificationEvaluator.Default.GetQuery(query, spec, evaluateCriteriaOnly);
     }
 
-    /// <summary>
-    ///     Extension method to provided ordered queryable data to a paginated result set.
-    /// </summary>
-    /// <remarks>
-    ///     This method will apply the given specification to the query, paginate the results, and project them to the desired
-    ///     result type.
-    /// </remarks>
-    /// <typeparam name="T">Source type of the entities in the query</typeparam>
-    /// <typeparam name="TResult">Destination type to which the entities should be projected</typeparam>
-    /// <param name="query">The original ordered query to project and paginate</param>
-    /// <param name="spec">The specification to apply to the query before projection and pagination</param>
-    /// <param name="pageNumber">The desired page number of the paginated results</param>
-    /// <param name="pageSize">The number of items per page in the paginated results</param>
-    /// <param name="configuration">Configuration for the projection</param>
-    /// <param name="cancellationToken">Optional cancellation token to cancel the operation</param>
-    /// <returns>The paginated and projected data</returns>
+
+
     public static async Task<PaginatedData<TResult>> ProjectToPaginatedDataAsync<T, TResult>(
         this IOrderedQueryable<T> query, ISpecification<T> spec, int pageNumber, int pageSize,
-        IConfigurationProvider configuration, CancellationToken cancellationToken = default) where T : class, IEntity
+        Func<T, TResult> mapperFunc, CancellationToken cancellationToken = default) where T : class, IEntity
     {
         var specificationEvaluator = SpecificationEvaluator.Default;
-        var count = await specificationEvaluator.GetQuery(query.AsNoTracking(), spec).CountAsync();
-        var data = await specificationEvaluator.GetQuery(query.AsNoTracking(), spec).Skip((pageNumber - 1) * pageSize)
+        var queryWithSpec = specificationEvaluator.GetQuery(query.AsNoTracking(), spec);
+
+        var countTask = queryWithSpec.CountAsync(cancellationToken);
+        var dataTask = queryWithSpec
+            .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .ProjectTo<TResult>(configuration)
             .ToListAsync(cancellationToken);
+
+        await Task.WhenAll(countTask, dataTask);
+
+        var count = countTask.Result;
+        var data = dataTask.Result.Select(x => mapperFunc(x)).ToList();
+
         return new PaginatedData<TResult>(data, count, pageNumber, pageSize);
     }
 

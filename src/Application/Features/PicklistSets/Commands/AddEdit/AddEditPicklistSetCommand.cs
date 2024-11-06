@@ -2,48 +2,30 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
-using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
+using CleanArchitecture.Blazor.Application.Features.PicklistSets.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.AddEdit;
 
 public class AddEditPicklistSetCommand : ICacheInvalidatorRequest<Result<int>>
 {
     [Description("Id")] public int Id { get; set; }
-
     [Description("Name")] public Picklist Name { get; set; }
-
     [Description("Value")] public string? Value { get; set; }
-
     [Description("Text")] public string? Text { get; set; }
-
     [Description("Description")] public string? Description { get; set; }
-
     public TrackingState TrackingState { get; set; } = TrackingState.Unchanged;
     public string CacheKey => PicklistSetCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => PicklistSetCacheKey.GetOrCreateTokenSource();
-
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<PicklistSetDto, AddEditPicklistSetCommand>(MemberList.None);
-            CreateMap<AddEditPicklistSetCommand, PicklistSet>(MemberList.None);
-        }
-    }
 }
 
 public class AddEditPicklistSetCommandHandler : IRequestHandler<AddEditPicklistSetCommand, Result<int>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
     public AddEditPicklistSetCommandHandler(
-        IApplicationDbContext context,
-        IMapper mapper
-    )
+        IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<Result<int>> Handle(AddEditPicklistSetCommand request, CancellationToken cancellationToken)
@@ -55,14 +37,14 @@ public class AddEditPicklistSetCommandHandler : IRequestHandler<AddEditPicklistS
             {
                 return await Result<int>.FailureAsync($"Picklist with id: [{request.Id}] not found.");
             }
-            item = _mapper.Map(request, item);
+            PicklistMapper.MapTo(request, item);
             item.AddDomainEvent(new UpdatedEvent<PicklistSet>(item));
             await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {
-            var keyValue = _mapper.Map<PicklistSet>(request);
+            var keyValue = PicklistMapper.Map(request);
             keyValue.AddDomainEvent(new UpdatedEvent<PicklistSet>(keyValue));
             _context.PicklistSets.Add(keyValue);
             await _context.SaveChangesAsync(cancellationToken);

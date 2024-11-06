@@ -22,18 +22,12 @@ public class DeleteProductCommandHandler :
     IRequestHandler<DeleteProductCommand, Result<int>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IStringLocalizer<DeleteProductCommandHandler> _localizer;
-    private readonly IMapper _mapper;
 
     public DeleteProductCommandHandler(
-        IApplicationDbContext context,
-        IStringLocalizer<DeleteProductCommandHandler> localizer,
-        IMapper mapper
+        IApplicationDbContext context
     )
     {
         _context = context;
-        _localizer = localizer;
-        _mapper = mapper;
     }
 
     public async Task<Result<int>> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
