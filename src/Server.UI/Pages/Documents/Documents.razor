@@ -323,7 +323,7 @@
             { x => x.Model, command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<UploadFilesFormDialog>
+        var dialog = await DialogService.ShowAsync<UploadFilesFormDialog>
             (L["Upload Pictures"], parameters, options);
         var state = await dialog.Result;
         if (state is not null && !state.Canceled)
@@ -341,7 +341,7 @@
             { nameof(DocumentFormDialog.Model), command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<DocumentFormDialog>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
+        var dialog = await DialogService.ShowAsync<DocumentFormDialog>(string.Format(ConstantString.EditTheItem, L["Document"]), parameters, options);
 
 
         var state = await dialog.Result;

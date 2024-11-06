@@ -280,7 +280,7 @@
     {
         var parameters = new DialogParameters<RoleFormDialog> { { x => x.Model, model } };
         var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<RoleFormDialog>(title, parameters, options);
+        var dialog = await DialogService.ShowAsync<RoleFormDialog>(title, parameters, options);
         var result = await dialog.Result;
 
         if (result is not null && !result.Canceled)
