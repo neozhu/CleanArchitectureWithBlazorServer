@@ -1,5 +1,6 @@
 ﻿@page "/identity/roles"
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
+@using CleanArchitecture.Blazor.Application.Features.Identity.Mappers
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using System.Security.Claims
@@ -208,23 +209,29 @@
         RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
         PermissionHelper = ScopedServices.GetRequiredService<PermissionHelper>();
     }
+    private Expression<Func<ApplicationRole, bool>> CreateSearchPredicate()
+    {
+        return x =>
+           (x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString)) &&
+           (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId));
+    }
+
     private async Task<GridData<ApplicationRoleDto>> ServerReload(GridState<ApplicationRoleDto> state)
     {
         try
         {
             _loading = true;
-            Expression<Func<ApplicationRole, bool>> filterPredicate = x =>
-           (x.Name!.ToLower().Contains(_searchString) || x.Description!.ToLower().Contains(_searchString)) &&
-           (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId));
-
-            var items = await RoleManager.Roles
-                .Where(filterPredicate)
+           
+            var searchPredicate = CreateSearchPredicate();
+            var count = await RoleManager.Roles.CountAsync(searchPredicate);
+            var data = await RoleManager.Roles
+                .Where(searchPredicate)
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize)
-                .ProjectTo<ApplicationRoleDto>(Mapper.ConfigurationProvider)
+                .ProjectTo()
                 .ToListAsync();
-            var total = await RoleManager.Roles.CountAsync(filterPredicate);
-            return new GridData<ApplicationRoleDto> { TotalItems = total, Items = items };
+
+            return new GridData<ApplicationRoleDto> { TotalItems = count, Items = data };
         }
         finally
         {

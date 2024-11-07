@@ -1,5 +1,6 @@
 ﻿@page "/system/tenants"
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Tenants.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Caching
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit
@@ -202,7 +203,7 @@
 
     private async Task OnEdit(TenantDto dto)
     {
-        var command = Mapper.Map<AddEditTenantCommand>(dto);
+        var command = TenantMapper.ToEditCommand(dto);
         await ShowEditDialog(command, L["Edit the Tenant"]);
     }
 

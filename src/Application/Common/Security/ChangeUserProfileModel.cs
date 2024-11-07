@@ -19,13 +19,7 @@ public class ChangeUserProfileModel
     public string? TenantName { get; set; }
     public string? TimeZoneId { get; set; }
     public string? LanguageCode { get; set; }
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<ChangeUserProfileModel, UserProfile>().ReverseMap();
-        }
-    }
+   
 }
 
 
