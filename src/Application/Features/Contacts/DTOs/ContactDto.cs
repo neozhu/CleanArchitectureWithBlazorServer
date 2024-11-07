@@ -19,13 +19,5 @@ public class ContactDto
     [Description("Country")]
     public string? Country {get;set;} 
 
-
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<Contact, ContactDto>().ReverseMap();
-        }
-    }
 }
 

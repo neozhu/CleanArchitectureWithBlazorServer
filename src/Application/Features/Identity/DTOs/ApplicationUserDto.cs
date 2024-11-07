@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
-using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
@@ -89,60 +88,7 @@ public class ApplicationUserDto
         return AssignedRoles?.Contains(role) ?? false;
     }
 
-#pragma warning disable CS8619
-#pragma warning disable CS8601
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<ApplicationUser, ApplicationUserDto>(MemberList.None)
-                .ForMember(x => x.LocalTimeOffset, s => s.Ignore())
-                .ForMember(x => x.EmailConfirmed, s => s.MapFrom(y => y.EmailConfirmed))
-                .ForMember(x => x.AssignedRoles, s => s.MapFrom(y => y.UserRoles.Select(r => r.Role.Name)))
-                .ForMember(x => x.Superior, s => s.MapFrom(y =>y.Superior!=null? new ApplicationUserDto() {
-                    Id=y.Superior.Id,
-                    UserName= y.Superior.UserName,
-                    DisplayName = y.Superior.DisplayName,
-                    Email = y.Superior.Email,
-                    PhoneNumber = y.Superior.PhoneNumber,
-                    ProfilePictureDataUrl = y.Superior.ProfilePictureDataUrl,
-                    IsActive = y.Superior.IsActive,
-                    TenantId = y.Superior.TenantId,
-                    AssignedRoles = y.Superior.UserRoles.Select(r => r.Role.Name).ToArray(),
-                    TimeZoneId = y.Superior.TimeZoneId,
-                    LanguageCode = y.Superior.LanguageCode
-                } : null))
-                .ForMember(x => x.CreatedByUser, s => s.MapFrom(y => y.CreatedByUser != null ? new ApplicationUserDto()
-                {
-                    Id = y.CreatedByUser.Id,
-                    UserName = y.CreatedByUser.UserName,
-                    DisplayName = y.CreatedByUser.DisplayName,
-                    Email = y.CreatedByUser.Email,
-                    PhoneNumber = y.CreatedByUser.PhoneNumber,
-                    ProfilePictureDataUrl = y.CreatedByUser.ProfilePictureDataUrl,
-                    IsActive = y.CreatedByUser.IsActive,
-                    TenantId = y.CreatedByUser.TenantId,
-                    AssignedRoles = y.CreatedByUser.UserRoles.Select(r => r.Role.Name).ToArray(),
-                    TimeZoneId = y.CreatedByUser.TimeZoneId,
-                    LanguageCode = y.CreatedByUser.LanguageCode
-                } : null))
-                .ForMember(x => x.LastModifiedByUser, s => s.MapFrom(y => y.LastModifiedByUser != null ? new ApplicationUserDto()
-                {
-                    Id = y.LastModifiedByUser.Id,
-                    UserName = y.LastModifiedByUser.UserName,
-                    DisplayName = y.LastModifiedByUser.DisplayName,
-                    Email = y.LastModifiedByUser.Email,
-                    PhoneNumber = y.LastModifiedByUser.PhoneNumber,
-                    ProfilePictureDataUrl = y.LastModifiedByUser.ProfilePictureDataUrl,
-                    IsActive= y.LastModifiedByUser.IsActive,
-                    TenantId = y.LastModifiedByUser.TenantId,
-                    AssignedRoles = y.LastModifiedByUser.UserRoles.Select(r => r.Role.Name).ToArray(),
-                    TimeZoneId = y.LastModifiedByUser.TimeZoneId,
-                    LanguageCode = y.LastModifiedByUser.LanguageCode
-                } : null));
-     
-        }
-    }
+ 
 }
 
 public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>

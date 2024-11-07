@@ -3,35 +3,31 @@
 
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
+using CleanArchitecture.Blazor.Application.Features.PicklistSets.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.GetAll;
 
 public class GetAllPicklistSetsQuery : ICacheableRequest<IEnumerable<PicklistSetDto>>
 {
     public string CacheKey => PicklistSetCacheKey.GetAllCacheKey;
-
     public MemoryCacheEntryOptions? Options => PicklistSetCacheKey.MemoryCacheEntryOptions;
 }
 
 public class GetAllPicklistSetsQueryHandler : IRequestHandler<GetAllPicklistSetsQuery, IEnumerable<PicklistSetDto>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
     public GetAllPicklistSetsQueryHandler(
-        IApplicationDbContext context,
-        IMapper mapper
-    )
+        IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<IEnumerable<PicklistSetDto>> Handle(GetAllPicklistSetsQuery request,
         CancellationToken cancellationToken)
     {
         var data = await _context.PicklistSets.OrderBy(x => x.Name).ThenBy(x => x.Value)
-            .ProjectTo<PicklistSetDto>(_mapper.ConfigurationProvider)
+            .ProjectTo()
             .ToListAsync(cancellationToken);
         return data;
     }
