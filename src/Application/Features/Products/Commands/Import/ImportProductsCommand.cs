@@ -5,6 +5,7 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Products.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Import;
 
@@ -33,22 +34,19 @@ public class ImportProductsCommandHandler :
     private readonly IApplicationDbContext _context;
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ImportProductsCommandHandler> _localizer;
-    private readonly IMapper _mapper;
     private readonly ISerializer _serializer;
 
     public ImportProductsCommandHandler(
         IApplicationDbContext context,
         IExcelService excelService,
         ISerializer serializer,
-        IStringLocalizer<ImportProductsCommandHandler> localizer,
-        IMapper mapper
+        IStringLocalizer<ImportProductsCommandHandler> localizer
     )
     {
         _context = context;
         _localizer = localizer;
         _excelService = excelService;
         _serializer = serializer;
-        _mapper = mapper;
     }
 
     public async Task<Result<byte[]>> Handle(CreateProductsTemplateCommand request, CancellationToken cancellationToken)
@@ -93,7 +91,7 @@ public class ImportProductsCommandHandler :
         {
             foreach (var dto in result.Data!)
             {
-                var item = _mapper.Map<Product>(dto);
+                var item = ProductMapper.Map(dto);
                 await _context.Products.AddAsync(item, cancellationToken);
             }
 

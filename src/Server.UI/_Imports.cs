@@ -1,5 +1,4 @@
 ﻿global using System.Data;
-global using AutoMapper.QueryableExtensions;
 global using CleanArchitecture.Blazor.Application.Common.Interfaces;
 global using CleanArchitecture.Blazor.Application.Common.Models;
 global using CleanArchitecture.Blazor.Infrastructure.Extensions;

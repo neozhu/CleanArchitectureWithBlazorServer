@@ -12,7 +12,6 @@ public class DeleteTenantCommand : ICacheInvalidatorRequest<Result<int>>
     {
         Id = id;
     }
-
     public string[] Id { get; }
     public string CacheKey => TenantCacheKey.GetAllCacheKey;
     public CancellationTokenSource? SharedExpiryTokenSource => TenantCacheKey.GetOrCreateTokenSource();
@@ -23,21 +22,15 @@ public class DeleteTenantCommandHandler :
 
 {
     private readonly IApplicationDbContext _context;
-    private readonly IStringLocalizer<DeleteTenantCommandHandler> _localizer;
-    private readonly IMapper _mapper;
     private readonly ITenantService _tenantsService;
 
     public DeleteTenantCommandHandler(
         ITenantService tenantsService,
-        IApplicationDbContext context,
-        IStringLocalizer<DeleteTenantCommandHandler> localizer,
-        IMapper mapper
+        IApplicationDbContext context
     )
     {
         _tenantsService = tenantsService;
         _context = context;
-        _localizer = localizer;
-        _mapper = mapper;
     }
 
     public async Task<Result<int>> Handle(DeleteTenantCommand request, CancellationToken cancellationToken)

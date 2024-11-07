@@ -3,6 +3,7 @@
 
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
+using CleanArchitecture.Blazor.Application.Features.PicklistSets.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.ByName;
 
@@ -12,26 +13,18 @@ public class PicklistSetsQueryByName : ICacheableRequest<IEnumerable<PicklistSet
     {
         Name = name;
     }
-
     public Picklist Name { get; set; }
-
     public string CacheKey => PicklistSetCacheKey.GetCacheKey(Name.ToString());
-
     public MemoryCacheEntryOptions? Options => PicklistSetCacheKey.MemoryCacheEntryOptions;
 }
 
 public class PicklistSetsQueryByNameHandler : IRequestHandler<PicklistSetsQueryByName, IEnumerable<PicklistSetDto>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-
     public PicklistSetsQueryByNameHandler(
-        IApplicationDbContext context,
-        IMapper mapper
-    )
+        IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<IEnumerable<PicklistSetDto>> Handle(PicklistSetsQueryByName request,
@@ -39,7 +32,7 @@ public class PicklistSetsQueryByNameHandler : IRequestHandler<PicklistSetsQueryB
     {
         var data = await _context.PicklistSets.Where(x => x.Name == request.Name)
             .OrderBy(x => x.Text)
-            .ProjectTo<PicklistSetDto>(_mapper.ConfigurationProvider)
+            .ProjectTo()
             .ToListAsync(cancellationToken);
         return data;
     }
