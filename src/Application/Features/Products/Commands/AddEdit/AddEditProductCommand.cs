@@ -43,14 +43,14 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
             {
                 return await Result<int>.FailureAsync($"Prduct with id: [{request.Id}] not found.");
             }
-            ProductMapper.MapTo(request, item);
+            ProductMapper.ApplyChangesFrom(request, item);
             item.AddDomainEvent(new UpdatedEvent<Product>(item));
             await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {
-            var item = ProductMapper.Map(request);
+            var item = ProductMapper.FromEditCommand(request);
             item.AddDomainEvent(new CreatedEvent<Product>(item));
             _context.Products.Add(item);
             await _context.SaveChangesAsync(cancellationToken);

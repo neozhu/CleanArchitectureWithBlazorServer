@@ -42,7 +42,7 @@ public class UpdateContactCommandHandler : IRequestHandler<UpdateContactCommand,
         {
             return await Result<int>.FailureAsync($"Contact with id: [{request.Id}] not found.");
         }
-        ContactMapper.MapTo(request, item);
+        ContactMapper.ApplyChangesFrom(request, item);
         // raise a update domain event
         item.AddDomainEvent(new ContactUpdatedEvent(item));
         await _context.SaveChangesAsync(cancellationToken);

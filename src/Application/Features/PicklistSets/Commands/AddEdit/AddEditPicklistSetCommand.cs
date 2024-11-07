@@ -37,14 +37,14 @@ public class AddEditPicklistSetCommandHandler : IRequestHandler<AddEditPicklistS
             {
                 return await Result<int>.FailureAsync($"Picklist with id: [{request.Id}] not found.");
             }
-            PicklistMapper.MapTo(request, item);
+            PicklistMapper.ApplyChangesFrom(request, item);
             item.AddDomainEvent(new UpdatedEvent<PicklistSet>(item));
             await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {
-            var keyValue = PicklistMapper.Map(request);
+            var keyValue = PicklistMapper.FromEditCommand(request);
             keyValue.AddDomainEvent(new UpdatedEvent<PicklistSet>(keyValue));
             _context.PicklistSets.Add(keyValue);
             await _context.SaveChangesAsync(cancellationToken);

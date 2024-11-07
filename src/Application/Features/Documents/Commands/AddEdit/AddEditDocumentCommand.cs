@@ -57,7 +57,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
         }
         else
         {
-            var document = DocumentMapper.Map(request);
+            var document = DocumentMapper.FromEditCommand(request);
             if (request.UploadRequest != null) document.URL = await _uploadService.UploadAsync(request.UploadRequest);
             document.AddDomainEvent(new CreatedEvent<Document>(document));
             _context.Documents.Add(document);

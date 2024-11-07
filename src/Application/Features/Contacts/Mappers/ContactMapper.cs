@@ -11,11 +11,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
 public static partial class ContactMapper
 {
     public static partial ContactDto ToDto(Contact contact);
-    public static partial Contact Map(ContactDto dto);
+    public static partial Contact FromDto(ContactDto dto);
     public static partial UpdateContactCommand ToUpdateCommand(ContactDto dto);
-    public static partial Contact Map(AddEditContactCommand command);
-    public static partial Contact Map(CreateContactCommand command);
-    public static partial void MapTo(UpdateContactCommand command, Contact contact);
-    public static partial void MapTo(AddEditContactCommand command, Contact contact);
+    public static partial Contact FromEditCommand(AddEditContactCommand command);
+    public static partial Contact FromCreateCommand(CreateContactCommand command);
+    public static partial void ApplyChangesFrom(UpdateContactCommand command, Contact contact);
+    public static partial void ApplyChangesFrom(AddEditContactCommand command, Contact contact);
     public static partial IQueryable<ContactDto> ProjectTo(this IQueryable<Contact> q);
 }

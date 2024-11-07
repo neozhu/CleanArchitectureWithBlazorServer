@@ -8,11 +8,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Mappers;
 public static partial class ProductMapper
 {
     public static partial ProductDto ToDto(Product product);
-    public static partial Product Map(ProductDto dto);
-    public static partial Product Map(AddEditProductCommand command);
-    public static partial void MapTo(AddEditProductCommand command, Product product);
+    public static partial Product FromDto(ProductDto dto);
+    public static partial Product FromEditCommand(AddEditProductCommand command);
+    public static partial void ApplyChangesFrom(AddEditProductCommand command, Product product);
     [MapperIgnoreSource(nameof(ProductDto.Id))]
-    public static partial AddEditProductCommand Clone(ProductDto dto);
+    public static partial AddEditProductCommand CloneFromDto(ProductDto dto);
     public static partial AddEditProductCommand ToEditCommand(ProductDto dto);
     public static partial IQueryable<ProductDto> ProjectTo(this IQueryable<Product> q);
 }

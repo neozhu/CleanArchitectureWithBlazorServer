@@ -292,7 +292,7 @@
     private async Task OnClone()
     {
         var copy = _selectedItems.First();
-        var command = ProductMapper.Clone(copy);
+        var command = ProductMapper.CloneFromDto(copy);
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
     }
 

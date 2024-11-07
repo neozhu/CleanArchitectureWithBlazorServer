@@ -41,7 +41,7 @@ public class AddEditContactCommandHandler : IRequestHandler<AddEditContactComman
             {
                 return await Result<int>.FailureAsync($"Contact with id: [{request.Id}] not found.");
             }
-            ContactMapper.MapTo(request,item);
+            ContactMapper.ApplyChangesFrom(request,item);
             // raise a update domain event
             item.AddDomainEvent(new ContactUpdatedEvent(item));
             await _context.SaveChangesAsync(cancellationToken);
@@ -49,7 +49,7 @@ public class AddEditContactCommandHandler : IRequestHandler<AddEditContactComman
         }
         else
         {
-            var item = ContactMapper.Map(request);
+            var item = ContactMapper.FromEditCommand(request);
             // raise a create domain event
             item.AddDomainEvent(new ContactCreatedEvent(item));
             _context.Contacts.Add(item);

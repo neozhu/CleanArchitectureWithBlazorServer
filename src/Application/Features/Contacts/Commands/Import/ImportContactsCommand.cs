@@ -63,7 +63,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
                     var exists = await _context.Contacts.AnyAsync(x => x.Name == dto.Name, cancellationToken);
                     if (!exists)
                     {
-                        var item = ContactMapper.Map(dto);
+                        var item = ContactMapper.FromDto(dto);
                         // add create domain events if this entity implement the IHasDomainEvent interface
 				        // item.AddDomainEvent(new ContactCreatedEvent(item));
                         await _context.Contacts.AddAsync(item, cancellationToken);

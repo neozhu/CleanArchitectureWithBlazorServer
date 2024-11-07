@@ -91,7 +91,7 @@ public class ImportProductsCommandHandler :
         {
             foreach (var dto in result.Data!)
             {
-                var item = ProductMapper.Map(dto);
+                var item = ProductMapper.FromDto(dto);
                 await _context.Products.AddAsync(item, cancellationToken);
             }
 

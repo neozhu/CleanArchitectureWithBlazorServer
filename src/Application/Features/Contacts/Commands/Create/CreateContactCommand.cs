@@ -37,7 +37,7 @@ public class CreateContactCommand: ICacheInvalidatorRequest<Result<int>>
         }
         public async Task<Result<int>> Handle(CreateContactCommand request, CancellationToken cancellationToken)
         {
-           var item =ContactMapper.Map(request);
+           var item =ContactMapper.FromCreateCommand(request);
            // raise a create domain event
 	       item.AddDomainEvent(new ContactCreatedEvent(item));
            _context.Contacts.Add(item);

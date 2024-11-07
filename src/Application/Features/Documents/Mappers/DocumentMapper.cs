@@ -13,11 +13,11 @@ public static partial class DocumentMapper
     public static partial DocumentDto ToDto(Document document);
 
     [MapperIgnoreSource(nameof(DocumentDto.CreatedByUser))]
-    public static partial Document Map(DocumentDto dto);
+    public static partial Document FromDto(DocumentDto dto);
     [MapperIgnoreSource(nameof(DocumentDto.CreatedByUser))]
     public static partial AddEditDocumentCommand ToEditCommand(DocumentDto dto);
-    public static partial Document Map(AddEditDocumentCommand command);
-    public static partial void MapTo(AddEditDocumentCommand command, Document document);
+    public static partial Document FromEditCommand(AddEditDocumentCommand command);
+    public static partial void ApplyChangesFrom(AddEditDocumentCommand command, Document document);
 
     public static partial IQueryable<DocumentDto> ProjectTo(this IQueryable<Document> q);
 
