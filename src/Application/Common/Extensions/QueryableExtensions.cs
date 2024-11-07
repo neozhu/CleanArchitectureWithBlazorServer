@@ -29,8 +29,18 @@ public static class QueryableExtensions
         return SpecificationEvaluator.Default.GetQuery(query, spec, evaluateCriteriaOnly);
     }
 
-
-
+    /// <summary>
+    /// Projects the query to a paginated data asynchronously.
+    /// </summary>
+    /// <typeparam name="T">The type of entities in the query</typeparam>
+    /// <typeparam name="TResult">The type of the result</typeparam>
+    /// <param name="query">The original ordered query</param>
+    /// <param name="spec">The specification to apply to the query</param>
+    /// <param name="pageNumber">The page number</param>
+    /// <param name="pageSize">The size of the page</param>
+    /// <param name="mapperFunc">The function to map entities to result</param>
+    /// <param name="cancellationToken">The cancellation token</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the paginated data</returns>
     public static async Task<PaginatedData<TResult>> ProjectToPaginatedDataAsync<T, TResult>(
         this IOrderedQueryable<T> query, ISpecification<T> spec, int pageNumber, int pageSize,
         Func<T, TResult> mapperFunc, CancellationToken cancellationToken = default) where T : class, IEntity
@@ -38,20 +48,16 @@ public static class QueryableExtensions
         var specificationEvaluator = SpecificationEvaluator.Default;
         var queryWithSpec = specificationEvaluator.GetQuery(query.AsNoTracking(), spec);
 
-        var countTask = queryWithSpec.CountAsync(cancellationToken);
-        var dataTask = queryWithSpec
+        var count = await queryWithSpec.CountAsync(cancellationToken);
+        var data = await queryWithSpec
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        await Task.WhenAll(countTask, dataTask);
+        var items = data.Select(x => mapperFunc(x)).ToList();
 
-        var count = countTask.Result;
-        var data = dataTask.Result.Select(x => mapperFunc(x)).ToList();
-
-        return new PaginatedData<TResult>(data, count, pageNumber, pageSize);
+        return new PaginatedData<TResult>(items, count, pageNumber, pageSize);
     }
-
 
     /// <summary>
     /// Filters the queryable data based on the specified keyword.
@@ -89,5 +95,4 @@ public static class QueryableExtensions
         var lambda = Expression.Lambda<Func<T, bool>>(predicate, parameter);
         return source.Where(lambda);
     }
-   
 }
