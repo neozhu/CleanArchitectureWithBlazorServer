@@ -1,8 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Identity.Mappers;
-using CleanArchitecture.Blazor.Domain.Identity;
-using Riok.Mapperly.Abstractions;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Mappers;
 #pragma warning disable RMG020
@@ -20,6 +18,7 @@ public static partial class DocumentMapper
     public static partial AddEditDocumentCommand ToEditCommand(DocumentDto dto);
     public static partial Document Map(AddEditDocumentCommand command);
     public static partial void MapTo(AddEditDocumentCommand command, Document document);
+
     public static partial IQueryable<DocumentDto> ProjectTo(this IQueryable<Document> q);
 
      

@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
-using Riok.Mapperly.Abstractions;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Mappers;
 [Mapper]

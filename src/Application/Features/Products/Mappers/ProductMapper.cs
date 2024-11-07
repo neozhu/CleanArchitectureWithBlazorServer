@@ -1,6 +1,5 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
-using Riok.Mapperly.Abstractions;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Mappers;
 #pragma warning disable RMG020

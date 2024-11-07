@@ -37,7 +37,7 @@ public class LogsQueryHandler : IRequestHandler<LogsWithPaginationQuery, Paginat
         CancellationToken cancellationToken)
     {
         var data = await _context.Loggers.OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectToPaginatedDataAsync<Logger,LogDto>(request.Specification, request.PageNumber, request.PageSize,
+            .ProjectToPaginatedDataAsync(request.Specification, request.PageNumber, request.PageSize,
                 LogMapper.ToDto, cancellationToken);
         return data;
     }

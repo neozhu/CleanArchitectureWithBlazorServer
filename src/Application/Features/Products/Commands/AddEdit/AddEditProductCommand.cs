@@ -3,7 +3,6 @@
 
 
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
-using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.Mappers;
 using Microsoft.AspNetCore.Components.Forms;
 

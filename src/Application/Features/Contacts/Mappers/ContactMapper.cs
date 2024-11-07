@@ -2,7 +2,6 @@
 using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Create;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Update;
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
-using Riok.Mapperly.Abstractions;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
 
