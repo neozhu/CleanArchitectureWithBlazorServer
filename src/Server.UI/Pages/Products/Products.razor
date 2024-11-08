@@ -345,6 +345,7 @@
                 ListView = Query.ListView,
                 OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
                 SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
+                CurrentUser = UserProfile,
                 ExportType = ExportType.Excel
             };
         var result = await Mediator.Send(request);
@@ -373,6 +374,7 @@
                 Unit = Query.Unit,
                 Keyword = Query.Keyword,
                 ListView = Query.ListView,
+                CurrentUser = UserProfile,
                 OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
                 SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
                 ExportType = ExportType.PDF
