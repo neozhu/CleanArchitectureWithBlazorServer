@@ -3,8 +3,8 @@
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
+using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Pagination;
 
@@ -12,7 +12,7 @@ public class ContactsWithPaginationQuery : ContactAdvancedFilter, ICacheableRequ
 {
     public override string ToString()
     {
-        return $"Listview:{ListView}-{CurrentUser?.UserId}, Search:{Keyword}, {OrderBy}, {SortDirection}, {PageNumber}, {PageSize}";
+        return $"Listview:{ListView}-{LocalTimezoneOffset.TotalHours}, Search:{Keyword}, {OrderBy}, {SortDirection}, {PageNumber}, {PageSize}";
     }
     public string CacheKey => ContactCacheKey.GetPaginationCacheKey($"{this}");
     public MemoryCacheEntryOptions? Options => ContactCacheKey.MemoryCacheEntryOptions;
@@ -25,8 +25,7 @@ public class ContactsWithPaginationQueryHandler :
         private readonly IApplicationDbContext _context;
 
         public ContactsWithPaginationQueryHandler(
-            IApplicationDbContext context
-            )
+            IApplicationDbContext context)
         {
             _context = context;
         }
@@ -34,7 +33,11 @@ public class ContactsWithPaginationQueryHandler :
         public async Task<PaginatedData<ContactDto>> Handle(ContactsWithPaginationQuery request, CancellationToken cancellationToken)
         {
            var data = await _context.Contacts.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                                    .ProjectToPaginatedDataAsync(request.Specification, request.PageNumber, request.PageSize,ContactMapper.ToDto, cancellationToken);
+                                                   .ProjectToPaginatedDataAsync(request.Specification, 
+                                                                                request.PageNumber, 
+                                                                                request.PageSize, 
+                                                                                ContactMapper.ToDto, 
+                                                                                cancellationToken);
             return data;
         }
 }

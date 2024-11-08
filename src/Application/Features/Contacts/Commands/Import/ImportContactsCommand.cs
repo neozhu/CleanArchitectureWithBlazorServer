@@ -36,8 +36,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
         public ImportContactsCommandHandler(
             IApplicationDbContext context,
             IExcelService excelService,
-            IStringLocalizer<ImportContactsCommandHandler> localizer
-            )
+            IStringLocalizer<ImportContactsCommandHandler> localizer)
         {
             _context = context;
             _localizer = localizer;
