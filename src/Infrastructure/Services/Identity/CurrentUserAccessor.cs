@@ -8,16 +8,14 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 /// </summary>
 public class CurrentUserAccessor : ICurrentUserAccessor
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ICurrentUserContext _currentUserContext;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CurrentUserAccessor"/> class.
     /// </summary>
     /// <param name="currentUserContext">The current user context.</param>
-    public CurrentUserAccessor(IHttpContextAccessor httpContextAccessor, ICurrentUserContext currentUserContext)
+    public CurrentUserAccessor(ICurrentUserContext currentUserContext)
     {
-        _httpContextAccessor = httpContextAccessor;
         _currentUserContext = currentUserContext;
     }
 
@@ -25,9 +23,5 @@ public class CurrentUserAccessor : ICurrentUserAccessor
     /// Gets the session information of the current user.
     /// </summary>
     public SessionInfo? SessionInfo => _currentUserContext.SessionInfo;
-
-    public string? UserId => (_httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated??false)? _httpContextAccessor.HttpContext?.User.GetUserId(): null;
-
-    public string? TenantId => (_httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false) ? _httpContextAccessor.HttpContext?.User.GetTenantId() : null;
 }
 

@@ -11,6 +11,4 @@ public interface ICurrentUserAccessor
     /// Gets the current session information of the user.
     /// </summary>
     SessionInfo? SessionInfo { get; }
-    string? UserId { get; }
-    string? TenantId { get; }
 }

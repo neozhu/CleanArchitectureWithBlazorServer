@@ -71,8 +71,8 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
     }
     private void UpdateAuditableEntities(DbContext context)
     {
-        var userId = _currentUserAccessor.UserId;
-        var tenantId = _currentUserAccessor.TenantId;
+        var userId = _currentUserAccessor.SessionInfo?.UserId;
+        var tenantId = _currentUserAccessor.SessionInfo?.TenantId;
         var now = _dateTime.Now;
 
         foreach (var entry in context.ChangeTracker.Entries<IAuditableEntity>())
@@ -124,7 +124,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
 
     private List<AuditTrail> GenerateAuditTrails(DbContext context)
     {
-        var userId = _currentUserAccessor.UserId;
+        var userId = _currentUserAccessor.SessionInfo?.UserId;
         var now = _dateTime.Now;
         var auditTrails = new List<AuditTrail>();
 
