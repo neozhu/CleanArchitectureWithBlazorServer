@@ -2,8 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
+using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetAll;
 
@@ -19,18 +19,16 @@ public class GetAllContactsQueryHandler :
     private readonly IApplicationDbContext _context;
 
     public GetAllContactsQueryHandler(
-        IApplicationDbContext context
-        )
+        IApplicationDbContext context)
     {
         _context = context;
     }
 
     public async Task<IEnumerable<ContactDto>> Handle(GetAllContactsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Contacts
-                     .ProjectTo()
-                     .AsNoTracking()
-                     .ToListAsync(cancellationToken);
+        var data = await _context.Contacts.ProjectTo()
+                                                .AsNoTracking()
+                                                .ToListAsync(cancellationToken);
         return data;
     }
 }
