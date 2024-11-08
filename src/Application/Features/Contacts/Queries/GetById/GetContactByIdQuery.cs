@@ -3,8 +3,8 @@
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
+using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById;
 
@@ -21,8 +21,7 @@ public class GetContactByIdQueryHandler :
     private readonly IApplicationDbContext _context;
 
     public GetContactByIdQueryHandler(
-        IApplicationDbContext context
-        )
+        IApplicationDbContext context)
     {
         _context = context;
     }
@@ -30,8 +29,8 @@ public class GetContactByIdQueryHandler :
     public async Task<Result<ContactDto>> Handle(GetContactByIdQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Contacts.ApplySpecification(new ContactByIdSpecification(request.Id))
-                     .ProjectTo()
-                     .FirstAsync(cancellationToken);
+                                                .ProjectTo()
+                                                .FirstAsync(cancellationToken);
         return await Result<ContactDto>.SuccessAsync(data);
     }
 }

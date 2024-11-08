@@ -1,54 +1,51 @@
 ﻿@page "/pages/Contacts/edit/{id:int}"
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Update
-@using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById
-@using CleanArchitecture.Blazor.Server.UI.Components.Fusion
 @inherits MudComponentBase
 @inject IValidationService Validator
 @inject IStringLocalizer<Contacts> L
 
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
-<MudContainer Class="mt-3" MaxWidth="MaxWidth.Medium">
-    @if (model != null)
-    {
-        <MudCard Class="pa-2">
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Typo="Typo.h6">@Title</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <ActiveUserSession PageComponent="@($"{nameof(EditContact)}/{ model.Id}")" />
-                <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
-                    <MudGrid Spacing="2">
-                        <MudItem xs="12" md="6">
-                            <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
-                        </MudItem>
-                        <MudItem xs="12" md="6">
-                            <MudTextField Label="@L[model.GetMemberDescription(x=>x.Email)]" @bind-Value="model.Email" For="@(() => model.Email)" Required="false" RequiredError="@L["email is required!"]"></MudTextField>
-                        </MudItem>
-                        <MudItem xs="12" md="6">
-                            <MudTextField Label="@L[model.GetMemberDescription(x=>x.PhoneNumber)]" @bind-Value="model.PhoneNumber" For="@(() => model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required!"]"></MudTextField>
-                        </MudItem>
-                        <MudItem xs="12" md="6">
-                            <MudTextField Label="@L[model.GetMemberDescription(x=>x.Country)]" @bind-Value="model.Country" For="@(() => model.Country)" Required="false" RequiredError="@L["country is required!"]"></MudTextField>
-                        </MudItem>
-                        <MudItem xs="12" md="12">
-                            <MudTextField Label="@L[model.GetMemberDescription(x=>x.Description)]" Lines="3" For="@(() => model.Description)" @bind-Value="model.Description"></MudTextField>
-                        </MudItem>
-                    </MudGrid>
-                </MudForm>
+<MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
+@if (model != null)
+{
+    <MudCard Class="pa-2">
+        <MudCardHeader>
+            <CardHeaderContent>
+                 <MudText Typo="Typo.h6">@Title</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+        <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
+            <MudGrid Spacing="2">
+                <MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Description)]" Lines="3" For="@(() => model.Description)" @bind-Value="model.Description"></MudTextField>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Email)]" @bind-Value="model.Email" For="@(() => model.Email)" Required="false" RequiredError="@L["email is required!"]"></MudTextField>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.PhoneNumber)]" @bind-Value="model.PhoneNumber" For="@(() => model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required!"]"></MudTextField>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Country)]" @bind-Value="model.Country" For="@(() => model.Country)" Required="false" RequiredError="@L["country is required!"]"></MudTextField>
+                </MudItem> 
 
-            </MudCardContent>
-            <MudCardActions Class="d-flex justify-end gap-2">
-                <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving"  OnClick="Submit">@ConstantString.Save</MudLoadingButton>
-            </MudCardActions>
+            </MudGrid>
+        </MudForm>
+        </MudCardContent>
+        <MudCardActions Class="d-flex justify-end gap-2">
+                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        </MudCardActions>
         </MudCard>
     }
 </MudContainer>
-
+ 
 
 @code {
     public string? Title { get; private set; }
@@ -80,7 +77,6 @@
             return null!;
         });
 
-
     }
     async Task Submit()
     {
@@ -90,18 +86,18 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
-            var result = await Mediator.Send(model!);
+            var result = await Mediator.Send(model);
             result.Match(
-            data =>
-            {
-                Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
-                return data;
-            },
-            errors =>
-            {
-                Snackbar.Add(errors, MudBlazor.Severity.Error);
-                return 0;
-            });
+                data=>
+                {
+                    Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                    return data;
+                },
+                errors=>
+                {
+                    Snackbar.Add(errors, MudBlazor.Severity.Error);
+                    return 0;
+                });
         }
         finally
         {

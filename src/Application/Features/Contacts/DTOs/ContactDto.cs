@@ -8,8 +8,8 @@ public class ContactDto
 {
     [Description("Id")]
     public int Id { get; set; }
-    [Description("Name")]
-    public string Name { get; set; } = string.Empty;
+        [Description("Name")]
+    public string Name {get;set;} 
     [Description("Description")]
     public string? Description {get;set;} 
     [Description("Email")]
@@ -18,6 +18,7 @@ public class ContactDto
     public string? PhoneNumber {get;set;} 
     [Description("Country")]
     public string? Country {get;set;} 
+
 
 }
 

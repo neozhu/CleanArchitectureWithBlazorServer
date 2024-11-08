@@ -1,8 +1,10 @@
 ﻿@page "/pages/Contacts"
 
 @using BlazorDownloadFile
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Caching
 @using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
@@ -11,6 +13,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.AddEdit
 @using CleanArchitecture.Blazor.Server.UI.Pages.Contacts.Components
 
+@inject ICurrentUserAccessor CurrentUserAccessor
 @inject IStringLocalizer<Contacts> L
 @attribute [Authorize(Policy = Permissions.Contacts.View)]
 <PageTitle>@Title</PageTitle>
@@ -19,23 +22,24 @@
         height: 120px !important;
     }
 </style>
-
+@CurrentUserAccessor.SessionInfo.TenantId
+@CurrentUserAccessor.SessionInfo.UserId
 <MudDataGrid ServerData="@(ServerReload)"
-             FixedHeader="true"
-             FixedFooter="true"
-             Virtualize="true"
-             @bind-RowsPerPage="_defaultPageSize"
-             Height="calc(100vh - 330px)"
-             Loading="@_loading"
-             MultiSelection="true"
-             T="ContactDto"
-             SelectOnRowClick="false"
-             RowClick="@(s=>OnView(s.Item))"
-             @bind-SelectedItems="_selectedItems"
-             @bind-SelectedItem="_currentDto"
-             Hover="true" @ref="_table">
-    <ToolBarContent>
-        <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
+                  FixedHeader="true"
+                  FixedFooter="true"
+                  Virtualize="true"
+                  @bind-RowsPerPage="_defaultPageSize"
+                  Height="calc(100vh - 330px)"
+                  Loading="@_loading"
+                  MultiSelection="true"
+                  T="ContactDto"
+                  SelectOnRowClick="false"
+                  RowClick="@(s=>OnView(s.Item))"
+                  @bind-SelectedItems="_selectedItems"
+                  @bind-SelectedItem="_currentDto"
+                  Hover="true" @ref="_table">
+            <ToolBarContent>
+                 <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
             <MudStack Row AlignItems="AlignItems.Start">
                 <MudIcon Icon="@Icons.Material.Filled.Window" Size="Size.Large" />
                 <MudStack Spacing="0">
@@ -46,21 +50,19 @@
             </MudStack>
             <MudStack Spacing="0" AlignItems="AlignItems.End">
                 <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
-                    <MudButton 
-                               Disabled="@_loading"
+                    <MudButton Disabled="@_loading"
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
                     @if (_canCreate)
                     {
-                        <MudButton 
-                                   StartIcon="@Icons.Material.Outlined.Add"
+                        <MudButton StartIcon="@Icons.Material.Outlined.Add"
                                    OnClick="OnCreate">
                             @ConstantString.New
                         </MudButton>
                     }
-                    <MudMenu  TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
+                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
                         @if (_canCreate)
                         {
                             <MudMenuItem Disabled="@(_selectedItems.Count != 1)" OnClick="OnClone">@ConstantString.Clone</MudMenuItem>
@@ -105,61 +107,61 @@
                 </MudStack>
             </MudStack>
         </MudStack>
-    </ToolBarContent>
-    <Columns>
-        <SelectColumn ShowInFooter="false"></SelectColumn>
-        <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
-            <CellTemplate>
-                @if (_canEdit || _canDelete)
-                {
-                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
-                        @if (_canEdit)
+            </ToolBarContent>
+            <Columns>
+                <SelectColumn ShowInFooter="false"></SelectColumn>
+                <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
+                    <CellTemplate>
+                        @if (_canEdit || _canDelete)
                         {
-                            <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                            <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
+                                     Dense="true"
+                                     EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                                @if (_canEdit)
+                                {
+                                    <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                                }
+                                @if (_canDelete)
+                                {
+                                    <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                                }
+                            </MudMenu>
                         }
-                        @if (_canDelete)
+                        else
                         {
-                            <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                            <MudIconButton Variant="Variant.Filled"  
+                                       Disabled="true"
+                                       Icon="@Icons.Material.Filled.DoNotTouch"
+                                       Size="Size.Small"
+                                       Color="Color.Surface">
+                                @ConstantString.NoAllowed
+                            </MudIconButton>
                         }
-                    </MudMenu>
-                }
-                else
-                {
-                    <MudIconButton Variant="Variant.Filled"
-                                   Disabled="true"
-                                   Icon="@Icons.Material.Filled.DoNotTouch"
-                                   Size="Size.Small"
-                                   Color="Color.Surface">
-                        @ConstantString.NoAllowed
-                    </MudIconButton>
-                }
-            </CellTemplate>
-        </TemplateColumn>
-        @*TODO: Define the fields that should be displayed in data table*@
-        <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
-            <CellTemplate>
-                <div class="d-flex flex-column">
-                    <MudText Typo="Typo.body2">@context.Item.Name</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
-                </div>
-            </CellTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.Email" Title="@L[_currentDto.GetMemberDescription(x=>x.Email)]" />
-        <PropertyColumn Property="x => x.PhoneNumber" Title="@L[_currentDto.GetMemberDescription(x=>x.PhoneNumber)]" />
-        <PropertyColumn Property="x => x.Country" Title="@L[_currentDto.GetMemberDescription(x=>x.Country)]" />
+                    </CellTemplate>
+                </TemplateColumn>
+                @*TODO: Define the fields that should be displayed in data table*@
+                <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Name)]"> 
+   <CellTemplate>
+      <div class="d-flex flex-column">
+        <MudText Typo="Typo.body2">@context.Item.Name</MudText>
+        <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
+     </div>
+    </CellTemplate>
+</PropertyColumn>
+                <PropertyColumn Property="x => x.Email" Title="@L[_currentDto.GetMemberDescription(x=>x.Email)]" />
+                <PropertyColumn Property="x => x.PhoneNumber" Title="@L[_currentDto.GetMemberDescription(x=>x.PhoneNumber)]" />
+                <PropertyColumn Property="x => x.Country" Title="@L[_currentDto.GetMemberDescription(x=>x.Country)]" />
 
-    </Columns>
-    <NoRecordsContent>
-        <MudText>@ConstantString.NoRecords</MudText>
-    </NoRecordsContent>
-    <LoadingContent>
-        <MudText>@ConstantString.Loading</MudText>
-    </LoadingContent>
-    <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
-    </PagerContent>
+            </Columns>
+            <NoRecordsContent>
+                <MudText>@ConstantString.NoRecords</MudText>
+            </NoRecordsContent>
+            <LoadingContent>
+                <MudText>@ConstantString.Loading</MudText>
+            </LoadingContent>
+            <PagerContent>
+                <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
+            </PagerContent>
 </MudDataGrid>
 
 
@@ -177,7 +179,8 @@
     private Task<AuthenticationState> AuthState { get; set; } = default!;
     [CascadingParameter]
     private UserProfile? UserProfile { get; set; }
-
+    [CascadingParameter(Name = "LocalTimezoneOffset")]
+    private TimeSpan _localTimezoneOffset { get; set; }
 
     private ContactsWithPaginationQuery Query { get; set; } = new();
     [Inject]
@@ -195,7 +198,7 @@
         var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Edit)).Succeeded;
+        _canEdit   = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Edit)).Succeeded;
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Export)).Succeeded;
@@ -210,6 +213,7 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
+            Query.LocalTimezoneOffset = _localTimezoneOffset;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
             return new GridData<ContactDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
@@ -234,7 +238,7 @@
     {
         ContactCacheKey.Refresh();
         _selectedItems = new();
-        Query.Keyword = string.Empty;
+        Query.Keyword  = string.Empty;
         await _table.ReloadServerData();
     }
     private async Task ShowEditFormDialog(string title, AddEditContactCommand command)
@@ -255,26 +259,29 @@
     }
     private void OnView(ContactDto dto)
     {
-        Navigation.NavigateTo($"/pages/contacts/view/{dto.Id}");
+        Navigation.NavigateTo($"/pages/Contacts/view/{dto.Id}");
     }
-    private void OnCreate()
+    private async Task OnCreate()
     {
-        Navigation.NavigateTo($"/pages/contacts/create");
+        var command = new AddEditContactCommand();
+        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Contact"]), command);
     }
-    private Task OnClone()
+    private async Task OnClone()
     {
-        throw new NotImplementedException();
+        var dto = _selectedItems.First();
+        var command = ContactMapper.CloneFromDto(dto);
+        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Contact"]), command);
     }
-    private void OnEdit(ContactDto dto)
+    private async Task OnEdit(ContactDto dto)
     {
-        Navigation.NavigateTo($"/pages/contacts/edit/{dto.Id}");
+       Navigation.NavigateTo($"/pages/Contacts/edit/{dto.Id}");
     }
 
     private async Task OnDelete(ContactDto dto)
     {
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Name);
         var command = new DeleteContactCommand(new int[] { dto.Id });
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText,async () =>
         {
             await InvokeAsync(async () =>
             {
@@ -288,7 +295,7 @@
     {
         var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
         var command = new DeleteContactCommand(_selectedItems.Select(x => x.Id).ToArray());
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText,async () =>
         {
             await InvokeAsync(async () =>
             {
@@ -311,17 +318,17 @@
             };
         var result = await Mediator.Send(request);
         await result.MatchAsync<byte[]>(
-          async data =>
-        {
-            var downloadresult = await BlazorDownloadFileService.DownloadFile($"{L["Contacts"]}.xlsx", result.Data, contentType: "application/octet-stream");
-            Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
-            return data;
-        },
-        errors =>
-        {
-            Snackbar.Add($"{errors}", MudBlazor.Severity.Error);
-            return Task.FromResult(Array.Empty<byte>());
-        });
+            async data =>
+            {
+                var downloadresult = await BlazorDownloadFileService.DownloadFile($"{L["Contacts"]}.xlsx", result.Data, contentType:"application/octet-stream");
+                Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
+                return data;
+            },
+            errors =>
+            {
+                Snackbar.Add($"{errors}", MudBlazor.Severity.Error);
+                return Task.FromResult(Array.Empty<byte>());
+            });
         _exporting = false;
     }
     private async Task OnImportData(IBrowserFile file)
@@ -332,19 +339,16 @@
         var command = new ImportContactsCommand(file.Name, stream.ToArray());
         var result = await Mediator.Send(command);
         await result.MatchAsync(
-         async data =>
-         {
-             await _table.ReloadServerData();
-             Snackbar.Add($"{ConstantString.ImportSuccess}", MudBlazor.Severity.Info);
-             return data;
-         },
-         errors =>
-         {
-             Snackbar.Add($"{errors}", MudBlazor.Severity.Error);
-             return Task.FromResult(0);
-         }
-         );
-
+            async data =>
+            {
+                await _table.ReloadServerData();
+                Snackbar.Add($"{ConstantString.ImportSuccess}", MudBlazor.Severity.Info);
+                return data;
+            }, errors =>
+            {
+                Snackbar.Add($"{errors}", MudBlazor.Severity.Error);
+                return Task.FromResult(0);
+            });
         _uploading = false;
     }
 
