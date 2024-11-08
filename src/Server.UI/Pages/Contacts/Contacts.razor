@@ -13,7 +13,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.AddEdit
 @using CleanArchitecture.Blazor.Server.UI.Pages.Contacts.Components
 
-@inject ICurrentUserAccessor CurrentUserAccessor
+
 @inject IStringLocalizer<Contacts> L
 @attribute [Authorize(Policy = Permissions.Contacts.View)]
 <PageTitle>@Title</PageTitle>
@@ -22,8 +22,7 @@
         height: 120px !important;
     }
 </style>
-@CurrentUserAccessor.SessionInfo.TenantId
-@CurrentUserAccessor.SessionInfo.UserId
+
 <MudDataGrid ServerData="@(ServerReload)"
                   FixedHeader="true"
                   FixedFooter="true"
