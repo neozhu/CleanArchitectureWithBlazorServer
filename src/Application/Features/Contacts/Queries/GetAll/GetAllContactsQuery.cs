@@ -3,6 +3,7 @@
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
+using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetAll;
 
@@ -16,24 +17,18 @@ public class GetAllContactsQueryHandler :
      IRequestHandler<GetAllContactsQuery, IEnumerable<ContactDto>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-    private readonly IStringLocalizer<GetAllContactsQueryHandler> _localizer;
 
     public GetAllContactsQueryHandler(
-        IApplicationDbContext context,
-        IMapper mapper,
-        IStringLocalizer<GetAllContactsQueryHandler> localizer
+        IApplicationDbContext context
         )
     {
         _context = context;
-        _mapper = mapper;
-        _localizer = localizer;
     }
 
     public async Task<IEnumerable<ContactDto>> Handle(GetAllContactsQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Contacts
-                     .ProjectTo<ContactDto>(_mapper.ConfigurationProvider)
+                     .ProjectTo()
                      .AsNoTracking()
                      .ToListAsync(cancellationToken);
         return data;

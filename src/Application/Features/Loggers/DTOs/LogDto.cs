@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
@@ -26,12 +26,4 @@ public class LogDto
     [Description("Properties")] public string? Properties { get; set; }
 
     [Description("Log Event")] public string? LogEvent { get; set; }
-
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<Logger, LogDto>().ReverseMap();
-        }
-    }
 }

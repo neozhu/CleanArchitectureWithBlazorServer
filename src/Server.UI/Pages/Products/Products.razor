@@ -1,5 +1,6 @@
 ﻿@page "/pages/products"
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Products.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Products.Specifications
@@ -291,19 +292,13 @@
     private async Task OnClone()
     {
         var copy = _selectedItems.First();
-        var command = Mapper.Map<ProductDto, AddEditProductCommand>(copy, opts =>
-        {
-            opts.AfterMap((src, dest) =>
-            {
-                dest.Id = 0;
-            });
-        });
+        var command = ProductMapper.CloneFromDto(copy);
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
     }
 
     private async Task OnEdit(ProductDto dto)
     {
-        var command = Mapper.Map<AddEditProductCommand>(dto);
+        var command = ProductMapper.ToEditCommand(dto);
         await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), command);
     }
 

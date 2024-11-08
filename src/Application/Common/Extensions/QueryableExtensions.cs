@@ -30,34 +30,34 @@ public static class QueryableExtensions
     }
 
     /// <summary>
-    ///     Extension method to provided ordered queryable data to a paginated result set.
+    /// Projects the query to a paginated data asynchronously.
     /// </summary>
-    /// <remarks>
-    ///     This method will apply the given specification to the query, paginate the results, and project them to the desired
-    ///     result type.
-    /// </remarks>
-    /// <typeparam name="T">Source type of the entities in the query</typeparam>
-    /// <typeparam name="TResult">Destination type to which the entities should be projected</typeparam>
-    /// <param name="query">The original ordered query to project and paginate</param>
-    /// <param name="spec">The specification to apply to the query before projection and pagination</param>
-    /// <param name="pageNumber">The desired page number of the paginated results</param>
-    /// <param name="pageSize">The number of items per page in the paginated results</param>
-    /// <param name="configuration">Configuration for the projection</param>
-    /// <param name="cancellationToken">Optional cancellation token to cancel the operation</param>
-    /// <returns>The paginated and projected data</returns>
+    /// <typeparam name="T">The type of entities in the query</typeparam>
+    /// <typeparam name="TResult">The type of the result</typeparam>
+    /// <param name="query">The original ordered query</param>
+    /// <param name="spec">The specification to apply to the query</param>
+    /// <param name="pageNumber">The page number</param>
+    /// <param name="pageSize">The size of the page</param>
+    /// <param name="mapperFunc">The function to map entities to result</param>
+    /// <param name="cancellationToken">The cancellation token</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the paginated data</returns>
     public static async Task<PaginatedData<TResult>> ProjectToPaginatedDataAsync<T, TResult>(
         this IOrderedQueryable<T> query, ISpecification<T> spec, int pageNumber, int pageSize,
-        IConfigurationProvider configuration, CancellationToken cancellationToken = default) where T : class, IEntity
+        Func<T, TResult> mapperFunc, CancellationToken cancellationToken = default) where T : class, IEntity
     {
         var specificationEvaluator = SpecificationEvaluator.Default;
-        var count = await specificationEvaluator.GetQuery(query.AsNoTracking(), spec).CountAsync();
-        var data = await specificationEvaluator.GetQuery(query.AsNoTracking(), spec).Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ProjectTo<TResult>(configuration)
-            .ToListAsync(cancellationToken);
-        return new PaginatedData<TResult>(data, count, pageNumber, pageSize);
-    }
+        var queryWithSpec = specificationEvaluator.GetQuery(query.AsNoTracking(), spec);
 
+        var count = await queryWithSpec.CountAsync(cancellationToken);
+        var data = await queryWithSpec
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        var items = data.Select(x => mapperFunc(x)).ToList();
+
+        return new PaginatedData<TResult>(items, count, pageNumber, pageSize);
+    }
 
     /// <summary>
     /// Filters the queryable data based on the specified keyword.
@@ -95,5 +95,4 @@ public static class QueryableExtensions
         var lambda = Expression.Lambda<Func<T, bool>>(predicate, parameter);
         return source.Where(lambda);
     }
-   
 }

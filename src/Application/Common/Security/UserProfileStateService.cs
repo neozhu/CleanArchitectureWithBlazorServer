@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+﻿using CleanArchitecture.Blazor.Application.Features.Identity.Mappers;
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,23 +12,21 @@ public class UserProfileStateService
     private UserProfile _userProfile = new UserProfile() { Email="", UserId="", UserName="" };
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IFusionCache _fusionCache;
-    private readonly IMapper _mapper;
 
     public UserProfileStateService(IServiceScopeFactory scopeFactory,
-        IFusionCache fusionCache,
-        IMapper mapper)
+        IFusionCache fusionCache)
     {
         var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
         _fusionCache = fusionCache;
-        _mapper = mapper;
+
     }
     public async Task InitializeAsync(string userName)
     {
         var key = GetApplicationUserCacheKey(userName);
         var result = await _fusionCache.GetOrSetAsync(key,
             _ => _userManager.Users.Where(x => x.UserName == userName).Include(x => x.UserRoles)
-                .ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
+                .ThenInclude(x => x.Role).ProjectTo()
                 .FirstOrDefaultAsync(), RefreshInterval);
         if(result is not null)
         {
