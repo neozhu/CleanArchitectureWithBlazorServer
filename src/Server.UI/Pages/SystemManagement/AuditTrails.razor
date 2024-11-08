@@ -31,12 +31,11 @@
             </MudStack>
             <MudStack Spacing="0" AlignItems="AlignItems.End">
                 <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
-                    <MudButton 
-                               OnClick="@(() => OnRefresh())"
+                    <MudButton OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
-                    
+
                 </MudToolBar>
                 <MudStack Row Spacing="1" AlignItems="AlignItems.End">
                     <MudEnumSelect TEnum="AuditType?" Placeholder="@L["Search by audit type"]" Value="@Query.AuditType" Clearable="true" ValueChanged="@(s => OnSearch(s))" Style="min-width:120px" FullWidth="true"> </MudEnumSelect>
@@ -49,10 +48,10 @@
             </MudStack>
         </MudStack>
 
-        
+
     </ToolBarContent>
     <Columns>
-        <HierarchyColumn T="AuditTrailDto" ButtonDisabledFunc="@(x => x.AuditType == AuditType.None)"/>
+        <HierarchyColumn T="AuditTrailDto" ButtonDisabledFunc="@(x => x.AuditType == AuditType.None)" />
         <PropertyColumn Property="x => x.UserId" Title="@L[_currentDto.GetMemberDescription(x => x.UserId)]">
             <CellTemplate>
                 <div class="d-flex flex-column">
@@ -61,9 +60,9 @@
                 </div>
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.AuditType" Title="@L[_currentDto.GetMemberDescription(x => x.AuditType)]"/>
-        <PropertyColumn Property="x => x.TableName" Title="@L[_currentDto.GetMemberDescription(x => x.TableName)]"/>
-        <PropertyColumn Property="x => x.PrimaryKey" Title="@L[_currentDto.GetMemberDescription(x => x.PrimaryKey)]"/>
+        <PropertyColumn Property="x => x.AuditType" Title="@L[_currentDto.GetMemberDescription(x => x.AuditType)]" />
+        <PropertyColumn Property="x => x.TableName" Title="@L[_currentDto.GetMemberDescription(x => x.TableName)]" />
+        <PropertyColumn Property="x => x.PrimaryKey" Title="@L[_currentDto.GetMemberDescription(x => x.PrimaryKey)]" />
         <PropertyColumn Property="x => x.DateTime" Title="@L[_currentDto.GetMemberDescription(x => x.DateTime)]">
             <CellTemplate>
                 <UtcToLocal UTCDateTime="@context.Item.DateTime"></UtcToLocal>
@@ -80,25 +79,53 @@
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent Class="py-3">
-                <MudSimpleTable Hover="true" Bordered="true">
-                    <thead>
-                        <tr>
-                            <th>@L["Field Name"]</th>
-                            <th>@L[_currentDto.GetMemberDescription(x => x.OldValues)]</th>
-                            <th>@L[_currentDto.GetMemberDescription(x => x.NewValues)]</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var field in context.Item.NewValues?.Any() ?? false ? context.Item.NewValues : context.Item.OldValues?.Any() ?? false ? context.Item.OldValues : new Dictionary<string, object?>())
-                        {
-                            <tr>
-                                <td>@field.Key</td>
-                                <td class="mud-text-secondary">@(context.Item.OldValues?.ContainsKey(field.Key) ?? false ? context.Item.OldValues[field.Key] : string.Empty)</td>
-                                <td>@(context.Item.NewValues?.ContainsKey(field.Key) ?? false ? context.Item.NewValues[field.Key] : string.Empty)</td>
-                            </tr>
-                        }
-                    </tbody>
-                </MudSimpleTable>
+                <MudExpansionPanels Dense Class="mt-2" Elevation="0" MultiExpansion>
+                    <MudExpansionPanel Dense Gutters>
+                        <TitleContent>
+                            <MudStack Row AlignItems="AlignItems.Center" Spacing="2">
+                                @if (context.Item.IsSuccessful)
+                                {
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" ></MudIcon>
+                                }
+                                else
+                                {
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ErrorOutline" Color="Color.Error" ></MudIcon>
+                                }
+                                <MudText>@L["History data"]</MudText>
+                            </MudStack>
+                        </TitleContent>
+                        <ChildContent>
+                            <MudSimpleTable Hover="true" Dense Elevation="0" Bordered="false">
+                                <thead>
+                                    <tr>
+                                        <th>@L["Field Name"]</th>
+                                        <th>@L[_currentDto.GetMemberDescription(x => x.OldValues)]</th>
+                                        <th>@L[_currentDto.GetMemberDescription(x => x.NewValues)]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var field in context.Item.NewValues?.Any() ?? false ? context.Item.NewValues : context.Item.OldValues?.Any() ?? false ? context.Item.OldValues : new Dictionary<string, object?>())
+                                    {
+                                        <tr>
+                                            <td>@field.Key</td>
+                                            <td class="mud-text-secondary">@(context.Item.OldValues?.ContainsKey(field.Key) ?? false ? context.Item.OldValues[field.Key] : string.Empty)</td>
+                                            <td>@(context.Item.NewValues?.ContainsKey(field.Key) ?? false ? context.Item.NewValues[field.Key] : string.Empty)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </MudSimpleTable>
+                        </ChildContent>
+                    </MudExpansionPanel>
+                    @if (@context.Item.IsSuccessful == false)
+                    {
+                        <MudExpansionPanel Text="@L[_currentDto.GetMemberDescription(x=>x.ErrorMessage)]" Dense Gutters>
+                            <MudText Typo="Typo.body2">@context.Item.ErrorMessage</MudText>
+                        </MudExpansionPanel>
+                    }
+                    <MudExpansionPanel Text="@L[_currentDto.GetMemberDescription(x=>x.DebugView)]" Dense Gutters>
+                        <MudText Typo="Typo.body2">@context.Item.DebugView</MudText>
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
             </MudCardContent>
         </MudCard>
     </ChildRowContent>
@@ -109,7 +136,7 @@
         <MudText>@ConstantString.Loading</MudText>
     </LoadingContent>
     <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"/>
+        <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
 
