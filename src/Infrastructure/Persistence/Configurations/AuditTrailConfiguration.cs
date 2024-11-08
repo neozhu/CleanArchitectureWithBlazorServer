@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Conversions;
@@ -24,5 +24,7 @@ public class AuditTrailConfiguration : IEntityTypeConfiguration<AuditTrail>
         builder.Property(u => u.PrimaryKey).HasJsonConversion();
         builder.Ignore(x => x.TemporaryProperties);
         builder.Ignore(x => x.HasTemporaryProperties);
+        builder.Property(x => x.DebugView).HasMaxLength(int.MaxValue);
+        builder.Property(x => x.ErrorMessage).HasMaxLength(int.MaxValue);
     }
 }
