@@ -4,6 +4,21 @@ namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
 public class PicklistAutocomplete<T> : MudAutocomplete<string>
 {
+    public PicklistAutocomplete()
+    {
+        SearchFunc = SearchFunc_;
+        Clearable = true;
+        Dense = true;
+        ResetValueOnEmptyText = true;
+        ToStringFunc = x =>
+        {
+            if (x != null && PicklistService != null)
+                return PicklistService.DataSource.FirstOrDefault(y => y.Value != null &&
+                                                                      y.Value.Equals(x))?.Text ?? x;
+            return x;
+        };
+    }
+
     [Parameter] public Picklist Picklist { get; set; }
 
     [Inject] private IPicklistService PicklistService { get; set; } = default!;
@@ -16,30 +31,16 @@ public class PicklistAutocomplete<T> : MudAutocomplete<string>
 
     private async Task PicklistService_OnChange()
     {
-       await  InvokeAsync(StateHasChanged);
+        await InvokeAsync(StateHasChanged);
     }
 
-    protected override void Dispose(bool disposing)
+    protected override async ValueTask DisposeAsyncCore()
     {
         PicklistService.OnChange -= PicklistService_OnChange;
-        base.Dispose(disposing);
+        await base.DisposeAsyncCore();
     }
-    public PicklistAutocomplete()
-    {
-        SearchFunc = SearchFunc_;
-        Clearable = true;
-        Dense = true;
-        ResetValueOnEmptyText = true;
-        ToStringFunc = x =>
-        {
-            if(x!=null && PicklistService!=null)
-                return PicklistService.DataSource.FirstOrDefault(y=>y.Value!=null &&
-                                  y.Value.Equals(x))?.Text ?? x;
-            return x;
-        };
-    }
-   
-    private Task<IEnumerable<string>> SearchFunc_(string value,CancellationToken cancellation=default)
+
+    private Task<IEnumerable<string>> SearchFunc_(string value, CancellationToken cancellation = default)
     {
         // if text is null or empty, show complete list
         return string.IsNullOrEmpty(value)
