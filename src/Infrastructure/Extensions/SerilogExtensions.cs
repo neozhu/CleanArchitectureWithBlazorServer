@@ -219,7 +219,12 @@ internal class UserInfoEnricher : ILogEventEnricher
     }
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
-       logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(
-                "UserName", _httpContextAccessor.HttpContext?.User?.Identity?.Name ?? ""));
+        var userName = _httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "";
+        var clientIp = _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
+        var clientAgent = _httpContextAccessor.HttpContext?.Request?.Headers["User-Agent"].ToString() ?? "";
+
+        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("UserName", userName));
+        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ClientIp", clientIp));
+        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ClientAgent", clientAgent));
     }
 }
