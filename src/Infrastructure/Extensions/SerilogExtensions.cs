@@ -158,7 +158,7 @@ public static class SerilogExtensions
             { "properties", new PropertiesColumnWriter(NpgsqlDbType.Varchar) },
             { "log_event", new LogEventSerializedColumnWriter(NpgsqlDbType.Varchar) },
             { "user_name", new SinglePropertyColumnWriter("UserName", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
-            { "client_ip", new SinglePropertyColumnWriter("ClientIp", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
+            { "client_ip", new SinglePropertyColumnWriter("ClientIP", PropertyWriteMethod.Raw, NpgsqlDbType.Varchar) },
             {
                 "client_agent",
                 new SinglePropertyColumnWriter("ClientAgent", PropertyWriteMethod.ToString, NpgsqlDbType.Varchar)
@@ -230,7 +230,7 @@ internal class UserInfoEnricher : ILogEventEnricher
             : "";
 
         logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("UserName", userName));
-        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ClientIp", clientIp));
+        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ClientIP", clientIp));
         logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ClientAgent", clientAgent));
     }
 }
