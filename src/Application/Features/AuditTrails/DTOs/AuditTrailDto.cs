@@ -19,5 +19,11 @@ public class AuditTrailDto
     [Description("Primary Key")] public string PrimaryKey { get; set; } = default!;
     [Description("Show Details")] public bool ShowDetails { get; set; }
     [Description("Owner")] public ApplicationUserDto? Owner { get; set; }
-   
+    [Description("Debug View")]
+    public string? DebugView { get; set; }
+    [Description("Error Message")]
+    public string? ErrorMessage { get; set; }
+    [Description("Is Successful")]
+    public bool IsSuccessful=> string.IsNullOrEmpty(ErrorMessage);
+
 }

@@ -6,40 +6,41 @@
 @inject IStringLocalizer<Contacts> L
 
 <PageTitle>@Title</PageTitle>
-<Breadcrumbs BreadcrumbItems="_breadcrumbItems" OnGoEditClick="GoEdit" OnDeleteClick="Delete"></Breadcrumbs>
-<MudContainer Class="mt-3" MaxWidth="MaxWidth.Medium">
-    @if (dto != null)
-    {
-        <MudCard Class="pa-2">
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Typo="Typo.h6">@Title</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudGrid Spacing="3" Class="readonly-grid">
-                    <MudItem xs="12" md="6">
-                        <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.Name)]" Value="@dto.Name"></ReadOnlyFieldX6>
-                    </MudItem>
-                    <MudItem xs="12" md="6">
-                        <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.Email)]" Value="@dto.Email"></ReadOnlyFieldX6>
-                    </MudItem>
-                    <MudItem xs="12" md="6">
-                        <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.PhoneNumber)]" Value="@dto.PhoneNumber"></ReadOnlyFieldX6>
-                    </MudItem>
-                    <MudItem xs="12" md="6">
-                        <ReadOnlyFieldX6 Label="@L[dto.GetMemberDescription(x => x.Country)]" Value="@dto.Country"></ReadOnlyFieldX6>
-                    </MudItem>
-                    <MudItem xs="12" md="12">
-                        <ReadOnlyFieldX12 Label="@L[dto.GetMemberDescription(x => x.Description)]" Value="@dto.Description"></ReadOnlyFieldX12>
-                    </MudItem>
-                </MudGrid>
-            </MudCardContent>
-            <MudCardActions></MudCardActions>
-        </MudCard>
-    }
-</MudContainer>
+<Breadcrumbs  OnGoEditClick="GoEdit" OnDeleteClick="Delete" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+<MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
+@if (model != null)
+{
+    <MudCard Class="pa-2">
+        <MudCardHeader>
+            <CardHeaderContent>
+                 <MudText Typo="Typo.h6">@Title</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGrid Spacing="3" Class="readonly-grid">
+                <MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Name)]" Value="model.Name"></ReadOnlyFieldX6>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Description)]" Value="model.Description"></ReadOnlyFieldX6>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Email)]" Value="model.Email"></ReadOnlyFieldX6>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.PhoneNumber)]" Value="model.PhoneNumber"></ReadOnlyFieldX6>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Country)]" Value="model.Country"></ReadOnlyFieldX6>
+                </MudItem> 
 
+            </MudGrid>
+        </MudCardContent>
+        <MudCardActions></MudCardActions>
+    </MudCard>
+ }
+</MudContainer>
+ 
 
 @code {
     public string? Title { get; private set; }
@@ -50,14 +51,14 @@
         new BreadcrumbItem("Home", href: "/"),
         new BreadcrumbItem("Contacts", href: "/pages/Contacts")
     };
-    private ContactDto? dto;
+    private ContactDto? model;
     protected override async Task OnInitializedAsync()
     {
         Title = L["Contact"];
         var result = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
         result.Map(data =>
         {
-            dto = data;
+            model = data;
             return data;
         }).Match(data =>
         {
@@ -77,8 +78,8 @@
     }
     async Task Delete()
     {
-        var contentText = string.Format(ConstantString.DeleteConfirmation, dto!.Name);
-        var command = new DeleteContactCommand(new int[] { dto.Id });
+        var contentText = string.Format(ConstantString.DeleteConfirmation, model.Name);
+        var command = new DeleteContactCommand(new int[] { model.Id });
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(() =>

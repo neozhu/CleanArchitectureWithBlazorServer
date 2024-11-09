@@ -10,7 +10,8 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 /// </summary>
 public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
-    private readonly ICurrentUserAccessor  _currentUserAccessor;
+    private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
     private readonly IDateTime _dateTime;
     private List<AuditTrail> _temporaryAuditTrailList = new();
 
@@ -19,9 +20,10 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
     /// </summary>
     /// <param name="currentUserService">The current user service.</param>
     /// <param name="dateTime">The date and time service.</param>
-    public AuditableEntityInterceptor(ICurrentUserAccessor  currentUserAccessor, IDateTime dateTime)
+    public AuditableEntityInterceptor(IServiceProvider serviceProvider, IDateTime dateTime)
     {
-        _currentUserAccessor = currentUserAccessor;
+        _currentUserAccessor = serviceProvider.GetRequiredService<ICurrentUserAccessor>();
+        _dbContextFactory= serviceProvider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>();
         _dateTime = dateTime;
     }
 
@@ -50,7 +52,23 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
         }
         return saveResult;
     }
+    public override async Task SaveChangesFailedAsync(DbContextErrorEventData eventData, CancellationToken cancellationToken = default)
+    {
+        await base.SaveChangesFailedAsync(eventData, cancellationToken);
+        var context = eventData.Context;
+        var exception = eventData.Exception;
+        if (context != null)
+        {
+            var errorMessage = exception.InnerException!=null? exception.InnerException.Message:exception.Message;
+            foreach (var auditTrail in _temporaryAuditTrailList)
+            {
+                auditTrail.ErrorMessage = errorMessage;
+            }
+            await SaveAuditTrailsWithNewContextAsync(_temporaryAuditTrailList, cancellationToken);
+        }
 
+       
+    }
     private void UpdateAuditableEntities(DbContext context)
     {
         var userId = _currentUserAccessor.SessionInfo?.UserId;
@@ -73,11 +91,8 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
                     SetDeletionAuditInfo(entry, userId, now);
                     break;
 
-                case EntityState.Unchanged:
-                    if (entry.HasChangedOwnedEntities())
-                    {
-                        SetModificationAuditInfo(entry.Entity, userId, now);
-                    }
+                case EntityState.Unchanged when entry.HasChangedOwnedEntities():
+                    SetModificationAuditInfo(entry.Entity, userId, now);
                     break;
             }
         }
@@ -117,7 +132,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
         {
             if (IsValidAuditEntry(entry))
             {
-                var auditTrail = CreateAuditTrail(entry, userId, now);
+                var auditTrail = CreateAuditTrail(entry, userId, now,entry.DebugView.LongView);
                 auditTrails.Add(auditTrail);
             }
         }
@@ -130,7 +145,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
         return entry.Entity is not AuditTrail && entry.State != EntityState.Detached && entry.State != EntityState.Unchanged;
     }
 
-    private AuditTrail CreateAuditTrail(EntityEntry entry, string userId, DateTime now)
+    private AuditTrail CreateAuditTrail(EntityEntry entry, string userId, DateTime now,string? debugView)
     {
         var auditTrail = new AuditTrail
         {
@@ -139,7 +154,8 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
             DateTime = now,
             AffectedColumns = new List<string>(),
             NewValues = new Dictionary<string, object?>(),
-            OldValues = new Dictionary<string, object?>()
+            OldValues = new Dictionary<string, object?>(),
+            DebugView = debugView
         };
 
         foreach (var property in entry.Properties)
@@ -202,6 +218,31 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
 
             await context.AddRangeAsync(_temporaryAuditTrailList, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
+            _temporaryAuditTrailList.Clear();
+        }
+    }
+    private async Task SaveAuditTrailsWithNewContextAsync(List<AuditTrail> auditTrails, CancellationToken cancellationToken)
+    {
+        if (_temporaryAuditTrailList.Any())
+        {
+            foreach (var auditTrail in _temporaryAuditTrailList)
+            {
+                foreach (var prop in auditTrail.TemporaryProperties)
+                {
+                    if (prop.Metadata.IsPrimaryKey() && prop.CurrentValue != null)
+                    {
+                        auditTrail.PrimaryKey[prop.Metadata.Name] = prop.CurrentValue;
+                    }
+                    else if (auditTrail.NewValues != null && prop.CurrentValue != null)
+                    {
+                        auditTrail.NewValues[prop.Metadata.Name] = prop.CurrentValue;
+                    }
+                }
+            }
+            var dbcontext = _dbContextFactory.CreateDbContext();
+            await dbcontext.AddRangeAsync(auditTrails, cancellationToken);
+            await dbcontext.SaveChangesAsync(cancellationToken);
+
             _temporaryAuditTrailList.Clear();
         }
     }
