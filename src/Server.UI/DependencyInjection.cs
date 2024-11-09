@@ -144,10 +144,13 @@ public static class DependencyInjection
         app.UseAuthorization();
         app.UseAntiforgery();
         app.UseHttpsRedirection();
-        app.UseStaticFiles();
+        app.MapStaticAssets();
+        
 
         if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
             Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
+
+
 
         app.UseStaticFiles(new StaticFileOptions
         {

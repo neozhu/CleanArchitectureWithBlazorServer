@@ -4,8 +4,6 @@ namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
 public class LanguageAutocomplete<T> : MudAutocomplete<string>
 {
-    
-    private List<LanguageCode> Languages { get; set; }= LocalizationConstants.SupportedLanguages.ToList();
     public LanguageAutocomplete()
     {
         SearchFunc = SearchFunc_;
@@ -13,10 +11,12 @@ public class LanguageAutocomplete<T> : MudAutocomplete<string>
         ResetValueOnEmptyText = true;
         ToStringFunc = x =>
         {
-            var language = Languages.FirstOrDefault(lang =>lang.Code.Equals(x, StringComparison.OrdinalIgnoreCase));
+            var language = Languages.FirstOrDefault(lang => lang.Code.Equals(x, StringComparison.OrdinalIgnoreCase));
             return language != null ? $"{language.DisplayName}" : x;
         };
     }
+
+    private List<LanguageCode> Languages { get; set; } = LocalizationConstants.SupportedLanguages.ToList();
 
     private Task<IEnumerable<string>> SearchFunc_(string value, CancellationToken cancellation = default)
     {
@@ -31,7 +31,6 @@ public class LanguageAutocomplete<T> : MudAutocomplete<string>
     private static bool Contains(LanguageCode language, string value)
     {
         return language.Code.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
-                language.DisplayName.Contains(value, StringComparison.InvariantCultureIgnoreCase);
+               language.DisplayName.Contains(value, StringComparison.InvariantCultureIgnoreCase);
     }
-    
 }
