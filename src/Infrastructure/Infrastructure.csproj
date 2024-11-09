@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <RootNamespace>CleanArchitecture.Blazor.Infrastructure</RootNamespace>
         <AssemblyName>CleanArchitecture.Blazor.Infrastructure</AssemblyName>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -8,18 +8,18 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0.10" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.10" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0.10" />
-        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.10" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.0-rc.2.24474.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.0-rc.2.24474.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.0-rc.2.24474.3" />
+        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.0-rc.2.24474.3" />
         <PackageReference Include="QuestPDF" Version="2024.10.2" />
-        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="7.0.1" />
+        <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="7.0.2" />
         <PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="4.1.1" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Blazor.Serilog.Sinks.SQLite" Version="1.0.6" />
-        <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
+        <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0-dev-00310" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Application\Application.csproj" />
