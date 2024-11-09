@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Data;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -220,8 +221,13 @@ internal class UserInfoEnricher : ILogEventEnricher
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
         var userName = _httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "";
-        var clientIp = _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
-        var clientAgent = _httpContextAccessor.HttpContext?.Request?.Headers["User-Agent"].ToString() ?? "";
+        var headers = _httpContextAccessor.HttpContext?.Request?.Headers;
+        var clientIp = headers != null && headers.ContainsKey("X-Forwarded-For")
+        ? headers["X-Forwarded-For"].ToString().Split(',').First().Trim()
+        : _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "";
+        var clientAgent = headers != null && headers.ContainsKey("User-Agent")
+            ? headers["User-Agent"].ToString()
+            : "";
 
         logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("UserName", userName));
         logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ClientIp", clientIp));
