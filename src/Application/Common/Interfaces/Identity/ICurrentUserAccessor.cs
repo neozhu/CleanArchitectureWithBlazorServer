@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+﻿using Org.BouncyCastle.Bcpg;
+
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 /// <summary>
 /// Interface to access the current user's session information.

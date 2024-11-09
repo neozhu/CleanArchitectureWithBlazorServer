@@ -40,6 +40,14 @@ namespace CleanArchitecture.Blazor.Migrators.MSSQL.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DebugView")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("NewValues")
                         .HasColumnType("nvarchar(max)");
 
