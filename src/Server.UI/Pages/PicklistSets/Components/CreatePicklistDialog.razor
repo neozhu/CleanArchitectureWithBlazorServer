@@ -45,7 +45,7 @@
 
 @code
 {
-    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 
     [EditorRequired][Parameter] public AddEditPicklistSetCommand Model { get; set; } = default!;
 
