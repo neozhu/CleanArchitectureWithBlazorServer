@@ -1,4 +1,4 @@
-version: '3.8'
+﻿version: '3.8'
 
 services:
   dashboard:
@@ -16,6 +16,13 @@ services:
       - SmtpClientOptions__Port=
       - SmtpClientOptions__User=
       - SmtpClientOptions__Password=
+      - SmtpClientOptions__DefaultFromEmail=
+      - Authentication__Microsoft__ClientId=
+      - Authentication__Microsoft__ClientSecret=
+      - Authentication__Google__ClientId=
+      - Authentication__Google__ClientSecret=
+      - ASPNETCORE_HTTP_PORTS=80
+      - ASPNETCORE_HTTPS_PORTS=443
       - ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=Password@123
       #- ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/CleanArchitecture.Blazor.Server.UI.pfx
@@ -30,7 +37,7 @@ services:
     restart: on-failure
 
   sqldb:
-    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
     environment:
       - "SA_PASSWORD=Password@123"
       - "ACCEPT_EULA=Y"
