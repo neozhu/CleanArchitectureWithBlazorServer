@@ -45,7 +45,7 @@ public class AddEditContactCommand: ICacheInvalidatorRequest<Result<int>>
 
 
       public string CacheKey => ContactCacheKey.GetAllCacheKey;
-      public CancellationTokenSource? SharedExpiryTokenSource => ContactCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => ContactCacheKey.Tags;
 }
 
 public class AddEditContactCommandHandler : IRequestHandler<AddEditContactCommand, Result<int>>

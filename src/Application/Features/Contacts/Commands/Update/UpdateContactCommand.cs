@@ -46,7 +46,7 @@ public class UpdateContactCommand: ICacheInvalidatorRequest<Result<int>>
     public string? Country {get;set;} 
 
         public string CacheKey => ContactCacheKey.GetAllCacheKey;
-        public CancellationTokenSource? SharedExpiryTokenSource => ContactCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => ContactCacheKey.Tags;
 
 }
 

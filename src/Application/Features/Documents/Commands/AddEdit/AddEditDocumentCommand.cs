@@ -19,7 +19,7 @@ public class AddEditDocumentCommand : ICacheInvalidatorRequest<Result<int>>
     [Description("Status")] public JobStatus Status { get; set; } = JobStatus.NotStart;
     [Description("Content")] public string? Content { get; set; }
     public UploadRequest? UploadRequest { get; set; }
-    public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => DocumentCacheKey.Tags;
 
 }
 

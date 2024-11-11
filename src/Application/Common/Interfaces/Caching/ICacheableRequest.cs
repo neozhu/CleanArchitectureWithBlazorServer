@@ -6,7 +6,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 public interface ICacheableRequest<TResponse> : IRequest<TResponse>
 {
     string CacheKey => string.Empty;
-    MemoryCacheEntryOptions? Options { get; }
+    IEnumerable<string>? Tags { get; }
 }
 
 public interface IFusionCacheRequest<TResponse> : IRequest<TResponse>
