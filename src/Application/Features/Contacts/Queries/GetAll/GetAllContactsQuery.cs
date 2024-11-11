@@ -23,7 +23,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetAll;
 public class GetAllContactsQuery : ICacheableRequest<IEnumerable<ContactDto>>
 {
    public string CacheKey => ContactCacheKey.GetAllCacheKey;
-   public MemoryCacheEntryOptions? Options => ContactCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => ContactCacheKey.Tags;
 }
 
 public class GetAllContactsQueryHandler :

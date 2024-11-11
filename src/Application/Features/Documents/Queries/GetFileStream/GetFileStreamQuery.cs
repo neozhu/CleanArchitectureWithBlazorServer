@@ -13,7 +13,7 @@ public class GetFileStreamQuery : ICacheableRequest<(string, byte[])>
     }
     public int Id { get; set; }
     public string CacheKey => DocumentCacheKey.GetStreamByIdKey(Id);
-    public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => DocumentCacheKey.Tags;
 }
 
 public class GetFileStreamQueryHandler : IRequestHandler<GetFileStreamQuery, (string, byte[])>

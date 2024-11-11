@@ -15,7 +15,7 @@ public class ImportPicklistSetsCommand : ICacheInvalidatorRequest<Result>
     }
     public string FileName { get; set; }
     public byte[] Data { get; set; }
-    public CancellationTokenSource? SharedExpiryTokenSource => PicklistSetCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => PicklistSetCacheKey.Tags;
 }
 
  

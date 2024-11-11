@@ -14,7 +14,7 @@ public class DeleteTenantCommand : ICacheInvalidatorRequest<Result<int>>
     }
     public string[] Id { get; }
     public string CacheKey => TenantCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => TenantCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => TenantCacheKey.Tags;
 }
 
 public class DeleteTenantCommandHandler :

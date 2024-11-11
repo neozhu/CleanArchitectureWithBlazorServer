@@ -18,7 +18,6 @@ global using CleanArchitecture.Blazor.Domain.Common.Events;
 global using CleanArchitecture.Blazor.Domain.Events;
 global using CleanArchitecture.Blazor.Domain.Entities;
 global using FluentValidation;
-global using LazyCache;
 global using MediatR;
 global using MediatR.Pipeline;
 global using Microsoft.EntityFrameworkCore;
