@@ -18,7 +18,7 @@ public class AuditTrailConfiguration : IEntityTypeConfiguration<AuditTrail>
         builder.Navigation(e => e.Owner).AutoInclude();
         builder.Property(t => t.AuditType)
             .HasConversion<string>();
-        builder.Property(e => e.AffectedColumns).HasStringListConversion();
+        builder.Property(e => e.AffectedColumns).HasJsonConversion();
         builder.Property(u => u.OldValues).HasJsonConversion();
         builder.Property(u => u.NewValues).HasJsonConversion();
         builder.Property(u => u.PrimaryKey).HasJsonConversion();
