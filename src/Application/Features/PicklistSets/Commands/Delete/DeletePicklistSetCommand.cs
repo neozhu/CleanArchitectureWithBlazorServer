@@ -14,7 +14,7 @@ public class DeletePicklistSetCommand : ICacheInvalidatorRequest<Result<int>>
 
     public int[] Id { get; }
     public string CacheKey => PicklistSetCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => PicklistSetCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => PicklistSetCacheKey.Tags;
 }
 
 public class DeletePicklistSetCommandHandler : IRequestHandler<DeletePicklistSetCommand, Result<int>>

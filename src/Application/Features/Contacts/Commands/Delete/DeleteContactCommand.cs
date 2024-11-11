@@ -35,7 +35,7 @@ public class DeleteContactCommand:  ICacheInvalidatorRequest<Result<int>>
 {
   public int[] Id {  get; }
   public string CacheKey => ContactCacheKey.GetAllCacheKey;
-  public CancellationTokenSource? SharedExpiryTokenSource => ContactCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => ContactCacheKey.Tags;
   public DeleteContactCommand(int[] id)
   {
     Id = id;

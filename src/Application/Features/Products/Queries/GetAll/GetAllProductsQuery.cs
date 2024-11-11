@@ -10,7 +10,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll;
 public class GetAllProductsQuery : ICacheableRequest<IEnumerable<ProductDto>>
 {
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => ProductCacheKey.Tags;
 }
 
 public class GetProductQuery : ICacheableRequest<ProductDto?>
@@ -18,7 +18,7 @@ public class GetProductQuery : ICacheableRequest<ProductDto?>
     public required int Id { get; set; }
 
     public string CacheKey => ProductCacheKey.GetProductByIdCacheKey(Id);
-    public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => ProductCacheKey.Tags;
 }
 
 public class GetAllProductsQueryHandler :
