@@ -38,12 +38,16 @@ public class UserSessionCircuitHandler : CircuitHandler
 
         if (context?.User?.Identity?.IsAuthenticated == true)
         {
+            var headers = context?.Request?.Headers;
+            string clientIp = headers != null && headers.ContainsKey("X-Forwarded-For")
+                                ? headers["X-Forwarded-For"].ToString().Split(',').First().Trim()
+                                : context!.Connection.RemoteIpAddress?.ToString() ?? "";
             var sessionInfo = new SessionInfo
             (
                 context.User.GetUserId(),
                 context.User.GetUserName(),
                 context.User.GetDisplayName(),
-                context.Connection.RemoteIpAddress?.ToString(),
+                clientIp,
                 context.User.GetTenantId(),
                 context.User.GetProfilePictureDataUrl(),
                 UserPresence.Available

@@ -16,7 +16,7 @@ using QuestPDF;
 using QuestPDF.Infrastructure;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
-using Polly;
+using CleanArchitecture.Blazor.Application;
 
 
 namespace CleanArchitecture.Blazor.Server.UI;
@@ -94,7 +94,7 @@ public static class DependencyInjection
         {
             c.BaseAddress = new Uri("http://10.33.1.150:8000/ocr/predict-by-file");
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        }).AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(30)));
+        });
         services.AddScoped<LocalTimeOffset>();
         services.AddHttpContextAccessor();
         services.AddScoped<HubClient>();
@@ -137,17 +137,20 @@ public static class DependencyInjection
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-
+        app.InitializeCacheFactory();
         app.UseStatusCodePagesWithRedirects("/404");
         app.MapHealthChecks("/health");
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseAntiforgery();
         app.UseHttpsRedirection();
-        app.UseStaticFiles();
+        app.MapStaticAssets();
+        
 
         if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
             Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
+
+
 
         app.UseStaticFiles(new StaticFileOptions
         {
@@ -180,6 +183,7 @@ public static class DependencyInjection
         { // We obviously need this
             KeepAliveInterval = TimeSpan.FromSeconds(30), // Just in case
         });
+       
         return app;
     }
 }

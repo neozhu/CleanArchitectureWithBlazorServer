@@ -13,7 +13,7 @@ public class DocumentsWithPaginationQuery : AdvancedDocumentsFilter, ICacheableR
     public AdvancedDocumentsSpecification Specification => new(this);
 
     public string CacheKey => DocumentCacheKey.GetPaginationCacheKey($"{this}");
-    public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => DocumentCacheKey.Tags;
 
     public override string ToString()
     {

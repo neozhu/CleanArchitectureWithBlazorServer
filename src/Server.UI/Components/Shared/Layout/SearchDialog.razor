@@ -28,7 +28,7 @@
 
 @code
 {
-    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = default!;
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 
     private readonly Dictionary<string, string> _pages = new();
     private HotKeysContext? _hotKeysContext;

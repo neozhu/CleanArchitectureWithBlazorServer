@@ -20,7 +20,7 @@ public class AddEditProductCommand : ICacheInvalidatorRequest<Result<int>>
 
     public IReadOnlyList<IBrowserFile>? UploadPictures { get; set; }
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => ProductCacheKey.Tags;
 }
 
 public class AddEditProductCommandHandler : IRequestHandler<AddEditProductCommand, Result<int>>

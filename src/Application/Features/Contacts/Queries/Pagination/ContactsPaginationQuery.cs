@@ -27,7 +27,7 @@ public class ContactsWithPaginationQuery : ContactAdvancedFilter, ICacheableRequ
         return $"Listview:{ListView}-{LocalTimezoneOffset.TotalHours}, Search:{Keyword}, {OrderBy}, {SortDirection}, {PageNumber}, {PageSize}";
     }
     public string CacheKey => ContactCacheKey.GetPaginationCacheKey($"{this}");
-    public MemoryCacheEntryOptions? Options => ContactCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => ContactCacheKey.Tags;
     public ContactAdvancedSpecification Specification => new ContactAdvancedSpecification(this);
 }
     

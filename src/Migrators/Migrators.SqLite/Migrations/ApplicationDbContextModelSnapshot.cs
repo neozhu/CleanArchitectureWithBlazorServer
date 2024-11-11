@@ -15,7 +15,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.0-rc.2.24474.1");
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.AuditTrail", b =>
                 {
