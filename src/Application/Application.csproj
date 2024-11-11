@@ -9,7 +9,6 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="BouncyCastle.Cryptography" Version="2.5.0-beta.105" />
-       
         <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
         <PackageReference Include="ClosedXML" Version="0.104.1" />
@@ -18,15 +17,13 @@
         <PackageReference Include="jcamp.FluentEmail.Razor" Version="3.8.0" />
         <PackageReference Include="FluentValidation" Version="11.10.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
-        <PackageReference Include="LazyCache" Version="2.4.0" />
-        <PackageReference Include="LazyCache.AspNetCore" Version="2.4.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0-rc.2.24474.3" />
         <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.0-rc.2.24474.3" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Riok.Mapperly" Version="4.1.1-next.0" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.8" />
         <PackageReference Include="Hangfire.Core" Version="1.8.15" />
-        <PackageReference Include="ZiggyCreatures.FusionCache" Version="1.4.1" />
+        <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.0.0-preview-1" />
            <PackageReference Include="ActualLab.Fusion" Version="9.5.59" />
         <PackageReference Include="ActualLab.Fusion.Blazor" Version="9.5.59" />
         <PackageReference Include="ActualLab.Generators" Version="9.5.59" />
