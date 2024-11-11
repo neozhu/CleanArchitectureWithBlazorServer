@@ -12,7 +12,7 @@ public class PicklistSetsWithPaginationQuery : PicklistSetAdvancedFilter, ICache
 {
     public PicklistSetAdvancedSpecification Specification => new(this);
     public string CacheKey => $"{nameof(PicklistSetsWithPaginationQuery)},{this}";
-    public MemoryCacheEntryOptions? Options => PicklistSetCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => PicklistSetCacheKey.Tags;
 
     public override string ToString()
     {

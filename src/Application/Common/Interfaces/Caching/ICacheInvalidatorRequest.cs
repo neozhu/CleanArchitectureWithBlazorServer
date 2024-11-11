@@ -6,7 +6,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 public interface ICacheInvalidatorRequest<TResponse> : IRequest<TResponse>
 {
     string CacheKey => string.Empty;
-    CancellationTokenSource? SharedExpiryTokenSource { get; }
+    IEnumerable<string>? Tags { get; }
 }
 
 public interface IFusionCacheRefreshRequest<TResponse> : IRequest<TResponse>

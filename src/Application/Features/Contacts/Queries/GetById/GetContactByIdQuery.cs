@@ -24,7 +24,7 @@ public class GetContactByIdQuery : ICacheableRequest<Result<ContactDto>>
 {
    public required int Id { get; set; }
    public string CacheKey => ContactCacheKey.GetByIdCacheKey($"{Id}");
-   public MemoryCacheEntryOptions? Options => ContactCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => ContactCacheKey.Tags;
 }
 
 public class GetContactByIdQueryHandler :

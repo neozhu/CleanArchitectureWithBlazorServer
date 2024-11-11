@@ -37,7 +37,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
         public string FileName { get; set; }
         public byte[] Data { get; set; }
         public string CacheKey => ContactCacheKey.GetAllCacheKey;
-        public CancellationTokenSource? SharedExpiryTokenSource => ContactCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => ContactCacheKey.Tags;
         public ImportContactsCommand(string fileName,byte[] data)
         {
            FileName = fileName;

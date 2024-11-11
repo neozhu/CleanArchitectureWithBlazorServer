@@ -14,7 +14,7 @@ public class AddEditTenantCommand : ICacheInvalidatorRequest<Result<string>>
     [Description("Tenant Name")] public string? Name { get; set; }
     [Description("Description")] public string? Description { get; set; }
     public string CacheKey => TenantCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => TenantCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => TenantCacheKey.Tags;
 }
 
 public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand, Result<string>>

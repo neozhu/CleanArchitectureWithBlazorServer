@@ -14,7 +14,7 @@ public class ProductsWithPaginationQuery : ProductAdvancedFilter, ICacheableRequ
     public ProductAdvancedSpecification Specification => new(this);
     public string CacheKey => ProductCacheKey.GetPaginationCacheKey($"{this}");
 
-    public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => ProductCacheKey.Tags;
 
     // the currently logged in user
     public override string ToString()

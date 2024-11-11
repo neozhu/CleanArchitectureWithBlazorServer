@@ -12,7 +12,7 @@ public class UploadDocumentCommand : ICacheInvalidatorRequest<Result<int>>
         UploadRequests = uploadRequests;
     }
     public List<UploadRequest> UploadRequests { get; set; }
-    public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => DocumentCacheKey.Tags;
 }
 
 public class UploadDocumentCommandHandler : IRequestHandler<UploadDocumentCommand, Result<int>>
