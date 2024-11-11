@@ -78,7 +78,7 @@ public static class SerilogExtensions
                 WriteToNpgsql(serilogConfig, connectionString);
                 break;
             case DbProviderKeys.SqLite:
-                WriteToSqLite(serilogConfig, "BlazorDashboardDb.db");
+                WriteToSqLite(serilogConfig, "\\BlazorDashboardDb.db");
                 break;
         }
     }
