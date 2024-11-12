@@ -11,7 +11,7 @@ public class TenantsWithPaginationQuery : PaginationFilter, ICacheableRequest<Pa
 {
     public TenantsPaginationSpecification Specification => new(this);
     public string CacheKey => TenantCacheKey.GetPaginationCacheKey($"{this}");
-    public MemoryCacheEntryOptions? Options => TenantCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => TenantCacheKey.Tags;
 
     public override string ToString()
     {

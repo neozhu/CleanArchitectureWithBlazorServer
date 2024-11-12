@@ -6,8 +6,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-08
-//     Last Modified: 2024-11-08
+//     Created Date: 2024-11-12
+//     Last Modified: 2024-11-12
 //     Description: 
 //       This file defines the UpdateContactCommand and its handler for updating 
 //       an existing Contact entity within the CleanArchitecture.Blazor application. 
@@ -45,8 +45,8 @@ public class UpdateContactCommand: ICacheInvalidatorRequest<Result<int>>
     [Description("Country")]
     public string? Country {get;set;} 
 
-        public string CacheKey => ContactCacheKey.GetAllCacheKey;
-        public CancellationTokenSource? SharedExpiryTokenSource => ContactCacheKey.GetOrCreateTokenSource();
+      public string CacheKey => ContactCacheKey.GetAllCacheKey;
+      public IEnumerable<string>? Tags => ContactCacheKey.Tags;
 
 }
 

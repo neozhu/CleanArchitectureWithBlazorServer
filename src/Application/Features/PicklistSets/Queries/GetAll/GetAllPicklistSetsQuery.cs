@@ -10,7 +10,7 @@ namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.Get
 public class GetAllPicklistSetsQuery : ICacheableRequest<IEnumerable<PicklistSetDto>>
 {
     public string CacheKey => PicklistSetCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => PicklistSetCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => PicklistSetCacheKey.Tags;
 }
 
 public class GetAllPicklistSetsQueryHandler : IRequestHandler<GetAllPicklistSetsQuery, IEnumerable<PicklistSetDto>>

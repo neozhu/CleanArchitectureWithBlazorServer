@@ -15,7 +15,7 @@ public class AddEditPicklistSetCommand : ICacheInvalidatorRequest<Result<int>>
     [Description("Description")] public string? Description { get; set; }
     public TrackingState TrackingState { get; set; } = TrackingState.Unchanged;
     public string CacheKey => PicklistSetCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => PicklistSetCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => PicklistSetCacheKey.Tags;
 }
 
 public class AddEditPicklistSetCommandHandler : IRequestHandler<AddEditPicklistSetCommand, Result<int>>
