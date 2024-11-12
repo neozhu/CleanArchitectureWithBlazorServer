@@ -13,7 +13,7 @@ public class DeleteDocumentCommand : ICacheInvalidatorRequest<Result<int>>
     }
 
     public int[] Id { get; set; }
-    public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => DocumentCacheKey.Tags;
 }
 
 public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentCommand, Result<int>>

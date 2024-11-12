@@ -15,7 +15,7 @@ public class PicklistSetsQueryByName : ICacheableRequest<IEnumerable<PicklistSet
     }
     public Picklist Name { get; set; }
     public string CacheKey => PicklistSetCacheKey.GetCacheKey(Name.ToString());
-    public MemoryCacheEntryOptions? Options => PicklistSetCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => PicklistSetCacheKey.Tags;
 }
 
 public class PicklistSetsQueryByNameHandler : IRequestHandler<PicklistSetsQueryByName, IEnumerable<PicklistSetDto>>

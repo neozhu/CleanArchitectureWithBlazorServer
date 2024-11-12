@@ -13,7 +13,7 @@ public class LogsWithPaginationQuery : LoggerAdvancedFilter, ICacheableRequest<P
     public LoggerAdvancedSpecification Specification => new(this);
 
     public string CacheKey => LogsCacheKey.GetPaginationCacheKey($"{this}");
-    public MemoryCacheEntryOptions? Options => LogsCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => LogsCacheKey.Tags;
 
     public override string ToString()
     {

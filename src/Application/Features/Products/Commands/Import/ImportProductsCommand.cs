@@ -20,7 +20,7 @@ public class ImportProductsCommand : ICacheInvalidatorRequest<Result<int>>
     public string FileName { get; }
     public byte[] Data { get; }
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => ProductCacheKey.Tags;
 }
 
 public record CreateProductsTemplateCommand : IRequest<Result<byte[]>>
