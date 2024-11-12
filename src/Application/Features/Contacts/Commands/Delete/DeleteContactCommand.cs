@@ -6,8 +6,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-08
-//     Last Modified: 2024-11-08
+//     Created Date: 2024-11-12
+//     Last Modified: 2024-11-12
 //     Description: 
 //       This file defines the command and its handler for deleting one or more
 //       Contact entities from the CleanArchitecture.Blazor application. It
@@ -35,7 +35,7 @@ public class DeleteContactCommand:  ICacheInvalidatorRequest<Result<int>>
 {
   public int[] Id {  get; }
   public string CacheKey => ContactCacheKey.GetAllCacheKey;
-    public IEnumerable<string>? Tags => ContactCacheKey.Tags;
+  public IEnumerable<string>? Tags => ContactCacheKey.Tags;
   public DeleteContactCommand(int[] id)
   {
     Id = id;

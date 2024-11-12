@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-08
-//     Last Modified: 2024-11-08
+//     Created Date: 2024-11-12
+//     Last Modified: 2024-11-12
 //     Description: 
 //       Defines static methods and properties for managing cache keys and expiration 
 //       settings for Contact-related data. This includes creating unique cache keys for 
@@ -26,8 +26,7 @@ public static class ContactCacheKey
     public static string GetPaginationCacheKey(string parameters) {
         return $"ContactCacheKey:ContactsWithPaginationQuery,{parameters}";
     }
-    public static string GetExportCacheKey(string parameters)
-    {
+    public static string GetExportCacheKey(string parameters) {
         return $"ContactCacheKey:ExportCacheKey,{parameters}";
     }
     public static string GetByNameCacheKey(string parameters) {
