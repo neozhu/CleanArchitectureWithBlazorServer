@@ -17,8 +17,8 @@
         <PackageReference Include="jcamp.FluentEmail.Razor" Version="3.8.0" />
         <PackageReference Include="FluentValidation" Version="11.10.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0-rc.2.24474.3" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.0-rc.2.24474.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Riok.Mapperly" Version="4.1.1-next.0" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.8" />
