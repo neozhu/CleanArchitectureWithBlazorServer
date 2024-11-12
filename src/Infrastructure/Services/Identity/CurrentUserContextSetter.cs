@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
+﻿using CleanArchitecture.Blazor.Infrastructure.Extensions;
+
+namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 /// <summary>
 /// Service for setting and clearing the current user context.
@@ -19,10 +21,18 @@ public class CurrentUserContextSetter : ICurrentUserContextSetter
     /// <summary>
     /// Sets the current user context with the provided session information.
     /// </summary>
-    /// <param name="sessionInfo">The session information of the current user.</param>
-    public void SetCurrentUser(SessionInfo sessionInfo)
+    /// <param name="user">The session information of the current user.</param>
+    public void SetCurrentUser(ClaimsPrincipal user)
     {
-        _currentUserContext.SessionInfo = sessionInfo;
+        _currentUserContext.SessionInfo = new SessionInfo(
+                user.GetUserId(),
+                user.GetUserName(),
+                user.GetDisplayName(),
+                "",
+                user.GetTenantId(),
+                user.GetProfilePictureDataUrl(),
+                UserPresence.Available
+            );
     }
 
     /// <summary>

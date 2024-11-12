@@ -16,8 +16,8 @@
 @inject IStringLocalizer<Users> L
 
 <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
-    <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden" />
-    <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden" />
+    <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden" @bind-value:event="oninput" />
+    <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden" @bind-value:event="oninput"/>
 
     <MudGrid Spacing="2">
         <MudItem sm="12">
@@ -55,7 +55,7 @@
             </MultiTenantAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L[Model.GetMemberDescription(x=>x.Provider)]"  ReadOnly></MudTextField>
+            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L[Model.GetMemberDescription(x=>x.Provider)]"  ReadOnly="true"></MudTextField>
         </MudItem>
 
         <MudItem xs="12" sm="6">

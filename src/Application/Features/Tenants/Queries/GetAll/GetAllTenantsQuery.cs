@@ -10,7 +10,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Tenants.Queries.GetAll;
 public class GetAllTenantsQuery : ICacheableRequest<IEnumerable<TenantDto>>
 {
     public string CacheKey => TenantCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => TenantCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => TenantCacheKey.Tags;
 }
 
 public class GetAllTenantsQueryHandler :

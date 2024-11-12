@@ -6,8 +6,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-08
-//     Last Modified: 2024-11-08
+//     Created Date: 2024-11-12
+//     Last Modified: 2024-11-12
 //     Description: 
 //       Defines mapping methods between `Contact` entities and related DTOs/commands 
 //       within the CleanArchitecture.Blazor application. This mapper facilitates 

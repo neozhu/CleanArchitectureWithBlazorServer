@@ -12,7 +12,7 @@ public class AuditTrailsWithPaginationQuery : AuditTrailAdvancedFilter, ICacheab
 {
     public AuditTrailAdvancedSpecification Specification => new(this);
     public string CacheKey => AuditTrailsCacheKey.GetPaginationCacheKey($"{this}");
-    public MemoryCacheEntryOptions? Options => AuditTrailsCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => AuditTrailsCacheKey.Tags;
 
     public override string ToString()
     {
