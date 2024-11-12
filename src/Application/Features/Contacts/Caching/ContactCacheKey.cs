@@ -26,6 +26,10 @@ public static class ContactCacheKey
     public static string GetPaginationCacheKey(string parameters) {
         return $"ContactCacheKey:ContactsWithPaginationQuery,{parameters}";
     }
+    public static string GetExportCacheKey(string parameters)
+    {
+        return $"ContactCacheKey:ExportCacheKey,{parameters}";
+    }
     public static string GetByNameCacheKey(string parameters) {
         return $"ContactCacheKey:GetByNameCacheKey,{parameters}";
     }
@@ -35,7 +39,7 @@ public static class ContactCacheKey
     public static IEnumerable<string>? Tags => new string[] { "contact" };
     public static void Refresh()
     {
-        
+        FusionCacheFactory.RemoveByTags(Tags);
     }
 }
 
