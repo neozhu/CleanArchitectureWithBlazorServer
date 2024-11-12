@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-08
-//     Last Modified: 2024-11-08
+//     Created Date: 2024-11-12
+//     Last Modified: 2024-11-12
 //     Description: 
 //       Defines a query to export contact data to an Excel file. This query 
 //       applies advanced filtering options and generates an Excel file with 
@@ -14,15 +14,22 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Export;
 
-public class ExportContactsQuery : ContactAdvancedFilter, IRequest<Result<byte[]>>
+public class ExportContactsQuery : ContactAdvancedFilter, ICacheableRequest<Result<byte[]>>
 {
       public ContactAdvancedSpecification Specification => new ContactAdvancedSpecification(this);
+      public IEnumerable<string>? Tags => ContactCacheKey.Tags;
+    public override string ToString()
+    {
+        return $"Listview:{ListView}:{CurrentUser?.UserId}-{LocalTimezoneOffset.TotalHours}, Search:{Keyword}, {OrderBy}, {SortDirection}";
+    }
+    public string CacheKey => ContactCacheKey.GetExportCacheKey($"{this}");
 }
     
 public class ExportContactsQueryHandler :

@@ -6,8 +6,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-08
-//     Last Modified: 2024-11-08
+//     Created Date: 2024-11-12
+//     Last Modified: 2024-11-12
 //     Description: 
 //       This file defines the command and its handler for creating a new Contact entity
 //       within the CleanArchitecture.Blazor application. The command uses caching
@@ -46,7 +46,7 @@ public class CreateContactCommand: ICacheInvalidatorRequest<Result<int>>
     public string? Country {get;set;} 
 
       public string CacheKey => ContactCacheKey.GetAllCacheKey;
-      public CancellationTokenSource? SharedExpiryTokenSource => ContactCacheKey.GetOrCreateTokenSource();
+      public IEnumerable<string>? Tags => ContactCacheKey.Tags;
 }
     
     public class CreateContactCommandHandler : IRequestHandler<CreateContactCommand, Result<int>>
