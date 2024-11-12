@@ -1,16 +1,18 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using ZiggyCreatures.Caching.Fusion;
+
 namespace CleanArchitecture.Blazor.Application.Pipeline;
 
 public class CacheInvalidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : ICacheInvalidatorRequest<TResponse>
 {
-    private readonly IAppCache _cache;
+    private readonly IFusionCache _cache;
     private readonly ILogger<CacheInvalidationBehaviour<TRequest, TResponse>> _logger;
 
     public CacheInvalidationBehaviour(
-        IAppCache cache,
+        IFusionCache cache,
         ILogger<CacheInvalidationBehaviour<TRequest, TResponse>> logger
     )
     {
@@ -28,7 +30,14 @@ public class CacheInvalidationBehaviour<TRequest, TResponse> : IPipelineBehavior
             _cache.Remove(request.CacheKey);
             _logger.LogTrace("Cache key {CacheKey} removed from cache", request.CacheKey);
         }
-        request.SharedExpiryTokenSource?.Cancel();
+        if(request.Tags!=null && request.Tags.Any())
+        {
+            foreach (var tag in request.Tags)
+            {
+               await _cache.RemoveByTagAsync(tag);
+               _logger.LogTrace("Cache tag {CacheTag} removed from cache", tag);
+            }
+        }
         return response;
     }
 }

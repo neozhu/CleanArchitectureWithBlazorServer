@@ -6,7 +6,7 @@ using ZiggyCreatures.Caching.Fusion;
 namespace CleanArchitecture.Blazor.Application.Pipeline;
 
 public class FusionCacheBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IFusionCacheRequest<TResponse>
+    where TRequest : ICacheableRequest<TResponse>
 {
     private readonly IFusionCache _fusionCache;
     private readonly ILogger<FusionCacheBehaviour<TRequest, TResponse>> _logger;
@@ -26,7 +26,8 @@ public class FusionCacheBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
         _logger.LogTrace("Handling request of type {RequestType} with cache key {CacheKey}", nameof(request), request.CacheKey);
         var response = await _fusionCache.GetOrSetAsync(
             request.CacheKey,
-            _ => next()
+            _ => next(),
+            tags:request.Tags
             ).ConfigureAwait(false);
 
         return response;

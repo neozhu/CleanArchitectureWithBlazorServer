@@ -131,7 +131,7 @@ public class DocumentOcrJob : IDocumentOcrJob
 
     private void CancelCacheToken()
     {
-        DocumentCacheKey.GetOrCreateTokenSource().Cancel();
+        DocumentCacheKey.Refresh();
     }
 }
 #pragma warning disable CS8981

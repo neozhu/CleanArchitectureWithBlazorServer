@@ -15,7 +15,7 @@ public class DeleteProductCommand : ICacheInvalidatorRequest<Result<int>>
 
     public int[] Id { get; }
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => ProductCacheKey.GetOrCreateTokenSource();
+    public IEnumerable<string>? Tags => ProductCacheKey.Tags;
 }
 
 public class DeleteProductCommandHandler :
