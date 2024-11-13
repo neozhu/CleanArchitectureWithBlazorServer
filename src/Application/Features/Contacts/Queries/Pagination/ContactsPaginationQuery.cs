@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-08
-//     Last Modified: 2024-11-08
+//     Created Date: 2024-11-12
+//     Last Modified: 2024-11-12
 //     Description: 
 //       Defines a query for retrieving contacts with pagination and filtering 
 //       options. The result is cached to enhance performance for repeated queries.
@@ -24,10 +24,10 @@ public class ContactsWithPaginationQuery : ContactAdvancedFilter, ICacheableRequ
 {
     public override string ToString()
     {
-        return $"Listview:{ListView}-{LocalTimezoneOffset.TotalHours}, Search:{Keyword}, {OrderBy}, {SortDirection}, {PageNumber}, {PageSize}";
+        return $"Listview:{ListView}:{CurrentUser?.UserId}-{LocalTimezoneOffset.TotalHours}, Search:{Keyword}, {OrderBy}, {SortDirection}, {PageNumber}, {PageSize}";
     }
     public string CacheKey => ContactCacheKey.GetPaginationCacheKey($"{this}");
-    public MemoryCacheEntryOptions? Options => ContactCacheKey.MemoryCacheEntryOptions;
+    public IEnumerable<string>? Tags => ContactCacheKey.Tags;
     public ContactAdvancedSpecification Specification => new ContactAdvancedSpecification(this);
 }
     

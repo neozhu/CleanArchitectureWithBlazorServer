@@ -3,7 +3,7 @@
     <PropertyGroup>
         <RootNamespace>CleanArchitecture.Blazor.Server.UI</RootNamespace>
         <AssemblyName>CleanArchitecture.Blazor.Server.UI</AssemblyName>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <NoWarn>$(NoWarn);VSTHRD200</NoWarn>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -15,18 +15,19 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.15" />
+        <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.10" />
-        <PackageReference Include="MudBlazor" Version="7.15.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0-rc.2.24474.3" />
+        <PackageReference Include="ActualLab.Fusion.Ext.Services" Version="9.5.59" />
+        <PackageReference Include="MudBlazor" Version="8.0.0-preview.4" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="5.1.0" />
-        <PackageReference Include="Blazor-ApexCharts" Version="3.5.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+        <PackageReference Include="Blazor-ApexCharts" Version="4.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0-rc.2.24474.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-     
-          
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj" />

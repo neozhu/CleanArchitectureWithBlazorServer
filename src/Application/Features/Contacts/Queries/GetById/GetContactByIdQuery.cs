@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-08
-//     Last Modified: 2024-11-08
+//     Created Date: 2024-11-12
+//     Last Modified: 2024-11-12
 //     Description: 
 //       Defines a query to retrieve a contact by its ID. The result is cached 
 //       to optimize performance for repeated retrievals of the same contact.
@@ -24,7 +24,7 @@ public class GetContactByIdQuery : ICacheableRequest<Result<ContactDto>>
 {
    public required int Id { get; set; }
    public string CacheKey => ContactCacheKey.GetByIdCacheKey($"{Id}");
-   public MemoryCacheEntryOptions? Options => ContactCacheKey.MemoryCacheEntryOptions;
+   public IEnumerable<string>? Tags => ContactCacheKey.Tags;
 }
 
 public class GetContactByIdQueryHandler :

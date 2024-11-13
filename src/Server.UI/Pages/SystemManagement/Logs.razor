@@ -1,4 +1,5 @@
 ﻿@page "/system/logs"
+@using CleanArchitecture.Blazor.Application.Features.Loggers.Caching
 @using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Specifications
@@ -43,9 +44,9 @@
                     @if (_canPurge)
                     {
                         <MudButton 
-                                   Disabled="@(_clearing)"
-                                   OnClick="@(OnPurge)"
-                                   StartIcon="@Icons.Material.Outlined.ClearAll">
+                        Disabled="@(_clearing)"
+                        OnClick="@(OnPurge)"
+                        StartIcon="@Icons.Material.Outlined.ClearAll">
                             @L["Clear Logs"]
                         </MudButton>
                     }
@@ -53,7 +54,7 @@
                 <MudStack Row Spacing="1">
                     <MudEnumSelect TEnum="LogLevel?" Placeholder="@L["Search by level"]" Value="@Query.Level" Clearable="true" ValueChanged="OnChangedLevel" Style="min-width:120px" FullWidth="true"> </MudEnumSelect>
                     <MudTextField T="string" Style="min-width:120px" ValueChanged="@(OnSearch)" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End"
-                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium">
+                    AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium">
                     </MudTextField>
                 </MudStack>
             </MudStack>
@@ -130,7 +131,7 @@
 
 <style>
     .mud-table-toolbar {
-        height: 120px !important;
+    height: 120px !important;
     }
 </style>
 
@@ -199,6 +200,7 @@
     private async Task OnRefresh()
     {
         Query.Keyword = string.Empty;
+        LogsCacheKey.Refresh();
         await _table.ReloadServerData();
     }
 

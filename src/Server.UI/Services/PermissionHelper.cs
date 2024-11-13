@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using ZiggyCreatures.Caching.Fusion;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
-using System.Data.Entity;
+ 
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 

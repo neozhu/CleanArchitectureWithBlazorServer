@@ -1,16 +1,17 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Fusion;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components.Server.Circuits;
-using Microsoft.AspNetCore.Http;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
 
 /// <summary>
 /// Handles user session tracking and online user tracking for Blazor server circuits.
 /// </summary>
-public class UserSessionCircuitHandler : CircuitHandler
+public class UserSessionCircuitHandler : CircuitHandler,IDisposable
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly ICurrentUserContextSetter _currentUserContextSetter;
+    private readonly AuthenticationStateProvider _authenticationStateProvider;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserSessionCircuitHandler"/> class.
@@ -18,11 +19,37 @@ public class UserSessionCircuitHandler : CircuitHandler
     /// <param name="userSessionTracker">The user session tracker service.</param>
     /// <param name="onlineUserTracker">The online user tracker service.</param>
     /// <param name="httpContextAccessor">The HTTP context accessor.</param>
-    public UserSessionCircuitHandler(IServiceProvider serviceProvider)
+    public UserSessionCircuitHandler(IServiceProvider serviceProvider, ICurrentUserContextSetter currentUserContextSetter, AuthenticationStateProvider authenticationStateProvider)
     {
         _serviceProvider = serviceProvider;
+        _currentUserContextSetter = currentUserContextSetter;
+        _authenticationStateProvider = authenticationStateProvider;
+    }
+    public override Task OnCircuitOpenedAsync(Circuit circuit,
+        CancellationToken cancellationToken)
+    {
+        _authenticationStateProvider.AuthenticationStateChanged +=
+            AuthenticationChanged;
+
+        return base.OnCircuitOpenedAsync(circuit, cancellationToken);
     }
 
+    private void AuthenticationChanged(Task<AuthenticationState> task)
+    {
+        _ = UpdateAuthentication(task);
+
+        async Task UpdateAuthentication(Task<AuthenticationState> task)
+        {
+            try
+            {
+                var state = await task;
+                _currentUserContextSetter.SetCurrentUser(state.User);
+            }
+            catch
+            {
+            }
+        }
+    }
     /// <summary>
     /// Called when a new circuit connection is established.
     /// </summary>
@@ -31,27 +58,16 @@ public class UserSessionCircuitHandler : CircuitHandler
     /// <returns>A task that represents the asynchronous operation.</returns>
     public override async Task OnConnectionUpAsync(Circuit circuit, CancellationToken cancellationToken)
     {
-        var httpContextAccessor = _serviceProvider.GetRequiredService<IHttpContextAccessor>();
+        var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        _currentUserContextSetter.SetCurrentUser(state.User);
         var usersStateContainer = _serviceProvider.GetRequiredService<IUsersStateContainer>();
         var currentUserContextSetter = _serviceProvider.GetRequiredService<ICurrentUserContextSetter>();
-        var context = httpContextAccessor.HttpContext;
-
-        if (context?.User?.Identity?.IsAuthenticated == true)
+        if (state.User.Identity?.IsAuthenticated??false)
         {
-            var sessionInfo = new SessionInfo
-            (
-                context.User.GetUserId(),
-                context.User.GetUserName(),
-                context.User.GetDisplayName(),
-                context.Connection.RemoteIpAddress?.ToString(),
-                context.User.GetTenantId(),
-                context.User.GetProfilePictureDataUrl(),
-                UserPresence.Available
-            );
-            currentUserContextSetter.SetCurrentUser(sessionInfo);
-            if (!string.IsNullOrEmpty(sessionInfo.UserId))
+            var userId = state.User.GetUserId();
+            if (!string.IsNullOrEmpty(userId))
             {
-                usersStateContainer.AddOrUpdate(circuit.Id, sessionInfo.UserId);
+                usersStateContainer.AddOrUpdate(circuit.Id, userId);
             }
         }
         await base.OnConnectionUpAsync(circuit, cancellationToken);
@@ -70,7 +86,7 @@ public class UserSessionCircuitHandler : CircuitHandler
         var onlineUserTracker = _serviceProvider.GetRequiredService<IOnlineUserTracker>();
         var usersStateContainer = _serviceProvider.GetRequiredService<IUsersStateContainer>();
         var currentUserContextSetter = _serviceProvider.GetRequiredService<ICurrentUserContextSetter>();
-        if (currentUserAccessor.SessionInfo!=null)
+        if (currentUserAccessor.SessionInfo != null)
         {
             await userSessionTracker.RemoveAllSessions(currentUserAccessor.SessionInfo.UserId, cancellationToken);
             await onlineUserTracker.Clear(currentUserAccessor.SessionInfo.UserId, cancellationToken);
@@ -79,5 +95,11 @@ public class UserSessionCircuitHandler : CircuitHandler
 
         currentUserContextSetter.Clear();
         await base.OnConnectionDownAsync(circuit, cancellationToken);
+    }
+
+    public void Dispose()
+    {
+        _authenticationStateProvider.AuthenticationStateChanged -=
+            AuthenticationChanged;
     }
 }

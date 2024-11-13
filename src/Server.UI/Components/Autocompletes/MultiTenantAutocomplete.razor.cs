@@ -5,9 +5,6 @@ namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 
 public class MultiTenantAutocomplete<T> : MudAutocomplete<TenantDto>
 {
-    [Inject]
-    private ITenantService TenantsService { get; set; } = default!;
-
     public MultiTenantAutocomplete()
     {
         SearchFunc = SearchKeyValues;
@@ -16,6 +13,8 @@ public class MultiTenantAutocomplete<T> : MudAutocomplete<TenantDto>
         ResetValueOnEmptyText = true;
         ShowProgressIndicator = true;
     }
+
+    [Inject] private ITenantService TenantsService { get; set; } = default!;
 
     protected override void OnInitialized()
     {
@@ -28,30 +27,23 @@ public class MultiTenantAutocomplete<T> : MudAutocomplete<TenantDto>
         await InvokeAsync(StateHasChanged);
     }
 
-    protected override void Dispose(bool disposing)
+    protected override async ValueTask DisposeAsyncCore()
     {
-        if (disposing)
-        {
-            TenantsService.OnChange -= TenantsService_OnChange;
-        }
-        base.Dispose(disposing);
+        TenantsService.OnChange -= TenantsService_OnChange;
+        await base.DisposeAsyncCore();
     }
 
-    private Task<IEnumerable<TenantDto>> SearchKeyValues(string value,CancellationToken cancellation)
+    private Task<IEnumerable<TenantDto>> SearchKeyValues(string value, CancellationToken cancellation)
     {
         IEnumerable<TenantDto> result;
 
         if (string.IsNullOrWhiteSpace(value))
-        {
             result = TenantsService.DataSource.ToList();
-        }
         else
-        {
             result = TenantsService.DataSource
                 .Where(x => x.Name?.Contains(value, StringComparison.InvariantCultureIgnoreCase) == true ||
                             x.Description?.Contains(value, StringComparison.InvariantCultureIgnoreCase) == true)
                 .ToList();
-        }
 
         return Task.FromResult(result);
     }

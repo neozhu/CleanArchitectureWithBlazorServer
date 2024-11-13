@@ -6,8 +6,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-08
-//     Last Modified: 2024-11-08
+//     Created Date: 2024-11-12
+//     Last Modified: 2024-11-12
 //     Description: 
 //       This file defines the command, handler, and associated logic for importing 
 //       contacts from an Excel file into the CleanArchitecture.Blazor application. 
@@ -37,7 +37,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
         public string FileName { get; set; }
         public byte[] Data { get; set; }
         public string CacheKey => ContactCacheKey.GetAllCacheKey;
-        public CancellationTokenSource? SharedExpiryTokenSource => ContactCacheKey.GetOrCreateTokenSource();
+        public IEnumerable<string>? Tags => ContactCacheKey.Tags;
         public ImportContactsCommand(string fileName,byte[] data)
         {
            FileName = fileName;
