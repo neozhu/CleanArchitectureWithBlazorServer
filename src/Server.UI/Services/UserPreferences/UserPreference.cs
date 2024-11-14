@@ -45,9 +45,11 @@ public class UserPreference
     public string SecondaryColor { get; set; } = "#ff4081ff";
     public double BorderRadius { get; set; } = 4;
     public double DefaultFontSize { get; set; } = 0.8125;
-    public double LineHeight => Math.Min(1.7, Math.Max(1.3, 1.5 * (DefaultFontSize / 0.875)));
+    public double LineHeight => Math.Min(1.7, Math.Max(1.3, 1.43 * (DefaultFontSize / 0.875)));
     public double LetterSpacing => 0.00938 * (DefaultFontSize / 0.875);
 
+    public double H6FontSize => DefaultFontSize + 0.185;
+    public double H5FontSize => DefaultFontSize + 0.435;
     public double Body1FontSize => DefaultFontSize + 0.0625;
     public double Body1LineHeight => LineHeight;
     public double Body1LetterSpacing => LetterSpacing;
@@ -55,11 +57,12 @@ public class UserPreference
     public double Body2LineHeight => LineHeight;
     public double Body2LetterSpacing => LetterSpacing;
     public double ButtonFontSize => DefaultFontSize;
-    public double ButtonLineHeight => 1.75 * (DefaultFontSize / 0.875);
-    public double CaptionFontSize => DefaultFontSize + 0.0625;
-    public double CaptionLineHeight => Math.Min(1.8, Math.Max(1.4, 1.66 * (DefaultFontSize / 0.75)));
-    public double OverlineFontSize => DefaultFontSize - 0.0625;
-    public double Subtitle1FontSize => DefaultFontSize + 0.1875;
+    public double ButtonLineHeight => Math.Min(2.15, Math.Max(1.5, 1.75 * (DefaultFontSize / 0.875)));
+    public double CaptionFontSize => DefaultFontSize - 0.1875;
+    public double CaptionLineHeight => Math.Min(1.8, Math.Max(1.3, 1.4 * (DefaultFontSize / 0.625)));
+    public double OverlineFontSize => DefaultFontSize - 0.1875;
+    public double OverlineLineHeight => Math.Min(2.0, Math.Max(1.5, 1.6 * (DefaultFontSize / 0.625)));
+    public double Subtitle1FontSize => DefaultFontSize + 0.125;
     public double Subtitle2FontSize => DefaultFontSize - 0.0625;
     public DarkLightMode DarkLightTheme { get; set; }
 

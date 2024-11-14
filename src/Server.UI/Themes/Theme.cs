@@ -89,44 +89,44 @@ public static class Theme
                 },
                 H1 = new H1Typography
                 {
-                    FontSize = "3.5rem",
+                    FontSize = "2.2rem",
                     FontWeight = "700",
-                    LineHeight = "1.167",
+                    LineHeight = "2.8",
                     LetterSpacing = "-.01562em"
                 },
                 H2 = new H2Typography
                 {
-                    FontSize = "3rem",
-                    FontWeight = "300",
-                    LineHeight = "1.2",
+                    FontSize = "2rem",
+                    FontWeight = "600",
+                    LineHeight = "2.5",
                     LetterSpacing = "-.00833em"
                 },
                 H3 = new H3Typography
                 {
-                    FontSize = "2rem",
+                    FontSize = "1.75rem",
                     FontWeight = "600",
-                    LineHeight = "1.167",
+                    LineHeight = "2.23",
                     LetterSpacing = "0"
                 },
                 H4 = new H4Typography
                 {
                     FontSize = "1.5rem",
-                    FontWeight = "400",
-                    LineHeight = "1.235",
+                    FontWeight = "500",
+                    LineHeight = "2",
                     LetterSpacing = ".00735em"
                 },
                 H5 = new H5Typography
                 {
                     FontSize = "1.25rem",
-                    FontWeight = "400",
-                    LineHeight = "1.3",
+                    FontWeight = "500",
+                    LineHeight = "1.8",
                     LetterSpacing = "0"
                 },
                 H6 = new H6Typography
                 {
-                    FontSize = "1.125rem",
-                    FontWeight = "600",
-                    LineHeight = "1.5",
+                    FontSize = "1rem",
+                    FontWeight = "400",
+                    LineHeight = "1.6",
                     LetterSpacing = ".0075em"
                 },
                 Button = new ButtonTypography
@@ -139,7 +139,7 @@ public static class Theme
                 },
                 Subtitle1 = new Subtitle1Typography
                 {
-                    FontSize = ".8125rem",
+                    FontSize = ".875rem",
                     FontWeight = "400",
                     LineHeight = "1.5",
                     LetterSpacing = "normal",
@@ -147,7 +147,7 @@ public static class Theme
                 },
                 Subtitle2 = new Subtitle2Typography
                 {
-                    FontSize = ".875rem",
+                    FontSize = ".8125rem",
                     FontWeight = "500",
                     LineHeight = "1.57",
                     LetterSpacing = ".00714em"
@@ -161,23 +161,23 @@ public static class Theme
                 },
                 Body2 = new Body2Typography
                 {
-                    FontSize = ".8125rem",
-                    FontWeight = "400",
+                    FontSize = ".75rem",
+                    FontWeight = "300",
                     LineHeight = "1.43",
                     LetterSpacing = ".01071em"
                 },
                 Caption = new CaptionTypography
                 {
-                    FontSize = ".75rem",
+                    FontSize = "0.625rem",
                     FontWeight = "400",
-                    LineHeight = "1.66",
+                    LineHeight = "1.5",
                     LetterSpacing = ".03333em"
                 },
                 Overline = new OverlineTypography
                 {
-                    FontSize = ".75rem",
-                    FontWeight = "400",
-                    LineHeight = "2.5",
+                    FontSize = "0.625rem",
+                    FontWeight = "300",
+                    LineHeight = "2",
                     LetterSpacing = ".08333em"
                 }
             },

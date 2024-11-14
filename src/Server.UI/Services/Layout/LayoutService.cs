@@ -80,6 +80,10 @@ public class LayoutService
         CurrentTheme.Typography.Button.FontSize =
             UserPreferences.ButtonFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Button.LineHeight = UserPreferences.ButtonLineHeight.ToString();
+        CurrentTheme.Typography.H5.FontSize =
+            UserPreferences.H5FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.H6.FontSize =
+            UserPreferences.H6FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Body1.FontSize =
             UserPreferences.Body1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
 
@@ -95,6 +99,7 @@ public class LayoutService
         CurrentTheme.Typography.Caption.LineHeight = UserPreferences.CaptionLineHeight.ToString();
         CurrentTheme.Typography.Overline.FontSize =
             UserPreferences.OverlineFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Overline.LineHeight = UserPreferences.OverlineLineHeight.ToString();
         CurrentTheme.Typography.Subtitle1.FontSize =
             UserPreferences.Subtitle1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Subtitle2.FontSize =
@@ -259,7 +264,10 @@ public class LayoutService
         CurrentTheme.Typography.Button.LineHeight = UserPreferences.ButtonLineHeight.ToString();
         CurrentTheme.Typography.Body1.FontSize =
             UserPreferences.Body1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
-
+        CurrentTheme.Typography.H5.FontSize =
+            UserPreferences.H5FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.H6.FontSize =
+            UserPreferences.H6FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Body1.LineHeight = UserPreferences.Body1LineHeight.ToString();
         CurrentTheme.Typography.Body1.LetterSpacing = UserPreferences.Body1LetterSpacing.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Body2.FontSize =
@@ -272,6 +280,7 @@ public class LayoutService
         CurrentTheme.Typography.Caption.LineHeight = UserPreferences.CaptionLineHeight.ToString();
         CurrentTheme.Typography.Overline.FontSize =
             UserPreferences.OverlineFontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+        CurrentTheme.Typography.Overline.LineHeight = UserPreferences.OverlineLineHeight.ToString();
         CurrentTheme.Typography.Subtitle1.FontSize =
             UserPreferences.Subtitle1FontSize.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
         CurrentTheme.Typography.Subtitle2.FontSize =

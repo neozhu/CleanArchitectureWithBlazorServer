@@ -83,8 +83,12 @@
                                    FullWidth="true"
                                    OnClick="@(() => UpdateThemePrimaryColor(color))">
                             <ChildContent>
-                                <div class="@(color == UserPreferences.DarkPrimaryColor ? "oval oval-selected" : "oval")"
+                                <div class="@(color == UserPreferences.DarkPrimaryColor ? "color-square color-square-selected" : "color-square")"
                                      style="@($"background: {color};")">
+                                    @if (color == UserPreferences.DarkPrimaryColor)
+                                    {
+                                        <MudIcon Size="Size.Large" Icon="@Icons.Material.Outlined.Check" Class="check-icon" />
+                                    }
                                 </div>
                             </ChildContent>
                         </MudButton>
@@ -100,8 +104,12 @@
                                    FullWidth="true"
                                    OnClick="@(() => UpdateThemePrimaryColor(color))">
                             <ChildContent>
-                                <div class="@(color == UserPreferences.PrimaryColor ? "oval oval-selected" : "oval")"
+                                <div class="@(color == UserPreferences.PrimaryColor ? "color-square color-square-selected" : "color-square")"
                                      style="@($"background: {color};")">
+                                    @if (color == UserPreferences.PrimaryColor)
+                                    {
+                                        <MudIcon Size="Size.Large" Icon="@Icons.Material.Outlined.Check" Class="check-icon" />
+                                    }
                                 </div>
                             </ChildContent>
                         </MudButton>
@@ -154,32 +162,58 @@
         height: 64px;
     }
 
-    .oval {
-        width: 25px;
-        height: 15px;
-        border-radius: 50%;
-        transform: rotate(120deg);
-        transition: transform 0.3s, box-shadow 0.3s;
+
+    .color-square {
+        width: 35px;
+        height: 35px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
-    .oval-selected {
-        transform: rotate(0deg);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 为选中的颜色添加阴影 */
+
+    .color-square-selected {
+        width: 35px;
+        height: 35px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
     }
+
 
     .color-button {
-        height: 50px;
+        height: 60px;
         border: 1px solid var(--mud-palette-table-lines);
-        transition: border 0.3s, transform 0.3s;
+        transition: border 0.3s, transform 0.3s, box-shadow 0.3s;
         cursor: pointer;
+        padding: 5px;
+        background-color: var(--mud-palette-surface);
+        border-radius: 8px;
     }
 
-   .color-button:hover {
-            transform: scale(1.1);
-   }
+
+        .color-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
 
     .color-button-selected {
         border: 2px solid var(--mud-palette-primary);
+    }
+
+
+        .color-button-selected:hover {
+            transform: scale(1.08);
+        }
+
+    .check-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #FFFFFF;
+        pointer-events: none;
     }
 </style>
 

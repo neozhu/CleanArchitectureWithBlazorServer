@@ -36,7 +36,9 @@
             <MudStack Row AlignItems="AlignItems.Start">
                 <MudIcon Icon="@Icons.Material.Filled.QrCodeScanner" Size="Size.Large" />
                 <MudStack Spacing="0">
-                    <MudText Typo="Typo.caption" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
+                    <MudText Typo="Typo.caption">caption</MudText>
+                    <MudText Typo="Typo.overline">overline</MudText>
+                    <MudText Typo="Typo.subtitle2" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
                     <MudEnumSelect Style="min-width:120px" TEnum="ProductListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
                     </MudEnumSelect>
                 </MudStack>
