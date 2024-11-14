@@ -1,7 +1,6 @@
 ﻿@page "/pages/Contacts"
 
 @using BlazorDownloadFile
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Caching
 @using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers
@@ -12,7 +11,6 @@
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.AddEdit
 @using CleanArchitecture.Blazor.Server.UI.Pages.Contacts.Components
-
 
 @inject IStringLocalizer<Contacts> L
 @attribute [Authorize(Policy = Permissions.Contacts.View)]
@@ -142,7 +140,7 @@
                 <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Name)]"> 
    <CellTemplate>
       <div class="d-flex flex-column">
-        <MudText Typo="Typo.body2">@context.Item.Name</MudText>
+        <MudText Typo="Typo.body1">@context.Item.Name</MudText>
         <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
      </div>
     </CellTemplate>
@@ -244,13 +242,13 @@
     {
         var parameters = new DialogParameters<ContactFormDialog>
             {
-                { x=> x.Model,command },
+                { x=>x.model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = await DialogService.ShowAsync<ContactFormDialog>(title, parameters, options);
+        var dialog = DialogService.Show<ContactFormDialog>(title, parameters, options);
         var state = await dialog.Result;
 
-        if (state is { Canceled: false })
+        if (state != null && !state.Canceled)
         {
             await _table.ReloadServerData();
             _selectedItems.Clear();

@@ -50,7 +50,7 @@ public class UserPreference
 
     public double H6FontSize => DefaultFontSize + 0.185;
     public double H5FontSize => DefaultFontSize + 0.435;
-    public double Body1FontSize => DefaultFontSize + 0.0625;
+    public double Body1FontSize => DefaultFontSize;
     public double Body1LineHeight => LineHeight;
     public double Body1LetterSpacing => LetterSpacing;
     public double Body2FontSize => DefaultFontSize - 0.0625;

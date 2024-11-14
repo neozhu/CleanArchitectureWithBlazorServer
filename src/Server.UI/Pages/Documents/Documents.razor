@@ -115,7 +115,7 @@
         <PropertyColumn Property="x => x.Title" Title="@L[_currentDto.GetMemberDescription(x => x.Title)]">
             <CellTemplate>
                 <div class="d-flex flex-column">
-                    <MudText Typo="Typo.body2">@context.Item.Title</MudText>
+                    <MudText >@context.Item.Title</MudText>
                     <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
                 </div>
             </CellTemplate>
@@ -140,7 +140,7 @@
                                 break;
                         }
                     </div>
-                    <div class="flex-grow-0">
+                    <div class="flex-grow-0  mud-text-secondary">
                         <MudHighlighter Text="@context.Item.Content" HighlightedText="@_searchString" Class="mud-text-secondary"></MudHighlighter>
                     </div>
                 </div>
