@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.Caching.Memory;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;

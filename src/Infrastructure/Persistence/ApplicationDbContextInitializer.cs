@@ -4,7 +4,6 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 

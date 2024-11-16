@@ -1,9 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Data;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;

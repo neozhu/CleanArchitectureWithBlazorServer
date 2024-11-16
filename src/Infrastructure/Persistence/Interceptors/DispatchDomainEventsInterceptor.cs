@@ -1,6 +1,5 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
 using CleanArchitecture.Blazor.Domain.Common.Entities;
-using MediatR;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;

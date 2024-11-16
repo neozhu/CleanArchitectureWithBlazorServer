@@ -1,7 +1,4 @@
-﻿using CleanArchitecture.Blazor.Infrastructure.Extensions;
-using Microsoft.AspNetCore.Http;
-
-namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
+﻿namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 /// <summary>
 /// Provides access to the current user's session information.

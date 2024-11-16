@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
-using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
