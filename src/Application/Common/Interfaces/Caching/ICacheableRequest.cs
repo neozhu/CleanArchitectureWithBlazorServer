@@ -8,9 +8,3 @@ public interface ICacheableRequest<TResponse> : IRequest<TResponse>
     string CacheKey => string.Empty;
     IEnumerable<string>? Tags { get; }
 }
-
-public interface IFusionCacheRequest<TResponse> : IRequest<TResponse>
-{
-    string CacheKey => string.Empty;
-    string CacheName => string.Empty;
-}

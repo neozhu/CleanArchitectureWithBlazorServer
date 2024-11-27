@@ -22,7 +22,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Riok.Mapperly" Version="4.1.1" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.9" />
-        <PackageReference Include="Hangfire.Core" Version="1.8.15" />
+        <PackageReference Include="Hangfire.Core" Version="1.8.16" />
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.0.0-preview-2" />
            <PackageReference Include="ActualLab.Fusion" Version="9.6.2" />
         <PackageReference Include="ActualLab.Fusion.Blazor" Version="9.6.2" />

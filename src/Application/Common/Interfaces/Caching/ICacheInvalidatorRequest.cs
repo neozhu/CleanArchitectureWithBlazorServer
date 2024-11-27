@@ -8,9 +8,3 @@ public interface ICacheInvalidatorRequest<TResponse> : IRequest<TResponse>
     string CacheKey => string.Empty;
     IEnumerable<string>? Tags { get; }
 }
-
-public interface IFusionCacheRefreshRequest<TResponse> : IRequest<TResponse>
-{
-    string CacheKey => string.Empty;
-    string CacheName => string.Empty;
-}

@@ -15,13 +15,13 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.15" />
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.16" />
         <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
 
-        <PackageReference Include="MudBlazor" Version="8.0.0-preview.4" />
+        <PackageReference Include="MudBlazor" Version="8.0.0-preview.5" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="5.1.0" />
         <PackageReference Include="Blazor-ApexCharts" Version="4.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">

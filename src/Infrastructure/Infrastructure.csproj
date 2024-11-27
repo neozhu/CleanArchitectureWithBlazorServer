@@ -11,7 +11,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.0" />
-        <PackageReference Include="QuestPDF" Version="2024.10.3" />
+        <PackageReference Include="QuestPDF" Version="2024.10.4" />
         <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.0.0" />
         <PackageReference Include="Serilog.Sinks.Postgresql.Alternative" Version="4.1.1" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
