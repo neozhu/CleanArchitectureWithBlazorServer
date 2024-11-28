@@ -20,7 +20,6 @@
         <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
-
         <PackageReference Include="MudBlazor" Version="8.0.0-preview.5" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="5.1.0" />
         <PackageReference Include="Blazor-ApexCharts" Version="4.0.1" />
