@@ -243,15 +243,8 @@
     </PagerContent>
 </MudDataGrid>
 
-
-
 <PermissionsDrawer OnAssignAllChanged="OnAssignAllChangedHandler" Waiting="@_processing" OnOpenChanged="OnOpenChangedHandler" Open="_showPermissionsDrawer" Permissions="_permissions" OnAssignChanged="OnAssignChangedHandler"></PermissionsDrawer>
 
-<style>
-    .mud-table-toolbar {
-        height: 120px !important;
-    }
-</style>
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;

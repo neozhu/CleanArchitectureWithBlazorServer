@@ -15,11 +15,6 @@
 @inject IStringLocalizer<Contacts> L
 @attribute [Authorize(Policy = Permissions.Contacts.View)]
 <PageTitle>@Title</PageTitle>
-<style>
-    .mud-table-toolbar {
-        height: 120px !important;
-    }
-</style>
 
 <MudDataGrid ServerData="@(ServerReload)"
              FixedHeader="true"
