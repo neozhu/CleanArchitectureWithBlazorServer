@@ -1,0 +1,98 @@
+﻿@page "/pages/CrmProductCategories/edit/{id:int}"
+@using CleanArchitecture.Blazor.Application.Features.CrmProductCategories.Commands.Update
+@using CleanArchitecture.Blazor.Application.Features.CrmProductCategories.Mappers
+@using CleanArchitecture.Blazor.Application.Features.CrmProductCategories.Queries.GetById
+@using CleanArchitecture.Blazor.Server.UI.Components.Fusion
+
+@inherits MudComponentBase
+@inject IValidationService Validator
+@inject IStringLocalizer<CrmProductCategories> L
+
+<PageTitle>@Title</PageTitle>
+<Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+<MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
+@if (model != null)
+{
+    <MudCard Class="pa-2">
+        <MudCardHeader>
+            <CardHeaderContent>
+                 <MudText Typo="Typo.h6">@Title</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+        <ActiveUserSession PageComponent="@($"{nameof(EditCrmProductCategory)}/{ model.Id }")" />
+        <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
+            <MudGrid Spacing="2">
+                <MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.CategoryName)]" @bind-Value="model.CategoryName" For="@(() => model.CategoryName)" Required="false" RequiredError="@L["category name is required!"]"></MudTextField>
+                </MudItem> 
+
+            </MudGrid>
+        </MudForm>
+        </MudCardContent>
+        <MudCardActions Class="d-flex justify-end gap-2">
+                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        </MudCardActions>
+        </MudCard>
+    }
+</MudContainer>
+ 
+
+@code {
+    public string? Title { get; private set; }
+    [Parameter]
+    public int Id { get; set; }
+    MudForm? _form;
+    private bool _saving = false;
+    private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("CrmProductCategories", href: "/pages/CrmProductCategories")
+    };
+    private UpdateCrmProductCategoryCommand? model;
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L["Edit CrmProductCategory"];
+        var result = await Mediator.Send(new GetCrmProductCategoryByIdQuery() { Id = Id });
+        result.Map(data =>
+        {
+            model = CrmProductCategoryMapper.ToUpdateCommand(data);
+            return data;
+        }).Match(data =>
+        {
+            _breadcrumbItems.Add(new BreadcrumbItem(data.CategoryName, href: $"/pages/CrmProductCategories/edit/{Id}"));
+            return data;
+        }, errors =>
+        {
+            Snackbar.Add($"{errors}", Severity.Error);
+            return null!;
+        });
+
+    }
+    async Task Submit()
+    {
+        try
+        {
+            _saving = true;
+            await _form!.Validate().ConfigureAwait(false);
+            if (!_form!.IsValid)
+                return;
+            var result = await Mediator.Send(model);
+            result.Match(
+                data=>
+                {
+                    Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                    return data;
+                },
+                errors=>
+                {
+                    Snackbar.Add(errors, MudBlazor.Severity.Error);
+                    return 0;
+                });
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+}

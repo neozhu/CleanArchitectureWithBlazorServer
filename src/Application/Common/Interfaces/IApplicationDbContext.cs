@@ -16,8 +16,8 @@ public interface IApplicationDbContext
     DbSet<Product> Products { get; set; }
     DbSet<Tenant> Tenants { get; set; }
     DbSet<Contact> Contacts { get; set; }
+    DbSet<CrmProductCategory> CrmProductCategories { get; set; }
     ChangeTracker ChangeTracker { get; }
-
     DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

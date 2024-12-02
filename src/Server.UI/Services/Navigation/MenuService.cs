@@ -19,8 +19,8 @@ public class MenuService : IMenuService
                     Icon = Icons.Material.Filled.ShoppingCart,
                     PageStatus = PageStatus.Completed,
                     IsParent = true,
-                    MenuItems = new List<MenuSectionSubItemModel>
-                    {
+                    MenuItems =
+                    [
                         new()
                         {
                             Title = "Products",
@@ -38,8 +38,14 @@ public class MenuService : IMenuService
                             Title = "Contacts",
                             Href = "/pages/contacts",
                             PageStatus = PageStatus.Completed
+                        },
+                        new()
+                        {
+                            Title = "Categories",
+                            Href = "/pages/CrmProductCategories",
+                            PageStatus = PageStatus.Completed
                         }
-                    }
+                    ]
                 },
                 new()
                 {

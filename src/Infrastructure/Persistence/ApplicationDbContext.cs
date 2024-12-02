@@ -28,6 +28,7 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<Product> Products { get; set; }
     public DbSet<Contact> Contacts { get; set; }
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
+    public DbSet<CrmProductCategory> CrmProductCategories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
