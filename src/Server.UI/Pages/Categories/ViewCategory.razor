@@ -1,0 +1,79 @@
+﻿@page "/pages/Categories/view/{id:int}"
+@using CleanArchitecture.Blazor.Application.Features.Categories.Commands.Delete
+@using CleanArchitecture.Blazor.Application.Features.Categories.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Categories.Queries.GetById
+@inherits MudComponentBase
+@inject IStringLocalizer<Categories> L
+
+<PageTitle>@Title</PageTitle>
+<Breadcrumbs  OnGoEditClick="GoEdit" OnDeleteClick="Delete" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+<MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
+@if (model != null)
+{
+    <MudCard Class="pa-2">
+        <MudCardHeader>
+            <CardHeaderContent>
+                 <MudText Typo="Typo.h6">@Title</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGrid Spacing="3" Class="readonly-grid">
+                <MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Name)]" Value="model.Name"></ReadOnlyFieldX6>
+                </MudItem> 
+
+            </MudGrid>
+        </MudCardContent>
+        <MudCardActions></MudCardActions>
+    </MudCard>
+ }
+</MudContainer>
+ 
+
+@code {
+    public string? Title { get; private set; }
+    [Parameter]
+    public int Id { get; set; }
+    private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Categories", href: "/pages/Categories")
+    };
+    private CategoryDto? model;
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L["Category"];
+        var result = await Mediator.Send(new GetCategoryByIdQuery() { Id = Id });
+        result.Map(data =>
+        {
+            model = data;
+            return data;
+        }).Match(data =>
+        {
+            _breadcrumbItems.Add(new BreadcrumbItem(data.Name, null, disabled: true));
+            return data;
+
+        }, errors =>
+        {
+            Snackbar.Add(errors, MudBlazor.Severity.Error);
+            return null!;
+        });
+
+    }
+    void GoEdit()
+    {
+        Navigation.NavigateTo($"/pages/Categories/edit/{Id}");
+    }
+    async Task Delete()
+    {
+        var contentText = string.Format(ConstantString.DeleteConfirmation, model.Name);
+        var command = new DeleteCategoryCommand(new int[] { model.Id });
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        {
+            await InvokeAsync(() =>
+            {
+                Navigation.NavigateTo($"/pages/Categories");
+            });
+        });
+    }
+}

@@ -42,7 +42,7 @@ public class MenuService : IMenuService
                         new()
                         {
                             Title = "Categories",
-                            Href = "/pages/CrmProductCategories",
+                            Href = "/pages/Categories",
                             PageStatus = PageStatus.Completed
                         }
                     ]

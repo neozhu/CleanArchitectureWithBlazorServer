@@ -1,0 +1,86 @@
+﻿@using CleanArchitecture.Blazor.Application.Features.Categories.Commands.AddEdit
+
+@inherits MudComponentBase
+@inject IValidationService Validator
+@inject IStringLocalizer<Categories> L
+
+<MudDialog>
+    <DialogContent>
+        <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
+            <MudGrid>
+                @*TODO: define mudform that should be edit fields, for example:*@
+                <MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
+                </MudItem> 
+
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
+        <MudLoadingButton Loading="@_savingnew" OnClick="SaveAndNew">@ConstantString.SaveAndNew</MudLoadingButton>
+        <MudLoadingButton Loading="@_saving"  OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    MudForm? _form;
+    private bool _saving = false;
+    private bool _savingnew = false;
+    [CascadingParameter]
+    IMudDialogInstance MudDialog { get; set; } = default!;
+    AddEditCategoryCommandValidator _modelValidator = new ();
+    [EditorRequired] [Parameter] public AddEditCategoryCommand model { get; set; } = null!;
+    async Task Submit()
+    {
+        try
+        {
+            _saving = true;
+            await _form!.Validate().ConfigureAwait(false);
+            if (!_form!.IsValid)
+                return;
+            var result = await Mediator.Send(model);
+            result.Match(data =>
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+                Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                return data;
+            }, errors =>
+            {
+                Snackbar.Add(errors, MudBlazor.Severity.Error);
+                return -1;
+            });
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+    async Task SaveAndNew()
+    {
+        try
+        {
+            _savingnew = true;
+            await _form!.Validate().ConfigureAwait(false);
+            if (!_form!.IsValid)
+               return;
+            var result = await Mediator.Send(model);
+            await result.MatchAsync(async data =>
+            {
+                Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                await Task.Delay(300);
+                model = new AddEditCategoryCommand() { };
+                return data;
+            }, errors =>
+            {
+                Snackbar.Add(errors, MudBlazor.Severity.Error);
+                return Task.FromResult(-1);
+            });
+        }
+        finally
+        {
+            _savingnew = false;
+        }
+    }
+    void Cancel() => MudDialog.Cancel();
+}
