@@ -33,13 +33,6 @@ Here are some projects that have been developed based on this Clean Architecture
 2. **The DPP Application (EU Digital Product Passport)**
    - [Live Demo](https://materialpassport.blazorserver.com/)
 
-[![Visitor Management Screenshot](https://user-images.githubusercontent.com/1549611/183225025-96295845-add4-4b00-89d5-8d280a08c192.png)](https://visitor.blazorserver.com/)
-3. **Visitor Management**
-   - [GitHub Repository](https://github.com/neozhu/visitormanagement)
-
-[![School Bus Transport Management System Screenshot](https://github.com/user-attachments/assets/0874eb1d-ce6a-4bdc-b716-9fb7dbce2186)](https://schoolbus.blazorserver.com/)
-4. **School Bus Transport Management System**
-   - [GitHub Repository](https://github.com/neozhu/schoolbus)
 
 
 
