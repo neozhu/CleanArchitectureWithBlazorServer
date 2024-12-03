@@ -16,6 +16,9 @@ Experience the application in action in Blazor Server mode by visiting:
 
 - PostgreSQL Database: [architecture.blazors.app](https://architecture.blazors.app/)
 
+### Additional Note:
+If you're also interested in exploring a version built with Blazor WebAssembly, it's now available! Please visit [CleanAspire Repository](https://github.com/neozhu/cleanaspire) for more details.
+[![](https://private-user-images.githubusercontent.com/1549611/386846455-013b167b-59fa-42d7-a2f7-ffec301c4e11.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzMyMDgzNzUsIm5iZiI6MTczMzIwODA3NSwicGF0aCI6Ii8xNTQ5NjExLzM4Njg0NjQ1NS0wMTNiMTY3Yi01OWZhLTQyZDctYTJmNy1mZmVjMzAxYzRlMTEuanBnP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI0MTIwMyUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNDEyMDNUMDY0MTE1WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9N2U0MjZjYTYxZTEyYjljZjhlOWRlNWNhY2VjNmE3NTRkYjE3NmQzMDljZGYxZjdkMWY1MDhkNTUyYjg4ODA2MyZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.XGF7ccu4iG-spz7w2lUk8QcD_y0WVFR92xp-nCkbY34)](https://github.com/neozhu/cleanaspire)
 
 ## Projects Based on This Template
 
