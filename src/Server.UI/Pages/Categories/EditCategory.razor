@@ -25,7 +25,10 @@
             <MudGrid Spacing="2">
                 <MudItem xs="12" md="6"> 
                         <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
-                </MudItem> 
+                </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudTextField Label="@L[model.GetMemberDescription(x=>x.Comments)]" @bind-Value="model.Comments" For="@(() => model.Comments)" Required="true" RequiredError="@L["Comment is required!"]"></MudTextField>
+                        </MudItem>
 
             </MudGrid>
         </MudForm>

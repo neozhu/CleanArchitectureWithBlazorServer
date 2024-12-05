@@ -9,6 +9,9 @@ public class CategoryDto
     [Description("Name")]
     public string Name { get; set; }
 
+    [Description("Comments")]
+    public string Comments { get; set; }
+
 
 }
 

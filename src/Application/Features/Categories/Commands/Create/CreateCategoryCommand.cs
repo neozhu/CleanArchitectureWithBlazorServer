@@ -9,9 +9,10 @@ public class CreateCategoryCommand: ICacheInvalidatorRequest<Result<int>>
       [Description("Id")]
       public int Id { get; set; }
           [Description("Name")]
-    public string Name {get;set;} 
-
-      public string CacheKey => CategoryCacheKey.GetAllCacheKey;
+    public string Name {get;set;}
+    [Description("Comments")]
+    public string Comments { get; set; }
+    public string CacheKey => CategoryCacheKey.GetAllCacheKey;
       public IEnumerable<string>? Tags => CategoryCacheKey.Tags;
 }
     
