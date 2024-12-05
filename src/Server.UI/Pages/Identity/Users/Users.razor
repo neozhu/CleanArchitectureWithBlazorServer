@@ -182,7 +182,7 @@
         </PropertyColumn>
         <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x => x.UserName)]">
             <CellTemplate>
-                <UserCard Item="@context.Item" OnSendVerify="@(x=> SendVerify(x))"></UserCard>
+                <UserCard Item="@context.Item" OnSendVerify="@(x=> SendVerify(x))" DisplayOnlineStatus="@_canViewOnlineStatus"></UserCard>
             </CellTemplate>
         </PropertyColumn>
         <PropertyColumn Property="x => x.Email" Title="@L["Full Name"]">
@@ -279,6 +279,7 @@
     private bool _loading;
     private bool _exporting;
     private bool _uploading;
+    private bool _canViewOnlineStatus;
     private List<string?> _roles = new();
     private string? _searchRole;
 
@@ -297,6 +298,7 @@
         _canManagePermissions = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        _canViewOnlineStatus = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ViewOnlineStatus)).Succeeded;
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
 
         //var list= await  UserManager.Users.Include(x=>x.LastModifiedByUser).Include(x=>x.CreatedByUser).ToListAsync();
