@@ -14,6 +14,7 @@ public interface IApplicationDbContext
     DbSet<Document> Documents { get; set; }
     DbSet<PicklistSet> PicklistSets { get; set; }
     DbSet<Product> Products { get; set; }
+    DbSet<Supplier> Suppliers { get; set; }
     DbSet<Tenant> Tenants { get; set; }
     DbSet<Contact> Contacts { get; set; }
     DbSet<Category> Categories { get; set; }

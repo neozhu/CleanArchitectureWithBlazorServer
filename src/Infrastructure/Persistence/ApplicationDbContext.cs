@@ -23,7 +23,7 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<Logger> Loggers { get; set; }
     public DbSet<AuditTrail> AuditTrails { get; set; }
     public DbSet<Document> Documents { get; set; }
-
+    public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<PicklistSet> PicklistSets { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Contact> Contacts { get; set; }

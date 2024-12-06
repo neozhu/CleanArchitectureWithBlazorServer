@@ -4,7 +4,7 @@
 namespace CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 [Description("Products")]
-public class ProductDto
+public record ProductDto
 {
     [Description("Id")] public int Id { get; set; }
 
@@ -19,4 +19,8 @@ public class ProductDto
     [Description("Price")] public decimal Price { get; set; }
 
     [Description("Pictures")] public List<ProductImage>? Pictures { get; set; }
+
+    [Description("RetailPrice")] public decimal? RetailPrice { get; set; }
+
+    [Description("Stock")]  public int? Stock { get; set; }
 }

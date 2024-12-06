@@ -53,6 +53,25 @@
                                      @bind-Value="Model.Price">
                     </MudNumericField>
                 </MudItem>
+
+                <MudItem xs="12" sm="4">
+                    <MudNumericField Label="@L["RetailPrice"]"
+                                     T="decimal"
+                                     Format="N2"
+                                     For="@(() => Model.RetailPrice)"
+                                     Min="0.00m"
+                                     @bind-Value="Model.RetailPrice">
+                    </MudNumericField>
+                </MudItem>
+
+                <MudItem xs="12" sm="4">
+                    <MudNumericField Label="@L["Stock"]"
+                                     T="int"
+                                     For="@(() => Model.Stock)"
+                                     @bind-Value="Model.Stock">
+                    </MudNumericField>
+                </MudItem>
+
                 <MudItem xs="12" sm="4">
                     <PicklistAutocomplete Picklist="Picklist.Unit" T="string"
                                           Label="@L["Unit"]"
