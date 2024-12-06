@@ -76,6 +76,7 @@ public static partial class Permissions
         public const string SendRestPasswordMail = "Permissions.Users.SendRestPasswordMail";
         public const string ManagePermissions = "Permissions.Users.Permissions";
         public const string Deactivation = "Permissions.Users.Activation/Deactivation";
+        public const string ViewOnlineStatus = "Permissions.Users.ViewOnlineStatus";
     }
 
     [DisplayName("Role Permissions")]
