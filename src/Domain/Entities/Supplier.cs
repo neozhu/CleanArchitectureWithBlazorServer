@@ -14,5 +14,4 @@ public class Supplier : BaseAuditableEntity
     public string? Email { get; set; }
     public string? VAT { get; set; } // New property for VAT
     public string? Country { get; set; } // New property for Country
-    public DateTime CreatedAt { get; set; }
 }
