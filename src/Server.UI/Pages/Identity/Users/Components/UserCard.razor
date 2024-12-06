@@ -5,7 +5,7 @@
 @if (Item is not null)
 {
     <MudStack Row Spacing="2" AlignItems="AlignItems.Center">
-        <MudBadge Color="@(IsOnline() ? Color.Success : Color.Error)" Overlap="false" Dot="true" Bordered="true">
+        <MudBadge Color="@(IsOnline() ? Color.Success : Color.Error)" Overlap="false" Dot="true" Bordered="true" Visible="@DisplayOnlineStatus">
             <MudAvatar>
                 @if (string.IsNullOrEmpty(Item.ProfilePictureDataUrl))
                 {
@@ -51,6 +51,8 @@ else
     public ApplicationUserDto? Item { get; set; }
     [Parameter]
     public Func<ApplicationUserDto, Task>? OnSendVerify { get; set; }
+    [Parameter]
+    public bool DisplayOnlineStatus { get; set; }
 
     private bool IsOnline()
     {
