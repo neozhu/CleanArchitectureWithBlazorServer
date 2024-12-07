@@ -1,6 +1,7 @@
 ﻿
 
 
+using CleanArchitecture.Blazor.Application.Features.OfferLines.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Offers.Caching;
 using CleanArchitecture.Blazor.Application.Features.Offers.Mappers;
 
@@ -8,21 +9,21 @@ namespace CleanArchitecture.Blazor.Application.Features.Offers.Commands.AddEdit;
 
 public class AddEditOfferCommand: ICacheInvalidatorRequest<Result<int>>
 {
-      [Description("Id")]
+    [Description("Id")]
       public int Id { get; set; }
-          [Description("Customer id")]
+    [Description("Customer id")]
     public int CustomerId {get;set;} 
     [Description("Offer date")]
-    public DateTime OfferDate {get;set;} 
+    public DateTime OfferDate {get;set;}  = DateTime.Now;
     [Description("Total amount")]
-    public decimal TotalAmount {get;set;} 
+    public decimal TotalAmount {get;set;}
     [Description("Status")]
-    public string? Status {get;set;} 
-    //[Description("Offer lines")]
-    //public List<OfferLineDtoDto>? OfferLines {get;set;} 
+    public string? Status { get; set; } = "Pending";
+    [Description("Offer lines")]
+    public List<OfferLineDto>? OfferLines { get; set; }
 
 
-      public string CacheKey => OfferCacheKey.GetAllCacheKey;
+    public string CacheKey => OfferCacheKey.GetAllCacheKey;
       public IEnumerable<string>? Tags => OfferCacheKey.Tags;
 }
 

@@ -1,4 +1,7 @@
-﻿@using CleanArchitecture.Blazor.Application.Features.Offers.Commands.AddEdit
+﻿@using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetAll
+@using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Pagination
+@using CleanArchitecture.Blazor.Application.Features.Offers.Commands.AddEdit
 
 @inherits MudComponentBase
 @inject IValidationService Validator
@@ -8,18 +11,33 @@
     <DialogContent>
         <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
             <MudGrid>
-                @*TODO: define mudform that should be edit fields, for example:*@
+
                 <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.CustomerId)]" @bind-Value="model.CustomerId" For="@(() => model.CustomerId)" Min="0" Required="false" RequiredError="@L["customer id is required!"]"></MudNumericField >
-                </MudItem> 
-@* <MudItem xs="12" md="6"> 
-                        <MudDatePicker Label="@L[model.GetMemberDescription(x=>x.OfferDate)]" @bind-Date="model.OfferDate" For="@(() => model.OfferDate)" Required="false" RequiredError="@L["offer date is required!"]"></MudDatePicker>
+                    <MudSelect T="ContactDto" Label="Select Contact" @bind-Value="SelectedContact">
+                        @if (Contacts is not null)
+                        {
+                            @foreach (var contact in Contacts)
+                            {
+                                <MudSelectItem Label="@L[model.GetMemberDescription(x=>x.CustomerId)]"
+                                Required="true"
+                                RequiredError="@L["customer id is required!"]"
+                                Value="contact">@contact.Name + " " + @contact.Description</MudSelectItem>
+                            }
+                        }
+                    </MudSelect>
+                </MudItem>
+
+@*                 <MudItem xs="12" md="6"> 
+                    <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.CustomerId)]" @bind-Value="model.CustomerId" For="@(() => model.CustomerId)" Min="0" 
+                    Required="false" RequiredError="@L["customer id is required!"]"></MudNumericField >
+                </MudItem> *@
+@*                 <MudItem xs="12" md="6"> 
+                    <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.TotalAmount)]" @bind-Value="model.TotalAmount" For="@(() => model.TotalAmount)" Min="0.00m" Required="false" RequiredError="@L["total amount is required!"]"></MudNumericField >
                 </MudItem>  *@
-<MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.TotalAmount)]" @bind-Value="model.TotalAmount" For="@(() => model.TotalAmount)" Min="0.00m" Required="false" RequiredError="@L["total amount is required!"]"></MudNumericField >
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Status)]" @bind-Value="model.Status" For="@(() => model.Status)" Required="false" RequiredError="@L["status is required!"]"></MudTextField>
+                <MudItem xs="12" md="6"> 
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Status)]" 
+                        @bind-Value="model.Status" For="@(() => model.Status)" Required="false" 
+                        RequiredError="@L["status is required!"]"></MudTextField>
                 </MudItem> 
 
             </MudGrid>
@@ -40,6 +58,23 @@
     IMudDialogInstance MudDialog { get; set; } = default!;
     AddEditOfferCommandValidator _modelValidator = new ();
     [EditorRequired] [Parameter] public AddEditOfferCommand model { get; set; } = null!;
+
+    private IEnumerable<ContactDto>? Contacts;
+    private ContactDto? SelectedContact;
+    private GetAllContactsQuery Query { get; set; } = new();
+
+    [CascadingParameter]
+    private UserProfile? UserProfile { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Mediator.Send(Query).ConfigureAwait(false);
+        if (result.Any()){
+            Contacts = result.ToList();
+        }
+
+    }
+
     async Task Submit()
     {
         try
@@ -48,6 +83,12 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
+
+            if (SelectedContact is null)
+                return;
+
+            model.CustomerId = SelectedContact.Id;
+
             var result = await Mediator.Send(model);
             result.Match(data =>
             {
