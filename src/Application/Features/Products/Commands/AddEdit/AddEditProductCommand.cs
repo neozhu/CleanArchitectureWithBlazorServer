@@ -19,6 +19,8 @@ public class AddEditProductCommand : ICacheInvalidatorRequest<Result<int>>
     public decimal Price { get; set; } = 0;
     public int Stock { get; set; } = 0;
 
+    public string? Code { get; set; } = string.Empty;
+
     public List<ProductImage>? Pictures { get; set; }
 
     public IReadOnlyList<IBrowserFile>? UploadPictures { get; set; }

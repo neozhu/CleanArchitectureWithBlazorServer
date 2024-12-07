@@ -20,10 +20,12 @@ public class AddEditSupplierCommand: ICacheInvalidatorRequest<Result<int>>
     [Description("Vat")]
     public string? VAT {get;set;} 
     [Description("Country")]
-    public string? Country {get;set;} 
+    public string? Country {get;set;}
 
+    [Description("Code")]
+    public string Code { get; set; } = string.Empty;
 
-      public string CacheKey => SupplierCacheKey.GetAllCacheKey;
+    public string CacheKey => SupplierCacheKey.GetAllCacheKey;
       public IEnumerable<string>? Tags => SupplierCacheKey.Tags;
 }
 
