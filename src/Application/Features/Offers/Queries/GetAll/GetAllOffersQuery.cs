@@ -39,9 +39,11 @@ public class GetAllOffersQueryHandler :
 
     public async Task<IEnumerable<OfferDto>> Handle(GetAllOffersQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Offers.ProjectTo()
-                                                .AsNoTracking()
-                                                .ToListAsync(cancellationToken);
+        var data = await _context.Offers
+                                        .Include(x=>x.OfferLines)
+                                        .ProjectTo()
+                                        .AsNoTracking()
+                                        .ToListAsync(cancellationToken);
         return data;
     }
 }

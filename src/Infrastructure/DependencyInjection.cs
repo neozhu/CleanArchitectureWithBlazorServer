@@ -100,7 +100,10 @@ public static class DependencyInjection
                 m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
                 m.UseExceptionProcessor(databaseSettings.DBProvider);
                 m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
+
+                //p.UseLazyLoadingProxies(false);
             });
+
 
         services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
         services.AddScoped<IApplicationDbContext>(provider =>

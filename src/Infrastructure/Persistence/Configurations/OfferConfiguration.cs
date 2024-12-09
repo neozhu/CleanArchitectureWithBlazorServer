@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Configurations;
@@ -13,9 +14,13 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
 
        builder.Property(x => x.Status).HasMaxLength(255);
 
-        builder.HasOne(o => o.Customer)
-               .WithMany(c => c.Offers)
-               .HasForeignKey(o => o.CustomerId);
+        builder.OwnsMany(o => o.OfferLines, x =>
+        {
+            x.ToTable("OfferLine"); // Map to separate table
+
+            x.WithOwner().HasForeignKey("OfferId"); // Foreign key
+
+        });
 
         builder.Ignore(e => e.DomainEvents);
     }

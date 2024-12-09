@@ -1,7 +1,7 @@
 ﻿
 
 
-using CleanArchitecture.Blazor.Application.Features.OfferLines.DTOs;
+
 using CleanArchitecture.Blazor.Application.Features.Offers.Caching;
 using CleanArchitecture.Blazor.Application.Features.Offers.Mappers;
 
@@ -20,7 +20,7 @@ public class AddEditOfferCommand: ICacheInvalidatorRequest<Result<int>>
     [Description("Status")]
     public string? Status { get; set; } = "Pending";
     [Description("Offer lines")]
-    public List<OfferLineDto>? OfferLines { get; set; }
+    public List<OfferLine>? OfferLines { get; set; }
 
 
     public string CacheKey => OfferCacheKey.GetAllCacheKey;

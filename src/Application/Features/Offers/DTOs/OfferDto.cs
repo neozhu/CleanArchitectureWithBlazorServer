@@ -26,7 +26,6 @@
 // layers and services. Each property includes a description for better understandability during 
 // serialization and documentation generation.
 
-using CleanArchitecture.Blazor.Application.Features.OfferLines.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Offers.DTOs;
 
@@ -45,7 +44,7 @@ public class OfferDto
     public string? Status {get;set;}
 
     [Description("Offer lines")]
-    public List<OfferLineDto>? OfferLines { get; set; }
+    public List<OfferLine>? OfferLines { get; set; }
 
     [Description("Customer")]
     public int ContactDto { get; set; }

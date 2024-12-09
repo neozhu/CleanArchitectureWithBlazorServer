@@ -3,6 +3,7 @@
 
 using System;
 using CleanArchitecture.Blazor.Domain.Common.Entities;
+using Riok.Mapperly.Abstractions;
 
 namespace CleanArchitecture.Blazor.Domain.Entities;
 
@@ -13,7 +14,5 @@ public class Offer : BaseAuditableEntity
     public decimal TotalAmount { get; set; }
     public string Status { get; set; } = "Pending";
 
-    public Contact Customer { get; set; } = null!;
-    // Navigation Property
-    public List<OfferLine> OfferLines { get; set; } = [];
+    public List<OfferLine> OfferLines { get;set; } = new List<OfferLine>();
 }

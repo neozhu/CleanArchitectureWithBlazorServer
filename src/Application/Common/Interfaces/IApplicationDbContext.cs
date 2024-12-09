@@ -21,7 +21,7 @@ public interface IApplicationDbContext
 
     DbSet<Offer> Offers { get; set; }
 
-    DbSet<OfferLine> OfferLines { get; set; }
+    //DbSet<OfferLine> OfferLines { get; set; }
 
     ChangeTracker ChangeTracker { get; }
     DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
