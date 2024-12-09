@@ -1,6 +1,5 @@
 ﻿
 
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Configurations;
@@ -12,7 +11,9 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
     {
         builder.ToTable("Offer");
 
-       builder.Property(x => x.Status).HasMaxLength(255);
+        builder.Property(x => x.Status).HasMaxLength(255);
+
+        builder.HasOne(x => x.Customer);
 
         builder.OwnsMany(o => o.OfferLines, x =>
         {

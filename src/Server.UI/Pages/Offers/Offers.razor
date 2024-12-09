@@ -132,10 +132,12 @@
             </CellTemplate>
         </TemplateColumn>
         @*TODO: Define the fields that should be displayed in data table*@
-        <PropertyColumn Property="x => x.CustomerId" Title="@L[_currentDto.GetMemberDescription(x=>x.CustomerId)]" />
+        <PropertyColumn Property="x => x.Customer.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Customer.Name)]" />
+        <PropertyColumn Property="x => x.Customer.Email" Title="@L[_currentDto.GetMemberDescription(x=>x.Customer.Email)]" />
         <PropertyColumn Property="x => x.OfferDate" Title="@L[_currentDto.GetMemberDescription(x=>x.OfferDate)]" />
         <PropertyColumn Property="x => x.TotalAmount" Title="@L[_currentDto.GetMemberDescription(x=>x.TotalAmount)]" />
         <PropertyColumn Property="x => x.Status" Title="@L[_currentDto.GetMemberDescription(x=>x.Status)]" />
+        <PropertyColumn Property="x => x.OfferLinesCount" Title="@L[_currentDto.GetMemberDescription(x => x.OfferLinesCount)]"/>
 
     </Columns>
     <NoRecordsContent>
@@ -187,16 +189,6 @@
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Offers.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Offers.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Offers.Export)).Succeeded;
-
-        // try
-        // {
-        //     var result = await Mediator.Send(new GetAllOffersQuery()).ConfigureAwait(false);
-        // }
-        // catch (Exception ex)
-        // {
-        //     var e = ex;
-          
-        // }
     }
     private async Task<GridData<OfferDto>> ServerReload(GridState<OfferDto> state)
     {

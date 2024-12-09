@@ -14,5 +14,7 @@ public class Offer : BaseAuditableEntity
     public decimal TotalAmount { get; set; }
     public string Status { get; set; } = "Pending";
 
+    public Contact? Customer { get; set; } = null;
+
     public List<OfferLine> OfferLines { get;set; } = new List<OfferLine>();
 }

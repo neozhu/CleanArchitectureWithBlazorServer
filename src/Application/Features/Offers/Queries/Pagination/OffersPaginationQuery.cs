@@ -44,7 +44,9 @@ public class OffersWithPaginationQueryHandler :
 
         public async Task<PaginatedData<OfferDto>> Handle(OffersWithPaginationQuery request, CancellationToken cancellationToken)
         {
-           var data = await _context.Offers.OrderBy($"{request.OrderBy} {request.SortDirection}")
+           var data = await _context.Offers
+            .Include(x=>x.Customer)
+            .OrderBy($"{request.OrderBy} {request.SortDirection}")
                                                    .ProjectToPaginatedDataAsync(request.Specification, 
                                                                                 request.PageNumber, 
                                                                                 request.PageSize, 
