@@ -1,4 +1,6 @@
 ﻿@page "/pages/Offers/edit/{id:int}"
+@using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetAll
 @using CleanArchitecture.Blazor.Application.Features.Offers.Commands.Update
 @using CleanArchitecture.Blazor.Application.Features.Offers.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Offers.Queries.GetById
@@ -11,43 +13,75 @@
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
 <MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
-@if (model != null)
-{
-    <MudCard Class="pa-2">
-        <MudCardHeader>
-            <CardHeaderContent>
-                 <MudText Typo="Typo.h6">@Title</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
-        <ActiveUserSession PageComponent="@($"{nameof(EditOffer)}/{ model.Id }")" />
-        <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
-            <MudGrid Spacing="2">
-                <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.CustomerId)]" @bind-Value="model.CustomerId" For="@(() => model.CustomerId)" Min="0" Required="false" RequiredError="@L["customer id is required!"]"></MudNumericField >
-                </MudItem> 
-@* <MudItem xs="12" md="6"> 
-                        <MudDatePicker Label="@L[model.GetMemberDescription(x=>x.OfferDate)]" @bind-Date="model.OfferDate" For="@(() => model.OfferDate)" Required="false" RequiredError="@L["offer date is required!"]"></MudDatePicker>
-                </MudItem>  *@
-<MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.TotalAmount)]" @bind-Value="model.TotalAmount" For="@(() => model.TotalAmount)" Min="0.00m" Required="false" RequiredError="@L["total amount is required!"]"></MudNumericField >
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Status)]" @bind-Value="model.Status" For="@(() => model.Status)" Required="false" RequiredError="@L["status is required!"]"></MudTextField>
-                </MudItem> 
+    @if (model != null)
+    {
+        <MudCard Class="pa-2">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">@Title</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <ActiveUserSession PageComponent="@($"{nameof(EditOffer)}/{ model.Id }")" />
 
-            </MudGrid>
-        </MudForm>
-        </MudCardContent>
-        <MudCardActions Class="d-flex justify-end gap-2">
-                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
-        </MudCardActions>
+                <MudForm Model="@model" @ref="_form" Validation="@(Validator.ValidateValue(model))">
+                    <MudGrid Spacing="2">
+                        <!-- Customer ID Selection -->
+                        <MudItem xs="12">
+                            <MudSelect T="int" Label="@L[model.GetMemberDescription(x => x.CustomerId)]"
+                                       @bind-Value="model.CustomerId"
+                                       Searchable="true"
+                                       SearchFunc="SearchContacts"
+                                       Required="true" RequiredError="@L["Customer ID is required!"]">
+                                @foreach (var contact in contactDtos)
+                                {
+                                    <MudSelectItem T="int" Value="@contact.Id">
+                                        <MudText Typo="Typo.body1">
+                                            <span class="fw-bold">Name:</span> @contact.Name |
+                                            <span class="fw-bold">Email:</span> @contact.Email
+                                        </MudText>
+                                    </MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+
+                        <!-- Total Amount Input -->
+                        <MudItem xs="12" md="6">
+                            <MudNumericField Label="@L[model.GetMemberDescription(x => x.TotalAmount)]"
+                                             @bind-Value="model.TotalAmount"
+                                             For="@(() => model.TotalAmount)"
+                                             Min="0.00m"
+                                             Required="true"
+                                             RequiredError="@L["Total amount is required!"]">
+                            </MudNumericField>
+                        </MudItem>
+
+                        <!-- Status Input -->
+                        <MudItem xs="12">
+                            <MudTextField Label="@L[model.GetMemberDescription(x => x.Status)]"
+                                          @bind-Value="model.Status"
+                                          For="@(() => model.Status)"
+                                          Required="true"
+                                          RequiredError="@L["Status is required!"]">
+                            </MudTextField>
+                        </MudItem>
+
+ 
+                    </MudGrid>
+                </MudForm>
+
+
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-end gap-2">
+                <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+            </MudCardActions>
         </MudCard>
     }
 </MudContainer>
- 
+
 
 @code {
+
     public string? Title { get; private set; }
     [Parameter]
     public int Id { get; set; }
@@ -59,11 +93,17 @@
         new BreadcrumbItem("Offers", href: "/pages/Offers")
     };
     private UpdateOfferCommand? model;
+
+    private IEnumerable<ContactDto> contactDtos;
+
     protected override async Task OnInitializedAsync()
     {
         Title = L["Edit Offer"];
+
+        contactDtos = await Mediator.Send(new GetAllContactsQuery());
+
         var result = await Mediator.Send(new GetOfferByIdQuery() { Id = Id });
-        result.Map(data =>
+        result.Map(async data =>
         {
             model = OfferMapper.ToUpdateCommand(data);
             return data;
@@ -78,6 +118,15 @@
         });
 
     }
+
+    private async Task<IEnumerable<ContactDto>> SearchContacts(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return contactDtos;
+
+        return contactDtos.Where(x => x.Name.Contains(value, StringComparison.OrdinalIgnoreCase));
+    }
+
     async Task Submit()
     {
         try
