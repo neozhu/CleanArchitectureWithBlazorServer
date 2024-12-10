@@ -1,9 +1,6 @@
-﻿@using Microsoft.AspNetCore.Antiforgery
-@layout MainLayout
+﻿@layout MainLayout
 @inherits LayoutComponentBase
 @inject LayoutService LayoutService
-@inject IAntiforgery _antiforgery;
-@inject IHttpContextAccessor _httpContextAccessor;
 @inject IStringLocalizer<SharedResource> L
 <MudLayout>
     <MudAppBar Elevation="0"
@@ -37,7 +34,6 @@
             <AuthorizeView>
                 <Authorized>
                     <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
-                        <input type="hidden" name="__RequestVerificationToken" value="@antiforgeryToken" />
                         <input type="hidden" name="ReturnUrl" value="/"/>
                         <MudTooltip Text="@L["Logout"]">
                             <MudButton Style="text-transform:none"
@@ -66,7 +62,6 @@
             <AuthorizeView>
                 <Authorized>
                     <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
-                        <input type="hidden" name="__RequestVerificationToken" value="@antiforgeryToken" />
                         <input type="hidden" name="ReturnUrl" value="/" />
                         <MudTooltip Text="@L["Logout"]">
                             <MudButton Style="text-transform:none"
@@ -101,19 +96,5 @@
 
 @code
 {
-    private string? antiforgeryToken;
-    protected override void OnInitialized()
-    {
-        antiforgeryToken = getAntiforgeryToken();
-    }
-    private string? getAntiforgeryToken()
-    {
-        var httpContext = _httpContextAccessor.HttpContext;
-        if (httpContext == null)
-        {
-            throw new InvalidOperationException("HttpContext is not available.");
-        }
-        var tokens = _antiforgery.GetAndStoreTokens(httpContext);
-        return tokens.RequestToken;
-    }
+
 }

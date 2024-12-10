@@ -7,11 +7,8 @@ namespace CleanArchitecture.Blazor.Server.UI.Hubs;
 
 public sealed class HubClient : IAsyncDisposable
 {
-   
-
     private readonly HubConnection _hubConnection;
     private bool _started;
-
     public HubClient(NavigationManager navigationManager, IHttpContextAccessor httpContextAccessor)
     {
         var uri = new UriBuilder(navigationManager.Uri);
