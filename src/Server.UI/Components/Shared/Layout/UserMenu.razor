@@ -1,40 +1,39 @@
-﻿@using Microsoft.AspNetCore.Antiforgery
-@inject IStringLocalizer<HeaderMenu> L
+﻿@inject IStringLocalizer<HeaderMenu> L
 @inject UserProfileStateService UserProfileStateService
-@inject IAntiforgery _antiforgery;
-@inject IHttpContextAccessor _httpContextAccessor;
 @implements IDisposable
 <MudTooltip Arrow="true" Text="@L["User Profile"]">
     <MudMenu AnchorOrigin="Origin.BottomRight"
-             Icon="@Icons.Material.Filled.PermIdentity"
-             Class="mx-1"
-             LockScroll="true"
-             TransformOrigin="Origin.TopRight">
+    Icon="@Icons.Material.Filled.PermIdentity"
+    Class="mx-1"
+    LockScroll="true"
+    TransformOrigin="Origin.TopRight">
         <ChildContent>
             <div class="pb-4"
-                 style="min-width: 260px;margin-bottom:0px!important">
+            style="min-width: 260px;margin-bottom:0px!important">
                 <MudStack Row="true" AlignItems="AlignItems.Center" Class="ma-4">
                     @if (UserProfile is null || string.IsNullOrEmpty(UserProfile.UserId))
                     {
-                        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true"/>
+                        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
                         <MudStack Justify="Justify.Center" Spacing="0">
-                            <MudSkeleton Width="120px"/>
-                            <MudSkeleton Width="120px"/>
+                            <MudSkeleton Width="120px" />
+                            <MudSkeleton Width="120px" />
                         </MudStack>
                     }
                     else
                     {
-                        <MudAvatar>
-                            @if (string.IsNullOrEmpty(UserProfile.ProfilePictureDataUrl))
-                            {
-                                @(string.IsNullOrEmpty(UserProfile.UserName) ? "" : UserProfile.UserName.First())
-                            }
-                            else
-                            {
-                                <MudImage Src="@UserProfile.ProfilePictureDataUrl"></MudImage>
-                            }
-                        </MudAvatar>
-
+                        <div class="avatar-container">
+                            <div class="rotating-border"></div>
+                            <MudAvatar Style="width: 40px; height: 40px;">
+                                @if (string.IsNullOrEmpty(UserProfile.ProfilePictureDataUrl))
+                                {
+                                    @(string.IsNullOrEmpty(UserProfile.UserName) ? "" : UserProfile.UserName.First())
+                                }
+                                else
+                                {
+                                    <MudImage Src="@UserProfile.ProfilePictureDataUrl"></MudImage>
+                                }
+                            </MudAvatar>
+                        </div>
                         <MudStack Justify="Justify.SpaceBetween" Spacing="0">
                             <MudText Typo="Typo.body1">@UserProfile.DisplayName</MudText>
                             <MudText Typo="Typo.body2">@UserProfile.Email</MudText>
@@ -42,30 +41,29 @@
                     }
                 </MudStack>
 
-                <MudDivider Class="my-2"/>
+                <MudDivider Class="my-2" />
                 <MudMenuItem Href="/user/profile">
                     <div class="d-flex align-center">
                         <MudIcon Class="mx-2"
-                                 Icon="@Icons.Material.Filled.Person"/>
+                        Icon="@Icons.Material.Filled.Person" />
                         <MudText>@L["Profile"]</MudText>
                     </div>
                 </MudMenuItem>
                 <MudMenuItem OnClick="OnSettingClick">
                     <div class="d-flex align-center">
                         <MudIcon Class="mx-2"
-                                 Icon="@Icons.Material.Filled.Settings"/>
+                        Icon="@Icons.Material.Filled.Settings" />
                         <MudText>@L["Settings"]</MudText>
                     </div>
                 </MudMenuItem>
                 <div class="mt-4 mx-4">
                     <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
-                        <input type="hidden" name="__RequestVerificationToken" value="@antiforgeryToken" />
                         <input type="hidden" name="ReturnUrl" value="/pages/authentication/login" />
                         <MudButton Color="Color.Secondary"
-                                   ButtonType="ButtonType.Submit"
-                                   FullWidth="true"
-                                   StartIcon="@Icons.Material.Filled.Logout"
-                                   Variant="Variant.Outlined">
+                        ButtonType="ButtonType.Submit"
+                        FullWidth="true"
+                        StartIcon="@Icons.Material.Filled.Logout"
+                        Variant="Variant.Outlined">
                             @L["Logout"]
                         </MudButton>
                     </form>
@@ -80,27 +78,9 @@
 {
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     private UserProfile UserProfile => UserProfileStateService.UserProfile;
-    private string? antiforgeryToken = string.Empty;
     protected override void OnInitialized()
     {
         UserProfileStateService.OnChange += UserProfileStateService_OnChange;
-    }
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            antiforgeryToken = getAntiforgeryToken();
-        }
-    }
-    private string? getAntiforgeryToken()
-    {
-        var httpContext = _httpContextAccessor.HttpContext;
-        if (httpContext == null)
-        {
-            throw new InvalidOperationException("HttpContext is not available.");
-        }
-        var tokens = _antiforgery.GetAndStoreTokens(httpContext);
-        return tokens.RequestToken;
     }
     public void Dispose()
     {
