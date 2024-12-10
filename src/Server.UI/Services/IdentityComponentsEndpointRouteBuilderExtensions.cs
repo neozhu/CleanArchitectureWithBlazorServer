@@ -58,7 +58,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             await signInManager.SignOutAsync().ConfigureAwait(false);
             logger.LogInformation("{UserName} has logged out.", user.Identity?.Name);
             return TypedResults.LocalRedirect($"{returnUrl}");
-        });
+        }).RequireAuthorization().DisableAntiforgery();
 
         var manageGroup = accountGroup.MapGroup("/Manage").RequireAuthorization();
 
