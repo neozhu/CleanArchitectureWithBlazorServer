@@ -57,7 +57,10 @@
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
     AddEditOfferCommandValidator _modelValidator = new ();
-    [EditorRequired] [Parameter] public AddEditOfferCommand model { get; set; } = null!;
+    [EditorRequired] [Parameter] 
+    public AddEditOfferCommand model { get; set; } = null!;
+
+    [Parameter] public Action? Refresh { get; set; }
 
     private IEnumerable<ContactDto>? Contacts;
     private ContactDto? SelectedContact;

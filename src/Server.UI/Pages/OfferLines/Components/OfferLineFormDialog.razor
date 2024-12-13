@@ -42,7 +42,11 @@
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
     AddEditOfferLineCommandValidator _modelValidator = new ();
-    [EditorRequired] [Parameter] public AddEditOfferLineCommand model { get; set; } = null!;
+    [EditorRequired] 
+    [Parameter] public AddEditOfferLineCommand model { get; set; } = null!;
+
+    [Parameter] public Action? Refresh { get; set; }
+
     async Task Submit()
     {
         try

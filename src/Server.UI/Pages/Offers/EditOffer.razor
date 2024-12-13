@@ -5,6 +5,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Offers.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Offers.Queries.GetById
 @using CleanArchitecture.Blazor.Server.UI.Components.Fusion
+@using CleanArchitecture.Blazor.Server.UI.Pages.OfferLines
 
 @inherits MudComponentBase
 @inject IValidationService Validator
@@ -66,6 +67,10 @@
                             </MudTextField>
                         </MudItem>
 
+                        <MudItem xs="12">
+                            <OfferLines></OfferLines>
+                        </MudItem>
+
  
                     </MudGrid>
                 </MudForm>
@@ -116,7 +121,6 @@
             Snackbar.Add($"{errors}", Severity.Error);
             return null!;
         });
-
     }
 
     private async Task<IEnumerable<ContactDto>> SearchContacts(string value)
