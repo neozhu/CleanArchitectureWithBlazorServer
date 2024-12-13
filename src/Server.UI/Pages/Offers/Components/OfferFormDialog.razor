@@ -27,17 +27,17 @@
                     </MudSelect>
                 </MudItem>
 
-@*                 <MudItem xs="12" md="6"> 
+                @*                 <MudItem xs="12" md="6"> 
                     <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.CustomerId)]" @bind-Value="model.CustomerId" For="@(() => model.CustomerId)" Min="0" 
                     Required="false" RequiredError="@L["customer id is required!"]"></MudNumericField >
                 </MudItem> *@
-@*                 <MudItem xs="12" md="6"> 
+                @*                 <MudItem xs="12" md="6"> 
                     <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.TotalAmount)]" @bind-Value="model.TotalAmount" For="@(() => model.TotalAmount)" Min="0.00m" Required="false" RequiredError="@L["total amount is required!"]"></MudNumericField >
                 </MudItem>  *@
                 <MudItem xs="12" md="6"> 
                     <MudTextField Label="@L[model.GetMemberDescription(x=>x.Status)]" 
-                        @bind-Value="model.Status" For="@(() => model.Status)" Required="false" 
-                        RequiredError="@L["status is required!"]"></MudTextField>
+                    @bind-Value="model.Status" For="@(() => model.Status)" Required="false" 
+                    RequiredError="@L["status is required!"]"></MudTextField>
                 </MudItem> 
 
             </MudGrid>
@@ -60,7 +60,8 @@
     [EditorRequired] [Parameter] 
     public AddEditOfferCommand model { get; set; } = null!;
 
-    [Parameter] public Action? Refresh { get; set; }
+    [Parameter] 
+    public Action? Refresh { get; set; }
 
     private IEnumerable<ContactDto>? Contacts;
     private ContactDto? SelectedContact;
@@ -74,6 +75,9 @@
         var result = await Mediator.Send(Query).ConfigureAwait(false);
         if (result.Any()){
             Contacts = result.ToList();
+            
+            if (model.CustomerId > 0)
+                SelectedContact = Contacts.First(x => x.Id == model.CustomerId);
         }
 
     }
