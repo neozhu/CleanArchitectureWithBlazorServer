@@ -10,7 +10,9 @@ namespace CleanArchitecture.Blazor.Application.Features.OfferLines.Queries.GetBy
 public class GetOfferLineByIdQuery : ICacheableRequest<Result<OfferLineDto>>
 {
    public required int Id { get; set; }
-   public string CacheKey => OfferLineCacheKey.GetByIdCacheKey($"{Id}");
+
+    public required int OfferId { get; set; }
+    public string CacheKey => OfferLineCacheKey.GetByIdCacheKey($"{Id}");
    public IEnumerable<string>? Tags => OfferLineCacheKey.Tags;
 }
 
@@ -30,13 +32,40 @@ public class GetOfferLineByIdQueryHandler :
         //var data = await _context.OfferLines.ApplySpecification(new OfferLineByIdSpecification(request.Id))
         //                                        .ProjectTo()
         //                                        .FirstAsync(cancellationToken);
+        try
+        {
+            var offer = _context.Offers.FirstOrDefault(x => x.Id == request.OfferId);
+            if (offer == null)
+                return await Result<OfferLineDto>.FailureAsync($"No items were find for Speficific offer wih id  {request}");
 
-        var data = await _context.Offers
-             .SelectMany(o => o.OfferLines)
-             .ApplySpecification(new OfferLineByIdSpecification(request.Id))
-             .ProjectTo()
-             .FirstAsync(cancellationToken);
+            //var sql = _context.Offers.Where(o => o.Id == request.OfferId)
+            //    .SelectMany(o => o.OfferLines)
+            //    .AsNoTracking()
+            //    .Where(ol => ol.Id == request.Id)
+            //    .ToQueryString();
 
-        return await Result<OfferLineDto>.SuccessAsync(data);
+            var data = await _context.Offers
+                .Where(o => o.Id == request.OfferId)
+                .SelectMany(o => o.OfferLines)
+                .Where(ol => ol.Id == request.Id)
+                .AsNoTracking()
+                .ProjectTo()
+                .FirstOrDefaultAsync(cancellationToken);
+
+            //var data = await _context.Offers.Where(x=>x.Id == request.OfferId)
+            //     .SelectMany(o => o.OfferLines)
+            //     .AsNoTracking()
+            //     .ApplySpecification(new OfferLineByIdSpecification(request.Id))
+            //     .ProjectTo()
+            //     .FirstAsync(cancellationToken);
+
+            return await Result<OfferLineDto>.SuccessAsync(data);
+        }
+        catch (Exception ex)
+        {
+            var message = ex.Message;
+            throw;
+        }
+
     }
 }

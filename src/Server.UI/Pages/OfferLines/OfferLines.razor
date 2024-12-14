@@ -274,7 +274,8 @@
     {
         var command = new AddEditOfferLineCommand()
             {
-                OfferId = this.OrderId
+                OfferId = this.OrderId , 
+                Id =  dto.Id
             };
 
         await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["OfferLine"]), command);

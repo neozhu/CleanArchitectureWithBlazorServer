@@ -132,7 +132,6 @@ public class AddEditOfferLineCommandHandler : IRequestHandler<AddEditOfferLineCo
             return await Result<int>.SuccessAsync(item.Id);
         }
 
-        return await Result<int>.SuccessAsync(1);
     }
 }
 

@@ -65,7 +65,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L["Edit OfferLine"];
-        var result = await Mediator.Send(new GetOfferLineByIdQuery() { Id = Id });
+        var result = await Mediator.Send(new GetOfferLineByIdQuery() { Id = Id , OfferId = 0 });
         result.Map(data =>
         {
             model = OfferLineMapper.ToUpdateCommand(data);
