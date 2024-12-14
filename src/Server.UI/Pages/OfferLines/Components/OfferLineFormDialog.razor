@@ -101,15 +101,13 @@
         if (model.Id > 0)
         {
             var result = await Mediator.Send(new GetOfferLineByIdQuery() { Id = model.Id , OfferId= model.OfferId });
-            result.Match(data =>
-                       {
+            result.Match(data => {
                            model.OfferId = result?.Data?.OfferId ?? 0;
                            model.ItemId = result?.Data?.ItemId ?? 0;
                            model.LinePrice = result?.Data?.LinePrice ?? 0;
                            model.Quantity = result?.Data?.Quantity ?? 0;
                            model.LinePrice = result?.Data?.LinePrice ?? 0;
-                           model.LineTotal = result?.Data?.LineTotal ?? 0;
-
+                           model.Discount = result?.Data?.Discount ?? 0;
                            return 1;
 
                        }, errors =>
@@ -117,10 +115,6 @@
                            Snackbar.Add(errors, MudBlazor.Severity.Error);
                            return -1;
                        });
-
-        }
-        else
-        {
 
         }
 

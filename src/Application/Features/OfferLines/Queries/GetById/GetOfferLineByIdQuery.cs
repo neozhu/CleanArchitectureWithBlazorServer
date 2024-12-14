@@ -34,9 +34,9 @@ public class GetOfferLineByIdQueryHandler :
         //                                        .FirstAsync(cancellationToken);
         try
         {
-            var offer = _context.Offers.FirstOrDefault(x => x.Id == request.OfferId);
-            if (offer == null)
-                return await Result<OfferLineDto>.FailureAsync($"No items were find for Speficific offer wih id  {request}");
+            //var offer = _context.Offers.FirstOrDefault(x => x.Id == request.OfferId);
+            //if (offer == null)
+            //    return await Result<OfferLineDto>.FailureAsync($"No items were find for Speficific offer wih id  {request}");
 
             //var sql = _context.Offers.Where(o => o.Id == request.OfferId)
             //    .SelectMany(o => o.OfferLines)
@@ -64,6 +64,7 @@ public class GetOfferLineByIdQueryHandler :
         catch (Exception ex)
         {
             var message = ex.Message;
+
             throw;
         }
 
