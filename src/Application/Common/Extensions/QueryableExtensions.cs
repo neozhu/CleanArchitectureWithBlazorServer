@@ -59,6 +59,26 @@ public static class QueryableExtensions
         return new PaginatedData<TResult>(items, count, pageNumber, pageSize);
     }
 
+    public static async Task<PaginatedData<TResult>> ProjectToPaginatedDataAsync<T, TResult>(
+        this IQueryable<T> query, int pageNumber, int pageSize,
+        Func<T, TResult> mapperFunc, CancellationToken cancellationToken = default) where T : class
+    {
+        // Calculate the total count of items
+        var count = await query.CountAsync(cancellationToken);
+
+        // Fetch the paginated data
+        var data = await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        // Map the data using the provided function
+        var items = data.Select(x => mapperFunc(x)).ToList();
+
+        // Return paginated data result
+        return new PaginatedData<TResult>(items, count, pageNumber, pageSize);
+    }
+
     /// <summary>
     /// Filters the queryable data based on the specified keyword.
     /// </summary>

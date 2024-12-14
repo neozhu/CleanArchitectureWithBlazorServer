@@ -21,6 +21,6 @@ public class OfferLineByIdSpecification : Specification<OfferLine>
 {
     public OfferLineByIdSpecification(int id)
     {
-       Query.Where(q => q.Id == id);
+       Query.Where(q => q.OfferId == id);
     }
 }

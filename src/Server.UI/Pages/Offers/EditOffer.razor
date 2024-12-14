@@ -1,6 +1,7 @@
 ﻿@page "/pages/Offers/edit/{id:int}"
 @using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetAll
+@using CleanArchitecture.Blazor.Application.Features.OfferLines.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Offers.Commands.Update
 @using CleanArchitecture.Blazor.Application.Features.Offers.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Offers.Queries.GetById
@@ -101,6 +102,8 @@
 
     private IEnumerable<ContactDto> contactDtos;
 
+    // private OfferLinesWithPaginationQuery Query { get; set; } = new();
+
     protected override async Task OnInitializedAsync()
     {
         Title = L["Edit Offer"];
@@ -108,6 +111,9 @@
         contactDtos = await Mediator.Send(new GetAllContactsQuery());
 
         var result = await Mediator.Send(new GetOfferByIdQuery() { Id = Id });
+
+        // var resultLines = await Mediator.Send(Query).ConfigureAwait(false);
+
         result.Map(async data =>
         {
             model = OfferMapper.ToUpdateCommand(data);

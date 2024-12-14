@@ -2,6 +2,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetAll
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Offers.Commands.AddEdit
+@using CleanArchitecture.Blazor.Server.UI.Pages.OfferLines
 
 @inherits MudComponentBase
 @inject IValidationService Validator
@@ -12,41 +13,53 @@
         <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
             <MudGrid>
 
-                <MudItem xs="12" md="6"> 
-                    <MudSelect T="ContactDto" Label="Select Contact" @bind-Value="SelectedContact">
+                <MudItem xs="12" md="6">
+                    <MudSelect T="ContactDto"
+                               Required="true" RequiredError="@L["customer id is required!"]"
+                               Label="Select Contact" @bind-Value="SelectedContact">
                         @if (Contacts is not null)
                         {
                             @foreach (var contact in Contacts)
                             {
                                 <MudSelectItem Label="@L[model.GetMemberDescription(x=>x.CustomerId)]"
-                                Required="true"
-                                RequiredError="@L["customer id is required!"]"
-                                Value="contact">@contact.Name + " " + @contact.Description</MudSelectItem>
+                                               Required="true"
+                                               RequiredError="@L["customer id is required!"]"
+                                               Value="contact">@contact.Name + " " + @contact.Description</MudSelectItem>
                             }
                         }
                     </MudSelect>
                 </MudItem>
 
-                @*                 <MudItem xs="12" md="6"> 
+                @*                <MudItem xs="12" md="6"> 
                     <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.CustomerId)]" @bind-Value="model.CustomerId" For="@(() => model.CustomerId)" Min="0" 
                     Required="false" RequiredError="@L["customer id is required!"]"></MudNumericField >
-                </MudItem> *@
-                @*                 <MudItem xs="12" md="6"> 
-                    <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.TotalAmount)]" @bind-Value="model.TotalAmount" For="@(() => model.TotalAmount)" Min="0.00m" Required="false" RequiredError="@L["total amount is required!"]"></MudNumericField >
                 </MudItem>  *@
-                <MudItem xs="12" md="6"> 
-                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Status)]" 
-                    @bind-Value="model.Status" For="@(() => model.Status)" Required="false" 
-                    RequiredError="@L["status is required!"]"></MudTextField>
-                </MudItem> 
 
+                <MudItem xs="12" md="6">
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Status)]"
+                                  @bind-Value="model.Status" For="@(() => model.Status)" Required="false"
+                                  RequiredError="@L["status is required!"]"></MudTextField>
+                </MudItem>
+
+
+                <MudItem xs="12">
+                    <OfferLines OrderId="@model.Id" />
+                </MudItem>
+
+                @*                 <MudItem xs="12" md="6">
+                    <MudNumericField Label="@L[model.GetMemberDescription(x=>x.TotalAmount)]"
+                                     @bind="model.TotalAmount"
+                                     For="@(() => model.TotalAmount)" Min="0.00m"
+                                     Required="false" RequiredError="@L["total amount is required!"]"></MudNumericField>
+                </MudItem>
+ *@
             </MudGrid>
         </MudForm>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
         <MudLoadingButton Loading="@_savingnew" OnClick="SaveAndNew">@ConstantString.SaveAndNew</MudLoadingButton>
-        <MudLoadingButton Loading="@_saving"  OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        <MudLoadingButton Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
     </DialogActions>
 </MudDialog>
 
@@ -56,11 +69,12 @@
     private bool _savingnew = false;
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
-    AddEditOfferCommandValidator _modelValidator = new ();
-    [EditorRequired] [Parameter] 
+    AddEditOfferCommandValidator _modelValidator = new();
+    [EditorRequired]
+    [Parameter]
     public AddEditOfferCommand model { get; set; } = null!;
 
-    [Parameter] 
+    [Parameter]
     public Action? Refresh { get; set; }
 
     private IEnumerable<ContactDto>? Contacts;
@@ -73,9 +87,10 @@
     protected override async Task OnInitializedAsync()
     {
         var result = await Mediator.Send(Query).ConfigureAwait(false);
-        if (result.Any()){
+        if (result.Any())
+        {
             Contacts = result.ToList();
-            
+
             if (model.CustomerId > 0)
                 SelectedContact = Contacts.First(x => x.Id == model.CustomerId);
         }
@@ -120,7 +135,7 @@
             _savingnew = true;
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
-               return;
+                return;
             var result = await Mediator.Send(model);
             await result.MatchAsync(async data =>
             {
