@@ -1,32 +1,48 @@
 ﻿
-// Usage:
-// This command can be used to add a new offerline or edit an existing one.
-// It handles caching logic and domain event raising automatically.
 
-
+using System.Reactive.Subjects;
 using CleanArchitecture.Blazor.Application.Features.OfferLines.Caching;
-using CleanArchitecture.Blazor.Application.Features.OfferLines.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.OfferLines.Commands.AddEdit;
 
 public class AddEditOfferLineCommand: ICacheInvalidatorRequest<Result<int>>
 {
-      [Description("Id")]
+    [Description("Id")]
       public int Id { get; set; }
-          [Description("Offer id")]
+    [Description("Offer id")]
     public int OfferId {get;set;} 
+
+    private int _itemId;
+
     [Description("Item id")]
-    public int ItemId {get;set;} 
+    public int ItemId
+    {
+        get => _itemId;
+        set
+        {
+            if (_itemId != value)
+            {
+                _itemId = value;
+                ItemIdBehaviorSubject.OnNext(value);  // Notify on change
+            }
+        }
+    }
+
     [Description("Quantity")]
     public int Quantity {get;set;} 
     [Description("Discount")]
     public decimal Discount {get;set;} 
     [Description("Line total")]
-    public decimal LineTotal {get;set;} 
+    public decimal LineTotal {get;set;}
+    public BehaviorSubject<int> ItemIdBehaviorSubject { get; set; } = new(0);
 
+    public string CacheKey => OfferLineCacheKey.GetAllCacheKey;
+    public IEnumerable<string>? Tags => OfferLineCacheKey.Tags;
 
-      public string CacheKey => OfferLineCacheKey.GetAllCacheKey;
-      public IEnumerable<string>? Tags => OfferLineCacheKey.Tags;
+    public void Dispose()
+    {
+        ItemIdBehaviorSubject?.Dispose();
+    }
 }
 
 public class AddEditOfferLineCommandHandler : IRequestHandler<AddEditOfferLineCommand, Result<int>>

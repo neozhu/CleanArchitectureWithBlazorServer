@@ -25,6 +25,7 @@
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent>
+
                 <ActiveUserSession PageComponent="@($"{nameof(EditOffer)}/{ model.Id }")" />
 
                 <MudForm Model="@model" @ref="_form" Validation="@(Validator.ValidateValue(model))">
@@ -103,8 +104,6 @@
 
     private IEnumerable<ContactDto> contactDtos;
 
-    // private OfferLinesWithPaginationQuery Query { get; set; } = new();
-
     protected override async Task OnInitializedAsync()
     {
         Title = L["Edit Offer"];
@@ -112,8 +111,6 @@
         contactDtos = await Mediator.Send(new GetAllContactsQuery());
 
         var result = await Mediator.Send(new GetOfferByIdQuery() { Id = Id });
-
-        // var resultLines = await Mediator.Send(Query).ConfigureAwait(false);
 
         result.Map(async data =>
         {

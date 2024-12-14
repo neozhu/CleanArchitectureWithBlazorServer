@@ -86,6 +86,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+
         var result = await Mediator.Send(Query).ConfigureAwait(false);
         if (result.Any())
         {
