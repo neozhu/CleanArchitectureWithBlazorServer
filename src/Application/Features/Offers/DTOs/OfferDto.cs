@@ -18,7 +18,7 @@ public class OfferDto
     public string? Status { get; set; }
 
     [Description("Offer lines")]
-    public List<OfferLine>? OfferLines { get; set; }
+    public List<OfferLine>? OfferLines { get; set; } = [];
 
     [Description("Offer lines Count")]
     public int OfferLinesCount
