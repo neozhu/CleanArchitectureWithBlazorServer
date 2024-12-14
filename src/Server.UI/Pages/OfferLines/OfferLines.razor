@@ -272,7 +272,12 @@
     }
     private async Task OnEdit(OfferLineDto dto)
     {
-        Navigation.NavigateTo($"/pages/OfferLines/edit/{dto.Id}");
+        var command = new AddEditOfferLineCommand()
+            {
+                OfferId = this.OrderId
+            };
+
+        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["OfferLine"]), command);
     }
 
     private async Task OnDelete(OfferLineDto dto)

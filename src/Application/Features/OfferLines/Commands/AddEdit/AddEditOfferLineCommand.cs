@@ -2,6 +2,7 @@
 
 using System.Reactive.Subjects;
 using CleanArchitecture.Blazor.Application.Features.OfferLines.Caching;
+using CleanArchitecture.Blazor.Application.Features.OfferLines.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.OfferLines.Commands.AddEdit;
 
@@ -96,27 +97,39 @@ public class AddEditOfferLineCommandHandler : IRequestHandler<AddEditOfferLineCo
     }
     public async Task<Result<int>> Handle(AddEditOfferLineCommand request, CancellationToken cancellationToken)
     {
+        var offer = await _context.Offers.FindAsync(request.OfferId, cancellationToken);
+
+        if (offer is null ) 
+            return await Result<int>.FailureAsync($"Offer with with id: [{request.OfferId}] not found.");
+
         if (request.Id > 0)
         {
-            //         var item = await _context.OfferLines.FindAsync(request.Id, cancellationToken);
-            //         if (item == null)
-            //         {
-            //             return await Result<int>.FailureAsync($"OfferLine with id: [{request.Id}] not found.");
-            //         }
-            //         OfferLineMapper.ApplyChangesFrom(request,item);
+            var item = offer.OfferLines.First(x=>x.Id == request.Id);
+
+            if (item == null)
+            {
+                return await Result<int>.FailureAsync($"OfferLine with id: [{request.Id}] not found.");
+            }
+            OfferLineMapper.ApplyChangesFrom(request,item);
+
             //// raise a update domain event
             //item.AddDomainEvent(new OfferLineUpdatedEvent(item));
-            //         await _context.SaveChangesAsync(cancellationToken);
-            //         return await Result<int>.SuccessAsync(item.Id);
+            await _context.SaveChangesAsync(cancellationToken);
+            
+            return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {
-            //         var item = OfferLineMapper.FromEditCommand(request);
-            //         // raise a create domain event
+            var item = OfferLineMapper.FromEditCommand(request);
+            // raise a create domain event
             //item.AddDomainEvent(new OfferLineCreatedEvent(item));
-            //         _context.OfferLines.Add(item);
-            //         await _context.SaveChangesAsync(cancellationToken);
-            //         return await Result<int>.SuccessAsync(item.Id);
+            //_context.OfferLines.Add(item);
+            //await _context.SaveChangesAsync(cancellationToken);
+            offer.OfferLines.Add(item);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return await Result<int>.SuccessAsync(item.Id);
         }
 
         return await Result<int>.SuccessAsync(1);
