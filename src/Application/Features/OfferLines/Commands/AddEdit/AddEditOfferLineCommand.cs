@@ -8,7 +8,7 @@ namespace CleanArchitecture.Blazor.Application.Features.OfferLines.Commands.AddE
 public class AddEditOfferLineCommand : ICacheInvalidatorRequest<Result<int>>
 {
 
-    private decimal _price;
+    private decimal _linePrice;
     private int _quantity;
     private decimal _discount = 1; // Represented as a percentage
 
@@ -34,12 +34,12 @@ public class AddEditOfferLineCommand : ICacheInvalidatorRequest<Result<int>>
     }
 
     [Description("Line Price")]
-    public decimal Price
+    public decimal LinePrice
     {
-        get => _price;
+        get => _linePrice;
         set
         {
-            _price = value;
+            _linePrice = value;
             CalculateLineTotal();
         }
     }
@@ -75,7 +75,8 @@ public class AddEditOfferLineCommand : ICacheInvalidatorRequest<Result<int>>
 
     private void CalculateLineTotal()
     {
-        LineTotal = Quantity * Price * (1 - Discount / 100);
+        LineTotal = Quantity * _linePrice * (1 - Discount / 100);
+
         LineTotalSubject.OnNext(LineTotal); // Notify subscribers
     }
 

@@ -12,7 +12,7 @@ public record OfferLineDto
 {
     [Description("Id")]
     public int Id { get; set; }
-        [Description("Offer id")]
+    [Description("Offer id")]
     public int OfferId {get;set;} 
     [Description("Item id")]
     public int ItemId {get;set;} 
@@ -21,8 +21,9 @@ public record OfferLineDto
     [Description("Discount")]
     public decimal Discount {get;set;} 
     [Description("Line total")]
-    public decimal LineTotal {get;set;} 
+    public decimal LineTotal {get;set;}
 
-
+    [Description("Line Price")]
+    public decimal? LinePrice { get; set; }
 }
 

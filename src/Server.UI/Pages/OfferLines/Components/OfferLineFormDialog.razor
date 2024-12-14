@@ -50,6 +50,11 @@
                     </MudNumericField>
                 </MudItem>
 
+                <MudItem xs="12" md="6">
+                    <MudNumericField Label="@L[model.GetMemberDescription(x=>x.LinePrice)]" @bind-Value="model.LinePrice"
+                                     For="@(() => model.LinePrice)" Min="0" Required="true" RequiredError="@L["LinePrice is required!"]"></MudNumericField>
+                </MudItem>
+
                 <MudItem xs="12" md="6"> 
                     <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.Quantity)]" @bind-Value="model.Quantity" 
                     For="@(() => model.Quantity)" Min="0" Required="false" RequiredError="@L["quantity is required!"]"></MudNumericField >
@@ -107,7 +112,7 @@
 
         SelectedProduct = productDtos.FirstOrDefault(p => p.Id == productId);
 
-        this.model.Price = SelectedProduct?.RetailPrice ?? 0;
+        this.model.LinePrice = SelectedProduct?.RetailPrice ?? 0;
     }
 
     async Task Submit()

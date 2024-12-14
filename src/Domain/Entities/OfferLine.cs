@@ -1,10 +1,5 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
+﻿
 using CleanArchitecture.Blazor.Domain.Common.Entities;
-using Riok.Mapperly.Abstractions;
-using System;
-
 namespace CleanArchitecture.Blazor.Domain.Entities;
 
 public class OfferLine : BaseAuditableEntity
@@ -14,4 +9,5 @@ public class OfferLine : BaseAuditableEntity
     public int Quantity { get; set; }
     public decimal Discount { get; set; }
     public decimal LineTotal { get; set; }
+    public decimal? LinePrice { get; set; } = 0m;
 }
