@@ -14,11 +14,11 @@
 
                 <MudItem xs="12">
                     <MudSelect T="int" Label="@L[model.GetMemberDescription(x => x.ItemId)]"
-                               @bind-Value="model.ItemId"
-                               For="@(() => model.ItemId)"
-                                Searchable="true"
-                                SearchFunc="SearchContacts"
-                                Required="true"
+                    @bind-Value="model.ItemId"
+                    For="@(() => model.ItemId)"
+                    Searchable="true"
+                    SearchFunc="SearchContacts"
+                    Required="true"
                     RequiredError="@L["Item ID is required!"]">
                         @foreach (var product in productDtos)
                         {
@@ -59,7 +59,9 @@
                     For="@(() => model.Discount)" Min="0.00m" Required="false" RequiredError="@L["discount is required!"]"></MudNumericField >
                 </MudItem> 
                 <MudItem xs="12" md="6"> 
-                    <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.LineTotal)]" @bind-Value="model.LineTotal" For="@(() => model.LineTotal)" Min="0.00m" Required="false" RequiredError="@L["line total is required!"]"></MudNumericField >
+                    <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.LineTotal)]" 
+                    @bind-Value="model.LineTotal" For="@(() => model.LineTotal)" Min="0.00m" 
+                    Required="true" RequiredError="@L["line total is required!"]"></MudNumericField >
                 </MudItem> 
 
             </MudGrid>
@@ -104,6 +106,8 @@
             return;
 
         SelectedProduct = productDtos.FirstOrDefault(p => p.Id == productId);
+
+        this.model.Price = SelectedProduct?.RetailPrice ?? 0;
     }
 
     async Task Submit()

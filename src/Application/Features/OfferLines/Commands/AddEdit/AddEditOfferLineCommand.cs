@@ -7,6 +7,11 @@ namespace CleanArchitecture.Blazor.Application.Features.OfferLines.Commands.AddE
 
 public class AddEditOfferLineCommand : ICacheInvalidatorRequest<Result<int>>
 {
+
+    private decimal _price;
+    private int _quantity;
+    private decimal _discount = 1; // Represented as a percentage
+
     [Description("Id")]
     public int Id { get; set; }
     [Description("Offer id")]
@@ -28,17 +33,51 @@ public class AddEditOfferLineCommand : ICacheInvalidatorRequest<Result<int>>
         }
     }
 
+    [Description("Line Price")]
+    public decimal Price
+    {
+        get => _price;
+        set
+        {
+            _price = value;
+            CalculateLineTotal();
+        }
+    }
+
     [Description("Quantity")]
-    public int Quantity { get; set; } = 1;
+    public int Quantity
+    {
+        get => _quantity;
+        set
+        {
+            _quantity = value;
+            CalculateLineTotal();
+        }
+    }
 
     [Description("Discount")]
-    public decimal Discount { get; set; }
+    public decimal Discount
+    {
+        get => _discount;
+        set
+        {
+            _discount = value;
+            CalculateLineTotal();
+        }
+    }
+
     [Description("Line total")]
     public decimal LineTotal { get; set; }
     public BehaviorSubject<int> ItemIdBehaviorSubject { get; set; } = new(0);
-
+    public BehaviorSubject<decimal> LineTotalSubject { get; set; } = new(0);
     public string CacheKey => OfferLineCacheKey.GetAllCacheKey;
     public IEnumerable<string>? Tags => OfferLineCacheKey.Tags;
+
+    private void CalculateLineTotal()
+    {
+        LineTotal = Quantity * Price * (1 - Discount / 100);
+        LineTotalSubject.OnNext(LineTotal); // Notify subscribers
+    }
 
     public void Dispose()
     {
