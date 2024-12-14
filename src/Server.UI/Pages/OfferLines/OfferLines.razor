@@ -197,7 +197,7 @@
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
             Query.LocalTimezoneOffset = _localTimezoneOffset;
-          
+
 
             var result = await Mediator.Send(Query).ConfigureAwait(false);
 
@@ -241,7 +241,7 @@
                 { x=>x.model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<OfferLineFormDialog>(title, parameters, options);
+        var dialog = await DialogService.ShowAsync<OfferLineFormDialog>(title, parameters, options);
         var state = await dialog.Result;
 
         if (state != null && !state.Canceled)
@@ -256,7 +256,11 @@
     }
     private async Task OnCreate()
     {
-        var command = new AddEditOfferLineCommand();
+        var command = new AddEditOfferLineCommand()
+        {
+           OfferId = this.OrderId
+        };
+
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["OfferLine"]), command);
     }
     private async Task OnClone()
