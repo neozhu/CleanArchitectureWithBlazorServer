@@ -88,6 +88,7 @@
     {
 
         var result = await Mediator.Send(Query).ConfigureAwait(false);
+
         if (result.Any())
         {
             Contacts = result.ToList();

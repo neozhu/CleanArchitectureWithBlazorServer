@@ -50,7 +50,7 @@
                     @if (_canCreate)
                     {
                         <MudButton StartIcon="@Icons.Material.Outlined.Add"
-                                   OnClick="OnCreate">
+                        OnClick="OnCreate">
                             @ConstantString.New
                         </MudButton>
                     }
@@ -62,14 +62,14 @@
                         @if (_canDelete)
                         {
                             <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                                         OnClick="OnDeleteChecked">
+                            OnClick="OnDeleteChecked">
                                 @ConstantString.Delete
                             </MudMenuItem>
                         }
                         @if (_canExport)
                         {
                             <MudMenuItem Disabled="@_exporting"
-                                         OnClick="OnExport">
+                            OnClick="OnExport">
                                 @ConstantString.Export
                             </MudMenuItem>
                         }
@@ -79,8 +79,8 @@
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                     <ActivatorContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
-                                                   Variant="Variant.Text"
-                                                   Disabled="@_uploading">
+                                        Variant="Variant.Text"
+                                        Disabled="@_uploading">
                                             @ConstantString.Import
                                         </MudButton>
                                     </ActivatorContent>
@@ -93,7 +93,7 @@
                     @if (_canSearch)
                     {
                         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                         </MudTextField>
                     }
                 </MudStack>
@@ -107,8 +107,8 @@
                 @if (_canEdit || _canDelete)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                    Dense="true"
+                    EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
                             <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
@@ -122,10 +122,10 @@
                 else
                 {
                     <MudIconButton Variant="Variant.Filled"
-                                   Disabled="true"
-                                   Icon="@Icons.Material.Filled.DoNotTouch"
-                                   Size="Size.Small"
-                                   Color="Color.Surface">
+                    Disabled="true"
+                    Icon="@Icons.Material.Filled.DoNotTouch"
+                    Size="Size.Small"
+                    Color="Color.Surface">
                         @ConstantString.NoAllowed
                     </MudIconButton>
                 }

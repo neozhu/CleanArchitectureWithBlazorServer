@@ -179,6 +179,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+         OfferLineCacheKey.Refresh();
+
         Title = L[_currentDto.GetClassDescription()];
         var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.OfferLines.Create)).Succeeded;
@@ -193,14 +195,15 @@
         try
         {
             _loading = true;
+
             Query.CurrentUser = UserProfile;
             Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
             Query.LocalTimezoneOffset = _localTimezoneOffset;
-
-
+            Query.OrderId = this.OrderId;
+            
             var result = await Mediator.Send(Query).ConfigureAwait(false);
 
             return new GridData<OfferLineDto>() { TotalItems = result.TotalItems, Items = result.Items };
@@ -216,7 +219,8 @@
     {
         Query.OrderId = this.OrderId;
 
-        return base.OnParametersSetAsync();
+        return Task.CompletedTask;
+
     }
     private async Task OnSearch(string text)
     {
