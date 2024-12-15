@@ -182,7 +182,7 @@ Facebook.
 2. Change the setting `DBProvider` to the desired provider name (See Supported Databases).
 3. Change the `ConnectionString` to a connection string, which works for your selected database provider.
 
-## Docker compose https deployment
+## Docker Compose HTTPS Deployment
 
 - Create self-signed development certificates for the project
   -
@@ -212,7 +212,7 @@ The [CleanArchitecture CodeGenerator for Blazor App](https://github.com/neozhu/C
 
 ### Install CleanArchitecture CodeGenerator For Blazor App
 
-- Open Manage Extensions Search with `CleanArchitecture CodeGenerator For Blaozr App`
+- Open Manage Extensions Search with `CleanArchitecture CodeGenerator For Blazor App`
   ![image](https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/555d274c-8f62-438b-ac7a-6d327e4c23c8)
 - Download to Install
 
@@ -220,14 +220,14 @@ The [CleanArchitecture CodeGenerator for Blazor App](https://github.com/neozhu/C
 
 ## How to install solution templates
 
-- install the project template
+- Install the project template
     - run CLI: `dotnet new install ./`
     - run CLI: `dotnet new list`
 
 <img width="828" alt="image" src="https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/f23022e0-3fd6-475a-96ab-84b0d3328e4c">
 
 - create a solution with the template
-    - run CLI: `dotnet new ca-blazorserver-sln` or `dotnet new ca-blazorserver-sln -n NewProjectName(root namesapces)`
+    - run CLI: `dotnet new ca-blazorserver-sln` or `dotnet new ca-blazorserver-sln -n NewProjectName(root namespaces)`
 
 
 - build a project template with nuget.exe
@@ -237,11 +237,11 @@ The [CleanArchitecture CodeGenerator for Blazor App](https://github.com/neozhu/C
       <img width="769" alt="image" src="https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/ed7eb20f-aec2-4f69-95b7-d47c2eb20428">
 
 
-## Tutorial: Removing an cutomer Object from a Project
+## Tutorial: Removing a cutomer Object from a Project
 [![Everything Is AWESOME](doc/remove.png)](https://www.youtube.com/watch?v=i3p-3I95YqM "Everything Is AWESOME")
 
 
-## Tutorial: add an contact Entity in the project
+## Tutorial: Adding a contact Entity in the project
 [![Everything Is AWESOME](doc/create.png)](https://www.youtube.com/watch?v=X1b4hFLs4vo "Everything Is AWESOME")
 
 
@@ -249,12 +249,12 @@ The [CleanArchitecture CodeGenerator for Blazor App](https://github.com/neozhu/C
 
 I prefer Blazor Server because I dislike switching between C# and JavaScript during development. Blazor Server allows me to focus on C#.
 
-## Characteristic
+## Characteristics
 - Real-Time Updates
 - Avoid repeating work
 - Focus on story implementation
-- Integration Hangfire dashboard
-- Implementation OCR image recognition
+- Integration with the Hangfire dashboard
+- Implementation of OCR image recognition
 - org chart
 
 
