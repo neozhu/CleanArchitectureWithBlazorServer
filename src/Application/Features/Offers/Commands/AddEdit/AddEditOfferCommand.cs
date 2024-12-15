@@ -37,28 +37,37 @@ public class AddEditOfferCommandHandler : IRequestHandler<AddEditOfferCommand, R
     }
     public async Task<Result<int>> Handle(AddEditOfferCommand request, CancellationToken cancellationToken)
     {
-        if (request.Id > 0)
+        try
         {
-            var item = await _context.Offers.FindAsync(request.Id, cancellationToken);
-            if (item == null)
+            if (request.Id > 0)
             {
-                return await Result<int>.FailureAsync($"Offer with id: [{request.Id}] not found.");
+                var item = await _context.Offers.FindAsync(request.Id, cancellationToken);
+                if (item == null)
+                {
+                    return await Result<int>.FailureAsync($"Offer with id: [{request.Id}] not found.");
+                }
+                OfferMapper.ApplyChangesFrom(request, item);
+                // raise a update domain event
+                //item.AddDomainEvent(new OfferUpdatedEvent(item));
+                await _context.SaveChangesAsync(cancellationToken);
+                return await Result<int>.SuccessAsync(item.Id);
             }
-            OfferMapper.ApplyChangesFrom(request,item);
-			// raise a update domain event
-			//item.AddDomainEvent(new OfferUpdatedEvent(item));
-            await _context.SaveChangesAsync(cancellationToken);
-            return await Result<int>.SuccessAsync(item.Id);
+            else
+            {
+                var item = OfferMapper.FromEditCommand(request);
+                // raise a create domain event
+                //item.AddDomainEvent(new OfferCreatedEvent(item));
+                _context.Offers.Add(item);
+                await _context.SaveChangesAsync(cancellationToken);
+                return await Result<int>.SuccessAsync(item.Id);
+            }
         }
-        else
+        catch (Exception e)
         {
-            var item = OfferMapper.FromEditCommand(request);
-            // raise a create domain event
-			//item.AddDomainEvent(new OfferCreatedEvent(item));
-            _context.Offers.Add(item);
-            await _context.SaveChangesAsync(cancellationToken);
-            return await Result<int>.SuccessAsync(item.Id);
+            var ex = e;
+            throw;
         }
+       
        
     }
 }

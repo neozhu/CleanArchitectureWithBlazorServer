@@ -42,9 +42,12 @@
                 </MudItem>
 
 
-                <MudItem xs="12">
-                    <OfferLines OrderId="@model.Id" />
-                </MudItem>
+
+                @if (model.Id > 0) {
+                    <MudItem xs="12">
+                        <OfferLines OrderId="@model.Id" />
+                    </MudItem>
+                }
 
                 @*                 <MudItem xs="12" md="6">
                     <MudNumericField Label="@L[model.GetMemberDescription(x=>x.TotalAmount)]"
@@ -104,7 +107,9 @@
         try
         {
             _saving = true;
+
             await _form!.Validate().ConfigureAwait(false);
+
             if (!_form!.IsValid)
                 return;
 
