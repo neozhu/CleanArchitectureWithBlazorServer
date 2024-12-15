@@ -11,7 +11,7 @@ public class AddEditOfferLineCommand : ICacheInvalidatorRequest<Result<int>>
 
     private decimal _linePrice;
     private int _quantity;
-    private decimal _discount = 1; // Represented as a percentage
+    private decimal _discount = 0; // Represented as a percentage
 
     [Description("Id")]
     public int Id { get; set; }

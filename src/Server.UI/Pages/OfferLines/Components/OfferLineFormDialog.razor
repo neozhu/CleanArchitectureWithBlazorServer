@@ -15,12 +15,12 @@
 
                 <MudItem xs="12">
                     <MudSelect T="int" Label="@L[model.GetMemberDescription(x => x.ItemId)]"
-                               @bind-Value="model.ItemId"
-                               For="@(() => model.ItemId)"
-                               Searchable="true"
-                               SearchFunc="SearchContacts"
-                               Required="true"
-                               RequiredError="@L["Item ID is required!"]">
+                    @bind-Value="model.ItemId"
+                    For="@(() => model.ItemId)"
+                    Searchable="true"
+                    SearchFunc="SearchContacts"
+                    Required="true"
+                    RequiredError="@L["Item ID is required!"]">
                         @foreach (var product in productDtos)
                         {
                             <MudSelectItem T="int" Value="@product.Id">
@@ -37,36 +37,36 @@
 
                 <MudItem xs="12" md="6">
                     <MudNumericField Label="Retail Price"
-                                     @bind-Value="SelectedProduct.RetailPrice"
-                                     For="@(() => SelectedProduct.RetailPrice)"
-                                     ReadOnly="true">
+                    @bind-Value="SelectedProduct.RetailPrice"
+                    For="@(() => SelectedProduct.RetailPrice)"
+                    ReadOnly="true">
                     </MudNumericField>
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudNumericField Label="Price"
-                                     @bind-Value="SelectedProduct.Price"
-                                     For="@(() => SelectedProduct.Price)"
-                                     ReadOnly="true">
+                    @bind-Value="SelectedProduct.Price"
+                    For="@(() => SelectedProduct.Price)"
+                    ReadOnly="true">
                     </MudNumericField>
                 </MudItem>
 
                 <MudItem xs="12" md="6">
                     <MudNumericField Label="@L[model.GetMemberDescription(x=>x.LinePrice)]" @bind-Value="model.LinePrice"
-                                     For="@(() => model.LinePrice)" Min="0" Required="true" RequiredError="@L["LinePrice is required!"]"></MudNumericField>
+                    For="@(() => model.LinePrice)" Min="0" Required="true" RequiredError="@L["LinePrice is required!"]"></MudNumericField>
                 </MudItem>
 
                 <MudItem xs="12" md="6">
                     <MudNumericField Label="@L[model.GetMemberDescription(x=>x.Quantity)]" @bind-Value="model.Quantity"
-                                     For="@(() => model.Quantity)" Min="0" Required="false" RequiredError="@L["quantity is required!"]"></MudNumericField>
+                    For="@(() => model.Quantity)" Min="0" Required="false" RequiredError="@L["quantity is required!"]"></MudNumericField>
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudNumericField Label="@L[model.GetMemberDescription(x=>x.Discount)]" @bind-Value="model.Discount"
-                                     For="@(() => model.Discount)" Min="0.00m" Required="false" RequiredError="@L["discount is required!"]"></MudNumericField>
+                    For="@(() => model.Discount)" Min="0.00m" Required="false" RequiredError="@L["discount is required!"]"></MudNumericField>
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudNumericField Label="@L[model.GetMemberDescription(x=>x.LineTotal)]"
-                                     @bind-Value="model.LineTotal" For="@(() => model.LineTotal)" Min="0.00m"
-                                     Required="true" RequiredError="@L["line total is required!"]"></MudNumericField>
+                    @bind-Value="model.LineTotal" For="@(() => model.LineTotal)" Min="0.00m"
+                    Required="true" RequiredError="@L["line total is required!"]"></MudNumericField>
                 </MudItem>
 
             </MudGrid>
@@ -102,19 +102,19 @@
         {
             var result = await Mediator.Send(new GetOfferLineByIdQuery() { Id = model.Id , OfferId= model.OfferId });
             result.Match(data => {
-                           model.OfferId = result?.Data?.OfferId ?? 0;
-                           model.ItemId = result?.Data?.ItemId ?? 0;
-                           model.LinePrice = result?.Data?.LinePrice ?? 0;
-                           model.Quantity = result?.Data?.Quantity ?? 0;
-                           model.LinePrice = result?.Data?.LinePrice ?? 0;
-                           model.Discount = result?.Data?.Discount ?? 0;
-                           return 1;
+                model.OfferId = result?.Data?.OfferId ?? 0;
+                model.ItemId = result?.Data?.ItemId ?? 0;
+                model.LinePrice = result?.Data?.LinePrice ?? 0;
+                model.Quantity = result?.Data?.Quantity ?? 0;
+                model.LinePrice = result?.Data?.LinePrice ?? 0;
+                model.Discount = result?.Data?.Discount ?? 0;
+                return 1;
 
-                       }, errors =>
-                       {
-                           Snackbar.Add(errors, MudBlazor.Severity.Error);
-                           return -1;
-                       });
+            }, errors =>
+            {
+                Snackbar.Add(errors, MudBlazor.Severity.Error);
+                return -1;
+            });
 
         }
 
@@ -132,6 +132,9 @@
             return;
 
         SelectedProduct = productDtos.FirstOrDefault(p => p.Id == productId);
+
+        if (model.Quantity == 0)
+            model.Quantity = 1;
 
         this.model.LinePrice = SelectedProduct?.RetailPrice ?? 0;
     }
