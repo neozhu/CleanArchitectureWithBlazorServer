@@ -13,8 +13,7 @@ public class Offer : BaseAuditableEntity
     public DateTime OfferDate { get; set; } = DateTime.UtcNow;
     public decimal TotalAmount { get; set; }
     public string Status { get; set; } = "Pending";
-
     public Contact? Customer { get; set; } = null;
 
-    public List<OfferLine> OfferLines { get;set; } = new List<OfferLine>();
+    public List<OfferLine> OfferLines { get;set; } = [];
 }

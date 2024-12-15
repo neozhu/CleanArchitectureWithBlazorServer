@@ -21,6 +21,9 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
 
             x.WithOwner().HasForeignKey("OfferId"); // Foreign key
 
+            x.HasOne(ol => ol.Product)
+               .WithMany()
+               .HasForeignKey(x => x.ItemId);
         });
 
         builder.Ignore(e => e.DomainEvents);

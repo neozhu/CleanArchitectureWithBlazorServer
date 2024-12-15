@@ -5,6 +5,8 @@
 // layers and services. Each property includes a description for better understandability during 
 // serialization and documentation generation.
 
+using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
+
 namespace CleanArchitecture.Blazor.Application.Features.OfferLines.DTOs;
 
 [Description("OfferLines")]
@@ -25,5 +27,9 @@ public record OfferLineDto
 
     [Description("Line Price")]
     public decimal? LinePrice { get; set; }
+
+    [Description("Product")]
+    public ProductDto? Product { get; set; }
+
 }
 

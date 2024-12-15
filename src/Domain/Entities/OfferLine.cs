@@ -10,4 +10,6 @@ public class OfferLine : BaseAuditableEntity
     public decimal Discount { get; set; }
     public decimal LineTotal { get; set; }
     public decimal? LinePrice { get; set; } = 0m;
+
+    public Product? Product { get; set; }
 }

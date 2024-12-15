@@ -21,10 +21,10 @@
                         {
                             @foreach (var contact in Contacts)
                             {
-                                <MudSelectItem Label="@L[model.GetMemberDescription(x=>x.CustomerId)]"
-                                               Required="true"
-                                               RequiredError="@L["customer id is required!"]"
-                                               Value="contact">@contact.Name + " " + @contact.Description</MudSelectItem>
+                                <MudSelectItem Value="contact"
+                                               Label="@($"{contact.Name} {contact.Description}")">
+                                    @($"{contact.Name} {contact.Description}")
+                                </MudSelectItem>
                             }
                         }
                     </MudSelect>

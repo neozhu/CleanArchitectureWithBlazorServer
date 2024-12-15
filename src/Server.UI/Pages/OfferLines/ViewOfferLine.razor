@@ -8,39 +8,39 @@
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs  OnGoEditClick="GoEdit" OnDeleteClick="Delete" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
 <MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
-@if (model != null)
-{
-    <MudCard Class="pa-2">
-        <MudCardHeader>
-            <CardHeaderContent>
-                 <MudText Typo="Typo.h6">@Title</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudGrid Spacing="3" Class="readonly-grid">
-                <MudItem xs="12" md="6"> 
+    @if (model != null)
+    {
+        <MudCard Class="pa-2">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">@Title</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid Spacing="3" Class="readonly-grid">
+                    <MudItem xs="12" md="6"> 
                         <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.OfferId)]" Value="model.OfferId"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
+                    </MudItem> 
+                    <MudItem xs="12" md="6"> 
                         <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.ItemId)]" Value="model.ItemId"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
+                    </MudItem> 
+                    <MudItem xs="12" md="6"> 
                         <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Quantity)]" Value="model.Quantity"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
+                    </MudItem> 
+                    <MudItem xs="12" md="6"> 
                         <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Discount)]" Value="model.Discount"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
+                    </MudItem> 
+                    <MudItem xs="12" md="6"> 
                         <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.LineTotal)]" Value="model.LineTotal"></ReadOnlyFieldX6>
-                </MudItem> 
+                    </MudItem> 
 
-            </MudGrid>
-        </MudCardContent>
-        <MudCardActions></MudCardActions>
-    </MudCard>
- }
+                </MudGrid>
+            </MudCardContent>
+            <MudCardActions></MudCardActions>
+        </MudCard>
+    }
 </MudContainer>
- 
+
 
 @code {
     public string? Title { get; private set; }
@@ -62,9 +62,15 @@
             return data;
         }).Match(data =>
         {
-            _breadcrumbItems.Add(new BreadcrumbItem(data.Id.ToString(), null, disabled: true));
-            return data;
+            if (data is not null){
 
+                _breadcrumbItems.Add(new BreadcrumbItem(data.Id.ToString(), null, disabled: true));
+
+                return data;
+            }
+
+            return new OfferLineDto();
+         
         }, errors =>
         {
             Snackbar.Add(errors, MudBlazor.Severity.Error);
