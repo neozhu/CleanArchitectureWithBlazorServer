@@ -169,6 +169,7 @@
         try
         {
             _savingnew = true;
+
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
@@ -177,7 +178,9 @@
             {
                 Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
                 await Task.Delay(300);
+                var orderId = model.OfferId;
                 model = new AddEditOfferLineCommand() { };
+                model.OfferId = orderId;
                 return data;
             }, errors =>
             {
