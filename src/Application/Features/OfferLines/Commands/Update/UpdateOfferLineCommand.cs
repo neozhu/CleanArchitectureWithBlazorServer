@@ -1,21 +1,11 @@
-﻿
-
-// Usage:
-// Use `UpdateOfferLineCommand` to update an existing offerline entity in the system. 
-// The handler ensures that if the entity is found, the changes are applied and 
-// the necessary domain event (`OfferLineUpdatedEvent`) is raised. Caching is also 
-// invalidated to keep the offerline list consistent.
-
-using CleanArchitecture.Blazor.Application.Features.OfferLines.Caching;
-using CleanArchitecture.Blazor.Application.Features.OfferLines.Mappers;
-
+﻿using CleanArchitecture.Blazor.Application.Features.OfferLines.Caching;
 namespace CleanArchitecture.Blazor.Application.Features.OfferLines.Commands.Update;
 
 public class UpdateOfferLineCommand: ICacheInvalidatorRequest<Result<int>>
 {
-      [Description("Id")]
-      public int Id { get; set; }
-            [Description("Offer id")]
+   [Description("Id")]
+    public int Id { get; set; }
+    [Description("Offer id")]
     public int OfferId {get;set;} 
     [Description("Item id")]
     public int ItemId {get;set;} 

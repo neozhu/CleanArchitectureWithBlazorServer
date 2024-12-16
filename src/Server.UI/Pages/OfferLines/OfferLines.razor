@@ -147,8 +147,8 @@
 
 @code {
 
-    [Parameter]
-    public int OrderId { get; set; }
+        [Parameter]
+        public int OrderId { get; set; }
 
     public string? Title { get; private set; }
     private int _defaultPageSize = 15;
@@ -179,7 +179,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-         OfferLineCacheKey.Refresh();
+        OfferLineCacheKey.Refresh();
 
         Title = L[_currentDto.GetClassDescription()];
         var state = await AuthState;
@@ -203,7 +203,7 @@
             Query.PageSize = state.PageSize;
             Query.LocalTimezoneOffset = _localTimezoneOffset;
             Query.OrderId = this.OrderId;
-            
+
             var result = await Mediator.Send(Query).ConfigureAwait(false);
 
             return new GridData<OfferLineDto>() { TotalItems = result.TotalItems, Items = result.Items };
@@ -289,8 +289,11 @@
     private async Task OnDelete(OfferLineDto dto)
     {
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Id);
-        var command = new DeleteOfferLineCommand(new int[] { dto.Id });
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        var command = new DeleteOfferLineCommand { 
+                Id = new int[] { dto.Id },
+                OfferId =  dto.OfferId
+        };
+            await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>
             {
@@ -303,7 +306,14 @@
     private async Task OnDeleteChecked()
     {
         var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
-        var command = new DeleteOfferLineCommand(_selectedItems.Select(x => x.Id).ToArray());
+        //var command = new DeleteOfferLineCommand(_selectedItems.Select(x => x.Id).ToArray());
+
+        var command = new DeleteOfferLineCommand
+            {
+                Id = _selectedItems.Select(x => x.Id).ToArray(),
+                OfferId = _selectedItems.First().OfferId
+            };
+
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>

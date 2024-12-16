@@ -85,7 +85,14 @@
     async Task Delete()
     {
         var contentText = string.Format(ConstantString.DeleteConfirmation, model.Id);
-        var command = new DeleteOfferLineCommand(new int[] { model.Id });
+        // var command = new DeleteOfferLineCommand(new int[] { model.Id });
+
+        var command = new DeleteOfferLineCommand
+            {
+                Id = new int[] { model.Id},
+                OfferId = model.OfferId
+            };
+
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(() =>
