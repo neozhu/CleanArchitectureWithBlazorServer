@@ -26,17 +26,17 @@ public class DeleteSupplyItemCommandHandler :
     }
     public async Task<Result<int>> Handle(DeleteSupplyItemCommand request, CancellationToken cancellationToken)
     {
-        //     var items = await _context.SupplyItems.Where(x=>request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-        //     foreach (var item in items)
-        //     {
-        //   // raise a delete domain event
-        //item.AddDomainEvent(new SupplyItemDeletedEvent(item));
-        //         _context.SupplyItems.Remove(item);
-        //     }
-        //     var result = await _context.SaveChangesAsync(cancellationToken);
-        //     return await Result<int>.SuccessAsync(result);
+        var items = await _context.SupplyItems
+            .Where(x => request.Id.Contains(x.Id))
+            .ToListAsync(cancellationToken);
 
-        return await Result<int>.SuccessAsync(0);
+        foreach (var item in items)
+        {
+            _context.SupplyItems.Remove(item);
+        }
+        var result = await _context.SaveChangesAsync(cancellationToken);
+
+        return await Result<int>.SuccessAsync(result);
     }
 
 }

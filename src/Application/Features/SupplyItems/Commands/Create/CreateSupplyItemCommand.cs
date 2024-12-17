@@ -40,14 +40,14 @@ public class CreateSupplyItemCommand: ICacheInvalidatorRequest<Result<int>>
         }
         public async Task<Result<int>> Handle(CreateSupplyItemCommand request, CancellationToken cancellationToken)
         {
-        //   var item = SupplyItemMapper.FromCreateCommand(request);
-        //   // raise a create domain event
-	       //item.AddDomainEvent(new SupplyItemCreatedEvent(item));
-        //   _context.SupplyItems.Add(item);
-        //   await _context.SaveChangesAsync(cancellationToken);
-        //   return  await Result<int>.SuccessAsync(item.Id);
+            var item = SupplyItemMapper.FromCreateCommand(request);
 
-            return await Result<int>.SuccessAsync(0);
+            _context.SupplyItems.Add(item);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return await Result<int>.SuccessAsync(item.Id);
+
         }
     }
 

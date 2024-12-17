@@ -3,6 +3,7 @@
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Suppliers.DTOs;
 using CleanArchitecture.Blazor.Application.Features.SupplyItems.Caching;
+using CleanArchitecture.Blazor.Application.Features.SupplyItems.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.SupplyItems.Commands.AddEdit;
 
@@ -13,9 +14,9 @@ public class AddEditSupplyItemCommand: ICacheInvalidatorRequest<Result<int>>
           [Description("Product id")]
     public int ProductId {get;set;} 
     [Description("Supplier id")]
-    public int SupplierId {get;set;} 
+    public int SupplierId {get;set;}
     [Description("Quantity")]
-    public int Quantity {get;set;} 
+    public int Quantity { get; set; } = 1;
     [Description("Cost per item")]
     public decimal CostPerItem {get;set;} 
     [Description("Notes")]
@@ -40,30 +41,26 @@ public class AddEditSupplyItemCommandHandler : IRequestHandler<AddEditSupplyItem
     }
     public async Task<Result<int>> Handle(AddEditSupplyItemCommand request, CancellationToken cancellationToken)
     {
-        //     if (request.Id > 0)
-        //     {
-        //         var item = await _context.SupplyItems.FindAsync(request.Id, cancellationToken);
-        //         if (item == null)
-        //         {
-        //             return await Result<int>.FailureAsync($"SupplyItem with id: [{request.Id}] not found.");
-        //         }
-        //         SupplyItemMapper.ApplyChangesFrom(request,item);
-        //// raise a update domain event
-        //item.AddDomainEvent(new SupplyItemUpdatedEvent(item));
-        //         await _context.SaveChangesAsync(cancellationToken);
-        //         return await Result<int>.SuccessAsync(item.Id);
-        //     }
-        //     else
-        //     {
-        //         var item = SupplyItemMapper.FromEditCommand(request);
-        //         // raise a create domain event
-        //item.AddDomainEvent(new SupplyItemCreatedEvent(item));
-        //         _context.SupplyItems.Add(item);
-        //         await _context.SaveChangesAsync(cancellationToken);
-        //         return await Result<int>.SuccessAsync(item.Id);
-        //}
+        if (request.Id > 0)
+        {
+            var item = await _context.SupplyItems.FindAsync(request.Id, cancellationToken);
+            if (item == null)
+            {
+                return await Result<int>.FailureAsync($"SupplyItem with id: [{request.Id}] not found.");
+            }
+            SupplyItemMapper.ApplyChangesFrom(request, item);
 
-        return await Result<int>.SuccessAsync(0);
+            await _context.SaveChangesAsync(cancellationToken);
+            return await Result<int>.SuccessAsync(item.Id);
+        }
+        else
+        {
+            var item = SupplyItemMapper.FromEditCommand(request);
+
+            _context.SupplyItems.Add(item);
+            await _context.SaveChangesAsync(cancellationToken);
+            return await Result<int>.SuccessAsync(item.Id);
+        }
 
     }
 }

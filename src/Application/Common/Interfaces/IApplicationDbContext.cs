@@ -18,8 +18,8 @@ public interface IApplicationDbContext
     DbSet<Tenant> Tenants { get; set; }
     DbSet<Contact> Contacts { get; set; }
     DbSet<Category> Categories { get; set; }
-
     DbSet<Offer> Offers { get; set; }
+    DbSet<SupplyItem> SupplyItems { get; set; }
 
     //DbSet<OfferLine> OfferLines { get; set; }
 

@@ -10,18 +10,43 @@
             <MudGrid>
                 @*TODO: define mudform that should be edit fields, for example:*@
                 <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.ProductId)]" @bind-Value="model.ProductId" For="@(() => model.ProductId)" Min="0" Required="false" RequiredError="@L["product id is required!"]"></MudNumericField >
+                        <MudTextField  Label="@L[model.GetMemberDescription(x=>x.Product.Id)]" @bind-Value="model.Product.Id" 
+                            ReadOnly ="true"
+                            For="@(() => model.Product.Id)" Required="false" RequiredError="@L["product id is required!"]">
+                            </MudTextField >
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Product.Name)]" @bind-Value="model.Product.Name"
+                                  ReadOnly="true"
+                                  For="@(() => model.Product.Name)" Required="false" RequiredError="@L["product id is required!"]">
+                    </MudTextField>
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Product.Code)]" @bind-Value="model.Product.Code"
+                                  ReadOnly="true"
+                                  For="@(() => model.Product.Code)" Required="false" RequiredError="@L["product id is required!"]">
+                    </MudTextField>
+                </MudItem>
+
+
+                <MudItem xs="12" md="6"> 
+                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.SupplierId)]" @bind-Value="model.SupplierId" 
+                            For="@(() => model.SupplierId)" Min="0" Required="false" RequiredError="@L["supplier id is required!"]">
+                            </MudNumericField >
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.SupplierId)]" @bind-Value="model.SupplierId" For="@(() => model.SupplierId)" Min="0" Required="false" RequiredError="@L["supplier id is required!"]"></MudNumericField >
-                </MudItem> 
-<MudItem xs="12" md="6"> 
+
+@*                 <MudItem xs="12" md="6"> 
                         <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.Quantity)]" @bind-Value="model.Quantity" For="@(() => model.Quantity)" Min="0" Required="false" RequiredError="@L["quantity is required!"]"></MudNumericField >
+                </MudItem>  *@
+                
+                <MudItem xs="12" md="6"> 
+                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.CostPerItem)]" @bind-Value="model.CostPerItem" For="@(() => model.CostPerItem)" 
+                            Min="0.00m" Required="false" RequiredError="@L["cost per item is required!"]"></MudNumericField >
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.CostPerItem)]" @bind-Value="model.CostPerItem" For="@(() => model.CostPerItem)" Min="0.00m" Required="false" RequiredError="@L["cost per item is required!"]"></MudNumericField >
-                </MudItem> 
-<MudItem xs="12" md="6"> 
+
+                <MudItem xs="12" md="6"> 
                         <MudTextField Label="@L[model.GetMemberDescription(x=>x.Notes)]" @bind-Value="model.Notes" For="@(() => model.Notes)" Required="false" RequiredError="@L["notes is required!"]"></MudTextField>
                 </MudItem> 
 
@@ -36,13 +61,16 @@
 </MudDialog>
 
 @code {
+    
     MudForm? _form;
     private bool _saving = false;
     private bool _savingnew = false;
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
     AddEditSupplyItemCommandValidator _modelValidator = new ();
-    [EditorRequired] [Parameter] public AddEditSupplyItemCommand model { get; set; } = null!;
+    [EditorRequired] [Parameter] 
+    public AddEditSupplyItemCommand model { get; set; } = null!;
+
     async Task Submit()
     {
         try

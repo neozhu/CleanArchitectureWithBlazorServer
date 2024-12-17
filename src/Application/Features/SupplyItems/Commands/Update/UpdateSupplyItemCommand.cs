@@ -40,19 +40,18 @@ public class UpdateSupplyItemCommandHandler : IRequestHandler<UpdateSupplyItemCo
     }
     public async Task<Result<int>> Handle(UpdateSupplyItemCommand request, CancellationToken cancellationToken)
     {
+        var item = await _context.SupplyItems.FindAsync(request.Id, cancellationToken);
 
-        //var item = await _context.SupplyItems.FindAsync(request.Id, cancellationToken);
-        //if (item == null)
-        //{
-        //    return await Result<int>.FailureAsync($"SupplyItem with id: [{request.Id}] not found.");
-        //}
-        //SupplyItemMapper.ApplyChangesFrom(request, item);
-        //// raise a update domain event
-        //item.AddDomainEvent(new SupplyItemUpdatedEvent(item));
-        //await _context.SaveChangesAsync(cancellationToken);
-        //return await Result<int>.SuccessAsync(item.Id);
+        if (item is null)
+        {
+            return await Result<int>.FailureAsync($"SupplyItem with id: [{request.Id}] not found.");
+        }
+        SupplyItemMapper.ApplyChangesFrom(request, item);
 
-        return await Result<int>.SuccessAsync(0);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return await Result<int>.SuccessAsync(item.Id);
+
     }
 }
 

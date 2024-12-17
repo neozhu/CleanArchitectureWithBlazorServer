@@ -47,8 +47,8 @@ public class MenuService : IMenuService
                         },
                          new()
                         {
-                            Title = "OfferLines",
-                            Href = "/pages/OfferLines",
+                            Title = "SupplyItems",
+                            Href = "/pages/SupplyItems",
                             PageStatus = PageStatus.Completed
                         },
                          new()

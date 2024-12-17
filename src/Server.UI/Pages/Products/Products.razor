@@ -4,6 +4,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Products.Specifications
+@using CleanArchitecture.Blazor.Application.Features.SupplyItems.Commands.AddEdit
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Server.UI.Pages.Products.Components
@@ -11,6 +12,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
+@using CleanArchitecture.Blazor.Server.UI.Pages.SupplyItems.Components
 
 @attribute [Authorize(Policy = Permissions.Products.View)]
 @inject IStringLocalizer<Products> L
@@ -48,6 +50,7 @@
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
+
                     @if (_canCreate)
                     {
                         <MudButton  
@@ -94,6 +97,7 @@
                                 </MudFileUpload>
                             </MudMenuItem>
                         }
+
                     </MudMenu>
                 </MudToolBar>
                 <MudStack Row Spacing="1">
@@ -124,6 +128,11 @@
                         {
                             <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
+
+                        <MudMenuItem OnClick="@(() => OnAddSupplierItem(context.Item))">
+                            @ConstantString.AddSupplierItem
+                        </MudMenuItem>
+
                     </MudMenu>
                 }
                 else
@@ -135,6 +144,9 @@
                         </MudIconButton>
                     </MudTooltip>
                 }
+
+              
+
             </CellTemplate>
         </TemplateColumn>
 
@@ -341,6 +353,33 @@
             });
         });
 
+    }
+
+    private async Task OnAddSupplierItem(ProductDto dto)
+    {
+        var command = new AddEditSupplyItemCommand()
+        {
+            Product = dto, 
+            ProductId = dto.Id
+        };
+
+        await DialogService.ShowEditFormDialog<SupplyItemFormDialog, AddEditSupplyItemCommand>(
+        string.Format(ConstantString.CreateAnItem, L["SupplyItem"]),
+        command,
+        configureOptions: options =>
+        {
+            
+        },
+        OnSuccess: async () =>
+        {
+            await _table.ReloadServerData();
+            _selectedItems.Clear();
+            Console.WriteLine("Success: Item successfully edited!");
+        },
+        OnFail: async () =>
+        {
+            //Snackbar.Add("Failed: Edit operation was canceled.", Severity.Error);
+        });
     }
 
     private async Task OnExport()

@@ -31,7 +31,9 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Offer> Offers { get; set; }
-    
+
+    public DbSet<SupplyItem> SupplyItems { get; set; }
+
     //public DbSet<OfferLine> OfferLines { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
