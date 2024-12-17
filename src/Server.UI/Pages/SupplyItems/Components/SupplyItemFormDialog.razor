@@ -1,4 +1,6 @@
-﻿@using CleanArchitecture.Blazor.Application.Features.SupplyItems.Commands.AddEdit
+﻿@using CleanArchitecture.Blazor.Application.Features.Suppliers.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Suppliers.Queries.GetAll
+@using CleanArchitecture.Blazor.Application.Features.SupplyItems.Commands.AddEdit
 
 @inherits MudComponentBase
 @inject IValidationService Validator
@@ -10,44 +12,56 @@
             <MudGrid>
                 @*TODO: define mudform that should be edit fields, for example:*@
                 <MudItem xs="12" md="6"> 
-                        <MudTextField  Label="@L[model.GetMemberDescription(x=>x.Product.Id)]" @bind-Value="model.Product.Id" 
-                            ReadOnly ="true"
-                            For="@(() => model.Product.Id)" Required="false" RequiredError="@L["product id is required!"]">
-                            </MudTextField >
+                    <MudTextField  Label="@L[model.GetMemberDescription(x=>x.Product.Id)]" @bind-Value="model.Product.Id" 
+                    ReadOnly ="true"
+                    For="@(() => model.Product.Id)" Required="false" RequiredError="@L["product id is required!"]">
+                    </MudTextField >
                 </MudItem>
 
                 <MudItem xs="12" md="6">
                     <MudTextField Label="@L[model.GetMemberDescription(x=>x.Product.Name)]" @bind-Value="model.Product.Name"
-                                  ReadOnly="true"
-                                  For="@(() => model.Product.Name)" Required="false" RequiredError="@L["product id is required!"]">
+                    ReadOnly="true"
+                    For="@(() => model.Product.Name)" Required="false" RequiredError="@L["product id is required!"]">
                     </MudTextField>
                 </MudItem>
 
                 <MudItem xs="12" md="6">
                     <MudTextField Label="@L[model.GetMemberDescription(x=>x.Product.Code)]" @bind-Value="model.Product.Code"
-                                  ReadOnly="true"
-                                  For="@(() => model.Product.Code)" Required="false" RequiredError="@L["product id is required!"]">
+                    ReadOnly="true"
+                    For="@(() => model.Product.Code)" Required="false" RequiredError="@L["product id is required!"]">
                     </MudTextField>
                 </MudItem>
 
+                @*                 <MudItem xs="12" md="6"> 
+                    <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.SupplierId)]" @bind-Value="model.SupplierId" 
+                    For="@(() => model.SupplierId)" Min="0" Required="false" RequiredError="@L["supplier id is required!"]">
+                    </MudNumericField >
+                </MudItem> *@
+
+                <MudItem xs="12" md="6">
+                    <MudSelect T="SupplierDto"
+                    Required="true" RequiredError="@L["customer id is required!"]"
+                    Label="Select Contact" @bind-Value="SelectedSupplier">
+                        @if (SupplierDtos is not null)
+                        {
+                            @foreach (var supplier in SupplierDtos)
+                            {
+                                <MudSelectItem Value="supplier"
+                                Label="@($"{supplier.Name} {supplier.Email}")">
+                                    @($"{supplier.Name} {supplier.Email}")
+                                </MudSelectItem>
+                            }
+                        }
+                    </MudSelect>
+                </MudItem>
 
                 <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.SupplierId)]" @bind-Value="model.SupplierId" 
-                            For="@(() => model.SupplierId)" Min="0" Required="false" RequiredError="@L["supplier id is required!"]">
-                            </MudNumericField >
+                    <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.CostPerItem)]" @bind-Value="model.CostPerItem" For="@(() => model.CostPerItem)" 
+                    Min="0.00m" Required="false" RequiredError="@L["cost per item is required!"]"></MudNumericField >
                 </MudItem> 
 
-@*                 <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.Quantity)]" @bind-Value="model.Quantity" For="@(() => model.Quantity)" Min="0" Required="false" RequiredError="@L["quantity is required!"]"></MudNumericField >
-                </MudItem>  *@
-                
                 <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.CostPerItem)]" @bind-Value="model.CostPerItem" For="@(() => model.CostPerItem)" 
-                            Min="0.00m" Required="false" RequiredError="@L["cost per item is required!"]"></MudNumericField >
-                </MudItem> 
-
-                <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Notes)]" @bind-Value="model.Notes" For="@(() => model.Notes)" Required="false" RequiredError="@L["notes is required!"]"></MudTextField>
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Notes)]" @bind-Value="model.Notes" For="@(() => model.Notes)" Required="false" RequiredError="@L["notes is required!"]"></MudTextField>
                 </MudItem> 
 
             </MudGrid>
@@ -61,7 +75,11 @@
 </MudDialog>
 
 @code {
-    
+
+    private SupplierDto SelectedSupplier { get; set; }
+    private IEnumerable<SupplierDto>? SupplierDtos;
+    private GetAllSuppliersQuery Query { get; set; } = new();
+
     MudForm? _form;
     private bool _saving = false;
     private bool _savingnew = false;
@@ -71,6 +89,21 @@
     [EditorRequired] [Parameter] 
     public AddEditSupplyItemCommand model { get; set; } = null!;
 
+    protected override async Task OnInitializedAsync()
+    {
+
+        var result = await Mediator.Send(Query).ConfigureAwait(false);
+
+        if (result.Any())
+        {
+            SupplierDtos = result.ToList();
+
+            if (model.SupplierId > 0)
+                SelectedSupplier = SupplierDtos.First(x => x.Id == model.SupplierId);
+        }
+
+    }
+
     async Task Submit()
     {
         try
@@ -79,6 +112,10 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
+
+            model.SupplierId = this.SelectedSupplier.Id;
+            model.Supplier = this.SelectedSupplier;
+
             var result = await Mediator.Send(model);
             result.Match(data =>
             {
@@ -104,12 +141,18 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                return;
+
+            model.SupplierId = this.SelectedSupplier.Id;
+            model.Supplier = this.SelectedSupplier;
+
             var result = await Mediator.Send(model);
             await result.MatchAsync(async data =>
             {
                 Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
                 await Task.Delay(300);
+                var productId = model.ProductId;
                 model = new AddEditSupplyItemCommand() { };
+                model.ProductId = productId;
                 return data;
             }, errors =>
             {

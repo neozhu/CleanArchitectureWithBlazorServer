@@ -18,4 +18,6 @@ public class Product : BaseAuditableEntity
     public int? Stock { get; set; }
     public List<ProductImage>? Pictures { get; set; }
 
+    public List<SupplyItem>? SupplyItems { get; set; }
+
 }

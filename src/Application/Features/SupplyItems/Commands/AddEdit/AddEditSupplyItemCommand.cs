@@ -21,9 +21,12 @@ public class AddEditSupplyItemCommand: ICacheInvalidatorRequest<Result<int>>
     public decimal CostPerItem {get;set;} 
     [Description("Notes")]
     public string? Notes {get;set;} 
+
     [Description("Product")]
+    [MapperIgnore]
     public ProductDto Product {get;set;} 
     [Description("Supplier")]
+    [MapperIgnore]
     public SupplierDto Supplier {get;set;} 
 
 
@@ -41,26 +44,37 @@ public class AddEditSupplyItemCommandHandler : IRequestHandler<AddEditSupplyItem
     }
     public async Task<Result<int>> Handle(AddEditSupplyItemCommand request, CancellationToken cancellationToken)
     {
-        if (request.Id > 0)
+        try
         {
-            var item = await _context.SupplyItems.FindAsync(request.Id, cancellationToken);
-            if (item == null)
+            if (request.Id > 0)
             {
-                return await Result<int>.FailureAsync($"SupplyItem with id: [{request.Id}] not found.");
+                var item = await _context.SupplyItems.FindAsync(request.Id, cancellationToken);
+                if (item is null)
+                {
+                    return await Result<int>.FailureAsync($"SupplyItem with id: [{request.Id}] not found.");
+                }
+                SupplyItemMapper.ApplyChangesFrom(request, item);
+
+                await _context.SaveChangesAsync(cancellationToken);
+                return await Result<int>.SuccessAsync(item.Id);
             }
-            SupplyItemMapper.ApplyChangesFrom(request, item);
+            else
+            {
+                var item = SupplyItemMapper.FromEditCommand(request);
 
-            await _context.SaveChangesAsync(cancellationToken);
-            return await Result<int>.SuccessAsync(item.Id);
+                _context.SupplyItems.Add(item);
+                
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return await Result<int>.SuccessAsync(item.Id);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            var item = SupplyItemMapper.FromEditCommand(request);
-
-            _context.SupplyItems.Add(item);
-            await _context.SaveChangesAsync(cancellationToken);
-            return await Result<int>.SuccessAsync(item.Id);
+            var message = ex.ToString();
+            throw;
         }
+
 
     }
 }
