@@ -33,7 +33,7 @@ public class MultiTenantAutocomplete<T> : MudAutocomplete<TenantDto>
         await base.DisposeAsyncCore();
     }
 
-    private Task<IEnumerable<TenantDto>> SearchKeyValues(string value, CancellationToken cancellation)
+    private Task<IEnumerable<TenantDto>> SearchKeyValues(string? value, CancellationToken cancellation)
     {
         IEnumerable<TenantDto> result;
 

@@ -18,7 +18,7 @@ public class LanguageAutocomplete<T> : MudAutocomplete<string>
 
     private List<LanguageCode> Languages { get; set; } = LocalizationConstants.SupportedLanguages.ToList();
 
-    private Task<IEnumerable<string>> SearchFunc_(string value, CancellationToken cancellation = default)
+    private Task<IEnumerable<string>> SearchFunc_(string? value, CancellationToken cancellation = default)
     {
         // 如果输入为空，返回完整的语言列表；否则进行模糊搜索
         return string.IsNullOrEmpty(value)

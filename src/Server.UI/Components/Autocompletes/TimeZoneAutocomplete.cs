@@ -16,7 +16,7 @@ public class TimeZoneAutocomplete<T> : MudAutocomplete<string>
 
     private List<TimeZoneInfo> TimeZones { get; set; } = TimeZoneInfo.GetSystemTimeZones().ToList();
 
-    private Task<IEnumerable<string>> SearchFunc_(string value, CancellationToken cancellation = default)
+    private Task<IEnumerable<string>> SearchFunc_(string? value, CancellationToken cancellation = default)
     {
         return string.IsNullOrEmpty(value)
             ? Task.FromResult(TimeZones.Select(tz => tz.Id).AsEnumerable())

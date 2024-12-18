@@ -36,7 +36,7 @@ public class PickUserAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
         await base.DisposeAsyncCore();
     }
 
-    private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string value, CancellationToken cancellation)
+    private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string? value, CancellationToken cancellation)
     {
         var result = UserService.DataSource.Where(x => x.TenantId != null && x.TenantId.Equals(TenantId));
 
