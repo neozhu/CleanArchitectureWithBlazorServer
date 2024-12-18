@@ -25,4 +25,5 @@ public class SupplyItemAdvancedFilter: PaginationFilter
     public TimeSpan LocalTimezoneOffset { get; set; }
     public SupplyItemListView ListView { get; set; } = SupplyItemListView.All;
     public UserProfile? CurrentUser { get; set; }
+    public int ProductId { get; set; }
 }

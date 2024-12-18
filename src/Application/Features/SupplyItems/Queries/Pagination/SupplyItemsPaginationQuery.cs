@@ -31,7 +31,11 @@ public class SupplyItemsWithPaginationQueryHandler :
 
     public async Task<PaginatedData<SupplyItemDto>> Handle(SupplyItemsWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.SupplyItems.OrderBy($"{request.OrderBy} {request.SortDirection}")
+        var data = await _context.SupplyItems
+            .Include(x=>x.Product)
+            .Include(x=>x.Supplier)
+            .AsNoTracking()
+            .OrderBy($"{request.OrderBy} {request.SortDirection}")
                                                 .ProjectToPaginatedDataAsync(request.Specification,
                                                                              request.PageNumber,
                                                                              request.PageSize,

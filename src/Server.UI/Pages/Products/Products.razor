@@ -133,6 +133,11 @@
                             @ConstantString.AddSupplierItem
                         </MudMenuItem>
 
+                        <MudMenuItem OnClick="@(() => ViewAddSupplierItem(context.Item))">
+                            @ConstantString.ViewSupplierItems
+                        </MudMenuItem>
+
+
                     </MudMenu>
                 }
                 else
@@ -366,10 +371,23 @@
         await DialogService.ShowEditFormDialog<SupplyItemFormDialog, AddEditSupplyItemCommand>(
         string.Format(ConstantString.CreateAnItem, L["SupplyItem"]),
         command,
-        configureOptions: options =>
+        configureOptions: options => {},
+        OnSuccess: async () =>
         {
-            
+            await _table.ReloadServerData();
+            _selectedItems.Clear();
+            Console.WriteLine("Success: Item successfully edited!");
         },
+        OnFail: async () =>
+        {
+            //Snackbar.Add("Failed: Edit operation was canceled.", Severity.Error);
+        });
+    }
+
+    private async Task ViewAddSupplierItem(ProductDto dto)
+    {
+        await DialogService.ShowEditFormDialog<CleanArchitecture.Blazor.Server.UI.Pages.SupplyItems.SupplyItems>(
+        string.Format(ConstantString.CreateAnItem, L["SupplyItem"]),dto.Id,
         OnSuccess: async () =>
         {
             await _table.ReloadServerData();

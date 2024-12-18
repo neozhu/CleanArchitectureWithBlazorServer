@@ -17,6 +17,7 @@ public static partial class SupplyItemMapper
     public static partial SupplyItem FromEditCommand(AddEditSupplyItemCommand command);
     public static partial SupplyItem FromCreateCommand(CreateSupplyItemCommand command);
     public static partial UpdateSupplyItemCommand ToUpdateCommand(SupplyItemDto dto);
+    public static partial AddEditSupplyItemCommand ToAddEditCommand(SupplyItemDto dto);
     public static partial AddEditSupplyItemCommand CloneFromDto(SupplyItemDto dto);
     public static partial void ApplyChangesFrom(UpdateSupplyItemCommand source, SupplyItem target);
     public static partial void ApplyChangesFrom(AddEditSupplyItemCommand source, SupplyItem target);

@@ -26,11 +26,9 @@ public class GetSupplyItemByIdQueryHandler :
 
     public async Task<Result<SupplyItemDto>> Handle(GetSupplyItemByIdQuery request, CancellationToken cancellationToken)
     {
-        //var data = await _context.SupplyItems.ApplySpecification(new SupplyItemByIdSpecification(request.Id))
-        //                                        .ProjectTo()
-        //                                        .FirstAsync(cancellationToken);
-        //return await Result<SupplyItemDto>.SuccessAsync(data);
-
-        return await Result<SupplyItemDto>.SuccessAsync(new SupplyItemDto());
+        var data = await _context.SupplyItems.ApplySpecification(new SupplyItemByIdSpecification(request.Id))
+                                                .ProjectTo()
+                                                .FirstAsync(cancellationToken);
+        return await Result<SupplyItemDto>.SuccessAsync(data);
     }
 }

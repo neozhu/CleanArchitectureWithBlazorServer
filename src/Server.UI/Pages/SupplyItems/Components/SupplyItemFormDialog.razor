@@ -1,6 +1,8 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.Suppliers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Suppliers.Queries.GetAll
 @using CleanArchitecture.Blazor.Application.Features.SupplyItems.Commands.AddEdit
+@using CleanArchitecture.Blazor.Application.Features.SupplyItems.Mappers
+@using CleanArchitecture.Blazor.Application.Features.SupplyItems.Queries.GetById
 
 @inherits MudComponentBase
 @inject IValidationService Validator
@@ -75,8 +77,7 @@
 </MudDialog>
 
 @code {
-
-    private SupplierDto SelectedSupplier { get; set; }
+    private SupplierDto SelectedSupplier { get; set; } = new();
     private IEnumerable<SupplierDto>? SupplierDtos;
     private GetAllSuppliersQuery Query { get; set; } = new();
 
@@ -86,11 +87,32 @@
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
     AddEditSupplyItemCommandValidator _modelValidator = new ();
-    [EditorRequired] [Parameter] 
+    [EditorRequired] 
+    [Parameter] 
     public AddEditSupplyItemCommand model { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
+
+        // if (model.Id > 0) {
+        //     var resultSupp = await Mediator.Send(new GetSupplyItemByIdQuery() { Id = model.Id });
+        //     resultSupp.Map(data =>
+        //       {
+        //           model = SupplyItemMapper.ToAddEditCommand(data);
+        //           return data;
+        //       }).Match(data =>
+        //       {
+
+        //           return data;
+        //       }, errors =>
+        //       {
+        //           Snackbar.Add($"{errors}", Severity.Error);
+        //           return null!;
+        //       });
+        //     // if (data is not null)
+        //     //     model = SupplyItemMapper.ToAddEditCommand(data.Data);
+        // }
+
 
         var result = await Mediator.Send(Query).ConfigureAwait(false);
 
@@ -101,6 +123,8 @@
             if (model.SupplierId > 0)
                 SelectedSupplier = SupplierDtos.First(x => x.Id == model.SupplierId);
         }
+
+        var resultSupp = await Mediator.Send(new GetSupplyItemByIdQuery() { Id = 4 });
 
     }
 

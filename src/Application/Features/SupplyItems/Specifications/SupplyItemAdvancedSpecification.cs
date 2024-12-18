@@ -13,7 +13,17 @@ public class SupplyItemAdvancedSpecification : Specification<SupplyItem>
         var todayrange = today.GetDateRange(SupplyItemListView.TODAY.ToString(), filter.LocalTimezoneOffset);
         var last30daysrange = today.GetDateRange(SupplyItemListView.LAST_30_DAYS.ToString(),filter.LocalTimezoneOffset);
 
+        var productId = filter.ProductId;
+
+        if (productId > 0)
+        {
+            Query.Where(x => x.ProductId == filter.ProductId);
+
+            return;
+        }
+
         Query
+             .Where(filter.Keyword, !string.IsNullOrEmpty(filter.Keyword))
              .Where(filter.Keyword,!string.IsNullOrEmpty(filter.Keyword))
              .Where(q => q.CreatedBy == filter.CurrentUser.UserId, filter.ListView == SupplyItemListView.My && filter.CurrentUser is not null)
              .Where(x => x.Created >= todayrange.Start && x.Created < todayrange.End.AddDays(1), filter.ListView == SupplyItemListView.TODAY)
