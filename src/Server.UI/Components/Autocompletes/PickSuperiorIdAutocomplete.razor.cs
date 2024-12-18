@@ -20,7 +20,7 @@ public class PickSuperiorIdAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
 
     [Inject] private IUserService UserService { get; set; } = default!;
 
-    private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string value, CancellationToken cancellation)
+    private Task<IEnumerable<ApplicationUserDto>> SearchKeyValues(string? value, CancellationToken cancellation)
     {
         var result = UserService.DataSource.Where(x =>
             x.TenantId != null && x.TenantId.Equals(TenantId) && !x.UserName.Equals(OwnerName));

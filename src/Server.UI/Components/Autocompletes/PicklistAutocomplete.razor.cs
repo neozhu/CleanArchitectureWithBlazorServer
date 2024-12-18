@@ -40,7 +40,7 @@ public class PicklistAutocomplete<T> : MudAutocomplete<string>
         await base.DisposeAsyncCore();
     }
 
-    private Task<IEnumerable<string>> SearchFunc_(string value, CancellationToken cancellation = default)
+    private Task<IEnumerable<string>> SearchFunc_(string? value, CancellationToken cancellation = default)
     {
         // if text is null or empty, show complete list
         return string.IsNullOrEmpty(value)
