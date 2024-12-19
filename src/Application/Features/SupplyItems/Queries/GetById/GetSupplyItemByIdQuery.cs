@@ -26,7 +26,11 @@ public class GetSupplyItemByIdQueryHandler :
 
     public async Task<Result<SupplyItemDto>> Handle(GetSupplyItemByIdQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.SupplyItems.ApplySpecification(new SupplyItemByIdSpecification(request.Id))
+        var data = await _context.SupplyItems
+                        .AsNoTracking()
+            .Include( x => x.Product )
+            .Include(x=>x.Supplier)
+            .ApplySpecification(new SupplyItemByIdSpecification(request.Id))
                                                 .ProjectTo()
                                                 .FirstAsync(cancellationToken);
         return await Result<SupplyItemDto>.SuccessAsync(data);

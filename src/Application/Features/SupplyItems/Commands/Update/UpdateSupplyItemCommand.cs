@@ -20,8 +20,10 @@ public class UpdateSupplyItemCommand : ICacheInvalidatorRequest<Result<int>>
     public decimal CostPerItem { get; set; }
     [Description("Notes")]
     public string? Notes { get; set; }
+
     [Description("Product")]
     public ProductDto Product { get; set; }
+    
     [Description("Supplier")]
     public SupplierDto Supplier { get; set; }
 
@@ -46,7 +48,12 @@ public class UpdateSupplyItemCommandHandler : IRequestHandler<UpdateSupplyItemCo
         {
             return await Result<int>.FailureAsync($"SupplyItem with id: [{request.Id}] not found.");
         }
+
         SupplyItemMapper.ApplyChangesFrom(request, item);
+        //TODO INVESTIGRATE WHY THIS HAPPENS 
+
+        item.Product = null;
+        item.Supplier = null;
 
         await _context.SaveChangesAsync(cancellationToken);
 

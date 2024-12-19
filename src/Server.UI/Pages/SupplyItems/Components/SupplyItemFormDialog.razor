@@ -94,26 +94,6 @@
     protected override async Task OnInitializedAsync()
     {
 
-        // if (model.Id > 0) {
-        //     var resultSupp = await Mediator.Send(new GetSupplyItemByIdQuery() { Id = model.Id });
-        //     resultSupp.Map(data =>
-        //       {
-        //           model = SupplyItemMapper.ToAddEditCommand(data);
-        //           return data;
-        //       }).Match(data =>
-        //       {
-
-        //           return data;
-        //       }, errors =>
-        //       {
-        //           Snackbar.Add($"{errors}", Severity.Error);
-        //           return null!;
-        //       });
-        //     // if (data is not null)
-        //     //     model = SupplyItemMapper.ToAddEditCommand(data.Data);
-        // }
-
-
         var result = await Mediator.Send(Query).ConfigureAwait(false);
 
         if (result.Any())

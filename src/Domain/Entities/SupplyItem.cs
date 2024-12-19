@@ -11,6 +11,7 @@ public class SupplyItem : BaseAuditableEntity
     public int Quantity { get; set; }
     public decimal CostPerItem { get; set; }
     public string Notes { get; set; }
+
     public virtual Product Product { get; set; } = null!;
 
     public virtual Supplier Supplier { get; set; } = null!;

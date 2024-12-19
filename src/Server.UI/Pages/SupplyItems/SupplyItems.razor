@@ -256,6 +256,7 @@
     private async Task OnCreate()
     {
         var command = new AddEditSupplyItemCommand();
+
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["SupplyItem"]), command);
     }
     private async Task OnClone()
@@ -266,12 +267,23 @@
     }
     private async Task OnEdit(SupplyItemDto dto)
     {
-        var command = new AddEditSupplyItemCommand();
+        var parameters = new DialogParameters
+        {
+            { "Id", dto.Id }
+        };
 
-        command.ProductId = dto.ProductId;
-        command.Id = dto.Id;
-
-        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["SupplyItem"]), command);
+        await DialogService.ShowEditFormDialog<CleanArchitecture.Blazor.Server.UI.Pages.SupplyItems.EditSupplyItem>(
+        string.Format(ConstantString.EditTheItem, L["SupplyItem"]), parameters, 
+        OnSuccess: async () =>
+        {
+            await _table.ReloadServerData();
+            _selectedItems.Clear();
+            Console.WriteLine("Success: Item successfully edited!");
+        },
+        OnFail: async () =>
+        {
+            //Snackbar.Add("Failed: Edit operation was canceled.", Severity.Error);
+        });
 
        // Navigation.NavigateTo($"/pages/SupplyItems/edit/{dto.Id}");
     }
