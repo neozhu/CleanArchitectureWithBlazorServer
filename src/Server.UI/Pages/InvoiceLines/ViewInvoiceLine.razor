@@ -1,0 +1,94 @@
+﻿@page "/pages/InvoiceLines/view/{id:int}"
+@using CleanArchitecture.Blazor.Application.Features.InvoiceLines.Commands.Delete
+@using CleanArchitecture.Blazor.Application.Features.InvoiceLines.DTOs
+@using CleanArchitecture.Blazor.Application.Features.InvoiceLines.Queries.GetById
+@inherits MudComponentBase
+@inject IStringLocalizer<InvoiceLines> L
+
+<PageTitle>@Title</PageTitle>
+<Breadcrumbs  OnGoEditClick="GoEdit" OnDeleteClick="Delete" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+<MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
+@if (model != null)
+{
+    <MudCard Class="pa-2">
+        <MudCardHeader>
+            <CardHeaderContent>
+                 <MudText Typo="Typo.h6">@Title</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGrid Spacing="3" Class="readonly-grid">
+                <MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.InvoiceId)]" Value="model.InvoiceId"></ReadOnlyFieldX6>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.ProductId)]" Value="model.ProductId"></ReadOnlyFieldX6>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Quantity)]" Value="model.Quantity"></ReadOnlyFieldX6>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.UnitPrice)]" Value="model.UnitPrice"></ReadOnlyFieldX6>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.LineTotal)]" Value="model.LineTotal"></ReadOnlyFieldX6>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Discount)]" Value="model.Discount"></ReadOnlyFieldX6>
+                </MudItem> 
+
+            </MudGrid>
+        </MudCardContent>
+        <MudCardActions></MudCardActions>
+    </MudCard>
+ }
+</MudContainer>
+ 
+
+@code {
+    public string? Title { get; private set; }
+    [Parameter]
+    public int Id { get; set; }
+    private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("InvoiceLines", href: "/pages/InvoiceLines")
+    };
+    private InvoiceLineDto? model;
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L["InvoiceLine"];
+        var result = await Mediator.Send(new GetInvoiceLineByIdQuery() { Id = Id });
+        result.Map(data =>
+        {
+            model = data;
+            return data;
+        }).Match(data =>
+        {
+            _breadcrumbItems.Add(new BreadcrumbItem(data.Id.ToString(), null, disabled: true));
+            return data;
+
+        }, errors =>
+        {
+            Snackbar.Add(errors, MudBlazor.Severity.Error);
+            return null!;
+        });
+
+    }
+    void GoEdit()
+    {
+        Navigation.NavigateTo($"/pages/InvoiceLines/edit/{Id}");
+    }
+    async Task Delete()
+    {
+        var contentText = string.Format(ConstantString.DeleteConfirmation, model.Id.ToString());
+        var command = new DeleteInvoiceLineCommand(new int[] { model.Id });
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
+        {
+            await InvokeAsync(() =>
+            {
+                Navigation.NavigateTo($"/pages/InvoiceLines");
+            });
+        });
+    }
+}

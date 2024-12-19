@@ -1,0 +1,108 @@
+﻿@page "/pages/Invoices/edit/{id:int}"
+@using CleanArchitecture.Blazor.Application.Features.Invoices.Commands.Update
+
+@using CleanArchitecture.Blazor.Application.Features.Invoices.Queries.GetById
+@using CleanArchitecture.Blazor.Application.Invoices.Mappers
+@using CleanArchitecture.Blazor.Server.UI.Components.Fusion
+
+@inherits MudComponentBase
+@inject IValidationService Validator
+@inject IStringLocalizer<Invoices> L
+
+<PageTitle>@Title</PageTitle>
+<Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+<MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
+@if (model != null)
+{
+    <MudCard Class="pa-2">
+        <MudCardHeader>
+            <CardHeaderContent>
+                 <MudText Typo="Typo.h6">@Title</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+        <ActiveUserSession PageComponent="@($"{nameof(EditInvoice)}/{ model.Id }")" />
+        <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
+            <MudGrid Spacing="2">
+                <MudItem xs="12" md="6"> 
+                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.OfferId)]" @bind-Value="model.OfferId" For="@(() => model.OfferId)" Min="0" Required="false" RequiredError="@L["offer id is required!"]"></MudNumericField >
+                </MudItem> 
+@* <MudItem xs="12" md="6"> 
+                        <MudDatePicker Label="@L[model.GetMemberDescription(x=>x.InvoiceDate)]" @bind-Date="model.InvoiceDate" For="@(() => model.InvoiceDate)" Required="false" RequiredError="@L["invoice date is required!"]"></MudDatePicker>
+                </MudItem>  *@
+<MudItem xs="12" md="6"> 
+                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.TotalAmount)]" @bind-Value="model.TotalAmount" For="@(() => model.TotalAmount)" Min="0.00m" Required="false" RequiredError="@L["total amount is required!"]"></MudNumericField >
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Status)]" @bind-Value="model.Status" For="@(() => model.Status)" Required="false" RequiredError="@L["status is required!"]"></MudTextField>
+                </MudItem> 
+
+            </MudGrid>
+        </MudForm>
+        </MudCardContent>
+        <MudCardActions Class="d-flex justify-end gap-2">
+                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        </MudCardActions>
+        </MudCard>
+    }
+</MudContainer>
+ 
+
+@code {
+    public string? Title { get; private set; }
+    [Parameter]
+    public int Id { get; set; }
+    MudForm? _form;
+    private bool _saving = false;
+    private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Invoices", href: "/pages/Invoices")
+    };
+    private UpdateInvoiceCommand? model;
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L["Edit Invoice"];
+        var result = await Mediator.Send(new GetInvoiceByIdQuery() { Id = Id });
+        result.Map(data =>
+        {
+            model = InvoiceMapper.ToUpdateCommand(data);
+            return data;
+        }).Match(data =>
+        {
+            _breadcrumbItems.Add(new BreadcrumbItem(data.Id.ToString(), href: $"/pages/Invoices/edit/{Id}"));
+            return data;
+        }, errors =>
+        {
+            Snackbar.Add($"{errors}", Severity.Error);
+            return null!;
+        });
+
+    }
+    async Task Submit()
+    {
+        try
+        {
+            _saving = true;
+            await _form!.Validate().ConfigureAwait(false);
+            if (!_form!.IsValid)
+                return;
+            var result = await Mediator.Send(model);
+            result.Match(
+                data=>
+                {
+                    Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                    return data;
+                },
+                errors=>
+                {
+                    Snackbar.Add(errors, MudBlazor.Severity.Error);
+                    return 0;
+                });
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+}

@@ -13,24 +13,24 @@
         <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
             <MudGrid>
                 @*TODO: define mudform that should be edit fields, for example:*@
-                <MudItem xs="12" md="6"> 
-                    <MudTextField  Label="@L[model.GetMemberDescription(x=>x.Product.Id)]" @bind-Value="model.Product.Id" 
-                    ReadOnly ="true"
-                    For="@(() => model.Product.Id)" Required="false" RequiredError="@L["product id is required!"]">
-                    </MudTextField >
+                <MudItem xs="12" md="6">
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Product.Id)]" @bind-Value="model.Product.Id"
+                                  ReadOnly="true"
+                                  For="@(() => model.Product.Id)" Required="false" RequiredError="@L["product id is required!"]">
+                    </MudTextField>
                 </MudItem>
 
                 <MudItem xs="12" md="6">
                     <MudTextField Label="@L[model.GetMemberDescription(x=>x.Product.Name)]" @bind-Value="model.Product.Name"
-                    ReadOnly="true"
-                    For="@(() => model.Product.Name)" Required="false" RequiredError="@L["product id is required!"]">
+                                  ReadOnly="true"
+                                  For="@(() => model.Product.Name)" Required="false" RequiredError="@L["product id is required!"]">
                     </MudTextField>
                 </MudItem>
 
                 <MudItem xs="12" md="6">
                     <MudTextField Label="@L[model.GetMemberDescription(x=>x.Product.Code)]" @bind-Value="model.Product.Code"
-                    ReadOnly="true"
-                    For="@(() => model.Product.Code)" Required="false" RequiredError="@L["product id is required!"]">
+                                  ReadOnly="true"
+                                  For="@(() => model.Product.Code)" Required="false" RequiredError="@L["product id is required!"]">
                     </MudTextField>
                 </MudItem>
 
@@ -42,14 +42,14 @@
 
                 <MudItem xs="12" md="6">
                     <MudSelect T="SupplierDto"
-                    Required="true" RequiredError="@L["customer id is required!"]"
-                    Label="Select Contact" @bind-Value="SelectedSupplier">
+                               Required="true" RequiredError="@L["customer id is required!"]"
+                               Label="Select Contact" @bind-Value="SelectedSupplier">
                         @if (SupplierDtos is not null)
                         {
                             @foreach (var supplier in SupplierDtos)
                             {
                                 <MudSelectItem Value="supplier"
-                                Label="@($"{supplier.Name} {supplier.Email}")">
+                                               Label="@($"{supplier.Name} {supplier.Email}")">
                                     @($"{supplier.Name} {supplier.Email}")
                                 </MudSelectItem>
                             }
@@ -57,14 +57,14 @@
                     </MudSelect>
                 </MudItem>
 
-                <MudItem xs="12" md="6"> 
-                    <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.CostPerItem)]" @bind-Value="model.CostPerItem" For="@(() => model.CostPerItem)" 
-                    Min="0.00m" Required="false" RequiredError="@L["cost per item is required!"]"></MudNumericField >
-                </MudItem> 
+                <MudItem xs="12" md="6">
+                    <MudNumericField Label="@L[model.GetMemberDescription(x=>x.CostPerItem)]" @bind-Value="model.CostPerItem" For="@(() => model.CostPerItem)"
+                                     Min="0.00m" Required="false" RequiredError="@L["cost per item is required!"]"></MudNumericField>
+                </MudItem>
 
-                <MudItem xs="12" md="6"> 
+                <MudItem xs="12" md="6">
                     <MudTextField Label="@L[model.GetMemberDescription(x=>x.Notes)]" @bind-Value="model.Notes" For="@(() => model.Notes)" Required="false" RequiredError="@L["notes is required!"]"></MudTextField>
-                </MudItem> 
+                </MudItem>
 
             </MudGrid>
         </MudForm>
@@ -72,7 +72,7 @@
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
         <MudLoadingButton Loading="@_savingnew" OnClick="SaveAndNew">@ConstantString.SaveAndNew</MudLoadingButton>
-        <MudLoadingButton Loading="@_saving"  OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        <MudLoadingButton Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
     </DialogActions>
 </MudDialog>
 
@@ -86,25 +86,23 @@
     private bool _savingnew = false;
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
-    AddEditSupplyItemCommandValidator _modelValidator = new ();
-    [EditorRequired] 
-    [Parameter] 
+    AddEditSupplyItemCommandValidator _modelValidator = new();
+    [EditorRequired]
+    [Parameter]
     public AddEditSupplyItemCommand model { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
-
         var result = await Mediator.Send(Query).ConfigureAwait(false);
 
-        if (result.Any())
-        {
-            SupplierDtos = result.ToList();
+        if (!result.Any())
+            return;
 
-            if (model.SupplierId > 0)
-                SelectedSupplier = SupplierDtos.First(x => x.Id == model.SupplierId);
-        }
+        SupplierDtos = result.ToList();
 
-        var resultSupp = await Mediator.Send(new GetSupplyItemByIdQuery() { Id = 4 });
+        SelectedSupplier = model.SupplierId > 0
+             ? SupplierDtos.FirstOrDefault(x => x.Id == model.SupplierId)
+             : SupplierDtos.FirstOrDefault();
 
     }
 
@@ -144,7 +142,7 @@
             _savingnew = true;
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
-               return;
+                return;
 
             model.SupplierId = this.SelectedSupplier.Id;
             model.Supplier = this.SelectedSupplier;

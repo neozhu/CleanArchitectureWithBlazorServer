@@ -53,8 +53,8 @@ public class MenuService : IMenuService
                         },
                          new()
                         {
-                            Title = "Categories",
-                            Href = "/pages/Categories",
+                            Title = "Invoices",
+                            Href = "/pages/Invoices",
                             PageStatus = PageStatus.Completed
                         },
                         new()

@@ -32,6 +32,8 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<Category> Categories { get; set; }
     public DbSet<Offer> Offers { get; set; }
 
+    public DbSet<Invoice> Invoices { get; set; }
+
     public DbSet<SupplyItem> SupplyItems { get; set; }
 
     //public DbSet<OfferLine> OfferLines { get; set; }

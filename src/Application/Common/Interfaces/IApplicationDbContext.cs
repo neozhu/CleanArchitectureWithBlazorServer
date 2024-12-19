@@ -22,7 +22,7 @@ public interface IApplicationDbContext
     DbSet<SupplyItem> SupplyItems { get; set; }
 
     //DbSet<OfferLine> OfferLines { get; set; }
-
+    DbSet<Invoice> Invoices { get; set; }
     ChangeTracker ChangeTracker { get; }
     DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);

@@ -13,5 +13,5 @@ public class Invoice : BaseAuditableEntity
     public DateTime InvoiceDate { get; set; } = DateTime.Now;
     public decimal TotalAmount { get; set; } = 0m;
     public string Status { get; set; } = "Pending";
-    public List<InvoiceLine> InvoiceLines { get; set; } = new List<InvoiceLine>();
+    public List<InvoiceLine> InvoiceLines { get; set; } = [];
 }

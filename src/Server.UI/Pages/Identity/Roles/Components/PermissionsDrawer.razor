@@ -20,7 +20,8 @@
     </MudStack>
     @if (Permissions != null && Permissions.Any())
     {
-        @foreach (var group in Permissions.Where(x => x.Group!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase) || x.Description!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Group).Distinct().ToList())
+        @foreach (var group in Permissions.Where(x => x.Group!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase) 
+        || x.Description!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Group).Distinct().ToList())
         {
             <MudCard class="ma-4">
                 <MudCardHeader>

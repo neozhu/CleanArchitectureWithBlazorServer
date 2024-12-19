@@ -1,0 +1,86 @@
+﻿@page "/pages/Invoices/create"
+@using CleanArchitecture.Blazor.Application.Features.Invoices.Commands.Create
+
+@inherits MudComponentBase
+@inject IValidationService Validator
+@inject IStringLocalizer<Invoices> L
+
+<PageTitle>@Title</PageTitle>
+<Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+<MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
+    <MudCard Class="pa-2">
+        <MudCardHeader>
+            <CardHeaderContent>
+                 <MudText Typo="Typo.h6">@Title</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+        <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
+            <MudGrid Spacing="2">
+                <MudItem xs="12" md="6"> 
+                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.OfferId)]" @bind-Value="model.OfferId" For="@(() => model.OfferId)" Min="0" Required="false" RequiredError="@L["offer id is required!"]"></MudNumericField >
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudDatePicker Label="@L[model.GetMemberDescription(x=>x.InvoiceDate)]" @bind-Date="model.InvoiceDate" For="@(() => model.InvoiceDate)" Required="false" RequiredError="@L["invoice date is required!"]"></MudDatePicker>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.TotalAmount)]" @bind-Value="model.TotalAmount" For="@(() => model.TotalAmount)" Min="0.00m" Required="false" RequiredError="@L["total amount is required!"]"></MudNumericField >
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Status)]" @bind-Value="model.Status" For="@(() => model.Status)" Required="false" RequiredError="@L["status is required!"]"></MudTextField>
+                </MudItem> 
+
+            </MudGrid>
+        </MudForm>
+        </MudCardContent>
+         <MudCardActions Class="d-flex justify-end gap-2">
+                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+         </MudCardActions>
+        </MudCard>
+</MudContainer>
+ 
+
+@code {
+    public string? Title { get; private set; }
+    MudForm? _form;
+    private bool _saving = false;
+    private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("Invoices", href: "/pages/Invoices"),
+        new BreadcrumbItem("Create Invoice", href:null, disabled:true)
+    };
+    private CreateInvoiceCommand model = new();
+    protected override Task OnInitializedAsync()
+    {
+        Title = L["Create Invoice"];
+        return Task.CompletedTask;
+    }
+    async Task Submit()
+    {
+        try
+        {
+            _saving = true;
+            await _form!.Validate().ConfigureAwait(false);
+            if (!_form!.IsValid)
+                return;
+            var result = await Mediator.Send(model);
+            result.Match(
+                data=>
+                {
+                    Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                    Navigation.NavigateTo($"/pages/Invoices");
+                    return data;
+                },
+                errors=>
+                {
+                    Snackbar.Add(errors, MudBlazor.Severity.Error);
+                    return -1;
+                });
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+}
