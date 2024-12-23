@@ -17,6 +17,7 @@ public static partial class InvoiceMapper
     public static partial Invoice FromCreateCommand(CreateInvoiceCommand command);
     public static partial UpdateInvoiceCommand ToUpdateCommand(InvoiceDto dto);
     public static partial AddEditInvoiceCommand CloneFromDto(InvoiceDto dto);
+    public static partial AddEditInvoiceCommand ToEditCommand(InvoiceDto dto);
     public static partial void ApplyChangesFrom(UpdateInvoiceCommand source, Invoice target);
     public static partial void ApplyChangesFrom(AddEditInvoiceCommand source, Invoice target);
     public static partial IQueryable<InvoiceDto> ProjectTo(this IQueryable<Invoice> q);

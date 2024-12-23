@@ -131,8 +131,8 @@
                     </CellTemplate>
                 </TemplateColumn>
                 @*TODO: Define the fields that should be displayed in data table*@
-                                <PropertyColumn Property="x => x.OfferId" Title="@L[_currentDto.GetMemberDescription(x=>x.OfferId)]" />
-                <PropertyColumn Property="x => x.InvoiceDate" Title="@L[_currentDto.GetMemberDescription(x=>x.InvoiceDate)]" />
+                <PropertyColumn Property="x => x.OfferId" Title="@L[_currentDto.GetMemberDescription(x=>x.OfferId)]" />
+                <PropertyColumn Property="x => x.InvoiceDate" Format="yyyy-MM-dd" Title="@L[_currentDto.GetMemberDescription(x => x.InvoiceDate)]" />
                 <PropertyColumn Property="x => x.TotalAmount" Title="@L[_currentDto.GetMemberDescription(x=>x.TotalAmount)]" />
                 <PropertyColumn Property="x => x.Status" Title="@L[_currentDto.GetMemberDescription(x=>x.Status)]" />
 
@@ -232,7 +232,7 @@
                 { x=>x.model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<InvoiceFormDialog>(title, parameters, options);
+        var dialog = await DialogService.ShowAsync<InvoiceFormDialog>(title, parameters, options);
         var state = await dialog.Result;
 
         if (state != null && !state.Canceled)
@@ -258,7 +258,9 @@
     }
     private async Task OnEdit(InvoiceDto dto)
     {
-       Navigation.NavigateTo($"/pages/Invoices/edit/{dto.Id}");
+        var command = InvoiceMapper.ToEditCommand(dto);
+
+        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Invoice"]), command);
     }
 
     private async Task OnDelete(InvoiceDto dto)
