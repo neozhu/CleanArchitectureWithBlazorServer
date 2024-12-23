@@ -15,6 +15,11 @@ public class InvoiceLinesWithPaginationQuery : InvoiceLineAdvancedFilter, ICache
     public string CacheKey => InvoiceLineCacheKey.GetPaginationCacheKey($"{this}");
     public IEnumerable<string>? Tags => InvoiceLineCacheKey.Tags;
     public InvoiceLineAdvancedSpecification Specification => new InvoiceLineAdvancedSpecification(this);
+    public int InvoiceId { get; protected set; }
+    public InvoiceLinesWithPaginationQuery(int invoiceId)
+    {
+        this.InvoiceId = invoiceId;
+    }
 }
     
 public class InvoiceLinesWithPaginationQueryHandler :
@@ -30,14 +35,25 @@ public class InvoiceLinesWithPaginationQueryHandler :
 
         public async Task<PaginatedData<InvoiceLineDto>> Handle(InvoiceLinesWithPaginationQuery request, CancellationToken cancellationToken)
         {
-        //var data = await _context.InvoiceLines.OrderBy($"{request.OrderBy} {request.SortDirection}")
-        //                                        .ProjectToPaginatedDataAsync(request.Specification, 
-        //                                                                     request.PageNumber, 
-        //                                                                     request.PageSize, 
-        //                                                                     InvoiceLineMapper.ToDto, 
-        //                                                                     cancellationToken);
-        // return data;
+            //var data = await _context.InvoiceLines.OrderBy($"{request.OrderBy} {request.SortDirection}")
+            //                                        .ProjectToPaginatedDataAsync(request.Specification, 
+            //                                                                     request.PageNumber, 
+            //                                                                     request.PageSize, 
+            //                                                                     InvoiceLineMapper.ToDto, 
+            //                                                                     cancellationToken);
+            // return data;
 
-        return null;
+            var lines = await _context.Invoices
+                                       .Where(x => x.Id == request.InvoiceId)
+                                       .SelectMany(x => x.InvoiceLines)
+                                       .Include(x => x.Product)
+                                       .AsNoTracking()
+                                       .ProjectToPaginatedDataAsync(request.PageNumber,
+                                                                     request.PageSize,
+                                                                     InvoiceLineMapper.ToDto,
+                                                                     cancellationToken);
+
+
+            return lines;
     }
 }

@@ -14,5 +14,5 @@ public class InvoiceLine : BaseAuditableEntity
     public decimal UnitPrice { get; set; }
     public decimal LineTotal { get; set; }
     public decimal Discount { get; set; } = 0m;
-    public Product Product { get; set; }
+    public Product Product { get; set; } = null!;
 }

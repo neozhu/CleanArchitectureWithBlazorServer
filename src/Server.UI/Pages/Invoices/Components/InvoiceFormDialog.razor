@@ -1,4 +1,5 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.Invoices.Commands.AddEdit
+@using CleanArchitecture.Blazor.Server.UI.Pages.InvoiceLines
 
 @inherits MudComponentBase
 @inject IValidationService Validator
@@ -8,22 +9,34 @@
     <DialogContent>
         <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
             <MudGrid>
-                @*TODO: define mudform that should be edit fields, for example:*@
                 <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.OfferId)]" @bind-Value="model.OfferId" For="@(() => model.OfferId)" Min="0" Required="false" RequiredError="@L["offer id is required!"]"></MudNumericField >
+                    <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.OfferId)]" @bind-Value="model.OfferId" For="@(() => model.OfferId)" Min="0" Required="false" RequiredError="@L["offer id is required!"]"></MudNumericField >
                 </MudItem> 
-                 <MudItem xs="12" md="6"> 
-                        <MudDatePicker Label="@L[model.GetMemberDescription(x=>x.InvoiceDate)]" @bind-Date="model.InvoiceDate" For="@(() => model.InvoiceDate)" Required="false" RequiredError="@L["invoice date is required!"]"></MudDatePicker>
-                                        </MudItem> 
-                        <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.TotalAmount)]" 
-                            ReadOnly="true"
-                            @bind-Value="model.TotalAmount" For="@(() => model.TotalAmount)" Min="0.00m" 
-                            Required="false" RequiredError="@L["total amount is required!"]"></MudNumericField >
+                
+                <MudItem xs="12" md="6"> 
+                    <MudDatePicker Label="@L[model.GetMemberDescription(x=>x.InvoiceDate)]" @bind-Date="model.InvoiceDate" For="@(() => model.InvoiceDate)" Required="false" RequiredError="@L["invoice date is required!"]"></MudDatePicker>
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Status)]" @bind-Value="model.Status" For="@(() => model.Status)" Required="false" RequiredError="@L["status is required!"]"></MudTextField>
+                
+                <MudItem xs="12" md="6"> 
+                    <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.TotalAmount)]" 
+                        ReadOnly="true" @bind-Value="model.TotalAmount" For="@(() => model.TotalAmount)" Min="0.00m" 
+                        Required="false" RequiredError="@L["total amount is required!"]">
+                    </MudNumericField >
                 </MudItem> 
+
+                <MudItem xs="12" md="6"> 
+                    <MudTextField Label="@L[model.GetMemberDescription(x=>x.Status)]"
+                        @bind-Value="model.Status" For="@(() => model.Status)" 
+                        Required="false" RequiredError="@L["status is required!"]">
+                    </MudTextField>
+                </MudItem> 
+
+                @if (model.Id > 0)
+                {
+                    <MudItem xs="12"> 
+                        <InvoiceLines InvoiceId="@model.Id"/>
+                    </MudItem> 
+                }
 
             </MudGrid>
         </MudForm>
