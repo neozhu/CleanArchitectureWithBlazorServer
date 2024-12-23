@@ -58,7 +58,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L["InvoiceLine"];
-        var result = await Mediator.Send(new GetInvoiceLineByIdQuery() { Id = Id });
+        var result = await Mediator.Send(new GetInvoiceLineByIdQuery() { Id = Id , InvoiceId = 0 });
         result.Map(data =>
         {
             model = data;

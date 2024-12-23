@@ -1,4 +1,6 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.InvoiceLines.Commands.AddEdit
+@using CleanArchitecture.Blazor.Application.Features.Products.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll
 
 @inherits MudComponentBase
 @inject IValidationService Validator
@@ -9,22 +11,44 @@
         <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
             <MudGrid>
                 @*TODO: define mudform that should be edit fields, for example:*@
+
                 <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.InvoiceId)]" @bind-Value="model.InvoiceId" For="@(() => model.InvoiceId)" Min="0" Required="false" RequiredError="@L["invoice id is required!"]"></MudNumericField >
+@*                         <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.ProductId)]" @bind-Value="model.ProductId" 
+                            For="@(() => model.ProductId)" Min="0" Required="false" RequiredError="@L["product id is required!"]"></MudNumericField > *@
+
+                    <MudItem xs="12">
+                        <MudSelect T="int" Label="@L[model.GetMemberDescription(x => x.ProductId)]"
+                                   @bind-Value="model.ProductId"
+                                   For="@(() => model.ProductId)"
+                                   Searchable="true"
+                                   SearchFunc="SearchContacts"
+                                   Required="true"
+                                   RequiredError="@L["Item ID is required!"]">
+                            @foreach (var product in productDtos)
+                            {
+                                <MudSelectItem T="int" Value="@product.Id">
+                                    <MudText Typo="Typo.body1">
+                                        <span class="fw-bold">Code:</span> @product.Code |
+                                        <span class="fw-bold">Name:</span> @product.Name |
+                                        <span class="fw-bold">Price:</span> @product.Price |
+                                        <span class="fw-bold">Retail Price:</span> @product.RetailPrice
+                                    </MudText>
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
                 </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.ProductId)]" @bind-Value="model.ProductId" For="@(() => model.ProductId)" Min="0" Required="false" RequiredError="@L["product id is required!"]"></MudNumericField >
-                </MudItem> 
-<MudItem xs="12" md="6"> 
+                <MudItem xs="12" md="6"> 
                         <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.Quantity)]" @bind-Value="model.Quantity" For="@(() => model.Quantity)" Min="0" Required="false" RequiredError="@L["quantity is required!"]"></MudNumericField >
                 </MudItem> 
-<MudItem xs="12" md="6"> 
+                <MudItem xs="12" md="6"> 
                         <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.UnitPrice)]" @bind-Value="model.UnitPrice" For="@(() => model.UnitPrice)" Min="0.00m" Required="false" RequiredError="@L["unit price is required!"]"></MudNumericField >
                 </MudItem> 
-<MudItem xs="12" md="6"> 
+                <MudItem xs="12" md="6"> 
                         <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.LineTotal)]" @bind-Value="model.LineTotal" For="@(() => model.LineTotal)" Min="0.00m" Required="false" RequiredError="@L["line total is required!"]"></MudNumericField >
                 </MudItem> 
-<MudItem xs="12" md="6"> 
+                <MudItem xs="12" md="6"> 
                         <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.Discount)]" @bind-Value="model.Discount" For="@(() => model.Discount)" Min="0.00m" Required="false" RequiredError="@L["discount is required!"]"></MudNumericField >
                 </MudItem> 
 
@@ -45,7 +69,47 @@
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
     AddEditInvoiceLineCommandValidator _modelValidator = new ();
-    [EditorRequired] [Parameter] public AddEditInvoiceLineCommand model { get; set; } = null!;
+    [EditorRequired] 
+    [Parameter] 
+    public AddEditInvoiceLineCommand model { get; set; } = null!;
+
+    private IEnumerable<ProductDto> productDtos { get; set; } = new List<ProductDto>();
+    private ProductDto? SelectedProduct { get; set; } = new ProductDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (model.Id > 0)
+        {
+            var result = await Mediator.Send(new CleanArchitecture.Blazor
+                .Application.Features.InvoiceLines.Queries.GetById.GetInvoiceLineByIdQuery() 
+            { Id = model.Id, InvoiceId = model.InvoiceId });
+
+            result.Match(data =>
+            {
+                model.InvoiceId = result?.Data?.InvoiceId ?? 0;
+                model.ProductId = result?.Data?.ProductId ?? 0;
+                model.UnitPrice = result?.Data?.UnitPrice ?? 0;
+                model.Quantity = result?.Data?.Quantity ?? 0;
+                model.Discount = result?.Data?.Discount ?? 0;
+                model.LineTotal = result?.Data?.LineTotal ?? 0;
+                return 1;
+
+            }, errors =>
+            {
+                Snackbar.Add(errors, MudBlazor.Severity.Error);
+                return -1;
+            });
+
+        }
+
+        productDtos = await Mediator.Send(new GetAllProductsQuery());
+
+        // model.ItemIdBehaviorSubject.Subscribe(id =>
+        // {
+        //     OnProductChanged(id);
+        // });
+    }
+
     async Task Submit()
     {
         try
