@@ -32,6 +32,7 @@ public class InvoicesWithPaginationQueryHandler :
         try
         {
             var data = await _context.Invoices
+                .Include(x=>x.Supplier)
                 .Include(x => x.InvoiceLines)
                 .ThenInclude(x => x.Product)
                 .AsNoTracking()

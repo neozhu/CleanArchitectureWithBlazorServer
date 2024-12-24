@@ -25,7 +25,7 @@
                   MultiSelection="true"
                   T="InvoiceDto"
                   SelectOnRowClick="false"
-                  RowClick="@(s=>OnView(s.Item))"
+                  RowClick="@(s=> OnView(s.Item))"
                   @bind-SelectedItems="_selectedItems"
                   @bind-SelectedItem="_currentDto"
                   Hover="true" @ref="_table">
@@ -132,6 +132,7 @@
                 </TemplateColumn>
                 @*TODO: Define the fields that should be displayed in data table*@
                 <PropertyColumn Property="x => x.OfferId" Title="@L[_currentDto.GetMemberDescription(x=>x.OfferId)]" />
+                <PropertyColumn Property="x => x.Supplier.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Supplier.Name)]" />
                 <PropertyColumn Property="x => x.InvoiceDate" Format="yyyy-MM-dd" Title="@L[_currentDto.GetMemberDescription(x => x.InvoiceDate)]" />
                 <PropertyColumn Property="x => x.TotalAmount" Title="@L[_currentDto.GetMemberDescription(x=>x.TotalAmount)]" />
                 <PropertyColumn Property="x => x.Status" Title="@L[_currentDto.GetMemberDescription(x=>x.Status)]" />

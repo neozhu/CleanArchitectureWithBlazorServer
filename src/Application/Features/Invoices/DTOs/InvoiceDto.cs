@@ -1,9 +1,10 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.InvoiceLines.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Suppliers.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Invoices.DTOs;
 
 [Description("Invoices")]
-public class InvoiceDto
+public record InvoiceDto
 {
     [Description("Id")]
     public int Id { get; set; }
@@ -18,6 +19,6 @@ public class InvoiceDto
     [Description("Invoice lines")]
     public List<InvoiceLineDto>? InvoiceLines { get; set; }
 
-
+    public SupplierDto Supplier { get; set; } = null!;
 }
 

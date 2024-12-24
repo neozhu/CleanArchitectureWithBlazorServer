@@ -16,4 +16,6 @@ public class Supplier : BaseAuditableEntity
     public string? Country { get; set; } // New property for Country
 
     public List<SupplyItem>? SupplyItems { get; set; }
+
+    public virtual ICollection<Invoice> Invoices { get; set; } = [];
 }

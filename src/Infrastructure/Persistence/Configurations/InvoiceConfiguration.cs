@@ -22,9 +22,11 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
             x.HasOne(ol => ol.Product)
                .WithMany()
                .HasForeignKey(x => x.ProductId);
-
         });
 
+        builder.HasOne(d => d.Supplier)
+            .WithMany(p => p.Invoices)
+            .HasForeignKey(d => d.SupplierId);
     }
 }
 
