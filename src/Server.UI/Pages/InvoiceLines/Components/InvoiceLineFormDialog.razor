@@ -155,6 +155,9 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
+
+            model.Product = SelectedProduct;
+
             var result = await Mediator.Send(model);
             result.Match(data =>
             {
@@ -185,7 +188,10 @@
             {
                 Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
                 await Task.Delay(300);
-                model = new AddEditInvoiceLineCommand() { };
+                var invoiceId = model.InvoiceId;
+
+                model = new AddEditInvoiceLineCommand() { InvoiceId = invoiceId };
+
                 return data;
             }, errors =>
             {

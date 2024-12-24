@@ -1,6 +1,7 @@
 ﻿
 using System.Reactive.Subjects;
 using CleanArchitecture.Blazor.Application.Features.InvoiceLines.Caching;
+using CleanArchitecture.Blazor.Application.Features.InvoiceLines.Mappers;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.InvoiceLines.Commands.AddEdit;
@@ -10,7 +11,7 @@ public class AddEditInvoiceLineCommand : ICacheInvalidatorRequest<Result<int>>
     [Description("Id")]
     public int Id { get; set; }
     [Description("Invoice id")]
-    public int InvoiceId { get; set; }
+    public required int InvoiceId { get; set; }
     int _productId;
     [Description("Product id")]
     public int ProductId
@@ -18,29 +19,13 @@ public class AddEditInvoiceLineCommand : ICacheInvalidatorRequest<Result<int>>
         get => _productId; set
         {
 
-            if (_itemId != value)
+            if (_productId != value)
             {
-                _itemId = value;
+                _productId = value;
                 ItemIdBehaviorSubject.OnNext(value);  // Notify on change
             }
         }
     }
-
-    private int _itemId;
-
-    //[Description("Item id")]
-    //public int ItemId
-    //{
-    //    get => _itemId;
-    //    set
-    //    {
-    //        if (_itemId != value)
-    //        {
-    //            _itemId = value;
-    //            ItemIdBehaviorSubject.OnNext(value);  // Notify on change
-    //        }
-    //    }
-    //}
 
     int _quantity;
     [Description("Quantity")]
@@ -119,31 +104,73 @@ public class AddEditInvoiceLineCommandHandler : IRequestHandler<AddEditInvoiceLi
     }
     public async Task<Result<int>> Handle(AddEditInvoiceLineCommand request, CancellationToken cancellationToken)
     {
+        var invoice = await _context.Invoices.FindAsync(request.InvoiceId, cancellationToken);
+
+        if (invoice is null)
+            return await Result<int>.FailureAsync($"Invoice with with id: [{request.InvoiceId}] not found.");
+
         if (request.Id > 0)
         {
-            //var item = await _context.InvoiceLines.FindAsync(request.Id, cancellationToken);
-            //if (item == null)
-            //{
-            //    return await Result<int>.FailureAsync($"InvoiceLine with id: [{request.Id}] not found.");
-            //}
-            //InvoiceLineMapper.ApplyChangesFrom(request, item);
+            var item = invoice.InvoiceLines.First(x => x.Id == request.Id);
+
+            if (item == null)
+            {
+                return await Result<int>.FailureAsync($"InvoiceLine with id: [{request.Id}] not found.");
+            }
+
+            InvoiceLineMapper.ApplyChangesFrom(request, item);
             //// raise a update domain event
             //item.AddDomainEvent(new InvoiceLineUpdatedEvent(item));
-            //await _context.SaveChangesAsync(cancellationToken);
-            //return await Result<int>.SuccessAsync(item.Id);
+            await _context.SaveChangesAsync(cancellationToken);
+            return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {
-            //var item = InvoiceLineMapper.FromEditCommand(request);
-            //// raise a create domain event
+            var item = InvoiceLineMapper.FromEditCommand(request);
+            // raise a create domain event
             //item.AddDomainEvent(new InvoiceLineCreatedEvent(item));
-            //_context.InvoiceLines.Add(item);
-            //await _context.SaveChangesAsync(cancellationToken);
-            //return await Result<int>.SuccessAsync(item.Id);
+            invoice.InvoiceLines.Add(item);
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return await Result<int>.SuccessAsync(item.Id);
         }
 
+        //var offer = await _context.Offers.FindAsync(request.OfferId, cancellationToken);
 
-        return await Result<int>.SuccessAsync(0);
+        //if (offer is null)
+        //    return await Result<int>.FailureAsync($"Offer with with id: [{request.OfferId}] not found.");
+
+        //if (request.Id > 0)
+        //{
+        //    var item = offer.OfferLines.First(x => x.Id == request.Id);
+
+        //    if (item == null)
+        //    {
+        //        return await Result<int>.FailureAsync($"OfferLine with id: [{request.Id}] not found.");
+        //    }
+        //    OfferLineMapper.ApplyChangesFrom(request, item);
+
+        //    //// raise a update domain event
+        //    //item.AddDomainEvent(new OfferLineUpdatedEvent(item));
+        //    await _context.SaveChangesAsync(cancellationToken);
+
+        //    return await Result<int>.SuccessAsync(item.Id);
+        //}
+        //else
+        //{
+        //    var item = OfferLineMapper.FromEditCommand(request);
+        //    // raise a create domain event
+        //    //item.AddDomainEvent(new OfferLineCreatedEvent(item));
+        //    //_context.OfferLines.Add(item);
+        //    //await _context.SaveChangesAsync(cancellationToken);
+        //    offer.OfferLines.Add(item);
+
+        //    await _context.SaveChangesAsync(cancellationToken);
+
+        //    return await Result<int>.SuccessAsync(item.Id);
+        //}
+
     }
 }
 

@@ -35,14 +35,16 @@ public class InvoiceLinesWithPaginationQueryHandler :
 
         public async Task<PaginatedData<InvoiceLineDto>> Handle(InvoiceLinesWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            //var data = await _context.InvoiceLines.OrderBy($"{request.OrderBy} {request.SortDirection}")
-            //                                        .ProjectToPaginatedDataAsync(request.Specification, 
-            //                                                                     request.PageNumber, 
-            //                                                                     request.PageSize, 
-            //                                                                     InvoiceLineMapper.ToDto, 
-            //                                                                     cancellationToken);
-            // return data;
+        //var data = await _context.InvoiceLines.OrderBy($"{request.OrderBy} {request.SortDirection}")
+        //                                        .ProjectToPaginatedDataAsync(request.Specification, 
+        //                                                                     request.PageNumber, 
+        //                                                                     request.PageSize, 
+        //                                                                     InvoiceLineMapper.ToDto, 
+        //                                                                     cancellationToken);
+        // return data;
 
+        try
+        {
             var lines = await _context.Invoices
                                        .Where(x => x.Id == request.InvoiceId)
                                        .SelectMany(x => x.InvoiceLines)
@@ -55,5 +57,13 @@ public class InvoiceLinesWithPaginationQueryHandler :
 
 
             return lines;
+        }
+        catch (Exception ex)
+        {
+            var error = ex.Message;
+            throw;
+        }
+
+      
     }
 }

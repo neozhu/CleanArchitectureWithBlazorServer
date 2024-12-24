@@ -29,12 +29,25 @@ public class InvoicesWithPaginationQueryHandler :
 
     public async Task<PaginatedData<InvoiceDto>> Handle(InvoicesWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Invoices.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                                                .ProjectToPaginatedDataAsync(request.Specification,
-                                                                             request.PageNumber,
-                                                                             request.PageSize,
-                                                                             InvoiceMapper.ToDto,
-                                                                             cancellationToken);
-        return data;
+        try
+        {
+            var data = await _context.Invoices
+                .Include(x => x.InvoiceLines)
+                .ThenInclude(x => x.Product)
+                .AsNoTracking()
+                .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                                                    .ProjectToPaginatedDataAsync(request.Specification,
+                                                                                 request.PageNumber,
+                                                                                 request.PageSize,
+                                                                                 InvoiceMapper.ToDto,
+                                                                                 cancellationToken);
+            return data;
+        }
+        catch (Exception ex)
+        {
+            var message = $"Error: {ex.Message} - {ex.InnerException?.Message}";
+            throw;
+        }
+
     }
 }

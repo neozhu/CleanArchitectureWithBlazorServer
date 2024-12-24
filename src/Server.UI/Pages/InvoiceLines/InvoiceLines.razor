@@ -182,6 +182,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        InvoiceLineCacheKey.Refresh();
+
         Title = L[_currentDto.GetClassDescription()];
         var state = await AuthState;
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.InvoiceLines.Create)).Succeeded;
@@ -237,7 +239,7 @@
                 { x=>x.model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<InvoiceLineFormDialog>(title, parameters, options);
+        var dialog = await DialogService.ShowAsync<InvoiceLineFormDialog>(title, parameters, options);
         var state = await dialog.Result;
 
         if (state != null && !state.Canceled)
@@ -252,7 +254,11 @@
     }
     private async Task OnCreate()
     {
-        var command = new AddEditInvoiceLineCommand();
+        var command = new AddEditInvoiceLineCommand
+        {
+                InvoiceId = this.InvoiceId
+        };
+
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["InvoiceLine"]), command);
     }
     private async Task OnClone()
@@ -263,7 +269,13 @@
     }
     private async Task OnEdit(InvoiceLineDto dto)
     {
-       Navigation.NavigateTo($"/pages/InvoiceLines/edit/{dto.Id}");
+        var command = new AddEditInvoiceLineCommand
+            {
+                InvoiceId = this.InvoiceId,
+                Id = dto.Id
+            };
+
+        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["InvoiceLine"]), command);
     }
 
     private async Task OnDelete(InvoiceLineDto dto)
