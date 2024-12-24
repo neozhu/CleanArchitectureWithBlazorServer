@@ -38,18 +38,42 @@
                         </MudSelect>
                     </MudItem>
 
+                </MudItem>
+
+                <MudItem xs="12" md="6">
+                    <MudNumericField Label="Retail Price"
+                                     @bind-Value="SelectedProduct.RetailPrice"
+                                     For="@(() => SelectedProduct.RetailPrice)"
+                                     ReadOnly="true">
+                    </MudNumericField>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudNumericField Label="Price"
+                                     @bind-Value="SelectedProduct.Price"
+                                     For="@(() => SelectedProduct.Price)"
+                                     ReadOnly="true">
+                    </MudNumericField>
+                </MudItem>
+
+                <MudItem xs="12" md="6"> 
+                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.Quantity)]" @bind-Value="model.Quantity" 
+                            For="@(() => model.Quantity)" Min="0" Required="false" 
+                            RequiredError="@L["quantity is required!"]"></MudNumericField >
                 </MudItem> 
                 <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.Quantity)]" @bind-Value="model.Quantity" For="@(() => model.Quantity)" Min="0" Required="false" RequiredError="@L["quantity is required!"]"></MudNumericField >
+                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.UnitPrice)]" @bind-Value="model.UnitPrice"
+                            For="@(() => model.UnitPrice)" Min="0.00m" Required="false" 
+                            RequiredError="@L["unit price is required!"]"></MudNumericField >
                 </MudItem> 
                 <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.UnitPrice)]" @bind-Value="model.UnitPrice" For="@(() => model.UnitPrice)" Min="0.00m" Required="false" RequiredError="@L["unit price is required!"]"></MudNumericField >
+                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.LineTotal)]" 
+                            @bind-Value="model.LineTotal" For="@(() => model.LineTotal)" Min="0.00m" 
+                            Required="false" RequiredError="@L["line total is required!"]"></MudNumericField >
                 </MudItem> 
                 <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.LineTotal)]" @bind-Value="model.LineTotal" For="@(() => model.LineTotal)" Min="0.00m" Required="false" RequiredError="@L["line total is required!"]"></MudNumericField >
-                </MudItem> 
-                <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.Discount)]" @bind-Value="model.Discount" For="@(() => model.Discount)" Min="0.00m" Required="false" RequiredError="@L["discount is required!"]"></MudNumericField >
+                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.Discount)]" @bind-Value="model.Discount" 
+                            For="@(() => model.Discount)" Min="0.00m" Required="false" 
+                            RequiredError="@L["discount is required!"]"></MudNumericField >
                 </MudItem> 
 
             </MudGrid>
@@ -75,6 +99,7 @@
 
     private IEnumerable<ProductDto> productDtos { get; set; } = new List<ProductDto>();
     private ProductDto? SelectedProduct { get; set; } = new ProductDto();
+    private IDisposable? Subscription;
 
     protected override async Task OnInitializedAsync()
     {
@@ -104,12 +129,24 @@
 
         productDtos = await Mediator.Send(new GetAllProductsQuery());
 
-        // model.ItemIdBehaviorSubject.Subscribe(id =>
-        // {
-        //     OnProductChanged(id);
-        // });
+        model.ItemIdBehaviorSubject.Subscribe(id =>
+        {
+            OnProductChanged(id);
+        });
     }
 
+    private void OnProductChanged(int productId)
+    {
+        if (productId == 0)
+            return;
+
+        SelectedProduct = productDtos.FirstOrDefault(p => p.Id == productId);
+
+        if (model.Quantity == 0)
+            model.Quantity = 1;
+
+        this.model.UnitPrice = SelectedProduct?.RetailPrice ?? 0;
+    }
     async Task Submit()
     {
         try
