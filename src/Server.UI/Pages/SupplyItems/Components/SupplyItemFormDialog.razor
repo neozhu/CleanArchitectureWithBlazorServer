@@ -43,7 +43,7 @@
                 <MudItem xs="12" md="6">
                     <MudSelect T="SupplierDto"
                                Required="true" RequiredError="@L["customer id is required!"]"
-                               Label="Select Contact" @bind-Value="SelectedSupplier">
+                               Label="Select Supplier" @bind-Value="SelectedSupplier">
                         @if (SupplierDtos is not null)
                         {
                             @foreach (var supplier in SupplierDtos)

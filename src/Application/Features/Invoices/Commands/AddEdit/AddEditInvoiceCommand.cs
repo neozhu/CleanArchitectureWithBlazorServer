@@ -19,6 +19,9 @@ public class AddEditInvoiceCommand : ICacheInvalidatorRequest<Result<int>>
     [Description("Invoice lines")]
     public List<InvoiceLineDto>? InvoiceLines { get; set; }
 
+    [Description("Supplier Id")]
+    public int SupplierId { get; set; } 
+
 
     public string CacheKey => InvoiceCacheKey.GetAllCacheKey;
     public IEnumerable<string>? Tags => InvoiceCacheKey.Tags;

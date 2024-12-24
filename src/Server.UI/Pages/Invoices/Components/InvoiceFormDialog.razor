@@ -1,5 +1,7 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.Invoices.Commands.AddEdit
 @using CleanArchitecture.Blazor.Server.UI.Pages.InvoiceLines
+@using CleanArchitecture.Blazor.Application.Features.Suppliers.DTOs
+@using CleanArchitecture.Blazor.Application.Features.Suppliers.Queries.GetAll
 
 @inherits MudComponentBase
 @inject IValidationService Validator
@@ -31,6 +33,23 @@
                     </MudTextField>
                 </MudItem> 
 
+                                <MudItem xs="12" md="6">
+                    <MudSelect T="SupplierDto"
+                               Required="true" RequiredError="@L["Supplier id is required!"]"
+                               Label="Select Supplier" @bind-Value="SelectedSupplier">
+                        @if (SupplierDtos is not null)
+                        {
+                            @foreach (var supplier in SupplierDtos)
+                            {
+                                <MudSelectItem Value="supplier"
+                                               Label="@($"{supplier.Name} {supplier.Email}")">
+                                    @($"{supplier.Name} {supplier.Email}")
+                                </MudSelectItem>
+                            }
+                        }
+                    </MudSelect>
+                </MudItem>
+
                 @if (model.Id > 0)
                 {
                     <MudItem xs="12"> 
@@ -49,6 +68,10 @@
 </MudDialog>
 
 @code {
+    private SupplierDto SelectedSupplier { get; set; } = new();
+    private IEnumerable<SupplierDto>? SupplierDtos;
+    private GetAllSuppliersQuery Query { get; set; } = new();
+
     MudForm? _form;
     private bool _saving = false;
     private bool _savingnew = false;
@@ -56,6 +79,22 @@
     IMudDialogInstance MudDialog { get; set; } = default!;
     AddEditInvoiceCommandValidator _modelValidator = new ();
     [EditorRequired] [Parameter] public AddEditInvoiceCommand model { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Mediator.Send(Query).ConfigureAwait(false);
+
+        if (!result.Any())
+            return;
+
+        SupplierDtos = result.ToList();
+
+        SelectedSupplier = model.SupplierId > 0
+             ? SupplierDtos.FirstOrDefault(x => x.Id == model.SupplierId)
+             : SupplierDtos.FirstOrDefault();
+
+    }
+
     async Task Submit()
     {
         try
