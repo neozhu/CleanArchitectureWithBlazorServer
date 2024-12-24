@@ -281,7 +281,8 @@
     private async Task OnDelete(InvoiceLineDto dto)
     {
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Id.ToString());
-        var command = new DeleteInvoiceLineCommand(new int[] { dto.Id });
+        var command = new DeleteInvoiceLineCommand(new int[] { dto.Id } , dto.InvoiceId);
+
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText,async () =>
         {
             await InvokeAsync(async () =>
@@ -295,7 +296,11 @@
     private async Task OnDeleteChecked()
     {
         var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
-        var command = new DeleteInvoiceLineCommand(_selectedItems.Select(x => x.Id).ToArray());
+
+        var invoiceId = _selectedItems.First().InvoiceId;
+
+        var command = new DeleteInvoiceLineCommand(_selectedItems.Select(x => x.Id).ToArray() , invoiceId );
+
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText,async () =>
         {
             await InvokeAsync(async () =>
