@@ -49,6 +49,20 @@
                         }
                     </MudSelect>
                 </MudItem>
+                
+                <MudItem xs="12" md="6">
+
+                <PicklistAutocomplete Picklist="Picklist.InvoiceType" T="string"
+                                      Label="@L["Invoice Type"]"
+                                      For="@(() => model.Status)"
+                                      ResetValueOnEmptyText="true"
+                                      ShowProgressIndicator="true"
+                                      @bind-Value="model.Status">
+                    <ProgressIndicatorTemplate>
+                        <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                    </ProgressIndicatorTemplate>
+                </PicklistAutocomplete>
+                </MudItem>
 
                 @if (model.Id > 0)
                 {

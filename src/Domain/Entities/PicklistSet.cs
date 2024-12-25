@@ -18,5 +18,6 @@ public enum Picklist
 {
     [Description("Status")] Status,
     [Description("Unit")] Unit,
-    [Description("Brand")] Brand
+    [Description("Brand")] Brand,
+    [Description("Invoice Type")] InvoiceType
 }
