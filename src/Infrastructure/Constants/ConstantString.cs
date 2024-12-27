@@ -22,6 +22,7 @@ public static class ConstantString
     public static string GoBack => Localize("Back");
     public static string Refresh => Localize("Refresh");
     public static string Edit => Localize("Edit");
+    public static string CreateInvoice => Localize("Create Invoice from Offer");
     public static string Submit => Localize("Submit");
     public static string Delete => Localize("Delete");
     public static string Add => Localize("Add");
@@ -100,6 +101,8 @@ public static class ConstantString
     public static string Waiting => Localize("Wating...");
     public static string Processing => Localize("Processing...");
     public static string DeleteConfirmationTitle => Localize("Delete Confirmation");
+
+    public static string CreateInvoiceConfirmationTitle => Localize("Create Invoice ?");
     public static string LogoutConfirmationTitle => Localize("Logout Confirmation");
 
     public static string LogoutConfirmation =>

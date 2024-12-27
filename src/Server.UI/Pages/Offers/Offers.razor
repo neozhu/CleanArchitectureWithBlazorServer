@@ -49,8 +49,7 @@
                     </MudButton>
                     @if (_canCreate)
                     {
-                        <MudButton StartIcon="@Icons.Material.Outlined.Add"
-                        OnClick="OnCreate">
+                        <MudButton StartIcon="@Icons.Material.Outlined.Add" OnClick="OnCreate">
                             @ConstantString.New
                         </MudButton>
                     }
@@ -112,6 +111,8 @@
                         @if (_canEdit)
                         {
                             <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+
+                            <MudMenuItem OnClick="@(()=>OnCreateInvoiceFromOffer(context.Item))">@ConstantString.CreateInvoice</MudMenuItem>
                         }
                         @if (_canDelete)
                         {
@@ -270,10 +271,42 @@
         await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Offer"]), command);
     }
 
+    private async Task OnCreateInvoiceFromOffer(OfferDto dto)
+    {
+        var command = OfferMapper.ToEditCommand(dto);
+        var contentText = string.Format(ConstantString.CreateInvoiceConfirmationTitle, dto.Id.ToString());
+
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.CreateInvoiceConfirmationTitle, 
+            string.Format(ConstantString.CreateInvoiceConfirmationTitle, dto.Id),
+          async () =>
+          {
+              await InvokeAsync(async () =>
+              {
+
+
+                  // var deleteRoles = await RoleManager.Roles.Where(x => x.Id == dto.Id).ToListAsync();
+                  // foreach (var role in deleteRoles)
+                  // {
+                  //     var deleteResult = await RoleManager.DeleteAsync(role);
+                  //     if (!deleteResult.Succeeded)
+                  //     {
+                  //         Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+                  //         return;
+                  //     }
+                  // }
+
+                  Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
+                  await OnRefresh();
+              });
+          });
+
+    }
+
     private async Task OnDelete(OfferDto dto)
     {
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Id.ToString());
         var command = new DeleteOfferCommand(new int[] { dto.Id });
+
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {
             await InvokeAsync(async () =>

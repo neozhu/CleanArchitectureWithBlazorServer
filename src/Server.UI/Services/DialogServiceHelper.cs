@@ -29,7 +29,9 @@ public class DialogServiceHelper
     /// <param name="onConfirm">The action to perform on confirmation.</param>
     /// <param name="onCancel">The action to perform on cancellation (optional).</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task ShowDeleteConfirmationDialogAsync(IRequest<Result<int>> command, string title, string contentText, Func<Task> onConfirm, Func<Task>? onCancel = null)
+    public async Task ShowDeleteConfirmationDialogAsync(IRequest<Result<int>> command, string title, string contentText, 
+            Func<Task> onConfirm, 
+            Func<Task>? onCancel = null)
     {
         var parameters = new DialogParameters
             {
