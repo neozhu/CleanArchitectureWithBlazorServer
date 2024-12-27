@@ -45,9 +45,12 @@ public class GetAllProductsQueryHandler :
 
     public async Task<ProductDto?> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Products.Where(x => x.Id == request.Id)
+        var data = await _context.Products
+                        .Where(x => x.Id == request.Id)
+                        .AsNoTracking()
                        .ProjectTo()
                        .FirstOrDefaultAsync(cancellationToken);
+
         return data;
     }
 }

@@ -13,7 +13,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Offers.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Offers.Commands.AddEdit
 @using CleanArchitecture.Blazor.Server.UI.Pages.Offers.Components
-
+@using CleanArchitecture.Blazor.Application.Features.SupplyItems.Queries.GetById
 @inject IStringLocalizer<Offers> L
 @attribute [Authorize(Policy = Permissions.Offers.View)]
 <PageTitle>@Title</PageTitle>
@@ -62,14 +62,14 @@
                         @if (_canDelete)
                         {
                             <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                            OnClick="OnDeleteChecked">
+                                         OnClick="OnDeleteChecked">
                                 @ConstantString.Delete
                             </MudMenuItem>
                         }
                         @if (_canExport)
                         {
                             <MudMenuItem Disabled="@_exporting"
-                            OnClick="OnExport">
+                                         OnClick="OnExport">
                                 @ConstantString.Export
                             </MudMenuItem>
                         }
@@ -79,8 +79,8 @@
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                     <ActivatorContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
-                                        Variant="Variant.Text"
-                                        Disabled="@_uploading">
+                                                   Variant="Variant.Text"
+                                                   Disabled="@_uploading">
                                             @ConstantString.Import
                                         </MudButton>
                                     </ActivatorContent>
@@ -93,7 +93,7 @@
                     @if (_canSearch)
                     {
                         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                         </MudTextField>
                     }
                 </MudStack>
@@ -107,8 +107,8 @@
                 @if (_canEdit || _canDelete)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
-                    Dense="true"
-                    EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                             Dense="true"
+                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
                             <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
@@ -124,10 +124,10 @@
                 else
                 {
                     <MudIconButton Variant="Variant.Filled"
-                    Disabled="true"
-                    Icon="@Icons.Material.Filled.DoNotTouch"
-                    Size="Size.Small"
-                    Color="Color.Surface">
+                                   Disabled="true"
+                                   Icon="@Icons.Material.Filled.DoNotTouch"
+                                   Size="Size.Small"
+                                   Color="Color.Surface">
                         @ConstantString.NoAllowed
                     </MudIconButton>
                 }
@@ -176,6 +176,15 @@
     private IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
 
     [Inject] private IPicklistService PicklistService { get; set; } = default!;
+
+    private readonly HashSet<(
+    int SupplierId,
+    int ItemId,
+    int Quantity,
+    decimal? Discount,
+    decimal? UnitPrice,
+    decimal LineTotal,
+    Product? Product)> _uniquePairs = new();
 
     private bool _canSearch;
     private bool _canCreate;
@@ -275,37 +284,94 @@
         await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Offer"]), command);
     }
 
+    public void AddUniquePair(int supplierId,int itemId,int quantity,decimal? discount,
+        decimal? unitPrice,decimal lineTotal,Product? product)
+    {
+        var pair = (supplierId, itemId, quantity, discount, unitPrice, lineTotal, product);
+        if (!_uniquePairs.Contains(pair))
+        {
+            _uniquePairs.Add(pair);
+        }
+    }
+
     private async Task OnCreateInvoiceFromOffer(OfferDto dto)
     {
         var command = OfferMapper.ToEditCommand(dto);
         var contentText = string.Format(ConstantString.CreateInvoiceConfirmationTitle, dto.Id.ToString());
 
-        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.CreateInvoiceConfirmationTitle, 
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.CreateInvoiceConfirmationTitle,
             string.Format(ConstantString.CreateInvoiceConfirmationTitle, dto.Id),
           async () =>
           {
               await InvokeAsync(async () =>
               {
+                  var uniquePairs = new HashSet<(
+                  int SupplierId,
+                  int ItemId,
+                  int Quantity,
+                  decimal? Discount,
+                  decimal? UnitPrice,
+                  decimal LineTotal,
+                  Product? product)>();
+
+                  foreach (var line in dto.OfferLines)
+                  {
+                      var supplierItem = await Mediator.Send(new GetSupplyItemByProductIdQuery() { ProductId = line.ItemId });
+
+                      var supplierId = supplierItem?.Data?.SupplierId ?? 0;
+
+                      var pair = (SupplierId: supplierId,
+                      ItemId: line.ItemId,
+                      Quantity: line.Quantity,
+                      Discount: line.Discount,
+                      LinePrice: line.LinePrice,
+                      LineTotal: line.LineTotal,
+                      Product: line.Product);
+
+                      if (pair.SupplierId > 0)
+                          uniquePairs.Add(pair);
+                  }
+
+                  var groupedBySupplier = uniquePairs
+                    .GroupBy(pair => pair.SupplierId)
+                    .ToDictionary(group => group.Key, group => group.ToList());
+
                   var invoicetype = PicklistService.DataSource
-                  .SingleOrDefault(x => x.Name == Picklist.InvoiceType 
+                        .SingleOrDefault(x => x.Name == Picklist.InvoiceType
                       && x.Value == PicklistInvoiceType.Invoice.ToString());
 
-                  var invoiceCommand = new AddEditInvoiceCommand()
-                      {
-                          InvoiceDate = DateTime.Now,
-                          OfferId = dto.Id,
-                          Status = invoicetype?.Text,
-                          InvoiceLines = dto.OfferLines?.Select(x => new CleanArchitecture.Blazor.Application.
-                          Features.InvoiceLines.DTOs.InvoiceLineDto()
+                  foreach (var group in groupedBySupplier)
+                  {
+                      var invoiceCommand = new AddEditInvoiceCommand()
                           {
-                              ProductId = x.ItemId,
-                              Quantity = x.Quantity,
-                              UnitPrice = x.LinePrice ?? 0,
-                              LineTotal = x.LineTotal
-                          })
-                          .ToList()
-                      };
+                              InvoiceDate = DateTime.Now,
+                              OfferId = dto.Id,
+                              Status = invoicetype?.Text,
+                              SupplierId = group.Key
+                          };
 
+                      foreach (var pair in group.Value)
+                      {
+                          invoiceCommand?.InvoiceLines?.Add(new Application.Features.InvoiceLines.DTOs.InvoiceLineDto
+                              {
+                                  ProductId = pair.ItemId,
+                                  Quantity = pair.Quantity,
+                                  UnitPrice = pair.UnitPrice ?? 0m,
+                                  Discount = pair.Discount ?? 0m,
+                                  LineTotal = pair.LineTotal
+                              });
+                      }
+
+                      var createInvoiceResult = await Mediator
+                      .Send(invoiceCommand ?? throw new Exception(nameof(invoiceCommand)))
+                            .ConfigureAwait(false);
+
+                      if (!createInvoiceResult.Succeeded)
+                      {
+                          Snackbar.Add($"{string.Join(",", createInvoiceResult.Errors.Select(x => x).ToArray())}",
+                            Severity.Error); return;
+                      }
+                  }
 
                   var offertype = PicklistService.DataSource
                         .SingleOrDefault(x => x.Name == Picklist.Offer
@@ -313,19 +379,10 @@
 
                   command.Status = offertype?.Text;
 
-                  var createInvoiceResult = await Mediator.Send(invoiceCommand).ConfigureAwait(false);
-
-                  if (!createInvoiceResult.Succeeded)
-                  {
-                      Snackbar.Add($"{string.Join(",", createInvoiceResult.Errors.Select(x => x).ToArray())}",
-                            Severity.Error); return;
-                  }
-
                   var updateOfferResult = await Mediator.Send(command).ConfigureAwait(false);
 
-                  Snackbar.Add($"{ConstantString.Refresh}", Severity.Info);
+                  Snackbar.Add($"{ConstantString.CreateSuccess}", Severity.Info);
 
-                  await OnRefresh();
               });
           });
 

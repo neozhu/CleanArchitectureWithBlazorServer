@@ -8,7 +8,7 @@ public record InvoiceLineDto
 {
     [Description("Id")]
     public int Id { get; set; }
-        [Description("Invoice id")]
+    [Description("Invoice id")]
     public int InvoiceId {get;set;} 
     [Description("Product id")]
     public int ProductId {get;set;} 

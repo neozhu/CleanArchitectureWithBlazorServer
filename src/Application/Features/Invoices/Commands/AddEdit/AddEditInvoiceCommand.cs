@@ -17,7 +17,7 @@ public class AddEditInvoiceCommand : ICacheInvalidatorRequest<Result<int>>
     [Description("Status")]
     public string? Status { get; set; }
     [Description("Invoice lines")]
-    public List<InvoiceLineDto>? InvoiceLines { get; set; }
+    public List<InvoiceLineDto>? InvoiceLines { get; set; } = [];
 
     [Description("Supplier Id")]
     public int SupplierId { get; set; } 
@@ -47,6 +47,7 @@ public class AddEditInvoiceCommandHandler : IRequestHandler<AddEditInvoiceComman
                     return await Result<int>.FailureAsync($"Invoice with id: [{request.Id}] not found.");
                 }
                 InvoiceMapper.ApplyChangesFrom(request, item);
+                
                 // raise a update domain event
                 //item.AddDomainEvent(new InvoiceUpdatedEvent(item));
                 await _context.SaveChangesAsync(cancellationToken);
@@ -57,6 +58,9 @@ public class AddEditInvoiceCommandHandler : IRequestHandler<AddEditInvoiceComman
                 var item = InvoiceMapper.FromEditCommand(request);
                 // raise a create domain event
                 //item.AddDomainEvent(new InvoiceCreatedEvent(item));
+
+                item.InvoiceLines.ForEach(x => x.Product = null);
+
                 _context.Invoices.Add(item);
                 await _context.SaveChangesAsync(cancellationToken);
                 return await Result<int>.SuccessAsync(item.Id);
