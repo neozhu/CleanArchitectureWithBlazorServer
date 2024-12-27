@@ -37,28 +37,37 @@ public class AddEditInvoiceCommandHandler : IRequestHandler<AddEditInvoiceComman
     }
     public async Task<Result<int>> Handle(AddEditInvoiceCommand request, CancellationToken cancellationToken)
     {
-        if (request.Id > 0)
+        try
         {
-            var item = await _context.Invoices.FindAsync(request.Id, cancellationToken);
-            if (item == null)
+            if (request.Id > 0)
             {
-                return await Result<int>.FailureAsync($"Invoice with id: [{request.Id}] not found.");
+                var item = await _context.Invoices.FindAsync(request.Id, cancellationToken);
+                if (item == null)
+                {
+                    return await Result<int>.FailureAsync($"Invoice with id: [{request.Id}] not found.");
+                }
+                InvoiceMapper.ApplyChangesFrom(request, item);
+                // raise a update domain event
+                //item.AddDomainEvent(new InvoiceUpdatedEvent(item));
+                await _context.SaveChangesAsync(cancellationToken);
+                return await Result<int>.SuccessAsync(item.Id);
             }
-            InvoiceMapper.ApplyChangesFrom(request, item);
-            // raise a update domain event
-            //item.AddDomainEvent(new InvoiceUpdatedEvent(item));
-            await _context.SaveChangesAsync(cancellationToken);
-            return await Result<int>.SuccessAsync(item.Id);
+            else
+            {
+                var item = InvoiceMapper.FromEditCommand(request);
+                // raise a create domain event
+                //item.AddDomainEvent(new InvoiceCreatedEvent(item));
+                _context.Invoices.Add(item);
+                await _context.SaveChangesAsync(cancellationToken);
+                return await Result<int>.SuccessAsync(item.Id);
+            }
         }
-        else
+        catch (Exception e)
         {
-            var item = InvoiceMapper.FromEditCommand(request);
-            // raise a create domain event
-            //item.AddDomainEvent(new InvoiceCreatedEvent(item));
-            _context.Invoices.Add(item);
-            await _context.SaveChangesAsync(cancellationToken);
-            return await Result<int>.SuccessAsync(item.Id);
+            var ex = e.Message;
+            throw;
         }
+
 
     }
 }

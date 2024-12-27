@@ -4,7 +4,7 @@ using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 namespace CleanArchitecture.Blazor.Application.Features.InvoiceLines.DTOs;
 
 [Description("InvoiceLines")]
-public class InvoiceLineDto
+public record InvoiceLineDto
 {
     [Description("Id")]
     public int Id { get; set; }
@@ -21,7 +21,7 @@ public class InvoiceLineDto
     [Description("Discount")]
     public decimal Discount {get;set;} 
     [Description("Product")]
-    public ProductDto Product {get;set;} 
+    public ProductDto Product {get;set;}  = new ProductDto();
 
 
 }

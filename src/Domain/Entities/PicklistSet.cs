@@ -19,5 +19,18 @@ public enum Picklist
     [Description("Status")] Status,
     [Description("Unit")] Unit,
     [Description("Brand")] Brand,
-    [Description("Invoice Type")] InvoiceType
+    [Description("Invoice Type")] InvoiceType,
+    [Description("Offer")] Offer
+}
+
+public enum PicklistInvoiceType
+{
+    [Description("Status")] Order , 
+    [Description("Unit")] Invoice 
+}
+
+public enum PicklistOfferInvoiceType
+{
+    [Description("Status")] Order = 1,
+    [Description("Unit")] Invoice = 2,
 }

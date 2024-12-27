@@ -1,6 +1,7 @@
 ﻿@page "/pages/Offers"
 
 @using BlazorDownloadFile
+@using CleanArchitecture.Blazor.Application.Features.Invoices.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Offers.Caching
 @using CleanArchitecture.Blazor.Application.Features.Offers.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Offers.Mappers
@@ -173,6 +174,9 @@
     private OffersWithPaginationQuery Query { get; set; } = new();
     [Inject]
     private IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
+
+    [Inject] private IPicklistService PicklistService { get; set; } = default!;
+
     private bool _canSearch;
     private bool _canCreate;
     private bool _canEdit;
@@ -282,20 +286,45 @@
           {
               await InvokeAsync(async () =>
               {
+                  var invoicetype = PicklistService.DataSource
+                  .SingleOrDefault(x => x.Name == Picklist.InvoiceType 
+                      && x.Value == PicklistInvoiceType.Invoice.ToString());
+
+                  var invoiceCommand = new AddEditInvoiceCommand()
+                      {
+                          InvoiceDate = DateTime.Now,
+                          OfferId = dto.Id,
+                          Status = invoicetype?.Text,
+                          InvoiceLines = dto.OfferLines?.Select(x => new CleanArchitecture.Blazor.Application.
+                          Features.InvoiceLines.DTOs.InvoiceLineDto()
+                          {
+                              ProductId = x.ItemId,
+                              Quantity = x.Quantity,
+                              UnitPrice = x.LinePrice ?? 0,
+                              LineTotal = x.LineTotal
+                          })
+                          .ToList()
+                      };
 
 
-                  // var deleteRoles = await RoleManager.Roles.Where(x => x.Id == dto.Id).ToListAsync();
-                  // foreach (var role in deleteRoles)
-                  // {
-                  //     var deleteResult = await RoleManager.DeleteAsync(role);
-                  //     if (!deleteResult.Succeeded)
-                  //     {
-                  //         Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-                  //         return;
-                  //     }
-                  // }
+                  var offertype = PicklistService.DataSource
+                        .SingleOrDefault(x => x.Name == Picklist.Offer
+                        && x.Value == PicklistOfferInvoiceType.Invoice.ToString());
 
-                  Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
+                  command.Status = offertype?.Text;
+
+                  var createInvoiceResult = await Mediator.Send(invoiceCommand).ConfigureAwait(false);
+
+                  if (!createInvoiceResult.Succeeded)
+                  {
+                      Snackbar.Add($"{string.Join(",", createInvoiceResult.Errors.Select(x => x).ToArray())}",
+                            Severity.Error); return;
+                  }
+
+                  var updateOfferResult = await Mediator.Send(command).ConfigureAwait(false);
+
+                  Snackbar.Add($"{ConstantString.Refresh}", Severity.Info);
+
                   await OnRefresh();
               });
           });
