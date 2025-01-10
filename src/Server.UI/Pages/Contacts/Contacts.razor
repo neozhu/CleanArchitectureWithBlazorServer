@@ -49,7 +49,7 @@
                     @if (_canCreate)
                     {
                         <MudButton StartIcon="@Icons.Material.Outlined.Add"
-                                   OnClick="OnCreate">
+                        OnClick="OnCreate">
                             @ConstantString.New
                         </MudButton>
                     }
@@ -61,14 +61,14 @@
                         @if (_canDelete)
                         {
                             <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                                         OnClick="OnDeleteChecked">
+                            OnClick="OnDeleteChecked">
                                 @ConstantString.Delete
                             </MudMenuItem>
                         }
                         @if (_canExport)
                         {
                             <MudMenuItem Disabled="@_exporting"
-                                         OnClick="OnExport">
+                            OnClick="OnExport">
                                 @ConstantString.Export
                             </MudMenuItem>
                         }
@@ -78,8 +78,8 @@
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                     <ActivatorContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
-                                                   Variant="Variant.Text"
-                                                   Disabled="@_uploading">
+                                        Variant="Variant.Text"
+                                        Disabled="@_uploading">
                                             @ConstantString.Import
                                         </MudButton>
                                     </ActivatorContent>
@@ -92,7 +92,7 @@
                     @if (_canSearch)
                     {
                         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                         </MudTextField>
                     }
                 </MudStack>
@@ -106,8 +106,8 @@
                 @if (_canEdit || _canDelete)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                    Dense="true"
+                    EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
                             <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
@@ -121,10 +121,10 @@
                 else
                 {
                     <MudIconButton Variant="Variant.Filled"
-                                   Disabled="true"
-                                   Icon="@Icons.Material.Filled.DoNotTouch"
-                                   Size="Size.Small"
-                                   Color="Color.Surface">
+                    Disabled="true"
+                    Icon="@Icons.Material.Filled.DoNotTouch"
+                    Size="Size.Small"
+                    Color="Color.Surface">
                         @ConstantString.NoAllowed
                     </MudIconButton>
                 }
@@ -144,7 +144,7 @@
         <PropertyColumn Property="x => x.Country" Title="@L[_currentDto.GetMemberDescription(x=>x.Country)]" />
 
     </Columns>
-    
+
     <PagerContent>
         <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
     </PagerContent>
@@ -234,7 +234,7 @@
                 { x=>x.model,command },
             };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<ContactFormDialog>(title, parameters, options);
+        var dialog = await DialogService.ShowAsync<ContactFormDialog>(title, parameters, options);
         var state = await dialog.Result;
 
         if (state != null && !state.Canceled)
@@ -258,9 +258,10 @@
         var command = ContactMapper.CloneFromDto(dto);
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Contact"]), command);
     }
-    private async Task OnEdit(ContactDto dto)
+    private Task OnEdit(ContactDto dto)
     {
         Navigation.NavigateTo($"/pages/Contacts/edit/{dto.Id}");
+        return Task.CompletedTask;
     }
 
     private async Task OnDelete(ContactDto dto)
