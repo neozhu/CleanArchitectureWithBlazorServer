@@ -57,7 +57,7 @@
                 <MudStack Spacing="0">
                     <MudText Typo="Typo.subtitle2" Class="mb-2">@Title</MudText>
                     <MudSelect T="string" Style="min-width:120px" ValueChanged="OnChangedListView" Value="@_selectedTenantId" Dense="true" Label="@L["List View"]">
-                        <MudSelectItem T="string" Value="@(" ")">@L["ALL"]</MudSelectItem>
+                        <MudSelectItem T="string" Value="@string.Empty">@L["ALL"]</MudSelectItem>
                         @foreach (var item in TenantsService.DataSource)
                         {
                             <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
@@ -68,16 +68,16 @@
             <MudStack Spacing="0" AlignItems="AlignItems.End">
                 <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
                     <MudButton 
-                               Disabled="@_loading"
-                               OnClick="@(() => OnRefresh())"
-                               StartIcon="@Icons.Material.Outlined.Refresh">
+                    Disabled="@_loading"
+                    OnClick="@(() => OnRefresh())"
+                    StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
                     @if (_canCreate)
                     {
                         <MudButton 
-                                   StartIcon="@Icons.Material.Outlined.Add"
-                                   OnClick="OnCreate">
+                        StartIcon="@Icons.Material.Outlined.Add"
+                        OnClick="OnCreate">
                             @ConstantString.New
                         </MudButton>
                     }
@@ -85,14 +85,14 @@
                         @if (_canDelete)
                         {
                             <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                                         OnClick="OnDeleteChecked">
+                            OnClick="OnDeleteChecked">
                                 @ConstantString.Delete
                             </MudMenuItem>
                         }
                         @if (_canExport)
                         {
                             <MudMenuItem Disabled="@_exporting"
-                                         OnClick="OnExport">
+                            OnClick="OnExport">
                                 @ConstantString.Export
                             </MudMenuItem>
                         }
@@ -102,8 +102,8 @@
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                     <ActivatorContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
-                                                   Variant="Variant.Text"
-                                                   Disabled="@_uploading">
+                                        Variant="Variant.Text"
+                                        Disabled="@_uploading">
                                             @ConstantString.Import
                                         </MudButton>
                                     </ActivatorContent>
@@ -122,7 +122,7 @@
                             }
                         </MudSelect>
                         <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                         </MudTextField>
                     }
                 </MudStack>
@@ -136,8 +136,8 @@
                 @if (_canEdit || _canDelete || _canManageRoles || _canRestPassword || _canSendRestPasswordMail || _canManagePermissions)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                    Dense="true"
+                    EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
                             <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
@@ -163,8 +163,8 @@
                 else
                 {
                     <MudButton Variant="Variant.Filled"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
+                    StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                    Color="Color.Surface">
                         @ConstantString.NoAllowed
                     </MudButton>
                 }
@@ -256,7 +256,7 @@
     private HashSet<ApplicationUserDto> _selectedItems = new();
     private readonly ApplicationUserDto _currentDto = new();
     private string _searchString = string.Empty;
-    private string _selectedTenantId = " ";
+    private string _selectedTenantId = string.Empty;
     private string Title { get; set; } = "Users";
     private IList<PermissionModel> _permissions = new List<PermissionModel>();
 
@@ -328,7 +328,7 @@
              x.PhoneNumber!.Contains(_searchString) ||
              x.Provider!.Contains(_searchString)) &&
             (_searchRole == null || (_searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole))) &&
-            (_selectedTenantId == " " || (_selectedTenantId != " " && x.TenantId == _selectedTenantId));
+            (_selectedTenantId == "" || (_selectedTenantId != "" && x.TenantId == _selectedTenantId));
     }
     private async Task<GridData<ApplicationUserDto>> ServerReload(GridState<ApplicationUserDto> state)
     {
@@ -344,7 +344,7 @@
                     .Include(x => x.Superior)
                     .EfOrderBySortDefinitions(state)
                     .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo().ToListAsync();
-    
+
             return new GridData<ApplicationUserDto> { TotalItems = count, Items = data };
         }
         finally
@@ -355,6 +355,10 @@
     private async Task OnChangedListView(string tenantId)
     {
         _selectedTenantId = tenantId;
+        if (_selectedTenantId != string.Empty)
+        {
+            _roles = await RoleManager.Roles.Where(x => x.TenantId == _selectedTenantId).Select(x => x.Name).ToListAsync();
+        }
         await _table.ReloadServerData();
     }
     private async Task OnSearch(string text)
@@ -718,8 +722,7 @@
         {
             _processing = true;
             var userId = models.First().UserId;
-            var user = await UserManager.FindByIdAsync(userId!) ?? throw new NotFoundException($"not found application user: {userId}");
-
+            var user = await UserManager.FindByIdAsync(userId!) ?? throw new NotFoundException($"not found application user: {userId}"); 
             foreach (var model in models)
             {
                 await ProcessPermissionChange(user, model);
@@ -811,6 +814,8 @@
                         DisplayName = x.DisplayName,
                         Email = x.Email!,
                         PhoneNumber = x.PhoneNumber,
+                        LanguageCode=x.LanguageCode,
+                        TimeZoneId = x.TimeZoneId,
                         SuperiorId = x.SuperiorId,
                         TenantId = x.TenantId
                     }).ToListAsync();
@@ -835,6 +840,8 @@
                 { L["Full Name"], item => item.DisplayName },
                 { L["Email"], item => item.Email },
                 { L["Phone Number"], item => item.PhoneNumber },
+                { L["Time Zone"], item => item.TimeZoneId },
+                { L["Language"], item => item.LanguageCode },
                 { L["Tenant Id"], item => item.TenantId },
                 { L["Superior Id"], item => item.SuperiorId }
                                                         }, L["Users"]);
@@ -881,6 +888,8 @@
             { L["Full Name"], (row, item) => item.DisplayName = row[L["Full Name"]]?.ToString() },
             { L["Email"], (row, item) => item.Email = row[L["Email"]]?.ToString() },
             { L["Phone Number"], (row, item) => item.PhoneNumber = row[L["Phone Number"]]?.ToString() },
+            { L["Time Zone"], (row, item) => item.TimeZoneId = row[L["Time Zone"]]?.ToString() },
+            { L["Language"], (row, item) => item.LanguageCode = row[L["Language"]]?.ToString() },
             { L["Tenant Id"], (row, item) => item.TenantId = row[L["Tenant Id"]]?.ToString() },
             { L["Superior Id"], (row, item) => item.SuperiorId = row[L["Superior Id"]]?.ToString() }
         }, L["Users"]);

@@ -96,7 +96,7 @@ public class PermissionHelper
             if (roles is not null && roles.Any())
             {
                 var roleClaims = new List<Claim>();
-                var tenantRoles = _roleManager.Roles.Where(x => roles.Contains(x.Name) && x.TenantId == user.TenantId);
+                var tenantRoles =await _roleManager.Roles.Where(x => roles.Contains(x.Name) && x.TenantId == user.TenantId).ToListAsync();
                 foreach (var role in tenantRoles)
                 {
                     var claims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
