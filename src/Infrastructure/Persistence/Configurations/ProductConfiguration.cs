@@ -23,5 +23,15 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
                     (c1, c2) => c1.SequenceEqual(c2),
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                     c => c.ToList()));
+
+        //builder.OwnsMany(o => o.SubProducts, subBuilder =>
+        //{
+        //    subBuilder.ToTable("SubProduct"); // Map to a separate table
+        //    subBuilder.WithOwner().HasForeignKey("ProdId"); // Foreign key to Product
+        //    subBuilder.Property(sp => sp.Unit).HasMaxLength(50); // Example property configuration
+        //    subBuilder.Property(sp => sp.Color).HasMaxLength(50); // Example property configuration
+
+        //});
+
     }
 }

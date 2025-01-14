@@ -16,8 +16,10 @@ public class Product : BaseAuditableEntity
     public decimal Price { get; set; }
     public decimal? RetailPrice { get; set; }
     public int? Stock { get; set; }
-    public List<ProductImage>? Pictures { get; set; }
+    public virtual List<ProductImage>? Pictures { get; set; }
 
-    public List<SupplyItem>? SupplyItems { get; set; }
+    public virtual List<SupplyItem>? SupplyItems { get; set; }
+
+    public virtual  List<SubProduct>? SubProducts { get; set; } = [];
 
 }

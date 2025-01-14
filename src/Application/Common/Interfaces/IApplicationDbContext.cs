@@ -20,8 +20,7 @@ public interface IApplicationDbContext
     DbSet<Category> Categories { get; set; }
     DbSet<Offer> Offers { get; set; }
     DbSet<SupplyItem> SupplyItems { get; set; }
-
-    //DbSet<OfferLine> OfferLines { get; set; }
+    DbSet<SubProduct> SubProducts { get; set; }
     DbSet<Invoice> Invoices { get; set; }
     ChangeTracker ChangeTracker { get; }
     DbSet<DataProtectionKey> DataProtectionKeys { get; set; }

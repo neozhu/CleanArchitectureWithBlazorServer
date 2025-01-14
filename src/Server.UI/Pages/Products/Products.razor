@@ -12,6 +12,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
+@using CleanArchitecture.Blazor.Server.UI.Pages.SubProducts.Components
 @using CleanArchitecture.Blazor.Server.UI.Pages.SupplyItems.Components
 
 @attribute [Authorize(Policy = Permissions.Products.View)]
@@ -137,6 +138,13 @@
                             @ConstantString.ViewSupplierItems
                         </MudMenuItem>
 
+                        <MudMenuItem OnClick="@(() => OnAddSubItem(context.Item))">
+                            @ConstantString.AddSubItem
+                        </MudMenuItem>
+
+                        <MudMenuItem OnClick="@(() => ViewSubItems(context.Item))">
+                            @ConstantString.ViewSubItems
+                        </MudMenuItem>
 
                     </MudMenu>
                 }
@@ -384,10 +392,50 @@
         });
     }
 
+    private async Task OnAddSubItem(ProductDto dto)
+    {
+        var command = new CleanArchitecture.Blazor.Application.Features.SubProducts.Commands.AddEdit.AddEditSubProductCommand()
+        {
+            Product = dto
+        };
+
+        await DialogService.ShowEditFormDialog<SubProductFormDialog, 
+        CleanArchitecture.Blazor.Application.Features.SubProducts.Commands.AddEdit.AddEditSubProductCommand>(
+        string.Format(ConstantString.CreateAnItem, L["Sub Item"]),
+        command,
+        configureOptions: options => {},
+        OnSuccess: async () =>
+        {
+            await _table.ReloadServerData();
+            _selectedItems.Clear();
+            Console.WriteLine("Success: Item successfully edited!");
+        },
+        OnFail: async () =>
+        {
+            //Snackbar.Add("Failed: Edit operation was canceled.", Severity.Error);
+        });
+    }
+
     private async Task ViewAddSupplierItem(ProductDto dto)
     {
         await DialogService.ShowEditFormDialog<CleanArchitecture.Blazor.Server.UI.Pages.SupplyItems.SupplyItems>(
         string.Format(ConstantString.CreateAnItem, L["SupplyItem"]),dto.Id,
+        OnSuccess: async () =>
+        {
+            await _table.ReloadServerData();
+            _selectedItems.Clear();
+            Console.WriteLine("Success: Item successfully edited!");
+        },
+        OnFail: async () =>
+        {
+            //Snackbar.Add("Failed: Edit operation was canceled.", Severity.Error);
+        });
+    }
+
+    private async Task ViewSubItems(ProductDto dto)
+    {
+        await DialogService.ShowEditFormDialog<CleanArchitecture.Blazor.Server.UI.Pages.SubProducts.SubProducts>(
+        string.Format(ConstantString.CreateAnItem, L["SubItem"]), dto.Id,
         OnSuccess: async () =>
         {
             await _table.ReloadServerData();

@@ -1,0 +1,104 @@
+﻿@page "/pages/SubProducts/edit/{id:int}"
+@using CleanArchitecture.Blazor.Application.Features.SubProducts.Commands.Update
+@using CleanArchitecture.Blazor.Application.Features.SubProducts.Mappers
+@using CleanArchitecture.Blazor.Application.Features.SubProducts.Queries.GetById
+@using CleanArchitecture.Blazor.Server.UI.Components.Fusion
+
+@inherits MudComponentBase
+@inject IValidationService Validator
+@inject IStringLocalizer<SubProducts> L
+
+<PageTitle>@Title</PageTitle>
+<Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+<MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
+@if (model != null)
+{
+    <MudCard Class="pa-2">
+        <MudCardHeader>
+            <CardHeaderContent>
+                 <MudText Typo="Typo.h6">@Title</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+        <ActiveUserSession PageComponent="@($"{nameof(EditSubProduct)}/{ model.Id }")" />
+        <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
+            <MudGrid Spacing="2">
+                <MudItem xs="12" md="6"> 
+                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.ProdId)]" @bind-Value="model.ProdId" For="@(() => model.ProdId)" Min="0" Required="false" RequiredError="@L["prod id is required!"]"></MudNumericField >
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Unit)]" @bind-Value="model.Unit" For="@(() => model.Unit)" Required="false" RequiredError="@L["unit is required!"]"></MudTextField>
+                </MudItem> 
+<MudItem xs="12" md="6"> 
+                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Color)]" @bind-Value="model.Color" For="@(() => model.Color)" Required="false" RequiredError="@L["color is required!"]"></MudTextField>
+                </MudItem> 
+
+            </MudGrid>
+        </MudForm>
+        </MudCardContent>
+        <MudCardActions Class="d-flex justify-end gap-2">
+                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        </MudCardActions>
+        </MudCard>
+    }
+</MudContainer>
+ 
+
+@code {
+    public string? Title { get; private set; }
+    [Parameter]
+    public int Id { get; set; }
+    MudForm? _form;
+    private bool _saving = false;
+    private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "/"),
+        new BreadcrumbItem("SubProducts", href: "/pages/SubProducts")
+    };
+    private UpdateSubProductCommand? model;
+    protected override async Task OnInitializedAsync()
+    {
+        Title = L["Edit SubProduct"];
+        var result = await Mediator.Send(new GetSubProductByIdQuery() { Id = Id });
+        result.Map(data =>
+        {
+            //model = SubProductMapper.FromEditCommand(data);
+            return data;
+        }).Match(data =>
+        {
+            _breadcrumbItems.Add(new BreadcrumbItem(data.Id.ToString(), href: $"/pages/SubProducts/edit/{Id}"));
+            return data;
+        }, errors =>
+        {
+            Snackbar.Add($"{errors}", Severity.Error);
+            return null!;
+        });
+
+    }
+    async Task Submit()
+    {
+        try
+        {
+            _saving = true;
+            await _form!.Validate().ConfigureAwait(false);
+            if (!_form!.IsValid)
+                return;
+            var result = await Mediator.Send(model);
+            result.Match(
+                data=>
+                {
+                    Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                    return data;
+                },
+                errors=>
+                {
+                    Snackbar.Add(errors, MudBlazor.Severity.Error);
+                    return 0;
+                });
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+}
