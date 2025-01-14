@@ -45,6 +45,8 @@ public class PermissionHelper
     public async Task<IList<PermissionModel>> GetAllPermissionsByUserId(string userId)
     {
         var assignedClaims = await GetUserClaimsByUserId(userId).ConfigureAwait(false);
+        var inheritClaims = await GetInheritedClaims(userId).ConfigureAwait(false);
+        var combinedClaims = assignedClaims.Concat(inheritClaims).Distinct(new ClaimComparer()).ToList();
         IList<PermissionModel> allPermissions = new List<PermissionModel>();
         var modules = typeof(Permissions).GetNestedTypes();
 
@@ -60,7 +62,10 @@ public class PermissionHelper
                 // Convert field name from PascalCase/CamelCase to space-separated words with first letter capitalized
                 var name = System.Text.RegularExpressions.Regex.Replace(field.Name, "(\\B[A-Z])", " $1").Trim().ToLower();
                 name = char.ToUpper(name[0]) + name.Substring(1); // Capitalize the first letter
-                var helpText = field.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty; // Get the description attribute
+                var helpText = inheritClaims.Any(x => x.Value.Equals(claimValue))
+                ? "This permission is inherited and cannot be modified."
+                : field.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
+
 
                 return new PermissionModel
                 {
@@ -71,12 +76,38 @@ public class PermissionHelper
                     Name = name, // Assigning the field name
                     HelpText = helpText, // Assigning the description as HelpText
                     Description = moduleDescription,
-                    Assigned = assignedClaims.Any(x => x.Value.Equals(claimValue))
+                    Assigned = combinedClaims.Any(x => x.Value.Equals(claimValue)),
+                    IsInherit = inheritClaims.Any(x => x.Value.Equals(claimValue))
+
                 };
             }).Where(pm => !string.IsNullOrEmpty(pm.ClaimValue))).ToList();
         }
 
         return allPermissions;
+    }
+
+    private async Task<List<Claim>> GetInheritedClaims(string userId)
+    {
+        var key = $"get-inherited-claims-by-{userId}";
+        return await _fusionCache.GetOrSetAsync(key, async _ =>
+        {
+            var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(false)
+                                    ?? throw new NotFoundException($"not found application user: {userId}");
+            var roles = (await _userManager.GetRolesAsync(user)).ToArray();
+            var inheritClaims = new List<Claim>();
+            if (roles is not null && roles.Any())
+            {
+                var assigendRoles = await _roleManager.Roles.Where(x => roles.Contains(x.Name) && x.TenantId == user.TenantId).ToListAsync();
+                foreach (var role in assigendRoles)
+                {
+                    var claims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
+                    inheritClaims.AddRange(claims);
+                }
+                inheritClaims = inheritClaims.Distinct(new ClaimComparer()).ToList();
+            }
+
+            return inheritClaims;
+        }, _refreshInterval).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -92,18 +123,6 @@ public class PermissionHelper
             var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(false)
                        ?? throw new NotFoundException($"not found application user: {userId}");
             var userClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
-            var roles = (await _userManager.GetRolesAsync(user).ConfigureAwait(false)).ToArray();
-            if (roles is not null && roles.Any())
-            {
-                var roleClaims = new List<Claim>();
-                var tenantRoles =await _roleManager.Roles.Where(x => roles.Contains(x.Name) && x.TenantId == user.TenantId).ToListAsync();
-                foreach (var role in tenantRoles)
-                {
-                    var claims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
-                    roleClaims.AddRange(claims);
-                }
-                userClaims = userClaims.Concat(roleClaims).Distinct(new ClaimComparer()).ToList();
-            }
             return userClaims;
 
         }, _refreshInterval).ConfigureAwait(false);
