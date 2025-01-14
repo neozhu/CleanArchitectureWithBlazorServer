@@ -12,4 +12,5 @@ public class PermissionModel
 
     public string? RoleId { get; set; }
     public string? UserId { get; set; }
+    public bool IsInherit { get; set; }
 }

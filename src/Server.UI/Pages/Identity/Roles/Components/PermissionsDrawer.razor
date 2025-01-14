@@ -3,20 +3,20 @@
 @inject IStringLocalizer<Roles> L
 
 <MudDrawer Open="@Open"
-           Width="400px"
-           Height="100vh"
-           OpenChanged="@(s => OnOpenChanged.InvokeAsync(s))"
-           Anchor="Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
+Width="400px"
+Height="100vh"
+OpenChanged="@(s => OnOpenChanged.InvokeAsync(s))"
+Anchor="Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
     <MudDrawerHeader>
         <MudText Typo="Typo.h6">Set Permissions</MudText>
     </MudDrawerHeader>
     <MudStack AlignItems="AlignItems.Stretch" Class="px-5">
         <MudTextField @bind-Value="Keyword" Label="Search"
-                      Margin="Margin.Dense"
-                      Variant="Variant.Text"
-                      Adornment="Adornment.End"
-                      AdornmentIcon="@Icons.Material.Filled.Search"
-                      AdornmentColor="Color.Secondary" />
+        Margin="Margin.Dense"
+        Variant="Variant.Text"
+        Adornment="Adornment.End"
+        AdornmentIcon="@Icons.Material.Filled.Search"
+        AdornmentColor="Color.Secondary" />
     </MudStack>
     @if (Permissions != null && Permissions.Any())
     {
@@ -36,7 +36,15 @@
                     </CardHeaderContent>
                     <CardHeaderActions>
                         <MudTooltip Text="@L["Assign or Unassign all"]">
-                            <MudIconButton Disabled="@Waiting" Icon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Default" OnClick="@(() => OnAssignAll(group))" />
+                            @if (Permissions.Any(x => x.Group == group && x.IsInherit))
+                            {
+                                <MudIconButton Disabled="true" Icon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Default" />
+                            }
+                            else
+                            {
+                                <MudIconButton Disabled="@Waiting" Icon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Default" OnClick="@(() => OnAssignAll(group))" />
+                            }
+                           
                         </MudTooltip>
                     </CardHeaderActions>
                 </MudCardHeader>
@@ -51,6 +59,7 @@
                                              T="bool"
                                              Size="Size.Small"
                                              Value="@Permissions[x].Assigned"
+                                             Disabled="@Permissions[x].IsInherit"
                                              Label="@L[Permissions[x].Name]"
                                              ValueChanged="@(s => OnAssignChanged.InvokeAsync(Permissions[x]))"
                                              Color="Color.Primary">
@@ -92,7 +101,6 @@
             t.Assigned = !t.Assigned;
             list.Add(t);
         }
-
         await OnAssignAllChanged.InvokeAsync(list);
     }
 
