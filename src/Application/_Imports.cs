@@ -1,7 +1,6 @@
 ﻿global using System.ComponentModel;
 global using System.Data;
 global using System.Globalization;
-global using System.Linq.Dynamic.Core;
 global using System.Linq.Expressions;
 global using System.Reflection;
 global using System.Text.Json;
