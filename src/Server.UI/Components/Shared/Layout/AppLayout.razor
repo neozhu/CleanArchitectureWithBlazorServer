@@ -18,11 +18,9 @@
                         OnSettingClick="@(() => _themingDrawerOpen = true)"/>
             <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@(UserProfile?.AssignedRoles??[])"
                             DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler"/>
-            <ThemesMenu ThemingDrawerOpen="_themingDrawerOpen"
-                        ThemingDrawerOpenChanged="ThemingDrawerOpenChangedHandler"
-                        UserPreferences="@LayoutService.UserPreferences"
+            <ThemesMenu UserPreferences="@LayoutService.UserPreferences"
                         UserPreferencesChanged="LayoutService.UpdateUserPreferences"/>
-            <ThemesButton OnClick="@(() => _themingDrawerOpen = true)"/>
+           
             <MudMainContent>
                 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mb-4 mt-4">
                     <ErrorBoundary @ref="ErrorBoundary">
