@@ -15,10 +15,10 @@
                         ToggleNavigationMenuDrawer="ToggleNavigationMenuDrawer"
                         RightToLeft="@LayoutService.IsRTL"
                         RightToLeftToggle="LayoutService.ToggleRightToLeft"
-                        OnSettingClick="@(() => _themingDrawerOpen = true)"/>
+                        OnSettingClick="@(() => themeSettings?.OpenSetting())" />
             <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@(UserProfile?.AssignedRoles??[])"
                             DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler"/>
-            <ThemesMenu UserPreferences="@LayoutService.UserPreferences"
+            <ThemesMenu @ref="themeSettings" UserPreferences="@LayoutService.UserPreferences"
                         UserPreferencesChanged="LayoutService.UpdateUserPreferences"/>
            
             <MudMainContent>
@@ -49,6 +49,7 @@
     private bool _themingDrawerOpen;
     private UserProfile? UserProfile;
     private ErrorBoundary? ErrorBoundary { set; get; }
+    private ThemesMenu? themeSettings { set; get; }
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()

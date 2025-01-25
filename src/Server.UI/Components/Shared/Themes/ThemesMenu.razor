@@ -5,35 +5,35 @@
 @inject IStringLocalizer<ThemesMenu> L
 
 <MudDrawer Anchor="LayoutService.IsRTL ? Anchor.Start : Anchor.End"
-           @bind-Open="@_open"
-           OverlayAutoClose="true"
-           Elevation="1"
-           Variant="@DrawerVariant.Temporary">
+@bind-Open="@_open"
+OverlayAutoClose="true"
+Elevation="1"
+Variant="@DrawerVariant.Temporary">
     <MudDrawerHeader Class="align-center">
         <MudText Typo="Typo.body1">
             <b>@L["Themes"]</b>
         </MudText>
         <MudSpacer />
         <MudIconButton Color="Color.Default"
-                       Icon="@Icons.Material.Filled.Close"
-                       OnClick="@(() => _open = false)"
-                       Size="Size.Small" />
+        Icon="@Icons.Material.Filled.Close"
+        OnClick="@(() => _open = false)"
+        Size="Size.Small" />
     </MudDrawerHeader>
     <div class="ma-6">
         <MudText Typo="Typo.body2">
             <b>@L["Mode"]</b>
         </MudText>
         <MudGrid Class="my-3"
-                 Spacing="2">
+        Spacing="2">
             <MudItem xs="4">
                 <MudTooltip Duration="1000" Text="@L["Switch to system"]">
                     <MudButton Class="mode-button"
-                               FullWidth="true"
-                               OnClick="@(() => ToggleDarkLightMode(DarkLightMode.System))"
-                               Style="background: white;">
+                    FullWidth="true"
+                    OnClick="@(() => ToggleDarkLightMode(DarkLightMode.System))"
+                    Style="background: white;">
                         <ChildContent>
                             <MudIcon Color="Color.Primary"
-                                     Icon="@Icons.Material.Filled.AutoMode" />
+                            Icon="@Icons.Material.Filled.AutoMode" />
                         </ChildContent>
                     </MudButton>
                 </MudTooltip>
@@ -41,12 +41,12 @@
             <MudItem xs="4">
                 <MudTooltip Duration="1000" Text="@L["Switch to Light Theme"]">
                     <MudButton Class="mode-button"
-                               FullWidth="true"
-                               OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Light))"
-                               Style="background: white;">
+                    FullWidth="true"
+                    OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Light))"
+                    Style="background: white;">
                         <ChildContent>
                             <MudIcon Color="Color.Primary"
-                                     Icon="@Icons.Material.Filled.WbSunny" />
+                            Icon="@Icons.Material.Filled.WbSunny" />
                         </ChildContent>
                     </MudButton>
                 </MudTooltip>
@@ -54,12 +54,12 @@
             <MudItem xs="4">
                 <MudTooltip Duration="1000" Text="@L["Switch to Dark Theme"]">
                     <MudButton Class="mode-button"
-                               FullWidth="true"
-                               OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Dark))"
-                               Style="background: #333333;">
+                    FullWidth="true"
+                    OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Dark))"
+                    Style="background: #333333;">
                         <ChildContent>
                             <MudIcon Icon="@Icons.Material.Filled.DarkMode"
-                                     Style="color: #c9c9c9" />
+                            Style="color: #c9c9c9" />
                         </ChildContent>
                     </MudButton>
                 </MudTooltip>
@@ -70,18 +70,18 @@
             <b>@L["Color"]</b>
         </MudText>
         <MudGrid Class="my-3"
-                 Spacing="2">
+        Spacing="2">
             @if (UserPreferences.IsDarkMode || UserPreferences.DarkLightTheme == DarkLightMode.Dark)
             {
                 @foreach (var color in UserPreference.DarkPrimaryColors)
                 {
                     <MudItem xs="4">
                         <MudButton Class="@(color == UserPreferences.DarkPrimaryColor ? "color-button color-button-selected" : "color-button")"
-                                   FullWidth="true"
-                                   OnClick="@(() => UpdateThemePrimaryColor(color))">
+                        FullWidth="true"
+                        OnClick="@(() => UpdateThemePrimaryColor(color))">
                             <ChildContent>
                                 <div class="@(color == UserPreferences.DarkPrimaryColor ? "color-square color-square-selected" : "color-square")"
-                                     style="@($"background: {color};")">
+                                style="@($"background: {color};")">
                                     @if (color == UserPreferences.DarkPrimaryColor)
                                     {
                                         <MudIcon Size="Size.Large" Icon="@Icons.Material.Outlined.Check" Class="check-icon" />
@@ -98,11 +98,11 @@
                 {
                     <MudItem xs="4">
                         <MudButton Class="@(color == UserPreferences.PrimaryColor ? "color-button color-button-selected" : "color-button")"
-                                   FullWidth="true"
-                                   OnClick="@(() => UpdateThemePrimaryColor(color))">
+                        FullWidth="true"
+                        OnClick="@(() => UpdateThemePrimaryColor(color))">
                             <ChildContent>
                                 <div class="@(color == UserPreferences.PrimaryColor ? "color-square color-square-selected" : "color-square")"
-                                     style="@($"background: {color};")">
+                                style="@($"background: {color};")">
                                     @if (color == UserPreferences.PrimaryColor)
                                     {
                                         <MudIcon Size="Size.Large" Icon="@Icons.Material.Outlined.Check" Class="check-icon" />
@@ -118,10 +118,10 @@
             <b>@L["Border Radius"]</b>
         </MudText>
         <MudGrid Class="my-3"
-                 Spacing="2">
+        Spacing="2">
             <MudItem xs="12">
                 <MudSlider Value="@UserPreferences.BorderRadius" Min="0" Max="@MaxValue" Immediate="false" Step="1" Color="Color.Primary"
-                           @oninput="@(e => ChangedSelection(e))">
+                @oninput="@(e => ChangedSelection(e))">
                     @UserPreferences.BorderRadius.ToString()
                 </MudSlider>
             </MudItem>
@@ -130,10 +130,10 @@
             <b>@L["Default Font Size"]</b>
         </MudText>
         <MudGrid Class="my-3"
-                 Spacing="2">
+        Spacing="2">
             <MudItem xs="12">
                 <MudSlider Value="@UserPreferences.DefaultFontSize" Min="0.625" Max="1.125" Immediate="false" Step="0.0625" Color="Color.Primary"
-                           @oninput="@(e => ChangedFontSize(e))">
+                @oninput="@(e => ChangedFontSize(e))">
                     @($"{UserPreferences.DefaultFontSize.ToString()} rem")
                 </MudSlider>
             </MudItem>
@@ -148,60 +148,60 @@
 <style>
 
     .mode-button {
-        border: 1px solid var(--mud-palette-table-lines);
-        height: 64px;
+    border: 1px solid var(--mud-palette-table-lines);
+    height: 64px;
     }
 
     .color-square {
-        width: 35px;
-        height: 35px;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 35px;
+    height: 35px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
     .color-square-selected {
-        width: 35px;
-        height: 35px;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    width: 35px;
+    height: 35px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
     }
 
 
     .color-button {
-        height: 60px;
-        border: 1px solid var(--mud-palette-table-lines);
-        transition: border 0.3s, transform 0.3s, box-shadow 0.3s;
-        cursor: pointer;
-        padding: 5px;
-        background-color: var(--mud-palette-surface);
-        border-radius: 8px;
+    height: 60px;
+    border: 1px solid var(--mud-palette-table-lines);
+    transition: border 0.3s, transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    padding: 5px;
+    background-color: var(--mud-palette-surface);
+    border-radius: 8px;
     }
 
 
-        .color-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
+    .color-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
 
 
     .color-button-selected {
-        border: 2px solid var(--mud-palette-primary);
+    border: 2px solid var(--mud-palette-primary);
     }
 
 
-        .color-button-selected:hover {
-            transform: scale(1.08);
-        }
+    .color-button-selected:hover {
+    transform: scale(1.08);
+    }
 
     .check-icon {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: #FFFFFF;
-        pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFFFFF;
+    pointer-events: none;
     }
 </style>
 
@@ -269,5 +269,10 @@
     {
         UserPreferences.DefaultFontSize = double.Parse(args?.Value?.ToString() ?? "0", NumberStyles.Float, CultureInfo.InvariantCulture);
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
+    }
+
+    public void OpenSetting()
+    {
+        _open = true;
     }
 }
