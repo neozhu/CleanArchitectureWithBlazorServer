@@ -11,21 +11,21 @@ public class UserPreference
     public static readonly List<string> PrimaryColors = new()
     {
         "#2d4275", // 蓝色
-        "#6A1B9A", // 深紫色
+        "#7928ca", // 深紫色
         "#4CAF50" , // 绿色
-        "#FF9800", // 橙色
-        "#F44336", // 红色
-        "#FF69B4" // 粉色
+        "#f7b955", // 橙色
+        "#f33f33", // 红色
+        "#ff0080" // 粉色
     };
 
     public static readonly List<string> DarkPrimaryColors = new()
     {
-        "#0077b6", // 蓝色的暗色调
-        "#a541be", // 深紫色的暗色调
-        "#388E3C",  // 绿色的暗色调
-        "#FB8C00", // 橙色的暗色调
-        "#ca322d", // 红色的暗色调
-        "#cf2d86", // 粉色的暗色调
+        "#0170f3", // 蓝色的暗色调
+        "#7928ca", // 深紫色的暗色调
+        "#50e3c2",  // 绿色的暗色调
+        "#f33f33", // 红色的暗色调
+        "#ff0080", // 粉色的暗色调
+        "#666666", // 灰色的暗色调
     };
 
     /// <summary>
