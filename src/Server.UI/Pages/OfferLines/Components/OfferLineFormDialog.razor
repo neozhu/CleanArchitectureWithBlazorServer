@@ -15,12 +15,10 @@
 
                 <MudItem xs="12">
                     <MudSelect T="int" Label="@L[model.GetMemberDescription(x => x.ItemId)]"
-                    @bind-Value="model.ItemId"
-                    For="@(() => model.ItemId)"
-                    Searchable="true"
-                    SearchFunc="SearchContacts"
-                    Required="true"
-                    RequiredError="@L["Item ID is required!"]">
+                        @bind-Value="model.ItemId"
+                        For="@(() => model.ItemId)"
+                        Required="true"
+                        RequiredError="@L["Item ID is required!"]">
                         @foreach (var product in productDtos)
                         {
                             <MudSelectItem T="int" Value="@product.Id">
@@ -36,17 +34,37 @@
                 </MudItem>
 
                 <MudItem xs="12" md="6">
+                    <MudSelect T="int" Label="@L[model.GetMemberDescription(x => x.SubItemId)]"
+                               @bind-Value="model.SubItemId"
+                               For="@(() => model.SubItemId)"
+                               Required="true"
+                               RequiredError="@L["Item ID is required!"]">
+                        @foreach (var subProduct in SubProducts)
+                        {
+                            <MudSelectItem T="int" Value="@subProduct.Id">
+                                <MudText Typo="Typo.body1">
+                                    <span class="fw-bold">Code:</span> @subProduct.Color |
+                                    <span class="fw-bold">Name:</span> @subProduct.Unit |
+                                    <span class="fw-bold">Price:</span> @subProduct.Price |
+                                    <span class="fw-bold">Retail Price:</span> @subProduct.RetailPrice
+                                </MudText>
+                            </MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="12" md="6">
                     <MudNumericField Label="Retail Price"
                     @bind-Value="SelectedProduct.RetailPrice"
                     For="@(() => SelectedProduct.RetailPrice)"
-                    ReadOnly="true">
+                    ReadOnly="false">
                     </MudNumericField>
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudNumericField Label="Price"
                     @bind-Value="SelectedProduct.Price"
                     For="@(() => SelectedProduct.Price)"
-                    ReadOnly="true">
+                    ReadOnly="false">
                     </MudNumericField>
                 </MudItem>
 
@@ -94,13 +112,31 @@
     private IEnumerable<ProductDto> productDtos { get; set; } = new List<ProductDto>();
     private ProductDto? SelectedProduct { get; set; } = new ProductDto();
 
-    private IDisposable? Subscription;
+    private IEnumerable<SubProduct> SubProducts { get; set; } = new List<SubProduct>();
+    private SubProduct? SelectedSubProducts { get; set; } = new SubProduct();
+
+    private IDisposable? ItemIdSubscription;
+
+    private IDisposable? ItemSubIdSubscription;
 
     protected override async Task OnInitializedAsync()
     {
+        productDtos = await Mediator.Send(new GetAllProductsQuery());
+
+        ItemIdSubscription = model.ItemIdBehaviorSubject.Subscribe(id =>
+        {
+            OnProductChanged(id);
+        });
+
+        ItemSubIdSubscription = model.SubItemIdBehaviorSubject.Subscribe(id =>
+        {
+            OnSubProductChanged(id);
+        });
+
         if (model.Id > 0)
         {
             var result = await Mediator.Send(new GetOfferLineByIdQuery() { Id = model.Id , OfferId= model.OfferId });
+            
             result.Match(data => {
                 model.OfferId = result?.Data?.OfferId ?? 0;
                 model.ItemId = result?.Data?.ItemId ?? 0;
@@ -108,6 +144,11 @@
                 model.Quantity = result?.Data?.Quantity ?? 0;
                 model.LinePrice = result?.Data?.LinePrice ?? 0;
                 model.Discount = result?.Data?.Discount ?? 0;
+                model.LineTotal = result?.Data?.LineTotal ?? 0;
+                model.SubItemId = result?.Data?.SubItemId ?? 0;
+                model.Color = result?.Data?.Color;  
+                model.Unit = result?.Data?.Unit;
+
                 return 1;
 
             }, errors =>
@@ -118,12 +159,7 @@
 
         }
 
-        productDtos = await Mediator.Send(new GetAllProductsQuery());
-
-        model.ItemIdBehaviorSubject.Subscribe(id =>
-        {
-            OnProductChanged(id);
-        });
+       
     }
 
     private void OnProductChanged(int productId)
@@ -137,6 +173,31 @@
             model.Quantity = 1;
 
         this.model.LinePrice = SelectedProduct?.RetailPrice ?? 0;
+        this.SubProducts = SelectedProduct?.SubProducts ?? new List<SubProduct>();
+
+    }
+
+    private void OnSubProductChanged(int subproductId)
+    {
+        if (subproductId == 0)
+            return;
+
+        SelectedSubProducts = SubProducts.FirstOrDefault(p => p.Id == subproductId);
+
+        if (model.Quantity == 0)
+            model.Quantity = 1;
+
+        if (SelectedSubProducts is not null && SelectedSubProducts.RetailPrice >0 )
+        {
+            SelectedProduct.RetailPrice = SelectedSubProducts.RetailPrice;
+        }
+
+        if (SelectedSubProducts is not null && SelectedSubProducts.Price > 0)
+        {
+            SelectedProduct.Price = SelectedSubProducts.Price ?? 0m;
+        }
+
+        StateHasChanged();
     }
 
     async Task Submit()
@@ -147,6 +208,10 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
+
+            model.Color = SelectedSubProducts?.Color;
+            model.Unit = SelectedSubProducts?.Unit;
+
             var result = await Mediator.Send(model);
             result.Match(data =>
             {
@@ -193,6 +258,12 @@
             _savingnew = false;
         }
     }
+
     void Cancel() => MudDialog.Cancel();
 
+    public void Dispose()
+    {
+        this.ItemIdSubscription?.Dispose();
+        this.ItemSubIdSubscription?.Dispose();
+    }
 }

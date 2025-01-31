@@ -1,4 +1,6 @@
 ﻿
+using CleanArchitecture.Blazor.Application.Features.SubProducts.DTOs;
+
 namespace CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
 [Description("Products")]
@@ -19,9 +21,15 @@ public record ProductDto
 
     [Description("Price")] public decimal Price { get; set; }
 
-    [Description("Pictures")] public List<ProductImage>? Pictures { get; set; }
+    [Description("Pictures")] 
+    public List<ProductImage>? Pictures { get; set; }
 
-    [Description("RetailPrice")] public decimal? RetailPrice { get; set; }
+    [Description("RetailPrice")] 
+    public decimal? RetailPrice { get; set; }
 
-    [Description("Stock")]  public int? Stock { get; set; }
+    [Description("Stock")]  
+    public int? Stock { get; set; }
+
+    [Description("SubProducts")]
+    public  IEnumerable<SubProduct>? SubProducts { get; set; } 
 }

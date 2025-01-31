@@ -38,6 +38,7 @@ public class GetAllProductsQueryHandler :
     public async Task<IEnumerable<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Products
+            .Include(x => x.SubProducts)
             .ProjectTo()
             .ToListAsync(cancellationToken);
         return data;

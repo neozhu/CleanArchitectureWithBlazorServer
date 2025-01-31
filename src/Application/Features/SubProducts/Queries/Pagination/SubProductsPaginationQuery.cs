@@ -48,7 +48,8 @@ public class SubProductsWithPaginationQueryHandler :
 
             try
             {
-                var data = await _context.SubProducts.Where(x => x.ProductId == request.ProductId)
+                var data = await _context.SubProducts.Include(x=>x.Product)
+                            .Where(x => x.ProductId == request.ProductId)
                                                  .OrderBy($"{request.OrderBy} {request.SortDirection}")
                                                         .ProjectToPaginatedDataAsync(request.Specification,
                                                                                      request.PageNumber,

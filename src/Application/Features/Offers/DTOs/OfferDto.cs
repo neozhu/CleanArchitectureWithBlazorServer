@@ -14,8 +14,27 @@ public class OfferDto
     public DateTime OfferDate { get; set; }
     [Description("Total amount")]
     public decimal TotalAmount { get; set; }
+
     [Description("Status")]
     public string? Status { get; set; }
+
+    [Description("Status")]
+    public string? PaymentType { get; set; } = "Cash";
+
+    [Description("Packaging")]
+    public int? Packaging { get; set; }
+
+    [Description("Draft")]
+    public int? Draft { get; set; }
+
+    [Description("StatDesignus")]
+    public string? Design { get; set; }
+
+    [Description("ShippingMethod")]
+    public string? ShippingMethod { get; set; }
+
+    [Description("AdvancePaymentAmount")]
+    public decimal AdvancePaymentAmount { get; set; } = 0m;
 
     [Description("Offer lines")]
     public List<OfferLine>? OfferLines { get; set; } = [];

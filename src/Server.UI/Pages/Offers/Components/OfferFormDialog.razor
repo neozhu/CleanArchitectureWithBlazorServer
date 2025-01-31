@@ -41,7 +41,47 @@
                                   RequiredError="@L["status is required!"]"></MudTextField>
                 </MudItem>
 
+                <MudItem xs="12" sm="6">
+                    <PicklistAutocomplete Picklist="Picklist.Design" T="string"
+                                          Label="@L["Design"]"
+                                          For="@(() => model.Design)"
+                                          ResetValueOnEmptyText="true"
+                                          ShowProgressIndicator="true"
+                                          Required="true" RequiredError="@L["Required!"]"
+                                          @bind-Value="model.Design">
+                        <ProgressIndicatorTemplate>
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                        </ProgressIndicatorTemplate>
+                    </PicklistAutocomplete>
+                </MudItem>
 
+                <MudItem xs="12" sm="6">
+                    <PicklistAutocomplete Picklist="Picklist.ShippingMethod" T="string"
+                                          Label="@L["ShippingMethod"]"
+                                          For="@(() => model.ShippingMethod)"
+                                          ResetValueOnEmptyText="true"
+                                          ShowProgressIndicator="true"
+                                          Required="true" RequiredError="@L["Required!"]"
+                                          @bind-Value="model.ShippingMethod">
+                        <ProgressIndicatorTemplate>
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                        </ProgressIndicatorTemplate>
+                    </PicklistAutocomplete>
+                </MudItem>
+
+                <MudItem xs="12" sm="6">
+                    <PicklistAutocomplete Picklist="Picklist.PaymentType" T="string"
+                                          Label="@L["ShippingMethod"]"
+                                          For="@(() => model.PaymentType)"
+                                          ResetValueOnEmptyText="true"
+                                          ShowProgressIndicator="true"
+                                          Required="true" RequiredError="@L["Required!"]"
+                                          @bind-Value="model.PaymentType">
+                        <ProgressIndicatorTemplate>
+                            <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                        </ProgressIndicatorTemplate>
+                    </PicklistAutocomplete>
+                </MudItem>
 
                 @if (model.Id > 0) {
                     <MudItem xs="12">

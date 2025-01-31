@@ -23,6 +23,24 @@ public class AddEditOfferCommand: ICacheInvalidatorRequest<Result<int>>
     public List<OfferLine>? OfferLines { get; set; }
 
 
+    [Description("Packaging")]
+    public int? Packaging { get; set; }
+
+    [Description("Draft")]
+    public int? Draft { get; set; }
+
+    [Description("StatDesignus")]
+    public string? Design { get; set; }
+
+    [Description("AdvancePaymentAmount")]
+    public decimal AdvancePaymentAmount { get; set; } = 0m;
+
+    [Description("ShippingMethod")]
+    public string? ShippingMethod { get; set; }
+
+    [Description("PaymentType")]
+    public string? PaymentType { get; set; } = "Cash";
+
     public string CacheKey => OfferCacheKey.GetAllCacheKey;
       public IEnumerable<string>? Tags => OfferCacheKey.Tags;
 }

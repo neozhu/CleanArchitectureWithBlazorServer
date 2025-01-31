@@ -34,6 +34,18 @@ public class AddEditOfferLineCommand : ICacheInvalidatorRequest<Result<int>>
         }
     }
 
+    private int _subItemId;
+
+    [Description("Sub ItemId")]
+    public int SubItemId { get => _subItemId; set { 
+        if (_subItemId != value)
+            {
+                _subItemId = value;
+                SubItemIdBehaviorSubject.OnNext(value);  // Notify on change
+            }
+        } 
+    }
+
     [Description("Line Price")]
     public decimal LinePrice
     {
@@ -67,9 +79,16 @@ public class AddEditOfferLineCommand : ICacheInvalidatorRequest<Result<int>>
         }
     }
 
+    [Description("Unit")]
+    public string? Unit { get; set; }
+
+    [Description("Color")]
+    public string? Color { get; set; }
+
     [Description("Line total")]
     public decimal LineTotal { get; set; }
     public BehaviorSubject<int> ItemIdBehaviorSubject { get; set; } = new(0);
+    public BehaviorSubject<int> SubItemIdBehaviorSubject { get; set; } = new(0);
     public BehaviorSubject<decimal> LineTotalSubject { get; set; } = new(0);
     public string CacheKey => OfferLineCacheKey.GetAllCacheKey;
     public IEnumerable<string>? Tags => OfferLineCacheKey.Tags;
@@ -84,6 +103,8 @@ public class AddEditOfferLineCommand : ICacheInvalidatorRequest<Result<int>>
     public void Dispose()
     {
         ItemIdBehaviorSubject?.Dispose();
+
+        SubItemIdBehaviorSubject?.Dispose();
     }
 }
 

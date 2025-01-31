@@ -9,36 +9,74 @@
 @inject IStringLocalizer<SubProducts> L
 
 <PageTitle>@Title</PageTitle>
-<Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+
+<Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" ></Breadcrumbs>
+
+
 <MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
 @if (model != null)
 {
-    <MudCard Class="pa-2">
-        <MudCardHeader>
-            <CardHeaderContent>
-                 <MudText Typo="Typo.h6">@Title</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
-        <ActiveUserSession PageComponent="@($"{nameof(EditSubProduct)}/{ model.Id }")" />
-        <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
-            <MudGrid Spacing="2">
-                <MudItem xs="12" md="6"> 
-                        <MudNumericField  Label="@L[model.GetMemberDescription(x=>x.ProdId)]" @bind-Value="model.ProdId" For="@(() => model.ProdId)" Min="0" Required="false" RequiredError="@L["prod id is required!"]"></MudNumericField >
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Unit)]" @bind-Value="model.Unit" For="@(() => model.Unit)" Required="false" RequiredError="@L["unit is required!"]"></MudTextField>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Color)]" @bind-Value="model.Color" For="@(() => model.Color)" Required="false" RequiredError="@L["color is required!"]"></MudTextField>
-                </MudItem> 
+        <MudCard Class="pa-2">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">@Title</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
+                    <MudItem xs="12" sm="6">
+                        <PicklistAutocomplete Picklist="Picklist.Unit" T="string"
+                                              Label="@L["Unit"]"
+                                              For="@(() => model.Unit)"
+                                              ResetValueOnEmptyText="true"
+                                              ShowProgressIndicator="true"
+                                              Required="true" RequiredError="@L["unit is required!"]"
+                                              @bind-Value="model.Unit">
+                            <ProgressIndicatorTemplate>
+                                <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                            </ProgressIndicatorTemplate>
+                        </PicklistAutocomplete>
+                    </MudItem>
 
-            </MudGrid>
-        </MudForm>
-        </MudCardContent>
-        <MudCardActions Class="d-flex justify-end gap-2">
-                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
-        </MudCardActions>
+                    <MudItem xs="12" sm="6">
+                        <PicklistAutocomplete Picklist="Picklist.Color" T="string"
+                                              Label="@L["Color"]"
+                                              For="@(() => model.Color)"
+                                              ResetValueOnEmptyText="true"
+                                              ShowProgressIndicator="true"
+                                              Required="true" RequiredError="@L["color is required!"]"
+                                              @bind-Value="model.Color">
+                            <ProgressIndicatorTemplate>
+                                <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
+                            </ProgressIndicatorTemplate>
+                        </PicklistAutocomplete>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                        <MudNumericField Label="@L["Price"]"
+                                         T="decimal"
+                                         Format="N2"
+                                         For="@(() => model.Price)"
+                                         Min="0.00m"
+                                         @bind-Value="model.Price">
+                        </MudNumericField>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                        <MudNumericField Label="@L["RetailPrice"]"
+                                         T="decimal"
+                                         Format="N2"
+                                         For="@(() => model.RetailPrice)"
+                                         Min="0.00m"
+                                         @bind-Value="model.RetailPrice">
+                        </MudNumericField>
+                    </MudItem>
+
+                </MudForm>
+            </MudCardContent>
+            <MudCardActions Class="d-flex justify-end gap-2">
+                <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+            </MudCardActions>
         </MudCard>
     }
 </MudContainer>
@@ -50,11 +88,13 @@
     public int Id { get; set; }
     MudForm? _form;
     private bool _saving = false;
-    private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: "/"),
-        new BreadcrumbItem("SubProducts", href: "/pages/SubProducts")
-    };
+    [CascadingParameter]
+    IMudDialogInstance MudDialog { get; set; } = default!;
+    // private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
+    // {
+    //     new BreadcrumbItem("Home", href: "/"),
+    //     new BreadcrumbItem("SubProducts", href: "/pages/SubProducts")
+    // };
     private UpdateSubProductCommand? model;
     protected override async Task OnInitializedAsync()
     {
@@ -62,11 +102,12 @@
         var result = await Mediator.Send(new GetSubProductByIdQuery() { Id = Id });
         result.Map(data =>
         {
-            //model = SubProductMapper.FromEditCommand(data);
+            model = SubProductMapper.ToUpdateCommand(data);
+
             return data;
         }).Match(data =>
         {
-            _breadcrumbItems.Add(new BreadcrumbItem(data.Id.ToString(), href: $"/pages/SubProducts/edit/{Id}"));
+            //_breadcrumbItems.Add(new BreadcrumbItem(data.Id.ToString(), href: $"/pages/SubProducts/edit/{Id}"));
             return data;
         }, errors =>
         {
@@ -87,6 +128,7 @@
             result.Match(
                 data=>
                 {
+                    MudDialog.Close(DialogResult.Ok(true));
                     Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
                     return data;
                 },

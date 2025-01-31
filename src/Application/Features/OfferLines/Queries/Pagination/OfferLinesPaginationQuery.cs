@@ -33,7 +33,8 @@ public class OfferLinesWithPaginationQueryHandler :
 
     public async Task<PaginatedData<OfferLineDto>> Handle(OfferLinesWithPaginationQuery request, CancellationToken cancellationToken)
     {
-            var offerLines = await _context.Offers
+
+        var offerLines = await _context.Offers
                                        .Where(x => x.Id == request.OrderId)
                                        .SelectMany(x => x.OfferLines)
                                        .Include(x=>x.Product)

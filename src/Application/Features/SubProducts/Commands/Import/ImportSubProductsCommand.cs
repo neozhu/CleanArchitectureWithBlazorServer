@@ -73,7 +73,7 @@ namespace CleanArchitecture.Blazor.Application.Features.SubProducts.Commands.Imp
 
            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, SubProductDto, object?>>
             {
-                { _localizer[_dto.GetMemberDescription(x=>x.ProdId)], (row, item) => item.ProdId =Convert.ToInt32(row[_localizer[_dto.GetMemberDescription(x=>x.ProdId)]]) }, 
+                { _localizer[_dto.GetMemberDescription(x=>x.ProductId)], (row, item) => item.ProductId =Convert.ToInt32(row[_localizer[_dto.GetMemberDescription(x=>x.ProductId)]]) }, 
 { _localizer[_dto.GetMemberDescription(x=>x.Unit)], (row, item) => item.Unit = row[_localizer[_dto.GetMemberDescription(x=>x.Unit)]].ToString() }, 
 { _localizer[_dto.GetMemberDescription(x=>x.Color)], (row, item) => item.Color = row[_localizer[_dto.GetMemberDescription(x=>x.Color)]].ToString() }, 
 
@@ -104,7 +104,7 @@ namespace CleanArchitecture.Blazor.Application.Features.SubProducts.Commands.Imp
             // TODO: Implement ImportSubProductsCommandHandler method 
             var fields = new string[] {
                    // TODO: Define the fields that should be generate in the template, for example:
-                   _localizer[_dto.GetMemberDescription(x=>x.ProdId)], 
+                   _localizer[_dto.GetMemberDescription(x=>x.ProductId)], 
 _localizer[_dto.GetMemberDescription(x=>x.Unit)], 
 _localizer[_dto.GetMemberDescription(x=>x.Color)], 
 

@@ -28,6 +28,14 @@ public record OfferLineDto
     [Description("Line Price")]
     public decimal? LinePrice { get; set; }
 
+    [Description("Unit")]
+    public string? Unit { get; set; }
+    [Description("Color")]
+    public string? Color { get; set; }
+
+    [Description("SubItemId")]
+    public int SubItemId { get; set; }
+
     [Description("Product")]
     public ProductDto? Product { get; set; }
 

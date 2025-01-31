@@ -22,6 +22,9 @@ public enum Picklist
     [Description("Invoice Type")] InvoiceType,
     [Description("Offer")] Offer,
     [Description("Color")] Color,
+    [Description("PaymentType")] PaymentType,
+    [Description("ShippingMethod")] ShippingMethod,
+    [Description("Design")] Design,
 }
 
 public enum PicklistInvoiceType

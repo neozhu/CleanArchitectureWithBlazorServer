@@ -61,7 +61,7 @@ public class ExportSubProductsQueryHandler :
                 new Dictionary<string, Func<SubProductDto, object?>>()
                 {
                     // TODO: Define the fields that should be exported, for example:
-                    {_localizer[_dto.GetMemberDescription(x=>x.ProdId)],item => item.ProdId}, 
+                    {_localizer[_dto.GetMemberDescription(x=>x.ProductId)],item => item.ProductId}, 
 {_localizer[_dto.GetMemberDescription(x=>x.Unit)],item => item.Unit}, 
 {_localizer[_dto.GetMemberDescription(x=>x.Color)],item => item.Color}, 
 

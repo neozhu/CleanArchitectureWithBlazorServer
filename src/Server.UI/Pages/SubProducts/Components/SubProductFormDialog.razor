@@ -37,6 +37,26 @@
                     </PicklistAutocomplete>
                 </MudItem>
 
+                <MudItem xs="12" sm="4">
+                    <MudNumericField Label="@L["Price"]"
+                                     T="decimal"
+                                     Format="N2"
+                                     For="@(() => model.Price)"
+                                     Min="0.00m"
+                                     @bind-Value="model.Price">
+                    </MudNumericField>
+                </MudItem>
+
+                <MudItem xs="12" sm="4">
+                    <MudNumericField Label="@L["RetailPrice"]"
+                                     T="decimal"
+                                     Format="N2"
+                                     For="@(() => model.RetailPrice)"
+                                     Min="0.00m"
+                                     @bind-Value="model.RetailPrice">
+                    </MudNumericField>
+                </MudItem>
+
 @*                 <MudItem xs="12" md="6"> 
                         <MudTextField Label="@L[model.GetMemberDescription(x=>x.Unit)]" @bind-Value="model.Unit" 
                             For="@(() => model.Unit)" Required="false" RequiredError="@L["unit is required!"]"></MudTextField>

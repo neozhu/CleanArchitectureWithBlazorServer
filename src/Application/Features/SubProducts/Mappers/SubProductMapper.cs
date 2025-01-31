@@ -33,7 +33,7 @@ public static partial class SubProductMapper
     public static partial SubProduct FromEditCommand(AddEditSubProductCommand command);
     public static partial SubProduct FromCreateCommand(CreateSubProductCommand command);
     
-    //public static partial UpdateSubProductCommand ToUpdateCommand(SubProductDto dto);
+    public static partial UpdateSubProductCommand ToUpdateCommand(SubProductDto dto);
     public static partial AddEditSubProductCommand CloneFromDto(SubProductDto dto);
     public static partial void ApplyChangesFrom(UpdateSubProductCommand source, SubProduct target);
     public static partial void ApplyChangesFrom(AddEditSubProductCommand source, SubProduct target);
