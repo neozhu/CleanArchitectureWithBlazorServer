@@ -288,6 +288,17 @@
         Title = L[_currentDto.GetClassDescription()];
         InitializeServices();
         var state = await AuthState;
+        await SetPermissionsAsync(state);
+        _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
+    }
+    private void InitializeServices()
+    {
+        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
+        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        PermissionHelper = ScopedServices.GetRequiredService<PermissionHelper>();
+    }
+    private async Task SetPermissionsAsync(AuthenticationState state)
+    {
         _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
         _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
         _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Edit)).Succeeded;
@@ -299,15 +310,6 @@
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         _canViewOnlineStatus = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ViewOnlineStatus)).Succeeded;
-        _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
-
-        //var list= await  UserManager.Users.Include(x=>x.LastModifiedByUser).Include(x=>x.CreatedByUser).ToListAsync();
-    }
-    private void InitializeServices()
-    {
-        RoleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
-        UserManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        PermissionHelper = ScopedServices.GetRequiredService<PermissionHelper>();
     }
     private async Task OnInvalidated(IComputed state)
     {
@@ -381,7 +383,8 @@
     {
         await _table.ReloadServerData();
     }
-    private async Task ShowCreateUserDialog(ApplicationUserDto model, string title)
+    #region User Creation, Editing, and Deletion
+    private async Task ShowUserDialog(ApplicationUserDto model, string title, Func<ApplicationUserDto, Task> processAction)
     {
         var parameters = new DialogParameters<UserFormDialog>
         {
@@ -393,25 +396,11 @@
         var result = await dialog.Result;
         if (result is not null && !result.Canceled)
         {
-            await ProcessUserCreation(model);
+            await processAction(model);
         }
     }
 
-    private async Task ShowEditUserDialog(ApplicationUserDto model, string title)
-    {
-        var parameters = new DialogParameters<UserFormDialog>
-        {
-            { x => x.Model, model },
-            { x => x.UserProfile, UserProfile }
-        };
-        var options = new DialogOptions { CloseButton = true, CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = await DialogService.ShowAsync<UserFormDialog>(title, parameters, options);
-        var result = await dialog.Result;
-        if (result is not null && !result.Canceled)
-        {
-            await ProcessUserUpdate(model);
-        }
-    }
+    
     private async Task ProcessUserCreation(ApplicationUserDto model)
     {
         var applicationUser = new ApplicationUser
@@ -502,39 +491,32 @@
                 TimeZoneId = TimeZoneInfo.Local.Id,
                 LanguageCode = CultureInfo.CurrentCulture.Name
             };
-        await ShowCreateUserDialog(model, L["Create a new user"]);
+        await ShowUserDialog(model, L["Create a new user"], ProcessUserCreation);
     }
 
-    private async Task OnEdit(ApplicationUserDto item)
+    private async Task OnEdit(ApplicationUserDto item) =>
+        await ShowUserDialog(item, L["Edit the user"], ProcessUserUpdate);
+
+    private async Task ShowDeleteConfirmationDialogAsync(ApplicationUserDto dto, Func<Task> onConfirmed)
     {
-        await ShowEditUserDialog(item, L["Edit the user"]);
-    }
-    private async Task ShowDeleteConfirmationDialogAsync(ApplicationUserDto dto)
-    {
-        var contentText = string.Format(ConstantString.DeleteConfirmation, dto.UserName);
-        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, contentText, async () =>
-        {
-            await InvokeAsync(async () =>
-            {
-                await _table.ReloadServerData();
-                _selectedItems.Clear();
-            });
-        });
+        var message = string.Format(ConstantString.DeleteConfirmation, dto.UserName);
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, message, onConfirmed);
     }
     private async Task ProcessUserDeletion(ApplicationUserDto dto)
     {
-        var user = await UserManager.FindByIdAsync(dto.Id) ?? throw new NotFoundException($"The application user [{dto.Id}] was not found.");
-        var identityResult = await UserManager.DeleteAsync(user);
-        if (identityResult.Succeeded)
+        var user = await UserManager.FindByIdAsync(dto.Id)
+                   ?? throw new NotFoundException($"User not found: {dto.Id}");
+        var result = await UserManager.DeleteAsync(user);
+        if (result.Succeeded)
         {
-            Logger.LogInformation("Delete the user succeeded. Username: {@UserName:l}, UserId: {@UserId}", user.UserName, user.Id);
-            Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
+            Logger.LogInformation("User deleted: {UserName} (ID: {UserId})", user.UserName, user.Id);
+            Snackbar.Add(ConstantString.DeleteSuccess, Severity.Info);
             await OnRefresh();
             UserService.Refresh();
         }
         else
         {
-            Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+            Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
         }
     }
     private async Task OnDelete(ApplicationUserDto dto)
@@ -545,53 +527,52 @@
             Snackbar.Add(L["You cannot delete your own account!"], Severity.Error);
             return;
         }
-        await ShowDeleteConfirmationDialogAsync(dto);
-
+        await ShowDeleteConfirmationDialogAsync(dto, async () =>
+        {
+            await ProcessUserDeletion(dto);
+            _selectedItems.Clear();
+            await OnRefresh();
+        });
     }
 
     private async Task OnDeleteChecked()
     {
         var state = await AuthState;
-        var currentUserId = state.User.GetUserId();
-        if (_selectedItems.Any(x => x.Id == currentUserId))
+        if (_selectedItems.Any(x => x.Id == state.User.GetUserId()))
         {
             Snackbar.Add(L["You cannot delete your own account!"], Severity.Error);
             return;
         }
-
-        var deleteContent = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
-        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, deleteContent, async () =>
-        {
-            await InvokeAsync(async () =>
-            {
-                await ProcessSelectedUsersDeletion();
-            });
-        });
+        var message = string.Format(ConstantString.DeleteConfirmation, _selectedItems.Count);
+        await DialogServiceHelper.ShowConfirmationDialogAsync(ConstantString.DeleteConfirmationTitle, message, ProcessSelectedUsersDeletion);
     }
+
     private async Task ProcessSelectedUsersDeletion()
     {
         var deleteIds = _selectedItems.Select(x => x.Id).ToArray();
         var deleteUsers = await UserManager.Users.Where(x => deleteIds.Contains(x.Id)).ToListAsync();
 
-        foreach (var deleteUser in deleteUsers)
+        foreach (var user in deleteUsers)
         {
-            var deleteResult = await UserManager.DeleteAsync(deleteUser);
-            if (!deleteResult.Succeeded)
+            var result = await UserManager.DeleteAsync(user);
+            if (!result.Succeeded)
             {
-                Snackbar.Add($"{string.Join(",", deleteResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+                Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
                 return;
             }
-
-            Logger.LogInformation("Delete the user succeeded. Username: {@UserName:l}, UserId: {@UserId}", deleteUser.UserName, deleteUser.Id);
+            Logger.LogInformation("User deleted: {UserName} (ID: {UserId})", user.UserName, user.Id);
         }
-
-        Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
+        Snackbar.Add(ConstantString.DeleteSuccess, Severity.Info);
         await OnRefresh();
         UserService.Refresh();
     }
+#endregion
+
+    #region Email Verification and Password Reset
     private async Task SendVerify(ApplicationUserDto item)
     {
-        var user = await UserManager.FindByIdAsync(item.Id) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
+        var user = await UserManager.FindByIdAsync(item.Id)
+                   ?? throw new NotFoundException($"User not found: {item.Id}");
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = Navigation.GetUriWithQueryParameters(
@@ -599,64 +580,12 @@
             new Dictionary<string, object?> { ["userId"] = item.Id, ["code"] = code, ["returnUrl"] = "/" });
         await Mediator.Publish(new UserActivationNotification(callbackUrl, item.Email, item.Id, item.UserName));
         Snackbar.Add(string.Format(L["Verification email sent to {0}."], item.Email), Severity.Info);
-        Logger.LogInformation($"Verification email sent to user {item.UserName} ({item.Id}) with callback URL {callbackUrl}");
+        Logger.LogInformation("Verification email sent to user {UserName} (ID: {UserId})", item.UserName, item.Id);
     }
-    #region change user status to active
-    private async Task SetActive(ApplicationUserDto item)
-    {
-        var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
-        await ToggleUserActiveState(user, item);
-    }
-
-    private async Task ToggleUserActiveState(ApplicationUser user, ApplicationUserDto item)
-    {
-        if (user.IsActive)
-        {
-            await DeactivateUser(user, item);
-        }
-        else
-        {
-            await ActivateUser(user, item);
-        }
-    }
-    private async Task ActivateUser(ApplicationUser user, ApplicationUserDto item)
-    {
-        user.IsActive = true;
-        user.LockoutEnd = null;
-        var identityResult = await UserManager.UpdateAsync(user);
-        if (identityResult.Succeeded)
-        {
-            item.IsActive = true;
-            item.LockoutEnd = null;
-            Snackbar.Add($"{L["The user has been activated."]}", Severity.Info);
-        }
-        else
-        {
-            Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-        }
-    }
-
-    private async Task DeactivateUser(ApplicationUser user, ApplicationUserDto item)
-    {
-        user.IsActive = false;
-        user.LockoutEnd = DateTimeOffset.MaxValue;
-        var identityResult = await UserManager.UpdateAsync(user);
-
-        if (identityResult.Succeeded)
-        {
-            item.IsActive = false;
-            item.LockoutEnd = DateTimeOffset.MaxValue;
-            Snackbar.Add($"{L["The user has been inactivated."]}", Severity.Info);
-        }
-        else
-        {
-            Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
-        }
-    }
-    #endregion
     private async Task OnSendResetPassword(ApplicationUserDto item)
     {
-        var user = await UserManager.FindByIdAsync(item.Id) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
+        var user = await UserManager.FindByIdAsync(item.Id)
+                   ?? throw new NotFoundException($"User not found: {item.Id}");
         var code = await UserManager.GeneratePasswordResetTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = Navigation.GetUriWithQueryParameters(
@@ -668,10 +597,7 @@
     private async Task OnResetPassword(ApplicationUserDto item)
     {
         var model = new ResetPasswordFormModel { Id = item.Id, DisplayName = item.DisplayName, UserName = item.UserName, ProfilePictureDataUrl = item.ProfilePictureDataUrl };
-        var parameters = new DialogParameters<ResetPasswordDialog>
-        {
-            { x => x.Model, model }
-        };
+        var parameters = new DialogParameters<ResetPasswordDialog> { { x => x.Model, model } };
         var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
         var dialog = await DialogService.ShowAsync<ResetPasswordDialog>(L["Set Password"], parameters, options);
         var result = await dialog.Result;
@@ -682,26 +608,77 @@
     }
     private async Task ProcessPasswordReset(ApplicationUserDto item, ResetPasswordFormModel model)
     {
-
-        var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"Application user not found {item.Id}.");
+        var user = await UserManager.FindByIdAsync(item.Id!)
+                   ?? throw new NotFoundException($"User not found: {item.Id}");
         var token = await UserManager.GeneratePasswordResetTokenAsync(user);
-        var identityResult = await UserManager.ResetPasswordAsync(user, token, model.Password!);
-
-        if (identityResult.Succeeded)
+        var result = await UserManager.ResetPasswordAsync(user, token, model.Password!);
+        if (result.Succeeded)
         {
             if (!user.EmailConfirmed)
             {
                 user.EmailConfirmed = true;
                 await UserManager.UpdateAsync(user);
             }
-
-            Snackbar.Add($"{L["Reset password successfully."]}", Severity.Info);
+            Snackbar.Add(L["Reset password successfully."], Severity.Info);
         }
         else
         {
-            Snackbar.Add($"{string.Join(",", identityResult.Errors.Select(x => x.Description).ToArray())}", Severity.Error);
+            Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
         }
     }
+
+#endregion
+
+    #region User Activation and Permission Management
+    private async Task SetActive(ApplicationUserDto item)
+    {
+        var user = await UserManager.FindByIdAsync(item.Id!)
+                   ?? throw new NotFoundException($"User not found: {item.Id}");
+        await ToggleUserActiveState(user, item);
+    }
+
+    private async Task ToggleUserActiveState(ApplicationUser user, ApplicationUserDto item)
+    {
+        if (user.IsActive)
+            await DeactivateUser(user, item);
+        else
+            await ActivateUser(user, item);
+    }
+
+    private async Task ActivateUser(ApplicationUser user, ApplicationUserDto item)
+    {
+        user.IsActive = true;
+        user.LockoutEnd = null;
+        var result = await UserManager.UpdateAsync(user);
+        if (result.Succeeded)
+        {
+            item.IsActive = true;
+            item.LockoutEnd = null;
+            Snackbar.Add(L["The user has been activated."], Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
+        }
+    }
+
+    private async Task DeactivateUser(ApplicationUser user, ApplicationUserDto item)
+    {
+        user.IsActive = false;
+        user.LockoutEnd = DateTimeOffset.MaxValue;
+        var result = await UserManager.UpdateAsync(user);
+        if (result.Succeeded)
+        {
+            item.IsActive = false;
+            item.LockoutEnd = DateTimeOffset.MaxValue;
+            Snackbar.Add(L["The user has been inactivated."], Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
+        }
+    }
+
     private async Task OnSetPermissions(ApplicationUserDto item)
     {
         _showPermissionsDrawer = true;
@@ -714,21 +691,19 @@
         return Task.CompletedTask;
     }
 
-
-
     private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
     {
+        _processing = true;
         try
         {
-            _processing = true;
             var userId = models.First().UserId;
-            var user = await UserManager.FindByIdAsync(userId!) ?? throw new NotFoundException($"not found application user: {userId}"); 
+            var user = await UserManager.FindByIdAsync(userId!)
+                       ?? throw new NotFoundException($"User not found: {userId}");
             foreach (var model in models)
             {
                 await ProcessPermissionChange(user, model);
             }
-
-            Snackbar.Add($"{L["Authorization has been changed."]}", Severity.Info);
+            Snackbar.Add(L["Authorization has been changed."], Severity.Info);
             await ClearClaimsCache(user.Id);
         }
         finally
@@ -741,18 +716,14 @@
     {
         if (model.Assigned)
         {
-            if (model.ClaimType is not null && model.ClaimValue is not null)
-            {
+            if (!string.IsNullOrEmpty(model.ClaimType) && !string.IsNullOrEmpty(model.ClaimValue))
                 await UserManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
-            }
         }
         else
         {
-            var removed = (await UserManager.GetClaimsAsync(user)).FirstOrDefault(x => x.Value == model.ClaimValue);
-            if (removed is not null)
-            {
-                await UserManager.RemoveClaimAsync(user, removed);
-            }
+            var existingClaim = (await UserManager.GetClaimsAsync(user)).FirstOrDefault(c => c.Value == model.ClaimValue);
+            if (existingClaim is not null)
+                await UserManager.RemoveClaimAsync(user, existingClaim);
         }
     }
 
@@ -765,32 +736,28 @@
 
     private async Task OnAssignChangedHandler(PermissionModel model)
     {
+        _processing = true;
         try
         {
-            _processing = true;
             var userId = model.UserId!;
-            var user = await UserManager.FindByIdAsync(userId) ?? throw new NotFoundException($"Application user Not Found {userId}.");
-
+            var user = await UserManager.FindByIdAsync(userId)
+                       ?? throw new NotFoundException($"User not found: {userId}");
             model.Assigned = !model.Assigned;
             if (model.Assigned)
             {
-                if (model.ClaimType is not null && model.ClaimValue is not null)
+                if (!string.IsNullOrEmpty(model.ClaimType) && !string.IsNullOrEmpty(model.ClaimValue))
                 {
                     await UserManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
-                    Snackbar.Add($"{L["Permission assigned successfully."]}", Severity.Info);
+                    Snackbar.Add(L["Permission assigned successfully."], Severity.Info);
                 }
             }
             else
             {
-                var removed = (await UserManager.GetClaimsAsync(user)).FirstOrDefault(x => x.Value == model.ClaimValue);
-                if (removed is not null)
-                {
-                    await UserManager.RemoveClaimAsync(user, removed);
-                }
-
-                Snackbar.Add($"{L["Permission removed successfully."]}", Severity.Info);
+                var existingClaim = (await UserManager.GetClaimsAsync(user)).FirstOrDefault(c => c.Value == model.ClaimValue);
+                if (existingClaim is not null)
+                    await UserManager.RemoveClaimAsync(user, existingClaim);
+                Snackbar.Add(L["Permission removed successfully."], Severity.Info);
             }
-
             await ClearClaimsCache(user.Id);
         }
         finally
@@ -798,15 +765,18 @@
             _processing = false;
         }
     }
-
+    #endregion
+ 
+     
+     
+    #region export and import
     private async Task OnExport()
     {
         _exporting = true;
         try
         {
-            var searchPredicate = CreateSearchPredicate();
-
-            var items = await UserManager.Users.Where(searchPredicate)
+            var predicate = CreateSearchPredicate();
+            var items = await UserManager.Users.Where(predicate)
                 .Select(x => new ApplicationUserDto
                     {
                         Id = x.Id,
@@ -814,7 +784,7 @@
                         DisplayName = x.DisplayName,
                         Email = x.Email!,
                         PhoneNumber = x.PhoneNumber,
-                        LanguageCode=x.LanguageCode,
+                        LanguageCode = x.LanguageCode,
                         TimeZoneId = x.TimeZoneId,
                         SuperiorId = x.SuperiorId,
                         TenantId = x.TenantId
@@ -822,40 +792,33 @@
 
             var result = await ExportUsers(items);
             await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, "application/octet-stream");
-            Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
+            Snackbar.Add(ConstantString.ExportSuccess, Severity.Info);
         }
-        finally
-        {
-            _exporting = false;
-        }
+        finally { _exporting = false; }
     }
 
-    private async Task<byte[]> ExportUsers(List<ApplicationUserDto> items)
-    {
-        return await ExcelService.ExportAsync(items,
-            new Dictionary<string, Func<ApplicationUserDto, object?>>
-                                                        {
-                { L["Id"], item => item.Id },
-                { L["User Name"], item => item.UserName },
-                { L["Full Name"], item => item.DisplayName },
-                { L["Email"], item => item.Email },
-                { L["Phone Number"], item => item.PhoneNumber },
-                { L["Time Zone"], item => item.TimeZoneId },
-                { L["Language"], item => item.LanguageCode },
-                { L["Tenant Id"], item => item.TenantId },
-                { L["Superior Id"], item => item.SuperiorId }
-                                                        }, L["Users"]);
-    }
+    private async Task<byte[]> ExportUsers(List<ApplicationUserDto> items) =>
+        await ExcelService.ExportAsync(items, new Dictionary<string, Func<ApplicationUserDto, object?>>
+            {
+            { L["Id"], item => item.Id },
+            { L["User Name"], item => item.UserName },
+            { L["Full Name"], item => item.DisplayName },
+            { L["Email"], item => item.Email },
+            { L["Phone Number"], item => item.PhoneNumber },
+            { L["Time Zone"], item => item.TimeZoneId },
+            { L["Language"], item => item.LanguageCode },
+            { L["Tenant Id"], item => item.TenantId },
+            { L["Superior Id"], item => item.SuperiorId }
+            }, L["Users"]);
 
     private async Task OnImportData(IBrowserFile file)
     {
         _uploading = true;
         try
         {
-            var stream = new MemoryStream();
+            using var stream = new MemoryStream();
             await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
             var result = await ImportUsers(stream);
-
             if (result?.Succeeded == true)
             {
                 if (result.Data != null)
@@ -863,27 +826,22 @@
                     await ProcessImportedUsers(result.Data);
                     await _table.ReloadServerData();
                 }
-                Snackbar.Add($"{ConstantString.ImportSuccess}", Severity.Info);
+                Snackbar.Add(ConstantString.ImportSuccess, Severity.Info);
             }
             else if (result?.Errors != null)
             {
-                foreach (var msg in result.Errors)
+                foreach (var error in result.Errors)
                 {
-                    Snackbar.Add($"{msg}", Severity.Error);
+                    Snackbar.Add(error, Severity.Error);
                 }
             }
         }
-        finally
-        {
-            _uploading = false;
-        }
-
+        finally { _uploading = false; }
     }
 
-    private async Task<IResult<IEnumerable<ApplicationUser>>> ImportUsers(MemoryStream stream)
-    {
-        return await ExcelService.ImportAsync(stream.ToArray(), new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
-        {
+    private async Task<IResult<IEnumerable<ApplicationUser>>> ImportUsers(MemoryStream stream) =>
+        await ExcelService.ImportAsync(stream.ToArray(), new Dictionary<string, Func<DataRow, ApplicationUser, object?>>
+            {
             { L["User Name"], (row, item) => item.UserName = row[L["User Name"]]?.ToString() },
             { L["Full Name"], (row, item) => item.DisplayName = row[L["Full Name"]]?.ToString() },
             { L["Email"], (row, item) => item.Email = row[L["Email"]]?.ToString() },
@@ -892,8 +850,7 @@
             { L["Language"], (row, item) => item.LanguageCode = row[L["Language"]]?.ToString() },
             { L["Tenant Id"], (row, item) => item.TenantId = row[L["Tenant Id"]]?.ToString() },
             { L["Superior Id"], (row, item) => item.SuperiorId = row[L["Superior Id"]]?.ToString() }
-        }, L["Users"]);
-    }
+            }, L["Users"]);
 
     private async Task ProcessImportedUsers(IEnumerable<ApplicationUser> users)
     {
@@ -901,18 +858,19 @@
         {
             if (!UserManager.Users.Any(x => x.UserName == user.UserName))
             {
-                var identityResult = await UserManager.CreateAsync(user);
-                if (identityResult.Succeeded)
+                var result = await UserManager.CreateAsync(user);
+                if (result.Succeeded)
                 {
                     await UserManager.AddToRolesAsync(user, new[] { RoleName.Basic });
                 }
                 else
                 {
-                    Snackbar.Add($"{string.Join(',', identityResult.Errors.Select(x => x.Description))}", Severity.Error);
+                    Snackbar.Add(string.Join(',', result.Errors.Select(e => e.Description)), Severity.Error);
                 }
             }
         }
     }
+    #endregion
 
     private async Task SendWelcomeNotification(string toEmail, string userName)
     {

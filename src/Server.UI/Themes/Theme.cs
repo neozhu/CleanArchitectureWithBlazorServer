@@ -71,9 +71,10 @@ public static class Theme
                 TableLines = "rgba(63, 68, 82, 0.6)",
                 LinesDefault = "#333333", 
                 LinesInputs = "rgba(255, 255, 255, 0.3)",
-                DarkContrastText= "#092750",
+                DarkContrastText= "#FAFAFA",
                 SecondaryContrastText = "#D5D5D5",
-                PrimaryContrastText = "#092750",
+                PrimaryContrastText = "#FAFAFA",
+                
             },
             LayoutProperties = new LayoutProperties
             {
