@@ -26,7 +26,7 @@ public static class Theme
                 Surface = "#ffffff", 
                 DrawerBackground = "#ffffff",
                 TextPrimary = "#2E2E2E", 
-                TextSecondary = "#6c757d", 
+                TextSecondary = "#111", 
                 SecondaryContrastText = "#F5F5F5", 
                 TextDisabled = "#B0B0B0", 
                 ActionDefault = "#80838b", 
@@ -61,7 +61,7 @@ public static class Theme
                 DrawerText = "rgba(255, 255, 255, 0.75)",
                 DrawerBackground = "#222222",
                 TextPrimary = "#DADADA", 
-                TextSecondary = "rgba(255, 255, 255, 0.6)",
+                TextSecondary = "rgba(255, 255, 255, 0.7)",
                 TextDisabled = "rgba(255, 255, 255, 0.38)",
                 ActionDefault = "#e8eaed", 
                 ActionDisabled = "rgba(255, 255, 255, 0.26)",
@@ -79,7 +79,8 @@ public static class Theme
             LayoutProperties = new LayoutProperties
             {
                 AppbarHeight = "80px",
-                DefaultBorderRadius = "6px"
+                DefaultBorderRadius = "6px",
+                DrawerWidthLeft = "256px",
             },
             Typography = new Typography
             {
