@@ -381,7 +381,11 @@
 
     private async Task OnRefresh()
     {
-        await _table.ReloadServerData();
+        await InvokeAsync(async () =>
+        {
+            _selectedItems = new HashSet<ApplicationUserDto>();
+            await _table.ReloadServerData();
+        });
     }
     #region User Creation, Editing, and Deletion
     private async Task ShowUserDialog(ApplicationUserDto model, string title, Func<ApplicationUserDto, Task> processAction)
