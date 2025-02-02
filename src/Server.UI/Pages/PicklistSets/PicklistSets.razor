@@ -52,50 +52,50 @@
                     </MudButton>
                     @if (_canCreate)
                     {
-                        <MudButton StartIcon="@Icons.Material.Outlined.Add"
-                                   OnClick="OnCreate">
+                            <MudButton StartIcon="@Icons.Material.Outlined.Add"
+                                       OnClick="OnCreate">
                             @ConstantString.New
-                        </MudButton>
+                            </MudButton>
                     }
                     <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
                         @if (_canDelete)
                         {
-                            <MudMenuItem Disabled="@(_selectedItems.Count == 0)"
-                                         OnClick="OnDeleteChecked">
+                                <MudMenuItem Disabled="@(_selectedItems.Count == 0)"
+                                             OnClick="OnDeleteChecked">
                                 @ConstantString.Delete
-                            </MudMenuItem>
+                                </MudMenuItem>
                         }
                         @if (_canExport)
                         {
-                            <MudMenuItem Disabled="@_exporting"
-                                         OnClick="OnExport">
+                                <MudMenuItem Disabled="@_exporting"
+                                             OnClick="OnExport">
                                 @ConstantString.Export
-                            </MudMenuItem>
+                                </MudMenuItem>
                         }
                         @if (_canImport)
                         {
-                            <MudMenuItem>
-                                <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
-                                    <ActivatorContent>
-                                        <MudButton Class="pa-0 ma-0"
-                                                   Style="font-weight:400;text-transform:none;"
-                                                   Variant="Variant.Text"
-                                                   Disabled="@_uploading">
+                                <MudMenuItem>
+                                    <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
+                                        <ActivatorContent>
+                                            <MudButton Class="pa-0 ma-0"
+                                                       Style="font-weight:400;text-transform:none;"
+                                                       Variant="Variant.Text"
+                                                       Disabled="@_uploading">
                                             @ConstantString.Import
-                                        </MudButton>
-                                    </ActivatorContent>
-                                </MudFileUpload>
-                            </MudMenuItem>
+                                            </MudButton>
+                                        </ActivatorContent>
+                                    </MudFileUpload>
+                                </MudMenuItem>
                         }
                     </MudMenu>
                 </MudToolBar>
                 <MudStack Row Spacing="1">
                     @if (_canSearch)
                     {
-                        <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true" 
-                                       ValueChanged="OnPicklistSearch" Style="width:160px" FullWidth="true" />
-                        <MudTextField T="string" Value="@Query.Keyword" ValueChanged="OnKeywordSearch" Placeholder="@ConstantString.Search" 
-                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
+                            <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true" 
+                                           ValueChanged="OnPicklistSearch" Style="width:160px" FullWidth="true" />
+                            <MudTextField T="string" Value="@Query.Keyword" ValueChanged="OnKeywordSearch" Placeholder="@ConstantString.Search" 
+                                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
                     }
                 </MudStack>
             </MudStack>
@@ -253,10 +253,10 @@
     private async Task OnCreate()
     {
         var command = new AddEditPicklistSetCommand
-        {
-            Name = SelectedItem.Name,
-            Description = SelectedItem?.Description
-        };
+            {
+                Name = SelectedItem.Name,
+                Description = SelectedItem?.Description
+            };
         await ShowCreateDialog(command, L["Create a picklist"]);
     }
 
