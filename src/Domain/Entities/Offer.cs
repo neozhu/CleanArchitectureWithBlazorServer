@@ -6,7 +6,7 @@ public class Offer : BaseAuditableEntity
 {
     public int CustomerId { get; set; }
     public DateTime OfferDate { get; set; } = DateTime.UtcNow;
-    public decimal ShippingCosts { get; set; }
+    public decimal? ShippingCosts { get; set; }
     public decimal TotalAmount { get; set; }
     public string Status { get; set; } = "Pending";
     public string? PaymentType { get; set; } = "Cash";
@@ -20,3 +20,4 @@ public class Offer : BaseAuditableEntity
 
     public List<OfferLine> OfferLines { get;set; } = [];
 }
+

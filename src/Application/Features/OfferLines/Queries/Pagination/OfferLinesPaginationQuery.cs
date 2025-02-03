@@ -20,20 +20,14 @@ public class OfferLinesWithPaginationQuery : OfferLineAdvancedFilter, ICacheable
     public int OrderId { get; set; }
 }
 
-public class OfferLinesWithPaginationQueryHandler :
+public class OfferLinesWithPaginationQueryHandler(
+         IApplicationDbContext context) :
          IRequestHandler<OfferLinesWithPaginationQuery, PaginatedData<OfferLineDto>>
 {
-    private readonly IApplicationDbContext _context;
-
-    public OfferLinesWithPaginationQueryHandler(
-        IApplicationDbContext context)
-    {
-        _context = context;
-    }
+    private readonly IApplicationDbContext _context = context;
 
     public async Task<PaginatedData<OfferLineDto>> Handle(OfferLinesWithPaginationQuery request, CancellationToken cancellationToken)
     {
-
         var offerLines = await _context.Offers
                                        .Where(x => x.Id == request.OrderId)
                                        .SelectMany(x => x.OfferLines)

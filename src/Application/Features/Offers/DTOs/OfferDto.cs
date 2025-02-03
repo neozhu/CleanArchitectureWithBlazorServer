@@ -15,6 +15,9 @@ public class OfferDto
     [Description("Total amount")]
     public decimal TotalAmount { get; set; }
 
+    [Description("ShippingCosts")]
+    public decimal ShippingCosts { get; set; }
+
     [Description("Status")]
     public string? Status { get; set; }
 

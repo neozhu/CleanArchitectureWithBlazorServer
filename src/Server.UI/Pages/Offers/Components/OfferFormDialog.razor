@@ -83,6 +83,12 @@
                     </PicklistAutocomplete>
                 </MudItem>
 
+                <MudItem xs="12" md="6">
+                    <MudNumericField Label="@L[model.GetMemberDescription(x=>x.ShippingCosts)]" @bind-Value="model.ShippingCosts"
+                                     For="@(() => model.ShippingCosts)" Min="0" Required="true" RequiredError="@L["ShippingCosts is required!"]"></MudNumericField>
+                </MudItem>
+
+
                 @if (model.Id > 0) {
                     <MudItem xs="12">
                         <OfferLines OrderId="@model.Id" />

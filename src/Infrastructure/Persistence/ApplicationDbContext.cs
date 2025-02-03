@@ -34,6 +34,7 @@ public class ApplicationDbContext : IdentityDbContext<
     public DbSet<Invoice> Invoices { get; set; }
     public DbSet<SupplyItem> SupplyItems { get; set; }
     public DbSet<SubProduct> SubProducts { get; set; }
+    public DbSet<Step> Steps { get; set; }
 
     //public DbSet<OfferLine> OfferLines { get; set; }
 

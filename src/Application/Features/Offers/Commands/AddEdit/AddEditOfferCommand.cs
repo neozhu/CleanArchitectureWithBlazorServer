@@ -17,11 +17,14 @@ public class AddEditOfferCommand: ICacheInvalidatorRequest<Result<int>>
     public DateTime OfferDate {get;set;}  = DateTime.Now;
     [Description("Total amount")]
     public decimal TotalAmount {get;set;}
+
+    [Description("ShippingCosts")]
+    public decimal ShippingCosts { get; set; }
+
     [Description("Status")]
     public string? Status { get; set; } = "Pending";
     [Description("Offer lines")]
     public List<OfferLine>? OfferLines { get; set; }
-
 
     [Description("Packaging")]
     public int? Packaging { get; set; }
@@ -64,6 +67,9 @@ public class AddEditOfferCommandHandler : IRequestHandler<AddEditOfferCommand, R
                 {
                     return await Result<int>.FailureAsync($"Offer with id: [{request.Id}] not found.");
                 }
+
+                request?.OfferLines?.ForEach(x => x.Product = null);
+
                 OfferMapper.ApplyChangesFrom(request, item);
                 // raise a update domain event
                 //item.AddDomainEvent(new OfferUpdatedEvent(item));

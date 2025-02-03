@@ -13,7 +13,11 @@ public class UpdateOfferCommand: ICacheInvalidatorRequest<Result<int>>
     [Description("Offer date")]
     public DateTime OfferDate {get;set;} 
     [Description("Total amount")]
-    public decimal TotalAmount {get;set;} 
+    public decimal TotalAmount {get;set;}
+
+    [Description("ShippingCosts")]
+    public decimal ShippingCosts { get; set; }
+
     [Description("Status")]
     public string? Status {get;set;}
 
