@@ -59,7 +59,7 @@ public class UserPreference
     /// <summary>
     /// Returns a darker version of the primary color.
     /// </summary>
-    public string PrimaryDarken => AdjustBrightness(PrimaryColor, 0.8);
+    public string PrimaryDarken => AdjustBrightness(PrimaryColor, 0.7);
 
     /// <summary>
     /// Returns a lighter version of the primary color.
@@ -84,7 +84,9 @@ public class UserPreference
     /// <summary>
     /// Calculates the line height based on the default font size.
     /// </summary>
-    public double LineHeight => Math.Min(1.7, Math.Max(1.3, 1.43 * (DefaultFontSize / 0.875)));
+    public double LineHeight => 1.12 * Math.Pow(DefaultFontSize, 2)
+                              - 1.16 * DefaultFontSize
+                              + 1.5875;
 
     /// <summary>
     /// Calculates the letter spacing based on the default font size.
@@ -92,12 +94,12 @@ public class UserPreference
     public double LetterSpacing => 0.00938 * (DefaultFontSize / 0.875);
 
     // Heading font sizes (calculated using the default font size and the scale factor)
-    public double H6FontSize => DefaultFontSize * 1.125 * ScaleFactor;
-    public double H5FontSize => DefaultFontSize * 1.25 * ScaleFactor;
-    public double H4FontSize => DefaultFontSize * 1.5 * ScaleFactor;
-    public double H3FontSize => DefaultFontSize * 1.875 * ScaleFactor;
-    public double H2FontSize => DefaultFontSize * 2.25 * ScaleFactor;
-    public double H1FontSize => DefaultFontSize * 3 * ScaleFactor;
+    public double H6FontSize => DefaultFontSize * 1.15385 * ScaleFactor; // ≈ 1.0rem
+    public double H5FontSize => DefaultFontSize * 1.297 * ScaleFactor;   // ≈ 1.125rem
+    public double H4FontSize => DefaultFontSize * 1.441 * ScaleFactor;   // ≈ 1.25rem
+    public double H3FontSize => DefaultFontSize * 1.73 * ScaleFactor;    // ≈ 1.5rem
+    public double H2FontSize => DefaultFontSize * 2.163 * ScaleFactor;   // ≈ 1.875rem
+    public double H1FontSize => DefaultFontSize * 2.594 * ScaleFactor;   // ≈ 2.25rem
 
     // Body text properties
     public double Body1FontSize => DefaultFontSize;
@@ -109,15 +111,19 @@ public class UserPreference
 
     // Button text properties
     public double ButtonFontSize => DefaultFontSize;
-    public double ButtonLineHeight => Math.Min(2.15, Math.Max(1.5, 1.75 * (DefaultFontSize / 0.875)));
+    public double ButtonLineHeight => 1.12 * Math.Pow(DefaultFontSize, 2)
+                             - 1.16 * DefaultFontSize
+                             + 1.9075;
 
     // Caption text properties
     public double CaptionFontSize => DefaultFontSize - 0.1875;
-    public double CaptionLineHeight => Math.Min(1.8, Math.Max(1.3, 1.4 * (DefaultFontSize / 0.625)));
+    public double CaptionLineHeight => 1.12 * Math.Pow(DefaultFontSize, 2)
+                             - 1.16 * DefaultFontSize
+                             + 1.9075;
 
     // Overline text properties
     public double OverlineFontSize => DefaultFontSize - 0.1875;
-    public double OverlineLineHeight => Math.Min(2.0, Math.Max(1.5, 1.6 * (DefaultFontSize / 0.625)));
+    public double OverlineLineHeight => LineHeight;
 
     // Subtitle text properties
     public double Subtitle1FontSize => DefaultFontSize + 0.125;
