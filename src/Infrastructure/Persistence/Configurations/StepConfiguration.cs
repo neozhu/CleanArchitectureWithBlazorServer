@@ -26,7 +26,6 @@ public class StepConfiguration : IEntityTypeConfiguration<Step>
         builder.Property(s => s.StepOrder)
             .IsRequired();
 
-
         builder.OwnsMany(s => s.Comments, c =>
         {
             // Ensuring Comments reference Step
