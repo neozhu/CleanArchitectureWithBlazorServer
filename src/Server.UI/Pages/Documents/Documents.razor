@@ -173,7 +173,6 @@
             <CellTemplate>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.TenantId</MudText>
                 </div>
             </CellTemplate>
         </PropertyColumn>
@@ -216,7 +215,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
+        await SetPermissionsAsync();
         Title = L[_currentDto.GetClassDescription()];
         Client.JobCompletedEvent += _client_JobCompleted;
         Client.JobStartedEvent += _client_JobStarted;
