@@ -26,7 +26,7 @@ public static class Theme
                 Surface = "#ffffff", 
                 DrawerBackground = "#ffffff",
                 TextPrimary = "#2E2E2E", 
-                TextSecondary = "#6c757d", 
+                TextSecondary = "#111", 
                 SecondaryContrastText = "#F5F5F5", 
                 TextDisabled = "#B0B0B0", 
                 ActionDefault = "#80838b", 
@@ -61,7 +61,7 @@ public static class Theme
                 DrawerText = "rgba(255, 255, 255, 0.75)",
                 DrawerBackground = "#222222",
                 TextPrimary = "#DADADA", 
-                TextSecondary = "rgba(255, 255, 255, 0.6)",
+                TextSecondary = "rgba(255, 255, 255, 0.7)",
                 TextDisabled = "rgba(255, 255, 255, 0.38)",
                 ActionDefault = "#e8eaed", 
                 ActionDisabled = "rgba(255, 255, 255, 0.26)",
@@ -79,7 +79,8 @@ public static class Theme
             LayoutProperties = new LayoutProperties
             {
                 AppbarHeight = "80px",
-                DefaultBorderRadius = "6px"
+                DefaultBorderRadius = "6px",
+                DrawerWidthLeft = "256px",
             },
             Typography = new Typography
             {
@@ -93,45 +94,45 @@ public static class Theme
                 },
                 H1 = new H1Typography
                 {
-                    FontSize = "2.2rem",
-                    FontWeight = "700",
-                    LineHeight = "2.8",
-                    LetterSpacing = "-.01562em"
+                    FontSize = "2.25rem",    
+                    FontWeight = "700",        
+                    LineHeight = "2.5",       
+                    LetterSpacing = "-0.02em"  
                 },
                 H2 = new H2Typography
                 {
-                    FontSize = "2rem",
-                    FontWeight = "600",
-                    LineHeight = "2.5",
-                    LetterSpacing = "-.00833em"
+                    FontSize = "1.875rem",     
+                    FontWeight = "700",
+                    LineHeight = "2.25",
+                    LetterSpacing = "0"
                 },
                 H3 = new H3Typography
                 {
-                    FontSize = "1.75rem",
-                    FontWeight = "600",
-                    LineHeight = "2.23",
+                    FontSize = "1.5rem",      
+                    FontWeight = "700",
+                    LineHeight = "2",
                     LetterSpacing = "0"
                 },
                 H4 = new H4Typography
                 {
-                    FontSize = "1.5rem",
-                    FontWeight = "500",
-                    LineHeight = "2",
-                    LetterSpacing = ".00735em"
+                    FontSize = "1.25rem",      
+                    FontWeight = "700",
+                    LineHeight = "1.75",
+                    LetterSpacing = "0"
                 },
                 H5 = new H5Typography
                 {
-                    FontSize = "1.25rem",
+                    FontSize = "1.125rem",     
                     FontWeight = "500",
-                    LineHeight = "1.8",
+                    LineHeight = "1.75",
                     LetterSpacing = "0"
                 },
                 H6 = new H6Typography
                 {
-                    FontSize = "1rem",
-                    FontWeight = "400",
-                    LineHeight = "1.6",
-                    LetterSpacing = ".0075em"
+                    FontSize = "1rem",        
+                    FontWeight = "500",
+                    LineHeight = "1.5",
+                    LetterSpacing = "0"
                 },
                 Button = new ButtonTypography
                 {
