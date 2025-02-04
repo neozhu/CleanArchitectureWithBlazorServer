@@ -229,7 +229,7 @@
     }
     private async Task OnSearch(string text)
     {
-        _selectedItems = new();
+        _selectedItems.Clear();
         Query.Keyword = text;
         await _table.ReloadServerData();
     }
@@ -241,7 +241,7 @@
     private async Task OnRefresh()
     {
         ContactCacheKey.Refresh();
-        _selectedItems = new();
+        _selectedItems.Clear();
         Query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
