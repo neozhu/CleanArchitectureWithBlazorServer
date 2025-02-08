@@ -5,7 +5,6 @@ using System.Reflection;
 using ActualLab.Fusion;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Serialization;
 using CleanArchitecture.Blazor.Application.Features.Fusion;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
@@ -18,7 +17,6 @@ using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
-using CleanArchitecture.Blazor.Infrastructure.Services.Serialization;
 using FluentEmail.MailKitSmtp;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.DataProtection;
@@ -174,8 +172,14 @@ public static class DependencyInjection
                 service.Initialize();
                 return service;
             });
-
-        return services.AddSingleton<ISerializer, SystemTextJsonSerializer>()
+        services.AddSingleton<UserService>()
+            .AddSingleton<IUserService>(sp =>
+            {
+                var service = sp.GetRequiredService<UserService>();
+                service.Initialize();
+                return service;
+            });
+        return services
             .AddScoped<IValidationService, ValidationService>()
             .AddScoped<IDateTime, DateTimeService>()
             .AddScoped<IExcelService, ExcelService>()
@@ -302,13 +306,7 @@ public static class DependencyInjection
         });
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
-        services.AddSingleton<UserService>()
-            .AddSingleton<IUserService>(sp =>
-            {
-                var service = sp.GetRequiredService<UserService>();
-                service.Initialize();
-                return service;
-            });
+        
 
         return services;
     }
