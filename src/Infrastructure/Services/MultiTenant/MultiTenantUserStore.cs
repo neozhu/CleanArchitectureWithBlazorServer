@@ -115,20 +115,20 @@ public class MultiTenantUserStore : UserStore<
     }
 
     // Retrieve a role entity based on the normalized role name and tenant ID
-    private async Task<ApplicationRole> GetRoleAsync(string normalizedRoleName, string tenantId, CancellationToken cancellationToken)
+    private  Task<ApplicationRole?> GetRoleAsync(string normalizedRoleName, string tenantId, CancellationToken cancellationToken)
     {
-        return await Context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName && r.TenantId == tenantId, cancellationToken);
+        return  Context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName && r.TenantId == tenantId, cancellationToken);
     }
 
     // Retrieve a user-role relationship based on user ID and role ID
-    private async Task<ApplicationUserRole> GetUserRoleAsync(string userId, string roleId, CancellationToken cancellationToken)
+    private  Task<ApplicationUserRole?> GetUserRoleAsync(string userId, string roleId, CancellationToken cancellationToken)
     {
-        return await Context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userId && ur.RoleId == roleId, cancellationToken);
+        return  Context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userId && ur.RoleId == roleId, cancellationToken);
     }
 
     // Check if a user is in a given role
-    private async Task<bool> IsUserInRoleAsync(string userId, string roleId, CancellationToken cancellationToken)
+    private  Task<bool> IsUserInRoleAsync(string userId, string roleId, CancellationToken cancellationToken)
     {
-        return await Context.UserRoles.AnyAsync(ur => ur.UserId == userId && ur.RoleId == roleId, cancellationToken);
+        return  Context.UserRoles.AnyAsync(ur => ur.UserId == userId && ur.RoleId == roleId, cancellationToken);
     }
 }

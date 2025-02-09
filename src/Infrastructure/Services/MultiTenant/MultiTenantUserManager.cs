@@ -98,7 +98,7 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
             });
         }
 
-        if (await IsInRoleAsync(user, role.Name))
+        if (await IsInRoleAsync(user, role.Name!))
         {
             return IdentityResult.Failed(new IdentityError
             {
@@ -108,7 +108,7 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
         }
 
         var userRoleStore = GetUserRoleStore();
-        await userRoleStore.AddToRoleAsync(user, role.NormalizedName, CancellationToken.None);
+        await userRoleStore.AddToRoleAsync(user, role.NormalizedName!, CancellationToken.None);
 
         return await UpdateUserAsync(user);
     }
@@ -153,5 +153,5 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
                ?? throw new NotSupportedException("The user store does not implement IUserRoleStore<ApplicationUser>.");
     }
 
-    private ApplicationDbContext Context => (Store as UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, string, ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin, ApplicationUserToken, ApplicationRoleClaim>)?.Context;
+    private ApplicationDbContext Context => (Store as UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, string, ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin, ApplicationUserToken, ApplicationRoleClaim>)?.Context ?? throw new InvalidOperationException("Context is not available.");
 }

@@ -23,5 +23,6 @@ public class DocumentConfiguration : IEntityTypeConfiguration<Document>
             .OnDelete(DeleteBehavior.Restrict);
         builder.Navigation(e => e.CreatedByUser).AutoInclude();
         builder.Navigation(e => e.LastModifiedByUser).AutoInclude();
+        builder.Navigation(e => e.Tenant).AutoInclude();
     }
 }
