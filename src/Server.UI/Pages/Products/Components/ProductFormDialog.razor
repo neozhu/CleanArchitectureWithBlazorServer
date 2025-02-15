@@ -184,17 +184,8 @@
                     }
                     else
                     {
-                        using (var outStream = new MemoryStream())
-                        {
-                            using (var image = Image.Load(attachStream))
-                            {
-                                image.Mutate(
-                                    i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(640, 320) }));
-                                image.Save(outStream, PngFormat.Instance);
-                                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.Product, outStream.ToArray()));
-                                list.Add(new ProductImage { Name = filename, Size = outStream.Length, Url = result });
-                            }
-                        }
+                        var result = await UploadService.UploadImageAsync(attachStream, UploadType.Product, new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(640, 320) });
+                        list.Add(new ProductImage { Name = filename, Size = attachStream.Length, Url = result });
                     }
                 }
                 catch (Exception ex)
@@ -228,13 +219,13 @@
 
             var result = await Mediator.Send(Model);
             result.Match(
-            data=>
+            data =>
             {
                 MudDialog.Close(DialogResult.Ok(true));
                 Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
                 return data;
             },
-            errors=>
+            errors =>
             {
                 Snackbar.Add(errors, Severity.Error);
                 return 0;
@@ -256,14 +247,14 @@
                 return;
             var result = await Mediator.Send(Model);
             result.Match(
-            data=>
+            data =>
             {
                 Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
                 Refresh?.Invoke();
                 Model = new AddEditProductCommand();
                 return data;
             },
-            errors=>
+            errors =>
             {
                 Snackbar.Add(result.ErrorMessage, Severity.Error);
                 return 0;
@@ -282,6 +273,6 @@
     private async Task OnDownloadFile(string? str)
     {
         var fileURL = str;
-        await new Fancybox(JS).Preview(str??string.Empty, []);
+        await new Fancybox(JS).Preview(str ?? string.Empty, []);
     }
 }

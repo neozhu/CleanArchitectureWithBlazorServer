@@ -205,15 +205,32 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        var state = await AuthState;
-        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Create)).Succeeded;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Edit)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Delete)).Succeeded;
-        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Import)).Succeeded;
-        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Export)).Succeeded;
+        await SetPermissionsAsync();
     }
+    private async Task SetPermissionsAsync()
+    {
+        // Retrieve the current authentication state.
+        var state = await AuthState;
 
+        // Initiate permission checks concurrently.
+        var createTask = AuthService.AuthorizeAsync(state.User, Permissions.Products.Create);
+        var searchTask = AuthService.AuthorizeAsync(state.User, Permissions.Products.Search);
+        var editTask = AuthService.AuthorizeAsync(state.User, Permissions.Products.Edit);
+        var deleteTask = AuthService.AuthorizeAsync(state.User, Permissions.Products.Delete);
+        var importTask = AuthService.AuthorizeAsync(state.User, Permissions.Products.Import);
+        var exportTask = AuthService.AuthorizeAsync(state.User, Permissions.Products.Export);
+
+        // Wait for all permission tasks to complete concurrently.
+        await Task.WhenAll(createTask, searchTask, editTask, deleteTask, importTask, exportTask);
+
+        // Assign the results of each permission check to the corresponding flags.
+        _canCreate = createTask.Result.Succeeded;
+        _canSearch = searchTask.Result.Succeeded;
+        _canEdit = editTask.Result.Succeeded;
+        _canDelete = deleteTask.Result.Succeeded;
+        _canImport = importTask.Result.Succeeded;
+        _canExport = exportTask.Result.Succeeded;
+    }
     private async Task<GridData<ProductDto>> ServerReload(GridState<ProductDto> state)
     {
         try

@@ -27,7 +27,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.Domain" Size="Size.Large" />
                 <MudStack Spacing="0">
                     <MudText Typo="Typo.subtitle2" Class="mb-2">@Title</MudText>
-              
+
                 </MudStack>
             </MudStack>
             <MudStack Spacing="0" AlignItems="AlignItems.End">
@@ -41,17 +41,17 @@
                     @if (_canCreate)
                     {
                         <MudButton 
-                                   StartIcon="@Icons.Material.Outlined.Add"
-                                   OnClick="OnCreate">
+                        StartIcon="@Icons.Material.Outlined.Add"
+                        OnClick="OnCreate">
                             @ConstantString.New
                         </MudButton>
                     }
                     @if (_canDelete)
                     {
                         <MudButton 
-                                   StartIcon="@Icons.Material.Outlined.Delete"
-                                   Disabled="@(!(_selectedItems.Count > 0))"
-                                   OnClick="OnDeleteChecked">
+                        StartIcon="@Icons.Material.Outlined.Delete"
+                        Disabled="@(!(_selectedItems.Count > 0))"
+                        OnClick="OnDeleteChecked">
                             @ConstantString.Delete
                         </MudButton>
                     }
@@ -60,7 +60,7 @@
                     @if (_canSearch)
                     {
                         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                         </MudTextField>
                     }
                 </MudStack>
@@ -74,8 +74,8 @@
                 @if (_canEdit || _canDelete)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                    Dense="true"
+                    EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
                             <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
@@ -89,8 +89,8 @@
                 else
                 {
                     <MudButton Variant="Variant.Filled"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
+                    StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                    Color="Color.Surface">
                         @ConstantString.NoAllowed
                     </MudButton>
                 }
@@ -136,21 +136,34 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        var state = await AuthState;
-        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Create)).Succeeded;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Edit)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Delete)).Succeeded;
+        await SetPermissionsAsync();
     }
+    private async Task SetPermissionsAsync()
+    {
+        var state = await AuthState;
+        var createTask = AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Create);
+        var searchTask = AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Search);
+        var editTask = AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Edit);
+        var deleteTask = AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Delete);
 
+        await Task.WhenAll(createTask, searchTask, editTask, deleteTask);
+
+        _canCreate = createTask.Result.Succeeded;
+        _canSearch = searchTask.Result.Succeeded;
+        _canEdit = editTask.Result.Succeeded;
+        _canDelete = deleteTask.Result.Succeeded;
+    }
     private async Task<GridData<TenantDto>> ServerReload(GridState<TenantDto> state)
     {
         try
         {
             _loading = true;
             Query.Keyword = _searchString;
-            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
+            var sortDefinition = state.SortDefinitions.FirstOrDefault();
+            Query.OrderBy = sortDefinition?.SortBy ?? "Id";
+            Query.SortDirection = (sortDefinition != null && sortDefinition.Descending)
+                                      ? SortDirection.Descending.ToString()
+                                      : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
             var result = await Mediator.Send(Query);

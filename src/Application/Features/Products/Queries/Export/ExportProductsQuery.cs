@@ -22,18 +22,15 @@ public class ExportProductsQueryHandler :
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ExportProductsQueryHandler> _localizer;
     private readonly IPDFService _pdfService;
-    private readonly ISerializer _serializer;
 
     public ExportProductsQueryHandler(
         IApplicationDbContext context,
-        ISerializer serializer,
         IExcelService excelService,
         IPDFService pdfService,
         IStringLocalizer<ExportProductsQueryHandler> localizer
     )
     {
         _context = context;
-        _serializer = serializer;
         _excelService = excelService;
         _pdfService = pdfService;
         _localizer = localizer;
@@ -71,7 +68,7 @@ public class ExportProductsQueryHandler :
                     { _localizer["Description"], item => item.Description },
                     { _localizer["Price of unit"], item => item.Price },
                     { _localizer["Unit"], item => item.Unit },
-                    { _localizer["Pictures"], item => _serializer.Serialize(item.Pictures) }
+                    { _localizer["Pictures"], item => JsonSerializer.Serialize(item.Pictures) }
                 };
                 result = await _excelService.ExportAsync(data, mappers, _localizer["Products"]);
                 break;

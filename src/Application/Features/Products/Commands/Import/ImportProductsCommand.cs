@@ -34,19 +34,16 @@ public class ImportProductsCommandHandler :
     private readonly IApplicationDbContext _context;
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ImportProductsCommandHandler> _localizer;
-    private readonly ISerializer _serializer;
 
     public ImportProductsCommandHandler(
         IApplicationDbContext context,
         IExcelService excelService,
-        ISerializer serializer,
         IStringLocalizer<ImportProductsCommandHandler> localizer
     )
     {
         _context = context;
         _localizer = localizer;
         _excelService = excelService;
-        _serializer = serializer;
     }
 
     public async Task<Result<byte[]>> Handle(CreateProductsTemplateCommand request, CancellationToken cancellationToken)
@@ -84,7 +81,7 @@ public class ImportProductsCommandHandler :
                     _localizer["Pictures"],
                     (row, item) => item.Pictures = string.IsNullOrEmpty(row[_localizer["Pictures"]].ToString())
                         ? new List<ProductImage>()
-                        : _serializer.Deserialize<List<ProductImage>>(row[_localizer["Pictures"]].ToString())
+                        : JsonSerializer.Deserialize<List<ProductImage>>(row[_localizer["Pictures"]].ToString())
                 }
             }, _localizer["Products"]);
         if (!result.Succeeded) return await Result<int>.FailureAsync(result.Errors);
