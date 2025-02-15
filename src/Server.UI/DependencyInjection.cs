@@ -92,7 +92,7 @@ public static class DependencyInjection
 
         services.AddHttpClient("ocr", c =>
         {
-            c.BaseAddress = new Uri("http://10.33.1.150:8000/ocr/predict-by-file");
+            c.BaseAddress = new Uri("https://paddleocr.blazors.app:8443/ocr/predict-by-file");
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
         services.AddScoped<LocalTimeOffset>();
