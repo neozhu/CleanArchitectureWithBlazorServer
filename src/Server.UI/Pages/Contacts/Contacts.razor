@@ -181,13 +181,31 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
+        await SetPermissionsAsync();
+    }
+    private async Task SetPermissionsAsync()
+    {
+        // Retrieve the current authentication state.
         var state = await AuthState;
-        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Create)).Succeeded;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Edit)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Delete)).Succeeded;
-        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Import)).Succeeded;
-        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Export)).Succeeded;
+
+        // Initiate permission checks concurrently.
+        var createTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Create);
+        var searchTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Search);
+        var editTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Edit);
+        var deleteTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Delete);
+        var importTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Import);
+        var exportTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Export);
+
+        // Wait for all permission tasks to complete concurrently.
+        await Task.WhenAll(createTask, searchTask, editTask, deleteTask, importTask, exportTask);
+
+        // Assign the results of each permission check to the corresponding flags.
+        _canCreate = createTask.Result.Succeeded;
+        _canSearch = searchTask.Result.Succeeded;
+        _canEdit = editTask.Result.Succeeded;
+        _canDelete = deleteTask.Result.Succeeded;
+        _canImport = importTask.Result.Succeeded;
+        _canExport = exportTask.Result.Succeeded;
     }
     private async Task<GridData<ContactDto>> ServerReload(GridState<ContactDto> state)
     {
@@ -211,7 +229,7 @@
     }
     private async Task OnSearch(string text)
     {
-        _selectedItems = new();
+        _selectedItems.Clear();
         Query.Keyword = text;
         await _table.ReloadServerData();
     }
@@ -223,7 +241,7 @@
     private async Task OnRefresh()
     {
         ContactCacheKey.Refresh();
-        _selectedItems = new();
+        _selectedItems.Clear();
         Query.Keyword = string.Empty;
         await _table.ReloadServerData();
     }

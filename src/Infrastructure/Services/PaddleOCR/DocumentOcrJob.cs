@@ -16,20 +16,17 @@ public class DocumentOcrJob : IDocumentOcrJob
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<DocumentOcrJob> _logger;
     private readonly IApplicationHubWrapper _notificationService;
-    private readonly ISerializer _serializer;
     private readonly Stopwatch _timer;
 
     public DocumentOcrJob(
         IApplicationHubWrapper appNotificationService,
         IApplicationDbContext context,
         IHttpClientFactory httpClientFactory,
-        ISerializer serializer,
         ILogger<DocumentOcrJob> logger)
     {
         _notificationService = appNotificationService;
         _context = context;
         _httpClientFactory = httpClientFactory;
-        _serializer = serializer;
         _logger = logger;
         _timer = new Stopwatch();
     }

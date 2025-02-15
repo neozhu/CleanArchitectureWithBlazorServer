@@ -1,14 +1,23 @@
 ﻿@inherits MudBaseButton
 
-<MudButton OnClick="OnClickAsync" StartIcon="@StartIcon" Disabled="@IsDisabled" IconColor="@IconColor" Variant="@Variant" Color="@Color" Size="@Size">
-    @if (_loading)
+<MudButton OnClick="OnClickAsync"
+           StartIcon="@StartIcon"
+           Disabled="@IsDisabled"
+           IconColor="@IconColor"
+           Variant="@Variant"
+           Color="@Color"
+           Size="@Size">
+    @if (Loading)
     {
-        if (LoadingAdornment == Adornment.Start)
+        @if (LoadingAdornment == Adornment.Start)
         {
-            <MudProgressCircular Class="me-2" Size="Size.Small" Color="@LoadingCircularColor" Indeterminate="true" />
+            <MudProgressCircular Class="me-2"
+                                 Size="Size.Small"
+                                 Color="@LoadingCircularColor"
+                                 Indeterminate="true" />
         }
 
-        if (LoadingContent != null)
+        @if (LoadingContent is not null)
         {
             @LoadingContent
         }
@@ -17,9 +26,12 @@
             @ChildContent
         }
 
-        if (LoadingAdornment == Adornment.End)
+        @if (LoadingAdornment == Adornment.End)
         {
-            <MudProgressCircular Class="ms-2" Size="Size.Small" Color="@LoadingCircularColor" Indeterminate="true" />
+            <MudProgressCircular Class="ms-2"
+                                 Size="Size.Small"
+                                 Color="@LoadingCircularColor"
+                                 Indeterminate="true" />
         }
     }
     else
@@ -27,81 +39,116 @@
         @ChildContent
     }
 </MudButton>
-@code{
+
+@code {
+    // Private field backing the Loading property.
     private bool _loading;
+
     /// <summary>
-    /// If applied the text will be added to the component.
+    /// Optional label text for the button.
     /// </summary>
     [Parameter]
     public string? Label { get; set; }
+
     /// <summary>
-    /// The color of the icon. It supports the theme colors.
+    /// Color of the icon; supports theme colors.
     /// </summary>
     [Parameter]
     public Color IconColor { get; set; } = Color.Inherit;
+
     /// <summary>
-    /// Icon placed before the text if set.
+    /// Icon displayed at the start of the button.
     /// </summary>
     [Parameter]
     public string? StartIcon { get; set; }
+
     /// <summary>
-    /// The color of the component. It supports the theme colors.
+    /// Button color; supports theme colors.
     /// </summary>
     [Parameter]
     public Color Color { get; set; } = Color.Default;
+
     /// <summary>
-    /// Placement of the loading adornment. Default is start.
+    /// Position of the loading adornment; defaults to Start.
     /// </summary>
     [Parameter]
     public Adornment LoadingAdornment { get; set; } = Adornment.Start;
 
     /// <summary>
-    /// The Size of the component.
+    /// Size of the button.
     /// </summary>
     [Parameter]
     public Size Size { get; set; } = Size.Medium;
+
     /// <summary>
-    /// The variant to use.
+    /// Variant of the button.
     /// </summary>
     [Parameter]
     public Variant Variant { get; set; } = Variant.Text;
+
+    /// <summary>
+    /// Indicates if the button is in a loading state. When true, displays a loading indicator and may disable the button.
+    /// </summary>
     [Parameter]
     public bool Loading
     {
         get => _loading;
         set
         {
-            if (_loading == value)
-                return;
-
-            _loading = value;
-            StateHasChanged();
+            if (_loading != value)
+            {
+                _loading = value;
+                StateHasChanged();
+            }
         }
     }
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }  // Adding ChildContent parameter
-
-    [Parameter]
-    public RenderFragment LoadingContent { get; set; }
-
-    [Parameter]
-    public Color LoadingCircularColor { get; set; } = Color.Primary;
 
     /// <summary>
-    /// Determines if the button should be disabled when loading.
+    /// When true, disables the button while it is loading. Default is true.
     /// </summary>
     [Parameter]
     public bool DisableWhenLoading { get; set; } = true;
 
+    /// <summary>
+    /// The content displayed within the button.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Optional content displayed when the button is loading. If not provided, ChildContent is used.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? LoadingContent { get; set; }
+
+    /// <summary>
+    /// Color for the loading circular progress indicator.
+    /// </summary>
+    [Parameter]
+    public Color LoadingCircularColor { get; set; } = Color.Primary;
+
+    /// <summary>
+    /// Determines whether the button is disabled based on its Disabled property and loading state.
+    /// </summary>
     private bool IsDisabled => Disabled || (Loading && DisableWhenLoading);
 
+    /// <summary>
+    /// Handles the button click event, setting the loading state during asynchronous execution.
+    /// Uses try/finally to ensure the loading state is reset even if an exception occurs.
+    /// </summary>
     private async Task OnClickAsync()
     {
         if (IsDisabled)
             return;
 
-        _loading = true;
-        await base.OnClick.InvokeAsync(null);
-        _loading = false;
+        try
+        {
+            Loading = true;
+            await base.OnClick.InvokeAsync(null);
+        }
+        finally
+        {
+            Loading = false;
+        }
     }
 }
