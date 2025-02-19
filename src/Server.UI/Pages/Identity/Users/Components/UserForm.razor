@@ -17,7 +17,7 @@
 
 <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
     <input For="@(() => Model.Id)" @bind-value="Model.Id" type="hidden" @bind-value:event="oninput" />
-    <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden" @bind-value:event="oninput"/>
+    <input For="@(() => Model.ProfilePictureDataUrl)" @bind-value="Model.ProfilePictureDataUrl" type="hidden" @bind-value:event="oninput" />
 
     <MudGrid Spacing="2">
         <MudItem sm="12">
@@ -55,11 +55,11 @@
             </MultiTenantAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L[Model.GetMemberDescription(x=>x.Provider)]"  ReadOnly="true"></MudTextField>
+            <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L[Model.GetMemberDescription(x=>x.Provider)]" ReadOnly="true"></MudTextField>
         </MudItem>
 
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L[Model.GetMemberDescription(x=>x.UserName)]"  Required="true"></MudTextField>
+            <MudTextField For="@(() => Model.UserName)" @bind-Value="Model.UserName" Label="@L[Model.GetMemberDescription(x=>x.UserName)]" Required="true"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <div class="d-fex">
@@ -67,7 +67,7 @@
             </div>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L[Model.GetMemberDescription(x=>x.DisplayName)]" ></MudTextField>
+            <MudTextField For="@(() => Model.DisplayName)" @bind-Value="Model.DisplayName" Label="@L[Model.GetMemberDescription(x=>x.DisplayName)]"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
             <PickSuperiorIdAutocomplete For="@(() => Model.Superior)" T="ApplicationUserDto"
@@ -79,16 +79,16 @@
             </PickSuperiorIdAutocomplete>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L[Model.GetMemberDescription(x=>x.Email)]"  Required="true"></MudTextField>
+            <MudTextField For="@(() => Model.Email)" @bind-Value="Model.Email" Label="@L[Model.GetMemberDescription(x=>x.Email)]" Required="true"></MudTextField>
         </MudItem>
         <MudItem xs="12" sm="6">
-            <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L[Model.GetMemberDescription(x=>x.PhoneNumber)]" ></MudTextField>
+            <MudTextField For="@(() => Model.PhoneNumber)" @bind-Value="Model.PhoneNumber" Label="@L[Model.GetMemberDescription(x=>x.PhoneNumber)]"></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <TimeZoneAutocomplete T="string" For="@(() => Model.TimeZoneId)"  @bind-Value="Model.TimeZoneId" Label="@L[Model.GetMemberDescription(x=>x.TimeZoneId)]" ></TimeZoneAutocomplete>
+            <TimeZoneAutocomplete T="string" For="@(() => Model.TimeZoneId)" @bind-Value="Model.TimeZoneId" Label="@L[Model.GetMemberDescription(x=>x.TimeZoneId)]"></TimeZoneAutocomplete>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <LanguageAutocomplete T="string" For="@(() => Model.LanguageCode)"  @bind-Value="Model.LanguageCode" Label="@L[Model.GetMemberDescription(x=>x.LanguageCode)]" ></LanguageAutocomplete>
+            <LanguageAutocomplete T="string" For="@(() => Model.LanguageCode)" @bind-Value="Model.LanguageCode" Label="@L[Model.GetMemberDescription(x=>x.LanguageCode)]"></LanguageAutocomplete>
         </MudItem>
 
 
@@ -114,16 +114,16 @@
             </MudGrid>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudTextField For="@(() => Model.CreatedBy)" Disabled  Value="Model.CreatedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.CreatedBy)]" ></MudTextField>
+            <MudTextField For="@(() => Model.CreatedBy)" Disabled Value="Model.CreatedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.CreatedBy)]"></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudTextField T="string" Disabled  Value="@(Model.Created.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.Created)]" ></MudTextField>
+            <MudTextField T="string" Disabled Value="@(Model.Created.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.Created)]"></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudTextField For="@(() => Model.LastModifiedBy)" Disabled  Value="Model.LastModifiedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.LastModifiedBy)]" ></MudTextField>
+            <MudTextField For="@(() => Model.LastModifiedBy)" Disabled Value="Model.LastModifiedByUser?.UserName" Label="@L[Model.GetMemberDescription(x=>x.LastModifiedBy)]"></MudTextField>
         </MudItem>
         <MudItem sm="6" xs="12">
-            <MudTextField T="string" Disabled  Value="@(Model.LastModified.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.LastModified)]" ></MudTextField>
+            <MudTextField T="string" Disabled Value="@(Model.LastModified.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x=>x.LastModified)]"></MudTextField>
         </MudItem>
     </MudGrid>
 </MudForm>
@@ -178,23 +178,9 @@
         var imgStream = new MemoryStream();
         await filestream.CopyToAsync(imgStream);
         imgStream.Position = 0;
-        using (var outStream = new MemoryStream())
-        {
-            using (var image = Image.Load(imgStream))
-            {
-                image.Mutate(
-                    i => i.Resize(new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) }));
-                image.Save(outStream, PngFormat.Instance);
-                var filename = file.Name;
-                var fi = new FileInfo(filename);
-                var ext = fi.Extension;
-                var result = await UploadService.UploadAsync(new UploadRequest($"{Model.Id}_{DateTime.UtcNow.Ticks}.png", UploadType.ProfilePicture, outStream.ToArray()));
-                Model.ProfilePictureDataUrl = result;
-
-                //Do your validations here
-                Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
-            }
-        }
+        var result = await UploadService.UploadImageAsync(imgStream, UploadType.ProfilePicture, new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) });
+        Model.ProfilePictureDataUrl = result;
+        Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
     }
 
     public async Task Submit()

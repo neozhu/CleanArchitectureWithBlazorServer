@@ -51,17 +51,17 @@
                     @if (_canCreate)
                     {
                         <MudButton 
-                                   StartIcon="@Icons.Material.Outlined.Camera"
-                                   OnClick="OnCreate">
+                        StartIcon="@Icons.Material.Outlined.Camera"
+                        OnClick="OnCreate">
                             @L["Upload Pictures"]
                         </MudButton>
                     }
                     @if (_canDelete)
                     {
                         <MudButton 
-                                   StartIcon="@Icons.Material.Outlined.Delete"
-                                   Disabled="@(!(_selectedItems.Count > 0))"
-                                   OnClick="OnDeleteChecked">
+                        StartIcon="@Icons.Material.Outlined.Delete"
+                        Disabled="@(!(_selectedItems.Count > 0))"
+                        OnClick="OnDeleteChecked">
                             @ConstantString.Delete
                         </MudButton>
                     }
@@ -70,7 +70,7 @@
                     @if (_canSearch)
                     {
                         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                         </MudTextField>
                     }
                 </MudStack>
@@ -86,8 +86,8 @@
                 @if (_canEdit || _canDelete)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
-                             Dense="true"
-                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                    Dense="true"
+                    EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_canEdit)
                         {
                             <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
@@ -105,8 +105,8 @@
                 else
                 {
                     <MudButton Variant="Variant.Filled"
-                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                               Color="Color.Surface">
+                    StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                    Color="Color.Surface">
                         @ConstantString.NoAllowed
                     </MudButton>
                 }
@@ -173,7 +173,6 @@
             <CellTemplate>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.TenantId</MudText>
                 </div>
             </CellTemplate>
         </PropertyColumn>
@@ -216,22 +215,37 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
+        await SetPermissionsAsync();
         Title = L[_currentDto.GetClassDescription()];
-        var state = await AuthState;
-        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Create)).Succeeded;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Edit)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Delete)).Succeeded;
-        _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import)).Succeeded;
-        _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export)).Succeeded;
-        _canDownload = (await AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download)).Succeeded;
         Client.JobCompletedEvent += _client_JobCompleted;
         Client.JobStartedEvent += _client_JobStarted;
         await Client.StartAsync();
         Query = new DocumentsWithPaginationQuery { CurrentUser = UserProfile };
     }
+    private async Task SetPermissionsAsync()
+    {
+        var state = await AuthState;
+        // Initiate permission checks concurrently using the user from the authentication state.
+        var createTask = AuthService.AuthorizeAsync(state.User, Permissions.Documents.Create);
+        var searchTask = AuthService.AuthorizeAsync(state.User, Permissions.Documents.Search);
+        var editTask = AuthService.AuthorizeAsync(state.User, Permissions.Documents.Edit);
+        var deleteTask = AuthService.AuthorizeAsync(state.User, Permissions.Documents.Delete);
+        var importTask = AuthService.AuthorizeAsync(state.User, Permissions.Documents.Import);
+        var exportTask = AuthService.AuthorizeAsync(state.User, Permissions.Documents.Export);
+        var downloadTask = AuthService.AuthorizeAsync(state.User, Permissions.Documents.Download);
 
+        // Wait for all permission tasks to complete concurrently.
+        await Task.WhenAll(createTask, searchTask, editTask, deleteTask, importTask, exportTask, downloadTask);
+
+        // Assign the results of each permission check to the corresponding flags.
+        _canCreate = createTask.Result.Succeeded;
+        _canSearch = searchTask.Result.Succeeded;
+        _canEdit = editTask.Result.Succeeded;
+        _canDelete = deleteTask.Result.Succeeded;
+        _canImport = importTask.Result.Succeeded;
+        _canExport = exportTask.Result.Succeeded;
+        _canDownload = downloadTask.Result.Succeeded;
+    }
     private void _client_JobCompleted(object? sender, JobCompletedEventArgs e)
     {
         InvokeAsync(async () =>
