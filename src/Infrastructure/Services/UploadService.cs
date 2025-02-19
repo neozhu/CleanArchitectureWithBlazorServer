@@ -2,6 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Extensions;
+using CleanArchitecture.Blazor.Domain.Common.Enums;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
@@ -60,6 +64,42 @@ public class UploadService : IUploadService
         if (File.Exists(removefile))
         {
             File.Delete(removefile);
+        }
+    }
+    /// <summary>
+    /// Uploads and processes an image.
+    /// </summary>
+    /// <param name="imageStream">The image stream.</param>
+    /// <param name="fileName">The file name.</param>
+    /// <param name="uploadType">The upload type.</param>
+    /// <param name="resizeOptions">The resize options (optional).</param>
+    /// <returns>The path of the uploaded image.</returns>
+    public async Task<string> UploadImageAsync(Stream imageStream, UploadType uploadType, ResizeOptions? resizeOptions = null, string? fileName=null)
+    {
+        var attachStream = new MemoryStream();
+        await imageStream.CopyToAsync(attachStream);
+        attachStream.Position = 0;
+
+        using (var outStream = new MemoryStream())
+        {
+            using (var image = Image.Load(attachStream))
+            {
+                // Apply resize if resize options are provided
+                if (resizeOptions != null)
+                {
+                    image.Mutate(i => i.Resize(resizeOptions));
+                }
+
+                image.Save(outStream, PngFormat.Instance);
+                var result = await UploadAsync(new UploadRequest(
+                
+                    fileName: fileName ?? $"{Guid.NewGuid()}_{DateTime.UtcNow.Ticks}.png",
+                    uploadType: uploadType,
+                    data: outStream.ToArray(),
+                    overwrite: true
+                ));
+                return result;
+            }
         }
     }
     /// <summary>

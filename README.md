@@ -11,7 +11,7 @@ This repository hosts a Blazor Server application designed using Clean Architect
 ## Explore the Live Demo
 
 Experience the application in action in Blazor Server mode by visiting:
-
+- Home Server: [cleanserver.blazors.app:8443](https://cleanserver.blazors.app:8443/)
 - MS SQL Database: [architecture.blazorserver.com](https://architecture.blazorserver.com/)
 
 - PostgreSQL Database: [architecture.blazors.app](https://architecture.blazors.app/)
