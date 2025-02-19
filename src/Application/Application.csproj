@@ -21,11 +21,11 @@
         <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Riok.Mapperly" Version="4.2.0-next.0" />
-        <PackageReference Include="Hangfire.Core" Version="1.8.17" />
+        <PackageReference Include="Hangfire.Core" Version="1.8.18" />
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.1.0" />
-           <PackageReference Include="ActualLab.Fusion" Version="9.8.35" />
-        <PackageReference Include="ActualLab.Fusion.Blazor" Version="9.8.35" />
-        <PackageReference Include="ActualLab.Generators" Version="9.8.35">
+           <PackageReference Include="ActualLab.Fusion" Version="9.8.37" />
+        <PackageReference Include="ActualLab.Fusion.Blazor" Version="9.8.37" />
+        <PackageReference Include="ActualLab.Generators" Version="9.8.37">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
