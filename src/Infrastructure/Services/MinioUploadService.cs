@@ -14,9 +14,9 @@ public class MinioUploadService : IUploadService
     private readonly IMinioClient _minioClient;
     private readonly string _bucketName;
     private readonly string _endpoint;
-    public MinioUploadService(IOptions<MinioOptions> options)
+    public MinioUploadService(MinioOptions options)
     {
-        var opt = options.Value;
+        var opt = options;
         _endpoint = opt.Endpoint;
         _minioClient = new MinioClient()
                             .WithEndpoint(_endpoint)

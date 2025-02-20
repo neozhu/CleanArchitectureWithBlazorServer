@@ -76,6 +76,9 @@ public static class DependencyInjection
 
         services.Configure<DatabaseSettings>(configuration.GetSection(DATABASE_SETTINGS_KEY))
             .AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+
+        services.Configure<MinioOptions>(configuration.GetSection(MinioOptions.Key))
+            .AddSingleton(s => s.GetRequiredService<IOptions<MinioOptions>>().Value);
         return services;
     }
 
@@ -179,11 +182,13 @@ public static class DependencyInjection
                 service.Initialize();
                 return service;
             });
+
+
         return services
             .AddScoped<IValidationService, ValidationService>()
             .AddScoped<IDateTime, DateTimeService>()
             .AddScoped<IExcelService, ExcelService>()
-            .AddScoped<IUploadService, FileUploadService>()
+            .AddScoped<IUploadService, MinioUploadService>()
             .AddScoped<IPDFService, PDFService>()
             .AddTransient<IDocumentOcrJob, DocumentOcrJob>();
     }
