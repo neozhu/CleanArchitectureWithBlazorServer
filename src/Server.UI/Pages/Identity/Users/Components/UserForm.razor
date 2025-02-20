@@ -174,11 +174,22 @@
     }
     private async Task UploadPhoto(IBrowserFile file)
     {
-        var filestream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
-        var imgStream = new MemoryStream();
-        await filestream.CopyToAsync(imgStream);
-        imgStream.Position = 0;
-        var result = await UploadService.UploadImageAsync(imgStream, UploadType.ProfilePicture, new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) });
+        using var fileStream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
+        using var memoryStream = new MemoryStream();
+        await fileStream.CopyToAsync(memoryStream);
+        byte[] fileData = memoryStream.ToArray();
+
+        var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, fileData, overwrite: true)
+            {
+                ResizeOptions = new ResizeOptions()
+                {
+                    Mode = ResizeMode.Max,
+                    Size = new Size(128, 128)
+                },
+                Folder = Model.Id
+            };
+
+        var result = await UploadService.UploadAsync(uploadRequest);
         Model.ProfilePictureDataUrl = result;
         Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
     }
