@@ -183,7 +183,7 @@ public static class DependencyInjection
             .AddScoped<IValidationService, ValidationService>()
             .AddScoped<IDateTime, DateTimeService>()
             .AddScoped<IExcelService, ExcelService>()
-            .AddScoped<IUploadService, UploadService>()
+            .AddScoped<IUploadService, FileUploadService>()
             .AddScoped<IPDFService, PDFService>()
             .AddTransient<IDocumentOcrJob, DocumentOcrJob>();
     }

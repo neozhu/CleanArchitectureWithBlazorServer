@@ -230,14 +230,22 @@ else
 
     private async Task UploadPhoto(IBrowserFile file)
     {
-        var filestream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
-        var imgstream = new MemoryStream();
-        await filestream.CopyToAsync(imgstream);
-        imgstream.Position = 0;
-
-        var user = await UserManager.FindByNameAsync(model.UserName) ?? throw new NotFoundException($"The application user [{model.UserName}] was not found.");
-        var result = await UploadService.UploadImageAsync(imgstream, UploadType.ProfilePicture, new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(128, 128) });
-
+        using var fileStream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
+        using var memoryStream = new MemoryStream();
+        await fileStream.CopyToAsync(memoryStream);
+        byte[] fileData = memoryStream.ToArray();
+        var user = await UserManager.FindByNameAsync(model.UserName)
+                   ?? throw new NotFoundException($"The application user [{model.UserName}] was not found.");
+        var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, fileData, overwrite: true)
+            {
+                ResizeOptions = new SixLabors.ImageSharp.Processing.ResizeOptions
+                {
+                    Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop,
+                    Size = new Size(128, 128)
+                },
+                Folder = user.Id
+            };
+        var result = await UploadService.UploadAsync(uploadRequest);
         model.ProfilePictureDataUrl = result;
         user.ProfilePictureDataUrl = model.ProfilePictureDataUrl;
         await UserManager.UpdateAsync(user);
@@ -247,7 +255,6 @@ else
                                        user.UserName ?? "",
                                        user.DisplayName ?? "",
                                        user.ProfilePictureDataUrl);
-
     }
 
     private async Task Submit()
