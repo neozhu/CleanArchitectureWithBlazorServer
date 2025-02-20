@@ -13,6 +13,8 @@ public class UploadRequest
         UploadType = uploadType;
         Data = data;
         Overwrite = overwrite;
+        Folder = folder;
+        ResizeOptions = resizeOptions;
     }
     public string FileName { get; set; }
     public string? Extension { get; set; }

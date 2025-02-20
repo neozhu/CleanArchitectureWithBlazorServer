@@ -74,13 +74,12 @@ public class MinioUploadService : IUploadService
         }
 
         // Build folder path based on UploadType and optional Folder property.
-        string folderPath = $"Files/{request.UploadType.GetDescription()}";
+        string folderPath = $"{request.UploadType.GetDescription()}";
         if (!string.IsNullOrWhiteSpace(request.Folder))
         {
             folderPath = $"{folderPath}/{request.Folder.Trim('/')}";
         }
-        await EnsureFolderExistsAsync(folderPath);
-
+                                         
         // Construct the object name including the folder path.
         string objectName = $"{folderPath}/{request.FileName}";
 
@@ -92,12 +91,11 @@ public class MinioUploadService : IUploadService
                 .WithStreamData(stream)
                 .WithObjectSize(stream.Length)
                 .WithContentType(contentType)
-                .WithHeaders(headers)
             );
         }
 
         // Return the URL constructed using the configured Endpoint.
-        return $"{_endpoint}/{_bucketName}/{objectName}";
+        return $"https://{_endpoint}/{_bucketName}/{objectName}";
     }
     public void Remove(string filename)
     {
@@ -121,36 +119,5 @@ public class MinioUploadService : IUploadService
         }
     }
 
-    private async Task EnsureFolderExistsAsync(string folderPath)
-    {
-        string folderKey = folderPath.TrimEnd('/') + "/";
-        if (!await ObjectExistsAsync(folderKey))
-        {
-            using var emptyStream = new MemoryStream(Array.Empty<byte>());
-            await _minioClient.PutObjectAsync(new PutObjectArgs()
-                .WithBucket(_bucketName)
-                .WithObject(folderKey)
-                .WithStreamData(emptyStream)
-                .WithObjectSize(0)
-                .WithContentType("application/x-directory")
-            );
-        }
-    }
-
-    private async Task<bool> ObjectExistsAsync(string objectName)
-    {
-        try
-        {
-            await _minioClient.StatObjectAsync(new StatObjectArgs().WithBucket(_bucketName).WithObject(objectName));
-            return true;
-        }
-        catch (ObjectNotFoundException)
-        {
-            return false;
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-    }
+    
 }
