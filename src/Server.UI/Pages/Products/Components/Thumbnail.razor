@@ -22,10 +22,6 @@
     private string Url()
     {
         var url = FileUrl?.Replace("\\", "/")??string.Empty;
-        if (!url.StartsWith('/'))
-        {
-            return '/' + url;
-        }
         return url;
     }
 

@@ -35,14 +35,12 @@
 
 <body>
     <div class="container">
-        <h2>Your Verification Code</h2>
+        <h2>Verification Code</h2>
         <p>Dear @Model.UserName,</p>
-        <p>Thank you for choosing our service. Please use the following verification code to proceed with your secure login:</p>
-        <h1 class="x_verification-code">@Model.AuthenticatorCode</h1>
-        <p>This code is valid for 10 minutes only. Enter it on the verification page to continue.</p>
-        <p>If you did not request this code, please contact our support team immediately.</p>
-        <p>Best regards,</p>
-        <p>The @Model.Company Team</p>
+        <p>Your verification code is:</p>
+        <h1>@Model.AuthenticatorCode</h1>
+        <p>This code is valid for 10 minutes. If you did not request it, please contact support immediately.</p>
+        <p>@Model.Company Team</p>
     </div>
 </body>
 </html>
