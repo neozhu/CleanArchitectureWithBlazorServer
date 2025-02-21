@@ -68,13 +68,14 @@ public class FileUploadService : IUploadService
     /// remove file
     /// </summary>
     /// <param name="filename"></param>
-    public void Remove(string filename)
+    public Task RemoveAsync(string filename)
     {
         var removefile = Path.Combine(Directory.GetCurrentDirectory(), filename);
         if (File.Exists(removefile))
         {
             File.Delete(removefile);
         }
+        return Task.CompletedTask;
     }
      
     /// <summary>

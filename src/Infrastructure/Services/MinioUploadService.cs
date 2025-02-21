@@ -97,21 +97,29 @@ public class MinioUploadService : IUploadService
         // Return the URL constructed using the configured Endpoint.
         return $"https://{_endpoint}/{_bucketName}/{objectName}";
     }
-    public void Remove(string filename)
+    public async Task RemoveAsync(string filename)
     {
-        // Expected filename format: "bucketName/objectName"
-        var parts = filename.Split('/', 2);
-        if (parts.Length < 2)
-            throw new ArgumentException("Filename must be in the format 'bucketName/objectName'.");
+        // Remove the "https://" or "http://" prefix from the URL and extract the bucket and object name.
+        Uri fileUri = new Uri(filename);
 
-        string bucket = parts[0];
-        string objectName = parts[1];
+        // Ensure the URL is well-formed and can be parsed
+        if (!fileUri.IsAbsoluteUri)
+            throw new ArgumentException("Invalid URL format.");
+
+        // Extract the bucket from the path portion of the URL
+        string[] pathParts = fileUri.AbsolutePath.TrimStart('/').Split('/', 2);
+        if (pathParts.Length < 2)
+            throw new ArgumentException("URL format must be 'https://<endpoint>/<bucket>/<object>'.");
+
+        string bucket = pathParts[0];  
+        string objectName = pathParts[1];  
 
         try
         {
-            _minioClient.RemoveObjectAsync(new RemoveObjectArgs()
+            // Proceed to remove the object from the correct bucket
+           await _minioClient.RemoveObjectAsync(new RemoveObjectArgs()
                 .WithBucket(bucket)
-                .WithObject(objectName)).Wait();
+                .WithObject(objectName));
         }
         catch (Exception ex)
         {
@@ -119,5 +127,5 @@ public class MinioUploadService : IUploadService
         }
     }
 
-    
+
 }
