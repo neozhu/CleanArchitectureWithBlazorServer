@@ -52,20 +52,6 @@ public class MinioUploadService : IUploadService
             contentType = "image/png";
         }
 
-        // Determine if the file should be previewed inline.
-        // Define a set of extensions that can be previewed in the browser.
-        var previewExtensions = new[] { ".pdf", ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".svg" };
-        // If the file extension is in the preview list, use "inline"; otherwise, "attachment".
-        string disposition = Array.Exists(previewExtensions, e => e.Equals(ext, StringComparison.OrdinalIgnoreCase))
-                             ? "inline"
-                             : "attachment";
-
-        // Set the Content-Disposition header, including the filename.
-        var headers = new Dictionary<string, string>
-        {
-            { "Content-Disposition", $"{disposition}; filename=\"{request.FileName}\"" }
-        };
-
         // Ensure the bucket exists.
         bool bucketExists = await _minioClient.BucketExistsAsync(new BucketExistsArgs().WithBucket(_bucketName));
         if (!bucketExists)
