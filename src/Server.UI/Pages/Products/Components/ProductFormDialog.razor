@@ -15,7 +15,7 @@
 
 <MudDialog>
     <DialogContent>
-        <ActiveUserSession PageComponent="@($"{nameof(ProductFormDialog)}/{ Model.Id}")" />
+        <ActiveUserSession PageComponent="@($"{nameof(ProductFormDialog)}/{Model.Id}")" />
         <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
             <MudGrid Spacing="2">
                 <MudItem xs="12">
@@ -100,7 +100,7 @@
                                         <tr @onclick="()=>OnDownloadFile(dto.Url)" style="cursor:pointer">
                                             <td><Thumbnail FileName="@dto.Name" FileUrl="@dto.Url"> </Thumbnail></td>
                                             <td><FileSizeFormatter FileSizeInBytes="@dto.Size"></FileSizeFormatter></td>
-                                            <td style="width:50px"><MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" title="@ConstantString.Delete" OnClick="@(()=>DeleteImage(dto))"></MudIconButton></td>
+                                            <td style="width:50px"><MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" title="@ConstantString.Delete" OnClick="@(() => DeleteImage(dto))"></MudIconButton></td>
                                         </tr>
                                     }
                                 </tbody>
@@ -148,6 +148,7 @@
             if (state is not null && !state.Canceled)
             {
                 Model.Pictures.Remove(picture);
+                await UploadService.RemoveAsync(picture.Url);
             }
         }
     }
@@ -179,12 +180,19 @@
                     var ext = fi.Extension;
                     if (ext.EndsWith(".pdf"))
                     {
-                        var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.Product, attachStream.ToArray()));
+                        var result = await UploadService.UploadAsync(new UploadRequest(filename, UploadType.Product, attachStream.ToArray()));
                         list.Add(new ProductImage { Name = filename, Size = attachStream.Length, Url = result });
                     }
                     else
                     {
-                        var result = await UploadService.UploadImageAsync(attachStream, UploadType.Product, new ResizeOptions { Mode = ResizeMode.Crop, Size = new Size(640, 320) });
+
+                        var result = await UploadService.UploadAsync(new UploadRequest(filename, UploadType.Product, attachStream.ToArray(), overwrite: false, null,
+                        new SixLabors.ImageSharp.Processing.ResizeOptions
+                        {
+                            Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop,
+                            Size = new Size(640, 320)
+                        }));
+
                         list.Add(new ProductImage { Name = filename, Size = attachStream.Length, Url = result });
                     }
                 }
