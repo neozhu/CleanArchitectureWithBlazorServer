@@ -60,20 +60,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                     return;
                 }
 
-                var imgFile = Path.Combine(Directory.GetCurrentDirectory(), doc.URL);
-                if (!File.Exists(imgFile))
-                {
-                    _logger.LogWarning("Image file not found for Document Id {Id}, URL: {URL}", id, doc.URL);
-                    return;
-                }
-
-                using var form = new MultipartFormDataContent();
-                using var fileStream = new FileStream(imgFile, FileMode.Open);
-                using var fileContent = new StreamContent(fileStream);
-                fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/png");
-                form.Add(fileContent, "file", Uri.EscapeDataString(Path.GetFileName(imgFile)));
-
-                var response = await client.PostAsync("", form);
+                var response = await client.GetAsync($"?imageUrl={doc.URL}");
 
                 if (response.IsSuccessStatusCode)
                 {
