@@ -38,7 +38,7 @@
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
-                    @if (_canCreate)
+                    @if (_accessRights.Create)
                     {
                         <MudButton 
                         StartIcon="@Icons.Material.Outlined.Add"
@@ -46,7 +46,7 @@
                             @ConstantString.New
                         </MudButton>
                     }
-                    @if (_canDelete)
+                    @if (_accessRights.Delete)
                     {
                         <MudButton 
                         StartIcon="@Icons.Material.Outlined.Delete"
@@ -57,7 +57,7 @@
                     }
                 </MudToolBar>
                 <MudStack Row Spacing="1">
-                    @if (_canSearch)
+                    @if (_accessRights.Search)
                     {
                         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                         AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
@@ -71,16 +71,16 @@
         <SelectColumn ShowInFooter="false"> </SelectColumn>
         <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
             <CellTemplate>
-                @if (_canEdit || _canDelete)
+                @if (_accessRights.Edit || _accessRights.Delete)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
                     Dense="true"
                     EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
-                        @if (_canEdit)
+                        @if (_accessRights.Edit)
                         {
                             <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                         }
-                        @if (_canDelete)
+                        @if (_accessRights.Delete)
                         {
                             <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
@@ -124,35 +124,19 @@
     private HashSet<TenantDto> _selectedItems = new();
     private MudDataGrid<TenantDto> _table = default!;
     private TenantDto _currentDto = new();
+    private TenantsAccessRights _accessRights = new();
     private string _searchString = string.Empty;
     private bool _loading;
-    private bool _canSearch;
-    private bool _canCreate;
-    private bool _canEdit;
-    private bool _canDelete;
+ 
 
     private TenantsWithPaginationQuery Query { get; } = new();
 
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        await SetPermissionsAsync();
+        _accessRights = await PermissionService.GetAccessRightsAsync<TenantsAccessRights>();
     }
-    private async Task SetPermissionsAsync()
-    {
-        var state = await AuthState;
-        var createTask = AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Create);
-        var searchTask = AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Search);
-        var editTask = AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Edit);
-        var deleteTask = AuthService.AuthorizeAsync(state.User, Permissions.Tenants.Delete);
-
-        await Task.WhenAll(createTask, searchTask, editTask, deleteTask);
-
-        _canCreate = createTask.Result.Succeeded;
-        _canSearch = searchTask.Result.Succeeded;
-        _canEdit = editTask.Result.Succeeded;
-        _canDelete = deleteTask.Result.Succeeded;
-    }
+     
     private async Task<GridData<TenantDto>> ServerReload(GridState<TenantDto> state)
     {
         try

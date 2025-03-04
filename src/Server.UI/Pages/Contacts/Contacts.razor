@@ -46,7 +46,7 @@
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
-                    @if (_canCreate)
+                    @if (_accessRights.Create)
                     {
                         <MudButton StartIcon="@Icons.Material.Outlined.Add"
                         OnClick="OnCreate">
@@ -54,25 +54,25 @@
                         </MudButton>
                     }
                     <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
-                        @if (_canCreate)
+                        @if (_accessRights.Create)
                         {
                             <MudMenuItem Disabled="@(_selectedItems.Count != 1)" OnClick="OnClone">@ConstantString.Clone</MudMenuItem>
                         }
-                        @if (_canDelete)
+                        @if (_accessRights.Delete)
                         {
                             <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
                             OnClick="OnDeleteChecked">
                                 @ConstantString.Delete
                             </MudMenuItem>
                         }
-                        @if (_canExport)
+                        @if (_accessRights.Export)
                         {
                             <MudMenuItem Disabled="@_exporting"
                             OnClick="OnExport">
                                 @ConstantString.Export
                             </MudMenuItem>
                         }
-                        @if (_canImport)
+                        @if (_accessRights.Import)
                         {
                             <MudMenuItem>
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
@@ -89,7 +89,7 @@
                     </MudMenu>
                 </MudToolBar>
                 <MudStack Row Spacing="1">
-                    @if (_canSearch)
+                    @if (_accessRights.Search)
                     {
                         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
                         AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
@@ -103,16 +103,16 @@
         <SelectColumn ShowInFooter="false"></SelectColumn>
         <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
             <CellTemplate>
-                @if (_canEdit || _canDelete)
+                @if (_accessRights.Edit || _accessRights.Delete)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
                     Dense="true"
                     EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
-                        @if (_canEdit)
+                        @if (_accessRights.Edit)
                         {
                             <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                         }
-                        @if (_canDelete)
+                        @if (_accessRights.Delete)
                         {
                             <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
@@ -171,42 +171,15 @@
     private ContactsWithPaginationQuery Query { get; set; } = new();
     [Inject]
     private IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
-    private bool _canSearch;
-    private bool _canCreate;
-    private bool _canEdit;
-    private bool _canDelete;
-    private bool _canImport;
-    private bool _canExport;
+
+    private ContactsAccessRights _accessRights = new();
 
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        await SetPermissionsAsync();
+        _accessRights = await PermissionService.GetAccessRightsAsync<ContactsAccessRights>();
     }
-    private async Task SetPermissionsAsync()
-    {
-        // Retrieve the current authentication state.
-        var state = await AuthState;
-
-        // Initiate permission checks concurrently.
-        var createTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Create);
-        var searchTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Search);
-        var editTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Edit);
-        var deleteTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Delete);
-        var importTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Import);
-        var exportTask = AuthService.AuthorizeAsync(state.User, Permissions.Contacts.Export);
-
-        // Wait for all permission tasks to complete concurrently.
-        await Task.WhenAll(createTask, searchTask, editTask, deleteTask, importTask, exportTask);
-
-        // Assign the results of each permission check to the corresponding flags.
-        _canCreate = createTask.Result.Succeeded;
-        _canSearch = searchTask.Result.Succeeded;
-        _canEdit = editTask.Result.Succeeded;
-        _canDelete = deleteTask.Result.Succeeded;
-        _canImport = importTask.Result.Succeeded;
-        _canExport = exportTask.Result.Succeeded;
-    }
+    
     private async Task<GridData<ContactDto>> ServerReload(GridState<ContactDto> state)
     {
         try

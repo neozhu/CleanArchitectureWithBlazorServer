@@ -19,3 +19,15 @@ public static partial class Permissions
         public const string Download = "Permissions.Documents.Download";
     }
 }
+
+public class DocumentsAccessRights
+{
+    public bool View { get; set; }
+    public bool Create { get; set; }
+    public bool Edit { get; set; }
+    public bool Delete { get; set; }
+    public bool Search { get; set; }
+    public bool Export { get; set; }
+    public bool Import { get; set; }
+    public bool Download { get; set; }
+}

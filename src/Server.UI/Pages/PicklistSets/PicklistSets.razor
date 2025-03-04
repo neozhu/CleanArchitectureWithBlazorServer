@@ -50,52 +50,52 @@
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
-                    @if (_canCreate)
+                    @if (_accessRights.Create)
                     {
-                            <MudButton StartIcon="@Icons.Material.Outlined.Add"
-                                       OnClick="OnCreate">
+                        <MudButton StartIcon="@Icons.Material.Outlined.Add"
+                        OnClick="OnCreate">
                             @ConstantString.New
-                            </MudButton>
+                        </MudButton>
                     }
                     <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
-                        @if (_canDelete)
+                        @if (_accessRights.Delete)
                         {
-                                <MudMenuItem Disabled="@(_selectedItems.Count == 0)"
-                                             OnClick="OnDeleteChecked">
+                            <MudMenuItem Disabled="@(_selectedItems.Count == 0)"
+                            OnClick="OnDeleteChecked">
                                 @ConstantString.Delete
-                                </MudMenuItem>
+                            </MudMenuItem>
                         }
-                        @if (_canExport)
+                        @if (_accessRights.Export)
                         {
-                                <MudMenuItem Disabled="@_exporting"
-                                             OnClick="OnExport">
+                            <MudMenuItem Disabled="@_exporting"
+                            OnClick="OnExport">
                                 @ConstantString.Export
-                                </MudMenuItem>
+                            </MudMenuItem>
                         }
-                        @if (_canImport)
+                        @if (_accessRights.Import)
                         {
-                                <MudMenuItem>
-                                    <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
-                                        <ActivatorContent>
-                                            <MudButton Class="pa-0 ma-0"
-                                                       Style="font-weight:400;text-transform:none;"
-                                                       Variant="Variant.Text"
-                                                       Disabled="@_uploading">
+                            <MudMenuItem>
+                                <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
+                                    <ActivatorContent>
+                                        <MudButton Class="pa-0 ma-0"
+                                        Style="font-weight:400;text-transform:none;"
+                                        Variant="Variant.Text"
+                                        Disabled="@_uploading">
                                             @ConstantString.Import
-                                            </MudButton>
-                                        </ActivatorContent>
-                                    </MudFileUpload>
-                                </MudMenuItem>
+                                        </MudButton>
+                                    </ActivatorContent>
+                                </MudFileUpload>
+                            </MudMenuItem>
                         }
                     </MudMenu>
                 </MudToolBar>
                 <MudStack Row Spacing="1">
-                    @if (_canSearch)
+                    @if (_accessRights.Search)
                     {
-                            <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true" 
-                                           ValueChanged="OnPicklistSearch" Style="width:160px" FullWidth="true" />
-                            <MudTextField T="string" Value="@Query.Keyword" ValueChanged="OnKeywordSearch" Placeholder="@ConstantString.Search" 
-                                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
+                        <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true" 
+                        ValueChanged="OnPicklistSearch" Style="width:160px" FullWidth="true" />
+                        <MudTextField T="string" Value="@Query.Keyword" ValueChanged="OnKeywordSearch" Placeholder="@ConstantString.Search" 
+                        Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
                     }
                 </MudStack>
             </MudStack>
@@ -113,10 +113,10 @@
         <PropertyColumn Property="x => x.Description" Title="@L[SelectedItem.GetMemberDescription(x => x.Description)]" />
         <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Delete" Sortable="false">
             <CellTemplate>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" Title="@ConstantString.Delete" Disabled="@(!_canDelete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" Title="@ConstantString.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
             </CellTemplate>
             <EditTemplate>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" Title="@ConstantString.Delete" Disabled="@(!_canDelete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Outlined" Color="Color.Error" Title="@ConstantString.Delete" Disabled="@(!_accessRights.Delete)" Size="Size.Small" OnClick="@(() => DeleteItem(context.Item))" />
             </EditTemplate>
         </TemplateColumn>
     </Columns>
@@ -142,53 +142,24 @@
     private int _defaultPageSize = 15;
 
     private PicklistSetsWithPaginationQuery Query { get; set; } = new();
+    private PicklistSetsAccessRights _accessRights = new();
+ 
 
-    private bool _canCreate;
-    private bool _canSearch;
-    private bool _canEdit;
-    private bool _canDelete;
-    private bool _canImport;
-    private bool _canExport;
-    private bool Readonly => !_canCreate || !_canEdit;
     private bool _loading;
     private bool _uploading;
     private bool _exporting;
 
     #endregion
 
-    #region Lifecycle Methods
+
 
     protected override async Task OnInitializedAsync()
     {
         Title = L[SelectedItem.GetClassDescription()];
-        await SetPermissionsAsync();
+        _accessRights = await PermissionService.GetAccessRightsAsync<PicklistSetsAccessRights>();
     }
-    private async Task SetPermissionsAsync()
-    {
-        // Retrieve the current authentication state.
-        var state = await AuthState;
+     
 
-        // Initiate all permission checks concurrently.
-        var createTask = AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Create);
-        var searchTask = AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Search);
-        var editTask = AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Edit);
-        var deleteTask = AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Delete);
-        var importTask = AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Import);
-        var exportTask = AuthService.AuthorizeAsync(state.User, Permissions.PicklistSets.Export);
-
-        // Wait for all permission tasks to complete concurrently.
-        await Task.WhenAll(createTask, searchTask, editTask, deleteTask, importTask, exportTask);
-
-        // Assign the results of each permission check to the corresponding flags.
-        _canCreate = createTask.Result.Succeeded;
-        _canSearch = searchTask.Result.Succeeded;
-        _canEdit = editTask.Result.Succeeded;
-        _canDelete = deleteTask.Result.Succeeded;
-        _canImport = importTask.Result.Succeeded;
-        _canExport = exportTask.Result.Succeeded;
-    }
-
-    #endregion
 
     #region Grid Data & Search
 

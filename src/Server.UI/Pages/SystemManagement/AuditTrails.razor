@@ -148,10 +148,11 @@
     private readonly AuditTrailDto _currentDto = new();
     private AuditTrailsWithPaginationQuery Query { get; } = new();
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
-    protected override Task OnInitializedAsync()
+    private AuditTrailsAccessRights _accessRights = new();
+    protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        return Task.CompletedTask;
+        _accessRights = await PermissionService.GetAccessRightsAsync<AuditTrailsAccessRights>();
     }
 
     private async Task<GridData<AuditTrailDto>> ServerReload(GridState<AuditTrailDto> state)

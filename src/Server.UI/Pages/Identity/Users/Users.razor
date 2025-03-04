@@ -67,43 +67,41 @@
             </MudStack>
             <MudStack Spacing="0" AlignItems="AlignItems.End">
                 <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
-                    <MudButton 
-                    Disabled="@_loading"
-                    OnClick="@(() => OnRefresh())"
-                    StartIcon="@Icons.Material.Outlined.Refresh">
+                    <MudButton Disabled="@_loading"
+                               OnClick="@(() => OnRefresh())"
+                               StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
-                    @if (_canCreate)
+                    @if (_accessRights.Create)
                     {
-                        <MudButton 
-                        StartIcon="@Icons.Material.Outlined.Add"
-                        OnClick="OnCreate">
+                        <MudButton StartIcon="@Icons.Material.Outlined.Add"
+                                   OnClick="OnCreate">
                             @ConstantString.New
                         </MudButton>
                     }
-                    <MudMenu  TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
-                        @if (_canDelete)
+                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
+                        @if (_accessRights.Delete)
                         {
                             <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                            OnClick="OnDeleteChecked">
+                                         OnClick="OnDeleteChecked">
                                 @ConstantString.Delete
                             </MudMenuItem>
                         }
-                        @if (_canExport)
+                        @if (_accessRights.Export)
                         {
                             <MudMenuItem Disabled="@_exporting"
-                            OnClick="OnExport">
+                                         OnClick="OnExport">
                                 @ConstantString.Export
                             </MudMenuItem>
                         }
-                        @if (_canImport)
+                        @if (_accessRights.Import)
                         {
                             <MudMenuItem>
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                     <ActivatorContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
-                                        Variant="Variant.Text"
-                                        Disabled="@_uploading">
+                                                   Variant="Variant.Text"
+                                                   Disabled="@_uploading">
                                             @ConstantString.Import
                                         </MudButton>
                                     </ActivatorContent>
@@ -113,7 +111,7 @@
                     </MudMenu>
                 </MudToolBar>
                 <MudStack Row Spacing="1">
-                    @if (_canSearch)
+                    @if (_accessRights.Search)
                     {
                         <MudSelect T="string" Placeholder="@L["Search by role name"]" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
                             @foreach (var str in _roles)
@@ -122,7 +120,7 @@
                             }
                         </MudSelect>
                         <MudTextField T="string" Immediate="false" ValueChanged="@(OnSearch)" Value="@_searchString" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                         </MudTextField>
                     }
                 </MudStack>
@@ -133,28 +131,28 @@
         <SelectColumn ShowInFooter="false"></SelectColumn>
         <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
             <CellTemplate>
-                @if (_canEdit || _canDelete || _canManageRoles || _canRestPassword || _canSendRestPasswordMail || _canManagePermissions)
+                @if (_accessRights.Edit || _accessRights.Delete || _accessRights.ManageRoles || _accessRights.RestPassword || _accessRights.SendRestPasswordMail || _accessRights.ManagePermissions)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
-                    Dense="true"
-                    EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
-                        @if (_canEdit)
+                             Dense="true"
+                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                        @if (_accessRights.Edit)
                         {
                             <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                         }
-                        @if (_canDelete)
+                        @if (_accessRights.Delete)
                         {
                             <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
-                        @if (_canManagePermissions)
+                        @if (_accessRights.ManagePermissions)
                         {
                             <MudMenuItem OnClick="@(() => OnSetPermissions(context.Item))">@L["Set Permissions"]</MudMenuItem>
                         }
-                        @if (_canSendRestPasswordMail)
+                        @if (_accessRights.SendRestPasswordMail)
                         {
                             <MudMenuItem OnClick="@(() => OnSendResetPassword(context.Item))">@L["Send Reset Password Email"]</MudMenuItem>
                         }
-                        @if (_canRestPassword)
+                        @if (_accessRights.RestPassword)
                         {
                             <MudMenuItem Disabled="@(!context.Item.IsActive)" OnClick="@(() => OnResetPassword(context.Item))">@L["Reset Password"]</MudMenuItem>
                         }
@@ -163,8 +161,8 @@
                 else
                 {
                     <MudButton Variant="Variant.Filled"
-                    StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
-                    Color="Color.Surface">
+                               StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
+                               Color="Color.Surface">
                         @ConstantString.NoAllowed
                     </MudButton>
                 }
@@ -182,7 +180,7 @@
         </PropertyColumn>
         <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x => x.UserName)]">
             <CellTemplate>
-                <UserCard Item="@context.Item" OnSendVerify="@(x=> SendVerify(x))" DisplayOnlineStatus="@_canViewOnlineStatus"></UserCard>
+                <UserCard Item="@context.Item" OnSendVerify="@(x => SendVerify(x))" DisplayOnlineStatus="@_canViewOnlineStatus"></UserCard>
             </CellTemplate>
         </PropertyColumn>
         <PropertyColumn Property="x => x.Email" Title="@L["Full Name"]">
@@ -216,16 +214,15 @@
                     @if (!context.Item.IsActive || (context.Item.LockoutEnd is not null && context.Item.LockoutEnd > DateTime.UtcNow))
                     {
                         <MudTooltip Text="@L["Click to change status to active."]" Delay="300">
-                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Close" ThumbIconColor="Color.Error">
+                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(() => SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Close" ThumbIconColor="Color.Error">
                             </MudSwitch>
                         </MudTooltip>
                     }
                     else
                     {
                         <MudTooltip Text="@L["Click to change status to inactive."]" Delay="300">
-                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(()=>SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Done" ThumbIconColor="Color.Success">
+                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(() => SetActive(context.Item))" ThumbIcon="@Icons.Material.Filled.Done" ThumbIconColor="Color.Success">
                             </MudSwitch>
-
                         </MudTooltip>
                     }
                 </div>
@@ -233,7 +230,7 @@
         </PropertyColumn>
         <PropertyColumn Property="x => x.LastModified" Title="@L[_currentDto.GetMemberDescription(x => x.LastModified)]">
             <CellTemplate>
-                <UtcToLocal UTCDateTime="@(context.Item.LastModified??context.Item.Created)" Format="yyyy-MM-dd"></UtcToLocal>
+                <UtcToLocal UTCDateTime="@(context.Item.LastModified ?? context.Item.Created)" Format="yyyy-MM-dd"></UtcToLocal>
             </CellTemplate>
         </PropertyColumn>
     </Columns>
@@ -262,20 +259,11 @@
 
     private TimeSpan RefreshInterval => TimeSpan.FromHours(2);
 
-
+    private UsersAccessRights _accessRights = new();
     private MudDataGrid<ApplicationUserDto> _table = null!;
     private bool _processing;
     private bool _showPermissionsDrawer;
-    private bool _canCreate;
-    private bool _canSearch;
-    private bool _canEdit;
-    private bool _canDelete;
-    private bool _canManageRoles;
-    private bool _canRestPassword;
-    private bool _canSendRestPasswordMail;
-    private bool _canManagePermissions;
-    private bool _canImport;
-    private bool _canExport;
+
     private bool _loading;
     private bool _exporting;
     private bool _uploading;
@@ -287,7 +275,7 @@
     {
         Title = L[_currentDto.GetClassDescription()];
         InitializeServices();
-        await SetPermissionsAsync();
+        _accessRights = await PermissionService.GetAccessRightsAsync<UsersAccessRights>();
         _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
     }
     private void InitializeServices()
@@ -297,50 +285,7 @@
         PermissionHelper = ScopedServices.GetRequiredService<PermissionHelper>();
     }
 
-    private async Task SetPermissionsAsync()
-    {
-        var state = await AuthState;
-        // Initiate permission checks concurrently.
-        var createTask = AuthService.AuthorizeAsync(state.User, Permissions.Users.Create);
-        var searchTask = AuthService.AuthorizeAsync(state.User, Permissions.Users.Search);
-        var editTask = AuthService.AuthorizeAsync(state.User, Permissions.Users.Edit);
-        var deleteTask = AuthService.AuthorizeAsync(state.User, Permissions.Users.Delete);
-        var manageRolesTask = AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles);
-        var restPasswordTask = AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword);
-        var sendRestPasswordMailTask = AuthService.AuthorizeAsync(state.User, Permissions.Users.SendRestPasswordMail);
-        var managePermissionsTask = AuthService.AuthorizeAsync(state.User, Permissions.Users.ManagePermissions);
-        var importTask = AuthService.AuthorizeAsync(state.User, Permissions.Users.Import);
-        var exportTask = AuthService.AuthorizeAsync(state.User, Permissions.Users.Export);
-        var viewOnlineStatusTask = AuthService.AuthorizeAsync(state.User, Permissions.Users.ViewOnlineStatus);
 
-        // Wait for all permission checks to complete concurrently.
-        await Task.WhenAll(
-            createTask,
-            searchTask,
-            editTask,
-            deleteTask,
-            manageRolesTask,
-            restPasswordTask,
-            sendRestPasswordMailTask,
-            managePermissionsTask,
-            importTask,
-            exportTask,
-            viewOnlineStatusTask
-        );
-
-        // Assign the results from the authorization checks to the corresponding permission flags.
-        _canCreate = createTask.Result.Succeeded;
-        _canSearch = searchTask.Result.Succeeded;
-        _canEdit = editTask.Result.Succeeded;
-        _canDelete = deleteTask.Result.Succeeded;
-        _canManageRoles = manageRolesTask.Result.Succeeded;
-        _canRestPassword = restPasswordTask.Result.Succeeded;
-        _canSendRestPasswordMail = sendRestPasswordMailTask.Result.Succeeded;
-        _canManagePermissions = managePermissionsTask.Result.Succeeded;
-        _canImport = importTask.Result.Succeeded;
-        _canExport = exportTask.Result.Succeeded;
-        _canViewOnlineStatus = viewOnlineStatusTask.Result.Succeeded;
-    }
     private async Task OnInvalidated(IComputed state)
     {
         await InvokeAsync(StateHasChanged);
@@ -368,7 +313,7 @@
         {
             _loading = true;
             var searchPredicate = CreateSearchPredicate();
-            var count =await  UserManager.Users.CountAsync(searchPredicate);
+            var count = await UserManager.Users.CountAsync(searchPredicate);
             var data = await UserManager.Users.Where(searchPredicate)
                     .Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
                     .Include(x => x.CreatedByUser)
@@ -434,24 +379,24 @@
         }
     }
 
-    
+
     private async Task ProcessUserCreation(ApplicationUserDto model)
     {
         var applicationUser = new ApplicationUser
-            {
-                Provider = model.Provider,
-                DisplayName = model.DisplayName,
-                UserName = model.UserName,
-                TenantId = model.TenantId,
-                Email = model.Email,
-                PhoneNumber = model.PhoneNumber,
-                SuperiorId = model.Superior?.Id,
-                ProfilePictureDataUrl = model.ProfilePictureDataUrl,
-                EmailConfirmed = false,
-                IsActive = model.IsActive,
-                LanguageCode = model.LanguageCode,
-                TimeZoneId = model.TimeZoneId
-            };
+        {
+            Provider = model.Provider,
+            DisplayName = model.DisplayName,
+            UserName = model.UserName,
+            TenantId = model.TenantId,
+            Email = model.Email,
+            PhoneNumber = model.PhoneNumber,
+            SuperiorId = model.Superior?.Id,
+            ProfilePictureDataUrl = model.ProfilePictureDataUrl,
+            EmailConfirmed = false,
+            IsActive = model.IsActive,
+            LanguageCode = model.LanguageCode,
+            TimeZoneId = model.TimeZoneId
+        };
 
         var identityResult = await UserManager.CreateAsync(applicationUser);
         if (!identityResult.Succeeded)
@@ -517,14 +462,14 @@
     private async Task OnCreate()
     {
         var model = new ApplicationUserDto
-            {
-                Provider = "Local",
-                Email = "",
-                UserName = "",
-                AssignedRoles = Array.Empty<string>(),
-                TimeZoneId = TimeZoneInfo.Local.Id,
-                LanguageCode = CultureInfo.CurrentCulture.Name
-            };
+        {
+            Provider = "Local",
+            Email = "",
+            UserName = "",
+            AssignedRoles = Array.Empty<string>(),
+            TimeZoneId = TimeZoneInfo.Local.Id,
+            LanguageCode = CultureInfo.CurrentCulture.Name
+        };
         await ShowUserDialog(model, L["Create a new user"], ProcessUserCreation);
     }
 
@@ -600,7 +545,7 @@
         await OnRefresh();
         UserService.Refresh();
     }
-#endregion
+    #endregion
 
     #region Email Verification and Password Reset
     private async Task SendVerify(ApplicationUserDto item)
@@ -661,7 +606,7 @@
         }
     }
 
-#endregion
+    #endregion
 
     #region User Activation and Permission Management
     private async Task SetActive(ApplicationUserDto item)
@@ -800,9 +745,9 @@
         }
     }
     #endregion
- 
-     
-     
+
+
+
     #region export and import
     private async Task OnExport()
     {
@@ -812,17 +757,17 @@
             var predicate = CreateSearchPredicate();
             var items = await UserManager.Users.Where(predicate)
                 .Select(x => new ApplicationUserDto
-                    {
-                        Id = x.Id,
-                        UserName = x.UserName!,
-                        DisplayName = x.DisplayName,
-                        Email = x.Email!,
-                        PhoneNumber = x.PhoneNumber,
-                        LanguageCode = x.LanguageCode,
-                        TimeZoneId = x.TimeZoneId,
-                        SuperiorId = x.SuperiorId,
-                        TenantId = x.TenantId
-                    }).ToListAsync();
+                {
+                    Id = x.Id,
+                    UserName = x.UserName!,
+                    DisplayName = x.DisplayName,
+                    Email = x.Email!,
+                    PhoneNumber = x.PhoneNumber,
+                    LanguageCode = x.LanguageCode,
+                    TimeZoneId = x.TimeZoneId,
+                    SuperiorId = x.SuperiorId,
+                    TenantId = x.TenantId
+                }).ToListAsync();
 
             var result = await ExportUsers(items);
             await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, "application/octet-stream");

@@ -33,19 +33,17 @@ public static partial class Permissions
         [Description("Allows importing product details.")]
         public const string Import = "Permissions.Products.Import";
     }
+}
 
 
-
-    [DisplayName("Category Permissions")]
-    [Description("Set permissions for category operations.")]
-    public static class Categories
-    {
-        public const string View = "Permissions.Categories.View";
-        public const string Create = "Permissions.Categories.Create";
-        public const string Edit = "Permissions.Categories.Edit";
-        public const string Delete = "Permissions.Categories.Delete";
-        public const string Search = "Permissions.Categories.Search";
-        public const string Export = "Permissions.Categories.Export";
-        public const string Import = "Permissions.Categories.Import";
-    }
+public class ProductsAccessRights
+{
+    public bool View { get; set; }
+    public bool Create { get; set; }
+    public bool Edit { get; set; }
+    public bool Delete { get; set; }
+    public bool Print { get; set; }
+    public bool Search { get; set; }
+    public bool Export { get; set; }
+    public bool Import { get; set; }
 }
