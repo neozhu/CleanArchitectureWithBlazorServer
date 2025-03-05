@@ -70,12 +70,12 @@ public static partial class Permissions
         public const string Delete = "Permissions.Users.Delete";
         public const string Search = "Permissions.Users.Search";
         public const string Import = "Permissions.Users.Import";
-        public const string Export = "Permissions.Dictionaries.Export";
+        public const string Export = "Permissions.Users.Export";
         public const string ManageRoles = "Permissions.Users.ManageRoles";
         public const string RestPassword = "Permissions.Users.RestPassword";
         public const string SendRestPasswordMail = "Permissions.Users.SendRestPasswordMail";
-        public const string ManagePermissions = "Permissions.Users.Permissions";
-        public const string Deactivation = "Permissions.Users.Activation/Deactivation";
+        public const string ManagePermissions = "Permissions.Users.ManagePermissions";
+        public const string Deactivation = "Permissions.Users.Deactivation";
         public const string ViewOnlineStatus = "Permissions.Users.ViewOnlineStatus";
     }
 
@@ -90,8 +90,8 @@ public static partial class Permissions
         public const string Search = "Permissions.Roles.Search";
         public const string Export = "Permissions.Roles.Export";
         public const string Import = "Permissions.Roles.Import";
-        public const string ManagePermissions = "Permissions.Roles.Permissions";
-        public const string ManageNavigation = "Permissions.Roles.Navigation";
+        public const string ManagePermissions = "Permissions.Roles.ManagePermissions";
+        public const string ManageNavigation = "Permissions.Roles.ManageNavigation";
     }
 
     [DisplayName("Tenant Permissions")]
@@ -114,11 +114,72 @@ public static partial class Permissions
         public const string View = "Permissions.Dashboards.View";
     }
 
-    [DisplayName("Job Permissions")]
-    [Description("Set permissions for job operations.")]
-    public static class Hangfire
-    {
-        public const string View = "Permissions.Hangfire.View";
-        public const string Jobs = "Permissions.Hangfire.Jobs";
-    }
+
+}
+
+public class PicklistSetsAccessRights
+{
+    public bool View { get; set; }
+    public bool Create { get; set; }
+    public bool Edit { get; set; }
+    public bool Delete { get; set; }
+    public bool Search { get; set; }
+    public bool Export { get; set; }
+    public bool Import { get; set; }
+}
+public class LogsAccessRights
+{
+    public bool View { get; set; }
+    public bool Search { get; set; }
+    public bool Export { get; set; }
+    public bool Purge { get; set; }
+}
+
+public class RolesAccessRights
+{
+    public bool View { get; set; }
+    public bool Create { get; set; }
+    public bool Edit { get; set; }
+    public bool Delete { get; set; }
+    public bool Search { get; set; }
+    public bool Export { get; set; }
+    public bool Import { get; set; }
+    public bool ManagePermissions { get; set; }
+    public bool ManageNavigation { get; set; }
+}
+public class UsersAccessRights
+{
+    public bool View { get; set; }
+    public bool Create { get; set; }
+    public bool Edit { get; set; }
+    public bool Delete { get; set; }
+    public bool Search { get; set; }
+    public bool Import { get; set; }
+    public bool Export { get; set; }
+    public bool ManageRoles { get; set; }
+    public bool RestPassword { get; set; }
+    public bool SendRestPasswordMail { get; set; }
+    public bool ManagePermissions { get; set; }
+    public bool Deactivation { get; set; }
+    public bool ViewOnlineStatus { get; set; }
+}
+
+public class AuditTrailsAccessRights
+{
+    public bool View { get; set; }
+    public bool Search { get; set; }
+    public bool Export { get; set; }
+}
+
+public class TenantsAccessRights
+{
+    public bool View { get; set; }
+    public bool Create { get; set; }
+    public bool Edit { get; set; }
+    public bool Delete { get; set; }
+    public bool Search { get; set; }
+}
+public class DashboardsAccessRights
+{
+    public bool View { get; set; }
 }

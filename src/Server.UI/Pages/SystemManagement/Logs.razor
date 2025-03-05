@@ -40,7 +40,7 @@
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
-                    @if (_canPurge)
+                    @if (_accessRights.Purge)
                     {
                         <MudButton 
                         Disabled="@(_clearing)"
@@ -141,15 +141,14 @@
     private TimeSpan _localTimeOffset => UserProfile?.LocalTimeOffset ?? TimeSpan.Zero;
     private bool _loading;
     private bool _clearing;
-    private bool _canPurge;
+    private LogsAccessRights _accessRights = new();
 
     private LogsWithPaginationQuery Query { get; } = new();
 
     protected override async Task OnInitializedAsync()
     {
         Title = L["Logs"];
-        var state = await AuthState;
-        _canPurge = (await AuthService.AuthorizeAsync(state.User, Permissions.Logs.Purge)).Succeeded;
+        _accessRights = await PermissionService.GetAccessRightsAsync<LogsAccessRights>();
     }
 
 
