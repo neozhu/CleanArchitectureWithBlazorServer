@@ -1,4 +1,4 @@
-import OpenSeadragon from 'https://cdn.jsdelivr.net/npm/openseadragon@4.1.0/+esm'
+﻿import OpenSeadragon from 'https://cdn.jsdelivr.net/npm/openseadragon@5.0/+esm'
 
 export function showOpenSeadragon(element, url) {
     var viewer = OpenSeadragon({
@@ -12,9 +12,11 @@ export function showOpenSeadragon(element, url) {
         minZoomImageRatio: 0.3,
         tileSources: {
             xmlns: "http://schemas.microsoft.com/deepzoom/2008",
+            buildPyramid: false,
+            crossOriginPolicy: 'Anonymous',
             type: 'image',
             url,
         }
     });
-    console.log(viewer)
+    //console.log(viewer)
 }
