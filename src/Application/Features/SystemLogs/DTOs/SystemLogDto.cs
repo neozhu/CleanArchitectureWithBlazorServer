@@ -13,11 +13,11 @@ public class SystemLogDto
 
     [Description("Level")] public string Level { get; set; } = default!;
 
-    [Description("Timestamp")] public DateTime TimeStamp { get; set; } = DateTime.UtcNow;
+    [Description("Datetime")] public DateTime TimeStamp { get; set; } = DateTime.UtcNow;
 
     [Description("Exception")] public string? Exception { get; set; }
 
-    [Description("Username")] public string? UserName { get; set; }
+    [Description("User name")] public string? UserName { get; set; }
 
     [Description("Client IP")] public string? ClientIP { get; set; }
 
