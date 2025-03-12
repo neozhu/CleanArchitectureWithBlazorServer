@@ -143,7 +143,7 @@ public static class SerilogExtensions
     {
         if (string.IsNullOrEmpty(connectionString)) return;
 
-        const string tableName = "SystemLogs";
+        const string tableName = "system_logs";
         //Used columns (Key is a column name) 
         //Column type is writer's constructor parameter
         IDictionary<string, ColumnWriterBase> columnOptions = new Dictionary<string, ColumnWriterBase>

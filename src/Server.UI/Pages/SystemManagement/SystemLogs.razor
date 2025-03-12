@@ -9,7 +9,7 @@
 @using CleanArchitecture.Blazor.Application.Features.SystemLogs.Commands.Clear
 
 @attribute [Authorize(Policy = Permissions.Logs.View)]
-@inject IStringLocalizer<Logs> L
+@inject IStringLocalizer<SystemLogs> L
 <PageTitle>@Title</PageTitle>
 
 <LogsLineCharts></LogsLineCharts>
