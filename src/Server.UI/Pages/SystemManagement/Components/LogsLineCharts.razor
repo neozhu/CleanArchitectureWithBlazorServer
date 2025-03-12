@@ -1,5 +1,5 @@
-﻿@using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
-@using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
+﻿@using CleanArchitecture.Blazor.Application.Features.SystemLogs.DTOs
+@using CleanArchitecture.Blazor.Application.Features.SystemLogs.Queries.ChatData
 @using ApexCharts
 @implements IDisposable
 
@@ -10,9 +10,9 @@
     <MudPaper Class="pa-5 flex-grow-1" Elevation="3">
         @if (Data.Any())
         {
-            <ApexChart @ref="Chart" Options="Options" TItem="LogTimeLineDto" Height="180"
+            <ApexChart @ref="Chart" Options="Options" TItem="SystemLogTimeLineDto" Height="180"
                        Title="@L["Collect logs by day"]">
-                <ApexPointSeries TItem="LogTimeLineDto"
+                <ApexPointSeries TItem="SystemLogTimeLineDto"
                                  Items="Data"
                                  Name="Count"
                                  XValue="@(e => e.dt.ToString("MMM-d"))"
@@ -30,9 +30,9 @@
 
 @code
 {
-    public List<LogTimeLineDto> Data { get; set; } = new();
-    private ApexChart<LogTimeLineDto> Chart { get; set; } = null!;
-    private ApexChartOptions<LogTimeLineDto> Options { get; set; } = new();
+    public List<SystemLogTimeLineDto> Data { get; set; } = new();
+    private ApexChart<SystemLogTimeLineDto> Chart { get; set; } = null!;
+    private ApexChartOptions<SystemLogTimeLineDto> Options { get; set; } = new();
 
 
 
@@ -101,7 +101,7 @@
 
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
 
-        Data = await Mediator.Send(new LogsTimeLineChatDataQuery());
+        Data = await Mediator.Send(new SystemLogsTimeLineChatDataQuery());
     }
 
     private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)

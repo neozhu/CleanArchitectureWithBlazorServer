@@ -1,19 +1,19 @@
 ﻿@page "/system/logs"
-@using CleanArchitecture.Blazor.Application.Features.Loggers.Caching
-@using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
-@using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery
-@using CleanArchitecture.Blazor.Application.Features.Loggers.Specifications
+@using CleanArchitecture.Blazor.Application.Features.SystemLogs.Caching
+@using CleanArchitecture.Blazor.Application.Features.SystemLogs.DTOs
+@using CleanArchitecture.Blazor.Application.Features.SystemLogs.Queries.PaginationQuery
+@using CleanArchitecture.Blazor.Application.Features.SystemLogs.Specifications
 @using CleanArchitecture.Blazor.Server.UI.Components.UtcToLocalTime
 @using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using CleanArchitecture.Blazor.Server.UI.Pages.SystemManagement.Components
-@using CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Clear
+@using CleanArchitecture.Blazor.Application.Features.SystemLogs.Commands.Clear
 
 @attribute [Authorize(Policy = Permissions.Logs.View)]
 @inject IStringLocalizer<Logs> L
 <PageTitle>@Title</PageTitle>
 
 <LogsLineCharts></LogsLineCharts>
-<MudDataGrid T="LogDto"
+<MudDataGrid T="SystemLogDto"
              ServerData="@(ServerReload)"
              FixedHeader="true"
              FixedFooter="false"
@@ -29,7 +29,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.BarChart" Size="Size.Large" />
                 <MudStack Spacing="0">
                     <MudText Typo="Typo.subtitle2" Class="mb-2">@Title</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="LogListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
+                    <MudEnumSelect Style="min-width:120px" TEnum="SystemLogListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
                     </MudEnumSelect>
                 </MudStack>
             </MudStack>
@@ -60,7 +60,7 @@
         </MudStack>
     </ToolBarContent>
     <Columns>
-        <HierarchyColumn T="LogDto" ButtonDisabledFunc="@(x => string.IsNullOrEmpty(x.Message))" />
+        <HierarchyColumn T="SystemLogDto" ButtonDisabledFunc="@(x => string.IsNullOrEmpty(x.Message))" />
         <PropertyColumn Style="width:130px" Property="x => x.TimeStamp" Title="@L[_currentDto.GetMemberDescription(x => x.TimeStamp)]">
             <CellTemplate>
                 <UtcToLocal UTCDateTime="@context.Item.TimeStamp"></UtcToLocal>
@@ -135,15 +135,15 @@
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
     private string Title { get; set; } = "Logs";
     private string _searchString = string.Empty;
-    private MudDataGrid<LogDto> _table = default!;
-    private readonly LogDto _currentDto = new();
+    private MudDataGrid<SystemLogDto> _table = default!;
+    private readonly SystemLogDto _currentDto = new();
     private readonly int _defaultPageSize = 15;
     private TimeSpan _localTimeOffset => UserProfile?.LocalTimeOffset ?? TimeSpan.Zero;
     private bool _loading;
     private bool _clearing;
     private LogsAccessRights _accessRights = new();
 
-    private LogsWithPaginationQuery Query { get; } = new();
+    private SystemLogsWithPaginationQuery Query { get; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -152,7 +152,7 @@
     }
 
 
-    private async Task<GridData<LogDto>> ServerReload(GridState<LogDto> state)
+    private async Task<GridData<SystemLogDto>> ServerReload(GridState<SystemLogDto> state)
     {
         try
         {
@@ -164,7 +164,7 @@
             Query.LocalTimeOffset = _localTimeOffset;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
 
-            return new GridData<LogDto> { TotalItems = result.TotalItems, Items = result.Items };
+            return new GridData<SystemLogDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
         {
@@ -172,7 +172,7 @@
         }
     }
 
-    private async Task OnChangedListView(LogListView listview)
+    private async Task OnChangedListView(SystemLogListView listview)
     {
         Query.ListView = listview;
         await _table.ReloadServerData();
@@ -193,7 +193,7 @@
     private async Task OnRefresh()
     {
         Query.Keyword = string.Empty;
-        LogsCacheKey.Refresh();
+        SystemLogsCacheKey.Refresh();
         await _table.ReloadServerData();
     }
 
@@ -206,7 +206,7 @@
             _clearing = true;
             try
             {
-                var command = new ClearLogsCommand();
+                var command = new ClearSystemLogsCommand();
                 var result = await Mediator.Send(command);
                 await _table.ReloadServerData();
                 Snackbar.Add(L["Logs have been erased"], Severity.Info);

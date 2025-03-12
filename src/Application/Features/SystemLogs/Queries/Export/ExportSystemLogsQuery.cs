@@ -1,28 +1,28 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Loggers.Mappers;
+using CleanArchitecture.Blazor.Application.Features.SystemLogs.DTOs;
+using CleanArchitecture.Blazor.Application.Features.SystemLogs.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.Export;
 
-public class ExportLogsQuery : IRequest<byte[]>
+public class ExportSystemLogsQuery : IRequest<byte[]>
 {
     public string Keyword { get; set; } = string.Empty;
     public string OrderBy { get; set; } = "Id";
     public string SortDirection { get; set; } = "Descending";
 }
 
-public class ExportLogsQueryHandler : IRequestHandler<ExportLogsQuery, byte[]>
+public class ExportSystemLogsQueryHandler : IRequestHandler<ExportSystemLogsQuery, byte[]>
 {
     private readonly IApplicationDbContext _context;
     private readonly IExcelService _excelService;
-    private readonly IStringLocalizer<ExportLogsQueryHandler> _localizer;
+    private readonly IStringLocalizer<ExportSystemLogsQueryHandler> _localizer;
 
-    public ExportLogsQueryHandler(
+    public ExportSystemLogsQueryHandler(
         IApplicationDbContext context,
         IExcelService excelService,
-        IStringLocalizer<ExportLogsQueryHandler> localizer
+        IStringLocalizer<ExportSystemLogsQueryHandler> localizer
     )
     {
         _context = context;
@@ -30,15 +30,15 @@ public class ExportLogsQueryHandler : IRequestHandler<ExportLogsQuery, byte[]>
         _localizer = localizer;
     }
 
-    public async Task<byte[]> Handle(ExportLogsQuery request, CancellationToken cancellationToken)
+    public async Task<byte[]> Handle(ExportSystemLogsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Loggers
+        var data = await _context.SystemLogs
             .Where(x => x.Message!.Contains(request.Keyword) || x.Exception!.Contains(request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo()
             .ToListAsync(cancellationToken);
         var result = await _excelService.ExportAsync(data,
-            new Dictionary<string, Func<LogDto, object?>>
+            new Dictionary<string, Func<SystemLogDto, object?>>
             {
                 //{ _localizer["Id"], item => item.Id },
                 { _localizer["Time Stamp"], item => item.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss") },

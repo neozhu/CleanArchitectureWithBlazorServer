@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Configurations;
 
-public class LoggerConfiguration : IEntityTypeConfiguration<Logger>
+public class SystemLogConfiguration : IEntityTypeConfiguration<SystemLog>
 {
-    public void Configure(EntityTypeBuilder<Logger> builder)
+    public void Configure(EntityTypeBuilder<SystemLog> builder)
     {
         builder.Property(x => x.Level).HasMaxLength(450);
         builder.Property(x => x.Message).HasMaxLength(int.MaxValue);
