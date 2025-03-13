@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Blazor.Application.Features.Identity.Mappers;
+﻿using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,13 +12,17 @@ public class UserProfileStateService
     private TimeSpan RefreshInterval => TimeSpan.FromSeconds(60);
     private UserProfile _userProfile = new UserProfile() { Email="", UserId="", UserName="" };
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IMapper _mapper;
     private readonly IFusionCache _fusionCache;
 
-    public UserProfileStateService(IServiceScopeFactory scopeFactory,
+    public UserProfileStateService(
+        IMapper mapper,
+        IServiceScopeFactory scopeFactory,
         IFusionCache fusionCache)
     {
         var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _mapper = mapper;
         _fusionCache = fusionCache;
 
     }
@@ -26,7 +31,7 @@ public class UserProfileStateService
         var key = GetApplicationUserCacheKey(userName);
         var result = await _fusionCache.GetOrSetAsync(key,
             _ => _userManager.Users.Where(x => x.UserName == userName).Include(x => x.UserRoles)
-                .ThenInclude(x => x.Role).ProjectTo()
+                .ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(), RefreshInterval);
         if(result is not null)
         {

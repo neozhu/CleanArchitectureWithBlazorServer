@@ -1,9 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
-using CleanArchitecture.Blazor.Application.Features.PicklistSets.Mappers;
+
 
 namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.ByName;
 
@@ -20,10 +21,13 @@ public class PicklistSetsQueryByName : ICacheableRequest<IEnumerable<PicklistSet
 
 public class PicklistSetsQueryByNameHandler : IRequestHandler<PicklistSetsQueryByName, IEnumerable<PicklistSetDto>>
 {
+    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
     public PicklistSetsQueryByNameHandler(
+        IMapper mapper,
         IApplicationDbContext context)
     {
+        _mapper = mapper;
         _context = context;
     }
 
@@ -32,7 +36,8 @@ public class PicklistSetsQueryByNameHandler : IRequestHandler<PicklistSetsQueryB
     {
         var data = await _context.PicklistSets.Where(x => x.Name == request.Name)
             .OrderBy(x => x.Text)
-            .ProjectTo()
+            .ProjectTo<PicklistSetDto>(_mapper.ConfigurationProvider)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
         return data;
     }

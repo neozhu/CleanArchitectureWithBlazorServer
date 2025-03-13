@@ -24,36 +24,48 @@
 
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
+using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.AddEdit;
 
-public class AddEditContactCommand: ICacheInvalidatorRequest<Result<int>>
+public class AddEditContactCommand : ICacheInvalidatorRequest<Result<int>>
 {
-      [Description("Id")]
-      public int Id { get; set; }
-          [Description("Name")]
-    public string Name {get;set;} 
+    [Description("Id")]
+    public int Id { get; set; }
+    [Description("Name")]
+    public string Name { get; set; }
     [Description("Description")]
-    public string? Description {get;set;} 
+    public string? Description { get; set; }
     [Description("Email")]
-    public string? Email {get;set;} 
+    public string? Email { get; set; }
     [Description("Phone number")]
-    public string? PhoneNumber {get;set;} 
+    public string? PhoneNumber { get; set; }
     [Description("Country")]
-    public string? Country {get;set;} 
+    public string? Country { get; set; }
 
 
-      public string CacheKey => ContactCacheKey.GetAllCacheKey;
-      public IEnumerable<string>? Tags => ContactCacheKey.Tags;
+    public string CacheKey => ContactCacheKey.GetAllCacheKey;
+    public IEnumerable<string>? Tags => ContactCacheKey.Tags;
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<ContactDto, AddEditContactCommand>(MemberList.None);
+            CreateMap<AddEditContactCommand, Contact>(MemberList.None);
+        }
+    }
 }
 
 public class AddEditContactCommandHandler : IRequestHandler<AddEditContactCommand, Result<int>>
 {
+    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
     public AddEditContactCommandHandler(
+        IMapper mapper,
         IApplicationDbContext context)
     {
+        _mapper = mapper;
         _context = context;
     }
     public async Task<Result<int>> Handle(AddEditContactCommand request, CancellationToken cancellationToken)
@@ -65,22 +77,22 @@ public class AddEditContactCommandHandler : IRequestHandler<AddEditContactComman
             {
                 return await Result<int>.FailureAsync($"Contact with id: [{request.Id}] not found.");
             }
-            ContactMapper.ApplyChangesFrom(request,item);
-			// raise a update domain event
-			item.AddDomainEvent(new ContactUpdatedEvent(item));
+            item = _mapper.Map(request, item);
+            // raise a update domain event
+            item.AddDomainEvent(new ContactUpdatedEvent(item));
             await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {
-            var item = ContactMapper.FromEditCommand(request);
+            var item = _mapper.Map<Contact>(request);
             // raise a create domain event
-			item.AddDomainEvent(new ContactCreatedEvent(item));
+            item.AddDomainEvent(new ContactCreatedEvent(item));
             _context.Contacts.Add(item);
             await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
-       
+
     }
 }
 

@@ -19,6 +19,8 @@
 @using Microsoft.JSInterop
 @using MudBlazor
 @using MediatR
+@using AutoMapper
+@using AutoMapper.QueryableExtensions
 @using FluentValidation;
 @using CleanArchitecture.Blazor.Domain
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
@@ -49,6 +51,7 @@
 @using CleanArchitecture.Blazor.Server.UI.Components.Shared.Layout
 @using CleanArchitecture.Blazor.Server.UI.Services.Layout
 @using CleanArchitecture.Blazor.Server.UI.Extensions
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
 @using Severity=MudBlazor.Severity
 @using Color = MudBlazor.Color
 @inject IApplicationSettings ApplicationSettings
@@ -62,3 +65,4 @@
 @inject NavigationManager Navigation
 @inject DialogServiceHelper DialogServiceHelper
 @inject IPermissionService PermissionService
+@inject IMapper Mapper
