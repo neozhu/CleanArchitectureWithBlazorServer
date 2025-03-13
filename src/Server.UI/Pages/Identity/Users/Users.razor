@@ -12,7 +12,6 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
-@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Roles.Components
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Components
 @using System.Linq.Expressions
@@ -27,7 +26,7 @@
 @implements IDisposable
 
 @inject IOnlineUserTracker OnlineUserTracker
-@inject IBlazorDownloadFileService BlazorDownloadFileService
+@inject BlazorDownloadFileService BlazorDownloadFileService
 @inject IUserService UserService
 @inject ITenantService TenantsService
 @inject IFusionCache FusionCache
@@ -771,7 +770,7 @@
                 }).ToListAsync();
 
             var result = await ExportUsers(items);
-            await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, "application/octet-stream");
+            await BlazorDownloadFileService.DownloadFileAsync($"{L["Users"]}.xlsx", result, "application/octet-stream");
             Snackbar.Add(ConstantString.ExportSuccess, Severity.Info);
         }
         finally { _exporting = false; }

@@ -58,10 +58,10 @@ public class UpdateContactCommand: ICacheInvalidatorRequest<Result<int>>
 
 public class UpdateContactCommandHandler : IRequestHandler<UpdateContactCommand, Result<int>>
 {
-    private readonly Mapper _mapper;
+    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
     public UpdateContactCommandHandler(
-        Mapper mapper,
+        IMapper mapper,
         IApplicationDbContext context)
     {
         _mapper = mapper;

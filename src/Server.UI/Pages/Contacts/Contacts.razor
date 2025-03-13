@@ -1,6 +1,5 @@
 ﻿@page "/pages/Contacts"
 
-@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Caching
 @using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications
@@ -169,7 +168,7 @@
 
     private ContactsWithPaginationQuery Query { get; set; } = new();
     [Inject]
-    private IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
+    private BlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
 
     private ContactsAccessRights _accessRights = new();
 
@@ -304,7 +303,7 @@
         await result.MatchAsync<byte[]>(
             async data =>
             {
-                var downloadresult = await BlazorDownloadFileService.DownloadFile($"{L["Contacts"]}.xlsx", result.Data, contentType: "application/octet-stream");
+                await BlazorDownloadFileService.DownloadFileAsync($"{L["Contacts"]}.xlsx", result.Data, contentType: "application/octet-stream");
                 Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
                 return data;
             },

@@ -4,7 +4,6 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Products.Specifications
 @using CleanArchitecture.Blazor.Domain.Common.Enums
-@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Server.UI.Pages.Products.Components
 @using CleanArchitecture.Blazor.Application.Features.Products.Caching
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
@@ -13,7 +12,7 @@
 
 @attribute [Authorize(Policy = Permissions.Products.View)]
 @inject IStringLocalizer<Products> L
-@inject IBlazorDownloadFileService BlazorDownloadFileService
+@inject BlazorDownloadFileService BlazorDownloadFileService
 
 <PageTitle>@Title</PageTitle>
 
@@ -341,7 +340,7 @@
         var result = await Mediator.Send(request);
         if (result.Succeeded)
         {
-            var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Products"]}.xlsx", result.Data, "application/octet-stream");
+            await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.xlsx", result.Data, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
         }
         else
@@ -372,7 +371,7 @@
         var result = await Mediator.Send(request);
         if (result.Succeeded)
         {
-            var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Products"]}.pdf", result.Data, "application/octet-stream");
+            await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.pdf", result.Data, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
         }
         else
