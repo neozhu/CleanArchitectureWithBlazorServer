@@ -218,7 +218,7 @@ else
         var state = await AuthState;
         _currentUserName = state.User.Identity?.Name ?? string.Empty;
         await UserProfileStateService.InitializeAsync(state.User.Identity?.Name ?? string.Empty);
-        model = UserProfileMapper.ToChangeUserProfileModel(UserProfileStateService.UserProfile);
+        model = Mapper.Map<ChangeUserProfileModel>(UserProfileStateService.UserProfile);
     }
 
     protected override void Dispose(bool disposing)

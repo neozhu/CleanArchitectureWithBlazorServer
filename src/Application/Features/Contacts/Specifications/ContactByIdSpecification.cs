@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-12
-//     Last Modified: 2024-11-12
+//     Created Date: 2025-03-13
+//     Last Modified: 2025-03-13
 //     Description: 
 //       Defines a specification for filtering a Contact entity by its ID.
 // </auto-generated>

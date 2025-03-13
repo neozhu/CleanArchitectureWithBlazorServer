@@ -1,6 +1,5 @@
 ﻿@page "/pages/Contacts/edit/{id:int}"
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Update
-@using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById
 @using CleanArchitecture.Blazor.Server.UI.Components.Fusion
 
@@ -8,6 +7,7 @@
 @inject IValidationService Validator
 @inject IStringLocalizer<Contacts> L
 @attribute [Authorize(Policy = Permissions.Contacts.Edit)]
+
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
 <MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
@@ -43,7 +43,7 @@
         </MudForm>
         </MudCardContent>
         <MudCardActions Class="d-flex justify-end gap-2">
-                    <MudLoadingButton Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
         </MudCardActions>
         </MudCard>
     }
@@ -68,7 +68,7 @@
         var result = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
         result.Map(data =>
         {
-            model = ContactMapper.ToUpdateCommand(data);
+            model = Mapper.Map<UpdateContactCommand>(data);
             return data;
         }).Match(data =>
         {
@@ -89,7 +89,7 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
-            var result = await Mediator.Send(model!);
+            var result = await Mediator.Send(model);
             result.Match(
                 data=>
                 {

@@ -1,11 +1,9 @@
 ﻿@page "/pages/products"
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
-@using CleanArchitecture.Blazor.Application.Features.Products.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
 @using CleanArchitecture.Blazor.Application.Features.Products.Specifications
 @using CleanArchitecture.Blazor.Domain.Common.Enums
-@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Server.UI.Pages.Products.Components
 @using CleanArchitecture.Blazor.Application.Features.Products.Caching
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit
@@ -14,7 +12,7 @@
 
 @attribute [Authorize(Policy = Permissions.Products.View)]
 @inject IStringLocalizer<Products> L
-@inject IBlazorDownloadFileService BlazorDownloadFileService
+@inject BlazorDownloadFileService BlazorDownloadFileService
 
 <PageTitle>@Title</PageTitle>
 
@@ -42,21 +40,19 @@
             </MudStack>
             <MudStack Spacing="0" AlignItems="AlignItems.End">
                 <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
-                    <MudButton 
-                               Disabled="@_loading"
+                    <MudButton Disabled="@_loading"
                                OnClick="@(() => OnRefresh())"
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
                     @if (_accessRights.Create)
                     {
-                        <MudButton  
-                                   StartIcon="@Icons.Material.Outlined.Add"
+                        <MudButton StartIcon="@Icons.Material.Outlined.Add"
                                    OnClick="OnCreate">
                             @ConstantString.New
                         </MudButton>
                     }
-                    <MudMenu  TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
+                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
                         @if (_accessRights.Create)
                         {
                             <MudMenuItem Disabled="@(_selectedItems.Count != 1)" OnClick="OnClone">@ConstantString.Clone</MudMenuItem>
@@ -86,9 +82,8 @@
                                     <ActivatorContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
                                                    Variant="Variant.Text"
-                                                   Disabled="@_uploading"
-                                                   >
-                                                @ConstantString.Import
+                                                   Disabled="@_uploading">
+                                            @ConstantString.Import
                                         </MudButton>
                                     </ActivatorContent>
                                 </MudFileUpload>
@@ -193,7 +188,7 @@
     private bool _pdfExporting;
     private int _defaultPageSize = 15;
 
-    
+
 
     private ProductsWithPaginationQuery Query { get; } = new();
 
@@ -203,7 +198,7 @@
         Title = L[_currentDto.GetClassDescription()];
         _accessRights = await PermissionService.GetAccessRightsAsync<ProductsAccessRights>();
     }
-    
+
     private async Task<GridData<ProductDto>> ServerReload(GridState<ProductDto> state)
     {
         try
@@ -257,7 +252,7 @@
             { x => x.Model, command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog =await DialogService.ShowAsync<ProductFormDialog>(title, parameters, options);
+        var dialog = await DialogService.ShowAsync<ProductFormDialog>(title, parameters, options);
         var state = await dialog.Result;
 
         if (state is not null && !state.Canceled)
@@ -277,13 +272,22 @@
     private async Task OnClone()
     {
         var copy = _selectedItems.First();
-        var command = ProductMapper.CloneFromDto(copy);
+        var command = new AddEditProductCommand()
+        {
+            Brand = copy.Brand,
+            Name = copy.Name,
+            Description = copy.Description,
+            Price = copy.Price,
+            Unit = copy.Unit,
+            Pictures = copy.Pictures
+
+        };
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
     }
 
     private async Task OnEdit(ProductDto dto)
     {
-        var command = ProductMapper.ToEditCommand(dto);
+        var command = Mapper.Map<AddEditProductCommand>(dto);
         await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), command);
     }
 
@@ -320,23 +324,23 @@
     {
         _exporting = true;
         var request = new ExportProductsQuery
-            {
-                Brand = Query.Brand,
-                Name = Query.Name,
-                MinPrice = Query.MinPrice,
-                MaxPrice = Query.MaxPrice,
-                Unit = Query.Unit,
-                Keyword = Query.Keyword,
-                ListView = Query.ListView,
-                OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-                SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
-                CurrentUser = UserProfile,
-                ExportType = ExportType.Excel
-            };
+        {
+            Brand = Query.Brand,
+            Name = Query.Name,
+            MinPrice = Query.MinPrice,
+            MaxPrice = Query.MaxPrice,
+            Unit = Query.Unit,
+            Keyword = Query.Keyword,
+            ListView = Query.ListView,
+            OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+            SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
+            CurrentUser = UserProfile,
+            ExportType = ExportType.Excel
+        };
         var result = await Mediator.Send(request);
         if (result.Succeeded)
         {
-            var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Products"]}.xlsx", result.Data, "application/octet-stream");
+            await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.xlsx", result.Data, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
         }
         else
@@ -351,23 +355,23 @@
     {
         _pdfExporting = true;
         var request = new ExportProductsQuery
-            {
-                Brand = Query.Brand,
-                Name = Query.Name,
-                MinPrice = Query.MinPrice,
-                MaxPrice = Query.MaxPrice,
-                Unit = Query.Unit,
-                Keyword = Query.Keyword,
-                ListView = Query.ListView,
-                CurrentUser = UserProfile,
-                OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-                SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
-                ExportType = ExportType.PDF
-            };
+        {
+            Brand = Query.Brand,
+            Name = Query.Name,
+            MinPrice = Query.MinPrice,
+            MaxPrice = Query.MaxPrice,
+            Unit = Query.Unit,
+            Keyword = Query.Keyword,
+            ListView = Query.ListView,
+            CurrentUser = UserProfile,
+            OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+            SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
+            ExportType = ExportType.PDF
+        };
         var result = await Mediator.Send(request);
         if (result.Succeeded)
         {
-            var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Products"]}.pdf", result.Data, "application/octet-stream");
+            await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.pdf", result.Data, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
         }
         else

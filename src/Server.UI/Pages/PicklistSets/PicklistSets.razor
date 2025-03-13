@@ -1,9 +1,7 @@
 ﻿@page "/system/picklistset"
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs
-@using CleanArchitecture.Blazor.Application.Features.PicklistSets.Mappers
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.PaginationQuery
-@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.AddEdit
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.Delete
@@ -13,7 +11,7 @@
 
 @attribute [Authorize(Policy = Permissions.PicklistSets.View)]
 @inject IStringLocalizer<PicklistSets> L
-@inject IBlazorDownloadFileService BlazorDownloadFileService
+@inject BlazorDownloadFileService BlazorDownloadFileService
 
 <PageTitle>@Title</PageTitle>
 
@@ -225,7 +223,7 @@
     {
         InvokeAsync(async () =>
         {
-            var command = PicklistMapper.ToEditCommand(item);
+            var command = Mapper.Map<AddEditPicklistSetCommand>(item);
             var result = await Mediator.Send(command);
             if (!result.Succeeded)
             {
@@ -303,7 +301,7 @@
         {
             var request = new ExportPicklistSetsQuery { Keyword = _searchString };
             var result = await Mediator.Send(request);
-            await BlazorDownloadFileService.DownloadFile($"{L["Picklist"]}.xlsx", result, "application/octet-stream");
+            await BlazorDownloadFileService.DownloadFileAsync($"{L["Picklist"]}.xlsx", result, "application/octet-stream");
             Snackbar.Add(ConstantString.ExportSuccess, Severity.Info);
         }
         finally

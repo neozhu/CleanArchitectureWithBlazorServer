@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-12
-//     Last Modified: 2024-11-12
+//     Created Date: 2025-03-13
+//     Last Modified: 2025-03-13
 //     Description: 
 //       Defines a query for retrieving contacts with pagination and filtering 
 //       options. The result is cached to enhance performance for repeated queries.
@@ -15,7 +15,6 @@
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Pagination;
@@ -35,21 +34,23 @@ public class ContactsWithPaginationQueryHandler :
          IRequestHandler<ContactsWithPaginationQuery, PaginatedData<ContactDto>>
 {
         private readonly IApplicationDbContext _context;
-
+        private readonly IMapper _mapper;
         public ContactsWithPaginationQueryHandler(
+            IMapper mapper,
             IApplicationDbContext context)
         {
+            _mapper = mapper;
             _context = context;
         }
 
         public async Task<PaginatedData<ContactDto>> Handle(ContactsWithPaginationQuery request, CancellationToken cancellationToken)
         {
            var data = await _context.Contacts.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                                                   .ProjectToPaginatedDataAsync(request.Specification, 
-                                                                                request.PageNumber, 
-                                                                                request.PageSize, 
-                                                                                ContactMapper.ToDto, 
-                                                                                cancellationToken);
+                                                   .ProjectToPaginatedDataAsync<Contact, ContactDto>(request.Specification,
+                                                    request.PageNumber,
+                                                    request.PageSize,
+                                                    _mapper.ConfigurationProvider,
+                                                    cancellationToken);
             return data;
         }
 }

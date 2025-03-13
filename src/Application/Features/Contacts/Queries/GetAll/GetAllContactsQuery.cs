@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-12
-//     Last Modified: 2024-11-12
+//     Created Date: 2025-03-13
+//     Last Modified: 2025-03-13
 //     Description: 
 //       Defines a query to retrieve all contacts from the database. The result 
 //       is cached to improve performance and reduce database load for repeated 
@@ -15,7 +15,6 @@
 //------------------------------------------------------------------------------
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetAll;
@@ -30,16 +29,18 @@ public class GetAllContactsQueryHandler :
      IRequestHandler<GetAllContactsQuery, IEnumerable<ContactDto>>
 {
     private readonly IApplicationDbContext _context;
-
+    private readonly IMapper _mapper;
     public GetAllContactsQueryHandler(
+        IMapper mapper,
         IApplicationDbContext context)
     {
+        _mapper = mapper;
         _context = context;
     }
 
     public async Task<IEnumerable<ContactDto>> Handle(GetAllContactsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Contacts.ProjectTo()
+        var data = await _context.Contacts.ProjectTo<ContactDto>(_mapper.ConfigurationProvider)
                                                 .AsNoTracking()
                                                 .ToListAsync(cancellationToken);
         return data;
