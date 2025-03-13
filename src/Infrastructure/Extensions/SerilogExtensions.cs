@@ -89,7 +89,7 @@ public static class SerilogExtensions
 
         MSSqlServerSinkOptions sinkOpts = new()
         {
-            TableName = "Loggers",
+            TableName = "SystemLogs",
             SchemaName = "dbo",
             AutoCreateSqlDatabase = false,
             AutoCreateSqlTable = false,
@@ -143,7 +143,7 @@ public static class SerilogExtensions
     {
         if (string.IsNullOrEmpty(connectionString)) return;
 
-        const string tableName = "loggers";
+        const string tableName = "system_logs";
         //Used columns (Key is a column name) 
         //Column type is writer's constructor parameter
         IDictionary<string, ColumnWriterBase> columnOptions = new Dictionary<string, ColumnWriterBase>
@@ -177,7 +177,7 @@ public static class SerilogExtensions
     private static void WriteToSqLite(LoggerConfiguration serilogConfig, string dbname)
     {
         var sqlPath = Environment.CurrentDirectory + dbname;
-        const string tableName = "Loggers";
+        const string tableName = "SystemLogs";
         serilogConfig.WriteTo.Async(wt => wt.SQLite(
             sqlPath,
             tableName,
