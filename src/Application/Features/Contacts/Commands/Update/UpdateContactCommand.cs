@@ -26,7 +26,6 @@
 // invalidated to keep the contact list consistent.
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Create;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Update;
 

@@ -26,7 +26,6 @@
 // events for integration with other bounded contexts in the application.
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Create;
