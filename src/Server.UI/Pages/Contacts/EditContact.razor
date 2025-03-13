@@ -7,6 +7,7 @@
 @inject IValidationService Validator
 @inject IStringLocalizer<Contacts> L
 @attribute [Authorize(Policy = Permissions.Contacts.Edit)]
+
 <PageTitle>@Title</PageTitle>
 <Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
 <MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
@@ -42,7 +43,7 @@
         </MudForm>
         </MudCardContent>
         <MudCardActions Class="d-flex justify-end gap-2">
-                    <MudLoadingButton Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
         </MudCardActions>
         </MudCard>
     }
@@ -88,7 +89,7 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
-            var result = await Mediator.Send(model!);
+            var result = await Mediator.Send(model);
             result.Match(
                 data=>
                 {

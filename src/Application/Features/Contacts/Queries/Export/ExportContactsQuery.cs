@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-12
-//     Last Modified: 2024-11-12
+//     Created Date: 2025-03-13
+//     Last Modified: 2025-03-13
 //     Description: 
 //       Defines a query to export contact data to an Excel file. This query 
 //       applies advanced filtering options and generates an Excel file with 
@@ -14,9 +14,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Export;
@@ -35,8 +34,8 @@ public class ExportContactsQuery : ContactAdvancedFilter, ICacheableRequest<Resu
 public class ExportContactsQueryHandler :
          IRequestHandler<ExportContactsQuery, Result<byte[]>>
 {
-    private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IApplicationDbContext _context;
         private readonly IExcelService _excelService;
         private readonly IStringLocalizer<ExportContactsQueryHandler> _localizer;
         private readonly ContactDto _dto = new();
@@ -47,8 +46,8 @@ public class ExportContactsQueryHandler :
             IStringLocalizer<ExportContactsQueryHandler> localizer
             )
         {
-        _mapper = mapper;
-        _context = context;
+            _mapper = mapper;
+            _context = context;
             _excelService = excelService;
             _localizer = localizer;
         }

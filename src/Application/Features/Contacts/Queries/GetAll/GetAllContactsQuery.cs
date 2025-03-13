@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2024-11-12
-//     Last Modified: 2024-11-12
+//     Created Date: 2025-03-13
+//     Last Modified: 2025-03-13
 //     Description: 
 //       Defines a query to retrieve all contacts from the database. The result 
 //       is cached to improve performance and reduce database load for repeated 
@@ -28,9 +28,8 @@ public class GetAllContactsQuery : ICacheableRequest<IEnumerable<ContactDto>>
 public class GetAllContactsQueryHandler :
      IRequestHandler<GetAllContactsQuery, IEnumerable<ContactDto>>
 {
-    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
-
+    private readonly IMapper _mapper;
     public GetAllContactsQueryHandler(
         IMapper mapper,
         IApplicationDbContext context)
