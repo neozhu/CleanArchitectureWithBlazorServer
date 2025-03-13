@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Headers;
-using BlazorDownloadFile;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
 using CleanArchitecture.Blazor.Server.UI.Services;
@@ -102,7 +101,7 @@ public static class DependencyInjection
             .AddScoped<LayoutService>()
             .AddScoped<DialogServiceHelper>()
             .AddScoped<PermissionHelper>()
-            .AddBlazorDownloadFile()
+            .AddScoped<BlazorDownloadFileService>()
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
             .AddScoped<IMenuService, MenuService>()
             .AddScoped<InMemoryNotificationService>()

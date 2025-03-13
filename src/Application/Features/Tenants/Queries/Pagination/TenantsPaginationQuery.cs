@@ -3,7 +3,6 @@
 
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Tenants.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Queries.Pagination;
 
@@ -22,12 +21,15 @@ public class TenantsWithPaginationQuery : PaginationFilter, ICacheableRequest<Pa
 public class TenantsWithPaginationQueryHandler :
     IRequestHandler<TenantsWithPaginationQuery, PaginatedData<TenantDto>>
 {
+    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
 
     public TenantsWithPaginationQueryHandler(
+        IMapper mapper,
         IApplicationDbContext context
     )
     {
+        _mapper = mapper;
         _context = context;
     }
 
@@ -35,8 +37,8 @@ public class TenantsWithPaginationQueryHandler :
         CancellationToken cancellationToken)
     {
         var data = await _context.Tenants.OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectToPaginatedDataAsync(request.Specification, request.PageNumber, request.PageSize,
-                TenantMapper.ToDto, cancellationToken);
+            .ProjectToPaginatedDataAsync<Tenant, TenantDto>(request.Specification, request.PageNumber, request.PageSize,
+                _mapper.ConfigurationProvider, cancellationToken);
         return data;
     }
 }

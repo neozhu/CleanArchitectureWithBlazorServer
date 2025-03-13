@@ -1,9 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Documents.Mappers;
 using CleanArchitecture.Blazor.Application.Features.Documents.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery;
@@ -24,12 +24,15 @@ public class DocumentsWithPaginationQuery : AdvancedDocumentsFilter, ICacheableR
 
 public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuery, PaginatedData<DocumentDto>>
 {
+    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
 
     public DocumentsQueryHandler(
+        IMapper mapper,
         IApplicationDbContext context
     )
     {
+        _mapper = mapper;
         _context = context;
     }
 
@@ -37,8 +40,7 @@ public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuer
         CancellationToken cancellationToken)
     {
         var data = await _context.Documents.OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectToPaginatedDataAsync(request.Specification, request.PageNumber,
-                request.PageSize,DocumentMapper.ToDto, cancellationToken);
+            .ProjectToPaginatedDataAsync<Document, DocumentDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
 
         return data;
     }
