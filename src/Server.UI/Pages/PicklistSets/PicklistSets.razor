@@ -1,6 +1,5 @@
 ﻿@page "/system/picklistset"
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs
-@using CleanArchitecture.Blazor.Application.Features.PicklistSets.Mappers
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.PaginationQuery
 @using BlazorDownloadFile
@@ -225,7 +224,7 @@
     {
         InvokeAsync(async () =>
         {
-            var command = PicklistMapper.ToEditCommand(item);
+            var command = Mapper.Map<AddEditPicklistSetCommand>(item);
             var result = await Mediator.Send(command);
             if (!result.Succeeded)
             {

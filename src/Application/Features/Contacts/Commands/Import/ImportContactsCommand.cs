@@ -28,7 +28,6 @@
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import;
 
@@ -56,17 +55,20 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
         private readonly IApplicationDbContext _context;
         private readonly IStringLocalizer<ImportContactsCommandHandler> _localizer;
         private readonly IExcelService _excelService;
-        private readonly ContactDto _dto = new();
+    private readonly IMapper _mapper;
+    private readonly ContactDto _dto = new();
 
         public ImportContactsCommandHandler(
             IApplicationDbContext context,
             IExcelService excelService,
+            IMapper mapper,
             IStringLocalizer<ImportContactsCommandHandler> localizer)
         {
             _context = context;
             _localizer = localizer;
             _excelService = excelService;
-        }
+        _mapper = mapper;
+    }
         #nullable disable warnings
         public async Task<Result<int>> Handle(ImportContactsCommand request, CancellationToken cancellationToken)
         {
@@ -87,7 +89,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
                     var exists = await _context.Contacts.AnyAsync(x => x.Name == dto.Name, cancellationToken);
                     if (!exists)
                     {
-                        var item = ContactMapper.FromDto(dto);
+                        var item = _mapper.Map<Contact>(dto);
                         // add create domain events if this entity implement the IHasDomainEvent interface
 				        // item.AddDomainEvent(new ContactCreatedEvent(item));
                         await _context.Contacts.AddAsync(item, cancellationToken);

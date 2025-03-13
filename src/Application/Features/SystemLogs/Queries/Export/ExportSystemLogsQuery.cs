@@ -1,8 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Features.SystemLogs.DTOs;
-using CleanArchitecture.Blazor.Application.Features.SystemLogs.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.Export;
 
@@ -15,16 +15,19 @@ public class ExportSystemLogsQuery : IRequest<byte[]>
 
 public class ExportSystemLogsQueryHandler : IRequestHandler<ExportSystemLogsQuery, byte[]>
 {
+    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ExportSystemLogsQueryHandler> _localizer;
 
     public ExportSystemLogsQueryHandler(
+        IMapper mapper,
         IApplicationDbContext context,
         IExcelService excelService,
         IStringLocalizer<ExportSystemLogsQueryHandler> localizer
     )
     {
+        _mapper = mapper;
         _context = context;
         _excelService = excelService;
         _localizer = localizer;
@@ -35,7 +38,7 @@ public class ExportSystemLogsQueryHandler : IRequestHandler<ExportSystemLogsQuer
         var data = await _context.SystemLogs
             .Where(x => x.Message!.Contains(request.Keyword) || x.Exception!.Contains(request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectTo()
+            .ProjectTo<SystemLogDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         var result = await _excelService.ExportAsync(data,
             new Dictionary<string, Func<SystemLogDto, object?>>

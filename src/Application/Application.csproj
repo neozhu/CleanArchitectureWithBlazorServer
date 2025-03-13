@@ -8,6 +8,7 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="14.0.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
         <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="8.0.0" />
@@ -20,7 +21,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.2" />
         <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="Riok.Mapperly" Version="4.2.0-next.0" />
         <PackageReference Include="Hangfire.Core" Version="1.8.18" />
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.1.0" />
            <PackageReference Include="ActualLab.Fusion" Version="9.8.46" />

@@ -1,8 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
-using CleanArchitecture.Blazor.Application.Features.AuditTrails.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Export;
 
@@ -18,16 +18,19 @@ public class ExportAuditTrailsQueryHandler :
 {
     private readonly IApplicationDbContext _context;
     private readonly IExcelService _excelService;
+    private readonly IMapper _mapper;
     private readonly IStringLocalizer<ExportAuditTrailsQueryHandler> _localizer;
 
     public ExportAuditTrailsQueryHandler(
         IApplicationDbContext context,
         IExcelService excelService,
+        IMapper mapper,
         IStringLocalizer<ExportAuditTrailsQueryHandler> localizer
     )
     {
         _context = context;
         _excelService = excelService;
+        _mapper = mapper;
         _localizer = localizer;
     }
 
@@ -36,7 +39,7 @@ public class ExportAuditTrailsQueryHandler :
         var data = await _context.AuditTrails
             .Where(x => x.TableName!.Contains(request.Keyword))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectTo()
+            .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         var result = await _excelService.ExportAsync(data,
             new Dictionary<string, Func<AuditTrailDto, object?>>

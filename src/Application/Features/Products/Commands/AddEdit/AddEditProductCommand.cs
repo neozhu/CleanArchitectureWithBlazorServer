@@ -3,7 +3,7 @@
 
 
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
-using CleanArchitecture.Blazor.Application.Features.Products.Mappers;
+using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.AddEdit;
@@ -21,16 +21,27 @@ public class AddEditProductCommand : ICacheInvalidatorRequest<Result<int>>
     public IReadOnlyList<IBrowserFile>? UploadPictures { get; set; }
     public string CacheKey => ProductCacheKey.GetAllCacheKey;
     public IEnumerable<string>? Tags => ProductCacheKey.Tags;
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<ProductDto, AddEditProductCommand>(MemberList.None);
+            CreateMap<AddEditProductCommand, Product>(MemberList.None);
+        }
+    }
 }
 
 public class AddEditProductCommandHandler : IRequestHandler<AddEditProductCommand, Result<int>>
 {
+    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
 
     public AddEditProductCommandHandler(
+        IMapper mapper,
         IApplicationDbContext context
     )
     {
+        _mapper = mapper;
         _context = context;
     }
 
@@ -43,14 +54,14 @@ public class AddEditProductCommandHandler : IRequestHandler<AddEditProductComman
             {
                 return await Result<int>.FailureAsync($"Prduct with id: [{request.Id}] not found.");
             }
-            ProductMapper.ApplyChangesFrom(request, item);
+            item = _mapper.Map(request, item);
             item.AddDomainEvent(new UpdatedEvent<Product>(item));
             await _context.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {
-            var item = ProductMapper.FromEditCommand(request);
+            var item = _mapper.Map<Product>(request);
             item.AddDomainEvent(new CreatedEvent<Product>(item));
             _context.Products.Add(item);
             await _context.SaveChangesAsync(cancellationToken);

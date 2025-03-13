@@ -14,9 +14,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Queries.Export;
@@ -35,17 +35,20 @@ public class ExportContactsQuery : ContactAdvancedFilter, ICacheableRequest<Resu
 public class ExportContactsQueryHandler :
          IRequestHandler<ExportContactsQuery, Result<byte[]>>
 {
-        private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly IApplicationDbContext _context;
         private readonly IExcelService _excelService;
         private readonly IStringLocalizer<ExportContactsQueryHandler> _localizer;
         private readonly ContactDto _dto = new();
         public ExportContactsQueryHandler(
+            IMapper mapper,
             IApplicationDbContext context,
             IExcelService excelService,
             IStringLocalizer<ExportContactsQueryHandler> localizer
             )
         {
-            _context = context;
+        _mapper = mapper;
+        _context = context;
             _excelService = excelService;
             _localizer = localizer;
         }
@@ -54,7 +57,7 @@ public class ExportContactsQueryHandler :
         {
             var data = await _context.Contacts.ApplySpecification(request.Specification)
                        .OrderBy($"{request.OrderBy} {request.SortDirection}")
-                       .ProjectTo()
+                       .ProjectTo<ContactDto>(_mapper.ConfigurationProvider)
                        .AsNoTracking()
                        .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,

@@ -1,6 +1,5 @@
 ﻿@page "/pages/Contacts/edit/{id:int}"
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Update
-@using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById
 @using CleanArchitecture.Blazor.Server.UI.Components.Fusion
 
@@ -68,7 +67,7 @@
         var result = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
         result.Map(data =>
         {
-            model = ContactMapper.ToUpdateCommand(data);
+            model = Mapper.Map<UpdateContactCommand>(data);
             return data;
         }).Match(data =>
         {

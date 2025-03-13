@@ -1,6 +1,5 @@
 ﻿@page "/identity/users"
 @using ActualLab.Fusion
-@using CleanArchitecture.Blazor.Application.Features.Identity.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Fusion
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
 @using CleanArchitecture.Blazor.Infrastructure.Persistence
@@ -320,7 +319,9 @@
                     .Include(x => x.LastModifiedByUser)
                     .Include(x => x.Superior)
                     .EfOrderBySortDefinitions(state)
-                    .Skip(state.Page * state.PageSize).Take(state.PageSize).ProjectTo().ToListAsync();
+                    .Skip(state.Page * state.PageSize).Take(state.PageSize)
+                    .ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider)
+                    .ToListAsync();
 
             return new GridData<ApplicationUserDto> { TotalItems = count, Items = data };
         }

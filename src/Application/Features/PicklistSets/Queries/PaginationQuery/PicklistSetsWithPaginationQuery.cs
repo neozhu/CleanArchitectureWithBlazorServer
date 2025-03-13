@@ -3,7 +3,6 @@
 
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Caching;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.DTOs;
-using CleanArchitecture.Blazor.Application.Features.PicklistSets.Mappers;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Specifications;
 
 namespace CleanArchitecture.Blazor.Application.Features.PicklistSets.Queries.PaginationQuery;
@@ -22,11 +21,14 @@ public class PicklistSetsWithPaginationQuery : PicklistSetAdvancedFilter, ICache
 
 public class PicklistSetsQueryHandler : IRequestHandler<PicklistSetsWithPaginationQuery, PaginatedData<PicklistSetDto>>
 {
+    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
 
     public PicklistSetsQueryHandler(
+        IMapper mapper,
         IApplicationDbContext context)
     {
+        _mapper = mapper;
         _context = context;
     }
 
@@ -34,8 +36,8 @@ public class PicklistSetsQueryHandler : IRequestHandler<PicklistSetsWithPaginati
         CancellationToken cancellationToken)
     {
         var data = await _context.PicklistSets.OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectToPaginatedDataAsync(request.Specification, request.PageNumber,
-                request.PageSize, PicklistMapper.ToDto, cancellationToken);
+            .ProjectToPaginatedDataAsync<PicklistSet, PicklistSetDto>(request.Specification, request.PageNumber,
+                request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
 
         return data;
     }

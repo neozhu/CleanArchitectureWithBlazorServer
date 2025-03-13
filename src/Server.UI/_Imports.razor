@@ -19,6 +19,8 @@
 @using Microsoft.JSInterop
 @using MudBlazor
 @using MediatR
+@using AutoMapper
+@using AutoMapper.QueryableExtensions
 @using FluentValidation;
 @using CleanArchitecture.Blazor.Domain
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
@@ -62,3 +64,4 @@
 @inject NavigationManager Navigation
 @inject DialogServiceHelper DialogServiceHelper
 @inject IPermissionService PermissionService
+@inject IMapper Mapper

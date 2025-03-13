@@ -15,9 +15,9 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
         <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
-        <PackageReference Include="BlazorDownloadFile" Version="2.4.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.2" />
         <PackageReference Include="MudBlazor" Version="8.3.0" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="6.0.1" />

@@ -1,6 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+
+
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
@@ -25,5 +27,16 @@ public class AuditTrailDto
     public string? ErrorMessage { get; set; }
     [Description("Is Successful")]
     public bool IsSuccessful=> string.IsNullOrEmpty(ErrorMessage);
+
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<AuditTrail, AuditTrailDto>(MemberList.None)
+                .ForMember(x => x.PrimaryKey,
+                    s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, DefaultJsonSerializerOptions.Options)));
+        }
+    }
 
 }

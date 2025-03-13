@@ -26,7 +26,7 @@
 // invalidated to keep the contact list consistent.
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
-using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers;
+using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Create;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Update;
 
@@ -47,15 +47,24 @@ public class UpdateContactCommand: ICacheInvalidatorRequest<Result<int>>
 
       public string CacheKey => ContactCacheKey.GetAllCacheKey;
       public IEnumerable<string>? Tags => ContactCacheKey.Tags;
-
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<UpdateContactCommand, Contact>(MemberList.None);
+        }
+    }
 }
 
 public class UpdateContactCommandHandler : IRequestHandler<UpdateContactCommand, Result<int>>
 {
+    private readonly Mapper _mapper;
     private readonly IApplicationDbContext _context;
     public UpdateContactCommandHandler(
+        Mapper mapper,
         IApplicationDbContext context)
     {
+        _mapper = mapper;
         _context = context;
     }
     public async Task<Result<int>> Handle(UpdateContactCommand request, CancellationToken cancellationToken)
@@ -66,9 +75,9 @@ public class UpdateContactCommandHandler : IRequestHandler<UpdateContactCommand,
        {
            return await Result<int>.FailureAsync($"Contact with id: [{request.Id}] not found.");
        }
-       ContactMapper.ApplyChangesFrom(request, item);
-	    // raise a update domain event
-	   item.AddDomainEvent(new ContactUpdatedEvent(item));
+        item = _mapper.Map(request, item);
+        // raise a update domain event
+        item.AddDomainEvent(new ContactUpdatedEvent(item));
        await _context.SaveChangesAsync(cancellationToken);
        return await Result<int>.SuccessAsync(item.Id);
     }
