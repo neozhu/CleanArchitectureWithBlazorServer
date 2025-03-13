@@ -1,6 +1,5 @@
 ﻿@page "/identity/roles"
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
-@using CleanArchitecture.Blazor.Application.Features.Identity.Mappers
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using System.Security.Claims
@@ -236,7 +235,7 @@ OnAssignChanged="OnAssignChangedHandler">
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize)
                 .Take(state.PageSize)
-                .ProjectTo()
+                .ProjectTo<ApplicationRoleDto>(Mapper.ConfigurationProvider)
                 .ToListAsync();
 
             return new GridData<ApplicationRoleDto> { TotalItems = totalCount, Items = roles };

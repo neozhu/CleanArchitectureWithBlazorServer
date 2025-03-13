@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
-using CleanArchitecture.Blazor.Application.Features.Documents.Mappers;
+using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit;
 
@@ -20,19 +20,29 @@ public class AddEditDocumentCommand : ICacheInvalidatorRequest<Result<int>>
     [Description("Content")] public string? Content { get; set; }
     public UploadRequest? UploadRequest { get; set; }
     public IEnumerable<string>? Tags => DocumentCacheKey.Tags;
-
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<DocumentDto, AddEditDocumentCommand>(MemberList.None);
+            CreateMap<AddEditDocumentCommand, Document>(MemberList.None);
+        }
+    }
 }
 
 public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentCommand, Result<int>>
 {
+    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
     private readonly IUploadService _uploadService;
 
     public AddEditDocumentCommandHandler(
+        IMapper mapper,
         IApplicationDbContext context,
         IUploadService uploadService
     )
     {
+        _mapper = mapper;
         _context = context;
         _uploadService = uploadService;
     }
@@ -57,7 +67,7 @@ public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentComm
         }
         else
         {
-            var document = DocumentMapper.FromEditCommand(request);
+            var document = _mapper.Map<Document>(request);
             if (request.UploadRequest != null) document.URL = await _uploadService.UploadAsync(request.UploadRequest);
             document.AddDomainEvent(new CreatedEvent<Document>(document));
             _context.Documents.Add(document);

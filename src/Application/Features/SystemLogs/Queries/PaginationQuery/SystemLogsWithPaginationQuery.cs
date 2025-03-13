@@ -3,8 +3,8 @@
 
 using CleanArchitecture.Blazor.Application.Features.SystemLogs.Caching;
 using CleanArchitecture.Blazor.Application.Features.SystemLogs.DTOs;
-using CleanArchitecture.Blazor.Application.Features.SystemLogs.Mappers;
 using CleanArchitecture.Blazor.Application.Features.SystemLogs.Specifications;
+using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Features.SystemLogs.Queries.PaginationQuery;
 
@@ -24,12 +24,15 @@ public class SystemLogsWithPaginationQuery : SystemLogAdvancedFilter, ICacheable
 
 public class LogsQueryHandler : IRequestHandler<SystemLogsWithPaginationQuery, PaginatedData<SystemLogDto>>
 {
+    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
 
     public LogsQueryHandler(
+        IMapper mapper,
         IApplicationDbContext context
     )
     {
+        _mapper = mapper;
         _context = context;
     }
 
@@ -37,8 +40,8 @@ public class LogsQueryHandler : IRequestHandler<SystemLogsWithPaginationQuery, P
         CancellationToken cancellationToken)
     {
         var data = await _context.SystemLogs.OrderBy($"{request.OrderBy} {request.SortDirection}")
-            .ProjectToPaginatedDataAsync(request.Specification, request.PageNumber, request.PageSize,
-                SystemLogMapper.ToDto, cancellationToken);
+            .ProjectToPaginatedDataAsync<SystemLog, SystemLogDto>(request.Specification, request.PageNumber, request.PageSize,
+                _mapper.ConfigurationProvider, cancellationToken);
         return data;
     }
 }

@@ -1,9 +1,7 @@
 ﻿@page "/pages/Contacts"
 
-@using BlazorDownloadFile
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Caching
 @using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs
-@using CleanArchitecture.Blazor.Application.Features.Contacts.Mappers
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
@@ -25,7 +23,7 @@
              MultiSelection="true"
              T="ContactDto"
              SelectOnRowClick="false"
-             RowClick="@(s=>OnView(s.Item))"
+             RowClick="@(s => OnView(s.Item))"
              @bind-SelectedItems="_selectedItems"
              @bind-SelectedItem="_currentDto"
              Hover="true" @ref="_table">
@@ -49,7 +47,7 @@
                     @if (_accessRights.Create)
                     {
                         <MudButton StartIcon="@Icons.Material.Outlined.Add"
-                        OnClick="OnCreate">
+                                   OnClick="OnCreate">
                             @ConstantString.New
                         </MudButton>
                     }
@@ -61,14 +59,14 @@
                         @if (_accessRights.Delete)
                         {
                             <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                            OnClick="OnDeleteChecked">
+                                         OnClick="OnDeleteChecked">
                                 @ConstantString.Delete
                             </MudMenuItem>
                         }
                         @if (_accessRights.Export)
                         {
                             <MudMenuItem Disabled="@_exporting"
-                            OnClick="OnExport">
+                                         OnClick="OnExport">
                                 @ConstantString.Export
                             </MudMenuItem>
                         }
@@ -78,8 +76,8 @@
                                 <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
                                     <ActivatorContent>
                                         <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
-                                        Variant="Variant.Text"
-                                        Disabled="@_uploading">
+                                                   Variant="Variant.Text"
+                                                   Disabled="@_uploading">
                                             @ConstantString.Import
                                         </MudButton>
                                     </ActivatorContent>
@@ -92,7 +90,7 @@
                     @if (_accessRights.Search)
                     {
                         <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                        AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
                         </MudTextField>
                     }
                 </MudStack>
@@ -106,32 +104,32 @@
                 @if (_accessRights.Edit || _accessRights.Delete)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
-                    Dense="true"
-                    EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                             Dense="true"
+                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_accessRights.Edit)
                         {
-                            <MudMenuItem OnClick="@(()=>OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
                         }
                         @if (_accessRights.Delete)
                         {
-                            <MudMenuItem OnClick="@(()=>OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
                     </MudMenu>
                 }
                 else
                 {
                     <MudIconButton Variant="Variant.Filled"
-                    Disabled="true"
-                    Icon="@Icons.Material.Filled.DoNotTouch"
-                    Size="Size.Small"
-                    Color="Color.Surface">
+                                   Disabled="true"
+                                   Icon="@Icons.Material.Filled.DoNotTouch"
+                                   Size="Size.Small"
+                                   Color="Color.Surface">
                         @ConstantString.NoAllowed
                     </MudIconButton>
                 }
             </CellTemplate>
         </TemplateColumn>
 
-        <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x=>x.Name)]">
+        <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x => x.Name)]">
             <CellTemplate>
                 <div class="d-flex flex-column">
                     <MudText Typo="Typo.body1">@context.Item.Name</MudText>
@@ -139,14 +137,14 @@
                 </div>
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Email" Title="@L[_currentDto.GetMemberDescription(x=>x.Email)]" />
-        <PropertyColumn Property="x => x.PhoneNumber" Title="@L[_currentDto.GetMemberDescription(x=>x.PhoneNumber)]" />
-        <PropertyColumn Property="x => x.Country" Title="@L[_currentDto.GetMemberDescription(x=>x.Country)]" />
+        <PropertyColumn Property="x => x.Email" Title="@L[_currentDto.GetMemberDescription(x => x.Email)]" />
+        <PropertyColumn Property="x => x.PhoneNumber" Title="@L[_currentDto.GetMemberDescription(x => x.PhoneNumber)]" />
+        <PropertyColumn Property="x => x.Country" Title="@L[_currentDto.GetMemberDescription(x => x.Country)]" />
 
     </Columns>
 
     <PagerContent>
-        <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
+        <MudDataGridPager PageSizeOptions="@(new int[] { 10, 15, 30, 50, 100, 500, 1000 })" />
     </PagerContent>
 </MudDataGrid>
 
@@ -170,7 +168,7 @@
 
     private ContactsWithPaginationQuery Query { get; set; } = new();
     [Inject]
-    private IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
+    private BlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
 
     private ContactsAccessRights _accessRights = new();
 
@@ -179,7 +177,7 @@
         Title = L[_currentDto.GetClassDescription()];
         _accessRights = await PermissionService.GetAccessRightsAsync<ContactsAccessRights>();
     }
-    
+
     private async Task<GridData<ContactDto>> ServerReload(GridState<ContactDto> state)
     {
         try
@@ -246,7 +244,14 @@
     private async Task OnClone()
     {
         var dto = _selectedItems.First();
-        var command = ContactMapper.CloneFromDto(dto);
+        var command = new AddEditContactCommand()
+        {
+            Country = dto.Country,
+            Description = dto.Description,
+            Email = dto.Email,
+            Name = dto.Name,
+            PhoneNumber = dto.PhoneNumber
+        };
         await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Contact"]), command);
     }
     private Task OnEdit(ContactDto dto)
@@ -287,18 +292,18 @@
     {
         _exporting = true;
         var request = new ExportContactsQuery()
-            {
-                Keyword = Query.Keyword,
-                CurrentUser = UserProfile,
-                ListView = Query.ListView,
-                OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-                SortDirection = (_table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? true) ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString()
-            };
+        {
+            Keyword = Query.Keyword,
+            CurrentUser = UserProfile,
+            ListView = Query.ListView,
+            OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+            SortDirection = (_table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? true) ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString()
+        };
         var result = await Mediator.Send(request);
         await result.MatchAsync<byte[]>(
             async data =>
             {
-                var downloadresult = await BlazorDownloadFileService.DownloadFile($"{L["Contacts"]}.xlsx", result.Data, contentType: "application/octet-stream");
+                await BlazorDownloadFileService.DownloadFileAsync($"{L["Contacts"]}.xlsx", result.Data, contentType: "application/octet-stream");
                 Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
                 return data;
             },

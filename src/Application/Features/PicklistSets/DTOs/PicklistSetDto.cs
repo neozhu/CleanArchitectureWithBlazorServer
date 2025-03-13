@@ -12,4 +12,12 @@ public class PicklistSetDto
     [Description("Text")] public string? Text { get; set; }
     [Description("Description")] public string? Description { get; set; }
     public TrackingState TrackingState { get; set; } = TrackingState.Unchanged;
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<PicklistSet, PicklistSetDto>(MemberList.None).ReverseMap();
+        }
+    }
 }

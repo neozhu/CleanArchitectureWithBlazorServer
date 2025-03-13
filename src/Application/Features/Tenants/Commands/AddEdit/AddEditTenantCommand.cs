@@ -4,7 +4,8 @@
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
-using CleanArchitecture.Blazor.Application.Features.Tenants.Mappers;
+using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
+
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit;
 
@@ -15,18 +16,29 @@ public class AddEditTenantCommand : ICacheInvalidatorRequest<Result<string>>
     [Description("Description")] public string? Description { get; set; }
     public string CacheKey => TenantCacheKey.GetAllCacheKey;
     public IEnumerable<string>? Tags => TenantCacheKey.Tags;
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<TenantDto, AddEditTenantCommand>(MemberList.None);
+            CreateMap<AddEditTenantCommand, Tenant>(MemberList.None);
+        }
+    }
 }
 
 public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand, Result<string>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
     private readonly ITenantService _tenantsService;
 
     public AddEditTenantCommandHandler(
+        IMapper mapper,
         ITenantService tenantsService,
         IApplicationDbContext context
     )
     {
+        _mapper = mapper;
         _tenantsService = tenantsService;
         _context = context;
     }
@@ -36,12 +48,12 @@ public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand,
         var item = await _context.Tenants.FindAsync(new object[] { request.Id }, cancellationToken);
         if (item is null)
         {
-            item = TenantMapper.Map(request);
+            item = _mapper.Map<Tenant>(request);
             await _context.Tenants.AddAsync(item, cancellationToken);
         }
         else
         {
-             TenantMapper.MapTo(request, item);
+            item = _mapper.Map(request, item);
         }
         await _context.SaveChangesAsync(cancellationToken);
         _tenantsService.Refresh();

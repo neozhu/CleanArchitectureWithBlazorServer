@@ -33,17 +33,29 @@ public class ContactDto
 {
     [Description("Id")]
     public int Id { get; set; }
-        [Description("Name")]
-    public string Name {get;set;} 
+    [Description("Name")]
+    public string Name { get; set; }
     [Description("Description")]
-    public string? Description {get;set;} 
+    public string? Description { get; set; }
     [Description("Email")]
-    public string? Email {get;set;} 
+    public string? Email { get; set; }
     [Description("Phone number")]
-    public string? PhoneNumber {get;set;} 
+    public string? PhoneNumber { get; set; }
     [Description("Country")]
-    public string? Country {get;set;} 
-
+    public string? Country { get; set; }
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<Contact, ContactDto>();
+            CreateMap<ContactDto, Contact>()
+            .ForMember(dest => dest.Created, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
+            .ForMember(dest => dest.LastModified, opt => opt.Ignore())
+            .ForMember(dest => dest.LastModifiedBy, opt => opt.Ignore())
+            .ForMember(dest => dest.DomainEvents, opt => opt.Ignore());
+        }
+    }
 
 }
 

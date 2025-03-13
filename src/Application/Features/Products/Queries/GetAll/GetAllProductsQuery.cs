@@ -1,9 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
-using CleanArchitecture.Blazor.Application.Features.Products.Mappers;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll;
 
@@ -26,19 +26,22 @@ public class GetAllProductsQueryHandler :
     IRequestHandler<GetProductQuery, ProductDto?>
 
 {
+    private readonly IMapper _mapper;
     private readonly IApplicationDbContext _context;
 
     public GetAllProductsQueryHandler(
+        IMapper mapper,
         IApplicationDbContext context
     )
     {
+        _mapper = mapper;
         _context = context;
     }
 
     public async Task<IEnumerable<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Products
-            .ProjectTo()
+            .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         return data;
     }
@@ -46,7 +49,7 @@ public class GetAllProductsQueryHandler :
     public async Task<ProductDto?> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Products.Where(x => x.Id == request.Id)
-                       .ProjectTo()
+                       .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                        .FirstOrDefaultAsync(cancellationToken);
         return data;
     }
