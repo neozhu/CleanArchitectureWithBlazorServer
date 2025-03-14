@@ -28,11 +28,11 @@
                 @L["Have an account?"] <MudLink Href="@Login.PageUrl">@L["Sign In"]</MudLink>
             </MudText>
             <StatusMessage Error="true" Message="@message"></StatusMessage>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label my-4">
                 <div class="mud-input-control-input-container">
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputSelect @bind-Value="Input.TenantId" class="mud-input-slot mud-input-root mud-input-root-outlined" style="padding: 18.5px 14px;
-                                                                                                                                       width:100%; 
+                                                                                                                                       width:100%;
                                                                                                                                        appearance: none;
                                                                                                                                        background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNiAxNic+PHBhdGggZmlsbD0nbm9uZScgc3Ryb2tlPScjMzQzYTQwJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS13aWR0aD0nMicgZD0nTTIgNWw2IDYgNi02Jy8+PC9zdmc+') no-repeat right 10px center;
                                                                                                                                        background-size: 10px;" aria-required="true">
@@ -41,96 +41,107 @@
                                 <option value="@tenant.Id">@tenant.Name</option>
                             }
                         </InputSelect>
-                        <div class="mud-input-outlined-border"></div>
+                        <div class="mud-input-slot mud-input-root mud-input-root-outlined mud-input-root-adorned-end" style="display:none"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["Tenant"]</legend></fieldset>
                     </div>
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="TenantId">@L["Tenant"]</label>
                 </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.TenantId" class="mud-input-error" />
+                <div class="mud-input-control-helper-container">
+                    <div class="mud-input-helper-text mud-input-error">
+                        <div class="d-flex mud-input-helper-text mud-input-error">
+                            <ValidationMessage For="() => Input.TenantId" class="mud-input-error" />
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label mud-field my-4">
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputText @bind-Value="Input.UserName" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="user name" />
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                         <!--!-->
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["User Name"]</legend></fieldset>
                     </div>
                     <!--!-->
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="userName">@L["User Name"]</label>
                 </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.UserName" class="mud-input-error" />
+                <div class="mud-input-control-helper-container">
+                    <div class="mud-input-helper-text mud-input-error">
+                        <div class="d-flex mud-input-helper-text mud-input-error">
+                            <ValidationMessage For="() => Input.UserName" class="mud-input-error" />
+                        </div>
                     </div>
                 </div>
             </div>
 
 
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label mud-field my-4">
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputText @bind-Value="Input.Email" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="user name" />
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                         <!--!-->
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["E-mail"]</legend></fieldset>
                     </div>
                     <!--!-->
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="userName">@L["E-mail"]</label>
                 </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.Email" class="mud-input-error" />
+                <div class="mud-input-control-helper-container">
+                    <div class="mud-input-helper-text mud-input-error">
+                        <div class="d-flex mud-input-helper-text mud-input-error">
+                            <ValidationMessage For="() => Input.Email" class="mud-input-error" />
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label mud-field my-4">
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputText type="password" @bind-Value="Input.Password" class="mud-input-slot mud-input-root mud-input-root-outlined" autocomplete="current-password" aria-required="true" placeholder="password" />
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                         <!--!-->
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["Password"]</legend></fieldset>
                     </div>
                     <!--!-->
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="password">@L["Password"]</label>
                 </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.Password" class="mud-input-error" />
+                <div class="mud-input-control-helper-container">
+                    <div class="mud-input-helper-text mud-input-error">
+                        <div class="d-flex mud-input-helper-text mud-input-error">
+                            <ValidationMessage For="() => Input.Password" class="mud-input-error" />
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label mud-field my-4">
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputText type="password" @bind-Value="Input.ConfirmPassword" class="mud-input-slot mud-input-root mud-input-root-outlined" autocomplete="current-password" aria-required="true" placeholder="Confirm password" />
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                         <!--!-->
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["Confirm Password"]</legend></fieldset>
                     </div>
                     <!--!-->
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="password">@L["Confirm Password"]</label>
                 </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.ConfirmPassword" class="mud-input-error" />
+                <div class="mud-input-control-helper-container">
+                    <div class="mud-input-helper-text mud-input-error">
+                        <div class="d-flex mud-input-helper-text mud-input-error">
+                            <ValidationMessage For="() => Input.ConfirmPassword" class="mud-input-error" />
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label mud-field my-4">
                 <div class="mud-input-control-input-container">
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputSelect @bind-Value="Input.TimeZoneId" class="mud-input-slot mud-input-root mud-input-root-outlined" style="padding: 18.5px 14px;
-                                                                                                                                       width:100%; 
+                                                                                                                                       width:100%;
                                                                                                                                        appearance: none;
                                                                                                                                        background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNiAxNic+PHBhdGggZmlsbD0nbm9uZScgc3Ryb2tlPScjMzQzYTQwJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS13aWR0aD0nMicgZD0nTTIgNWw2IDYgNi02Jy8+PC9zdmc+') no-repeat right 10px center;
                                                                                                                                        background-size: 10px;" aria-required="true">
@@ -139,21 +150,23 @@
                                 <option value="@item.Id">@item.DisplayName</option>
                             }
                         </InputSelect>
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["Time Zone"]</legend></fieldset>
                     </div>
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="TenantId">@L["Time Zone"]</label>
                 </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.TimeZoneId" class="mud-input-error" />
+                <div class="mud-input-control-helper-container">
+                    <div class="mud-input-helper-text mud-input-error">
+                        <div class="d-flex mud-input-helper-text mud-input-error">
+                            <ValidationMessage For="() => Input.TimeZoneId" class="mud-input-error" />
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label mud-field my-4">
                 <div class="mud-input-control-input-container">
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputSelect @bind-Value="Input.LanguageCode" class="mud-input-slot mud-input-root mud-input-root-outlined" style="padding: 18.5px 14px;
-                                                                                                                                       width:100%; 
+                                                                                                                                       width:100%;
                                                                                                                                        appearance: none;
                                                                                                                                        background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNiAxNic+PHBhdGggZmlsbD0nbm9uZScgc3Ryb2tlPScjMzQzYTQwJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS13aWR0aD0nMicgZD0nTTIgNWw2IDYgNi02Jy8+PC9zdmc+') no-repeat right 10px center;
                                                                                                                                        background-size: 10px;" aria-required="true">
@@ -162,13 +175,15 @@
                                 <option value="@item.Code">@item.DisplayName</option>
                             }
                         </InputSelect>
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["Language"]</legend></fieldset>
                     </div>
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="TenantId">@L["Language"]</label>
                 </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.LanguageCode" class="mud-input-error" />
+                <div class="mud-input-control-helper-container">
+                    <div class="mud-input-helper-text mud-input-error">
+                        <div class="d-flex mud-input-helper-text mud-input-error">
+                            <ValidationMessage For="() => Input.LanguageCode" class="mud-input-error" />
+                        </div>
                     </div>
                 </div>
             </div>

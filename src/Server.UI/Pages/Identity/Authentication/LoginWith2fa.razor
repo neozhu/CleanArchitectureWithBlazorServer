@@ -20,14 +20,14 @@
             <input type="hidden" name="RememberMe" value="@RememberMe"/>
             <DataAnnotationsValidator/>
             <StatusMessage Message="@message" Error="true"/>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label my-4">
                 <div class="mud-input-control-input-container">
                     <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputText @bind-Value="Input.TwoFactorCode" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="off" aria-required="true"/>
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
                         <!--!-->
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["Authenticator code"]</legend></fieldset>
                     </div>
                     <!--!-->
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="twoFactorCode">@L["Authenticator code"]</label>

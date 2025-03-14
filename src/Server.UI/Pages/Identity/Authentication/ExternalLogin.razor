@@ -30,9 +30,9 @@
         <EditForm Model="Input" OnValidSubmit="OnValidSubmitAsync" FormName="confirmation" method="post">
             <DataAnnotationsValidator/>
             <StatusMessage Message="@message" Error="true"/>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label my-4">
                 <div class="mud-input-control-input-container">
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputSelect @bind-Value="Input.TenantId" class="mud-input-slot mud-input-root mud-input-root-outlined" style="padding: 18.5px 14px;
                                                                                                                                        width:100%;
                                                                                                                                        appearance: none;
@@ -43,7 +43,7 @@
                                 <option value="@tenant.Id">@tenant.Name</option>
                             }
                         </InputSelect>
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["Tenant"]</legend></fieldset>
                     </div>
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="TenantId">@L["Tenant"]</label>
                 </div>
@@ -53,12 +53,12 @@
                     </div>
                 </div>
             </div>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label my-4">
                 <div class="mud-input-control-input-container">
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputText type="text" @bind-Value="Input.Email" class="mud-input-slot mud-input-root mud-input-root-outlined" aria-required="true" autocomplete="email" placeholder="Please enter your email."/>
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["Email"]</legend></fieldset>
                     </div>
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="email">@L["Email"]</label>
                 </div>
@@ -68,9 +68,9 @@
                     </div>
                 </div>
             </div>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label my-4">
                 <div class="mud-input-control-input-container">
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputSelect @bind-Value="Input.TimeZoneId" class="mud-input-slot mud-input-root mud-input-root-outlined" style="padding: 18.5px 14px;
                                                                                                                                        width:100%; 
                                                                                                                                        appearance: none;
@@ -81,7 +81,7 @@
                                 <option value="@item.Id">@item.DisplayName</option>
                             }
                         </InputSelect>
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["Time Zone"]</legend></fieldset>
                     </div>
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="TenantId">@L["Time Zone"]</label>
                 </div>
@@ -91,9 +91,9 @@
                     </div>
                 </div>
             </div>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <div class="mud-input-control mud-input-outlined-with-label my-4">
                 <div class="mud-input-control-input-container">
-                    <div class="mud-input mud-input-outlined mud-shrink">
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
                         <InputSelect @bind-Value="Input.LanguageCode" class="mud-input-slot mud-input-root mud-input-root-outlined" style="padding: 18.5px 14px;
                                                                                                                                        width:100%; 
                                                                                                                                        appearance: none;
@@ -104,7 +104,7 @@
                                 <option value="@item.Code">@item.DisplayName</option>
                             }
                         </InputSelect>
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["Language"]</legend></fieldset>
                     </div>
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="TenantId">@L["Language"]</label>
                 </div>

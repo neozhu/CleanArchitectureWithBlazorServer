@@ -16,51 +16,49 @@
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
         <EditForm Model="Input" method="post" OnValidSubmit="OnSubmit" FormName="login" Enhance>
-            <DataAnnotationsValidator/>
+            <DataAnnotationsValidator />
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
             <MudText>
                 @L["Don't have an account?"] <MudLink Href="@Register.PageUrl" Target="_self">@L["Sign Up"]</MudLink>
             </MudText>
-            <StatusMessage Message="@errorMessage" Error="true"/>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <StatusMessage Message="@errorMessage" Error="true" />
+            <!--user name-->
+            <div class="mud-input-control mud-input-outlined-with-label mud-field my-4">
                 <div class="mud-input-control-input-container">
-                    <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText @bind-Value="Input.UserName" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="user name"/>
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
+                        <InputText @bind-Value="Input.UserName" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="username" aria-required="true" placeholder="user name" />
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
-                        <!--!-->
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["User name"]</legend></fieldset>
                     </div>
-                    <!--!-->
                     <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="userName">@L["User name"]</label>
                 </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.UserName" class="mud-input-error"/>
+                <div class="mud-input-control-helper-container">
+                    <div class="d-flex mud-input-helper-text mud-input-error">
+                        <ValidationMessage For="() => Input.UserName" class="mud-input-error" />
                     </div>
                 </div>
             </div>
-            <div class="mud-input-control mud-input-input-control my-4">
+            <!--password-->
+            <div class="mud-input-control mud-input-outlined-with-label mud-field my-4">
                 <div class="mud-input-control-input-container">
-                    <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-shrink">
-                        <InputText type="password" @bind-Value="Input.Password" class="mud-input-slot mud-input-root mud-input-root-outlined" autocomplete="current-password" aria-required="true" placeholder="password"/>
+                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
+                        <InputText @bind-Value="Input.Password" class="mud-input-slot mud-input-root mud-input-root-outlined" type="password" autocomplete="current-password" aria-required="true" placeholder="password" />
                         <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
-                        <!--!-->
-                        <div class="mud-input-outlined-border"></div>
+                        <fieldset class="mud-input-outlined-border"><legend>@L["Password"]</legend></fieldset>
                     </div>
-                    <!--!-->
-                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="password">@L["Password"]</label>
+                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="userName">@L["Password"]</label>
                 </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.Password" class="mud-input-error"/>
+                <div class="mud-input-control-helper-container">
+                    <div class="d-flex mud-input-helper-text mud-input-error">
+                        <ValidationMessage For="() => Input.Password" class="mud-input-error" />
                     </div>
                 </div>
             </div>
+
+            
             <div Class="d-flex justify-space-between align-center mb-1">
                 <label class="form-label">
-                    <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input"/>
+                    <InputCheckbox @bind-Value="Input.RememberMe" class="form-check-input" />
                     @L["Remember me"]
                 </label>
                 <MudLink Href="@Forgot.PageUrl">@L["Forgot password?"]</MudLink>
@@ -78,7 +76,7 @@
     </div>
     <div class="d-flex flex-column">
 
-        <ExternalLoginPicker/>
+        <ExternalLoginPicker />
 
     </div>
 </div>
@@ -124,10 +122,10 @@
             errorMessage = L["Error: User does not exist."];
             return;
         }
-        else if(!user.IsActive)
+        else if (!user.IsActive)
         {
             errorMessage = L["Error: Your account is inactive. Please contact support."];
-            return; 
+            return;
         }
 
         // This doesn't count login failures towards account lockout
@@ -136,16 +134,16 @@
         if (result.Succeeded)
         {
             // Set the language cookie if user.LanguageCode is not null or empty
-            Logger.LogInformation("{UserName} has logged in.",Input.UserName);
+            Logger.LogInformation("{UserName} has logged in.", Input.UserName);
             // Determine the language code (use user's language preference or a default value)
-            string languageCode = user.LanguageCode ?? "en-US"; 
+            string languageCode = user.LanguageCode ?? "en-US";
             // Redirect to the desired URL with the culture as a query parameter
             string redirectUrl = $"{ReturnUrl ?? "/"}?culture={languageCode}";
             RedirectTo(redirectUrl);
         }
         else if (result.RequiresTwoFactor)
         {
-          
+
             var factorUser = (await SignInManager.GetTwoFactorAuthenticationUserAsync()) ?? throw new InvalidOperationException("Unable to load two-factor authentication user.");
             var token = await UserManager.GenerateTwoFactorTokenAsync(factorUser, "Email");
             await Mediator.Publish(new SendFactorCodeNotification(factorUser.Email ?? string.Empty, factorUser.UserName ?? string.Empty, token));
@@ -153,7 +151,7 @@
         }
         else if (result.IsLockedOut)
         {
-            Logger.LogWarning("{UserName} has locked out.",Input.UserName);
+            Logger.LogWarning("{UserName} has locked out.", Input.UserName);
             RedirectManager.RedirectTo(Lockout.PageUrl);
         }
         else if (result.IsNotAllowed)
