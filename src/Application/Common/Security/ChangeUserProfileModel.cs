@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 public class ChangeUserProfileModel
@@ -19,7 +20,14 @@ public class ChangeUserProfileModel
     public string? TenantName { get; set; }
     public string? TimeZoneId { get; set; }
     public string? LanguageCode { get; set; }
-   
+
+    private class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<UserProfile, ChangeUserProfileModel>(MemberList.None);
+        }
+    }
 }
 
 
