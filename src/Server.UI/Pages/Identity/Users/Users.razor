@@ -32,6 +32,7 @@
 @inject IFusionCache FusionCache
 @inject IExcelService ExcelService
 @inject IMailService MailService
+@inject IRoleService RoleService
 @inject IStringLocalizer<Users> L
 @inject ILogger<Users> Logger
 
@@ -112,7 +113,7 @@
                     @if (_accessRights.Search)
                     {
                         <MudSelect T="string" Placeholder="@L["Search by role name"]" Value="@_searchRole" Clearable="true" ValueChanged="@(OnSearchRole)" Style="width:150px">
-                            @foreach (var str in _roles)
+                            @foreach (var str in _roles.Select(x=>x.Name).Distinct())
                             {
                                 <MudSelectItem Value="@str">@str</MudSelectItem>
                             }
@@ -266,7 +267,7 @@
     private bool _exporting;
     private bool _uploading;
     private bool _canViewOnlineStatus;
-    private List<string?> _roles = new();
+    private List<ApplicationRoleDto> _roles = new();
     private string? _searchRole;
 
     protected override async Task OnInitializedAsync()
@@ -274,7 +275,7 @@
         Title = L[_currentDto.GetClassDescription()];
         InitializeServices();
         _accessRights = await PermissionService.GetAccessRightsAsync<UsersAccessRights>();
-        _roles = await RoleManager.Roles.Select(x => x.Name).ToListAsync();
+        _roles = RoleService.DataSource;
     }
     private void InitializeServices()
     {
@@ -334,7 +335,7 @@
         _selectedTenantId = tenantId;
         if (_selectedTenantId != string.Empty)
         {
-            _roles = await RoleManager.Roles.Where(x => x.TenantId == _selectedTenantId).Select(x => x.Name).ToListAsync();
+            _roles = RoleService.DataSource.Where(x => x.TenantId == _selectedTenantId).ToList();
         }
         await _table.ReloadServerData();
     }

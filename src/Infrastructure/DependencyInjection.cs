@@ -184,7 +184,13 @@ public static class DependencyInjection
                 return service;
             });
 
-
+        services.AddSingleton<RoleService>()
+            .AddSingleton<IRoleService>(sp =>
+            {
+                var service = sp.GetRequiredService<RoleService>();
+                service.Initialize();
+                return service;
+            });
         return services
             .AddScoped<IValidationService, ValidationService>()
             .AddScoped<IDateTime, DateTimeService>()

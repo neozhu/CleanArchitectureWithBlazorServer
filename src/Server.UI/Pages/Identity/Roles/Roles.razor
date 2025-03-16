@@ -1,4 +1,5 @@
 ﻿@page "/identity/roles"
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
@@ -12,6 +13,7 @@
 @attribute [Authorize(Policy = Permissions.Roles.View)]
 @inherits OwningComponentBase<ApplicationDbContext>
 @inject ITenantService TenantsService
+@inject IRoleService RoleService
 @inject IFusionCache FusionCache
 @inject IStringLocalizer<Roles> L
 
@@ -273,6 +275,7 @@ OnAssignChanged="OnAssignChangedHandler">
         await InvokeAsync(async () =>
         {
             _selectedItems = new HashSet<ApplicationRoleDto>();
+            RoleService.Refresh();
             await _table.ReloadServerData();
         });
     }
