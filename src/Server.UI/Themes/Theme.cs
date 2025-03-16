@@ -138,14 +138,14 @@ public static class Theme
                 },
                 Subtitle1 = new Subtitle1Typography
                 {
-                    FontSize = ".875rem",
-                    FontWeight = "500",
+                    FontSize = ".8125rem",
+                    FontWeight = "400",
                     LineHeight = "1.5",
                     LetterSpacing = "normal",
                 },
                 Subtitle2 = new Subtitle2Typography
                 {
-                    FontSize = ".8125rem",
+                    FontSize = ".875rem",
                     FontWeight = "500",
                     LineHeight = "1.57",
                 },

@@ -126,8 +126,8 @@ public class UserPreference
     public double OverlineLineHeight => LineHeight;
 
     // Subtitle text properties
-    public double Subtitle1FontSize => DefaultFontSize + 0.125;
-    public double Subtitle2FontSize => DefaultFontSize - 0.0625;
+    public double Subtitle1FontSize => DefaultFontSize;
+    public double Subtitle2FontSize => DefaultFontSize + 0.125;
 
     /// <summary>
     /// The theme mode (System, Light, or Dark).

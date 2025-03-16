@@ -86,7 +86,6 @@ public class LayoutService
         // Update typography settings
         string defaultFontSize = FormatFontSize(UserPreferences.DefaultFontSize);
         CurrentTheme.Typography.Default.FontSize = defaultFontSize;
-        CurrentTheme.Typography.Subtitle1.FontSize = defaultFontSize;
 
         CurrentTheme.Typography.Button.FontSize = FormatFontSize(UserPreferences.ButtonFontSize);
         CurrentTheme.Typography.Button.LineHeight = UserPreferences.ButtonLineHeight.ToString();
@@ -116,9 +115,8 @@ public class LayoutService
         CurrentTheme.Typography.Overline.LineHeight = UserPreferences.OverlineLineHeight.ToString();
 
         // Subtitles
-        string subtitleFontSize = FormatFontSize(UserPreferences.Subtitle1FontSize);
-        CurrentTheme.Typography.Subtitle1.FontSize = subtitleFontSize;
-        CurrentTheme.Typography.Subtitle2.FontSize = subtitleFontSize;
+        CurrentTheme.Typography.Subtitle1.FontSize = FormatFontSize(UserPreferences.Subtitle1FontSize);
+        CurrentTheme.Typography.Subtitle2.FontSize = FormatFontSize(UserPreferences.Subtitle2FontSize); ;
     }
 
     /// <summary>

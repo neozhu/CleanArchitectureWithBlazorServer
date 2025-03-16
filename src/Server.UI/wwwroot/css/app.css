@@ -20,7 +20,7 @@
 }
 
 .mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
-    font-size: var(--mud-typography-subtitle1-size);
+    font-size: var(--mud-typography-subtitle1-size) !important;
 }
 .mud-input > input.mud-input-root, div.mud-input-slot.mud-input-root {
     font-size: var(--mud-typography-default-size) !important;
@@ -28,9 +28,8 @@
 .mud-input > textarea.mud-input-root {
     font-size: var(--mud-typography-default-size) !important;
 }
-    .mud-simple-table table * tr > td, .mud-simple-table table * tr th {
+.mud-simple-table table * tr > td, .mud-simple-table table * tr th {
     font-size: var(--mud-typography-default-size) !important;
-    
 }
 
 .mud-expand-panel .mud-expand-panel-header {
