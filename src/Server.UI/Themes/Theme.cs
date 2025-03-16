@@ -25,7 +25,7 @@ public static class Theme
                 Background = "#f5f5f5", 
                 Surface = "#ffffff", 
                 DrawerBackground = "#ffffff",
-                TextPrimary = "#2E2E2E", 
+                TextPrimary = "#000000", 
                 TextSecondary = "#111", 
                 SecondaryContrastText = "#F5F5F5", 
                 TextDisabled = "#B0B0B0", 
@@ -97,42 +97,36 @@ public static class Theme
                     FontSize = "2.25rem",    
                     FontWeight = "700",        
                     LineHeight = "2.5",       
-                    LetterSpacing = "-0.02em"  
                 },
                 H2 = new H2Typography
                 {
                     FontSize = "1.875rem",     
                     FontWeight = "700",
                     LineHeight = "2.25",
-                    LetterSpacing = "0"
                 },
                 H3 = new H3Typography
                 {
                     FontSize = "1.5rem",      
                     FontWeight = "700",
                     LineHeight = "2",
-                    LetterSpacing = "0"
                 },
                 H4 = new H4Typography
                 {
                     FontSize = "1.25rem",      
                     FontWeight = "700",
                     LineHeight = "1.75",
-                    LetterSpacing = "0"
                 },
                 H5 = new H5Typography
                 {
                     FontSize = "1.125rem",     
-                    FontWeight = "500",
+                    FontWeight = "600",
                     LineHeight = "1.75",
-                    LetterSpacing = "0"
                 },
                 H6 = new H6Typography
                 {
                     FontSize = "1rem",        
-                    FontWeight = "500",
+                    FontWeight = "600",
                     LineHeight = "1.5",
-                    LetterSpacing = "0"
                 },
                 Button = new ButtonTypography
                 {
@@ -145,45 +139,39 @@ public static class Theme
                 Subtitle1 = new Subtitle1Typography
                 {
                     FontSize = ".875rem",
-                    FontWeight = "400",
+                    FontWeight = "500",
                     LineHeight = "1.5",
                     LetterSpacing = "normal",
-                    FontFamily = ["Public Sans", "Roboto", "Arial", "sans-serif"]
                 },
                 Subtitle2 = new Subtitle2Typography
                 {
                     FontSize = ".8125rem",
                     FontWeight = "500",
                     LineHeight = "1.57",
-                    LetterSpacing = ".00714em"
                 },
                 Body1 = new Body1Typography
                 {
                     FontSize = "0.8125rem",
                     FontWeight = "400",
                     LineHeight = "1.5",
-                    LetterSpacing = ".00938em"
                 },
                 Body2 = new Body2Typography
                 {
                     FontSize = ".75rem",
-                    FontWeight = "300",
-                    LineHeight = "1.43",
-                    LetterSpacing = ".01071em"
+                    FontWeight = "400",
+                    LineHeight = "1.4",
                 },
                 Caption = new CaptionTypography
                 {
                     FontSize = "0.625rem",
                     FontWeight = "400",
                     LineHeight = "1.5",
-                    LetterSpacing = ".03333em"
                 },
                 Overline = new OverlineTypography
                 {
                     FontSize = "0.625rem",
                     FontWeight = "300",
                     LineHeight = "2",
-                    LetterSpacing = ".08333em"
                 }
             },
             Shadows = new Shadow

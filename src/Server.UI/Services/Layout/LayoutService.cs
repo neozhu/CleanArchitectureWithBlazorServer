@@ -102,11 +102,11 @@ public class LayoutService
         // Body text
         CurrentTheme.Typography.Body1.FontSize = FormatFontSize(UserPreferences.Body1FontSize);
         CurrentTheme.Typography.Body1.LineHeight = UserPreferences.Body1LineHeight.ToString();
-        CurrentTheme.Typography.Body1.LetterSpacing = FormatFontSize(UserPreferences.Body1LetterSpacing);
+        //CurrentTheme.Typography.Body1.LetterSpacing = FormatFontSize(UserPreferences.Body1LetterSpacing);
 
         CurrentTheme.Typography.Body2.FontSize = FormatFontSize(UserPreferences.Body2FontSize);
         CurrentTheme.Typography.Body2.LineHeight = UserPreferences.Body1LineHeight.ToString();
-        CurrentTheme.Typography.Body2.LetterSpacing = FormatFontSize(UserPreferences.Body1LetterSpacing);
+        //CurrentTheme.Typography.Body2.LetterSpacing = FormatFontSize(UserPreferences.Body1LetterSpacing);
 
         // Caption and overline texts
         CurrentTheme.Typography.Caption.FontSize = FormatFontSize(UserPreferences.CaptionFontSize);

@@ -49,12 +49,12 @@ public class UserPreference
     /// <summary>
     /// The primary color for light mode.
     /// </summary>
-    public string PrimaryColor { get; set; } = "#2d4275";
+    public string PrimaryColor { get; set; } = PrimaryColors[0];
 
     /// <summary>
     /// The primary color for dark mode.
     /// </summary>
-    public string DarkPrimaryColor { get; set; } = "#8b9ac6";
+    public string DarkPrimaryColor { get; set; } = DarkPrimaryColors[0];
 
     /// <summary>
     /// Returns a darker version of the primary color.
