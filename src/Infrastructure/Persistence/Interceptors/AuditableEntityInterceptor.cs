@@ -102,8 +102,8 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
     {
         entity.CreatedBy = userId;
         entity.Created = now;
-        if (entity is IMustHaveTenant mustTenant) mustTenant.TenantId = tenantId;
-        if (entity is IMayHaveTenant mayTenant) mayTenant.TenantId = tenantId;
+        if (entity is IMustHaveTenant mustTenant && mustTenant.TenantId==null) mustTenant.TenantId = tenantId;
+        if (entity is IMayHaveTenant mayTenant && mayTenant.TenantId==null) mayTenant.TenantId = tenantId;
     }
 
     private static void SetModificationAuditInfo(IAuditableEntity entity, string userId, DateTime now)
