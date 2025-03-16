@@ -26,7 +26,7 @@ public static class Theme
                 Surface = "#ffffff", 
                 DrawerBackground = "#ffffff",
                 TextPrimary = "#000000", 
-                TextSecondary = "#111", 
+                TextSecondary = "#333333", 
                 SecondaryContrastText = "#F5F5F5", 
                 TextDisabled = "#B0B0B0", 
                 ActionDefault = "#80838b", 

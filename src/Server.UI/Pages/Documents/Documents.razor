@@ -20,10 +20,9 @@
 
 <MudDataGrid ServerData="@(new Func<GridState<DocumentDto>, Task<GridData<DocumentDto>>>(ServerReload))"
              FixedHeader="true"
-             FixedFooter="false"
+             FixedFooter="true"
              Virtualize="false"
              @bind-RowsPerPage="_defaultPageSize"
-             Height="calc(100vh - 300px)"
              Loading="@_loading"
              MultiSelection="true"
              @bind-SelectedItems="_selectedItems"
