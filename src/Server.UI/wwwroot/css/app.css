@@ -3,12 +3,17 @@
     min-height: 100vh;
     display: flex;
 }
- 
+
+.mud-chip.mud-chip-size-medium {
+    font-size: var(--mud-typography-default-size) !important;
+}
+
+.mud-chip.mud-chip-size-small {
+    font-size: var(--mud-typography-body2-size) !important;
+}
+
 .mud-chip {
     font-size: var(--mud-typography-default-size);
-}
-.mud-chip.mud-chip-size-small {
-    font-size: var(--mud-typography-body1-size);
 }
 .mud-tabs {
     background-color: var(--mud-palette-surface);
