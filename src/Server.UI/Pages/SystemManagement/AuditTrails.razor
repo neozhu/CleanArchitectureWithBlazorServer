@@ -13,9 +13,8 @@
 <MudDataGrid ServerData="@(ServerReload)"
              T="AuditTrailDto"
              FixedHeader="true"
-             FixedFooter="true"
+             FixedFooter="false"
              @bind-RowsPerPage="_defaultPageSize"
-             Height="calc(100vh - 300px)"
              Loading="@_loading"
              Hover="true" @ref="_table">
     <ToolBarContent>

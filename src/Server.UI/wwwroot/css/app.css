@@ -48,7 +48,6 @@
 
 .mud-typography-subtitle2 {
     font-size: var(--mud-typography-subtitle2-size);
-    color: var(--mud-palette-text-secondary);
 }
 .mud-typography-body1 {
     font-size: var(--mud-typography-body1-size);

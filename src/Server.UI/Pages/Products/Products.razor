@@ -19,9 +19,8 @@
 <AdvancedSearchProducts TRequest="Query" OnConditionChanged="ConditionChanged"></AdvancedSearchProducts>
 <MudDataGrid ServerData="@(ServerReload)"
              FixedHeader="true"
-             FixedFooter="true"
+             FixedFooter="false"
              @bind-RowsPerPage="_defaultPageSize"
-             Height="calc(100vh - 370px)"
              Loading="@_loading"
              MultiSelection="true"
              @bind-SelectedItems="_selectedItems"

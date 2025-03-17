@@ -20,7 +20,7 @@
 
 <MudDataGrid ServerData="@(new Func<GridState<DocumentDto>, Task<GridData<DocumentDto>>>(ServerReload))"
              FixedHeader="true"
-             FixedFooter="true"
+             FixedFooter="false"
              Virtualize="false"
              @bind-RowsPerPage="_defaultPageSize"
              Loading="@_loading"
