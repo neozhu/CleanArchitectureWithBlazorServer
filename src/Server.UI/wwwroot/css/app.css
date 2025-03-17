@@ -44,7 +44,9 @@
 .mud-table-cell {
     font-size: var(--mud-typography-default-size) !important;
 }
-
+.mud-table-dense .mud-table-cell {
+    font-size: var(--mud-typography-body2-size) !important;
+}
 
 .mud-typography-subtitle2 {
     font-size: var(--mud-typography-subtitle2-size);
