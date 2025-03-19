@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2025-03-13
-//     Last Modified: 2025-03-13
+//     Created Date: 2025-03-19
+//     Last Modified: 2025-03-19
 //     Description: 
 //       Defines a specification for applying advanced filtering options to the 
 //       Contact entity, supporting different views and keyword-based searches.
