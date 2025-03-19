@@ -33,7 +33,7 @@
                 <MudIcon Icon="@Icons.Material.Filled.ViewList" Size="Size.Large" />
                 <MudStack Spacing="0">
                     <MudText Typo="Typo.subtitle2" Class="mb-2">@Title</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="PickListView" Value="Query.ListView" 
+                    <MudEnumSelect Style="min-width:120px" TEnum="PickListView" Value="_picklistQuery.ListView" 
                                      ValueChanged="OnChangedListView" Dense="true" Label="@L["List View"]">
                     </MudEnumSelect>
                 </MudStack>
@@ -90,7 +90,7 @@
                     {
                         <MudEnumSelect TEnum="Picklist?" Placeholder="@L["Search by picklist"]" Value="@_searchPicklist" Clearable="true" 
                         ValueChanged="OnPicklistSearch" Style="width:160px" FullWidth="true" />
-                        <MudTextField T="string" Value="@Query.Keyword" ValueChanged="OnKeywordSearch" Placeholder="@ConstantString.Search" 
+                        <MudTextField T="string" Value="@_picklistQuery.Keyword" ValueChanged="OnKeywordSearch" Placeholder="@ConstantString.Search" 
                         Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" />
                     }
                 </MudStack>
@@ -137,7 +137,7 @@
     private Picklist? _searchPicklist;
     private int _defaultPageSize = 15;
 
-    private PicklistSetsWithPaginationQuery Query { get; set; } = new();
+    private PicklistSetsWithPaginationQuery _picklistQuery { get; set; } = new();
     private PicklistSetsAccessRights _accessRights = new();
  
 
@@ -164,16 +164,16 @@
         try
         {
             _loading = true;
-            Query.CurrentUser = UserProfile;
-            Query.Keyword = _searchString;
-            Query.Picklist = _searchPicklist;
-            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            Query.SortDirection = (state.SortDefinitions.FirstOrDefault()?.Descending ?? true)
+            _picklistQuery.CurrentUser = UserProfile;
+            _picklistQuery.Keyword = _searchString;
+            _picklistQuery.Picklist = _searchPicklist;
+            _picklistQuery.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            _picklistQuery.SortDirection = (state.SortDefinitions.FirstOrDefault()?.Descending ?? true)
                                   ? SortDirection.Descending.ToString()
                                   : SortDirection.Ascending.ToString();
-            Query.PageNumber = state.Page + 1;
-            Query.PageSize = state.PageSize;
-            var result = await Mediator.Send(Query);
+            _picklistQuery.PageNumber = state.Page + 1;
+            _picklistQuery.PageSize = state.PageSize;
+            var result = await Mediator.Send(_picklistQuery);
             return new GridData<PicklistSetDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -184,7 +184,7 @@
 
     private async Task OnChangedListView(PickListView listview)
     {
-        Query.ListView = listview;
+        _picklistQuery.ListView = listview;
         await _table.ReloadServerData();
     }
 

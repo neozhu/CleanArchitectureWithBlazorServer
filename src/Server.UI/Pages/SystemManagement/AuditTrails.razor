@@ -16,37 +16,57 @@
              FixedFooter="false"
              @bind-RowsPerPage="_defaultPageSize"
              Loading="@_loading"
-             Hover="true" @ref="_table">
+             Hover="true" @ref="_auditTrailGrid">
     <ToolBarContent>
         <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
+            <!-- Left Toolbar: Icon, Title and List View -->
             <MudStack Row AlignItems="AlignItems.Start">
                 <MudIcon Icon="@Icons.Material.Filled.ReceiptLong" Size="Size.Large" />
                 <MudStack Spacing="0">
                     <MudText Typo="Typo.subtitle2" Class="mb-2">@Title</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="AuditTrailListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
+                    <MudEnumSelect Style="min-width:120px"
+                                   TEnum="AuditTrailListView"
+                                   ValueChanged="OnListViewChanged"
+                                   Value="_auditTrailsQuery.ListView"
+                                   Dense="true"
+                                   Label="@L["List View"]">
                     </MudEnumSelect>
                 </MudStack>
             </MudStack>
+            <!-- Right Toolbar: Actions and Search -->
             <MudStack Spacing="0" AlignItems="AlignItems.End">
                 <MudToolBar Dense WrapContent="true" Class="py-1 px-0">
-                    <MudButton OnClick="@(() => OnRefresh())"
+                    <MudButton OnClick="OnRefreshAuditTrails"
                                StartIcon="@Icons.Material.Outlined.Refresh">
                         @ConstantString.Refresh
                     </MudButton>
-
                 </MudToolBar>
                 <MudStack Row Spacing="1" AlignItems="AlignItems.End">
-                    <MudEnumSelect TEnum="AuditType?" Placeholder="@L["Search by audit type"]" Value="@Query.AuditType" Clearable="true" ValueChanged="@(s => OnSearch(s))" Style="min-width:120px" FullWidth="true"> </MudEnumSelect>
+                    <!-- Search by audit type -->
+                    <MudEnumSelect TEnum="AuditType ?"
+                                   Placeholder="@L["Search by audit type"]"
+                                   Value="_auditTrailsQuery.AuditType"
+                                   Clearable="true"
+                                   ValueChanged="OnAuditTypeSearch"
+                                   Style="min-width:120px"
+                                   FullWidth="true">
+                    </MudEnumSelect>
+                    <!-- Keyword search (hidden on small screens) -->
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
-                        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="Search" Adornment="Adornment.End" Style="min-width:120px" FullWidth="true"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        <MudTextField T="string"
+                                      Value="_auditTrailsQuery.Keyword"
+                                      ValueChanged="OnKeywordSearch"
+                                      Placeholder="Search"
+                                      Adornment="Adornment.End"
+                                      Style="min-width:120px"
+                                      FullWidth="true"
+                                      AdornmentIcon="@Icons.Material.Filled.Search"
+                                      IconSize="Size.Small">
                         </MudTextField>
                     </MudHidden>
                 </MudStack>
             </MudStack>
         </MudStack>
-
-
     </ToolBarContent>
     <Columns>
         <HierarchyColumn T="AuditTrailDto" ButtonDisabledFunc="@(x => x.AuditType == AuditType.None)" />
@@ -83,11 +103,11 @@
                             <MudStack Row AlignItems="AlignItems.Center" Spacing="2">
                                 @if (context.Item.IsSuccessful)
                                 {
-                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" ></MudIcon>
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success"></MudIcon>
                                 }
                                 else
                                 {
-                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ErrorOutline" Color="Color.Error" ></MudIcon>
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ErrorOutline" Color="Color.Error"></MudIcon>
                                 }
                                 <MudText>@L["History data"]</MudText>
                             </MudStack>
@@ -102,7 +122,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var field in context.Item.NewValues?.Any() ?? false ? context.Item.NewValues : context.Item.OldValues?.Any() ?? false ? context.Item.OldValues : new Dictionary<string, object?>())
+                                    @foreach (var field in (context.Item.NewValues?.Any() ?? false
+                                                                        ? context.Item.NewValues
+                                                                        : context.Item.OldValues?.Any() ?? false
+                                                                        ? context.Item.OldValues
+                                                                        : new Dictionary<string, object?>()))
                                     {
                                         <tr>
                                             <td>@field.Key</td>
@@ -114,13 +138,13 @@
                             </MudSimpleTable>
                         </ChildContent>
                     </MudExpansionPanel>
-                    @if (@context.Item.IsSuccessful == false)
+                    @if (context.Item.IsSuccessful == false)
                     {
-                        <MudExpansionPanel Text="@L[_currentDto.GetMemberDescription(x=>x.ErrorMessage)]" Dense Gutters>
+                        <MudExpansionPanel Text="@L[_currentDto.GetMemberDescription(x => x.ErrorMessage)]" Dense Gutters>
                             <MudText Typo="Typo.body2">@context.Item.ErrorMessage</MudText>
                         </MudExpansionPanel>
                     }
-                    <MudExpansionPanel Text="@L[_currentDto.GetMemberDescription(x=>x.DebugView)]" Dense Gutters>
+                    <MudExpansionPanel Text="@L[_currentDto.GetMemberDescription(x => x.DebugView)]" Dense Gutters>
                         <MudText Typo="Typo.body2">@context.Item.DebugView</MudText>
                     </MudExpansionPanel>
                 </MudExpansionPanels>
@@ -138,34 +162,43 @@
     </PagerContent>
 </MudDataGrid>
 
-@code
-{
+@code {
+    // Public page title
     public string Title { get; private set; } = "Audit Trails";
-    private MudDataGrid<AuditTrailDto> _table = null!;
+
+    // Private fields using underscore and camelCase naming
+    private MudDataGrid<AuditTrailDto> _auditTrailGrid = null!;
     private bool _loading;
     private int _defaultPageSize = 15;
     private readonly AuditTrailDto _currentDto = new();
-    private AuditTrailsWithPaginationQuery Query { get; } = new();
+
+    // _auditTrailsQuery parameters for pagination; using PascalCase for public properties and _camelCase for private fields
+    private AuditTrailsWithPaginationQuery _auditTrailsQuery { get; } = new();
+
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
     private AuditTrailsAccessRights _accessRights = new();
+
     protected override async Task OnInitializedAsync()
     {
+        // Set page title based on current DTO's class description
         Title = L[_currentDto.GetClassDescription()];
         _accessRights = await PermissionService.GetAccessRightsAsync<AuditTrailsAccessRights>();
     }
 
+    // Server data loading callback for the grid
     private async Task<GridData<AuditTrailDto>> ServerReload(GridState<AuditTrailDto> state)
     {
         try
         {
             _loading = true;
-            Query.CurrentUser = UserProfile;
-            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
-            Query.PageNumber = state.Page + 1;
-            Query.PageSize = state.PageSize;
-
-            var result = await Mediator.Send(Query).ConfigureAwait(false);
+            _auditTrailsQuery.CurrentUser = UserProfile;
+            _auditTrailsQuery.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            _auditTrailsQuery.SortDirection = (state.SortDefinitions.FirstOrDefault()?.Descending ?? true)
+                                  ? SortDirection.Descending.ToString()
+                                  : SortDirection.Ascending.ToString();
+            _auditTrailsQuery.PageNumber = state.Page + 1;
+            _auditTrailsQuery.PageSize = state.PageSize;
+            var result = await Mediator.Send(_auditTrailsQuery).ConfigureAwait(false);
             return new GridData<AuditTrailDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -174,32 +207,37 @@
         }
     }
 
-    private async Task OnChangedListView(AuditTrailListView listview)
+    // Event handler for when the list view is changed
+    private async Task OnListViewChanged(AuditTrailListView listview)
     {
-        Query.ListView = listview;
-        await _table.ReloadServerData();
+        _auditTrailsQuery.ListView = listview;
+        await _auditTrailGrid.ReloadServerData();
     }
 
-    private async Task OnSearch(string text)
+    // Event handler for keyword search
+    private async Task OnKeywordSearch(string text)
     {
-        Query.Keyword = text;
-        await _table.ReloadServerData();
+        _auditTrailsQuery.Keyword = text;
+        await _auditTrailGrid.ReloadServerData();
     }
 
-    private async Task OnSearch(AuditType? val)
+    // Event handler for audit type search
+    private async Task OnAuditTypeSearch(AuditType? auditType)
     {
-        Query.AuditType = val;
-        await _table.ReloadServerData();
+        _auditTrailsQuery.AuditType = auditType;
+        await _auditTrailGrid.ReloadServerData();
     }
 
-    private async Task OnRefresh()
+    // Refresh callback
+    private async Task OnRefreshAuditTrails()
     {
         AuditTrailsCacheKey.Refresh();
-        Query.Keyword = string.Empty;
-        await _table.ReloadServerData();
+        _auditTrailsQuery.Keyword = string.Empty;
+        await _auditTrailGrid.ReloadServerData();
     }
 
-    private Task OnShowDetail(AuditTrailDto dto)
+    // Toggle detail view for a specific audit trail
+    private Task OnToggleDetail(AuditTrailDto dto)
     {
         dto.ShowDetails = !dto.ShowDetails;
         return Task.CompletedTask;

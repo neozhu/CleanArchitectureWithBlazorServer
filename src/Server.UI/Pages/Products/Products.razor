@@ -16,7 +16,9 @@
 
 <PageTitle>@Title</PageTitle>
 
-<AdvancedSearchProducts TRequest="Query" OnConditionChanged="ConditionChanged"></AdvancedSearchProducts>
+<!-- Advanced search component -->
+<AdvancedSearchProducts TRequest="_productsQuery" OnConditionChanged="OnConditionChanged"></AdvancedSearchProducts>
+
 <MudDataGrid ServerData="@(ServerReload)"
              FixedHeader="true"
              FixedFooter="false"
@@ -32,7 +34,12 @@
                 <MudIcon Icon="@Icons.Material.Filled.QrCodeScanner" Size="Size.Large" />
                 <MudStack Spacing="0">
                     <MudText Typo="Typo.subtitle2" Class="mb-2">@L[_currentDto.GetClassDescription()]</MudText>
-                    <MudEnumSelect Style="min-width:120px" TEnum="ProductListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="@L["List View"]">
+                    <MudEnumSelect Style="min-width:120px"
+                                   TEnum="ProductListView"
+                                   ValueChanged="OnListViewChanged"
+                                   Value="_productsQuery.ListView"
+                                   Dense="true"
+                                   Label="@L["List View"]">
                     </MudEnumSelect>
                 </MudStack>
             </MudStack>
@@ -46,39 +53,45 @@
                     @if (_accessRights.Create)
                     {
                         <MudButton StartIcon="@Icons.Material.Outlined.Add"
-                                   OnClick="OnCreate">
+                                   OnClick="OnCreateProduct">
                             @ConstantString.New
                         </MudButton>
                     }
-                    <MudMenu TransformOrigin="Origin.BottomRight" AnchorOrigin="Origin.BottomRight" EndIcon="@Icons.Material.Filled.MoreVert" Label="@ConstantString.More">
+                    <MudMenu TransformOrigin="Origin.BottomRight"
+                             AnchorOrigin="Origin.BottomRight"
+                             EndIcon="@Icons.Material.Filled.MoreVert"
+                             Label="@ConstantString.More">
                         @if (_accessRights.Create)
                         {
-                            <MudMenuItem Disabled="@(_selectedItems.Count != 1)" OnClick="OnClone">@ConstantString.Clone</MudMenuItem>
+                            <MudMenuItem Disabled="@(_selectedItems.Count != 1)" OnClick="OnCloneProduct">
+                                @ConstantString.Clone
+                            </MudMenuItem>
                         }
                         @if (_accessRights.Delete)
                         {
                             <MudMenuItem Disabled="@(!(_selectedItems.Count > 0))"
-                                         OnClick="OnDeleteChecked">
+                                         OnClick="OnDeleteSelectedProducts">
                                 @ConstantString.Delete
                             </MudMenuItem>
                         }
                         @if (_accessRights.Export)
                         {
-                            <MudMenuItem Disabled="@_exporting"
-                                         OnClick="OnExport">
+                            <MudMenuItem Disabled="@_exporting" OnClick="OnExport">
                                 @ConstantString.Export
                             </MudMenuItem>
-                            <MudMenuItem Disabled="@_pdfExporting"
-                                         OnClick="OnExportPDF">
+                            <MudMenuItem Disabled="@_pdfExporting" OnClick="OnExportPDF">
                                 @ConstantString.ExportPDF
                             </MudMenuItem>
                         }
                         @if (_accessRights.Import)
                         {
                             <MudMenuItem>
-                                <MudFileUpload T="IBrowserFile" FilesChanged="OnImportData" Accept=".xlsx">
+                                <MudFileUpload T="IBrowserFile"
+                                               FilesChanged="OnFileImport"
+                                               Accept=".xlsx">
                                     <ActivatorContent>
-                                        <MudButton Class="pa-0 ma-0" Style="font-weight:400;text-transform:none;"
+                                        <MudButton Class="pa-0 ma-0"
+                                                   Style="font-weight:400;text-transform:none;"
                                                    Variant="Variant.Text"
                                                    Disabled="@_uploading">
                                             @ConstantString.Import
@@ -92,8 +105,13 @@
                 <MudStack Row Spacing="1">
                     @if (_accessRights.Search)
                     {
-                        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Value="@Query.Keyword" Placeholder="@ConstantString.Search" Adornment="Adornment.End"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small">
+                        <MudTextField T="string"
+                                      ValueChanged="@(s => OnSearch(s))"
+                                      Value="@_productsQuery.Keyword"
+                                      Placeholder="@ConstantString.Search"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@Icons.Material.Filled.Search"
+                                      IconSize="Size.Small">
                         </MudTextField>
                     }
                 </MudStack>
@@ -106,31 +124,39 @@
             <CellTemplate>
                 @if (_accessRights.Edit || _accessRights.Delete)
                 {
-                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
+                    <MudMenu Icon="@Icons.Material.Filled.Edit"
+                             Variant="Variant.Filled"
+                             Size="Size.Small"
                              Dense="true"
-                             IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                             IconColor="Color.Info"
+                             AnchorOrigin="Origin.CenterLeft">
                         @if (_accessRights.Edit)
                         {
-                            <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnEditProduct(context.Item))">
+                                @ConstantString.Edit
+                            </MudMenuItem>
                         }
                         @if (_accessRights.Delete)
                         {
-                            <MudMenuItem OnClick="@(() => OnDelete(context.Item))">@ConstantString.Delete</MudMenuItem>
+                            <MudMenuItem OnClick="@(() => OnDeleteProduct(context.Item))">
+                                @ConstantString.Delete
+                            </MudMenuItem>
                         }
                     </MudMenu>
                 }
                 else
                 {
                     <MudTooltip Text="@ConstantString.NoAllowed" Delay="300">
-                        <MudIconButton Variant="Variant.Filled" Disabled="true"
-                                       Icon="@Icons.Material.Filled.DoNotTouch" Size="Size.Small"
+                        <MudIconButton Variant="Variant.Filled"
+                                       Disabled="true"
+                                       Icon="@Icons.Material.Filled.DoNotTouch"
+                                       Size="Size.Small"
                                        Color="Color.Surface">
                         </MudIconButton>
                     </MudTooltip>
                 }
             </CellTemplate>
         </TemplateColumn>
-
         <PropertyColumn Property="x => x.Brand" Title="@L[_currentDto.GetMemberDescription(x => x.Brand)]">
             <FooterTemplate>
                 @ConstantString.Selected: @_selectedItems.Count
@@ -140,7 +166,9 @@
             <CellTemplate>
                 <div class="d-flex flex-column">
                     <MudText>@context.Item.Name</MudText>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">
+                        @context.Item.Description
+                    </MudText>
                 </div>
             </CellTemplate>
         </PropertyColumn>
@@ -172,7 +200,6 @@
 </style>
 
 @code {
-
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
     public string? Title { get; private set; }
@@ -186,10 +213,7 @@
     private bool _pdfExporting;
     private int _defaultPageSize = 15;
 
-
-
-    private ProductsWithPaginationQuery Query { get; } = new();
-
+    private ProductsWithPaginationQuery _productsQuery { get; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -202,13 +226,14 @@
         try
         {
             _loading = true;
-            Query.CurrentUser = UserProfile;
-            Query.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
-            Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
-            Query.PageNumber = state.Page + 1;
-            Query.PageSize = state.PageSize;
-            var result = await Mediator.Send(Query).ConfigureAwait(false);
-
+            _productsQuery.CurrentUser = UserProfile;
+            _productsQuery.OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "Id";
+            _productsQuery.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true
+                                              ? SortDirection.Descending.ToString()
+                                              : SortDirection.Ascending.ToString();
+            _productsQuery.PageNumber = state.Page + 1;
+            _productsQuery.PageSize = state.PageSize;
+            var result = await Mediator.Send(_productsQuery).ConfigureAwait(false);
             return new GridData<ProductDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
@@ -217,7 +242,7 @@
         }
     }
 
-    private void ConditionChanged(string s)
+    private void OnConditionChanged(string condition)
     {
         InvokeAsync(_table.ReloadServerData);
     }
@@ -225,13 +250,13 @@
     private async Task OnSearch(string text)
     {
         _selectedItems = new HashSet<ProductDto>();
-        Query.Keyword = text;
+        _productsQuery.Keyword = text;
         await _table.ReloadServerData();
     }
 
-    private async Task OnChangedListView(ProductListView listview)
+    private async Task OnListViewChanged(ProductListView listview)
     {
-        Query.ListView = listview;
+        _productsQuery.ListView = listview;
         await _table.ReloadServerData();
     }
 
@@ -239,10 +264,11 @@
     {
         ProductCacheKey.Refresh();
         _selectedItems = new HashSet<ProductDto>();
-        Query.Keyword = string.Empty;
+        _productsQuery.Keyword = string.Empty;
         await _table.ReloadServerData();
     }
-    private async Task ShowEditFormDialog(string title, AddEditProductCommand command)
+
+    private async Task ShowProductEditFormDialog(string title, AddEditProductCommand command)
     {
         var parameters = new DialogParameters<ProductFormDialog>
         {
@@ -252,7 +278,6 @@
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = await DialogService.ShowAsync<ProductFormDialog>(title, parameters, options);
         var state = await dialog.Result;
-
         if (state is not null && !state.Canceled)
         {
             await _table.ReloadServerData();
@@ -260,14 +285,13 @@
         }
     }
 
-    private async Task OnCreate()
+    private async Task OnCreateProduct()
     {
         var command = new AddEditProductCommand { Pictures = new List<ProductImage>() };
-
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
+        await ShowProductEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
     }
 
-    private async Task OnClone()
+    private async Task OnCloneProduct()
     {
         var copy = _selectedItems.First();
         var command = new AddEditProductCommand()
@@ -278,18 +302,17 @@
             Price = copy.Price,
             Unit = copy.Unit,
             Pictures = copy.Pictures
-
         };
-        await ShowEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
+        await ShowProductEditFormDialog(string.Format(ConstantString.CreateAnItem, L["Product"]), command);
     }
 
-    private async Task OnEdit(ProductDto dto)
+    private async Task OnEditProduct(ProductDto dto)
     {
         var command = Mapper.Map<AddEditProductCommand>(dto);
-        await ShowEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), command);
+        await ShowProductEditFormDialog(string.Format(ConstantString.EditTheItem, L["Product"]), command);
     }
 
-    private async Task OnDelete(ProductDto dto)
+    private async Task OnDeleteProduct(ProductDto dto)
     {
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Name);
         var command = new DeleteProductCommand(new[] { dto.Id });
@@ -303,7 +326,7 @@
         });
     }
 
-    private async Task OnDeleteChecked()
+    private async Task OnDeleteSelectedProducts()
     {
         var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedItems.Count);
         var command = new DeleteProductCommand(_selectedItems.Select(x => x.Id).ToArray());
@@ -315,7 +338,6 @@
                 _selectedItems.Clear();
             });
         });
-
     }
 
     private async Task OnExport()
@@ -323,15 +345,17 @@
         _exporting = true;
         var request = new ExportProductsQuery
         {
-            Brand = Query.Brand,
-            Name = Query.Name,
-            MinPrice = Query.MinPrice,
-            MaxPrice = Query.MaxPrice,
-            Unit = Query.Unit,
-            Keyword = Query.Keyword,
-            ListView = Query.ListView,
+            Brand = _productsQuery.Brand,
+            Name = _productsQuery.Name,
+            MinPrice = _productsQuery.MinPrice,
+            MaxPrice = _productsQuery.MaxPrice,
+            Unit = _productsQuery.Unit,
+            Keyword = _productsQuery.Keyword,
+            ListView = _productsQuery.ListView,
             OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-            SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
+            SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false
+                                ? SortDirection.Descending.ToString()
+                                : SortDirection.Ascending.ToString(),
             CurrentUser = UserProfile,
             ExportType = ExportType.Excel
         };
@@ -345,7 +369,6 @@
         {
             Snackbar.Add($"{result.ErrorMessage}", Severity.Error);
         }
-
         _exporting = false;
     }
 
@@ -354,16 +377,18 @@
         _pdfExporting = true;
         var request = new ExportProductsQuery
         {
-            Brand = Query.Brand,
-            Name = Query.Name,
-            MinPrice = Query.MinPrice,
-            MaxPrice = Query.MaxPrice,
-            Unit = Query.Unit,
-            Keyword = Query.Keyword,
-            ListView = Query.ListView,
+            Brand = _productsQuery.Brand,
+            Name = _productsQuery.Name,
+            MinPrice = _productsQuery.MinPrice,
+            MaxPrice = _productsQuery.MaxPrice,
+            Unit = _productsQuery.Unit,
+            Keyword = _productsQuery.Keyword,
+            ListView = _productsQuery.ListView,
             CurrentUser = UserProfile,
             OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-            SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString(),
+            SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false
+                                ? SortDirection.Descending.ToString()
+                                : SortDirection.Ascending.ToString(),
             ExportType = ExportType.PDF
         };
         var result = await Mediator.Send(request);
@@ -376,17 +401,15 @@
         {
             Snackbar.Add($"{result.ErrorMessage}", Severity.Error);
         }
-
         _pdfExporting = false;
     }
 
-    private async Task OnImportData(IBrowserFile file)
+    private async Task OnFileImport(IBrowserFile file)
     {
         _uploading = true;
         var stream = new MemoryStream();
         await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(stream);
         var command = new ImportProductsCommand(file.Name, stream.ToArray());
-
         var result = await Mediator.Send(command);
         if (result.Succeeded)
         {
@@ -400,8 +423,6 @@
                 Snackbar.Add($"{msg}", Severity.Error);
             }
         }
-
         _uploading = false;
     }
-
 }
