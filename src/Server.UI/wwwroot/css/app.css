@@ -28,6 +28,7 @@
     font-size: var(--mud-typography-default-size) !important;
 }
 
+
 .mud-simple-table table * tr > td, .mud-simple-table table * tr th {
     font-size: var(--mud-typography-default-size) !important;
 }
@@ -48,16 +49,6 @@
     font-size: var(--mud-typography-body2-size) !important;
 }
 
-.mud-typography-subtitle2 {
-    font-size: var(--mud-typography-subtitle2-size);
-}
-.mud-typography-body1 {
-    font-size: var(--mud-typography-body1-size);
-}
-
-.mud-typography-body2 {
-    font-size: var(--mud-typography-body2-size);
-}
 
 .mud-button-outlined-size-small {
     font-size: var(--mud-typography-body2-size);
