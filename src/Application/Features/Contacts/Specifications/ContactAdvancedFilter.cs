@@ -36,7 +36,6 @@ public enum ContactListView
 /// </summary>
 public class ContactAdvancedFilter: PaginationFilter
 {
-    public TimeSpan LocalTimezoneOffset { get; set; }
     public ContactListView ListView { get; set; } = ContactListView.All;
     public UserProfile? CurrentUser { get; set; }
 }

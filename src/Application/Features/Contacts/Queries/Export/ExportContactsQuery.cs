@@ -26,7 +26,7 @@ public class ExportContactsQuery : ContactAdvancedFilter, ICacheableRequest<Resu
       public IEnumerable<string>? Tags => ContactCacheKey.Tags;
     public override string ToString()
     {
-        return $"Listview:{ListView}:{CurrentUser?.UserId}-{LocalTimezoneOffset.TotalHours}, Search:{Keyword}, {OrderBy}, {SortDirection}";
+        return $"Listview:{ListView}:{CurrentUser?.UserId}, Search:{Keyword}, {OrderBy}, {SortDirection}";
     }
     public string CacheKey => ContactCacheKey.GetExportCacheKey($"{this}");
 }

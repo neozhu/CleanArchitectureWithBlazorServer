@@ -6,86 +6,92 @@
 @inject IStringLocalizer<Contacts> L
 @attribute [Authorize(Policy = Permissions.Contacts.View)]
 <PageTitle>@Title</PageTitle>
-<Breadcrumbs  OnGoEditClick="GoEdit" OnDeleteClick="Delete" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+<Breadcrumbs OnGoEditClick="OnEditContact" OnDeleteClick="OnDeleteContact" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
 <MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
-@if (model != null)
-{
-    <MudCard Class="pa-2">
-        <MudCardHeader>
-            <CardHeaderContent>
-                 <MudText Typo="Typo.h6">@Title</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudGrid Spacing="3" Class="readonly-grid">
-                <MudItem xs="12" md="6"> 
-                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Name)]" Value="model.Name"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Description)]" Value="model.Description"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Email)]" Value="model.Email"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.PhoneNumber)]" Value="model.PhoneNumber"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyFieldX6 Label="@L[model.GetMemberDescription(x=>x.Country)]" Value="model.Country"></ReadOnlyFieldX6>
-                </MudItem> 
-
-            </MudGrid>
-        </MudCardContent>
-        <MudCardActions></MudCardActions>
-    </MudCard>
- }
+    @if (_contactDto != null)
+    {
+        <MudCard Class="pa-2">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">@Title</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid Spacing="3" Class="readonly-grid">
+                    <MudItem xs="12" md="6">
+                        <ReadOnlyFieldX6 Label="@L[_contactDto.GetMemberDescription(x => x.Name)]" Value="_contactDto.Name"></ReadOnlyFieldX6>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <ReadOnlyFieldX6 Label="@L[_contactDto.GetMemberDescription(x => x.Description)]" Value="_contactDto.Description"></ReadOnlyFieldX6>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <ReadOnlyFieldX6 Label="@L[_contactDto.GetMemberDescription(x => x.Email)]" Value="_contactDto.Email"></ReadOnlyFieldX6>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <ReadOnlyFieldX6 Label="@L[_contactDto.GetMemberDescription(x => x.PhoneNumber)]" Value="_contactDto.PhoneNumber"></ReadOnlyFieldX6>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <ReadOnlyFieldX6 Label="@L[_contactDto.GetMemberDescription(x => x.Country)]" Value="_contactDto.Country"></ReadOnlyFieldX6>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+            <MudCardActions></MudCardActions>
+        </MudCard>
+    }
 </MudContainer>
- 
 
 @code {
     public string? Title { get; private set; }
+
     [Parameter]
     public int Id { get; set; }
+
     private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "/"),
         new BreadcrumbItem("Contacts", href: "/pages/Contacts")
     };
-    private ContactDto? model;
+
+    private ContactDto? _contactDto;
+
     protected override async Task OnInitializedAsync()
     {
         Title = L["Contact"];
-        var result = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
-        result.Map(data =>
+        var contactResult = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
+        contactResult.Map(data =>
         {
-            model = data;
+            _contactDto = data;
             return data;
         }).Match(data =>
         {
             _breadcrumbItems.Add(new BreadcrumbItem(data.Name, null, disabled: true));
             return data;
-
         }, errors =>
         {
             Snackbar.Add(errors, MudBlazor.Severity.Error);
             return null!;
         });
-
     }
-    void GoEdit()
+
+    private void OnEditContact()
     {
         Navigation.NavigateTo($"/pages/Contacts/edit/{Id}");
     }
-    async Task Delete()
+
+    private async Task OnDeleteContact()
     {
-        var contentText = string.Format(ConstantString.DeleteConfirmation, model.Name);
-        var command = new DeleteContactCommand(new int[] { model.Id });
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
-        {
-            await InvokeAsync(() =>
+        var contentText = string.Format(ConstantString.DeleteConfirmation, _contactDto!.Name);
+        var command = new DeleteContactCommand(new int[] { _contactDto.Id });
+        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(
+            command,
+            ConstantString.DeleteConfirmationTitle,
+            contentText,
+            async () =>
             {
-                Navigation.NavigateTo($"/pages/Contacts");
+                await InvokeAsync(() =>
+                {
+                    Navigation.NavigateTo($"/pages/Contacts");
+                });
             });
-        });
     }
 }
