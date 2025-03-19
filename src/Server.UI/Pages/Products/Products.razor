@@ -27,7 +27,7 @@
              MultiSelection="true"
              @bind-SelectedItems="_selectedItems"
              ColumnResizeMode="ResizeMode.Column"
-             Hover="true" @ref="_table">
+             Hover="true" @ref="_productsGrid">
     <ToolBarContent>
         <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
             <MudStack Row AlignItems="AlignItems.Start">
@@ -204,7 +204,7 @@
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
     public string? Title { get; private set; }
     private HashSet<ProductDto> _selectedItems = new();
-    private MudDataGrid<ProductDto> _table = default!;
+    private MudDataGrid<ProductDto> _productsGrid = default!;
     private ProductDto _currentDto = new();
     private ProductsAccessRights _accessRights = new();
     private bool _loading;
@@ -244,20 +244,20 @@
 
     private void OnConditionChanged(string condition)
     {
-        InvokeAsync(_table.ReloadServerData);
+        InvokeAsync(_productsGrid.ReloadServerData);
     }
 
     private async Task OnSearch(string text)
     {
         _selectedItems = new HashSet<ProductDto>();
         _productsQuery.Keyword = text;
-        await _table.ReloadServerData();
+        await _productsGrid.ReloadServerData();
     }
 
     private async Task OnListViewChanged(ProductListView listview)
     {
         _productsQuery.ListView = listview;
-        await _table.ReloadServerData();
+        await _productsGrid.ReloadServerData();
     }
 
     private async Task OnRefresh()
@@ -265,22 +265,22 @@
         ProductCacheKey.Refresh();
         _selectedItems = new HashSet<ProductDto>();
         _productsQuery.Keyword = string.Empty;
-        await _table.ReloadServerData();
+        await _productsGrid.ReloadServerData();
     }
 
     private async Task ShowProductEditFormDialog(string title, AddEditProductCommand command)
     {
         var parameters = new DialogParameters<ProductFormDialog>
         {
-            { x => x.Refresh, () => _table.ReloadServerData() },
-            { x => x.Model, command }
+            { x => x.Refresh, () => _productsGrid.ReloadServerData() },
+            { x => x._model, command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
         var dialog = await DialogService.ShowAsync<ProductFormDialog>(title, parameters, options);
         var state = await dialog.Result;
         if (state is not null && !state.Canceled)
         {
-            await _table.ReloadServerData();
+            await _productsGrid.ReloadServerData();
             _selectedItems.Clear();
         }
     }
@@ -320,7 +320,7 @@
         {
             await InvokeAsync(async () =>
             {
-                await _table.ReloadServerData();
+                await _productsGrid.ReloadServerData();
                 _selectedItems.Clear();
             });
         });
@@ -334,7 +334,7 @@
         {
             await InvokeAsync(async () =>
             {
-                await _table.ReloadServerData();
+                await _productsGrid.ReloadServerData();
                 _selectedItems.Clear();
             });
         });
@@ -352,8 +352,8 @@
             Unit = _productsQuery.Unit,
             Keyword = _productsQuery.Keyword,
             ListView = _productsQuery.ListView,
-            OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-            SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false
+            OrderBy = _productsGrid.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+            SortDirection = _productsGrid.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false
                                 ? SortDirection.Descending.ToString()
                                 : SortDirection.Ascending.ToString(),
             CurrentUser = UserProfile,
@@ -385,8 +385,8 @@
             Keyword = _productsQuery.Keyword,
             ListView = _productsQuery.ListView,
             CurrentUser = UserProfile,
-            OrderBy = _table.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-            SortDirection = _table.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false
+            OrderBy = _productsGrid.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+            SortDirection = _productsGrid.SortDefinitions.Values.FirstOrDefault()?.Descending ?? false
                                 ? SortDirection.Descending.ToString()
                                 : SortDirection.Ascending.ToString(),
             ExportType = ExportType.PDF
@@ -413,7 +413,7 @@
         var result = await Mediator.Send(command);
         if (result.Succeeded)
         {
-            await _table.ReloadServerData();
+            await _productsGrid.ReloadServerData();
             Snackbar.Add($"{ConstantString.ImportSuccess}", Severity.Info);
         }
         else

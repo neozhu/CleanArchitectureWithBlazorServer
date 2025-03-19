@@ -239,7 +239,7 @@
     {
         var parameters = new DialogParameters<TenantFormDialog>
         {
-            { x => x.Model, command }
+            { x => x._model, command }
         };
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = await DialogService.ShowAsync<TenantFormDialog>(title, parameters, options);

@@ -15,12 +15,12 @@
 
 <MudDialog>
     <DialogContent>
-        <ActiveUserSession PageComponent="@($"{nameof(ProductFormDialog)}/{Model.Id}")" />
-        <MudForm Model="@Model" @ref="@_form" Validation="@(Validator.ValidateValue(Model))">
+        <ActiveUserSession PageComponent="@($"{nameof(ProductFormDialog)}/{_model.Id}")" />
+        <MudForm Model="@_model" @ref="@_form" Validation="@(Validator.ValidateValue(_model))">
             <MudGrid Spacing="2">
                 <MudItem xs="12">
-                    <MudTextField Label="@L["Product Name"]" @bind-Value="Model.Name"
-                                  For="@(() => Model.Name)"
+                    <MudTextField Label="@L["Product Name"]" @bind-Value="_model.Name"
+                                  For="@(() => _model.Name)"
                                   Required="true"
                                   RequiredError="@L["product name is required!"]">
                     </MudTextField>
@@ -28,17 +28,17 @@
                 <MudItem xs="12">
                     <MudTextField Label="@L["Description"]"
                                   Lines="3"
-                                  For="@(() => Model.Description)"
-                                  @bind-Value="Model.Description">
+                                  For="@(() => _model.Description)"
+                                  @bind-Value="_model.Description">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <PicklistAutocomplete Picklist="Picklist.Brand" T="string"
                                           Label="@L["Brand Name"]"
-                                          For="@(() => Model.Brand)"
+                                          For="@(() => _model.Brand)"
                                           ResetValueOnEmptyText="true"
                                           ShowProgressIndicator="true"
-                                          @bind-Value="Model.Brand">
+                                          @bind-Value="_model.Brand">
                         <ProgressIndicatorTemplate>
                             <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
                         </ProgressIndicatorTemplate>
@@ -48,18 +48,18 @@
                     <MudNumericField Label="@L["Price"]"
                                      T="decimal"
                                      Format="N2"
-                                     For="@(() => Model.Price)"
+                                     For="@(() => _model.Price)"
                                      Min="0.00m"
-                                     @bind-Value="Model.Price">
+                                     @bind-Value="_model.Price">
                     </MudNumericField>
                 </MudItem>
                 <MudItem xs="12" sm="4">
                     <PicklistAutocomplete Picklist="Picklist.Unit" T="string"
                                           Label="@L["Unit"]"
-                                          For="@(() => Model.Unit)"
+                                          For="@(() => _model.Unit)"
                                           ResetValueOnEmptyText="true"
                                           ShowProgressIndicator="true"
-                                          @bind-Value="Model.Unit">
+                                          @bind-Value="_model.Unit">
                         <ProgressIndicatorTemplate>
                             <MudProgressLinear Size="MudBlazor.Size.Small" Indeterminate="true" />
                         </ProgressIndicatorTemplate>
@@ -69,8 +69,8 @@
                     <MudStack Spacing="1" Class="mb-2">
                         <MudText Typo="Typo.body2">@L["The recommended size for uploading images is 640X320"]</MudText>
                         <MudFileUpload T="IReadOnlyList<IBrowserFile>" multiple
-                                       @bind-Files="Model.UploadPictures"
-                                       For="@(() => Model.UploadPictures)"
+                                       @bind-Files="_model.UploadPictures"
+                                       For="@(() => _model.UploadPictures)"
                                        OnFilesChanged="UploadFiles" Accept=".pdf,image/*"
                                        Hidden="@false"
                                        InputClass="absolute mud-width-full mud-height-full overflow-hidden z-100"
@@ -91,11 +91,11 @@
                             </ActivatorContent>
 
                         </MudFileUpload>
-                        @if (Model.Pictures is not null)
+                        @if (_model.Pictures is not null)
                         {
                             <MudSimpleTable Hover Dense Elevation="0">
                                 <tbody>
-                                    @foreach (var dto in Model.Pictures)
+                                    @foreach (var dto in _model.Pictures)
                                     {
                                         <tr @onclick="()=>OnDownloadFile(dto.Url)" style="cursor:pointer">
                                             <td><Thumbnail FileName="@dto.Name" FileUrl="@dto.Url"> </Thumbnail></td>
@@ -122,7 +122,7 @@
 @code {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired][Parameter] public AddEditProductCommand Model { get; set; } = default!;
+    [EditorRequired][Parameter] public AddEditProductCommand _model { get; set; } = default!;
 
     [Parameter] public Action? Refresh { get; set; }
 
@@ -135,7 +135,7 @@
 
     private async Task DeleteImage(ProductImage picture)
     {
-        if (Model.Pictures != null)
+        if (_model.Pictures != null)
         {
             var parameters = new DialogParameters<ConfirmationDialog>
             {
@@ -147,7 +147,7 @@
 
             if (state is not null && !state.Canceled)
             {
-                Model.Pictures.Remove(picture);
+                _model.Pictures.Remove(picture);
                 await UploadService.RemoveAsync(picture.Url);
             }
         }
@@ -204,10 +204,10 @@
 
             Snackbar.Add(L["Upload pictures successfully"], Severity.Info);
 
-            if (Model.Pictures is null)
-                Model.Pictures = list;
+            if (_model.Pictures is null)
+                _model.Pictures = list;
             else
-                Model.Pictures.AddRange(list);
+                _model.Pictures.AddRange(list);
         }
         finally
         {
@@ -225,7 +225,7 @@
             if (!_form!.IsValid)
                 return;
 
-            var result = await Mediator.Send(Model);
+            var result = await Mediator.Send(_model);
             result.Match(
             data =>
             {
@@ -253,13 +253,13 @@
             await _form!.Validate().ConfigureAwait(false);
             if (!_form!.IsValid)
                 return;
-            var result = await Mediator.Send(Model);
+            var result = await Mediator.Send(_model);
             result.Match(
             data =>
             {
                 Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
                 Refresh?.Invoke();
-                Model = new AddEditProductCommand();
+                _model = new AddEditProductCommand();
                 return data;
             },
             errors =>
