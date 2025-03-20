@@ -413,11 +413,9 @@
     }
     private async Task ProcessUserUpdate(ApplicationUserDto item)
     {
-        var user = await UserManager.Users.Where(x => x.Id == item.Id)
-                .Include(x => x.UserRoles)
-                .ThenInclude(y => y.Role).FirstOrDefaultAsync() ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
-        var roles = user.UserRoles.Select(x => x.Role.Name!).ToArray();
-        if (roles != null && roles.Any())
+        var user = await UserManager.FindByIdAsync(item.Id!) ?? throw new NotFoundException($"The application user [{item.Id}] was not found.");
+        var roles = await UserManager.GetRolesAsync(user);
+        if (roles.Count > 0)
         {
             await UserManager.RemoveFromRolesAsync(user, roles);
         }
