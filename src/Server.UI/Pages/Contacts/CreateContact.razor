@@ -74,12 +74,10 @@
                 {
                     Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
                     Navigation.NavigateTo($"/pages/Contacts");
-                    return data;
                 },
                 errors=>
                 {
                     Snackbar.Add(errors, MudBlazor.Severity.Error);
-                    return -1;
                 });
         }
         finally

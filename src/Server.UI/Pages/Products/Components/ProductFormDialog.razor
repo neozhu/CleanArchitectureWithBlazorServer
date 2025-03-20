@@ -231,12 +231,10 @@
             {
                 MudDialog.Close(DialogResult.Ok(true));
                 Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
-                return data;
             },
             errors =>
             {
                 Snackbar.Add(errors, Severity.Error);
-                return 0;
             });
         }
         finally
@@ -260,12 +258,10 @@
                 Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
                 Refresh?.Invoke();
                 _model = new AddEditProductCommand();
-                return data;
             },
             errors =>
             {
                 Snackbar.Add(result.ErrorMessage, Severity.Error);
-                return 0;
             });
         }
         finally

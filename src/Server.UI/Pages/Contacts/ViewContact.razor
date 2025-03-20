@@ -63,12 +63,9 @@
         }).Match(data =>
         {
             _breadcrumbItems.Add(new BreadcrumbItem(data.Name, null, disabled: true));
-            return data;
-
         }, errors =>
         {
             Snackbar.Add(errors, MudBlazor.Severity.Error);
-            return null!;
         });
 
     }

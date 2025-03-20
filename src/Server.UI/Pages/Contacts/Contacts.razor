@@ -306,17 +306,16 @@
                 SortDirection = (_contactsGrid.SortDefinitions.Values.FirstOrDefault()?.Descending ?? true) ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString()
             };
         var result = await Mediator.Send(request);
-        await result.MatchAsync<byte[]>(
+        await result.MatchAsync(
             async data =>
             {
                 await BlazorDownloadFileService.DownloadFileAsync($"{L["Contacts"]}.xlsx", result.Data, contentType:"application/octet-stream");
                 Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
-                return data;
             },
             errors =>
             {
                 Snackbar.Add($"{errors}", MudBlazor.Severity.Error);
-                return Task.FromResult(Array.Empty<byte>());
+                return Task.CompletedTask;
             });
         _exporting = false;
     }
@@ -332,11 +331,10 @@
             {
                 await _contactsGrid.ReloadServerData();
                 Snackbar.Add($"{ConstantString.ImportSuccess}", MudBlazor.Severity.Info);
-                return data;
             }, errors =>
             {
                 Snackbar.Add($"{errors}", MudBlazor.Severity.Error);
-                return Task.FromResult(0);
+                return Task.CompletedTask;
             });
         _uploading = false;
     }

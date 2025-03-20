@@ -55,11 +55,9 @@
             {
                 MudDialog.Close(DialogResult.Ok(true));
                 Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
-                return data;
             }, errors =>
             {
                 Snackbar.Add(errors, MudBlazor.Severity.Error);
-                return -1;
             });
         }
         finally
@@ -81,11 +79,10 @@
                 Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
                 await Task.Delay(300);
                 _model = new AddEditContactCommand() { };
-                return data;
             }, errors =>
             {
                 Snackbar.Add(errors, MudBlazor.Severity.Error);
-                return Task.FromResult(-1);
+                return Task.CompletedTask;
             });
         }
         finally
