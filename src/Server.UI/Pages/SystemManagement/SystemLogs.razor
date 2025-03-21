@@ -137,7 +137,6 @@
     private MudDataGrid<SystemLogDto> _table = default!;
     private readonly SystemLogDto _currentDto = new();
     private readonly int _defaultPageSize = 15;
-    private TimeSpan _localTimeOffset => UserProfile?.LocalTimeOffset ?? TimeSpan.Zero;
     private bool _loading;
     private bool _clearing;
     private LogsAccessRights _accessRights = new();
@@ -160,7 +159,7 @@
             _systemLogsQuery.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             _systemLogsQuery.PageNumber = state.Page + 1;
             _systemLogsQuery.PageSize = state.PageSize;
-            _systemLogsQuery.LocalTimeOffset = _localTimeOffset;
+            _systemLogsQuery.CurrentUser = UserProfile;
             var result = await Mediator.Send(_systemLogsQuery).ConfigureAwait(false);
 
             return new GridData<SystemLogDto> { TotalItems = result.TotalItems, Items = result.Items };
