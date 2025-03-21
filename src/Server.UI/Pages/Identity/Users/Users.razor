@@ -320,6 +320,7 @@
             _isLoading = true;
             var predicate = CreateSearchPredicate();
             var totalCount = await _userManager.Users.CountAsync(predicate);
+            var testd = await _userManager.Users.Where(predicate).Include(x => x.CreatedByUser).Include(x => x.LastModifiedByUser).ToListAsync();
             var data = await _userManager.Users.Where(predicate)
                 .Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
                 .Include(x => x.CreatedByUser)
@@ -403,7 +404,9 @@
             EmailConfirmed = false,
             IsActive = model.IsActive,
             LanguageCode = model.LanguageCode,
-            TimeZoneId = model.TimeZoneId
+            TimeZoneId = model.TimeZoneId,
+            CreatedBy = UserProfile?.UserId,
+            Created = DateTime.UtcNow
         };
 
         var result = await _userManager.CreateAsync(newUser);
@@ -441,6 +444,8 @@
         user.SuperiorId = model.Superior?.Id;
         user.LanguageCode = model.LanguageCode;
         user.TimeZoneId = model.TimeZoneId;
+        user.LastModifiedBy = UserProfile?.UserId;
+        user.LastModified = DateTime.UtcNow;
         var updateResult = await _userManager.UpdateAsync(user);
         if (updateResult.Succeeded)
         {
