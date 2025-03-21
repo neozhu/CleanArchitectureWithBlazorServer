@@ -3,10 +3,6 @@ using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using Microsoft.AspNetCore.StaticFiles;
 using Minio;
 using Minio.DataModel.Args;
-using Minio.Exceptions;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Processing;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 public class MinioUploadService : IUploadService
@@ -38,19 +34,6 @@ public class MinioUploadService : IUploadService
         // Define common bitmap image extensions (not including vector formats like SVG).
         var bitmapImageExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
         var ext = Path.GetExtension(request.FileName).ToLowerInvariant();
-
-        // If ResizeOptions is provided and the file is a bitmap image, process the image.
-        if (request.ResizeOptions != null && Array.Exists(bitmapImageExtensions, e => e.Equals(ext, StringComparison.OrdinalIgnoreCase)))
-        {
-            using var inputStream = new MemoryStream(request.Data);
-            using var outputStream = new MemoryStream();
-            using var image = Image.Load(inputStream);
-            image.Mutate(x => x.Resize(request.ResizeOptions));
-            // Convert the image to PNG format.
-            image.Save(outputStream, new PngEncoder());
-            request.Data = outputStream.ToArray();
-            contentType = "image/png";
-        }
 
         // Ensure the bucket exists.
         bool bucketExists = await _minioClient.BucketExistsAsync(new BucketExistsArgs().WithBucket(_bucketName));

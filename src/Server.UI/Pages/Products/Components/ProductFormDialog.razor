@@ -185,14 +185,8 @@
                     }
                     else
                     {
-
-                        var result = await UploadService.UploadAsync(new UploadRequest(filename, UploadType.Product, attachStream.ToArray(), overwrite: false, null,
-                        new SixLabors.ImageSharp.Processing.ResizeOptions
-                        {
-                            Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop,
-                            Size = new Size(640, 320)
-                        }));
-
+                        var resizedStream = await ImageProcessor.ResizeAndCompressToJpegAsync(attachStream,640,320);
+                        var result = await UploadService.UploadAsync(new UploadRequest(filename, UploadType.Product, resizedStream.ToArray(), overwrite: false, null));
                         list.Add(new ProductImage { Name = filename, Size = attachStream.Length, Url = result });
                     }
                 }

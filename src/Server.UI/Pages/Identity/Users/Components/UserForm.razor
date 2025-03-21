@@ -154,11 +154,8 @@
     {
         using var ms = new MemoryStream();
         await file.OpenReadStream(GlobalVariable.MaxAllowedSize).CopyToAsync(ms);
-        var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, ms.ToArray(), overwrite: true)
-        {
-            ResizeOptions = new ResizeOptions { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Max, Size = new SixLabors.ImageSharp.Size(128, 128) },
-            Folder = Model.Id
-        };
+        var resizedStream = await ImageProcessor.ResizeAndCompressToJpegAsync(ms,128,128,80);
+        var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, resizedStream.ToArray(), overwrite: true, Model.Id);
         Model.ProfilePictureDataUrl = await UploadService.UploadAsync(uploadRequest);
         Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);
     }

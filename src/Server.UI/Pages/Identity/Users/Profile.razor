@@ -250,16 +250,9 @@ else
 
         var user = await _userManager.FindByNameAsync(_profileModel.UserName)
                    ?? throw new NotFoundException($"User [{_profileModel.UserName}] not found.");
-
-        var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, fileData, overwrite: true)
-        {
-            ResizeOptions = new SixLabors.ImageSharp.Processing.ResizeOptions
-            {
-                Mode = ResizeMode.Crop,
-                Size = new Size(128, 128)
-            },
-            Folder = user.Id
-        };
+        var resizedStream = await ImageProcessor.ResizeAndCompressToJpegAsync(memoryStream,128,128,80);
+        var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, fileData, overwrite: true, user.Id);
+        
 
         var result = await UploadService.UploadAsync(uploadRequest);
         _profileModel.ProfilePictureDataUrl = result;
