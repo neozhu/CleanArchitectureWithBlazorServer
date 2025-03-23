@@ -4,11 +4,11 @@ on:
   push:
     branches: [ "main" ]
     paths-ignore:
-      - ".github/workflows/deploy/**"
+      - "deploy/**"
   pull_request:
     branches: [ "main" ]
     paths-ignore:
-      - ".github/workflows/deploy/**"
+      - "deploy/**"
 
 jobs:
 
