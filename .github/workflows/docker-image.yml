@@ -65,16 +65,27 @@ jobs:
         sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose.yml
         sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose-db.yml
         
-    - name: Set up Git
+    - name: Create Pull Request
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
+        # Create a new branch with timestamp to avoid conflicts
+        NEW_BRANCH="update-compose-version-${{ steps.version.outputs.version }}"
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        git checkout -b $NEW_BRANCH
         
-    - name: Commit and push updated files
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      run: |
+        # Add, commit changes
         git add .github/workflows/deploy/docker-compose.yml .github/workflows/deploy/docker-compose-db.yml
         git commit -m "Update Docker Compose files to version ${{ steps.version.outputs.version }}"
-        git push origin main
+        git push origin $NEW_BRANCH
+    
+    - name: Create Pull Request with GitHub CLI
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        NEW_BRANCH="update-compose-version-${{ steps.version.outputs.version }}"
+        gh pr create --base main --head $NEW_BRANCH \
+          --title "Update Docker Compose to version ${{ steps.version.outputs.version }}" \
+          --body "Automatically updating Docker Compose version references to match the latest build version ${{ steps.version.outputs.version }}"
      
