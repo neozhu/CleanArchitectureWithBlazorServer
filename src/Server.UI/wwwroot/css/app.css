@@ -19,15 +19,16 @@
     background-color: var(--mud-palette-surface);
 }
 
+.mud-input-control-margin-dense .mud-input > input.mud-input-root,
+.mud-input-control-margin-dense div.mud-input-slot.mud-input-root {
+    font-size: 0.90em;
+}
+
 .mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol {
-    font-size: var(--mud-typography-subtitle1-size) !important;
-}
-.mud-input > input.mud-input-root, div.mud-input-slot.mud-input-root {
     font-size: var(--mud-typography-default-size) !important;
 }
-.mud-input > textarea.mud-input-root {
-    font-size: var(--mud-typography-default-size) !important;
-}
+
+
 .mud-simple-table table * tr > td, .mud-simple-table table * tr th {
     font-size: var(--mud-typography-default-size) !important;
 }
@@ -44,19 +45,10 @@
 .mud-table-cell {
     font-size: var(--mud-typography-default-size) !important;
 }
-
-
-.mud-typography-subtitle2 {
-    font-size: var(--mud-typography-subtitle2-size);
-    color: var(--mud-palette-text-secondary);
-}
-.mud-typography-body1 {
-    font-size: var(--mud-typography-body1-size);
+.mud-table-dense .mud-table-cell {
+    font-size: var(--mud-typography-body2-size) !important;
 }
 
-.mud-typography-body2 {
-    font-size: var(--mud-typography-body2-size);
-}
 
 .mud-button-outlined-size-small {
     font-size: var(--mud-typography-body2-size);

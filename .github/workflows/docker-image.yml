@@ -3,8 +3,12 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - ".github/workflows/deploy/**"
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - ".github/workflows/deploy/**"
 
 jobs:
 
@@ -47,4 +51,21 @@ jobs:
         context: .
         push: true
         tags: blazordevlab/cleanarchitectureblazorserver:latest
+
+    - name: Update version in docker-compose files
+      run: |
+        echo "Updating docker-compose files with version ${{ steps.version.outputs.version }}"
+        sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose.yml
+        sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose-db.yml
+        
+    - name: Set up Git
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+    - name: Commit and push updated files
+      run: |
+        git add .github/workflows/deploy/docker-compose.yml .github/workflows/deploy/docker-compose-db.yml
+        git commit -m "Update Docker Compose files to version ${{ steps.version.outputs.version }}"
+        git push origin ${{ github.ref_name }}
      
