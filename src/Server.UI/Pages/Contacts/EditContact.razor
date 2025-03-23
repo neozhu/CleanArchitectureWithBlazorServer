@@ -1,4 +1,4 @@
-﻿@page "/pages/Contacts/edit/{id:int}"
+﻿@page "/pages/contacts/edit/{id:int}"
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Update
 @using CleanArchitecture.Blazor.Application.Features.Contacts.Queries.GetById
 @using CleanArchitecture.Blazor.Server.UI.Components.Fusion
@@ -9,9 +9,9 @@
 @attribute [Authorize(Policy = Permissions.Contacts.Edit)]
 
 <PageTitle>@Title</PageTitle>
-<Breadcrumbs OnSaveButtonClick="Submit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
-<MudContainer Class="mt-3" MaxWidth="MaxWidth.Small">
-@if (model != null)
+<Breadcrumbs OnSaveButtonClick="OnSubmit" Saving="_saving" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+<MudContainer Class="mt-3" MaxWidth="MaxWidth.Large">
+@if (_model != null)
 {
     <MudCard Class="pa-2">
         <MudCardHeader>
@@ -20,30 +20,30 @@
             </CardHeaderContent>
         </MudCardHeader>
         <MudCardContent>
-        <ActiveUserSession PageComponent="@($"{nameof(EditContact)}/{ model.Id }")" />
-        <MudForm Model="@model" @ref="@_form" Validation="@(Validator.ValidateValue(model))">
+        <ActiveUserSession PageComponent="@($"{nameof(EditContact)}/{ _model.Id }")" />
+        <MudForm Model="@_model" @ref="@_contactForm" Validation="@(Validator.ValidateValue(_model))">
             <MudGrid Spacing="2">
                 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Name)]" @bind-Value="model.Name" For="@(() => model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
+                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Name)]" @bind-Value="_model.Name" For="@(() => _model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
                 </MudItem> 
 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Description)]"  For="@(() => model.Description)" @bind-Value="model.Description"></MudTextField>
+                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Description)]"  For="@(() => _model.Description)" @bind-Value="_model.Description"></MudTextField>
                 </MudItem> 
 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Email)]" @bind-Value="model.Email" For="@(() => model.Email)" Required="false" RequiredError="@L["email is required!"]"></MudTextField>
+                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Email)]" @bind-Value="_model.Email" For="@(() => _model.Email)" Required="false" RequiredError="@L["email is required!"]"></MudTextField>
                 </MudItem> 
 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.PhoneNumber)]" @bind-Value="model.PhoneNumber" For="@(() => model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required!"]"></MudTextField>
+                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.PhoneNumber)]" @bind-Value="_model.PhoneNumber" For="@(() => _model.PhoneNumber)" Required="false" RequiredError="@L["phone number is required!"]"></MudTextField>
                 </MudItem> 
 <MudItem xs="12" md="6"> 
-                        <MudTextField Label="@L[model.GetMemberDescription(x=>x.Country)]" @bind-Value="model.Country" For="@(() => model.Country)" Required="false" RequiredError="@L["country is required!"]"></MudTextField>
+                        <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Country)]" @bind-Value="_model.Country" For="@(() => _model.Country)" Required="false" RequiredError="@L["country is required!"]"></MudTextField>
                 </MudItem> 
 
             </MudGrid>
         </MudForm>
         </MudCardContent>
         <MudCardActions Class="d-flex justify-end gap-2">
-                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+                    <MudLoadingButton Color="Color.Primary" DropShadow="false" Loading="@_saving" OnClick="OnSubmit">@ConstantString.Save</MudLoadingButton>
         </MudCardActions>
         </MudCard>
     }
@@ -54,52 +54,48 @@
     public string? Title { get; private set; }
     [Parameter]
     public int Id { get; set; }
-    MudForm? _form;
+    MudForm? _contactForm;
     private bool _saving = false;
     private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "/"),
-        new BreadcrumbItem("Contacts", href: "/pages/Contacts")
+        new BreadcrumbItem("Contacts", href: "/pages/contacts")
     };
-    private UpdateContactCommand? model;
+    private UpdateContactCommand? _model;
     protected override async Task OnInitializedAsync()
     {
         Title = L["Edit Contact"];
         var result = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
         result.Map(data =>
         {
-            model = Mapper.Map<UpdateContactCommand>(data);
+            _model = Mapper.Map<UpdateContactCommand>(data);
             return data;
         }).Match(data =>
         {
-            _breadcrumbItems.Add(new BreadcrumbItem(data.Name, href: $"/pages/Contacts/edit/{Id}"));
-            return data;
+            _breadcrumbItems.Add(new BreadcrumbItem(data.Name, href: $"/pages/contacts/edit/{Id}"));
         }, errors =>
         {
             Snackbar.Add($"{errors}", Severity.Error);
-            return null!;
         });
 
     }
-    async Task Submit()
+    async Task OnSubmit()
     {
         try
         {
             _saving = true;
-            await _form!.Validate().ConfigureAwait(false);
-            if (!_form!.IsValid)
+            await _contactForm!.Validate().ConfigureAwait(false);
+            if (!_contactForm!.IsValid)
                 return;
-            var result = await Mediator.Send(model);
+            var result = await Mediator.Send(_model);
             result.Match(
                 data=>
                 {
                     Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
-                    return data;
                 },
                 errors=>
                 {
                     Snackbar.Add(errors, MudBlazor.Severity.Error);
-                    return 0;
                 });
         }
         finally

@@ -7,14 +7,13 @@ namespace CleanArchitecture.Blazor.Application.Common.Models;
 
 public class UploadRequest
 {
-    public UploadRequest(string fileName, UploadType uploadType, byte[] data, bool overwrite = false,string? folder=null, ResizeOptions? resizeOptions=null)
+    public UploadRequest(string fileName, UploadType uploadType, byte[] data, bool overwrite = false,string? folder=null)
     {
         FileName = fileName;
         UploadType = uploadType;
         Data = data;
         Overwrite = overwrite;
         Folder = folder;
-        ResizeOptions = resizeOptions;
     }
     public string FileName { get; set; }
     public string? Extension { get; set; }
@@ -22,5 +21,4 @@ public class UploadRequest
     public bool Overwrite { get; set; }
     public byte[] Data { get; set; }
     public string? Folder { get; set; }
-    public ResizeOptions? ResizeOptions { get; set; }
 }
