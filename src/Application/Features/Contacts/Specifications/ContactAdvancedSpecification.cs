@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2025-03-13
-//     Last Modified: 2025-03-13
+//     Created Date: 2025-03-19
+//     Last Modified: 2025-03-19
 //     Description: 
 //       Defines a specification for applying advanced filtering options to the 
 //       Contact entity, supporting different views and keyword-based searches.
@@ -23,8 +23,8 @@ public class ContactAdvancedSpecification : Specification<Contact>
     public ContactAdvancedSpecification(ContactAdvancedFilter filter)
     {
         DateTime today = DateTime.UtcNow;
-        var todayrange = today.GetDateRange(ContactListView.TODAY.ToString(), filter.LocalTimezoneOffset);
-        var last30daysrange = today.GetDateRange(ContactListView.LAST_30_DAYS.ToString(),filter.LocalTimezoneOffset);
+        var todayrange = today.GetDateRange(ContactListView.TODAY.ToString(), filter.CurrentUser.LocalTimeOffset);
+        var last30daysrange = today.GetDateRange(ContactListView.LAST_30_DAYS.ToString(),filter.CurrentUser.LocalTimeOffset);
 
         Query.Where(q => q.Name != null)
              .Where(filter.Keyword,!string.IsNullOrEmpty(filter.Keyword))
