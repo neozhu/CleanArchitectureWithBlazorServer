@@ -52,28 +52,20 @@ jobs:
         push: true
         tags: blazordevlab/cleanarchitectureblazorserver:latest
 
-    - name: Update docker-compose files with new version
+    - name: Update version in docker-compose files
       run: |
         echo "Updating docker-compose files with version ${{ steps.version.outputs.version }}"
         sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose.yml
         sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose-db.yml
-
-    - name: Checkout branch properly
-      run: |
-        if [ "${{ github.event_name }}" = "pull_request" ]; then
-          echo "Pull request event detected. Checking out head branch: ${{ github.head_ref }}"
-          git fetch origin ${{ github.head_ref }}
-          git checkout -B "${{ github.head_ref }}" "origin/${{ github.head_ref }}"
-        else
-          echo "Push event detected. Checking out branch: ${{ github.ref_name }}"
-          git checkout -B "${{ github.ref_name }}" "${{ github.ref }}"
-        fi
-
-    - name: Commit and push updated docker-compose files
+        
+    - name: Set up Git
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        
+    - name: Commit and push updated files
+      run: |
         git add .github/workflows/deploy/docker-compose.yml .github/workflows/deploy/docker-compose-db.yml
-        git commit -m "Update docker-compose files with version ${{ steps.version.outputs.version }}"
+        git commit -m "Update Docker Compose files to version ${{ steps.version.outputs.version }}"
         git push origin ${{ github.ref_name }}
      
