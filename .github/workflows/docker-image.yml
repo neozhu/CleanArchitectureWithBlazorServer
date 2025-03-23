@@ -58,11 +58,14 @@ jobs:
         sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose.yml
         sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose-db.yml
 
+    - name: Checkout branch
+      run: git checkout ${{ github.ref_name }}
+
     - name: Commit and push updated docker-compose files
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add .github/workflows/deploy/docker-compose.yml .github/workflows/deploy/docker-compose-db.yml
         git commit -m "Update docker-compose files with version ${{ steps.version.outputs.version }}"
-        git push
+        git push origin ${{ github.ref_name }}
      
