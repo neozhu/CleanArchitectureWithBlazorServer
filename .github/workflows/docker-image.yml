@@ -82,7 +82,7 @@ jobs:
     - name: Create Pull Request with GitHub CLI
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.MY_TOKEN }}
       run: |
         NEW_BRANCH="update-compose-version-${{ steps.version.outputs.version }}"
         gh pr create --base main --head $NEW_BRANCH \
