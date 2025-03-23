@@ -62,8 +62,8 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
         echo "Updating docker-compose files with version ${{ steps.version.outputs.version }}"
-        sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' deploy/docker-compose.yml
-        sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' deploy/docker-compose-db.yml
+        sed -i 's#blazordevlab/cleanarchitectureblazorserver:[0-9a-zA-Z\.\-]*#blazordevlab/cleanarchitectureblazorserver:${{ steps.version.outputs.version }}#' deploy/docker-compose.yml
+        sed -i 's#blazordevlab/cleanarchitectureblazorserver:[0-9a-zA-Z\.\-]*#blazordevlab/cleanarchitectureblazorserver:${{ steps.version.outputs.version }}#' deploy/docker-compose-db.yml
         
     - name: Create Pull Request
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
