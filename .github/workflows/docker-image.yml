@@ -58,27 +58,23 @@ jobs:
     #     sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose.yml
     #     sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose-db.yml
         
+    - name: Update version in docker-compose files
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        echo "Updating docker-compose files with version ${{ steps.version.outputs.version }}"
+        sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose.yml
+        sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose-db.yml
+        
     - name: Set up Git
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         
     - name: Commit and push updated files
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
-        # First, create a temporary branch from the current state
-        git checkout -b temp-update-branch
-    
-        # Add and commit the changes
         git add .github/workflows/deploy/docker-compose.yml .github/workflows/deploy/docker-compose-db.yml
         git commit -m "Update Docker Compose files to version ${{ steps.version.outputs.version }}"
-    
-        # If this is a pull request, we need to push to the source branch
-        if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-          # Get the source branch name
-          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"
-          git push origin temp-update-branch:${SOURCE_BRANCH}
-        else
-          # For direct pushes to main, push directly
-          git push origin temp-update-branch:${{ github.ref_name }}
-        fi
+        git push origin main
      
