@@ -18,7 +18,7 @@ public class SystemLogsWithPaginationQuery : SystemLogAdvancedFilter, ICacheable
     public override string ToString()
     {
         return
-            $"Listview:{ListView}-{LocalTimeOffset.TotalHours},{Level},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
+            $"Listview:{ListView},{Level},Search:{Keyword},OrderBy:{OrderBy} {SortDirection},{PageNumber},{PageSize}";
     }
 }
 

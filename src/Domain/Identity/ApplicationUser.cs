@@ -5,7 +5,7 @@ using CleanArchitecture.Blazor.Domain.Common.Entities;
 
 namespace CleanArchitecture.Blazor.Domain.Identity;
 
-public class ApplicationUser : IdentityUser, IAuditableEntity
+public class ApplicationUser : IdentityUser
 {
     public ApplicationUser()
     {
