@@ -6,8 +6,12 @@ name: Build
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - ".github/workflows/deploy/**"
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - ".github/workflows/deploy/**"
 
 jobs:
   build:

@@ -2,10 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Extensions;
-using CleanArchitecture.Blazor.Domain.Common.Enums;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Processing;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
@@ -24,17 +20,6 @@ public class FileUploadService : IUploadService
     public async Task<string> UploadAsync(UploadRequest request)
     {
         if (request.Data == null || !request.Data.Any()) return string.Empty;
-
-        if (request.ResizeOptions != null)
-        {
-            using var inputStream = new MemoryStream(request.Data);
-            using var outputStream = new MemoryStream();
-            using var image = Image.Load(inputStream);
-            image.Mutate(i => i.Resize(request.ResizeOptions));
-            image.Save(outputStream, PngFormat.Instance);
-            request.Data = outputStream.ToArray();
-        }
-
         var folder = request.UploadType.GetDescription();
         var folderName = Path.Combine("Files", folder);
         if (!string.IsNullOrEmpty(request.Folder))

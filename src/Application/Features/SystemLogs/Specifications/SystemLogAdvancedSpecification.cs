@@ -7,8 +7,8 @@ public class SystemLogAdvancedSpecification : Specification<SystemLog>
     public SystemLogAdvancedSpecification(SystemLogsWithPaginationQuery filter)
     {
         DateTime today = DateTime.UtcNow;
-        var todayrange = today.GetDateRange("TODAY", filter.LocalTimeOffset);
-        var last30daysrange = today.GetDateRange("LAST_30_DAYS", filter.LocalTimeOffset);
+        var todayrange = today.GetDateRange("TODAY", filter.CurrentUser.LocalTimeOffset);
+        var last30daysrange = today.GetDateRange("LAST_30_DAYS", filter.CurrentUser.LocalTimeOffset);
         // Build query conditions
         Query.Where(p => p.TimeStamp >= todayrange.Start && p.TimeStamp < todayrange.End.AddDays(1),
                 filter.ListView == SystemLogListView.TODAY)

@@ -3,8 +3,12 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - ".github/workflows/deploy/**"
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - ".github/workflows/deploy/**"
 
 jobs:
 
@@ -26,25 +30,51 @@ jobs:
     - run: git tag ${{ steps.version.outputs.version }}
     - run: git push origin ${{ steps.version.outputs.version }}    
     
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+    # - name: Login to Docker Hub
+    #   uses: docker/login-action@v3
+    #   with:
+    #       username: ${{ secrets.DOCKER_USERNAME }}
+    #       password: ${{ secrets.DOCKERHUB_TOKEN }}
           
    
 
-    - name: Build and push
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: blazordevlab/cleanarchitectureblazorserver:${{ steps.version.outputs.version }}
+    # - name: Build and push
+    #   uses: docker/build-push-action@v5
+    #   with:
+    #     context: .
+    #     push: true
+    #     tags: blazordevlab/cleanarchitectureblazorserver:${{ steps.version.outputs.version }}
 
-    - name: Build and push with latest tag
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: blazordevlab/cleanarchitectureblazorserver:latest
+    # - name: Build and push with latest tag
+    #   uses: docker/build-push-action@v5
+    #   with:
+    #     context: .
+    #     push: true
+    #     tags: blazordevlab/cleanarchitectureblazorserver:latest
+
+    # - name: Update version in docker-compose files
+    #   run: |
+    #     echo "Updating docker-compose files with version ${{ steps.version.outputs.version }}"
+    #     sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose.yml
+    #     sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose-db.yml
+        
+    - name: Update version in docker-compose files
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        echo "Updating docker-compose files with version ${{ steps.version.outputs.version }}"
+        sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose.yml
+        sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose-db.yml
+        
+    - name: Set up Git
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+    - name: Commit and push updated files
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        git add .github/workflows/deploy/docker-compose.yml .github/workflows/deploy/docker-compose-db.yml
+        git commit -m "Update Docker Compose files to version ${{ steps.version.outputs.version }}"
+        git push origin main
      

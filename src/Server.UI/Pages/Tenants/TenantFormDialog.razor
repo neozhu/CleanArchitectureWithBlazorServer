@@ -4,26 +4,26 @@
 
 <MudDialog>
     <DialogContent>
-        <MudForm Model="Model" @ref="_form" Validation="@(Validator.ValidateValue(Model))">
+        <MudForm Model="_model" @ref="_form" Validation="@(Validator.ValidateValue(_model))">
             <MudGrid Spacing="2">
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Id)]" @bind-Value="Model.Id"
-                                  For="@(() => Model.Id)"
+                    <MudTextField Label="@L[_model.GetMemberDescription(x => x.Id)]" @bind-Value="_model.Id"
+                                  For="@(() => _model.Id)"
                                   ReadOnly="true"
                                   Required="true"
                                   RequiredError="@L["Tenant id is required!"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Name)]" @bind-Value="Model.Name"
-                                  For="@(() => Model.Name)"
+                    <MudTextField Label="@L[_model.GetMemberDescription(x => x.Name)]" @bind-Value="_model.Name"
+                                  For="@(() => _model.Name)"
                                   Required="true"
                                   RequiredError="@L["Tenant name is required!"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Description)]" @bind-Value="Model.Description"
-                                  For="@(() => Model.Description)">
+                    <MudTextField Label="@L[_model.GetMemberDescription(x => x.Description)]" @bind-Value="_model.Description"
+                                  For="@(() => _model.Description)">
                     </MudTextField>
                 </MudItem>
 
@@ -39,7 +39,7 @@
 @code {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired] [Parameter] public AddEditTenantCommand Model { get; set; } = default!;
+    [EditorRequired] [Parameter] public AddEditTenantCommand _model { get; set; } = default!;
 
     private MudForm? _form;
     private bool _saving;
@@ -53,7 +53,7 @@
 
             if (!_form!.IsValid)
                 return;
-            var result = await Mediator.Send(Model);
+            var result = await Mediator.Send(_model);
 
             if (result.Succeeded)
             {
