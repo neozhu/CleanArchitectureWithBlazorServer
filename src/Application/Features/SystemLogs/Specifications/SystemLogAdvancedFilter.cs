@@ -12,7 +12,7 @@ public enum SystemLogListView
 
 public class SystemLogAdvancedFilter : PaginationFilter
 {
-    public TimeSpan LocalTimeOffset { get; set; }
+    public UserProfile? CurrentUser { get; set; }
     public LogLevel? Level { get; set; }
     public SystemLogListView ListView { get; set; } = SystemLogListView.LAST_30_DAYS;
 }

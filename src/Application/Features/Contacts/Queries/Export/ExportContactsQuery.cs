@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2025-03-13
-//     Last Modified: 2025-03-13
+//     Created Date: 2025-03-19
+//     Last Modified: 2025-03-19
 //     Description: 
 //       Defines a query to export contact data to an Excel file. This query 
 //       applies advanced filtering options and generates an Excel file with 
@@ -26,7 +26,7 @@ public class ExportContactsQuery : ContactAdvancedFilter, ICacheableRequest<Resu
       public IEnumerable<string>? Tags => ContactCacheKey.Tags;
     public override string ToString()
     {
-        return $"Listview:{ListView}:{CurrentUser?.UserId}-{LocalTimezoneOffset.TotalHours}, Search:{Keyword}, {OrderBy}, {SortDirection}";
+        return $"Listview:{ListView}:{CurrentUser?.UserId}, Search:{Keyword}, {OrderBy}, {SortDirection}";
     }
     public string CacheKey => ContactCacheKey.GetExportCacheKey($"{this}");
 }
@@ -63,11 +63,11 @@ public class ExportContactsQueryHandler :
                 new Dictionary<string, Func<ContactDto, object?>>()
                 {
                     // TODO: Define the fields that should be exported, for example:
-                    {_localizer[_dto.GetMemberDescription(x=>x.Name)],item => item.Name}, 
-{_localizer[_dto.GetMemberDescription(x=>x.Description)],item => item.Description}, 
-{_localizer[_dto.GetMemberDescription(x=>x.Email)],item => item.Email}, 
-{_localizer[_dto.GetMemberDescription(x=>x.PhoneNumber)],item => item.PhoneNumber}, 
-{_localizer[_dto.GetMemberDescription(x=>x.Country)],item => item.Country}, 
+                                     {_localizer[_dto.GetMemberDescription(x=>x.Name)],item => item.Name}, 
+                 {_localizer[_dto.GetMemberDescription(x=>x.Description)],item => item.Description}, 
+                 {_localizer[_dto.GetMemberDescription(x=>x.Email)],item => item.Email}, 
+                 {_localizer[_dto.GetMemberDescription(x=>x.PhoneNumber)],item => item.PhoneNumber}, 
+                 {_localizer[_dto.GetMemberDescription(x=>x.Country)],item => item.Country}, 
 
                 }
                 , _localizer[_dto.GetClassDescription()]);
