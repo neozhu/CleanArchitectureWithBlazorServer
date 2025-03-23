@@ -11,122 +11,49 @@ public class ScopedMediator : IScopedMediator
 {
     private readonly IServiceScopeFactory _scopeFactory;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ScopedMediator"/> class.
-    /// </summary>
-    /// <param name="scopeFactory">The service scope factory.</param>
-    public ScopedMediator(IServiceScopeFactory scopeFactory)
-    {
+    public ScopedMediator(IServiceScopeFactory scopeFactory) =>
         _scopeFactory = scopeFactory;
+
+    public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) =>
+        ExecuteWithinScope(mediator => mediator.Send(request, cancellationToken));
+
+    public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default) where TRequest : IRequest =>
+        ExecuteWithinScope(mediator => mediator.Send(request, cancellationToken));
+
+    public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
+        ExecuteWithinScope(mediator => mediator.Send(request, cancellationToken));
+
+    public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification =>
+        ExecuteWithinScope(mediator => mediator.Publish(notification, cancellationToken));
+
+    public Task Publish(object notification, CancellationToken cancellationToken = default) =>
+        ExecuteWithinScope(mediator => mediator.Publish(notification, cancellationToken));
+
+    public async IAsyncEnumerable<TResponse> CreateStream<TResponse>(IStreamRequest<TResponse> request, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        using var scope = _scopeFactory.CreateAsyncScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await foreach (var item in mediator.CreateStream(request, cancellationToken))
+            yield return item;
     }
 
-    /// <inheritdoc/>
-    public async Task<TResponse> Send<TResponse>(
-        IRequest<TResponse> request,
-        CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<object?> CreateStream(object request, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            TResponse response = await mediator.Send(request, cancellationToken);
-
-            return response;
-        }
+        using var scope = _scopeFactory.CreateAsyncScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await foreach (var item in mediator.CreateStream(request, cancellationToken))
+            yield return item;
     }
 
-    /// <inheritdoc/>
-    public async Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
-        where TRequest : IRequest
+    private async Task<T> ExecuteWithinScope<T>(Func<IMediator, Task<T>> operation)
     {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            await mediator.Send(request, cancellationToken);
-        }
+        using var scope = _scopeFactory.CreateAsyncScope();
+        return await operation(scope.ServiceProvider.GetRequiredService<IMediator>());
     }
 
-    /// <inheritdoc/>
-    public async Task<object?> Send(object request, CancellationToken cancellationToken = default)
+    private Task ExecuteWithinScope(Func<IMediator, Task> operation)
     {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            object? response = await mediator.Send(request, cancellationToken);
-
-            return response;
-        }
-    }
-
-    /// <inheritdoc/>
-    public async Task Publish<TNotification>(
-        TNotification notification,
-        CancellationToken cancellationToken = default)
-        where TNotification : INotification
-    {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            await mediator.Publish(notification, cancellationToken);
-        }
-    }
-
-    /// <inheritdoc/>
-    public async Task Publish(object notification, CancellationToken cancellationToken = default)
-    {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            await mediator.Publish(notification, cancellationToken);
-        }
-    }
-
-    /// <inheritdoc/>
-    public async IAsyncEnumerable<TResponse> CreateStream<TResponse>(
-        IStreamRequest<TResponse> request,
-        [EnumeratorCancellation]
-            CancellationToken cancellationToken = default)
-    {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            IAsyncEnumerable<TResponse> items = mediator.CreateStream(request, cancellationToken);
-
-            await foreach (TResponse item in items)
-            {
-                yield return item;
-            }
-        }
-    }
-
-    /// <inheritdoc/>
-    public async IAsyncEnumerable<object?> CreateStream(
-        object request,
-        [EnumeratorCancellation]
-            CancellationToken cancellationToken = default)
-    {
-        AsyncServiceScope scope = _scopeFactory.CreateAsyncScope();
-        await using (scope.ConfigureAwait(false))
-        {
-            IMediator mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-            IAsyncEnumerable<object?> items = mediator.CreateStream(request, cancellationToken);
-
-            await foreach (object? item in items)
-            {
-                yield return item;
-            }
-        }
+        using var scope = _scopeFactory.CreateAsyncScope();
+        return operation(scope.ServiceProvider.GetRequiredService<IMediator>());
     }
 }

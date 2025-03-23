@@ -7,6 +7,7 @@ public class TimeZoneAutocomplete<T> : MudAutocomplete<string>
         SearchFunc = SearchFunc_;
         Dense = true;
         ResetValueOnEmptyText = true;
+        MaxItems = 80;
         ToStringFunc = x =>
         {
             var timeZone = TimeZones.FirstOrDefault(tz => tz.Id.Equals(x));
