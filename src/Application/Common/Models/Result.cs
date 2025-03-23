@@ -120,22 +120,30 @@ public class Result<T> : Result, IResult<T>
     public static new Task<Result<T>> FailureAsync(params string[] errors) => Task.FromResult(Failure(errors));
 
     /// <summary>
-    /// Executes the appropriate function based on whether the operation succeeded.
+    /// Executes the appropriate action based on whether the operation succeeded.
     /// </summary>
-    /// <typeparam name="TResult">The return type.</typeparam>
-    /// <param name="onSuccess">Function to execute if the operation succeeded, with the data.</param>
-    /// <param name="onFailure">Function to execute if the operation failed, with an error message.</param>
-    public TResult Match<TResult>(Func<T, TResult> onSuccess, Func<string, TResult> onFailure)
-        => Succeeded ? onSuccess(Data!) : onFailure(ErrorMessage);
+    /// <param name="onSuccess">Action to execute if the operation succeeded, with the data.</param>
+    /// <param name="onFailure">Action to execute if the operation failed, with an error message.</param>
+    public void Match(Action<T> onSuccess, Action<string> onFailure)
+    {
+        if (Succeeded)
+            onSuccess(Data!);
+        else
+            onFailure(ErrorMessage);
+    }
 
     /// <summary>
-    /// Asynchronously executes the appropriate function based on whether the operation succeeded.
+    /// Asynchronously executes the appropriate action based on whether the operation succeeded.
     /// </summary>
-    /// <typeparam name="TResult">The return type.</typeparam>
-    /// <param name="onSuccess">Asynchronous function to execute if the operation succeeded, with the data.</param>
-    /// <param name="onFailure">Asynchronous function to execute if the operation failed, with an error message.</param>
-    public Task<TResult> MatchAsync<TResult>(Func<T, Task<TResult>> onSuccess, Func<string, Task<TResult>> onFailure)
-        => Succeeded ? onSuccess(Data!) : onFailure(ErrorMessage);
+    /// <param name="onSuccess">Asynchronous action to execute if the operation succeeded, with the data.</param>
+    /// <param name="onFailure">Asynchronous action to execute if the operation failed, with an error message.</param>
+    public async Task MatchAsync(Func<T, Task> onSuccess, Func<string, Task> onFailure)
+    {
+        if (Succeeded)
+            await onSuccess(Data!);
+        else
+            await onFailure(ErrorMessage);
+    }
 
     /// <summary>
     /// Maps the data contained in the result to a new type.
