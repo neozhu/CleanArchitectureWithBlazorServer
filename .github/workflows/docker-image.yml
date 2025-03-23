@@ -59,7 +59,7 @@ jobs:
         sed -i 's#\(blazordevlab/cleanarchitectureblazorserver:\).*#\1${{ steps.version.outputs.version }}#' .github/workflows/deploy/docker-compose-db.yml
 
     - name: Checkout branch
-      run: git checkout ${{ github.ref_name }}
+      run: git checkout -B "${{ github.ref_name }}" "${{ github.ref }}"
 
     - name: Commit and push updated docker-compose files
       run: |
