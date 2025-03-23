@@ -9,7 +9,6 @@ services:
       - ASPNETCORE_HTTP_PORTS=${ASPNETCORE_HTTP_PORTS}
       - ASPNETCORE_HTTPS_PORTS=${ASPNETCORE_HTTPS_PORTS}
       - AppConfigurationSettings__ApplicationUrl=${APP_URL}
-      - AppConfigurationSettings__Version=${APP_VERSION}
       - DatabaseSettings__DBProvider=${DB_PROVIDER}
       - DatabaseSettings__ConnectionString=${DB_CONNECTION_STRING}
       - SmtpClientOptions__User=${SMTP_USER}
@@ -21,8 +20,6 @@ services:
       - Authentication__Microsoft__ClientSecret=${MS_CLIENT_SECRET}
       - Authentication__Google__ClientId=${GOOGLE_CLIENT_ID}
       - Authentication__Google__ClientSecret=${GOOGLE_CLIENT_SECRET}
-      - Authentication__Facebook__AppId=${FB_APP_ID}
-      - Authentication__Facebook__AppSecret=${FB_APP_SECRET}
       - Minio__Endpoint=${MINIO_ENDPOINT}
       - Minio__AccessKey=${MINIO_ACCESS_KEY}
       - Minio__SecretKey=${MINIO_SECRET_KEY}
