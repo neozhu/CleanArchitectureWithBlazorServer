@@ -35,7 +35,7 @@ public static class ContactCacheKey
     public static string GetByIdCacheKey(string parameters) {
         return $"ContactCacheKey:GetByIdCacheKey,{parameters}";
     }
-    public static IEnumerable<string>? Tags => new string[] { "contact" };
+    public static IEnumerable<string> Tags => new string[] { "contact" };
     public static void Refresh()
     {
         FusionCacheFactory.RemoveByTags(Tags);

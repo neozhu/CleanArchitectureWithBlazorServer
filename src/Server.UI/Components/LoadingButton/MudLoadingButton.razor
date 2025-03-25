@@ -41,8 +41,6 @@
 </MudButton>
 
 @code {
-    // Private field backing the Loading property.
-    private bool _loading;
 
     /// <summary>
     /// Optional label text for the button.
@@ -90,18 +88,7 @@
     /// Indicates if the button is in a loading state. When true, displays a loading indicator and may disable the button.
     /// </summary>
     [Parameter]
-    public bool Loading
-    {
-        get => _loading;
-        set
-        {
-            if (_loading != value)
-            {
-                _loading = value;
-                StateHasChanged();
-            }
-        }
-    }
+    public bool Loading { get; set; }
 
     /// <summary>
     /// When true, disables the button while it is loading. Default is true.
@@ -144,11 +131,15 @@
         try
         {
             Loading = true;
+            Disabled = true;
+            StateHasChanged();
             await base.OnClick.InvokeAsync(null);
         }
         finally
         {
             Loading = false;
+            Disabled = false;
+            StateHasChanged();
         }
     }
 }

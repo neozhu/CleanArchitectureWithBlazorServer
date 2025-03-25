@@ -2,7 +2,7 @@
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
-
+#nullable disable warnings
 public class PickSuperiorIdAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
 {
     public PickSuperiorIdAutocomplete()

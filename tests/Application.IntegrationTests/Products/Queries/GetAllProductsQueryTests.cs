@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace CleanArchitecture.Blazor.Application.IntegrationTests.Products.Queries;
 
 using static Testing;
-
+[NonParallelizable]
 internal class GetAllProductsQueryTests : TestBase
 {
     [SetUp]
@@ -24,17 +24,16 @@ internal class GetAllProductsQueryTests : TestBase
     {
         var query = new GetAllProductsQuery();
         var result = await SendAsync(query);
-        Assert.Equals(4, result.Count());
+        Assert.That(result.Count(), Is.EqualTo(4));
     }
 
     [Test]
     public async Task ShouldQueryById()
     {
-        var query = new GetAllProductsQuery();
-        var result = await SendAsync(query);
-        var id = result.Last().Id;
+        var db = CreateDbContext();
+        var id = db.Products.First().Id;
         var getProductQuery = new GetProductQuery { Id = id };
         var product = await SendAsync(getProductQuery);
-        Assert.Equals(id, product.Id);
+        Assert.That(product.Id, Is.EqualTo(id));
     }
 }

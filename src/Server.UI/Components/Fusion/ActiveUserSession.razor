@@ -39,7 +39,7 @@
         if (result.Any())
         {
 
-            return result.Where(x => x.UserId!=currentUserId).Select(x=>x.DisplayName??x.UserName).ToArray();
+            return result.Where(x => x.UserId!=currentUserId).Select(x=>x.UserName??string.Empty).ToArray();
         }
 
         return Array.Empty<string>();

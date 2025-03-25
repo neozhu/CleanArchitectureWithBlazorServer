@@ -44,7 +44,7 @@ public class MultiTenantUserStore : UserStore<
         if (string.IsNullOrWhiteSpace(normalizedRoleName)) throw new ArgumentException("Value cannot be null or empty.", nameof(normalizedRoleName));
 
         // Retrieve the role entity for the given tenant and role name
-        var roleEntity = await GetRoleAsync(normalizedRoleName, user.TenantId, cancellationToken);
+        var roleEntity = await GetRoleAsync(normalizedRoleName, user.TenantId??string.Empty, cancellationToken);
         if (roleEntity == null) throw new InvalidOperationException($"Role '{normalizedRoleName}' does not exist in the user's tenant.");
 
         // Check if the user is already assigned to the role
@@ -77,7 +77,7 @@ public class MultiTenantUserStore : UserStore<
         if (string.IsNullOrWhiteSpace(normalizedRoleName)) throw new ArgumentException("Value cannot be null or empty.", nameof(normalizedRoleName));
 
         // Retrieve the role entity for the given tenant and role name
-        var role = await GetRoleAsync(normalizedRoleName, user.TenantId, cancellationToken);
+        var role = await GetRoleAsync(normalizedRoleName, user.TenantId ?? string.Empty, cancellationToken);
         // Check if the user is in the role
         return role != null && await IsUserInRoleAsync(user.Id, role.Id, cancellationToken);
     }
@@ -101,7 +101,7 @@ public class MultiTenantUserStore : UserStore<
         if (string.IsNullOrWhiteSpace(normalizedRoleName)) throw new ArgumentException("Value cannot be null or empty.", nameof(normalizedRoleName));
 
         // Retrieve the role entity for the given tenant and role name
-        var role = await GetRoleAsync(normalizedRoleName, user.TenantId, cancellationToken);
+        var role = await GetRoleAsync(normalizedRoleName, user.TenantId ?? string.Empty, cancellationToken);
         if (role != null)
         {
             // Retrieve the user-role relationship for the given user and role

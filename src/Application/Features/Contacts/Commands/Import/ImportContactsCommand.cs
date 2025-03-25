@@ -12,7 +12,7 @@
 // Usage:
 // - Use `ImportContactsCommand` to import contacts from Excel.
 // - Use `CreateContactsTemplateCommand` to generate an Excel template for contact data.
-
+#nullable enable
 
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;

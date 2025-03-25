@@ -179,7 +179,7 @@
         Title = L[_contactDto.GetClassDescription()];
         _accessRights = await PermissionService.GetAccessRightsAsync<ContactsAccessRights>(); 
     }
-     
+
     private async Task<GridData<ContactDto>> ServerReload(GridState<ContactDto> state)
     {
         try
@@ -259,11 +259,12 @@
         };
         await ShowEditFormDialog(L["Clone Contact"], command);
     }
-    private async Task OnEditContact(ContactDto dto)
+    private Task OnEditContact(ContactDto dto)
     {
-       //var command = Mapper.Map<AddEditContactCommand>(dto);
-       //await ShowEditFormDialog(L["Edit Contact"], command);
-       Navigation.NavigateTo($"/pages/contacts/edit/{dto.Id}");
+        //var command = Mapper.Map<AddEditContactCommand>(dto);
+        //await ShowEditFormDialog(L["Edit Contact"], command);
+        Navigation.NavigateTo($"/pages/contacts/edit/{dto.Id}");
+        return Task.CompletedTask;
     }
 
     private async Task OnDeleteContact(ContactDto dto)
@@ -309,7 +310,7 @@
         await result.MatchAsync(
             async data =>
             {
-                await BlazorDownloadFileService.DownloadFileAsync($"{L["Contacts"]}.xlsx", result.Data, contentType:"application/octet-stream");
+                await BlazorDownloadFileService.DownloadFileAsync($"{L["Contacts"]}.xlsx", result.Data!, contentType:"application/octet-stream");
                 Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
             },
             errors =>

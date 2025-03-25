@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.AddEdit;
 using CleanArchitecture.Blazor.Application.Features.PicklistSets.Commands.Delete;
@@ -10,7 +10,7 @@ namespace CleanArchitecture.Blazor.Application.IntegrationTests.KeyValues.Comman
 
 using static Testing;
 
-public class DeleteKeyValueTests : TestBase
+public class DeletePicklistTests : TestBase
 {
     [Test]
     public void ShouldRequireValidKeyValueId()
