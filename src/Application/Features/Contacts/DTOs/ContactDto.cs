@@ -8,8 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 //
-// Usage:
-// Use ContactDto to represent contact data across commands, queries, and views.
+#nullable enable
+#nullable disable warnings
 
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
@@ -19,8 +19,8 @@ public class ContactDto
 {
     [Description("Id")]
     public int Id { get; set; }
-        [Description("Name")]
-    public string Name {get;set;} 
+    [Description("Name")]
+    public string Name { get; set; } = string.Empty;
     [Description("Description")]
     public string? Description {get;set;} 
     [Description("Email")]

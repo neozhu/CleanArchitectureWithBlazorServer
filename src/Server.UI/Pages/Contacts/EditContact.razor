@@ -87,7 +87,7 @@
             await _contactForm!.Validate().ConfigureAwait(false);
             if (!_contactForm!.IsValid)
                 return;
-            var result = await Mediator.Send(_model);
+            var result = await Mediator.Send(_model!);
             result.Match(
                 data=>
                 {

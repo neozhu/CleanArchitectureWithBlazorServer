@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Application.IntegrationTests.KeyValues.Comman
 
 using static Testing;
 
-internal class AddEditKeyValueCommandTests : TestBase
+internal class AddEditPicklistCommandTests : TestBase
 {
     [Test]
     public void ShouldThrowValidationException()

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination;
 using CleanArchitecture.Blazor.Domain.Entities;
 using NUnit.Framework;
@@ -22,24 +23,24 @@ internal class ProductsPaginationQueryTests : TestBase
     [Test]
     public async Task ShouldNotEmptyQuery()
     {
-        var query = new ProductsWithPaginationQuery();
+        var query = new ProductsWithPaginationQuery(){ CurrentUser=new Common.Security.UserProfile(){Email="test@test.com", UserName="test", UserId=Guid.NewGuid().ToString(), TimeZoneId= "Asia/Shanghai" } };
         var result = await SendAsync(query);
-        Assert.Equals(5, result.TotalItems);
+        Assert.That(result.TotalItems, Is.EqualTo(5));
     }
 
     [Test]
     public async Task ShouldNotEmptyKeywordQuery()
     {
-        var query = new ProductsWithPaginationQuery { Keyword = "1" };
+        var query = new ProductsWithPaginationQuery { Keyword = "1" , CurrentUser = new Common.Security.UserProfile() { Email = "test@test.com", UserName = "test", UserId = Guid.NewGuid().ToString(), TimeZoneId = "Asia/Shanghai" } };
         var result = await SendAsync(query);
-        Assert.Equals(5, result.TotalItems);
+        Assert.That(result.TotalItems, Is.EqualTo(5));
     }
 
     [Test]
     public async Task ShouldNotEmptySpecificationQuery()
     {
-        var query = new ProductsWithPaginationQuery { Keyword = "1", Brand = "Test1", Unit = "EA", Name = "Test1" };
+        var query = new ProductsWithPaginationQuery { Keyword = "1", Brand = "Test1", Unit = "EA", Name = "Test1" , CurrentUser = new Common.Security.UserProfile() { Email = "test@test.com", UserName = "test", UserId = Guid.NewGuid().ToString(), TimeZoneId = "Asia/Shanghai" } };
         var result = await SendAsync(query);
-        Assert.Equals(1, result.TotalItems);
+        Assert.That(result.TotalItems, Is.EqualTo(1));
     }
 }

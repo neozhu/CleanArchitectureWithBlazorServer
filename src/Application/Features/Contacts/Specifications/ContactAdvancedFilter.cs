@@ -16,7 +16,7 @@
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 
-#nullable disable warnings
+#nullable enable
 /// <summary>
 /// Specifies the different views available for the Contact list.
 /// </summary>

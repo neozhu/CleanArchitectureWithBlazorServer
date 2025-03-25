@@ -63,9 +63,9 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
             });
         }
 
-        foreach (var role in tenantRoles)
+        foreach (var role in tenantRoles.Where(x=>!string.IsNullOrEmpty(x.Name)))
         {
-            var result = await AddToRoleAsync(user, role.Name);
+            var result = await AddToRoleAsync(user, role.Name ?? string.Empty);
             if (!result.Succeeded)
             {
                 return result;
