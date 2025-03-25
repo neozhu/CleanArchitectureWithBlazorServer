@@ -45,7 +45,6 @@ public class Testing
 
         var services = new ServiceCollection();
 
-
         services.AddSingleton(Mock.Of<IWebHostEnvironment>(w =>
             w.EnvironmentName == "Development" &&
             w.ApplicationName == "Server.UI"));
@@ -57,44 +56,49 @@ public class Testing
 
         //startup.ConfigureServices(services);
 
-        // Replace service registration for ICurrentUserService
-        // Remove existing registration
+        // 替换 ICurrentUserAccessor 的注册
         var currentUserServiceDescriptor = services.FirstOrDefault(d =>
             d.ServiceType == typeof(ICurrentUserAccessor));
+        if (currentUserServiceDescriptor != null)
+        {
+            services.Remove(currentUserServiceDescriptor);
+        }
 
-        services.Remove(currentUserServiceDescriptor);
-
-        // Register testing version
-        services.AddScoped(provider =>
-            Mock.Of<ICurrentUserAccessor>(s => s.SessionInfo.UserId == _currentUserId));
-
+        // 使用 Moq 创建 Mock 对象并配置 SessionInfo 属性
+        // 注意：为了确保每次获取的 ICurrentUserAccessor 都能读取最新的 _currentUserId，
+        // 可将 Mock 的创建放在工厂方法内
+        services.AddScoped<ICurrentUserAccessor>(provider =>
+        {
+            var mockCurrentUserAccessor = new Mock<ICurrentUserAccessor>();
+            mockCurrentUserAccessor
+                .Setup(x => x.SessionInfo)
+                .Returns(new SessionInfo(_currentUserId,"admin","admin","","","", UserPresence.Available));
+            return mockCurrentUserAccessor.Object;
+        });
 
         _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
-
-        _checkpoint = await Respawner.CreateAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"),
+        EnsureDatabase();
+        _checkpoint = await Respawner.CreateAsync(
+            _configuration.GetValue<string>("DatabaseSettings:ConnectionString"),
             new RespawnerOptions
             {
                 TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
             });
 
-        EnsureDatabase();
+        
     }
 
     private static void EnsureDatabase()
     {
         using var scope = _scopeFactory.CreateScope();
-
         var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
-
         context.Database.Migrate();
     }
 
     public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
     {
         using var scope = _scopeFactory.CreateScope();
-
         var mediator = scope.ServiceProvider.GetService<IScopedMediator>();
-
         return await mediator.Send(request);
     }
 
@@ -111,31 +115,27 @@ public class Testing
     public static async Task<string> RunAsUserAsync(string userName, string password, string[] roles)
     {
         using var scope = _scopeFactory.CreateScope();
-
         var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
-
         var user = new ApplicationUser { UserName = userName, Email = userName };
-
         var result = await userManager.CreateAsync(user, password);
 
         if (roles.Any())
         {
             var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
-
-            foreach (var role in roles) await roleManager.CreateAsync(new IdentityRole(role));
-
+            foreach (var role in roles)
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
             await userManager.AddToRolesAsync(user, roles);
         }
 
         if (result.Succeeded)
         {
             _currentUserId = user.Id;
-
             return _currentUserId;
         }
 
         var errors = string.Join(Environment.NewLine, result.ToApplicationResult().Errors);
-
         throw new Exception($"Unable to create {userName}.{Environment.NewLine}{errors}");
     }
 
@@ -149,30 +149,28 @@ public class Testing
         where TEntity : class
     {
         using var scope = _scopeFactory.CreateScope();
-
         var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
-
         return await context.FindAsync<TEntity>(keyValues);
+    }
+    public static IApplicationDbContext CreateDbContext()
+    {
+        var scope = _scopeFactory.CreateScope();
+        return scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     }
 
     public static async Task AddAsync<TEntity>(TEntity entity)
         where TEntity : class
     {
         using var scope = _scopeFactory.CreateScope();
-
         var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
-
         context.Add(entity);
-
         await context.SaveChangesAsync();
     }
 
     public static async Task<int> CountAsync<TEntity>() where TEntity : class
     {
         using var scope = _scopeFactory.CreateScope();
-
         var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
-
         return await context.Set<TEntity>().CountAsync();
     }
 
