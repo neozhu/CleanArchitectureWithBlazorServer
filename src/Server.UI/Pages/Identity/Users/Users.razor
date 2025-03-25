@@ -256,12 +256,12 @@
     private string _title { get; set; } = "Users";
     private IList<PermissionModel> _permissions = new List<PermissionModel>();
 
+    public bool _canViewOnlineStatus;
     private bool _isProcessing;
     private bool _showPermissionsDrawer;
     private bool _isLoading;
     private bool _isExporting;
     private bool _isUploading;
-    private bool _canViewOnlineStatus;
     private List<ApplicationRoleDto> _roles = new();
     private string? _searchRole;
 

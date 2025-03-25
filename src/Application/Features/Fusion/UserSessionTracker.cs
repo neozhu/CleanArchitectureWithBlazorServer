@@ -10,7 +10,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Fusion;
 /// </summary>
 public class UserSessionTracker : IUserSessionTracker
 {
-    private volatile ImmutableDictionary<string, ImmutableHashSet<SessionInfo>> _pageUserSessions = ImmutableDictionary<string, ImmutableHashSet<SessionInfo>>.Empty;
+    private ImmutableDictionary<string, ImmutableHashSet<SessionInfo>> _pageUserSessions = ImmutableDictionary<string, ImmutableHashSet<SessionInfo>>.Empty;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserSessionTracker"/> class.
@@ -25,21 +25,21 @@ public class UserSessionTracker : IUserSessionTracker
     /// </summary>
     /// <param name="pageComponent">The page component.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    public virtual async Task AddUserSession(string pageComponent,SessionInfo sessionInfo, CancellationToken cancellationToken = default)
+    public virtual async Task AddUserSession(string pageComponent, SessionInfo sessionInfo, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return;
 
-  
-            ImmutableInterlocked.AddOrUpdate(
-                ref _pageUserSessions,
-                pageComponent,
-                ImmutableHashSet.Create(sessionInfo),
-                (key, existingSessions) => existingSessions.Add(sessionInfo));
 
-            using var invalidating = Invalidation.Begin();
-            _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
-        
+        ImmutableInterlocked.AddOrUpdate(
+            ref _pageUserSessions,
+            pageComponent,
+            ImmutableHashSet.Create(sessionInfo),
+            (key, existingSessions) => existingSessions.Add(sessionInfo));
+
+        using var invalidating = Invalidation.Begin();
+        _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
+
     }
 
     /// <summary>
@@ -122,10 +122,10 @@ public class UserSessionTracker : IUserSessionTracker
                 }
             }
             using var invalidating = Invalidation.Begin();
-                _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
+            _ = await GetUserSessions(pageComponent, cancellationToken).ConfigureAwait(false);
         }
-        
+
     }
 
-     
+
 }

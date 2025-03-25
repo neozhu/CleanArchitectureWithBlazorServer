@@ -30,7 +30,6 @@ public class Testing
     private static IServiceScopeFactory _scopeFactory;
     private static Respawner _checkpoint;
     private static string _currentUserId;
-    private static string _currentTenantId;
 
     [OneTimeSetUp]
     public async Task RunBeforeAnyTests()
@@ -144,7 +143,6 @@ public class Testing
     {
         await _checkpoint.ResetAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
         _currentUserId = null;
-        _currentTenantId = null;
     }
 
     public static async Task<TEntity> FindAsync<TEntity>(params object[] keyValues)

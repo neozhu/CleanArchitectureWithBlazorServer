@@ -75,7 +75,7 @@
     }
     async Task Delete()
     {
-        var contentText = string.Format(ConstantString.DeleteConfirmation, _model.Name);
+        var contentText = string.Format(ConstantString.DeleteConfirmation, _model!.Name);
         var command = new DeleteContactCommand(new int[] { _model.Id });
         await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText, async () =>
         {

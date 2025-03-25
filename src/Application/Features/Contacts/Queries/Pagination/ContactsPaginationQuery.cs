@@ -12,7 +12,7 @@
 //       options. The result is cached to enhance performance for repeated queries.
 // </auto-generated>
 //------------------------------------------------------------------------------
-
+#nullable enable
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;

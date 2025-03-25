@@ -13,7 +13,7 @@
 // Delete multiple Contacts by specifying their IDs.
 // Domain events are raised for each deletion to support cache invalidation.
 
-
+#nullable enable
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 
 
