@@ -7,10 +7,8 @@
 // Docs: https://docs.cleanarchitectureblazor.com/features/contact
 // </auto-generated>
 //------------------------------------------------------------------------------
-//
-// Usage:
-// Use UpdateContactCommand to update an existing contact. If found, changes are applied, cache is invalidated, and ContactUpdatedEvent is raised.
-
+#nullable enable
+#nullable disable warnings
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 

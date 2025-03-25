@@ -12,7 +12,7 @@
 //       to optimize performance for repeated retrievals of the same contact.
 // </auto-generated>
 //------------------------------------------------------------------------------
-
+#nullable enable
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;

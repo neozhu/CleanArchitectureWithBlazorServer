@@ -18,7 +18,7 @@
                 @if (string.IsNullOrEmpty(user.ProfilePictureDataUrl))
                 {
                     <MudAvatar title="@user.UserName">
-                        @user.UserName.First()
+                        @user?.UserName?.First()
                     </MudAvatar>
                 }
                 else

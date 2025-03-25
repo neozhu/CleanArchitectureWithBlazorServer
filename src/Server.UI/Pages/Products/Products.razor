@@ -362,7 +362,7 @@
         var result = await Mediator.Send(request);
         if (result.Succeeded)
         {
-            await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.xlsx", result.Data, "application/octet-stream");
+            await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.xlsx", result.Data!, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
         }
         else
@@ -394,7 +394,7 @@
         var result = await Mediator.Send(request);
         if (result.Succeeded)
         {
-            await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.pdf", result.Data, "application/octet-stream");
+            await BlazorDownloadFileService.DownloadFileAsync($"{L["Products"]}.pdf", result.Data!, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
         }
         else

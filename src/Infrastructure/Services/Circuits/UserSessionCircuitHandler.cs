@@ -88,8 +88,8 @@ public class UserSessionCircuitHandler : CircuitHandler,IDisposable
         var currentUserContextSetter = _serviceProvider.GetRequiredService<ICurrentUserContextSetter>();
         if (currentUserAccessor.SessionInfo != null)
         {
-            await userSessionTracker.RemoveAllSessions(currentUserAccessor.SessionInfo.UserId, cancellationToken);
-            await onlineUserTracker.Clear(currentUserAccessor.SessionInfo.UserId, cancellationToken);
+            await userSessionTracker.RemoveAllSessions(currentUserAccessor.SessionInfo.UserId??string.Empty, cancellationToken);
+            await onlineUserTracker.Clear(currentUserAccessor.SessionInfo.UserId ?? string.Empty, cancellationToken);
             usersStateContainer.Remove(circuit.Id);
         }
 

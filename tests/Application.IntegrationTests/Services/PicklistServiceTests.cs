@@ -19,12 +19,13 @@ public class PicklistServiceTests : TestBase
     }
 
     [Test]
-    public async Task ShouldLoadDataSource()
+    public void ShouldLoadDataSource()
     {
         var picklist = CreatePicklistService();
         picklist.Initialize();
         var count = picklist.DataSource.Count();
         Assert.Equals(4, count);
+  
     }
 
     [Test]
