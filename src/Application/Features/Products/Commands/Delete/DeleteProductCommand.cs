@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete;
 
-public class DeleteProductCommand : ICacheInvalidatorRequest<Result<int>>
+public class DeleteProductCommand : ICacheInvalidatorRequest<Result>
 {
     public DeleteProductCommand(int[] id)
     {
@@ -19,7 +19,7 @@ public class DeleteProductCommand : ICacheInvalidatorRequest<Result<int>>
 }
 
 public class DeleteProductCommandHandler :
-    IRequestHandler<DeleteProductCommand, Result<int>>
+    IRequestHandler<DeleteProductCommand, Result>
 {
     private readonly IApplicationDbContext _context;
 
@@ -30,7 +30,7 @@ public class DeleteProductCommandHandler :
         _context = context;
     }
 
-    public async Task<Result<int>> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
         var items = await _context.Products.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
@@ -39,7 +39,7 @@ public class DeleteProductCommandHandler :
             _context.Products.Remove(item);
         }
 
-        var result = await _context.SaveChangesAsync(cancellationToken);
-        return await Result<int>.SuccessAsync(result);
+        await _context.SaveChangesAsync(cancellationToken);
+        return await Result.SuccessAsync();
     }
 }

@@ -3,8 +3,8 @@
 public class
     ValidationExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse,
     TException>
-    where TRequest : IRequest<Result<int>>
-    where TResponse : Result<int>
+    where TRequest : IRequest<Result>
+    where TResponse : Result
     where TException : ValidationException
 {
 
@@ -12,7 +12,7 @@ public class
         CancellationToken cancellationToken)
     {
         state.SetHandled(
-            (TResponse)Result<int>.Failure(exception.Errors.Select(x => x.ErrorMessage).Distinct().ToArray()));
+            (TResponse)Result.Failure(exception.Errors.Select(x => x.ErrorMessage).Distinct().ToArray()));
         return Task.CompletedTask;
     }
 }
