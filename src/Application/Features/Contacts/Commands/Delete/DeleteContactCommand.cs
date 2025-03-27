@@ -19,7 +19,7 @@ using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Delete;
 
-public class DeleteContactCommand:  ICacheInvalidatorRequest<Result<int>>
+public class DeleteContactCommand:  ICacheInvalidatorRequest<Result>
 {
   public int[] Id {  get; }
   public string CacheKey => ContactCacheKey.GetAllCacheKey;
@@ -31,7 +31,7 @@ public class DeleteContactCommand:  ICacheInvalidatorRequest<Result<int>>
 }
 
 public class DeleteContactCommandHandler : 
-             IRequestHandler<DeleteContactCommand, Result<int>>
+             IRequestHandler<DeleteContactCommand, Result>
 
 {
     private readonly IApplicationDbContext _context;
@@ -40,7 +40,7 @@ public class DeleteContactCommandHandler :
     {
         _context = context;
     }
-    public async Task<Result<int>> Handle(DeleteContactCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteContactCommand request, CancellationToken cancellationToken)
     {
         var items = await _context.Contacts.Where(x=>request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
@@ -49,8 +49,8 @@ public class DeleteContactCommandHandler :
 			item.AddDomainEvent(new ContactDeletedEvent(item));
             _context.Contacts.Remove(item);
         }
-        var result = await _context.SaveChangesAsync(cancellationToken);
-        return await Result<int>.SuccessAsync(result);
+        await _context.SaveChangesAsync(cancellationToken);
+        return await Result.SuccessAsync();
     }
 
 }

@@ -46,15 +46,16 @@
     public string? Title { get; private set; }
     [Parameter]
     public int Id { get; set; }
-    private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: "/"),
-        new BreadcrumbItem("Contacts", href: "/pages/contacts")
-    };
+    private List<BreadcrumbItem>? _breadcrumbItems;
     private ContactDto? _model;
     protected override async Task OnInitializedAsync()
     {
         Title = L["Contact"];
+        _breadcrumbItems = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem(L["Home"], href: "/"),
+            new BreadcrumbItem(L["Contacts"], href: "/pages/contacts")
+        };
         var result = await Mediator.Send(new GetContactByIdQuery() { Id = Id });
         result.Map(data =>
         {

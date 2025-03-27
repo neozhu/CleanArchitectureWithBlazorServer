@@ -6,7 +6,7 @@ using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Tenants.Commands.Delete;
 
-public class DeleteTenantCommand : ICacheInvalidatorRequest<Result<int>>
+public class DeleteTenantCommand : ICacheInvalidatorRequest<Result>
 {
     public DeleteTenantCommand(string[] id)
     {
@@ -18,7 +18,7 @@ public class DeleteTenantCommand : ICacheInvalidatorRequest<Result<int>>
 }
 
 public class DeleteTenantCommandHandler :
-    IRequestHandler<DeleteTenantCommand, Result<int>>
+    IRequestHandler<DeleteTenantCommand, Result>
 
 {
     private readonly IApplicationDbContext _context;
@@ -33,13 +33,13 @@ public class DeleteTenantCommandHandler :
         _context = context;
     }
 
-    public async Task<Result<int>> Handle(DeleteTenantCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteTenantCommand request, CancellationToken cancellationToken)
     {
         var items = await _context.Tenants.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items) _context.Tenants.Remove(item);
 
-        var result = await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
         _tenantsService.Refresh();
-        return await Result<int>.SuccessAsync(result);
+        return await Result.SuccessAsync();
     }
 }

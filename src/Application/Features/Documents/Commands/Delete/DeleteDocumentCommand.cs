@@ -5,7 +5,7 @@ using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete;
 
-public class DeleteDocumentCommand : ICacheInvalidatorRequest<Result<int>>
+public class DeleteDocumentCommand : ICacheInvalidatorRequest<Result>
 {
     public DeleteDocumentCommand(int[] id)
     {
@@ -16,7 +16,7 @@ public class DeleteDocumentCommand : ICacheInvalidatorRequest<Result<int>>
     public IEnumerable<string>? Tags => DocumentCacheKey.Tags;
 }
 
-public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentCommand, Result<int>>
+public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentCommand, Result>
 
 {
     private readonly IApplicationDbContext _context;
@@ -28,7 +28,7 @@ public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentComman
         _context = context;
     }
 
-    public async Task<Result<int>> Handle(DeleteDocumentCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteDocumentCommand request, CancellationToken cancellationToken)
     {
         var items = await _context.Documents.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
@@ -37,7 +37,7 @@ public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentComman
             _context.Documents.Remove(item);
         }
 
-        var result = await _context.SaveChangesAsync(cancellationToken);
-        return await Result<int>.SuccessAsync(result);
+        await _context.SaveChangesAsync(cancellationToken);
+        return await Result.SuccessAsync();
     }
 }

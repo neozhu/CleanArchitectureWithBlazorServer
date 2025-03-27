@@ -3,8 +3,8 @@
 namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 
 public class DbExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
-    where TRequest : IRequest<Result<int>>
-    where TResponse : Result<int>
+    where TRequest : IRequest<Result>
+    where TResponse : Result
     where TException : DbUpdateException
 {
     private readonly ILogger _logger;
@@ -20,7 +20,7 @@ public class DbExceptionHandler<TRequest, TResponse, TException> : IRequestExcep
     public Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state,
         CancellationToken cancellationToken)
     {
-        state.SetHandled((TResponse)Result<int>.Failure(GetErrors(exception)));
+        state.SetHandled((TResponse)Result.Failure(GetErrors(exception)));
         return Task.CompletedTask;
     }
 

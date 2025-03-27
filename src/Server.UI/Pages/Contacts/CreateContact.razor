@@ -48,16 +48,17 @@
     public string? Title { get; private set; }
     MudForm? _contactForm;
     private bool _saving = false;
-    private List<BreadcrumbItem> _breadcrumbItems = new List<BreadcrumbItem>
-    {
-        new BreadcrumbItem("Home", href: "/"),
-        new BreadcrumbItem("Contacts", href: "/pages/contacts"),
-        new BreadcrumbItem("Create Contact", href:null, disabled:true)
-    };
+    private List<BreadcrumbItem>? _breadcrumbItems;
     private CreateContactCommand _model = new();
     protected override Task OnInitializedAsync()
     {
         Title = L["Create Contact"];
+        _breadcrumbItems = new List<BreadcrumbItem>
+        {
+            new BreadcrumbItem(L["Home"], href: "/"),
+            new BreadcrumbItem(L["Contacts"], href: "/pages/contacts"),
+            new BreadcrumbItem(L["Create Contact"], href:null, disabled:true)
+        };
         return Task.CompletedTask;
     }
     async Task OnSubmit()

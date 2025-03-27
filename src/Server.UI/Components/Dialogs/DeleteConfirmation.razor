@@ -21,22 +21,20 @@
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 
     [EditorRequired][Parameter] public string? ContentText { get; set; }
-    [EditorRequired][Parameter] public IRequest<Result<int>> Command { get; set; } = default!;
+    [EditorRequired][Parameter] public IRequest<Result> Command { get; set; } = default!;
 
     private async Task Submit()
     {
         var result = await Mediator.Send(Command);
-        await result.MatchAsync(
-          data=>
+        result.Match(
+          ()=>
           {
               Snackbar.Add($"{ConstantString.DeleteSuccess}", Severity.Info);
               MudDialog.Close(DialogResult.Ok(true));
-              return Task.FromResult(0);
           },
           errors =>
           {
               Snackbar.Add($"{errors}", Severity.Error);
-              return Task.FromResult(0);
           }
         );
         

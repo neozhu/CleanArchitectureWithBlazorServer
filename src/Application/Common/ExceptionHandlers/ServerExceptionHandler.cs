@@ -2,8 +2,8 @@
 
 public class
     ServerExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
-    where TRequest : IRequest<Result<int>>
-    where TResponse : Result<int>
+    where TRequest : IRequest<Result>
+    where TResponse : Result
     where TException : ServerException
 {
     private readonly ILogger<ServerExceptionHandler<TRequest, TResponse, TException>> _logger;
@@ -16,7 +16,7 @@ public class
     public Task Handle(TRequest request, TException exception, RequestExceptionHandlerState<TResponse> state,
         CancellationToken cancellationToken)
     {
-        state.SetHandled((TResponse)Result<int>.Failure(exception.Message));
+        state.SetHandled((TResponse)Result.Failure(exception.Message));
         _logger.LogError(exception, exception.Message);
         return Task.CompletedTask;
     }
