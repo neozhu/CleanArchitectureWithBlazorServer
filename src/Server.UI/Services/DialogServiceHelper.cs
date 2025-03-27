@@ -29,7 +29,7 @@ public class DialogServiceHelper
     /// <param name="onCancel">The action to perform on cancellation (optional).</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task ShowDeleteConfirmationDialogAsync(
-        IRequest<Result<int>> command,
+        IRequest<Result> command,
         string title,
         string contentText,
         Func<Task> onConfirm,
