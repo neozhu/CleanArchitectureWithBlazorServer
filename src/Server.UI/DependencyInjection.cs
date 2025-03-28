@@ -1,6 +1,8 @@
 ﻿using System.Net.Http.Headers;
+using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
+using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Services;
 using CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
@@ -9,13 +11,12 @@ using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using QuestPDF;
 using QuestPDF.Infrastructure;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
-using CleanArchitecture.Blazor.Server.UI.Middlewares;
-using CleanArchitecture.Blazor.Application;
 
 
 namespace CleanArchitecture.Blazor.Server.UI;
@@ -66,8 +67,10 @@ public static class DependencyInjection
         services.AddScoped<LocalizationCookiesMiddleware>()
             .Configure<RequestLocalizationOptions>(options =>
             {
+    
                 options.AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
                 options.AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
+                options.DefaultRequestCulture = new RequestCulture(LocalizationConstants.DefaultLanguageCode);
                 options.FallBackToParentUICultures = true;
             })
             .AddLocalization(options => options.ResourcesPath = LocalizationConstants.ResourcesPath);
@@ -157,9 +160,18 @@ public static class DependencyInjection
         });
 
         var localizationOptions = new RequestLocalizationOptions()
-            .SetDefaultCulture(LocalizationConstants.SupportedLanguages.Select(x => x.Code).First())
+            .SetDefaultCulture(LocalizationConstants.DefaultLanguageCode)
             .AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray())
             .AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code).ToArray());
+
+        // Remove AcceptLanguageHeaderRequestCultureProvider to prevent the browser's Accept-Language header from taking effect
+        var acceptLanguageProvider = localizationOptions.RequestCultureProviders
+            .OfType<AcceptLanguageHeaderRequestCultureProvider>()
+            .FirstOrDefault();
+        if (acceptLanguageProvider != null)
+        {
+            localizationOptions.RequestCultureProviders.Remove(acceptLanguageProvider);
+        }
         app.UseRequestLocalization(localizationOptions);
         app.UseMiddleware<LocalizationCookiesMiddleware>();
         app.UseExceptionHandler();
