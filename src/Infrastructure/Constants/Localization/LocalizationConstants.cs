@@ -6,6 +6,11 @@ namespace CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 public static class LocalizationConstants
 {
     public const string ResourcesPath = "Resources";
+    /// <summary>
+    /// Default language code. Set to English (en-US). 
+    /// Change to "zh-CN" for Chinese or other codes from SupportedLanguages.
+    /// </summary>
+    public const string DefaultLanguageCode = "en-US";
 
     public static readonly LanguageCode[] SupportedLanguages =
     {
