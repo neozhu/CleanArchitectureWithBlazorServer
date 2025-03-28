@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   blazorserverapp:
-    image: blazordevlab/cleanarchitectureblazorserver:1.2.5
+    image: blazordevlab/cleanarchitectureblazorserver:1.2.6
     environment:
       - UseInMemoryDatabase=${USE_IN_MEMORY_DATABASE}
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
