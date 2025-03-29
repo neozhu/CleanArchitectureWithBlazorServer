@@ -17,7 +17,7 @@ public class UserPreference
         "#2d4275",
         "#7928ca",
         "#4CAF50",
-        "#f7b955",
+        "#f97316",
         "#f33f33",
         "#ff0080"
     };
