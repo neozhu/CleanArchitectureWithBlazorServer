@@ -12,13 +12,28 @@ public static partial class Permissions
     [Description("Set permissions for contact operations.")]
     public static class Contacts
     {
+        [Description("Allows viewing contact details.")]
         public const string View = "Permissions.Contacts.View";
+
+        [Description("Allows creating new contact records.")]
         public const string Create = "Permissions.Contacts.Create";
+
+        [Description("Allows modifying existing contact details.")]
         public const string Edit = "Permissions.Contacts.Edit";
+
+        [Description("Allows deleting contact records.")]
         public const string Delete = "Permissions.Contacts.Delete";
+
+        [Description("Allows printing contact details.")]
         public const string Print = "Permissions.Contacts.Print";
+
+        [Description("Allows searching for contact records.")]
         public const string Search = "Permissions.Contacts.Search";
+
+        [Description("Allows exporting contact records.")]
         public const string Export = "Permissions.Contacts.Export";
+
+        [Description("Allows importing contact records.")]
         public const string Import = "Permissions.Contacts.Import";
     }
 }

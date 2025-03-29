@@ -1,6 +1,6 @@
 ﻿@inherits MudComponentBase
 
-@inject IStringLocalizer<Roles> L
+@inject IStringLocalizer<PermissionsDrawer> L
 
 <MudDrawer Open="@Open"
 Width="400px"
@@ -8,7 +8,7 @@ Height="100vh"
 OpenChanged="@(s => OnOpenChanged.InvokeAsync(s))"
 Anchor="Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
     <MudDrawerHeader>
-        <MudText Typo="Typo.h6">Set Permissions</MudText>
+        <MudText Typo="Typo.h5">@L["Set Permissions"]</MudText>
     </MudDrawerHeader>
     <MudStack AlignItems="AlignItems.Stretch" Class="px-5">
         <MudTextField @bind-Value="Keyword" Label="Search"
@@ -29,13 +29,13 @@ Anchor="Anchor.End" Elevation="1" Variant="@DrawerVariant.Temporary">
                             <MudText Typo="Typo.body1">
                                 @L[group]
                             </MudText>
-                            <MudText Typo="Typo.body2">
+                            <MudText Typo="Typo.body2" Class="mud-text-secondary">
                                 @(L[Permissions.First(x => x.Group == group).Description])
                             </MudText>
                         </MudStack>
                     </CardHeaderContent>
                     <CardHeaderActions>
-                        <MudTooltip Text="@L["Assign or Unassign all"]">
+                        <MudTooltip Text="@L["Assign / Unassign all permission set"]">
                             @if (Permissions.Any(x => x.Group == group && x.IsInherit))
                             {
                                 <MudIconButton Disabled="true" Icon="@Icons.Material.Filled.AutoFixHigh" Color="Color.Default" />

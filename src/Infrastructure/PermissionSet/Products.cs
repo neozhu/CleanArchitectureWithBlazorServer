@@ -8,29 +8,28 @@ public static partial class Permissions
     [Description("Set permissions for product operations.")]
     public static class Products
     {
-
         [Description("Allows viewing product details.")]
         public const string View = "Permissions.Products.View";
 
-        [Description("Allows creating product details.")]
+        [Description("Allows creating new product records.")]
         public const string Create = "Permissions.Products.Create";
 
-        [Description("Allows editing product details.")]
+        [Description("Allows modifying existing product details.")]
         public const string Edit = "Permissions.Products.Edit";
 
-        [Description("Allows deleting product details.")]
+        [Description("Allows deleting product records.")]
         public const string Delete = "Permissions.Products.Delete";
 
-        [Description("Allows print product details.")]
+        [Description("Allows printing product details.")]
         public const string Print = "Permissions.Products.Print";
 
-        [Description("Allows searching product details.")]
+        [Description("Allows searching for product records.")]
         public const string Search = "Permissions.Products.Search";
 
-        [Description("Allows exporting product details.")]
-        public const string Export = "Permissions.Products.Export"; 
+        [Description("Allows exporting product records.")]
+        public const string Export = "Permissions.Products.Export";
 
-        [Description("Allows importing product details.")]
+        [Description("Allows importing product records.")]
         public const string Import = "Permissions.Products.Import";
     }
 }
