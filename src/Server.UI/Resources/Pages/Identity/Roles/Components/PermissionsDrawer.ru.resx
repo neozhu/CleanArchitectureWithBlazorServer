@@ -378,4 +378,55 @@
   <data name="Set permissions for contact operations." xml:space="preserve">
     <value>Установите разрешения для операций документа.</value>
   </data>
+  <data name="ManageNavigation" xml:space="preserve">
+    <value>Управление навигацией</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Просмотр</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Создание</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Редактирование</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Удаление</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Печать</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Экспорт</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Импорт</value>
+  </data>
+  <data name="ViewOnlineStatus" xml:space="preserve">
+    <value>Просмотр статуса «В сети»</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Загрузка</value>
+  </data>
+  <data name="ManageRoles" xml:space="preserve">
+    <value>Управление ролями</value>
+  </data>
+  <data name="RestPassword" xml:space="preserve">
+    <value>Пароль Rest</value>
+  </data>
+  <data name="SendRestPasswordMail" xml:space="preserve">
+    <value>Отправить письмо с паролем Rest</value>
+  </data>
+  <data name="ManagePermissions" xml:space="preserve">
+    <value>Управление разрешениями</value>
+  </data>
+  <data name="Deactivation" xml:space="preserve">
+    <value>Деактивация</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>Очистка</value>
+  </data>
 </root>

@@ -381,4 +381,55 @@
   <data name="Set permissions for contact operations." xml:space="preserve">
     <value>문서 작업에 대한 권한을 설정합니다.</value>
   </data>
+  <data name="ManageNavigation" xml:space="preserve">
+    <value>탐색 관리</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>보기</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>만들기</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>편집</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>인쇄</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>검색</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>내보내기</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>가져오기</value>
+  </data>
+  <data name="ViewOnlineStatus" xml:space="preserve">
+    <value>온라인 상태 보기</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>다운로드</value>
+  </data>
+  <data name="ManageRoles" xml:space="preserve">
+    <value>역할 관리</value>
+  </data>
+  <data name="RestPassword" xml:space="preserve">
+    <value>비밀번호 재설정</value>
+  </data>
+  <data name="SendRestPasswordMail" xml:space="preserve">
+    <value>비밀번호 재설정 메일 보내기</value>
+  </data>
+  <data name="ManagePermissions" xml:space="preserve">
+    <value>권한 관리</value>
+  </data>
+  <data name="Deactivation" xml:space="preserve">
+    <value>비활성화</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>제거</value>
+  </data>
 </root>

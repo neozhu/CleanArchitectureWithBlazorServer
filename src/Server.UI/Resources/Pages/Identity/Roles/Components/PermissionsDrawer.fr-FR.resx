@@ -381,4 +381,55 @@
   <data name="Set permissions for contact operations." xml:space="preserve">
     <value>Définir les autorisations pour les opérations de contact.</value>
   </data>
+  <data name="ManageNavigation" xml:space="preserve">
+    <value>Gérer la navigation</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Afficher</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Créer</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Imprimer</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Exporter</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Importer</value>
+  </data>
+  <data name="ViewOnlineStatus" xml:space="preserve">
+    <value>Afficher l'état de connexion</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Télécharger</value>
+  </data>
+  <data name="ManageRoles" xml:space="preserve">
+    <value>Gérer les rôles</value>
+  </data>
+  <data name="RestPassword" xml:space="preserve">
+    <value>Mot de passe REST</value>
+  </data>
+  <data name="SendRestPasswordMail" xml:space="preserve">
+    <value>Envoyer un e-mail de mot de passe REST</value>
+  </data>
+  <data name="ManagePermissions" xml:space="preserve">
+    <value>Gérer les autorisations</value>
+  </data>
+  <data name="Deactivation" xml:space="preserve">
+    <value>Désactivation</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>Purger</value>
+  </data>
 </root>

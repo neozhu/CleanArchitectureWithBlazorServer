@@ -381,4 +381,55 @@
   <data name="Set permissions for contact operations." xml:space="preserve">
     <value>កំណត់សិទ្ធិសម្រាប់ប្រតិបត្តិការទំនាក់ទំនង។</value>
   </data>
+  <data name="ManageNavigation" xml:space="preserve">
+    <value>គ្រប់គ្រងការរុករក</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>មើល</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>បង្កើត</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>កែសម្រួល</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>លុប</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>បោះពុម្ព</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>ស្វែងរក</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>នាំចេញ</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>នាំចូល</value>
+  </data>
+  <data name="ViewOnlineStatus" xml:space="preserve">
+    <value>មើលស្ថានភាពលើអ៊ីនធឺណិត</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>ទាញយក</value>
+  </data>
+  <data name="ManageRoles" xml:space="preserve">
+    <value>គ្រប់គ្រងតួនាទី</value>
+  </data>
+  <data name="RestPassword" xml:space="preserve">
+    <value>កំណត់ពាក្យសម្ងាត់ឡើងវិញ</value>
+  </data>
+  <data name="SendRestPasswordMail" xml:space="preserve">
+    <value>ផ្ញើ​សំបុត្រ​លេខ​សម្ងាត់​សម្រាក</value>
+  </data>
+  <data name="ManagePermissions" xml:space="preserve">
+    <value>គ្រប់គ្រងការអនុញ្ញាត</value>
+  </data>
+  <data name="Deactivation" xml:space="preserve">
+    <value>ការបិទដំណើរការ</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>បោសសំអាត</value>
+  </data>
 </root>

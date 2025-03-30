@@ -381,4 +381,55 @@
   <data name="Set permissions for contact operations." xml:space="preserve">
     <value>Set permissions for contact operations.</value>
   </data>
+  <data name="View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>Purge</value>
+  </data>
+  <data name="ManageRoles" xml:space="preserve">
+    <value>Manage Roles</value>
+  </data>
+  <data name="RestPassword" xml:space="preserve">
+    <value>Rest Password</value>
+  </data>
+  <data name="SendRestPasswordMail" xml:space="preserve">
+    <value>Send Rest Password Mail</value>
+  </data>
+  <data name="ManagePermissions" xml:space="preserve">
+    <value>Manage Permissions</value>
+  </data>
+  <data name="Deactivation" xml:space="preserve">
+    <value>Deactivation</value>
+  </data>
+  <data name="ViewOnlineStatus" xml:space="preserve">
+    <value>View Online Status</value>
+  </data>
+  <data name="ManageNavigation" xml:space="preserve">
+    <value>Manage Navigation</value>
+  </data>
 </root>

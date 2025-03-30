@@ -381,4 +381,55 @@
   <data name="Set permissions for contact operations." xml:space="preserve">
     <value>设置联系人操作权限。</value>
   </data>
+  <data name="ManageNavigation" xml:space="preserve">
+    <value>管理导航</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>查看</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>创建</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>打印</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>导入</value>
+  </data>
+  <data name="ViewOnlineStatus" xml:space="preserve">
+    <value>查看在线状态</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="ManageRoles" xml:space="preserve">
+    <value>管理角色</value>
+  </data>
+  <data name="RestPassword" xml:space="preserve">
+    <value>重置密码</value>
+  </data>
+  <data name="SendRestPasswordMail" xml:space="preserve">
+    <value>发送重置密码邮件</value>
+  </data>
+  <data name="ManagePermissions" xml:space="preserve">
+    <value>管理权限</value>
+  </data>
+  <data name="Deactivation" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>清除</value>
+  </data>
 </root>

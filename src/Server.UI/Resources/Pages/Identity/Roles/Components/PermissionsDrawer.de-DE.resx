@@ -381,4 +381,55 @@
   <data name="Set permissions for contact operations." xml:space="preserve">
     <value>Berechtigungen für Kontakt-Operationen festlegen.</value>
   </data>
+  <data name="ManageNavigation" xml:space="preserve">
+    <value>Navigation verwalten</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Anzeigen</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Erstellen</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Drucken</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Suchen</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Exportieren</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Importieren</value>
+  </data>
+  <data name="ViewOnlineStatus" xml:space="preserve">
+    <value>Online-Status anzeigen</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Herunterladen</value>
+  </data>
+  <data name="ManageRoles" xml:space="preserve">
+    <value>Rollen verwalten</value>
+  </data>
+  <data name="RestPassword" xml:space="preserve">
+    <value>Rest-Passwort</value>
+  </data>
+  <data name="SendRestPasswordMail" xml:space="preserve">
+    <value>Rest-Passwort-E-Mail senden</value>
+  </data>
+  <data name="ManagePermissions" xml:space="preserve">
+    <value>Berechtigungen verwalten</value>
+  </data>
+  <data name="Deactivation" xml:space="preserve">
+    <value>Deaktivierung</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
 </root>

@@ -381,4 +381,55 @@
   <data name="Set permissions for contact operations." xml:space="preserve">
     <value>連絡先操作の権限を設定します。</value>
   </data>
+  <data name="ManageNavigation" xml:space="preserve">
+    <value>ナビゲーションの管理</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>表示</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>作成</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>編集</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>印刷</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>検索</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>エクスポート</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>インポート</value>
+  </data>
+  <data name="ViewOnlineStatus" xml:space="preserve">
+    <value>オンライン ステータスの表示</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>ダウンロード</value>
+  </data>
+  <data name="ManageRoles" xml:space="preserve">
+    <value>ロールの管理</value>
+  </data>
+  <data name="RestPassword" xml:space="preserve">
+    <value>REST パスワード</value>
+  </data>
+  <data name="SendRestPasswordMail" xml:space="preserve">
+    <value>REST パスワードのメール送信</value>
+  </data>
+  <data name="ManagePermissions" xml:space="preserve">
+    <value>権限の管理</value>
+  </data>
+  <data name="Deactivation" xml:space="preserve">
+    <value>無効化</value>
+  </data>
+  <data name="Purge" xml:space="preserve">
+    <value>消去</value>
+  </data>
 </root>
