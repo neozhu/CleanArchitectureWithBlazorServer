@@ -10,6 +10,9 @@ This repository hosts a Blazor Server application designed using Clean Architect
 
 ## Explore the Live Demo
 
+Explore the application's features and design through screenshots and a video walkthrough.
+[![Everything Is AWESOME](doc/blazorstudio.png)](https://www.youtube.com/watch?v=hCsHSNAs-70 "Everything Is AWESOME")
+
 Experience the application in action in Blazor Server mode by visiting:
 - Home Server: [architecture.blazors.app:8443](https://architecture.blazors.app:8443/)
 - MS SQL Database: [architecture.blazorserver.com](https://architecture.blazorserver.com/)
@@ -35,10 +38,6 @@ Here are some projects that have been developed based on this Clean Architecture
 
 
 
-## Visual Insights
-
-Explore the application's features and design through screenshots and a video walkthrough.
-[![Everything Is AWESOME](doc/logo.png)](https://www.youtube.com/watch?v=hCsHSNAs-70 "Everything Is AWESOME")
 
 ## Development Setup
 
