@@ -17,11 +17,11 @@
     <ItemGroup>
         <PackageReference Include="Hangfire.AspNetCore" Version="1.8.18" />
         <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.4" />
         <PackageReference Include="MudBlazor" Version="8.5.1" />
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="6.0.1" />
         <PackageReference Include="Blazor-ApexCharts" Version="5.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.3">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
