@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using ActualLab.Fusion.Blazor;
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Server.UI.Hubs;

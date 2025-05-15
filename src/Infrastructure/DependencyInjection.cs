@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
+using ActualLab.Fusion.Blazor;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 public static class DependencyInjection
@@ -354,6 +355,7 @@ public static class DependencyInjection
     private static void AddFusionService(this IServiceCollection services)
     {
         var fusion = services.AddFusion();
+        fusion.AddBlazor();
         fusion.AddService<IUserSessionTracker, UserSessionTracker>();
         fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
     }
