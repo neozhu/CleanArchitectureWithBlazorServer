@@ -16,13 +16,14 @@ using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
-using CleanArchitecture.Blazor.Infrastructure.Services.PaddleOCR;
+using CleanArchitecture.Blazor.Infrastructure.Services.Gemini;
 using FluentEmail.MailKitSmtp;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
+using ActualLab.Fusion.Blazor;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 public static class DependencyInjection
@@ -354,6 +355,7 @@ public static class DependencyInjection
     private static void AddFusionService(this IServiceCollection services)
     {
         var fusion = services.AddFusion();
+        fusion.AddBlazor();
         fusion.AddService<IUserSessionTracker, UserSessionTracker>();
         fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
     }
