@@ -94,7 +94,8 @@ public static class DependencyInjection
 
         services.AddHttpClient("ocr", c =>
         {
-            c.BaseAddress = new Uri("https://paddleocr.blazorserver.com/ocr/predict-by-url");
+            var gemini_api_key = config["AI:GEMINI_API_KEY"];
+            c.BaseAddress = new Uri($"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent?key={gemini_api_key}");
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
         services.AddScoped<LocalTimeOffset>();
