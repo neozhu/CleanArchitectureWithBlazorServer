@@ -8,8 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		CleanArchitecture.Blazor.nuspec = CleanArchitecture.Blazor.nuspec
-		README.md = README.md
 		Dockerfile = Dockerfile
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{21DC0B96-ED87-4130-BA8D-E8CF73903344}"

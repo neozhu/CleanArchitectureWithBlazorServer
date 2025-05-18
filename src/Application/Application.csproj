@@ -21,11 +21,11 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.5" />
         <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.5" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="Hangfire.Core" Version="1.8.18" />
+        <PackageReference Include="Hangfire.Core" Version="1.8.20" />
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.2.0" />
-           <PackageReference Include="ActualLab.Fusion" Version="10.2.11" />
-        <PackageReference Include="ActualLab.Fusion.Blazor" Version="10.2.11" />
-        <PackageReference Include="ActualLab.Generators" Version="10.2.11">
+           <PackageReference Include="ActualLab.Fusion" Version="10.2.16" />
+        <PackageReference Include="ActualLab.Fusion.Blazor" Version="10.2.16" />
+        <PackageReference Include="ActualLab.Generators" Version="10.2.16">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
