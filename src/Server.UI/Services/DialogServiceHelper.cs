@@ -1,5 +1,7 @@
-﻿using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
+using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
+using Microsoft.AspNetCore.Components;
 using MediatR;
+using MudBlazor;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 
@@ -18,6 +20,39 @@ public class DialogServiceHelper
     {
         _dialogService = dialogService;
     }
+    
+    /// <summary>
+    /// Shows a form dialog with the specified model and handles actions on completion.
+    /// </summary>
+    /// <typeparam name="TDialog">The type of dialog component to show.</typeparam>
+    /// <typeparam name="TModel">The type of model to pass to the dialog.</typeparam>
+    /// <param name="title">The title of the dialog.</param>
+    /// <param name="model">The model to pass to the dialog.</param>
+    /// <param name="onDialogResult">Action to perform when dialog returns a non-cancelled result.</param>
+    /// <param name="parameterName">The name of the parameter in the dialog component (default is "_model").</param>
+    /// <param name="options">Dialog options (optional).</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task ShowFormDialogAsync<TDialog, TModel>(
+        string title,
+        TModel model,
+        Func<Task> onDialogResult,
+        string parameterName = "_model",
+        DialogOptions? options = null) where TDialog : ComponentBase
+    {
+        var parameters = new DialogParameters
+        {
+            { parameterName, model }
+        };
+
+        var dialogOptions = options ?? new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var dialog = await _dialogService.ShowAsync<TDialog>(title, parameters, dialogOptions);
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            await onDialogResult();
+        }
+    }
 
     /// <summary>
     /// Shows a delete confirmation dialog.
@@ -29,7 +64,7 @@ public class DialogServiceHelper
     /// <param name="onCancel">The action to perform on cancellation (optional).</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task ShowDeleteConfirmationDialogAsync(
-        IRequest<Result> command,
+        object command,
         string title,
         string contentText,
         Func<Task> onConfirm,

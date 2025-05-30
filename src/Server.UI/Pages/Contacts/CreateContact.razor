@@ -46,7 +46,7 @@
 
 @code {
     public string? Title { get; private set; }
-    MudForm? _contactForm;
+    MudForm _contactForm=new();
     private bool _saving = false;
     private List<BreadcrumbItem>? _breadcrumbItems;
     private CreateContactCommand _model = new();
@@ -66,8 +66,8 @@
         try
         {
             _saving = true;
-            await _contactForm!.Validate().ConfigureAwait(false);
-            if (!_contactForm!.IsValid)
+            await _contactForm.Validate().ConfigureAwait(false);
+            if (!_contactForm.IsValid)
                 return;
             var result = await Mediator.Send(_model);
             result.Match(

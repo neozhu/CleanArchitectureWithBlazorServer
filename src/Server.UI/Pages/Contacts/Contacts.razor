@@ -17,19 +17,19 @@
 <PageTitle>@Title</PageTitle>
 
 <MudDataGrid ServerData="@(ServerReload)"
-                  FixedHeader="true"
-                  FixedFooter="false"
-                  Virtualize="false"
-                  @bind-RowsPerPage="_defaultPageSize"
-                  Loading="@_loading"
-                  MultiSelection="true"
-                  T="ContactDto"
-                  SelectOnRowClick="false"
-                  RowClick="@(s=>OnDataGridRowClick(s.Item))"
-                  @bind-SelectedItems="_selectedContacts"
-                  Hover="true" @ref="_contactsGrid">
-            <ToolBarContent>
-                 <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
+             FixedHeader="true"
+             FixedFooter="false"
+             Virtualize="false"
+             @bind-RowsPerPage="_defaultPageSize"
+             Loading="@_loading"
+             MultiSelection="true"
+             T="ContactDto"
+             SelectOnRowClick="false"
+             RowClick="@(s => OnDataGridRowClick(s.Item))"
+             @bind-SelectedItems="_selectedContacts"
+             Hover="true" @ref="_contactsGrid">
+    <ToolBarContent>
+        <MudStack Row Spacing="0" Class="flex-grow-1" Justify="Justify.SpaceBetween">
             <MudStack Row AlignItems="AlignItems.Start">
                 <MudIcon Icon="@Icons.Material.Filled.Window" Size="Size.Large" />
                 <MudStack Spacing="0">
@@ -97,61 +97,61 @@
                 </MudStack>
             </MudStack>
         </MudStack>
-            </ToolBarContent>
-            <Columns>
-                <SelectColumn ShowInFooter="false"></SelectColumn>
-                <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
-                    <CellTemplate>
-                        @if (_accessRights.Edit || _accessRights.Delete)
+    </ToolBarContent>
+    <Columns>
+        <SelectColumn ShowInFooter="false"></SelectColumn>
+        <TemplateColumn HeaderStyle="width:60px" Title="@ConstantString.Actions" Sortable="false">
+            <CellTemplate>
+                @if (_accessRights.Edit || _accessRights.Delete)
+                {
+                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
+                             Dense="true"
+                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                        @if (_accessRights.Edit)
                         {
-                            <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
-                                     Dense="true"
-                                     EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
-                                @if (_accessRights.Edit)
-                                {
-                                    <MudMenuItem OnClick="@(()=>OnEditContact(context.Item))">@ConstantString.Edit</MudMenuItem>
-                                }
-                                @if (_accessRights.Delete)
-                                {
-                                    <MudMenuItem OnClick="@(()=>OnDeleteContact(context.Item))">@ConstantString.Delete</MudMenuItem>
-                                }
-                            </MudMenu>
+                            <MudMenuItem OnClick="@(() => OnEditContact(context.Item))">@ConstantString.Edit</MudMenuItem>
                         }
-                        else
+                        @if (_accessRights.Delete)
                         {
-                            <MudIconButton Variant="Variant.Filled"  
-                                       Disabled="true"
-                                       Icon="@Icons.Material.Filled.DoNotTouch"
-                                       Size="Size.Small"
-                                       Color="Color.Surface">
-                                @ConstantString.NoAllowed
-                            </MudIconButton>
+                            <MudMenuItem OnClick="@(() => OnDeleteContact(context.Item))">@ConstantString.Delete</MudMenuItem>
                         }
-                    </CellTemplate>
-                </TemplateColumn>
-                @*TODO: Define the fields that should be displayed in data table*@
-                <PropertyColumn Property="x => x.Name" Title="@L[_contactDto.GetMemberDescription(x=>x.Name)]"> 
-   <CellTemplate>
-      <div class="d-flex flex-column">
-        <MudText Typo="Typo.body1">@context.Item.Name</MudText>
-        <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
-     </div>
-    </CellTemplate>
-</PropertyColumn>
-                <PropertyColumn Property="x => x.Email" Title="@L[_contactDto.GetMemberDescription(x=>x.Email)]" />
-                <PropertyColumn Property="x => x.PhoneNumber" Title="@L[_contactDto.GetMemberDescription(x=>x.PhoneNumber)]" />
-                <PropertyColumn Property="x => x.Country" Title="@L[_contactDto.GetMemberDescription(x=>x.Country)]" />
+                    </MudMenu>
+                }
+                else
+                {
+                    <MudIconButton Variant="Variant.Filled"
+                                   Disabled="true"
+                                   Icon="@Icons.Material.Filled.DoNotTouch"
+                                   Size="Size.Small"
+                                   Color="Color.Surface">
+                        @ConstantString.NoAllowed
+                    </MudIconButton>
+                }
+            </CellTemplate>
+        </TemplateColumn>
+        @*TODO: Define the fields that should be displayed in data table*@
+        <PropertyColumn Property="x => x.Name" Title="@L[_contactDto.GetMemberDescription(x => x.Name)]">
+            <CellTemplate>
+                <div class="d-flex flex-column">
+                    <MudText Typo="Typo.body1">@context.Item.Name</MudText>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@context.Item.Description</MudText>
+                </div>
+            </CellTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.Email" Title="@L[_contactDto.GetMemberDescription(x => x.Email)]" />
+        <PropertyColumn Property="x => x.PhoneNumber" Title="@L[_contactDto.GetMemberDescription(x => x.PhoneNumber)]" />
+        <PropertyColumn Property="x => x.Country" Title="@L[_contactDto.GetMemberDescription(x => x.Country)]" />
 
-            </Columns>
-            <NoRecordsContent>
-                <MudText>@ConstantString.NoRecords</MudText>
-            </NoRecordsContent>
-            <LoadingContent>
-                <MudText>@ConstantString.Loading</MudText>
-            </LoadingContent>
-            <PagerContent>
-                <MudDataGridPager PageSizeOptions="@(new int[]{10,15,30,50,100,500,1000})" />
-            </PagerContent>
+    </Columns>
+    <NoRecordsContent>
+        <MudText>@ConstantString.NoRecords</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>@ConstantString.Loading</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudDataGridPager PageSizeOptions="@(new int[] { 10, 15, 30, 50, 100, 500, 1000 })" />
+    </PagerContent>
 </MudDataGrid>
 
 
@@ -177,7 +177,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L[_contactDto.GetClassDescription()];
-        _accessRights = await PermissionService.GetAccessRightsAsync<ContactsAccessRights>(); 
+        _accessRights = await PermissionService.GetAccessRightsAsync<ContactsAccessRights>();
     }
 
     private async Task<GridData<ContactDto>> ServerReload(GridState<ContactDto> state)
@@ -217,47 +217,41 @@
     {
         ContactCacheKey.Refresh();
         _selectedContacts.Clear();
-        _contactsQuery.Keyword  = string.Empty;
+        _contactsQuery.Keyword = string.Empty;
         await _contactsGrid.ReloadServerData();
     }
-    private async Task ShowEditFormDialog(string title, AddEditContactCommand command)
+    private Task ShowEditFormDialog(string title, AddEditContactCommand command)
     {
-        var parameters = new DialogParameters<ContactFormDialog>
+        return DialogServiceHelper.ShowFormDialogAsync<ContactFormDialog, AddEditContactCommand>(
+            title,
+            command,
+            async () =>
             {
-                { x=>x._model,command },
-            };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = await DialogService.ShowAsync<ContactFormDialog>(title, parameters, options);
-        var state = await dialog.Result;
-
-        if (state != null && !state.Canceled)
-        {
-            await _contactsGrid.ReloadServerData();
-            _selectedContacts.Clear();
-        }
+                await _contactsGrid.ReloadServerData();
+                _selectedContacts.Clear();
+            });
     }
     private void OnDataGridRowClick(ContactDto dto)
     {
         Navigation.NavigateTo($"/pages/contacts/view/{dto.Id}");
     }
-    private async Task OnCreate()
+    private Task OnCreate()
     {
         var command = new AddEditContactCommand();
-        await ShowEditFormDialog(L["New Contact"], command);
+        return ShowEditFormDialog(L["New Contact"], command);
     }
-    private async Task OnCloneContact()
+    private Task OnCloneContact()
     {
         var dto = _selectedContacts.First();
         var command = new AddEditContactCommand()
         {
-                    Name = dto.Name, 
-        Description = dto.Description, 
-        Email = dto.Email, 
-        PhoneNumber = dto.PhoneNumber, 
-        Country = dto.Country, 
-
+            Name = dto.Name,
+            Description = dto.Description,
+            Email = dto.Email,
+            PhoneNumber = dto.PhoneNumber,
+            Country = dto.Country
         };
-        await ShowEditFormDialog(L["Clone Contact"], command);
+        return ShowEditFormDialog(L["Clone Contact"], command);
     }
     private Task OnEditContact(ContactDto dto)
     {
@@ -266,51 +260,49 @@
         Navigation.NavigateTo($"/pages/contacts/edit/{dto.Id}");
         return Task.CompletedTask;
     }
-
-    private async Task OnDeleteContact(ContactDto dto)
+    private Task OnDeleteContact(ContactDto dto)
     {
         var contentText = string.Format(ConstantString.DeleteConfirmation, dto.Name);
         var command = new DeleteContactCommand(new int[] { dto.Id });
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText,async () =>
-        {
-            await InvokeAsync(async () =>
-            {
-                await _contactsGrid.ReloadServerData();
-                _selectedContacts.Clear();
-            });
-        });
+        return DeleteContactsInternal(command, contentText);
     }
 
-    private async Task OnDeleteSelectedContacts()
+    private Task OnDeleteSelectedContacts()
     {
         var contentText = string.Format(ConstantString.DeleteConfirmWithSelected, _selectedContacts.Count);
         var command = new DeleteContactCommand(_selectedContacts.Select(x => x.Id).ToArray());
-        await DialogServiceHelper.ShowDeleteConfirmationDialogAsync(command, ConstantString.DeleteConfirmationTitle, contentText,async () =>
-        {
-            await InvokeAsync(async () =>
+        return DeleteContactsInternal(command, contentText);
+    }
+
+    private Task DeleteContactsInternal(DeleteContactCommand command, string contentText)
+    {
+        return DialogServiceHelper.ShowDeleteConfirmationDialogAsync(
+            command,
+            ConstantString.DeleteConfirmationTitle,
+            contentText,
+            async () =>
             {
                 await _contactsGrid.ReloadServerData();
                 _selectedContacts.Clear();
             });
-        });
     }
 
     private async Task OnExport()
     {
         _exporting = true;
         var request = new ExportContactsQuery()
-            {
-                Keyword = _contactsQuery.Keyword,
-                CurrentUser = UserProfile,
-                ListView = _contactsQuery.ListView,
-                OrderBy = _contactsGrid.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
-                SortDirection = (_contactsGrid.SortDefinitions.Values.FirstOrDefault()?.Descending ?? true) ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString()
-            };
+        {
+            Keyword = _contactsQuery.Keyword,
+            CurrentUser = UserProfile,
+            ListView = _contactsQuery.ListView,
+            OrderBy = _contactsGrid.SortDefinitions.Values.FirstOrDefault()?.SortBy ?? "Id",
+            SortDirection = (_contactsGrid.SortDefinitions.Values.FirstOrDefault()?.Descending ?? true) ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString()
+        };
         var result = await Mediator.Send(request);
         await result.MatchAsync(
             async data =>
             {
-                await BlazorDownloadFileService.DownloadFileAsync($"{L["Contacts"]}.xlsx", result.Data!, contentType:"application/octet-stream");
+                await BlazorDownloadFileService.DownloadFileAsync($"{L["Contacts"]}.xlsx", result.Data!, contentType: "application/octet-stream");
                 Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
             },
             errors =>
