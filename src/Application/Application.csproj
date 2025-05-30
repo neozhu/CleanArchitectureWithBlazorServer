@@ -23,9 +23,9 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Hangfire.Core" Version="1.8.20" />
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.2.0" />
-           <PackageReference Include="ActualLab.Fusion" Version="10.2.16" />
-        <PackageReference Include="ActualLab.Fusion.Blazor" Version="10.2.16" />
-        <PackageReference Include="ActualLab.Generators" Version="10.2.16">
+           <PackageReference Include="ActualLab.Fusion" Version="10.2.21" />
+        <PackageReference Include="ActualLab.Fusion.Blazor" Version="10.2.21" />
+        <PackageReference Include="ActualLab.Generators" Version="10.2.21">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
