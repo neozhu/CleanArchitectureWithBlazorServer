@@ -644,6 +644,8 @@
     {
         user.IsActive = true;
         user.LockoutEnd = null;
+        user.LastModified = DateTime.UtcNow;
+        user.LastModifiedBy = UserProfile?.UserId;
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {
@@ -661,6 +663,8 @@
     {
         user.IsActive = false;
         user.LockoutEnd = DateTimeOffset.MaxValue;
+        user.LastModified = DateTime.UtcNow;
+        user.LastModifiedBy = UserProfile?.UserId;
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {

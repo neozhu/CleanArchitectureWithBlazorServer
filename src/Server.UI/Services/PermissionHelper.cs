@@ -8,10 +8,36 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using ZiggyCreatures.Caching.Fusion;
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
+using Microsoft.EntityFrameworkCore;
  
-
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 
+/// <summary>
+/// Contains information about a permission module.
+/// </summary>
+public class ModuleInfo
+{
+    /// <summary>
+    /// Gets the display name of the module.
+    /// </summary>
+    public string DisplayName { get; }
+
+    /// <summary>
+    /// Gets the description of the module.
+    /// </summary>
+    public string Description { get; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ModuleInfo"/> class.
+    /// </summary>
+    /// <param name="displayName">Display name of the module.</param>
+    /// <param name="description">Description of the module.</param>
+    public ModuleInfo(string displayName, string description)
+    {
+        DisplayName = displayName;
+        Description = description;
+    }
+}
 
 /// <summary>
 /// Helper class for managing permissions.
@@ -22,6 +48,8 @@ public class PermissionHelper
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IFusionCache _fusionCache;
     private readonly TimeSpan _refreshInterval;
+    private const string ClaimsCacheKeyPrefix = "get-claims-by-";
+    private readonly IServiceScope _scope;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PermissionHelper"/> class.
@@ -30,13 +58,12 @@ public class PermissionHelper
     /// <param name="fusionCache">The fusion cache.</param>
     public PermissionHelper(IServiceScopeFactory scopeFactory, IFusionCache fusionCache)
     {
-        var scope = scopeFactory.CreateScope();
-        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        _scope = scopeFactory.CreateScope();
+        _userManager = _scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _roleManager = _scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         _fusionCache = fusionCache;
-        _refreshInterval = TimeSpan.FromSeconds(30);
-    }
-
+        _refreshInterval = TimeSpan.FromSeconds(30);    }
+    
     /// <summary>
     /// Gets all permissions for a user by user ID.
     /// </summary>
@@ -47,43 +74,52 @@ public class PermissionHelper
         var assignedClaims = await GetUserClaimsByUserId(userId).ConfigureAwait(false);
         var inheritClaims = await GetInheritedClaims(userId).ConfigureAwait(false);
         var combinedClaims = assignedClaims.Concat(inheritClaims).Distinct(new ClaimComparer()).ToList();
-        IList<PermissionModel> allPermissions = new List<PermissionModel>();
-        var modules = typeof(Permissions).GetNestedTypes();
-
-        foreach (var module in modules)
-        {
-            var moduleName = module.GetCustomAttributes<DisplayNameAttribute>().FirstOrDefault()?.DisplayName ?? string.Empty;
-            var moduleDescription = module.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
-            var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-
-            allPermissions = allPermissions.Concat(fields.Select(field =>
+        
+        return await BuildPermissionModels(
+            moduleType: typeof(Permissions),
+            claimsToCheck: combinedClaims,
+            additionalParams: new Dictionary<string, object>
             {
-                var claimValue = field.GetValue(null)?.ToString();
-                // Convert field name from PascalCase/CamelCase to space-separated words with first letter capitalized
-                var name = System.Text.RegularExpressions.Regex.Replace(field.Name, "(\\B[A-Z])", " $1").Trim().ToLower();
-                name = char.ToUpper(name[0]) + name.Substring(1); // Capitalize the first letter
-                var helpText = inheritClaims.Any(x => x.Value.Equals(claimValue))
-                ? "This permission is inherited and cannot be modified."
-                : field.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
-
+                { "userId", userId },
+                { "inheritClaims", inheritClaims }
+            },
+            permissionModelFactory: (moduleInfo, fieldInfo, claimsToCheck, additionalParams) =>
+            {
+                var claimValue = fieldInfo.GetValue(null)?.ToString();
+                var userId = (string)additionalParams["userId"];
+                var inheritClaims = (IList<Claim>)additionalParams["inheritClaims"];
+                
+                // Convert field name from PascalCase/CamelCase to space-separated words
+                var name = FormatFieldNameForDisplay(fieldInfo.Name);
+                
+                var isInherited = inheritClaims.Any(x => x.Value.Equals(claimValue));
+                var helpText = isInherited
+                    ? "This permission is inherited and cannot be modified."
+                    : fieldInfo.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
 
                 return new PermissionModel
                 {
                     UserId = userId,
                     ClaimValue = claimValue ?? string.Empty,
                     ClaimType = ApplicationClaimTypes.Permission,
-                    Group = moduleName,
-                    Name = name, // Assigning the field name
-                    HelpText = helpText, // Assigning the description as HelpText
-                    Description = moduleDescription,
-                    Assigned = combinedClaims.Any(x => x.Value.Equals(claimValue)),
-                    IsInherit = inheritClaims.Any(x => x.Value.Equals(claimValue))
-
+                    Group = moduleInfo.DisplayName,
+                    Name = name,
+                    HelpText = helpText,
+                    Description = moduleInfo.Description,
+                    Assigned = claimsToCheck.Any(x => x.Value.Equals(claimValue)),
+                    IsInherit = isInherited
                 };
-            }).Where(pm => !string.IsNullOrEmpty(pm.ClaimValue))).ToList();
-        }
-
-        return allPermissions;
+            }
+        );
+    }
+    
+    /// <summary>
+    /// Formats a field name from PascalCase to a more readable format with spaces
+    /// </summary>
+    private static string FormatFieldNameForDisplay(string fieldName)
+    {
+        var name = System.Text.RegularExpressions.Regex.Replace(fieldName, "(\\B[A-Z])", " $1").Trim().ToLower();
+        return char.ToUpper(name[0]) + name.Substring(1); // Capitalize the first letter
     }
 
     private async Task<List<Claim>> GetInheritedClaims(string userId)
@@ -117,7 +153,7 @@ public class PermissionHelper
     /// <returns>The list of claims.</returns>
     private async Task<IList<Claim>> GetUserClaimsByUserId(string userId)
     {
-        var key = $"get-claims-by-{userId}";
+        var key = $"{ClaimsCacheKeyPrefix}{userId}";
         return await _fusionCache.GetOrSetAsync(key, async _ =>
         {
             var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(false)
@@ -125,9 +161,8 @@ public class PermissionHelper
             var userClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
             return userClaims;
 
-        }, _refreshInterval).ConfigureAwait(false);
-    }
-
+        }, _refreshInterval).ConfigureAwait(false);    }
+    
     /// <summary>
     /// Gets all permissions for a role by role ID.
     /// </summary>
@@ -136,38 +171,37 @@ public class PermissionHelper
     public async Task<IList<PermissionModel>> GetAllPermissionsByRoleId(string roleId)
     {
         var assignedClaims = await GetUserClaimsByRoleId(roleId).ConfigureAwait(false);
-        IList<PermissionModel> allPermissions = new List<PermissionModel>();
-        var modules = typeof(Permissions).GetNestedTypes();
-
-        foreach (var module in modules)
-        {
-            var moduleName = module.GetCustomAttributes<DisplayNameAttribute>().FirstOrDefault()?.DisplayName ?? string.Empty;
-            var moduleDescription = module.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
-            var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-
-            allPermissions = allPermissions.Concat(fields.Select(field =>
+        
+        return await BuildPermissionModels(
+            moduleType: typeof(Permissions),
+            claimsToCheck: assignedClaims,
+            additionalParams: new Dictionary<string, object>
             {
-                var claimValue = field.GetValue(null)?.ToString();
-                // Convert field name from PascalCase/CamelCase to space-separated words with first letter capitalized
-                var name = System.Text.RegularExpressions.Regex.Replace(field.Name, "(\\B[A-Z])", " $1").Trim().ToLower();
-                name = char.ToUpper(name[0]) + name.Substring(1); // Capitalize the first letter
-                var helpText = field.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty; // Get the description attribute
+                { "roleId", roleId }
+            },
+            permissionModelFactory: (moduleInfo, fieldInfo, claimsToCheck, additionalParams) =>
+            {
+                var claimValue = fieldInfo.GetValue(null)?.ToString();
+                var roleId = (string)additionalParams["roleId"];
+                
+                // Convert field name from PascalCase/CamelCase to space-separated words
+                var name = FormatFieldNameForDisplay(fieldInfo.Name);
+                
+                var helpText = fieldInfo.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault()?.Description ?? string.Empty;
 
                 return new PermissionModel
                 {
                     RoleId = roleId,
                     ClaimValue = claimValue ?? string.Empty,
                     ClaimType = ApplicationClaimTypes.Permission,
-                    Group = moduleName,
-                    Name = name, // Assigning the field name
-                    HelpText = helpText, // Assigning the description as HelpText
-                    Description = moduleDescription,
-                    Assigned = assignedClaims.Any(x => x.Value.Equals(claimValue))
+                    Group = moduleInfo.DisplayName,
+                    Name = name,
+                    HelpText = helpText,
+                    Description = moduleInfo.Description,
+                    Assigned = claimsToCheck.Any(x => x.Value.Equals(claimValue))
                 };
-            }).Where(pm => !string.IsNullOrEmpty(pm.ClaimValue))).ToList();
-        }
-
-        return allPermissions;
+            }
+        );
     }
 
     /// <summary>
@@ -177,13 +211,63 @@ public class PermissionHelper
     /// <returns>The list of claims.</returns>
     private async Task<IList<Claim>> GetUserClaimsByRoleId(string roleId)
     {
-        var key = $"get-claims-by-{roleId}";
+        var key = $"{ClaimsCacheKeyPrefix}{roleId}";
         return await _fusionCache.GetOrSetAsync(key, async _ =>
         {
             var role = await _roleManager.FindByIdAsync(roleId).ConfigureAwait(false)
                        ?? throw new NotFoundException($"not found application role: {roleId}");
             return await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
-        }, _refreshInterval).ConfigureAwait(false);
+        }, _refreshInterval).ConfigureAwait(false);    }
+    
+    /// <summary>
+    /// Builds permission models from a given module type and claims.
+    /// </summary>
+    /// <param name="moduleType">The module type to extract permissions from.</param>
+    /// <param name="claimsToCheck">The claims to check for permission assignments.</param>
+    /// <param name="additionalParams">Additional parameters for the factory method.</param>
+    /// <param name="permissionModelFactory">Factory method to create permission models.</param>
+    /// <returns>A list of permission models.</returns>
+    private async Task<IList<PermissionModel>> BuildPermissionModels(
+        Type moduleType,
+        IEnumerable<Claim> claimsToCheck,
+        Dictionary<string, object> additionalParams,
+        Func<ModuleInfo, FieldInfo, IEnumerable<Claim>, Dictionary<string, object>, PermissionModel> permissionModelFactory)
+    {
+        var result = new List<PermissionModel>();
+        var modules = moduleType.GetNestedTypes();
+
+        foreach (var module in modules)
+        {
+            var displayNameAttribute = module.GetCustomAttributes<DisplayNameAttribute>().FirstOrDefault();
+            var descriptionAttribute = module.GetCustomAttributes<DescriptionAttribute>().FirstOrDefault();
+            
+            var moduleInfo = new ModuleInfo(
+                displayNameAttribute?.DisplayName ?? string.Empty,
+                descriptionAttribute?.Description ?? string.Empty
+            );
+            
+            var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+
+            foreach (var field in fields)
+            {
+                var claimValue = field.GetValue(null)?.ToString();
+                if (string.IsNullOrEmpty(claimValue))
+                {
+                    continue;
+                }
+
+                var model = permissionModelFactory(
+                    moduleInfo,
+                    field,
+                    claimsToCheck,
+                    additionalParams
+                );
+
+                result.Add(model);
+            }
+        }
+
+        return await Task.FromResult(result);
     }
 
     /// <summary>

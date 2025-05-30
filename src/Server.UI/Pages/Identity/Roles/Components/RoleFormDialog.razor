@@ -12,6 +12,7 @@
                                T="string"
                                Label="@L["Select Tenant"]"
                                Required="true"
+                               Validation="@(new Func<string, IEnumerable<string>>(ValidateTenant))"
                                @bind-Value="@Model.TenantId">
                         @foreach (var item in TenantsService.DataSource)
                         {
@@ -20,26 +21,33 @@
                     </MudSelect>
                 </MudItem>
                 <MudItem sm="6" xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Name)]" @bind-Value="Model.Name"
-                                  Required="true"
-                                  For="@(() => Model.Name)"
-                                  RequiredError="@L["DefaultRole name is required!"]"
-                                  MaxLength="50">
+                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Name)]" 
+                                 @bind-Value="Model.Name"
+                                 Required="true"
+                                 For="@(() => Model.Name)"
+                                 Validation="@(new Func<string, IEnumerable<string>>(ValidateName))"
+                                 RequiredError="@L["Role name is required!"]"
+                                 MaxLength="50"
+                                 Immediate="true">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
                     <MudTextField Label="@L[Model.GetMemberDescription(x => x.Description)]"
-                                  For="@(() => Model.Description)"
-                                  MaxLength="255"
-                                  @bind-Value="Model.Description">
+                                 For="@(() => Model.Description)"
+                                 MaxLength="255"
+                                 Placeholder="@L["Enter description for this role"]"
+                                 @bind-Value="Model.Description">
                     </MudTextField>
                 </MudItem>
             </MudGrid>
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">@ConstantString.Ok</MudButton>
+        <MudButton OnClick="Cancel" Disabled="@_processing">@ConstantString.Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit" Disabled="@_processing" 
+                  StartIcon="@Icons.Material.Filled.Save">
+            @ConstantString.Save
+        </MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -49,13 +57,23 @@
     [EditorRequired] [Parameter] public ApplicationRoleDto Model { get; set; } = default!;
 
     private MudForm? _form;
+    private bool _processing;
 
     private async Task Submit()
     {
-        await _form!.Validate();
-        if (_form!.IsValid)
+        _processing = true;
+        
+        try
         {
-            MudDialog.Close(DialogResult.Ok(true));
+            await _form!.Validate();
+            if (_form!.IsValid)
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+            }
+        }
+        finally
+        {
+            _processing = false;
         }
     }
 
@@ -64,5 +82,19 @@
         MudDialog.Cancel();
     }
 
+    private IEnumerable<string> ValidateTenant(string tenantId)
+    {
+        if (string.IsNullOrWhiteSpace(tenantId))
+            yield return L["Tenant selection is required"];
+    }
 
+    private IEnumerable<string> ValidateName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            yield return L["Role name is required"];
+        else if (name.Length < 2)
+            yield return L["Role name must be at least 2 characters"];
+        else if (name.Length > 50)
+            yield return L["Role name must not exceed 50 characters"];
+    }
 }
