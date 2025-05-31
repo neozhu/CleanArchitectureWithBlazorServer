@@ -192,16 +192,16 @@
     }
 
     // Create tenant event handler
-    private async Task OnCreateTenant()
+    private  Task OnCreateTenant()
     {
-        await ShowEditTenantDialog(new AddEditTenantCommand(), L["Create a new Tenant"]);
+        return ShowEditTenantDialog(new AddEditTenantCommand(), L["Create a new Tenant"]);
     }
 
     // Edit tenant event handler
-    private async Task OnEditTenant(TenantDto dto)
+    private  Task OnEditTenant(TenantDto dto)
     {
         var command = Mapper.Map<AddEditTenantCommand>(dto);
-        await ShowEditTenantDialog(command, L["Edit the Tenant"]);
+        return ShowEditTenantDialog(command, L["Edit the Tenant"]);
     }
 
     // Delete tenant event handler
@@ -235,18 +235,15 @@
     }
 
     // Helper method: Show edit dialog for tenant
-    private async Task ShowEditTenantDialog(AddEditTenantCommand command, string title)
+    private Task ShowEditTenantDialog(AddEditTenantCommand command, string title)
     {
-        var parameters = new DialogParameters<TenantFormDialog>
-        {
-            { x => x._model, command }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = await DialogService.ShowAsync<TenantFormDialog>(title, parameters, options);
-        var state = await dialog.Result;
-        if (state is not null && !state.Canceled)
-        {
-            await _tenantGrid.ReloadServerData();
-        }
+        return DialogServiceHelper.ShowFormDialogAsync<TenantFormDialog, AddEditTenantCommand>(
+            title,
+            command,
+            async () =>
+            {
+                await _tenantGrid.ReloadServerData();
+                _selectedItems.Clear();
+            });
     }
 }

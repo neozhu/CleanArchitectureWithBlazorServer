@@ -41,7 +41,7 @@
 
     [EditorRequired] [Parameter] public AddEditTenantCommand _model { get; set; } = default!;
 
-    private MudForm? _form;
+    private MudForm _form = new();
     private bool _saving;
 
     private async Task Submit()
@@ -49,9 +49,9 @@
         try
         {
             _saving = true;
-            await _form!.Validate().ConfigureAwait(false);
+            await _form.Validate().ConfigureAwait(false);
 
-            if (!_form!.IsValid)
+            if (!_form.IsValid)
                 return;
             var result = await Mediator.Send(_model);
 

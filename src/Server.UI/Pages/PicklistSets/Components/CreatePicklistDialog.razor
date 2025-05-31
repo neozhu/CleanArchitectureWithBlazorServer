@@ -4,30 +4,30 @@
 
 <MudDialog>
     <DialogContent>
-        <MudForm Model="Model" @ref="_form" Validation="@(Validator.ValidateValue(Model))">
+        <MudForm Model="_model" @ref="_form" Validation="@(Validator.ValidateValue(_model))">
             <MudGrid Spacing="2">
                 <MudItem xs="12" md="6">
-                    <MudEnumSelect Label="@L[Model.GetMemberDescription(x => x.Name)]" @bind-Value="Model.Name"
-                                   For="@(() => Model.Name)"
+                    <MudEnumSelect Label="@L[_model.GetMemberDescription(x => x.Name)]" @bind-Value="_model.Name"
+                                   For="@(() => _model.Name)"
                                    Required="true"
                                    RequiredError="@L["Name is required!"]">
                     </MudEnumSelect>
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Description)]" @bind-Value="Model.Description"
-                                  For="@(() => Model.Description)">
+                    <MudTextField Label="@L[_model.GetMemberDescription(x => x.Description)]" @bind-Value="_model.Description"
+                                  For="@(() => _model.Description)">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Value)]" @bind-Value="Model.Value"
-                                  For="@(() => Model.Value)"
+                    <MudTextField Label="@L[_model.GetMemberDescription(x => x.Value)]" @bind-Value="_model.Value"
+                                  For="@(() => _model.Value)"
                                   Required="true"
                                   RequiredError="@L["Value is required!"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Text)]" @bind-Value="Model.Text"
-                                  For="@(() => Model.Text)"
+                    <MudTextField Label="@L[_model.GetMemberDescription(x => x.Text)]" @bind-Value="_model.Text"
+                                  For="@(() => _model.Text)"
                                   Required="true"
                                   RequiredError="@L["Text is required!"]">
                     </MudTextField>
@@ -47,9 +47,9 @@
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 
-    [EditorRequired][Parameter] public AddEditPicklistSetCommand Model { get; set; } = default!;
+    [EditorRequired][Parameter] public AddEditPicklistSetCommand _model { get; set; } = default!;
 
-    private MudForm? _form;
+    private MudForm _form = new();
     private bool _saving;
 
     private async Task Submit()
@@ -57,10 +57,10 @@
         try
         {
             _saving = true;
-            await _form!.Validate().ConfigureAwait(false);
-            if (!_form!.IsValid)
+            await _form.Validate().ConfigureAwait(false);
+            if (!_form.IsValid)
                 return;
-            var result = await Mediator.Send(Model);
+            var result = await Mediator.Send(_model);
 
             if (result.Succeeded)
             {

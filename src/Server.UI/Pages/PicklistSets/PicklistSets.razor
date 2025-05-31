@@ -235,29 +235,22 @@
 
     #region Create & Delete
 
-    private async Task OnCreate()
+    private Task OnCreate()
     {
         var command = new AddEditPicklistSetCommand
-            {
-                Name = SelectedItem.Name,
-                Description = SelectedItem?.Description
-            };
-        await ShowCreateDialog(command, L["Create a picklist"]);
-    }
-
-    private async Task ShowCreateDialog(AddEditPicklistSetCommand command, string title)
-    {
-        var parameters = new DialogParameters
         {
-            { nameof(CreatePicklistDialog.Model), command }
+            Name = SelectedItem.Name,
+            Description = SelectedItem?.Description
         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = await DialogService.ShowAsync<CreatePicklistDialog>(title, parameters, options);
-        var state = await dialog.Result;
-        if (state is not null && !state.Canceled)
-        {
-            await _table.ReloadServerData();
-        }
+        return DialogServiceHelper.ShowFormDialogAsync<CreatePicklistDialog, AddEditPicklistSetCommand>(
+             L["Create a picklist"],
+            command,
+            async () =>
+            {
+                await _table.ReloadServerData();
+                _selectedItems.Clear();
+            });
+         
     }
 
     private async Task DeleteItem(PicklistSetDto item)
