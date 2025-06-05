@@ -187,4 +187,76 @@
   <data name="Full Name" xml:space="preserve">
     <value>전체 이름</value>
   </data>
+  <data name="2FA is currently enabled." xml:space="preserve">
+    <value>2단계 인증이 현재 활성화되어 있습니다.</value>
+  </data>
+  <data name="Two-Factor Authentication (2FA)" xml:space="preserve">
+    <value>2단계 인증 (2FA)</value>
+  </data>
+  <data name="2FA is currently disabled." xml:space="preserve">
+    <value>2단계 인증이 현재 비활성화되어 있습니다.</value>
+  </data>
+  <data name="Disable 2FA" xml:space="preserve">
+    <value>2단계 인증 비활성화</value>
+  </data>
+  <data name="View Recovery Codes" xml:space="preserve">
+    <value>복구 코드 보기</value>
+  </data>
+  <data name="If you lose access to your authenticator device, you can use recovery codes to log in." xml:space="preserve">
+    <value>인증 장치에 접근할 수 없는 경우, 복구 코드를 사용하여 로그인할 수 있습니다.</value>
+  </data>
+  <data name="Or enter this key manually in your app:" xml:space="preserve">
+    <value>또는 이 키를 앱에 수동으로 입력하세요:</value>
+  </data>
+  <data name="Two-factor authentication adds an extra layer of security to your account by requiring more than just a password to sign in." xml:space="preserve">
+    <value>2단계 인증은 로그인 시 비밀번호 외에 추가 인증을 요구하여 계정 보안을 강화합니다.</value>
+  </data>
+  <data name="Verification code is invalid." xml:space="preserve">
+    <value>인증 코드가 올바르지 않습니다.</value>
+  </data>
+  <data name="Copy all codes" xml:space="preserve">
+    <value>모든 코드 복사</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>다운로드</value>
+  </data>
+  <data name="Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in." xml:space="preserve">
+    <value>이 복구 코드를 안전한 장소에 보관하세요. 인증 장치에 접근할 수 없을 경우, 이 코드를 사용하여 로그인할 수 있습니다.</value>
+  </data>
+  <data name="Recovery Codes" xml:space="preserve">
+    <value>복구 코드</value>
+  </data>
+  <data name="Two-factor authentication has been disabled." xml:space="preserve">
+    <value>2단계 인증이 비활성화되었습니다.</value>
+  </data>
+  <data name="Two-factor authentication has been enabled." xml:space="preserve">
+    <value>2단계 인증이 활성화되었습니다.</value>
+  </data>
+  <data name="Please enter a valid 6-digit verification code" xml:space="preserve">
+    <value>유효한 6자리 인증 코드를 입력하세요.</value>
+  </data>
+  <data name="Enable 2FA" xml:space="preserve">
+    <value>2단계 인증 활성화</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="Verify" xml:space="preserve">
+    <value>확인</value>
+  </data>
+  <data name="Verification Code" xml:space="preserve">
+    <value>인증 코드</value>
+  </data>
+  <data name="Scan the QR code below with your authenticator app:" xml:space="preserve">
+    <value>아래 QR 코드를 인증 앱으로 스캔하세요:</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="All recovery codes have been copied to the clipboard." xml:space="preserve">
+    <value>모든 복구 코드가 클립보드에 복사되었습니다.</value>
+  </data>
+  <data name="Two-Factor Authentication" xml:space="preserve">
+    <value>2단계 인증</value>
+  </data>
 </root>

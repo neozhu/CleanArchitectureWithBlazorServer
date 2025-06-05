@@ -187,4 +187,76 @@
   <data name="Full Name" xml:space="preserve">
     <value>Полное имя</value>
   </data>
+  <data name="2FA is currently enabled." xml:space="preserve">
+    <value>2FA в настоящее время включена.</value>
+  </data>
+  <data name="Two-Factor Authentication (2FA)" xml:space="preserve">
+    <value>Двухфакторная аутентификация (2FA)</value>
+  </data>
+  <data name="2FA is currently disabled." xml:space="preserve">
+    <value>2FA в настоящее время отключена.</value>
+  </data>
+  <data name="Disable 2FA" xml:space="preserve">
+    <value>Отключить 2FA</value>
+  </data>
+  <data name="View Recovery Codes" xml:space="preserve">
+    <value>Показать коды восстановления</value>
+  </data>
+  <data name="If you lose access to your authenticator device, you can use recovery codes to log in." xml:space="preserve">
+    <value>Если вы потеряете доступ к своему устройству аутентификации, вы можете использовать коды восстановления для входа.</value>
+  </data>
+  <data name="Or enter this key manually in your app:" xml:space="preserve">
+    <value>Или введите этот ключ вручную в своём приложении:</value>
+  </data>
+  <data name="Two-factor authentication adds an extra layer of security to your account by requiring more than just a password to sign in." xml:space="preserve">
+    <value>Двухфакторная аутентификация добавляет дополнительный уровень безопасности вашему аккаунту, требуя больше, чем просто пароль для входа.</value>
+  </data>
+  <data name="Verification code is invalid." xml:space="preserve">
+    <value>Неверный код подтверждения.</value>
+  </data>
+  <data name="Copy all codes" xml:space="preserve">
+    <value>Скопировать все коды</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Скачать</value>
+  </data>
+  <data name="Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in." xml:space="preserve">
+    <value>Сохраните эти коды восстановления в безопасном месте. Если вы потеряете доступ к своему устройству, вы сможете использовать эти коды для входа.</value>
+  </data>
+  <data name="Recovery Codes" xml:space="preserve">
+    <value>Коды восстановления</value>
+  </data>
+  <data name="Two-factor authentication has been disabled." xml:space="preserve">
+    <value>Двухфакторная аутентификация была отключена.</value>
+  </data>
+  <data name="Two-factor authentication has been enabled." xml:space="preserve">
+    <value>Двухфакторная аутентификация была включена.</value>
+  </data>
+  <data name="Please enter a valid 6-digit verification code" xml:space="preserve">
+    <value>Пожалуйста, введите действительный 6-значный код подтверждения.</value>
+  </data>
+  <data name="Enable 2FA" xml:space="preserve">
+    <value>Включить 2FA</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Verify" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="Verification Code" xml:space="preserve">
+    <value>Код подтверждения</value>
+  </data>
+  <data name="Scan the QR code below with your authenticator app:" xml:space="preserve">
+    <value>Отсканируйте QR-код ниже с помощью вашего приложения аутентификации:</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="All recovery codes have been copied to the clipboard." xml:space="preserve">
+    <value>Все коды восстановления были скопированы в буфер обмена.</value>
+  </data>
+  <data name="Two-Factor Authentication" xml:space="preserve">
+    <value>Двухфакторная аутентификация</value>
+  </data>
 </root>

@@ -187,4 +187,76 @@
   <data name="Full Name" xml:space="preserve">
     <value>ឈ្មោះ​ពេញ</value>
   </data>
+  <data name="2FA is currently enabled." xml:space="preserve">
+    <value>2FA បច្ចុប្បន្នត្រូវបានបើក។</value>
+  </data>
+  <data name="Two-Factor Authentication (2FA)" xml:space="preserve">
+    <value>ការផ្ទៀងផ្ទាត់ពីរជាន់ (2FA)</value>
+  </data>
+  <data name="2FA is currently disabled." xml:space="preserve">
+    <value>2FA បច្ចុប្បន្នត្រូវបានបិទ។</value>
+  </data>
+  <data name="Disable 2FA" xml:space="preserve">
+    <value>បិទ 2FA</value>
+  </data>
+  <data name="View Recovery Codes" xml:space="preserve">
+    <value>មើលកូដស្ដារ</value>
+  </data>
+  <data name="If you lose access to your authenticator device, you can use recovery codes to log in." xml:space="preserve">
+    <value>បើអ្នកបាត់បង់ឧបករណ៍ផ្ទៀងផ្ទាត់របស់អ្នក អ្នកអាចប្រើកូដស្ដារដើម្បីចូលបានវិញ។</value>
+  </data>
+  <data name="Or enter this key manually in your app:" xml:space="preserve">
+    <value>ឬបញ្ចូលកូនសោនេះដោយដៃក្នុងកម្មវិធីរបស់អ្នក៖</value>
+  </data>
+  <data name="Two-factor authentication adds an extra layer of security to your account by requiring more than just a password to sign in." xml:space="preserve">
+    <value>ការផ្ទៀងផ្ទាត់ពីរជាន់ បន្ថែមសុវត្ថិភាពបន្ថែមមួយសម្រាប់គណនីរបស់អ្នក ដោយទាមទារច្រើនជាងពាក្យសម្ងាត់ដើម្បីចូល។</value>
+  </data>
+  <data name="Verification code is invalid." xml:space="preserve">
+    <value>កូដផ្ទៀងផ្ទាត់មិនត្រឹមត្រូវទេ។</value>
+  </data>
+  <data name="Copy all codes" xml:space="preserve">
+    <value>ចម្លងកូដទាំងអស់</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>ទាញយក</value>
+  </data>
+  <data name="Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in." xml:space="preserve">
+    <value>រក្សាទុកកូដស្ដារទាំងនេះនៅកន្លែងដែលមានសុវត្ថិភាព។ ប្រសិនបើអ្នកបាត់បង់ឧបករណ៍ផ្ទៀងផ្ទាត់ អ្នកអាចប្រើកូដទាំងនេះដើម្បីចូលបានវិញ។</value>
+  </data>
+  <data name="Recovery Codes" xml:space="preserve">
+    <value>កូដស្ដារ</value>
+  </data>
+  <data name="Two-factor authentication has been disabled." xml:space="preserve">
+    <value>ការផ្ទៀងផ្ទាត់ពីរជាន់ត្រូវបានបិទ។</value>
+  </data>
+  <data name="Two-factor authentication has been enabled." xml:space="preserve">
+    <value>ការផ្ទៀងផ្ទាត់ពីរជាន់ត្រូវបានបើក។</value>
+  </data>
+  <data name="Please enter a valid 6-digit verification code" xml:space="preserve">
+    <value>សូមបញ្ចូលកូដផ្ទៀងផ្ទាត់ 6 ខ្ទង់ដែលត្រឹមត្រូវ</value>
+  </data>
+  <data name="Enable 2FA" xml:space="preserve">
+    <value>បើក 2FA</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>បោះបង់</value>
+  </data>
+  <data name="Verify" xml:space="preserve">
+    <value>ផ្ទៀងផ្ទាត់</value>
+  </data>
+  <data name="Verification Code" xml:space="preserve">
+    <value>កូដផ្ទៀងផ្ទាត់</value>
+  </data>
+  <data name="Scan the QR code below with your authenticator app:" xml:space="preserve">
+    <value>ស្កែន QR កូដខាងក្រោមជាមួយកម្មវិធីផ្ទៀងផ្ទាត់របស់អ្នក៖</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>បិទ</value>
+  </data>
+  <data name="All recovery codes have been copied to the clipboard." xml:space="preserve">
+    <value>កូដស្ដារទាំងអស់ត្រូវបានចម្លងទៅក្តារចម្លង។</value>
+  </data>
+  <data name="Two-Factor Authentication" xml:space="preserve">
+    <value>ការផ្ទៀងផ្ទាត់ពីរជាន់</value>
+  </data>
 </root>
