@@ -1,0 +1,54 @@
+﻿@inject IStringLocalizer<Profile> Localizer
+
+<MudDialog>
+    <DialogContent>
+        <MudText Class="mb-4">@Localizer["Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in."]</MudText>
+        
+        <MudPaper Elevation="0" Class="pa-4 mud-background-gray">
+            <div class="d-flex justify-space-between mb-4">
+                <MudText>@Localizer["Recovery Codes"]</MudText>
+                <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" 
+                              OnClick="CopyAllCodesToClipboard" 
+                              Title="@Localizer["Copy all codes"]" />
+            </div>
+            
+            <MudList T="string" Dense="true" DisableGutters="true" Class="pa-0">
+                @foreach (var rcode in RecoveryCodes)
+                {
+                    <MudListItem>
+                        <div class="d-flex justify-space-between align-center">
+                            <code>@rcode</code>
+                        </div>
+                    </MudListItem>
+                }
+            </MudList>
+        </MudPaper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton   OnClick="DownloadRecoveryCodes">@Localizer["Download"]</MudButton>
+        <MudButton  OnClick="Close">@Localizer["Close"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public List<string> RecoveryCodes { get; set; } = new();
+
+    private async Task CopyAllCodesToClipboard()
+    {
+        var codesText = string.Join(Environment.NewLine, RecoveryCodes);
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", codesText);
+        Snackbar.Add(Localizer["All recovery codes have been copied to the clipboard."], Severity.Success);
+    }
+
+    private async Task DownloadRecoveryCodes()
+    {
+        var codesText = string.Join(Environment.NewLine, RecoveryCodes);
+        var fileName = "recovery-codes.txt";
+        var fileContent = System.Text.Encoding.UTF8.GetBytes(codesText);
+        
+        await new BlazorDownloadFileService(JS).DownloadFileAsync(fileName, fileContent, "text/plain");
+    }
+
+    private void Close() => MudDialog.Close();
+}
