@@ -1,24 +1,21 @@
-﻿@inject IStringLocalizer<RecoveryCodesDialog> L
+﻿@inject IStringLocalizer<Profile> Localizer
 
 <MudDialog>
-    <TitleContent>
-        <MudText Typo="Typo.h6">@Title</MudText>
-    </TitleContent>
     <DialogContent>
-        <MudText Class="mb-4">@L["Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in."]</MudText>
+        <MudText Class="mb-4">@Localizer["Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in."]</MudText>
         
         <MudPaper Elevation="0" Class="pa-4 mud-background-gray">
             <div class="d-flex justify-space-between mb-4">
-                <MudText>@L["Recovery Codes"]</MudText>
+                <MudText>@Localizer["Recovery Codes"]</MudText>
                 <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" 
                               OnClick="CopyAllCodesToClipboard" 
-                              Title="@L["Copy all codes"]" />
+                              Title="@Localizer["Copy all codes"]" />
             </div>
             
             <MudList T="string" Dense="true" DisableGutters="true" Class="pa-0">
                 @foreach (var rcode in RecoveryCodes)
                 {
-                    <MudListItem Icon="@Icons.Material.Filled.Key">
+                    <MudListItem>
                         <div class="d-flex justify-space-between align-center">
                             <code>@rcode</code>
                         </div>
@@ -28,20 +25,20 @@
         </MudPaper>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="DownloadRecoveryCodes">@L["Download"]</MudButton>
-        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Close">@L["Close"]</MudButton>
+        <MudButton   OnClick="DownloadRecoveryCodes">@Localizer["Download"]</MudButton>
+        <MudButton  OnClick="Close">@Localizer["Close"]</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
     [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
     [Parameter] public List<string> RecoveryCodes { get; set; } = new();
-    [Parameter] public string Title { get; set; } = string.Empty;
 
     private async Task CopyAllCodesToClipboard()
     {
         var codesText = string.Join(Environment.NewLine, RecoveryCodes);
         await JS.InvokeVoidAsync("navigator.clipboard.writeText", codesText);
+        Snackbar.Add(Localizer["All recovery codes have been copied to the clipboard."], Severity.Success);
     }
 
     private async Task DownloadRecoveryCodes()
@@ -50,7 +47,7 @@
         var fileName = "recovery-codes.txt";
         var fileContent = System.Text.Encoding.UTF8.GetBytes(codesText);
         
-        await JS.InvokeVoidAsync("downloadFile", Convert.ToBase64String(fileContent), "text/plain", fileName);
+        await new BlazorDownloadFileService(JS).DownloadFileAsync(fileName, fileContent, "text/plain");
     }
 
     private void Close() => MudDialog.Close();

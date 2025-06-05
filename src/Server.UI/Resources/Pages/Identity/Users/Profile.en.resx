@@ -187,4 +187,76 @@
   <data name="Full Name" xml:space="preserve">
     <value>Full Name</value>
   </data>
+  <data name="Two-Factor Authentication" xml:space="preserve">
+    <value>Two-Factor Authentication</value>
+  </data>
+  <data name="2FA is currently enabled." xml:space="preserve">
+    <value>2FA is currently enabled.</value>
+  </data>
+  <data name="Two-Factor Authentication (2FA)" xml:space="preserve">
+    <value>Two-Factor Authentication (2FA)</value>
+  </data>
+  <data name="If you lose access to your authenticator device, you can use recovery codes to log in." xml:space="preserve">
+    <value>If you lose access to your authenticator device, you can use recovery codes to log in.</value>
+  </data>
+  <data name="View Recovery Codes" xml:space="preserve">
+    <value>View Recovery Codes</value>
+  </data>
+  <data name="Disable 2FA" xml:space="preserve">
+    <value>Disable 2FA</value>
+  </data>
+  <data name="2FA is currently disabled." xml:space="preserve">
+    <value>2FA is currently disabled.</value>
+  </data>
+  <data name="Scan the QR code below with your authenticator app:" xml:space="preserve">
+    <value>Scan the QR code below with your authenticator app:</value>
+  </data>
+  <data name="Or enter this key manually in your app:" xml:space="preserve">
+    <value>Or enter this key manually in your app:</value>
+  </data>
+  <data name="Verification Code" xml:space="preserve">
+    <value>Verification Code</value>
+  </data>
+  <data name="Verify" xml:space="preserve">
+    <value>Verify</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Two-factor authentication adds an extra layer of security to your account by requiring more than just a password to sign in." xml:space="preserve">
+    <value>Two-factor authentication adds an extra layer of security to your account by requiring more than just a password to sign in.</value>
+  </data>
+  <data name="Enable 2FA" xml:space="preserve">
+    <value>Enable 2FA</value>
+  </data>
+  <data name="Please enter a valid 6-digit verification code" xml:space="preserve">
+    <value>Please enter a valid 6-digit verification code</value>
+  </data>
+  <data name="Two-factor authentication has been enabled." xml:space="preserve">
+    <value>Two-factor authentication has been enabled.</value>
+  </data>
+  <data name="Verification code is invalid." xml:space="preserve">
+    <value>Verification code is invalid.</value>
+  </data>
+  <data name="Two-factor authentication has been disabled." xml:space="preserve">
+    <value>Two-factor authentication has been disabled.</value>
+  </data>
+  <data name="Recovery Codes" xml:space="preserve">
+    <value>Recovery Codes</value>
+  </data>
+  <data name="Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in." xml:space="preserve">
+    <value>Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in.</value>
+  </data>
+  <data name="Copy all codes" xml:space="preserve">
+    <value>Copy all codes</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="All recovery codes have been copied to the clipboard." xml:space="preserve">
+    <value>All recovery codes have been copied to the clipboard.</value>
+  </data>
 </root>

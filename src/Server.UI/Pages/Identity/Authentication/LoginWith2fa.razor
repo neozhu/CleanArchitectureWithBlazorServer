@@ -87,14 +87,14 @@
     private async Task OnValidSubmitAsync()
     {
         var authenticatorCode = Input.TwoFactorCode!.Replace(" ", string.Empty).Replace("-", string.Empty);
-        var isCodeValid = await UserManager.VerifyTwoFactorTokenAsync(user, "Email", authenticatorCode);
+        var isCodeValid = await UserManager.VerifyTwoFactorTokenAsync(user, SignInManager.Options.Tokens.AuthenticatorTokenProvider, authenticatorCode);
         if (!isCodeValid)
         {
             message = L["Error: Invalid authenticator code."];
             return;
         }
 
-        var result = await SignInManager.TwoFactorSignInAsync("Email", authenticatorCode, true, true);
+        var result = await SignInManager.TwoFactorSignInAsync(SignInManager.Options.Tokens.AuthenticatorTokenProvider, authenticatorCode, RememberMe, RememberMe);
         var userId = await UserManager.GetUserIdAsync(user);
         if (result.Succeeded)
         {

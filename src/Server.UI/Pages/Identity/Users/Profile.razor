@@ -154,21 +154,21 @@ else
             </MudForm>
         </MudTabPanel>
         <MudTabPanel Text="@Localizer["Two-Factor Authentication"]">
-            <MudPaper Class="pa-4" Style="max-width:600px; margin:auto;">
+            <div Class="pa-4" Style="max-width:600px; margin:auto;">
                 <MudText Typo="Typo.h6" Class="mb-4">@Localizer["Two-Factor Authentication (2FA)"]</MudText>
-                
+
                 @if (_twoFactorEnabled)
                 {
                     <MudAlert Severity="Severity.Success" Class="my-4">@Localizer["2FA is currently enabled."]</MudAlert>
-                    
+
                     <MudText Class="mb-4">@Localizer["If you lose access to your authenticator device, you can use recovery codes to log in."]</MudText>
-                    
+
                     <div class="d-flex gap-4 mb-4">
-                        <MudButton Variant="Variant.Filled" Color="Color.Warning" 
+                        <MudButton 
                                    OnClick="@(async () => await ShowRecoveryCodesAsync())">
                             @Localizer["View Recovery Codes"]
                         </MudButton>
-                        
+
                         <MudButton Variant="Variant.Filled" Color="Color.Error"
                                    OnClick="@(async () => await DisableTwoFactorAsync())">
                             @Localizer["Disable 2FA"]
@@ -178,29 +178,29 @@ else
                 else
                 {
                     <MudAlert Severity="Severity.Info" Class="my-4">@Localizer["2FA is currently disabled."]</MudAlert>
-                    
+
                     @if (_showSetup)
                     {
                         <MudText Class="mb-2">@Localizer["Scan the QR code below with your authenticator app:"]</MudText>
-                        
+
                         <div class="d-flex justify-center my-4">
                             @if (!string.IsNullOrEmpty(_authenticatorUri))
                             {
                                 <MudImage Src="@_qrCodeImageUrl" Alt="QR Code" Width="200" Height="200" ObjectFit="ObjectFit.Cover" />
                             }
                         </div>
-                        
+
                         <MudText Class="mb-2">@Localizer["Or enter this key manually in your app:"]</MudText>
                         <MudPaper Elevation="0" Class="pa-2 mb-4 mud-background-gray rounded">
                             <code>@_sharedKey</code>
                         </MudPaper>
-                        
-                        <MudTextField @bind-Value="_verificationCode" Label="@Localizer["Verification Code"]" 
+
+                        <MudTextField @bind-Value="_verificationCode" Label="@Localizer["Verification Code"]"
                                       Variant="Variant.Outlined" Class="mb-4" Required="true" />
-                        
+
                         <div class="d-flex gap-2">
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" 
-                                       OnClick="@(async () => await VerifyTwoFactorSetupAsync())" 
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                       OnClick="@(async () => await VerifyTwoFactorSetupAsync())"
                                        Disabled="@(_verificationCode?.Length != 6)">
                                 @if (_submitting)
                                 {
@@ -212,7 +212,7 @@ else
                                     <MudText>@Localizer["Verify"]</MudText>
                                 }
                             </MudButton>
-                            
+
                             <MudButton Variant="Variant.Outlined" Color="Color.Secondary"
                                        OnClick="@(() => _showSetup = false)">
                                 @Localizer["Cancel"]
@@ -222,13 +222,13 @@ else
                     else
                     {
                         <MudText Class="mb-4">@Localizer["Two-factor authentication adds an extra layer of security to your account by requiring more than just a password to sign in."]</MudText>
-                        
+
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async () => await SetupTwoFactorAsync())">
                             @Localizer["Enable 2FA"]
                         </MudButton>
                     }
                 }
-            </MudPaper>
+            </div>
         </MudTabPanel>
         <MudTabPanel Text="@Localizer["Org Chart"]">
             <div class="chart-container" style="height: calc(100vh - 265px);"></div>
@@ -270,8 +270,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _userManager = Services.GetRequiredService<UserManager<ApplicationUser>>();
         var authState = await AuthState;
+        _userManager = Services.GetRequiredService<UserManager<ApplicationUser>>();
+
         _currentUserName = authState.User.Identity?.Name ?? string.Empty;
         await UserProfileStateService.InitializeAsync(_currentUserName);
         // Map user profile data to the profile model
@@ -286,10 +287,16 @@ else
     // Triggered when the active tab changes
     private async Task ActivePanelIndexChanged(int index)
     {
-        if (index == 3)
+        if (index == 2)
+        {
+            var user = await _userManager.FindByIdAsync(_profileModel.UserId);
+            _twoFactorEnabled= await _userManager.GetTwoFactorEnabledAsync(user!);
+        }
+        else if (index == 3)
         {
             await LoadOrgChartAsync();
         }
+
     }
 
     // Load organization chart data and initialize the chart via JS interop
@@ -337,9 +344,9 @@ else
 
         var user = await _userManager.FindByNameAsync(_profileModel.UserName)
                    ?? throw new NotFoundException($"User [{_profileModel.UserName}] not found.");
-        var resizedStream = await ImageProcessor.ResizeAndCompressToJpegAsync(memoryStream,128,128,80);
+        var resizedStream = await ImageProcessor.ResizeAndCompressToJpegAsync(memoryStream, 128, 128, 80);
         var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, fileData, overwrite: true, user.Id);
-        
+
 
         var result = await UploadService.UploadAsync(uploadRequest);
         _profileModel.ProfilePictureDataUrl = result;
@@ -420,27 +427,27 @@ else
     {
         var user = await _userManager.FindByNameAsync(_currentUserName)
                    ?? throw new NotFoundException($"User [{_currentUserName}] not found.");
-        
+
         // Generate the authenticator key and URI
         _sharedKey = await _userManager.GetAuthenticatorKeyAsync(user);
-        
+
         // If the user doesn't have a key, generate one
         if (string.IsNullOrEmpty(_sharedKey))
         {
             await _userManager.ResetAuthenticatorKeyAsync(user);
             _sharedKey = await _userManager.GetAuthenticatorKeyAsync(user);
         }
-        
+
         // Create the authenticator URI
-        _authenticatorUri = GenerateQrCodeUri(user.Email!, _sharedKey);
-        
+        _authenticatorUri = GenerateQrCodeUri(user.Email!, _sharedKey!);
+
         // Generate QR code image
-        _qrCodeImageUrl =await (new GenerateQrCode(JS)).Generate(_authenticatorUri);
-        
+        _qrCodeImageUrl = await (new GenerateQrCode(JS)).Generate(_authenticatorUri);
+
         _showSetup = true;
         StateHasChanged();
     }
-    
+
     private string GenerateQrCodeUri(string email, string unformattedKey)
     {
         const string authenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
@@ -450,7 +457,7 @@ else
             Uri.EscapeDataString(email),
             unformattedKey);
     }
-    
+
     private async Task VerifyTwoFactorSetupAsync()
     {
         if (string.IsNullOrEmpty(_verificationCode) || _verificationCode.Length != 6)
@@ -458,32 +465,32 @@ else
             Snackbar.Add(Localizer["Please enter a valid 6-digit verification code"], Severity.Warning);
             return;
         }
-        
+
         _submitting = true;
         try
         {
             var user = await _userManager.FindByNameAsync(_currentUserName)
                        ?? throw new NotFoundException($"User [{_currentUserName}] not found.");
-            
+
             var isTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
                 user,
                 _userManager.Options.Tokens.AuthenticatorTokenProvider,
                 _verificationCode);
-            
+
             if (isTokenValid)
             {
                 // Enable 2FA for the user
                 await _userManager.SetTwoFactorEnabledAsync(user, true);
-                
+
                 // Generate recovery codes
                 _recoveryCodes = (await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10)).ToList();
-                
+
                 _twoFactorEnabled = true;
                 _showSetup = false;
-                
+
                 // Show recovery codes in a dialog
                 await ShowRecoveryCodesAsync();
-                
+
                 Snackbar.Add(Localizer["Two-factor authentication has been enabled."], Severity.Success);
             }
             else
@@ -496,57 +503,52 @@ else
             _submitting = false;
         }
     }
-    
+
     private async Task DisableTwoFactorAsync()
     {
-        var isConfirmed = await JS.InvokeAsync<bool>("confirm", Localizer["Are you sure you want to disable two-factor authentication? This will make your account less secure."]);
-        
-        if (isConfirmed)
+
+        var user = await _userManager.FindByNameAsync(_currentUserName)
+                   ?? throw new NotFoundException($"User [{_currentUserName}] not found.");
+
+        var result = await _userManager.SetTwoFactorEnabledAsync(user, false);
+
+        if (result.Succeeded)
         {
-            var user = await _userManager.FindByNameAsync(_currentUserName)
-                       ?? throw new NotFoundException($"User [{_currentUserName}] not found.");
-            
-            var result = await _userManager.SetTwoFactorEnabledAsync(user, false);
-            
-            if (result.Succeeded)
-            {
-                _twoFactorEnabled = false;
-                Snackbar.Add(Localizer["Two-factor authentication has been disabled."], Severity.Success);
-            }
-            else
-            {
-                Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
-            }
+            _twoFactorEnabled = false;
+            Snackbar.Add(Localizer["Two-factor authentication has been disabled."], Severity.Success);
         }
+        else
+        {
+            Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
+        }
+
     }
-    
+
     private async Task ShowRecoveryCodesAsync()
     {
         var user = await _userManager.FindByNameAsync(_currentUserName)
                    ?? throw new NotFoundException($"User [{_currentUserName}] not found.");
-        
+
         // Get recovery codes (or generate new ones if they haven't been generated yet)
         if (_recoveryCodes.Count == 0)
         {
             _recoveryCodes = (await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10)).ToList();
         }
-        
+
         // Display the recovery codes in a dialog
-        var parameters = new DialogParameters
+        var parameters = new DialogParameters<RecoveryCodesDialog>
         {
-            { "RecoveryCodes", _recoveryCodes },
-            { "Title", Localizer["Recovery Codes"] }
+            { x=>x.RecoveryCodes, _recoveryCodes },
         };
-        
+
         var dialogOptions = new DialogOptions
         {
             CloseButton = true,
             MaxWidth = MaxWidth.Small,
             FullWidth = true
         };
-        
-        var dialogService = Services.GetRequiredService<IDialogService>();
-        await dialogService.ShowAsync<RecoveryCodesDialog>("", parameters, dialogOptions);
+
+        await DialogService.ShowAsync<RecoveryCodesDialog>(Localizer["Recovery Codes"], parameters, dialogOptions);
     }
 
     #endregion
