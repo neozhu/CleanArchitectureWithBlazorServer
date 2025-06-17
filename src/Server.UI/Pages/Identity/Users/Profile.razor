@@ -478,12 +478,12 @@ else
                 _verificationCode);
 
             if (isTokenValid)
-            {
-                // Enable 2FA for the user
+            {                // Enable 2FA for the user
                 await _userManager.SetTwoFactorEnabledAsync(user, true);
 
                 // Generate recovery codes
-                _recoveryCodes = (await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10)).ToList();
+                var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
+                _recoveryCodes = recoveryCodes?.ToList() ?? new List<string>();
 
                 _twoFactorEnabled = true;
                 _showSetup = false;
@@ -527,12 +527,11 @@ else
     private async Task ShowRecoveryCodesAsync()
     {
         var user = await _userManager.FindByNameAsync(_currentUserName)
-                   ?? throw new NotFoundException($"User [{_currentUserName}] not found.");
-
-        // Get recovery codes (or generate new ones if they haven't been generated yet)
+                   ?? throw new NotFoundException($"User [{_currentUserName}] not found.");        // Get recovery codes (or generate new ones if they haven't been generated yet)
         if (_recoveryCodes.Count == 0)
         {
-            _recoveryCodes = (await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10)).ToList();
+            var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
+            _recoveryCodes = recoveryCodes?.ToList() ?? new List<string>();
         }
 
         // Display the recovery codes in a dialog

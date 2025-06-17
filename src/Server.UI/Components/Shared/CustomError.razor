@@ -3,28 +3,51 @@
 
 <MudDialog Visible="true">
     <TitleContent>
-        <MudText Typo="Typo.h6" Color="Color.Error"> @StatusCode </MudText>
+        <MudStack Row="true" AlignItems="AlignItems.Center">
+            <MudText Typo="Typo.h6" Color="Color.Error">@StatusCode</MudText>
+        </MudStack>
     </TitleContent>
     <DialogContent>
-        <div Class="px-6 rounded-lg d-flex flex-column">
-            <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Class="pb-4" Style="height:100px;width:100px;margin:auto" Color="Color.Warning"/>
-
-            <div class="d-flex align-center gap-4">
-                <MudText Typo="Typo.subtitle2">@Message</MudText>
-                <MudText Typo="Typo.subtitle2">@DateTime.Now</MudText>
-                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(() => ShowStackTrace = !ShowStackTrace)">More</MudButton>
-            </div>
-            <MudText>@Message For more information, contact your system administrator</MudText>
-            @if (ShowStackTrace)
-            {
-                <MudText Typo="Typo.body2" Class="mt-2">@StackTrace</MudText>
-            }
-            <MudDivider Class="my-3"/>
-
-        </div>
+        <MudPaper Elevation="0" Class="pa-4 rounded-lg">
+            <MudStack AlignItems="AlignItems.Center" Spacing="4">
+                <MudAlert Severity="Severity.Error" Variant="Variant.Filled" Class="my-2">
+                    <MudText Typo="Typo.subtitle1" Class="mb-2">@Message</MudText>
+                    <MudText Typo="Typo.body2">For more information, contact your system administrator</MudText>
+                </MudAlert>
+                
+                <MudPaper Elevation="0" Width="100%" Class="d-flex justify-space-between align-center px-2">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</MudText>
+                    <MudButton 
+                        Variant="Variant.Text" 
+                        Color="Color.Primary" 
+                        EndIcon="@(ShowStackTrace ? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)" 
+                        OnClick="@(() => ShowStackTrace = !ShowStackTrace)">
+                        @(ShowStackTrace ? "Hide Details" : "Show Details")
+                    </MudButton>
+                </MudPaper>
+                
+                @if (ShowStackTrace)
+                {
+                    <MudExpansionPanel Class="mt-2 w-100" Expanded="true">
+                        <TitleContent>
+                            <MudText Typo="Typo.subtitle2">Stack Trace</MudText>
+                        </TitleContent>
+                        <ChildContent>
+                            <MudText Typo="Typo.body2" Style="white-space: pre-wrap; overflow-x: auto; max-height: 200px;">@StackTrace</MudText>
+                        </ChildContent>
+                    </MudExpansionPanel>
+                }
+            </MudStack>
+        </MudPaper>
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Default" OnClick="OnRefresh">@ConstantString.Refresh</MudButton>
+        <MudButton 
+            Variant="Variant.Filled" 
+            Color="Color.Primary" 
+            StartIcon="@Icons.Material.Filled.Refresh" 
+            OnClick="OnRefresh">
+            @ConstantString.Refresh
+        </MudButton>
     </DialogActions>
 </MudDialog>
 

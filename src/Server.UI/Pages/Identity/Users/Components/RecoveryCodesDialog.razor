@@ -6,13 +6,12 @@
         
         <MudPaper Elevation="0" Class="pa-4 mud-background-gray">
             <div class="d-flex justify-space-between mb-4">
-                <MudText>@Localizer["Recovery Codes"]</MudText>
-                <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" 
+                <MudText>@Localizer["Recovery Codes"]</MudText>                <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" 
                               OnClick="CopyAllCodesToClipboard" 
-                              Title="@Localizer["Copy all codes"]" />
+                              title="@Localizer["Copy all codes"]" />
             </div>
             
-            <MudList T="string" Dense="true" DisableGutters="true" Class="pa-0">
+            <MudList T="string" Dense="true" DisableGutters Class="pa-0">
                 @foreach (var rcode in RecoveryCodes)
                 {
                     <MudListItem>
