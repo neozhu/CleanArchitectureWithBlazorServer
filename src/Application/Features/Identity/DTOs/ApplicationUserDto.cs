@@ -172,6 +172,6 @@ public class ApplicationUserDtoValidator : AbstractValidator<ApplicationUserDto>
 
         RuleFor(x => x.PhoneNumber)
             .MaximumLength(20).WithMessage(_localizer["Phone number must be less than 20 digits"]);
-        _localizer = localizer;
+   
     }
 }

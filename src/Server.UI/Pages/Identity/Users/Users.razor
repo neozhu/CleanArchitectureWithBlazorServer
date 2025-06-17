@@ -132,7 +132,7 @@
                 @if (_accessRights.Edit || _accessRights.Delete || _accessRights.ManageRoles ||
                                 _accessRights.RestPassword || _accessRights.SendRestPasswordMail || _accessRights.ManagePermissions)
                 {
-                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
+                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small"
                              Dense="true"
                              EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_accessRights.Edit)
@@ -159,7 +159,7 @@
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled"
+                    <MudButton Variant="Variant.Outlined"
                                StartIcon="@Icons.Material.Filled.DoNotTouch" IconColor="Color.Secondary" Size="Size.Small"
                                Color="Color.Surface">
                         @ConstantString.NoAllowed
@@ -180,13 +180,6 @@
                 <UserCard Item="@context.Item" OnSendVerify="SendVerificationEmail" DisplayOnlineStatus="@_canViewOnlineStatus"></UserCard>
             </CellTemplate>
         </PropertyColumn>
-        <PropertyColumn Property="x => x.Email" Title="@Localizer["Full Name"]">
-            <CellTemplate>
-                <div class="d-flex flex-column">
-                    <MudText Typo="Typo.body2">@context.Item.DisplayName</MudText>
-                </div>
-            </CellTemplate>
-        </PropertyColumn>
         <PropertyColumn Property="x => x.Superior" Title="@Localizer[_currentUserDto.GetMemberDescription(x => x.Superior)]">
             <CellTemplate>
                 @context.Item.Superior?.UserName
@@ -199,7 +192,7 @@
                 {
                     foreach (var role in context.Item.AssignedRoles)
                     {
-                        <MudChip Size="Size.Small" Variant="Variant.Text">@role</MudChip>
+                        <MudChip Size="Size.Small" Variant="Variant.Outlined">@role</MudChip>
                     }
                 }
             </CellTemplate>
@@ -210,13 +203,13 @@
                     @if (!context.Item.IsActive || (context.Item.LockoutEnd is not null && context.Item.LockoutEnd > DateTime.UtcNow))
                     {
                         <MudTooltip Text="@Localizer["Click to change status to active."]" Delay="300">
-                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(() => ToggleUserActiveStatusAsync(context.Item))" ThumbIcon="@Icons.Material.Filled.Close" ThumbIconColor="Color.Error" />
+                            <MudCheckBox T="bool" Color="Color.Error" Value="context.Item.IsActive" ValueChanged="@(() => ToggleUserActiveStatusAsync(context.Item))" />
                         </MudTooltip>
                     }
                     else
                     {
                         <MudTooltip Text="@Localizer["Click to change status to inactive."]" Delay="300">
-                            <MudSwitch T="bool" Value="context.Item.IsActive" ValueChanged="@(() => ToggleUserActiveStatusAsync(context.Item))" ThumbIcon="@Icons.Material.Filled.Done" ThumbIconColor="Color.Success" />
+                            <MudCheckBox T="bool" Color="Color.Success" Value="context.Item.IsActive" ValueChanged="@(() => ToggleUserActiveStatusAsync(context.Item))" />
                         </MudTooltip>
                     }
                 </div>

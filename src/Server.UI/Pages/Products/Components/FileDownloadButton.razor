@@ -1,5 +1,5 @@
 ﻿@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
-<MudButton Variant="Variant.Filled" DropShadow="false" StartIcon="@Icons.Material.Filled.Preview" OnClick="Download">@Label</MudButton>
+<MudButton Variant="Variant.Outlined" DropShadow="false" StartIcon="@Icons.Material.Filled.Preview" OnClick="Download">@Label</MudButton>
 @inject IJSRuntime JSRuntime
 @code {
     [Parameter][EditorRequired]

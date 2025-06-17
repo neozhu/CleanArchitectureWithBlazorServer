@@ -76,7 +76,7 @@
 
             // We don't want to refresh the UI too frequently,
             // So, we use a timer to update the UI every few hundred milliseconds
-            await using var timer = new Timer(_ => InvokeAsync(() => StateHasChanged()));
+            using var timer = new Timer(_ => InvokeAsync(() => StateHasChanged()));
             timer.Change(TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500));
 
             // Upload files

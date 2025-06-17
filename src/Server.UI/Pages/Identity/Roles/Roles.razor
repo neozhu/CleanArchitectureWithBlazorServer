@@ -113,7 +113,7 @@
             <CellTemplate>
                 @if (_accessRights.Edit || _accessRights.Delete || _accessRights.ManagePermissions)
                 {
-                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Size="Size.Small"
+                    <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Outlined" Size="Size.Small"
                              Dense="true" EndIcon="@Icons.Material.Filled.KeyboardArrowDown"
                              IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
                         @if (_accessRights.Edit)
@@ -132,7 +132,7 @@
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.DoNotTouch"
+                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.DoNotTouch"
                                IconColor="Color.Secondary" Size="Size.Small" Color="Color.Surface">
                         @ConstantString.NoAllowed
                     </MudButton>

@@ -92,7 +92,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
         }
         public async Task<Result<byte[]>> Handle(CreateContactsTemplateCommand request, CancellationToken cancellationToken)
         {
-            // TODO: Implement ImportContactsCommandHandler method 
             var fields = new string[] {
                    // TODO: Define the fields that should be generate in the template, for example:
                    _localizer[_dto.GetMemberDescription(x=>x.Name)], 

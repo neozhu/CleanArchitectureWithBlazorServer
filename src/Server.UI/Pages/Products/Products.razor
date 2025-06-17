@@ -125,7 +125,7 @@
                 @if (_accessRights.Edit || _accessRights.Delete)
                 {
                     <MudMenu Icon="@Icons.Material.Filled.Edit"
-                             Variant="Variant.Filled"
+                             Variant="Variant.Outlined"
                              Size="Size.Small"
                              Dense="true"
                              IconColor="Color.Info"
@@ -147,7 +147,7 @@
                 else
                 {
                     <MudTooltip Text="@ConstantString.NoAllowed" Delay="300">
-                        <MudIconButton Variant="Variant.Filled"
+                        <MudIconButton Variant="Variant.Outlined"
                                        Disabled="true"
                                        Icon="@Icons.Material.Filled.DoNotTouch"
                                        Size="Size.Small"
