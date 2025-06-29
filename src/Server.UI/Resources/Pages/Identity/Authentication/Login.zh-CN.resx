@@ -181,7 +181,7 @@
   <data name="No user found, or no authorization, please contact an administrator." xml:space="preserve">
     <value>未找到用户，或者没有授权，请联系管理员。</value>
   </data>
-  <data name="Password update successfuly" xml:space="preserve">
+  <data name="Password update successfully" xml:space="preserve">
     <value>密码更新成功</value>
   </data>
   <data name="Set new password" xml:space="preserve">

@@ -49,7 +49,7 @@ public static class ConstantString
     public static string Download => Localize("Download");
     public static string Uploading => Localize("Uploading...");
     public static string Downloading => Localize("Downloading...");
-    public static string NoAllowed => Localize("No Allowed");
+    public static string NoAllowed => Localize("Not Allowed");
     public static string SigninWith => Localize("Sign in with {0}");
     public static string Logout => Localize("Logout");
     public static string Signin => Localize("Sign In");
@@ -94,7 +94,7 @@ public static class ConstantString
 
     public static string NoRecords => Localize("There are no records to view.");
     public static string Loading => Localize("Loading...");
-    public static string Waiting => Localize("Wating...");
+    public static string Waiting => Localize("Waiting...");
     public static string Processing => Localize("Processing...");
     public static string DeleteConfirmationTitle => Localize("Delete Confirmation");
     public static string LogoutConfirmationTitle => Localize("Logout Confirmation");

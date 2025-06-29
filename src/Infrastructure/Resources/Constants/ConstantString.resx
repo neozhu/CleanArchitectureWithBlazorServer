@@ -229,8 +229,8 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
-  <data name="No Allowed" xml:space="preserve">
-    <value>No Allowed</value>
+  <data name="Not Allowed" xml:space="preserve">
+    <value>Not Allowed</value>
   </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>

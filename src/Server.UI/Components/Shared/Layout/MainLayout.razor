@@ -20,7 +20,7 @@
     private bool _defaultDarkMode;
     public void Dispose()
     {
-        LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
+        LayoutService.MajorUpdateOccurred -= LayoutServiceOnMajorUpdateOccurred;
         GC.SuppressFinalize(this);
     }
 
@@ -42,12 +42,12 @@
 
     protected override Task OnInitializedAsync()
     {
-        LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
+        LayoutService.MajorUpdateOccurred += LayoutServiceOnMajorUpdateOccurred;
         LayoutService.SetBaseTheme(Theme.ApplicationTheme());
         return base.OnInitializedAsync();
     }
 
-    private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
+    private void LayoutServiceOnMajorUpdateOccurred(object? sender, EventArgs e)
     {
         InvokeAsync(() => StateHasChanged());
     }

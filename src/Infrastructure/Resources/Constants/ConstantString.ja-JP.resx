@@ -226,7 +226,7 @@
   <data name="No" xml:space="preserve">
     <value>いいえ</value>
   </data>
-  <data name="No Allowed" xml:space="preserve">
+  <data name="Not Allowed" xml:space="preserve">
     <value>許可されていません</value>
   </data>
   <data name="OK" xml:space="preserve">

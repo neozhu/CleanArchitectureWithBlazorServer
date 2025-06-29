@@ -181,8 +181,8 @@
   <data name="Please check your username and password.  If you are still unable to log in, contact your administrator." xml:space="preserve">
     <value>Please check your username and password.  If you are still unable to log in, contact your administrator.</value>
   </data>
-  <data name="Password update successfuly" xml:space="preserve">
-    <value>Password update successfuly</value>
+  <data name="Password update successfully" xml:space="preserve">
+    <value>Password update successfully</value>
   </data>
   <data name="Set new password" xml:space="preserve">
     <value>Set new password</value>

@@ -385,11 +385,11 @@ namespace CleanArchitecture.Blazor.Infrastructure.Resources.Constants {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Allowed.
+        ///   Looks up a localized string similar to Not Allowed.
         /// </summary>
         internal static string No_Allowed {
             get {
-                return ResourceManager.GetString("No Allowed", resourceCulture);
+                return ResourceManager.GetString("Not Allowed", resourceCulture);
             }
         }
         
