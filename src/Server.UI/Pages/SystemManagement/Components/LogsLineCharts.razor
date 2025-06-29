@@ -99,12 +99,12 @@
                 }
             };
 
-        LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
+        LayoutService.MajorUpdateOccurred += LayoutServiceOnMajorUpdateOccurred;
 
         Data = await Mediator.Send(new SystemLogsTimeLineChatDataQuery());
     }
 
-    private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
+    private void LayoutServiceOnMajorUpdateOccurred(object? sender, EventArgs e)
     {
         InvokeAsync(async () =>
         {
@@ -122,7 +122,7 @@
 
     public void Dispose()
     {
-        LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
+        LayoutService.MajorUpdateOccurred -= LayoutServiceOnMajorUpdateOccurred;
         GC.SuppressFinalize(this);
     }
 }
