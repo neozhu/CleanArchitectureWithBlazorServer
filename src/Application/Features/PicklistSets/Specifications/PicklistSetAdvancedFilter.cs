@@ -6,7 +6,7 @@ public enum PickListView
     All,
     [Description("My")]
     My,
-    [Description("Created Toady")]
+    [Description("Created Today")]
     TODAY,
     [Description("Created within the last 30 days")]
     LAST_30_DAYS
