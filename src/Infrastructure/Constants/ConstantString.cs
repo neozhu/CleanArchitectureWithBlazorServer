@@ -49,7 +49,7 @@ public static class ConstantString
     public static string Download => Localize("Download");
     public static string Uploading => Localize("Uploading...");
     public static string Downloading => Localize("Downloading...");
-    public static string NoAllowed => Localize("No Allowed");
+    public static string NoAllowed => Localize("Not Allowed");
     public static string SigninWith => Localize("Sign in with {0}");
     public static string Logout => Localize("Logout");
     public static string Signin => Localize("Sign In");

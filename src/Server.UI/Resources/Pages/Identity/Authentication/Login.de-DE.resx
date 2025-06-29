@@ -181,7 +181,7 @@
   <data name="Please check your username and password.  If you are still unable to log in, contact your administrator." xml:space="preserve">
     <value>Bitte überprüfen Sie Ihren Benutzernamen und Ihr Passwort. Wenn Sie sich immer noch nicht anmelden können, wenden Sie sich an Ihren Administrator.</value>
   </data>
-  <data name="Password update successfuly" xml:space="preserve">
+  <data name="Password update successfully" xml:space="preserve">
     <value>Passwortaktualisierung erfolgreich</value>
   </data>
   <data name="Set new password" xml:space="preserve">

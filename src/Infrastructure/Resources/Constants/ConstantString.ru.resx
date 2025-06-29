@@ -226,7 +226,7 @@
   <data name="No" xml:space="preserve">
     <value>Нет</value>
   </data>
-  <data name="No Allowed" xml:space="preserve">
+  <data name="Not Allowed" xml:space="preserve">
     <value>Не разрешено</value>
   </data>
   <data name="OK" xml:space="preserve">

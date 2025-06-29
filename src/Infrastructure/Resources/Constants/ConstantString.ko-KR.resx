@@ -235,7 +235,7 @@
   <data name="No" xml:space="preserve">
     <value>아니요</value>
   </data>
-  <data name="No Allowed" xml:space="preserve">
+  <data name="Not Allowed" xml:space="preserve">
     <value>허용되지 않음</value>
   </data>
   <data name="OK" xml:space="preserve">

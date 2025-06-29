@@ -181,7 +181,7 @@
   <data name="Please check your username and password.  If you are still unable to log in, contact your administrator." xml:space="preserve">
     <value>ユーザー名とパスワードを確認してください。 それでもログインできない場合は、管理者に問い合わせてください。</value>
   </data>
-  <data name="Password update successfuly" xml:space="preserve">
+  <data name="Password update successfully" xml:space="preserve">
     <value>パスワードの更新に成功しました</value>
   </data>
   <data name="Set new password" xml:space="preserve">

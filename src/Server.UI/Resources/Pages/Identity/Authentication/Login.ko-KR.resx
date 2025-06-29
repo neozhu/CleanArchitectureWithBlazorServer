@@ -151,7 +151,7 @@
   <data name="Password must contain at least one lowercase letter" xml:space="preserve">
     <value>비밀번호에는 소문자가 하나 이상 포함되어야 합니다.</value>
   </data>
-  <data name="Password update successfuly" xml:space="preserve">
+  <data name="Password update successfully" xml:space="preserve">
     <value>비밀번호 업데이트 성공</value>
   </data>
   <data name="Please check your username and password.  If you are still unable to log in, contact your administrator." xml:space="preserve">
