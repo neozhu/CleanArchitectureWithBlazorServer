@@ -1,65 +1,65 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
-        Microsoft ResX Schema 
-        
-        Version 2.0
-        
-        The primary goals of this format is to allow a simple XML format 
-        that is mostly human readable. The generation and parsing of the 
-        various data types are done through the TypeConverter classes 
-        associated with the data types.
-        
-        Example:
-        
-        ... ado.net/XML headers & schema ...
-        <resheader name="resmimetype">text/microsoft-resx</resheader>
-        <resheader name="version">2.0</resheader>
-        <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-        <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-        <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-        <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-        <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-            <value>[base64 mime encoded serialized .NET Framework object]</value>
-        </data>
-        <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-            <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-            <comment>This is a comment</comment>
-        </data>
-                    
-        There are any number of "resheader" rows that contain simple 
-        name/value pairs.
-        
-        Each data row contains a name, and value. The row also contains a 
-        type or mimetype. Type corresponds to a .NET class that support 
-        text/value conversion through the TypeConverter architecture. 
-        Classes that don't support this are serialized and stored with the 
-        mimetype set.
-        
-        The mimetype is used for serialized objects, and tells the 
-        ResXResourceReader how to depersist the object. This is currently not 
-        extensible. For a given mimetype the value must be set accordingly:
-        
-        Note - application/x-microsoft.net.object.binary.base64 is the format 
-        that the ResXResourceWriter will generate, however the reader can 
-        read any of the formats listed below.
-        
-        mimetype: application/x-microsoft.net.object.binary.base64
-        value   : The object must be serialized with 
-                : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-                : and then encoded with base64 encoding.
-        
-        mimetype: application/x-microsoft.net.object.soap.base64
-        value   : The object must be serialized with 
-                : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-                : and then encoded with base64 encoding.
+    Microsoft ResX Schema 
     
-        mimetype: application/x-microsoft.net.object.bytearray.base64
-        value   : The object must be serialized into a byte array 
-                : using a System.ComponentModel.TypeConverter
-                : and then encoded with base64 encoding.
-        -->
-  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root" xmlns="">
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -112,14 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Change Password" xml:space="preserve">
     <value>Changer le mot de passe</value>
@@ -166,20 +162,20 @@
   <data name="User Name" xml:space="preserve">
     <value>Nom d'utilisateur</value>
   </data>
-  <data name="Superior Name" xml:space="preserve">
-    <value>Nom supérieur</value>
-  </data>
   <data name="Tenant Name" xml:space="preserve">
     <value>Nom du locataire</value>
   </data>
   <data name="Status" xml:space="preserve">
     <value>Statut</value>
   </data>
-  <data name="Click upload a image" xml:space="preserve">
-    <value>Cliquez sur télécharger une image</value>
+  <data name="Superior Name" xml:space="preserve">
+    <value>Nom supérieur</value>
   </data>
   <data name="Org Chart" xml:space="preserve">
     <value>Organigramme</value>
+  </data>
+  <data name="Click upload a image" xml:space="preserve">
+    <value>Cliquez sur télécharger une image</value>
   </data>
   <data name="The avatar has been updated" xml:space="preserve">
     <value>L'avatar a été mis à jour</value>
@@ -187,32 +183,65 @@
   <data name="Full Name" xml:space="preserve">
     <value>Nom et prénom</value>
   </data>
-  <data name="2FA is currently enabled." xml:space="preserve">
-    <value>2FA est actuellement activée.</value>
+  <data name="Two-Factor Authentication" xml:space="preserve">
+    <value>Authentification à deux facteurs</value>
   </data>
   <data name="Two-Factor Authentication (2FA)" xml:space="preserve">
     <value>Authentification à deux facteurs (2FA)</value>
   </data>
-  <data name="2FA is currently disabled." xml:space="preserve">
-    <value>2FA est actuellement désactivée.</value>
-  </data>
-  <data name="Disable 2FA" xml:space="preserve">
-    <value>Désactiver la 2FA</value>
-  </data>
-  <data name="View Recovery Codes" xml:space="preserve">
-    <value>Afficher les codes de récupération</value>
+  <data name="2FA is currently enabled." xml:space="preserve">
+    <value>L'authentification à deux facteurs est actuellement activée.</value>
   </data>
   <data name="If you lose access to your authenticator device, you can use recovery codes to log in." xml:space="preserve">
     <value>Si vous perdez l'accès à votre appareil d'authentification, vous pouvez utiliser les codes de récupération pour vous connecter.</value>
   </data>
+  <data name="View Recovery Codes" xml:space="preserve">
+    <value>Afficher les codes de récupération</value>
+  </data>
+  <data name="Disable 2FA" xml:space="preserve">
+    <value>Désactiver la 2FA</value>
+  </data>
+  <data name="2FA is currently disabled." xml:space="preserve">
+    <value>L'authentification à deux facteurs est actuellement désactivée.</value>
+  </data>
+  <data name="Scan the QR code below with your authenticator app:" xml:space="preserve">
+    <value>Scannez le code QR ci-dessous avec votre application d’authentification :</value>
+  </data>
   <data name="Or enter this key manually in your app:" xml:space="preserve">
     <value>Ou saisissez cette clé manuellement dans votre application :</value>
+  </data>
+  <data name="Verification Code" xml:space="preserve">
+    <value>Code de vérification</value>
+  </data>
+  <data name="Verify" xml:space="preserve">
+    <value>Vérifier</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
   </data>
   <data name="Two-factor authentication adds an extra layer of security to your account by requiring more than just a password to sign in." xml:space="preserve">
     <value>L’authentification à deux facteurs ajoute une couche de sécurité supplémentaire à votre compte en exigeant plus qu’un simple mot de passe pour se connecter.</value>
   </data>
+  <data name="Enable 2FA" xml:space="preserve">
+    <value>Activer la 2FA</value>
+  </data>
+  <data name="Please enter a valid 6-digit verification code" xml:space="preserve">
+    <value>Veuillez saisir un code de vérification valide à 6 chiffres.</value>
+  </data>
+  <data name="Two-factor authentication has been enabled." xml:space="preserve">
+    <value>L’authentification à deux facteurs a été activée.</value>
+  </data>
   <data name="Verification code is invalid." xml:space="preserve">
     <value>Le code de vérification est invalide.</value>
+  </data>
+  <data name="Two-factor authentication has been disabled." xml:space="preserve">
+    <value>L’authentification à deux facteurs a été désactivée.</value>
+  </data>
+  <data name="Recovery Codes" xml:space="preserve">
+    <value>Codes de récupération</value>
+  </data>
+  <data name="Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in." xml:space="preserve">
+    <value>Stockez ces codes de récupération dans un endroit sécurisé. Si vous perdez l’accès à votre appareil d’authentification, vous pourrez utiliser ces codes pour vous connecter.</value>
   </data>
   <data name="Copy all codes" xml:space="preserve">
     <value>Copier tous les codes</value>
@@ -220,43 +249,10 @@
   <data name="Download" xml:space="preserve">
     <value>Télécharger</value>
   </data>
-  <data name="Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in." xml:space="preserve">
-    <value>Stockez ces codes de récupération dans un endroit sécurisé. Si vous perdez l’accès à votre appareil d’authentification, vous pourrez utiliser ces codes pour vous connecter.</value>
-  </data>
-  <data name="Recovery Codes" xml:space="preserve">
-    <value>Codes de récupération</value>
-  </data>
-  <data name="Two-factor authentication has been disabled." xml:space="preserve">
-    <value>L’authentification à deux facteurs a été désactivée.</value>
-  </data>
-  <data name="Two-factor authentication has been enabled." xml:space="preserve">
-    <value>L’authentification à deux facteurs a été activée.</value>
-  </data>
-  <data name="Please enter a valid 6-digit verification code" xml:space="preserve">
-    <value>Veuillez saisir un code de vérification valide à 6 chiffres.</value>
-  </data>
-  <data name="Enable 2FA" xml:space="preserve">
-    <value>Activer la 2FA</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Annuler</value>
-  </data>
-  <data name="Verify" xml:space="preserve">
-    <value>Vérifier</value>
-  </data>
-  <data name="Verification Code" xml:space="preserve">
-    <value>Code de vérification</value>
-  </data>
-  <data name="Scan the QR code below with your authenticator app:" xml:space="preserve">
-    <value>Scannez le code QR ci-dessous avec votre application d’authentification :</value>
-  </data>
   <data name="Close" xml:space="preserve">
     <value>Fermer</value>
   </data>
   <data name="All recovery codes have been copied to the clipboard." xml:space="preserve">
     <value>Tous les codes de récupération ont été copiés dans le presse-papiers.</value>
-  </data>
-  <data name="Two-Factor Authentication" xml:space="preserve">
-    <value>Authentification à deux facteurs</value>
   </data>
 </root>

@@ -94,7 +94,7 @@ public static class ConstantString
 
     public static string NoRecords => Localize("There are no records to view.");
     public static string Loading => Localize("Loading...");
-    public static string Waiting => Localize("Wating...");
+    public static string Waiting => Localize("Waiting...");
     public static string Processing => Localize("Processing...");
     public static string DeleteConfirmationTitle => Localize("Delete Confirmation");
     public static string LogoutConfirmationTitle => Localize("Logout Confirmation");
