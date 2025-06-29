@@ -106,6 +106,8 @@ public static class DependencyInjection
             .AddScoped<LayoutService>()
             .AddScoped<DialogServiceHelper>()
             .AddScoped<PermissionHelper>()
+            .AddScoped<CleanArchitecture.Blazor.Server.UI.Services.Identity.UserPermissionAssignmentService>()
+            .AddScoped<CleanArchitecture.Blazor.Server.UI.Services.Identity.RolePermissionAssignmentService>()
             .AddScoped<BlazorDownloadFileService>()
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
             .AddScoped<IMenuService, MenuService>()

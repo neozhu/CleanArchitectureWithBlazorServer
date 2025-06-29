@@ -4,6 +4,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
 @using CleanArchitecture.Blazor.Infrastructure.Persistence
 @using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant
+@using CleanArchitecture.Blazor.Server.UI.Services.Identity
 @using CleanArchitecture.Blazor.Server.UI.Components.UtcToLocalTime
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Domain.Identity
@@ -239,6 +240,7 @@
     private UserManager<ApplicationUser> _userManager = null!;
     private RoleManager<ApplicationRole> _roleManager = null!;
     private PermissionHelper _permissionHelper = null!;
+    private UserPermissionAssignmentService _permissionAssignmentService = null!;
 
     // Page state and data
     private int _defaultPageSize = 15;
@@ -283,6 +285,7 @@
         _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         _permissionHelper = ScopedServices.GetRequiredService<PermissionHelper>();
+        _permissionAssignmentService = ScopedServices.GetRequiredService<UserPermissionAssignmentService>();
     }
 
     public void Dispose()
@@ -674,7 +677,7 @@
     private async Task OpenPermissionsDrawerAsync(ApplicationUserDto model)
     {
         _showPermissionsDrawer = true;
-        _permissions = await _permissionHelper.GetAllPermissionsByUserId(model.Id);
+        _permissions = await _permissionAssignmentService.LoadAsync(model.Id);
     }
 
     private Task HandlePermissionsDrawerOpenChanged(bool state)
@@ -688,15 +691,8 @@
         _isProcessing = true;
         try
         {
-            var userId = models.First().UserId;
-            var user = await _userManager.FindByIdAsync(userId!)
-                       ?? throw new NotFoundException($"User not found: {userId}");
-            foreach (var model in models)
-            {
-                await UpdateUserPermissionAsync(user, model);
-            }
+            await _permissionAssignmentService.AssignBulkAsync(models);
             Snackbar.Add(Localizer["Authorization has been changed."], Severity.Info);
-            await ClearUserClaimsCacheAsync(user.Id);
         }
         finally
         {
@@ -704,53 +700,14 @@
         }
     }
 
-    private async Task UpdateUserPermissionAsync(ApplicationUser user, PermissionModel model)
-    {
-        if (model.Assigned)
-        {
-            if (!string.IsNullOrEmpty(model.ClaimType) && !string.IsNullOrEmpty(model.ClaimValue))
-                await _userManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
-        }
-        else
-        {
-            var existingClaim = (await _userManager.GetClaimsAsync(user)).FirstOrDefault(c => c.Value == model.ClaimValue);
-            if (existingClaim is not null)
-                await _userManager.RemoveClaimAsync(user, existingClaim);
-        }
-    }
-
-    private async Task ClearUserClaimsCacheAsync(string userId)
-    {
-        var cacheKey = $"get-claims-by-{userId}";
-        FusionCache.Remove(cacheKey);
-        await Task.Delay(300);
-    }
-
     private async Task HandlePermissionChangedAsync(PermissionModel model)
     {
         _isProcessing = true;
         try
         {
-            var userId = model.UserId!;
-            var user = await _userManager.FindByIdAsync(userId)
-                       ?? throw new NotFoundException($"User not found: {userId}");
             model.Assigned = !model.Assigned;
-            if (model.Assigned)
-            {
-                if (!string.IsNullOrEmpty(model.ClaimType) && !string.IsNullOrEmpty(model.ClaimValue))
-                {
-                    await _userManager.AddClaimAsync(user, new Claim(model.ClaimType, model.ClaimValue));
-                    Snackbar.Add(Localizer["Permission assigned successfully."], Severity.Info);
-                }
-            }
-            else
-            {
-                var existingClaim = (await _userManager.GetClaimsAsync(user)).FirstOrDefault(c => c.Value == model.ClaimValue);
-                if (existingClaim is not null)
-                    await _userManager.RemoveClaimAsync(user, existingClaim);
-                Snackbar.Add(Localizer["Permission removed successfully."], Severity.Info);
-            }
-            await ClearUserClaimsCacheAsync(user.Id);
+            await _permissionAssignmentService.AssignAsync(model);
+            Snackbar.Add(model.Assigned ? Localizer["Permission assigned successfully."] : Localizer["Permission removed successfully."], Severity.Info);
         }
         finally
         {

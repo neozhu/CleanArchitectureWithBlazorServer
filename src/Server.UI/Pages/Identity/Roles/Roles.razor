@@ -13,6 +13,7 @@
 @using CleanArchitecture.Blazor.Infrastructure.Constants
 @using CleanArchitecture.Blazor.Infrastructure.PermissionSet
 @using System.Data
+@using CleanArchitecture.Blazor.Server.UI.Services.Identity
 
 @attribute [Authorize(Policy = Permissions.Roles.View)]
 @inherits OwningComponentBase<ApplicationDbContext>
@@ -183,13 +184,15 @@
     private string _searchString = string.Empty;
     private string _selectedTenantId = " ";
     private TimeSpan _refreshInterval => TimeSpan.FromHours(2);
-    private IList<PermissionModel> _permissions = new List<PermissionModel>();    private MudDataGrid<ApplicationRoleDto> _dataGrid = null!;
+    private IList<PermissionModel> _permissions = new List<PermissionModel>();
+    private MudDataGrid<ApplicationRoleDto> _dataGrid = null!;
     private bool _showPermissionsDrawer;
     private bool _isLoading;
     private bool _isUploading;
-    private bool _isExporting;    private PermissionHelper _permissionHelper = null!;
+    private bool _isExporting;
+    private PermissionHelper _permissionHelper = null!;
+    private RolePermissionAssignmentService _permissionAssignmentService = null!;
     private CleanArchitecture.Blazor.Infrastructure.PermissionSet.RolesAccessRights _accessRights = new();
-    private const string ClaimsCacheKeyPrefix = "get-claims-by-";
 
     #endregion
 
@@ -205,6 +208,7 @@
     {
         _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
         _permissionHelper = ScopedServices.GetRequiredService<PermissionHelper>();
+        _permissionAssignmentService = ScopedServices.GetRequiredService<RolePermissionAssignmentService>();
     }
 
     #endregion
@@ -342,7 +346,7 @@
     {
         _showPermissionsDrawer = true;
         _currentRoleName = item.Name!;
-        _permissions = await _permissionHelper.GetAllPermissionsByRoleId(item.Id);
+        _permissions = await _permissionAssignmentService.LoadAsync(item.Id);
     }
 
     // Update drawer open state.
@@ -355,61 +359,12 @@
     // Process a single permission change.
     private async Task OnAssignChangedHandler(PermissionModel model)
     {
-        await ProcessPermissionChange(model, async (roleId, claim, assigned) =>
-        {
-            var role = await _roleManager.FindByIdAsync(roleId)
-                ?? throw new NotFoundException($"Application role {roleId} not found.");
-            if (assigned)
-            {
-                await _roleManager.AddClaimAsync(role, claim);
-                Snackbar.Add(_localizer["Permission assigned successfully"], Severity.Info);
-            }
-            else
-            {
-                await _roleManager.RemoveClaimAsync(role, claim);
-                Snackbar.Add(_localizer["Permission removed successfully"], Severity.Info);
-            }
-        });
-    }
-
-    // Process batch permission changes.
-    private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
-    {
-        var roleGroups = models.GroupBy(m => m.RoleId).ToDictionary(g => g.Key!, g => g.ToList());
-
-        foreach (var (roleId, permissionModels) in roleGroups)
-        {
-            var assignedClaims = permissionModels
-                .Where(m => m.Assigned)
-                .Select(m => new Claim(m.ClaimType, m.ClaimValue))
-                .ToList();
-            var unassignedClaims = permissionModels
-                .Where(m => !m.Assigned)
-                .Select(m => new Claim(m.ClaimType, m.ClaimValue))
-                .ToList();
-
-            await ProcessPermissionsBatch(roleId, assignedClaims, unassignedClaims);
-        }
-        Snackbar.Add(_localizer["Authorization has been changed"], Severity.Info);
-    }
-
-    // Process permission batch for a role.
-    private async Task ProcessPermissionsBatch(string roleId, List<Claim> assignedClaims, List<Claim> unassignedClaims)
-    {
         _isProcessing = true;
         try
         {
-            var role = await _roleManager.FindByIdAsync(roleId)
-                ?? throw new NotFoundException($"Application role {roleId} not found.");
-
-            foreach (var claim in assignedClaims)
-            {
-                await _roleManager.AddClaimAsync(role, claim);
-            }
-            foreach (var claim in unassignedClaims)
-            {            await _roleManager.RemoveClaimAsync(role, claim);
-            }
-            _fusionCache.Remove($"{ClaimsCacheKeyPrefix}{roleId}");
+            model.Assigned = !model.Assigned;
+            await _permissionAssignmentService.AssignAsync(model);
+            Snackbar.Add(model.Assigned ? _localizer["Permission assigned successfully"] : _localizer["Permission removed successfully"], Severity.Info);
         }
         finally
         {
@@ -417,16 +372,14 @@
         }
     }
 
-    // Toggle a permission and apply the change.
-    private async Task ProcessPermissionChange(PermissionModel model, Func<string, Claim, bool, Task> changeAction)
+    // Process batch permission changes.
+    private async Task OnAssignAllChangedHandler(List<PermissionModel> models)
     {
         _isProcessing = true;
         try
-        {            var roleId = model.RoleId!;
-            var claim = new Claim(model.ClaimType, model.ClaimValue);
-            model.Assigned = !model.Assigned;
-            await changeAction(roleId, claim, model.Assigned);
-            _fusionCache.Remove($"{ClaimsCacheKeyPrefix}{roleId}");
+        {
+            await _permissionAssignmentService.AssignBulkAsync(models);
+            Snackbar.Add(_localizer["Authorization has been changed"], Severity.Info);
         }
         finally
         {

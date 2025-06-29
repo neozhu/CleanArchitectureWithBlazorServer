@@ -192,6 +192,9 @@ public static class DependencyInjection
                 service.Initialize();
                 return service;
             });
+
+        // Permission assignment services are registered in Server.UI DI
+
         return services
             .AddScoped<IValidationService, ValidationService>()
             .AddScoped<IDateTime, DateTimeService>()
