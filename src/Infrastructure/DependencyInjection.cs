@@ -197,6 +197,13 @@ public static class DependencyInjection
 
         // Permission assignment services are registered in Server.UI DI
 
+        // Configure HttpClient for GeolocationService
+        services.AddHttpClient<IGeolocationService, GeolocationService>(client =>
+        {
+            client.Timeout = TimeSpan.FromSeconds(10);
+            client.DefaultRequestHeaders.Add("User-Agent", "CleanArchitectureBlazorServer/1.0");
+        });
+
         return services
             .AddScoped<IValidationService, ValidationService>()
             .AddScoped<IDateTime, DateTimeService>()
