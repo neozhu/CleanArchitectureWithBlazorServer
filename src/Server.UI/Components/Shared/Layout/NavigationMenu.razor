@@ -80,7 +80,11 @@
     </MudNavMenu>
 
     <MudDivider Class="mt-auto"></MudDivider>
-    <MudNavMenu Class="d-flex justify-space-between pa-4">
+    
+    @* 用户信息显示区域 - 使用独立组件 *@
+    <UserInfoCard OnSettingClick="OnSettingClick" />
+    
+    <MudNavMenu Class="d-flex justify-space-between pa-2">
         <MudLink Href="#" Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">@L[ApplicationSettings.Copyright]</MudLink>
         <MudText Class="" Style="font-size:0.625rem;line-height:1.125rem;color:#6F6F6F !important">@L["version"] @ApplicationSettings.Version</MudText>
     </MudNavMenu>
@@ -123,6 +127,8 @@ else
 
     private IEnumerable<MenuSectionModel> MenuSections => MenuService.Features;
     [EditorRequired] [Parameter] public string[] Roles { get; set; } = Array.Empty<string>();
+    
+    [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
 
     private bool Expanded(MenuSectionItemModel menu)
     {
