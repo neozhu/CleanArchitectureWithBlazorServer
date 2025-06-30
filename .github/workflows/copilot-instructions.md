@@ -63,7 +63,7 @@ When Copilot emits code it **must**:
 8. Generate **bUnit tests** for Blazor components with meaningful logic.
 9. Avoid hard‑coded secrets; use `IConfiguration` / user secrets.
 10. Use **FusionCache** (`IFusionCache`) for caching read‑heavy queries; prefer `GetOrSetAsync` with sensible expirations.
-
+11. All annotations and comments in the codebase should be written in English to maintain consistency and ensure readability for a global developer audience.
 ---
 
 ## 5  CQRS Skeleton Example

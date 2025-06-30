@@ -6,35 +6,51 @@
 @inject IStringLocalizer<Contacts> L
 @attribute [Authorize(Policy = Permissions.Contacts.View)]
 <PageTitle>@Title</PageTitle>
-<Breadcrumbs  OnGoEditClick="GoEdit" OnDeleteClick="Delete" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
+<Breadcrumbs OnGoEditClick="GoEdit" OnDeleteClick="Delete" BreadcrumbItems="_breadcrumbItems"></Breadcrumbs>
 <MudContainer Class="mt-3" MaxWidth="MaxWidth.Large">
 @if (_model != null)
 {
-    <MudCard Class="pa-2">
+    <MudCard Class="pa-2" Elevation="2">
         <MudCardHeader>
             <CardHeaderContent>
                  <MudText Typo="Typo.h6">@Title</MudText>
             </CardHeaderContent>
         </MudCardHeader>
         <MudCardContent>
-            <MudGrid Spacing="3" Class="readonly-grid">
-                <MudItem xs="12" md="6"> 
-                        <ReadOnlyFieldX6 Label="@L[_model.GetMemberDescription(x=>x.Name)]" Value="_model.Name"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyFieldX6 Label="@L[_model.GetMemberDescription(x=>x.Description)]" Value="_model.Description"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyFieldX6 Label="@L[_model.GetMemberDescription(x=>x.Email)]" Value="_model.Email"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyFieldX6 Label="@L[_model.GetMemberDescription(x=>x.PhoneNumber)]" Value="_model.PhoneNumber"></ReadOnlyFieldX6>
-                </MudItem> 
-<MudItem xs="12" md="6"> 
-                        <ReadOnlyFieldX6 Label="@L[_model.GetMemberDescription(x=>x.Country)]" Value="_model.Country"></ReadOnlyFieldX6>
-                </MudItem> 
-
-            </MudGrid>
+            <!-- Contact information display area -->
+            <MudPaper Class="pa-3" Elevation="0" Style="background: var(--mud-palette-background-grey);">
+                <MudGrid Spacing="3">
+                    <MudItem xs="12" sm="6">
+                        <ReadOnlyField Label="@L[_model.GetMemberDescription(x=>x.Name)]" 
+                                       Value="_model.Name" 
+                                       Dense="_isDenseMode" />
+                    </MudItem>
+                    
+                    <MudItem xs="12" sm="6">
+                        <ReadOnlyField Label="@L[_model.GetMemberDescription(x=>x.Description)]" 
+                                       Value="_model.Description"
+                                       Dense="_isDenseMode" />
+                    </MudItem>
+                    
+                    <MudItem xs="12" sm="6">
+                        <ReadOnlyField Label="@L[_model.GetMemberDescription(x=>x.Email)]" 
+                                       Value="_model.Email"
+                                       Dense="_isDenseMode" />
+                    </MudItem>
+                    
+                    <MudItem xs="12" sm="6">
+                        <ReadOnlyField Label="@L[_model.GetMemberDescription(x=>x.PhoneNumber)]" 
+                                       Value="_model.PhoneNumber"
+                                       Dense="_isDenseMode" />
+                    </MudItem>
+                    
+                    <MudItem xs="12" sm="12">
+                        <ReadOnlyField Label="@L[_model.GetMemberDescription(x=>x.Country)]" 
+                                       Value="_model.Country"
+                                       Dense="_isDenseMode" />
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
         </MudCardContent>
         <MudCardActions></MudCardActions>
     </MudCard>
@@ -48,6 +64,8 @@
     public int Id { get; set; }
     private List<BreadcrumbItem>? _breadcrumbItems;
     private ContactDto? _model;
+    private bool _isDenseMode = true; 
+    
     protected override async Task OnInitializedAsync()
     {
         Title = L["Contact"];
@@ -70,6 +88,7 @@
         });
 
     }
+    
     void GoEdit()
     {
         Navigation.NavigateTo($"/pages/Contacts/edit/{Id}");
