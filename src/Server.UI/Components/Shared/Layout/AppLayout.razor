@@ -17,7 +17,8 @@
                         RightToLeftToggle="LayoutService.ToggleRightToLeft"
                         OnSettingClick="@(() => themeSettings?.OpenSetting())" />
             <NavigationMenu DrawerOpen="_navigationMenuDrawerOpen" Roles="@(UserProfile?.AssignedRoles??[])"
-                            DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler"/>
+                            DrawerOpenChanged="NavigationMenuDrawerOpenChangedHandler"
+                            OnSettingClick="@(() => themeSettings?.OpenSetting())"/>
             <ThemesMenu @ref="themeSettings" UserPreferences="@LayoutService.UserPreferences"
                         UserPreferencesChanged="LayoutService.UpdateUserPreferences"/>
            

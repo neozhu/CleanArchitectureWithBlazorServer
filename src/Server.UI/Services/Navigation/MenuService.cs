@@ -103,7 +103,13 @@ public class MenuService : IMenuService
                             Title = "Profile",
                             Href = "/user/profile",
                             PageStatus = PageStatus.Completed
-                        }
+                        },
+                        new()
+                        {
+                            Title = "Login History",
+                            Href = "/pages/identity/loginaudits",
+                            PageStatus = PageStatus.Completed
+                        },
                     }
                 },
                 new()

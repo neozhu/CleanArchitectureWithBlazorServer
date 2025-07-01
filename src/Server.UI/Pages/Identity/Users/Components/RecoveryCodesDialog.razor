@@ -1,4 +1,4 @@
-﻿@inject IStringLocalizer<Profile> Localizer
+﻿@inject IStringLocalizer<CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Profile> Localizer
 
 <MudDialog>
     <DialogContent>
@@ -6,7 +6,7 @@
         
         <MudPaper Elevation="0" Class="pa-4 mud-background-gray">
             <div class="d-flex justify-space-between mb-4">
-                <MudText>@Localizer["Recovery Codes"]</MudText>                <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Size="Size.Small" 
+                <MudText>@Localizer["Recovery Codes"]</MudText>                <MudIconButton Icon="@Icons.Material.Filled.ContentCopy" Size="MudBlazor.Size.Small" 
                               OnClick="CopyAllCodesToClipboard" 
                               title="@Localizer["Copy all codes"]" />
             </div>
