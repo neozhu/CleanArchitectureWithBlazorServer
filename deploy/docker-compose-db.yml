@@ -16,7 +16,7 @@ services:
       retries: 3
 
   blazorserverapp:
-    image: blazordevlab/cleanarchitectureblazorserver:1.2.22
+    image: blazordevlab/cleanarchitectureblazorserver:1.2.24
     environment:
       - UseInMemoryDatabase=${USE_IN_MEMORY_DATABASE}
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
