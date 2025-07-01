@@ -193,6 +193,9 @@
   <data name="Roles" xml:space="preserve">
     <value>角色</value>
   </data>
+  <data name="Login Audits" xml:space="preserve">
+    <value>登录审计</value>
+  </data>
   <data name="System" xml:space="preserve">
     <value>系统</value>
   </data>
@@ -207,5 +210,8 @@
   </data>
   <data name="Contacts" xml:space="preserve">
     <value>联系人</value>
+  </data>
+  <data name="Login History" xml:space="preserve">
+    <value>登录历史</value>
   </data>
 </root>

@@ -1,0 +1,259 @@
+﻿
+
+<div Class="pa-4" Style="max-width:600px; margin:auto;">
+    <MudText Typo="Typo.h6" Class="mb-4">@Localizer["Two-Factor Authentication (2FA)"]</MudText>
+
+    @if (TwoFactorEnabled)
+    {
+        <MudAlert Severity="Severity.Success" Class="my-4">@Localizer["2FA is currently enabled."]</MudAlert>
+
+        <MudText Class="mb-4">@Localizer["If you lose access to your authenticator device, you can use recovery codes to log in."]</MudText>
+
+        <div class="d-flex gap-4 mb-4">
+            <MudButton OnClick="OnShowRecoveryCodes">
+                @Localizer["View Recovery Codes"]
+            </MudButton>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Error"
+                       OnClick="OnDisableTwoFactor">
+                @Localizer["Disable 2FA"]
+            </MudButton>
+        </div>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Info" Class="my-4">@Localizer["2FA is currently disabled."]</MudAlert>
+
+        @if (ShowSetup)
+        {
+            <MudText Class="mb-2">@Localizer["Scan the QR code below with your authenticator app:"]</MudText>
+
+            <div class="d-flex justify-center my-4">
+                @if (!string.IsNullOrEmpty(AuthenticatorUri))
+                {
+                    <MudImage Src="@QrCodeImageUrl" Alt="QR Code" Width="200" Height="200" ObjectFit="ObjectFit.Cover" />
+                }
+            </div>
+
+            <MudText Class="mb-2">@Localizer["Or enter this key manually in your app:"]</MudText>
+            <MudPaper Elevation="0" Class="pa-2 mb-4 mud-background-gray rounded">
+                <code>@SharedKey</code>
+            </MudPaper>
+
+            <MudTextField @bind-Value="VerificationCode" Label="@Localizer["Verification Code"]"
+                          Variant="Variant.Outlined" Class="mb-4" Required="true" />
+
+            <div class="d-flex gap-2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                           OnClick="OnVerifyTwoFactorSetup"
+                           Disabled="@(VerificationCode?.Length != 6)">
+                    @if (_submitting)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">@ConstantString.Waiting</MudText>
+                    }
+                    else
+                    {
+                        <MudText>@Localizer["Verify"]</MudText>
+                    }
+                </MudButton>
+
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary"
+                           OnClick="OnCancelSetup">
+                    @Localizer["Cancel"]
+                </MudButton>
+            </div>
+        }
+        else
+        {
+            <MudText Class="mb-4">@Localizer["Two-factor authentication adds an extra layer of security to your account by requiring more than just a password to sign in."]</MudText>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OnSetupTwoFactor">
+                @Localizer["Enable 2FA"]
+            </MudButton>
+        }
+    }
+</div>
+
+@code {
+    [CascadingParameter] private UserProfile? UserProfile { get; set; }
+    
+    [Inject] public IStringLocalizer<CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Profile> Localizer { get; set; } = null!;
+    [Inject] public UserManager<ApplicationUser> UserManager { get; set; } = null!;
+
+    // Internal state - no longer parameters
+    private bool TwoFactorEnabled { get; set; }
+    private bool ShowSetup { get; set; }
+    private string? AuthenticatorUri { get; set; }
+    private string? SharedKey { get; set; }
+    private string? QrCodeImageUrl { get; set; }
+    private string? VerificationCode { get; set; }
+    private bool _submitting;
+    private List<string> _recoveryCodes = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await UserManager.FindByIdAsync(UserProfile?.UserId??string.Empty);
+        if (user != null)
+        {
+            TwoFactorEnabled = await UserManager.GetTwoFactorEnabledAsync(user);
+        }
+    }
+
+    private async Task OnSetupTwoFactor()
+    {
+        await SetupTwoFactorAsync();
+    }
+
+    private async Task OnVerifyTwoFactorSetup()
+    {
+        await VerifyTwoFactorSetupAsync();
+    }
+
+    private async Task OnDisableTwoFactor()
+    {
+        await DisableTwoFactorAsync();
+    }
+
+    private async Task OnShowRecoveryCodes()
+    {
+        await ShowRecoveryCodesAsync();
+    }
+
+    private void OnCancelSetup()
+    {
+        ShowSetup = false;
+        StateHasChanged();
+    }
+
+    private async Task SetupTwoFactorAsync()
+    {
+        var user = await UserManager.FindByIdAsync(UserProfile?.UserId??string.Empty)
+                   ?? throw new NotFoundException($"User [{UserProfile?.UserId}] not found.");
+
+        // Generate the authenticator key and URI
+        var sharedKey = await UserManager.GetAuthenticatorKeyAsync(user);
+
+        // If the user doesn't have a key, generate one
+        if (string.IsNullOrEmpty(sharedKey))
+        {
+            await UserManager.ResetAuthenticatorKeyAsync(user);
+            sharedKey = await UserManager.GetAuthenticatorKeyAsync(user);
+        }
+
+        // Create the authenticator URI
+        var authenticatorUri = GenerateQrCodeUri(user.Email!, sharedKey!);
+
+        // Generate QR code image
+        var qrCodeImageUrl = await (new GenerateQrCode(JS)).Generate(authenticatorUri);
+
+        SharedKey = sharedKey;
+        AuthenticatorUri = authenticatorUri;
+        QrCodeImageUrl = qrCodeImageUrl;
+        ShowSetup = true;
+        StateHasChanged();
+    }
+
+    private string GenerateQrCodeUri(string email, string unformattedKey)
+    {
+        const string authenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+        return string.Format(
+            authenticatorUriFormat,
+            Uri.EscapeDataString("CleanArchitecture.Blazor"),
+            Uri.EscapeDataString(email),
+            unformattedKey);
+    }
+
+    private async Task VerifyTwoFactorSetupAsync()
+    {
+        if (string.IsNullOrEmpty(VerificationCode) || VerificationCode.Length != 6)
+        {
+            Snackbar.Add(Localizer["Please enter a valid 6-digit verification code"], Severity.Warning);
+            return;
+        }
+
+        _submitting = true;
+        try
+        {
+            var user = await UserManager.FindByIdAsync(UserProfile?.UserId??string.Empty)
+                       ?? throw new NotFoundException($"User [{UserProfile?.UserId}] not found.");
+
+            var isTokenValid = await UserManager.VerifyTwoFactorTokenAsync(
+                user,
+                UserManager.Options.Tokens.AuthenticatorTokenProvider,
+                VerificationCode);
+
+            if (isTokenValid)
+            {
+                // Enable 2FA for the user
+                await UserManager.SetTwoFactorEnabledAsync(user, true);
+
+                // Generate recovery codes
+                var recoveryCodes = await UserManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
+                _recoveryCodes = recoveryCodes?.ToList() ?? new List<string>();
+
+                TwoFactorEnabled = true;
+                ShowSetup = false;
+
+                // Show recovery codes in a dialog
+                await ShowRecoveryCodesAsync();
+
+                Snackbar.Add(Localizer["Two-factor authentication has been enabled."], Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add(Localizer["Verification code is invalid."], Severity.Error);
+            }
+        }
+        finally
+        {
+            _submitting = false;
+        }
+    }
+
+    private async Task DisableTwoFactorAsync()
+    {
+        var user = await UserManager.FindByIdAsync(UserProfile?.UserId??string.Empty)
+                   ?? throw new NotFoundException($"User [{UserProfile?.UserId}] not found.");
+
+        var result = await UserManager.SetTwoFactorEnabledAsync(user, false);
+
+        if (result.Succeeded)
+        {
+            TwoFactorEnabled = false;
+            Snackbar.Add(Localizer["Two-factor authentication has been disabled."], Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(string.Join(",", result.Errors.Select(e => e.Description)), Severity.Error);
+        }
+    }
+
+    private async Task ShowRecoveryCodesAsync()
+    {
+        var user = await UserManager.FindByIdAsync(UserProfile?.UserId??string.Empty)
+                   ?? throw new NotFoundException($"User [{UserProfile?.UserId}] not found.");
+        
+        // Get recovery codes (or generate new ones if they haven't been generated yet)
+        if (_recoveryCodes.Count == 0)
+        {
+            var recoveryCodes = await UserManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
+            _recoveryCodes = recoveryCodes?.ToList() ?? new List<string>();
+        }
+
+        // Display the recovery codes in a dialog
+        var parameters = new DialogParameters<RecoveryCodesDialog>
+        {
+            { x=>x.RecoveryCodes, _recoveryCodes },
+        };
+
+        var dialogOptions = new DialogOptions
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        await DialogService.ShowAsync<RecoveryCodesDialog>(Localizer["Recovery Codes"], parameters, dialogOptions);
+    }
+}

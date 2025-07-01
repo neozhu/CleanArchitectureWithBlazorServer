@@ -204,4 +204,10 @@
   <data name="Contacts" xml:space="preserve">
     <value>Contacts</value>
   </data>
+  <data name="Login History" xml:space="preserve">
+    <value>Historique de connexion</value>
+  </data>
+  <data name="Login Audits" xml:space="preserve">
+    <value>Audits de connexion</value>
+  </data>
 </root>

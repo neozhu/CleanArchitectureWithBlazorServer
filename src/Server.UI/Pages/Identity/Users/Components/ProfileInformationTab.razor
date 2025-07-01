@@ -1,0 +1,159 @@
+﻿
+<MudForm Model="@ProfileModel" @ref="_profileForm" Validation="@(Validator.ValidateValue(ProfileModel))"
+         Style="display: flex; align-items: center; flex-direction: column;">
+    <MudGrid Justify="Justify.Center" Spacing="2" Style="max-width:600px; display:flex;">
+        <!-- Profile Picture and Roles -->
+        <MudItem sm="12" xs="12">
+            <div class="d-flex justify-center">
+                <MudElement Class="d-flex flex-column align-center">
+                    @if (string.IsNullOrEmpty(ProfileModel.ProfilePictureDataUrl))
+                    {
+                        <MudAvatar Style="height:120px; width:120px; font-size:2rem;">
+                            @(string.IsNullOrEmpty(ProfileModel.UserName) ? "" : ProfileModel.UserName.ToUpper().First())
+                        </MudAvatar>
+                    }
+                    else
+                    {
+                        <MudAvatar Style="height:120px; width:120px; font-size:2rem;">
+                            <MudImage Src="@ProfileModel.ProfilePictureDataUrl" />
+                        </MudAvatar>
+                    }
+                    @if (ProfileModel.AssignedRoles is not null)
+                    {
+                        <div class="d-flex">
+                            @foreach (var role in ProfileModel.AssignedRoles)
+                            {
+                                <MudChip T="string" Size="MudBlazor.Size.Small">@role</MudChip>
+                            }
+                        </div>
+                    }
+                </MudElement>
+                <MudTooltip Text="@Localizer["Click upload an image"]">
+                    <MudFileUpload T="IBrowserFile" Accept=".jpg, .jpeg, .png, .webp" FilesChanged="OnFileChanged"
+                                   Style="margin-top:-10px; margin-left:-15px">
+                        <ActivatorContent>
+                            <MudIconButton Icon="@Icons.Material.Filled.PhotoCamera" />
+                        </ActivatorContent>
+                    </MudFileUpload>
+                </MudTooltip>
+            </div>
+        </MudItem>
+
+        <!-- User Information Fields -->
+        <MudItem sm="6" xs="12">
+            <MudTextField For="@(() => ProfileModel.TenantName)" @bind-Value="ProfileModel.TenantName" Label="@Localizer["Tenant Name"]" ReadOnly="true" />
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField For="@(() => ProfileModel.SuperiorName)" @bind-Value="ProfileModel.SuperiorName" Label="@Localizer["Superior Name"]" ReadOnly="true" />
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField For="@(() => ProfileModel.UserName)" @bind-Value="ProfileModel.UserName" Label="@Localizer["User Name"]" ReadOnly="true" />
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField For="@(() => ProfileModel.Email)" @bind-Value="ProfileModel.Email" Label="@Localizer["Email"]" ReadOnly="true" />
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField For="@(() => ProfileModel.DisplayName)" @bind-Value="ProfileModel.DisplayName" Label="@Localizer["Full Name"]" />
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <MudTextField For="@(() => ProfileModel.PhoneNumber)" @bind-Value="ProfileModel.PhoneNumber" Label="@Localizer["Phone Number"]" />
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <TimeZoneAutocomplete T="string" For="@(() => ProfileModel.TimeZoneId)" @bind-Value="ProfileModel.TimeZoneId" Label="@Localizer["Time Zone"]" />
+        </MudItem>
+        <MudItem sm="6" xs="12">
+            <LanguageAutocomplete T="string" For="@(() => ProfileModel.LanguageCode)" @bind-Value="ProfileModel.LanguageCode" Label="@Localizer["Language"]" />
+        </MudItem>
+        <MudItem sm="12" xs="12" Class="d-flex justify-end">
+            <MudButton ButtonType="ButtonType.Button" Disabled="@_submitting" Color="Color.Primary" Class="ml-auto"
+                       OnClick="@(async () => await SubmitAsync())">
+                @if (_submitting)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">@ConstantString.Waiting </MudText>
+                }
+                else
+                {
+                    <MudText>@ConstantString.Save</MudText>
+                }
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+</MudForm>
+
+@code {
+    [CascadingParameter] private UserProfile? UserProfile { get; set; }
+     public ChangeUserProfileModel ProfileModel { get; set; } = null!;
+    [Inject] public IStringLocalizer<CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Profile> Localizer { get; set; } = null!;
+    [Inject] public IUploadService UploadService { get; set; } = null!;
+    [Inject] public UserManager<ApplicationUser> UserManager { get; set; } = null!;
+    [Inject] public UserProfileStateService UserProfileStateService { get; set; } = null!;
+    [Inject] public IOnlineUserTracker OnlineUserTracker { get; set; } = null!;
+
+    private MudForm? _profileForm;
+    private bool _submitting;
+
+    protected override Task OnInitializedAsync()
+    {
+        ProfileModel = Mapper.Map<ChangeUserProfileModel>(UserProfile);
+        return Task.CompletedTask;
+    }
+    private async Task OnFileChanged(IBrowserFile file)
+    {
+        await UploadPhoto(file);
+    }
+
+    public async Task<bool> ValidateAsync()
+    {
+        await _profileForm!.Validate();
+        return _profileForm.IsValid;
+    }
+
+    public async Task SubmitAsync()
+    {
+        _submitting = true;
+        try
+        {
+            await _profileForm!.Validate();
+            if (_profileForm.IsValid)
+            {
+                var user = await UserManager.FindByIdAsync(ProfileModel.UserId)
+                           ?? throw new NotFoundException($"User with ID [{ProfileModel.UserId}] not found.");
+                user.PhoneNumber = ProfileModel.PhoneNumber;
+                user.DisplayName = ProfileModel.DisplayName;
+                user.TimeZoneId = ProfileModel.TimeZoneId;
+                user.LanguageCode = ProfileModel.LanguageCode;
+                user.ProfilePictureDataUrl = ProfileModel.ProfilePictureDataUrl;
+                await UserManager.UpdateAsync(user);
+                UserProfileStateService.UpdateUserProfile(user.UserName!, user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber, user.TimeZoneId, user.LanguageCode);
+                await OnlineUserTracker.Update(user.Id, user.UserName ?? "", user.DisplayName ?? "", user.ProfilePictureDataUrl ?? "");
+                Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
+            }
+        }
+        finally
+        {
+            _submitting = false;
+        }
+    }
+
+    private async Task UploadPhoto(IBrowserFile file)
+    {
+        using var fileStream = file.OpenReadStream(GlobalVariable.MaxAllowedSize);
+        using var memoryStream = new MemoryStream();
+        await fileStream.CopyToAsync(memoryStream);
+        byte[] fileData = memoryStream.ToArray();
+
+        var user = await UserManager.FindByIdAsync(ProfileModel.UserId)
+                   ?? throw new NotFoundException($"User with ID [{ProfileModel.UserId}] not found.");
+        var resizedStream = await ImageProcessor.ResizeAndCompressToJpegAsync(memoryStream, 128, 128, 80);
+        var uploadRequest = new UploadRequest(file.Name, UploadType.ProfilePicture, fileData, overwrite: true, user.Id);
+
+        var result = await UploadService.UploadAsync(uploadRequest);
+        ProfileModel.ProfilePictureDataUrl = result;
+        user.ProfilePictureDataUrl = ProfileModel.ProfilePictureDataUrl;
+        await UserManager.UpdateAsync(user);
+        Snackbar.Add(Localizer["The avatar has been updated"], Severity.Info);
+        UserProfileStateService.UpdateUserProfile(user.UserName!, user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber, user.TimeZoneId, user.LanguageCode);
+        await OnlineUserTracker.Update(user.Id, user.UserName ?? "", user.DisplayName ?? "", user.ProfilePictureDataUrl);
+    }
+}
