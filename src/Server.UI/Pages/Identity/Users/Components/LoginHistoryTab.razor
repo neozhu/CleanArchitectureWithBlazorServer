@@ -1,0 +1,107 @@
+﻿@using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
+@using CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.GetMyLoginHistory
+
+
+
+
+<MudDataGrid T="LoginAuditDto"
+             @ref="_dataGrid"
+             Loading="_loading"
+             ServerData="LoadServerData"
+             Filterable="false"
+             Height="500px"
+             FixedHeader="true">
+    <ToolBarContent>
+        <div class="d-flex flex-row flex-grow-1 justify-space-between align-center">
+            <MudSpacer />
+            <MudTextField T="string"
+                          Value="_searchKeyword"
+                          ValueChanged="OnSearchKeyChanged"
+                          Placeholder="Search by IP, Browser, Region, or Provider"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@Icons.Material.Filled.Search"
+                          IconSize="MudBlazor.Size.Medium"
+                          Class="mt-0"
+                           />
+        </div>
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="x => x.LoginTimeUtc"
+                        Title="Login Time"
+                        Format="yyyy-MM-dd HH:mm:ss" />
+        <PropertyColumn Property="x => x.IpAddress"
+                        Title="IP Address" />
+        <PropertyColumn Property="x => x.Region"
+                        Title="Region" />
+        <PropertyColumn Property="x => x.Provider"
+                        Title="Provider" />
+        <TemplateColumn Title="Status">
+            <CellTemplate>
+                @if (context.Item.Success)
+                {
+                    <MudChip Color="Color.Success" Size="MudBlazor.Size.Small">Success</MudChip>
+                }
+                else
+                {
+                    <MudChip Color="Color.Error" Size="MudBlazor.Size.Small">Failed</MudChip>
+                }
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="LoginAuditDto" />
+    </PagerContent>
+</MudDataGrid>
+
+
+@code {
+    [CascadingParameter] private UserProfile? UserProfile { get; set; }
+
+    private MudDataGrid<LoginAuditDto>? _dataGrid;
+    private bool _loading = false;
+    private string _searchKeyword = string.Empty;
+
+
+    private async Task<GridData<LoginAuditDto>> LoadServerData(GridState<LoginAuditDto> state)
+    {
+        if (UserProfile?.UserId == null)
+        {
+            return new GridData<LoginAuditDto>
+            {
+                Items = new List<LoginAuditDto>(),
+                TotalItems = 0
+            };
+        }
+
+        _loading = true;
+
+        var query = new GetMyLoginHistoryQuery
+        {
+            UserId = UserProfile.UserId,
+            Keyword = _searchKeyword,
+            PageNumber = state.Page + 1,
+            PageSize = state.PageSize,
+            OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "LoginTimeUtc",
+            SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending == true ? "desc" : "asc"
+        };
+
+        var result = await Mediator.Send(query);
+
+        _loading = false;
+
+        return new GridData<LoginAuditDto>
+        {
+            Items = result.Items,
+            TotalItems = result.TotalItems
+        };
+    }
+
+    private async Task OnSearchKeyChanged(string val)
+    {
+        _searchKeyword = val;
+        await _dataGrid!.ReloadServerData();
+
+    }
+
+
+}
