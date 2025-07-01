@@ -1,0 +1,80 @@
+@if (Dense)
+{
+    <!-- Dense mode: Pure d-flex layout, Label fixed width for consistent alignment, Value adapts to remaining space -->
+    <div class="d-flex align-center py-1">
+        <!-- Label area: Fixed width for consistent cross-column alignment -->
+        <div class="flex-shrink-0 pr-3" style="width: 140px;">
+            <span class="mud-typography mud-typography-body2 mud-text-secondary" style="font-weight: 500;">
+                @Label
+            </span>
+        </div>
+        <!-- Value area: Occupy remaining space -->
+        <div class="flex-grow-1 d-flex align-center">
+            @if (CheckBox)
+            {
+                <div class="d-flex align-center">
+                    <input type="checkbox" disabled="@true" checked="@(Convert.ToBoolean(Value))" class="mud-checkbox-input" style="margin: 0; transform: scale(0.9);" />
+                </div>
+            }
+            else
+            {
+                <span class="mud-typography mud-typography-body1" style="word-break: break-word; font-weight: 400;">
+                    @if (Value == null || string.IsNullOrWhiteSpace(Value.ToString()))
+                    {
+                        <span class="mud-text-disabled" style="font-style: italic;">—</span>
+                    }
+                    else
+                    {
+                        @Value
+                    }
+                </span>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <!-- Standard mode: Label on top, value below, pure CSS implementation -->
+    <div class="mb-3">
+        <div class="mb-1">
+            <span class="mud-typography mud-typography-body2 mud-text-secondary" style="font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                @Label
+            </span>
+        </div>
+        <div>
+            @if (CheckBox)
+            {
+                <div class="d-flex align-center mt-1">
+                    <input type="checkbox" disabled="@true" checked="@(Convert.ToBoolean(Value))" class="mud-checkbox-input" style="margin: 0; transform: scale(0.9);" />
+                </div>
+            }
+            else
+            {
+                <span class="mud-typography mud-typography-body1" style="min-height: 24px; font-weight: 400; word-break: break-word; display: block;">
+                    @if (Value == null || string.IsNullOrWhiteSpace(Value.ToString()))
+                    {
+                        <span class="mud-text-disabled" style="font-style: italic;">—</span>
+                    }
+                    else
+                    {
+                        @Value
+                    }
+                </span>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? Label { get; set; }
+    
+    [Parameter]
+    public object? Value { get; set; }
+    
+    [Parameter]
+    public bool CheckBox { get; set; }
+    
+    [Parameter]
+    public bool Dense { get; set; } = false;
+}

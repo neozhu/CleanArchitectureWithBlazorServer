@@ -1,0 +1,75 @@
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Reflection
+@using System.Text
+@using System.ComponentModel
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper
+@using CleanArchitecture.Blazor.Server.UI.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.DependencyInjection
+@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Localization
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.JSInterop
+@using MudBlazor
+@using MediatR
+@using AutoMapper
+@using AutoMapper.QueryableExtensions
+@using FluentValidation;
+@using CleanArchitecture.Blazor.Domain
+@using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
+@using CleanArchitecture.Blazor.Application.Common.Extensions
+@using CleanArchitecture.Blazor.Application.Common.Interfaces
+@using CleanArchitecture.Blazor.Application.Common.Models
+@using CleanArchitecture.Blazor.Application.Common.Security
+@using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
+@using CleanArchitecture.Blazor.Infrastructure.Constants
+@using CleanArchitecture.Blazor.Infrastructure.Extensions
+@using CleanArchitecture.Blazor.Infrastructure.Configurations
+@using CleanArchitecture.Blazor.Server.UI.Models
+@using CleanArchitecture.Blazor.Server.UI
+@using CleanArchitecture.Blazor.Server.UI.Shared
+@using CleanArchitecture.Blazor.Server.UI.Components
+@using CleanArchitecture.Blazor.Server.UI.Components.Forms
+@using CleanArchitecture.Blazor.Server.UI.Components.Breadcrumbs
+@using CleanArchitecture.Blazor.Server.UI.Components.Autocompletes
+@using CleanArchitecture.Blazor.Server.UI.Components.Dialogs
+@using CleanArchitecture.Blazor.Server.UI.Components.Identity
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication
+@using CleanArchitecture.Blazor.Server.UI.Components.Localization
+@using CleanArchitecture.Blazor.Server.UI.Components.Redirections
+@using CleanArchitecture.Blazor.Server.UI.Components.Shared
+@using CleanArchitecture.Blazor.Server.UI.Components.Shared.Themes
+@using CleanArchitecture.Blazor.Server.UI.Components.Shared.Layout
+@using CleanArchitecture.Blazor.Server.UI.Services.Layout
+@using CleanArchitecture.Blazor.Server.UI.Extensions
+@using CleanArchitecture.Blazor.Server.UI.Services.JsInterop
+@using Severity=MudBlazor.Severity
+@using Color = MudBlazor.Color
+@inject IApplicationSettings ApplicationSettings
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IConfiguration Config
+@inject IAuthorizationService AuthService 
+@inject IValidationService Validator
+@inject IJSRuntime JS
+@inject IMediator Mediator
+@inject NavigationManager Navigation
+@inject DialogServiceHelper DialogServiceHelper
+@inject IPermissionService PermissionService
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users
+@using CleanArchitecture.Blazor.Domain.Identity
+@using CleanArchitecture.Blazor.Domain.Common.Enums
+@using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
+@using Size = SixLabors.ImageSharp.Size
+@using SixLabors.ImageSharp.Processing
+@using SixLabors.ImageSharp
+@using SixLabors.ImageSharp.Formats.Png
+@using CleanArchitecture.Blazor.Application.Features.Fusion
+@inject IMapper Mapper

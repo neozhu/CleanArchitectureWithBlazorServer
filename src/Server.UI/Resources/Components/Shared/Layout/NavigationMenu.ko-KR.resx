@@ -208,4 +208,10 @@
   <data name="Contacts" xml:space="preserve">
     <value>콘택트 렌즈</value>
   </data>
+  <data name="Login History" xml:space="preserve">
+    <value>로그인 기록</value>
+  </data>
+  <data name="Login Audits" xml:space="preserve">
+    <value>로그인 감사</value>
+  </data>
 </root>

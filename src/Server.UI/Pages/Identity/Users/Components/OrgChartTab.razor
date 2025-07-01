@@ -1,0 +1,49 @@
+﻿<div class="chart-container" style="height: calc(100vh - 265px);"></div>
+
+@code {
+    [CascadingParameter] private UserProfile? UserProfile { get; set; }
+    [Inject] public UserManager<ApplicationUser> UserManager { get; set; } = null!;
+
+    private readonly List<OrgItem> _orgData = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadOrgChartAsync();
+        }
+    }
+
+    // Load organization chart data and initialize the chart via JS interop
+    private async Task LoadOrgChartAsync()
+    {
+        var users = await UserManager.Users
+            .Include(x => x.UserRoles).ThenInclude(x => x.Role)
+            .Include(x => x.Superior)
+            .ToListAsync();
+
+        _orgData.Clear();
+        foreach (var user in users)
+        {
+            var roles = await UserManager.GetRolesAsync(user);
+            var subordinateCount = await UserManager.Users.Where(x => x.SuperiorId == user.Id).CountAsync();
+            var orgItem = new OrgItem
+            {
+                Id = user.Id,
+                Name = user.DisplayName ?? user.UserName,
+                Area = user.Tenant?.Name,
+                ProfileUrl = user.ProfilePictureDataUrl,
+                ImageUrl = user.ProfilePictureDataUrl,
+                IsLoggedUser = UserProfile.UserName == user.UserName,
+                Size = string.Empty,
+                Tags = user.PhoneNumber ?? user.Email,
+                PositionName = roles != null && roles.Count > 0 ? string.Join(',', roles) : string.Empty,
+                ParentId = user.SuperiorId,
+                DirectSubordinates = subordinateCount
+            };
+            _orgData.Add(orgItem);
+        }
+
+        await new OrgChart(JS).Create(_orgData);
+    }
+}

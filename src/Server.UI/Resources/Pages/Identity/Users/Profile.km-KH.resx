@@ -259,4 +259,22 @@
   <data name="Two-Factor Authentication" xml:space="preserve">
     <value>ការផ្ទៀងផ្ទាត់ពីរជាន់</value>
   </data>
+  <data name="Login Time" xml:space="preserve">
+    <value>ពេលវេលាចូល</value>
+  </data>
+  <data name="Search by IP, Browser, Region, or Provider" xml:space="preserve">
+    <value>ស្វែងរកតាម IP កម្មវិធីរុករកតាមតំបន់ ឬអ្នកផ្តល់សេវា</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>អ្នកផ្តល់សេវា</value>
+  </data>
+  <data name="Region" xml:space="preserve">
+    <value>តំបន់</value>
+  </data>
+  <data name="IP Address" xml:space="preserve">
+    <value>អាសយដ្ឋាន IP</value>
+  </data>
+  <data name="Login History" xml:space="preserve">
+    <value>ប្រវត្តិចូល</value>
+  </data>
 </root>

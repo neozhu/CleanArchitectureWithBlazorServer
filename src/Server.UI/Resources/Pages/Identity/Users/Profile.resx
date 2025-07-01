@@ -259,4 +259,22 @@
   <data name="All recovery codes have been copied to the clipboard." xml:space="preserve">
     <value>All recovery codes have been copied to the clipboard.</value>
   </data>
+  <data name="Login History" xml:space="preserve">
+    <value>Login History</value>
+  </data>
+  <data name="Search by IP, Browser, Region, or Provider" xml:space="preserve">
+    <value>Search by IP, Browser, Region, or Provider</value>
+  </data>
+  <data name="Login Time" xml:space="preserve">
+    <value>Login Time</value>
+  </data>
+  <data name="IP Address" xml:space="preserve">
+    <value>IP Address</value>
+  </data>
+  <data name="Region" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>Provider</value>
+  </data>
 </root>

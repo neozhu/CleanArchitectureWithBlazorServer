@@ -3,6 +3,9 @@
 
 using System.Reflection;
 using ActualLab.Fusion;
+using ActualLab.Fusion.Blazor;
+using ActualLab.Fusion.Blazor.Authentication;
+using ActualLab.Fusion.Extensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Fusion;
@@ -14,16 +17,16 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
+using CleanArchitecture.Blazor.Infrastructure.Services.Gemini;
 using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
-using CleanArchitecture.Blazor.Infrastructure.Services.Gemini;
 using FluentEmail.MailKitSmtp;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
-using ActualLab.Fusion.Blazor;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 public static class DependencyInjection
@@ -195,6 +198,13 @@ public static class DependencyInjection
 
         // Permission assignment services are registered in Server.UI DI
 
+        // Configure HttpClient for GeolocationService
+        services.AddHttpClient<IGeolocationService, GeolocationService>(client =>
+        {
+            client.Timeout = TimeSpan.FromSeconds(10);
+            client.DefaultRequestHeaders.Add("User-Agent", "CleanArchitectureBlazorServer/1.0");
+        });
+
         return services
             .AddScoped<IValidationService, ValidationService>()
             .AddScoped<IDateTime, DateTimeService>()
@@ -235,6 +245,17 @@ public static class DependencyInjection
             .AddSignInManager()
             .AddClaimsPrincipalFactory<MultiTenantUserClaimsPrincipalFactory>()
             .AddDefaultTokenProviders();
+
+        // Add LoginAuditService
+        services.AddScoped<LoginAuditService>();
+
+        // Replace the default SignInManager with AuditSignInManager
+        var signInManagerDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(SignInManager<ApplicationUser>));
+        if (signInManagerDescriptor != null)
+        {
+            services.Remove(signInManagerDescriptor);
+        }
+        services.AddScoped<SignInManager<ApplicationUser>, AuditSignInManager<ApplicationUser>>();
 
         // Add the custom role validator MultiTenantRoleValidator to override the default validation logic.
         // Ensures role names are unique within each tenant.
@@ -358,7 +379,8 @@ public static class DependencyInjection
     private static void AddFusionService(this IServiceCollection services)
     {
         var fusion = services.AddFusion();
-        fusion.AddBlazor();
+        fusion.AddBlazor().AddAuthentication();
+        fusion.AddFusionTime();
         fusion.AddService<IUserSessionTracker, UserSessionTracker>();
         fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
     }
