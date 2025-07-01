@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Text.Json;
@@ -44,14 +44,12 @@ public class GeolocationService : IGeolocationService
         try
         {
             var url = $"https://ipapi.co/{ipAddress}/country/";
-            _logger.LogDebug("Requesting country for IP {IpAddress} from {Url}", ipAddress, url);
 
             var response = await _httpClient.GetAsync(url, cancellationToken);
             
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogWarning("Failed to get country for IP {IpAddress}. Status: {StatusCode}", 
-                    ipAddress, response.StatusCode);
+                _logger.LogWarning("Failed to get country information. Status: {StatusCode}", response.StatusCode);
                 return null;
             }
 
@@ -62,28 +60,25 @@ public class GeolocationService : IGeolocationService
             
             if (string.IsNullOrEmpty(country) || country.Equals("undefined", StringComparison.OrdinalIgnoreCase))
             {
-                _logger.LogWarning("Received invalid country response for IP {IpAddress}: {Country}", 
-                    ipAddress, country);
+                _logger.LogWarning("Received invalid country response");
                 return null;
             }
 
-            _logger.LogDebug("Successfully retrieved country {Country} for IP {IpAddress}", 
-                country, ipAddress);
             return country;
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "HTTP request failed while getting country for IP {IpAddress}", ipAddress);
+            _logger.LogError(ex, "HTTP request failed while getting country information");
             return null;
         }
         catch (TaskCanceledException ex)
         {
-            _logger.LogWarning(ex, "Request timeout while getting country for IP {IpAddress}", ipAddress);
+            _logger.LogWarning(ex, "Request timeout while getting country information");
             return null;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unexpected error while getting country for IP {IpAddress}", ipAddress);
+            _logger.LogError(ex, "Unexpected error while getting country information");
             return null;
         }
     }
@@ -99,15 +94,14 @@ public class GeolocationService : IGeolocationService
 
         try
         {
-            var url = $"http://ip-api.com/json/{ipAddress}";
-            _logger.LogDebug("Requesting geolocation for IP {IpAddress} from {Url}", ipAddress, url);
+            // Using HTTPS for secure communication
+            var url = $"https://ip-api.com/json/{ipAddress}";
 
             var response = await _httpClient.GetAsync(url, cancellationToken);
             
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogWarning("Failed to get geolocation for IP {IpAddress}. Status: {StatusCode}", 
-                    ipAddress, response.StatusCode);
+                _logger.LogWarning("Failed to get geolocation information. Status: {StatusCode}", response.StatusCode);
                 return null;
             }
 
@@ -115,7 +109,7 @@ public class GeolocationService : IGeolocationService
             
             if (string.IsNullOrWhiteSpace(jsonContent))
             {
-                _logger.LogWarning("Received empty response for IP {IpAddress}", ipAddress);
+                _logger.LogWarning("Received empty response");
                 return null;
             }
 
@@ -123,15 +117,14 @@ public class GeolocationService : IGeolocationService
             
             if (apiResponse == null)
             {
-                _logger.LogWarning("Failed to deserialize response for IP {IpAddress}", ipAddress);
+                _logger.LogWarning("Failed to deserialize response");
                 return null;
             }
 
             // Check if the API returned an error (status != "success")
             if (apiResponse.Status != "success")
             {
-                _logger.LogWarning("API returned error status for IP {IpAddress}: {Status} - {Message}", 
-                    ipAddress, apiResponse.Status, apiResponse.Message);
+                _logger.LogWarning("API returned error status: {Status}", apiResponse.Status);
                 return null;
             }
 
@@ -150,29 +143,26 @@ public class GeolocationService : IGeolocationService
                 Organization = apiResponse.Org
             };
 
-            _logger.LogDebug("Successfully retrieved geolocation for IP {IpAddress}: {Country}/{Region}/{City}", 
-                ipAddress, geolocation.Country, geolocation.Region, geolocation.City);
-            
             return geolocation;
         }
         catch (JsonException ex)
         {
-            _logger.LogError(ex, "JSON deserialization failed for IP {IpAddress}", ipAddress);
+            _logger.LogError(ex, "JSON deserialization failed");
             return null;
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "HTTP request failed while getting geolocation for IP {IpAddress}", ipAddress);
+            _logger.LogError(ex, "HTTP request failed while getting geolocation information");
             return null;
         }
         catch (TaskCanceledException ex)
         {
-            _logger.LogWarning(ex, "Request timeout while getting geolocation for IP {IpAddress}", ipAddress);
+            _logger.LogWarning(ex, "Request timeout while getting geolocation information");
             return null;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unexpected error while getting geolocation for IP {IpAddress}", ipAddress);
+            _logger.LogError(ex, "Unexpected error while getting geolocation information");
             return null;
         }
     }

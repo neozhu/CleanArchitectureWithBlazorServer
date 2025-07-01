@@ -49,8 +49,6 @@ public class LoginAuditService
         bool success = true,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogDebug("Creating login audit for user {UserName} from IP {IpAddress}", userName, ipAddress);
-
         var loginAudit = new LoginAudit
         {
             UserId = userId,
@@ -68,11 +66,10 @@ public class LoginAuditService
             try
             {
                 await loginAudit.EnrichWithGeolocationAsync(_geolocationService, cancellationToken);
-                _logger.LogDebug("Login audit enriched with geolocation: {Region}", loginAudit.Region);
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to enrich login audit with geolocation for IP {IpAddress}", ipAddress);
+                _logger.LogWarning(ex, "Failed to enrich login audit with geolocation");
             }
         }
 
@@ -91,9 +88,6 @@ public class LoginAuditService
     {
         if (loginAudit == null)
             throw new ArgumentNullException(nameof(loginAudit));
-
-        _logger.LogDebug("Updating login audit {LoginAuditId} with geolocation for IP {IpAddress}", 
-            loginAudit.Id, loginAudit.IpAddress);
 
         await loginAudit.EnrichWithGeolocationAsync(_geolocationService, cancellationToken);
 

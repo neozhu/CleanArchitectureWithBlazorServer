@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
@@ -166,7 +166,7 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
 
             // Fall back to remote IP
             var remoteIp = httpContext.Connection.RemoteIpAddress?.ToString();
-            
+
             // Handle localhost scenarios
             if (remoteIp == "::1" || remoteIp == "127.0.0.1")
             {
@@ -180,6 +180,7 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
             _logger.LogWarning(ex, "Failed to get client IP address");
             return null;
         }
+    }
 
     private string SanitizeInput(string? input)
     {
@@ -188,7 +189,7 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
         // Remove newline characters and trim whitespace
         return input.Replace("\r", "").Replace("\n", "").Trim();
     }
-    }
+    
 
     private string? GetBrowserInfo(HttpContext httpContext)
     {
