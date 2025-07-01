@@ -103,7 +103,7 @@
 @code {
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
-    private string Title { get; set; } = "Login Audits";
+    private string Title { get; set; } = "Login History";
     private MudDataGrid<LoginAuditDto> _table = default!;
     private readonly LoginAuditDto _currentDto = new();
     private readonly int _defaultPageSize = 15;

@@ -54,52 +54,53 @@ Copilot **must** respect these pillars when proposing code.
 When Copilot emits code it **must**:
 
 1. Use **constructor injection**; mark dependencies `readonly`.
+
 2. Stay **async/await** – *never* block with `.Result` or `.Wait()`.
+
 3. Guard arguments using `ArgumentNullException.ThrowIfNull(...)` or inline null‑checks.
+
 4. Provide a **FluentValidation validator** for every Command/Query.
+
 5. Keep **business logic** solely in Domain & Application layers.
+
 6. Register services inside the correct layer’s `DependencyInjection` class.
+
 7. Add **unit tests** (NUnit + Moq or In‑Memory Db) for new handlers/services.
-8. Generate **bUnit tests** for Blazor components with meaningful logic.
-9. Avoid hard‑coded secrets; use `IConfiguration` / user secrets.
-10. Use **FusionCache** (`IFusionCache`) for caching read‑heavy queries; prefer `GetOrSetAsync` with sensible expirations.
-11. All annotations and comments in the codebase should be written in English to maintain consistency and ensure readability for a global developer audience.
+
+8. Avoid hard-coded secrets; use `IConfiguration` / user secrets.
+
+9. Use **FusionCache** (`IFusionCache`) for caching read-heavy queries; prefer `GetOrSetAsync` with sensible expirations.
+
+10. All annotations and comments in the codebase should be written in English to maintain consistency and ensure readability for a global developer audience.
+
 ---
 
 ## 5  CQRS Skeleton Example
 
 ```csharp
-// src/Application/TodoItems/Commands/CreateTodoItemCommand.cs
-public sealed record CreateTodoItemCommand(string Title) : ICacheInvalidatorRequest<Result<int>>;
+// src/Application/Todo/Commands/AddTodoItemCommand.cs
+public sealed record AddTodoItemCommand(string Title) : IRequest<int>;
 
-// src/Application/TodoItems/Commands/CreateTodoItemHandler.cs
-internal sealed class CreateTodoItemHandler : IRequestHandler<CreateTodoItemCommand, Result<int>>
+// src/Application/Todo/Commands/AddTodoItemHandler.cs
+internal sealed class AddTodoItemHandler : IRequestHandler<AddTodoItemCommand, int>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
+    public AddTodoItemHandler(IApplicationDbContext context) => _context = context;
 
-    public CreateTodoItemHandler(IApplicationDbContext context, IMapper mapper)
-    {
-        _context = context;
-        _mapper = mapper;
-    }
-
-    public async Task<Result<int>> Handle(CreateTodoItemCommand request, CancellationToken ct)
+    public async Task<int> Handle(AddTodoItemCommand request, CancellationToken ct)
     {
         var entity = new TodoItem(request.Title);
         _context.TodoItems.Add(entity);
         await _context.SaveChangesAsync(ct);
-        return await Result<int>.SuccessAsync(item.Id);
+        return entity.Id;
     }
 }
 
-// Validator
-public sealed class CreateTodoItemCommandValidator : AbstractValidator<CreateTodoItemCommand>
+// src/Application/Todo/Commands/AddTodoItemCommandValidator.cs
+public sealed class AddTodoItemCommandValidator : AbstractValidator<AddTodoItemCommand>
 {
-    public CreateTodoItemCommandValidator()
-    {
-        RuleFor(x => x.Title).NotEmpty().MaximumLength(200);
-    }
+    public AddTodoItemCommandValidator() =>
+        RuleFor(c => c.Title).NotEmpty().MaximumLength(200);
 }
 ```
 
@@ -116,7 +117,7 @@ public sealed class CreateTodoItemCommandValidator : AbstractValidator<CreateTod
 
 ---
 
-## 7  FusionCache Guidelines
+## 7  FusionCache Guidelines
 
 * Register `FusionCache` (e.g., `services.AddFusionCache()`) in **Infrastructure.DependencyInjection**.
 * Prefer injecting `IFusionCache` instead of `IMemoryCache`.
@@ -124,7 +125,7 @@ public sealed class CreateTodoItemCommandValidator : AbstractValidator<CreateTod
 * Build cache keys as `<Layer>:<Entity>:<Id>` or `<Feature>:<Hash>` to avoid collisions.
 * Never cache sensitive or per‑user data without proper key scoping (`user:{UserId}:...`).
 
-## 8  EF Core & Identity Guidelines
+## 8  EF Core & Identity Guidelines
 
 * **DbContext location:** `src/Infrastructure/Persistence`.
 * Configure EF Core in `Infrastructure.DependencyInjection` with `services.AddDbContext<ApplicationDbContext>(...)`.
@@ -139,7 +140,7 @@ public sealed class CreateTodoItemCommandValidator : AbstractValidator<CreateTod
   * Policies live in `Server.UI`, constants in `Application`.
 * Wrap transactional work in `IDbContextTransaction` or MediatR pipeline behaviors (`UnitOfWorkBehavior`).
 
-## 9  AutoMapper Rules
+## 9  AutoMapper Rules
 
 * Profiles live in `src/Application/Common/Mapping`.
 * Call `CreateMap<Source, Destination>().ReverseMap();` when bidirectional.
@@ -147,7 +148,7 @@ public sealed class CreateTodoItemCommandValidator : AbstractValidator<CreateTod
 
 ---
 
-## 10  Testing Matrix
+## 10  Testing Matrix
 
 | Target                      | Framework | Helper libs                 |
 | --------------------------- | --------- | --------------------------- |
@@ -157,7 +158,7 @@ public sealed class CreateTodoItemCommandValidator : AbstractValidator<CreateTod
 
 ---
 
-## 11  Migrators Conventions
+## 11  Migrators Conventions
 
 * Each provider project (`Migrators.MSSQL`, etc.) holds **only migrations** plus provider‑specific DI.
 * Migrations are chronological (`yyyymmddHHmm_description`).
@@ -166,7 +167,7 @@ public sealed class CreateTodoItemCommandValidator : AbstractValidator<CreateTod
 
 ---
 
-## 12  Commit Message Format
+## 12  Commit Message Format
 
 Follow **Conventional Commits**:
 
@@ -178,7 +179,7 @@ Types: `feat`, `fix`, `docs`, `refactor`, `test`, `build`, `chore`, `perf`, `ci`
 
 ---
 
-## 13  What Copilot **MUST NOT** Do
+## 13  What Copilot **MUST NOT** Do
 
 * Mix layers (e.g., make DbContext calls from the UI).
 * Propose blocking/synchronous IO.
@@ -194,3 +195,24 @@ When uncertain, Copilot should insert an inline
 ```
 
 so humans can refine the intent.
+
+---
+
+## 14  Blazor Development Best Practices
+
+The guidelines below complement Sections 6 and 7, focusing on maintainability, performance, and user experience when building Blazor Server apps with MudBlazor.
+
+1. **Keep Markup and Logic Together (optional)**  ⟶ It's acceptable to keep your component's logic within the same `.razor` file when this improves readability; separating into partial classes is optional.
+2. **Keep Components Focused (≤ 300 LOC)**  ⟶ If a component grows, extract child components or view‑models to uphold the Single Responsibility Principle.
+3. **Optimize Rendering with `@key`**  ⟶ Add `@key` when rendering collection items to improve diffing; use `Virtualize` only when essential.
+4. **Prefer `Scoped` DI for UI State**  ⟶ Share per‑session data through scoped services (`SessionState`), avoiding singletons that could bleed state across users.
+5. **Asynchronous Lifecycle Hooks**  ⟶ Use `async Task` versions of lifecycle methods (`OnInitializedAsync`, `OnParametersSetAsync`); inject `CancellationToken` for graceful tear‑down.
+6. **Throttle `StateHasChanged`**  ⟶ Batch UI updates or debounce rapid events (e.g., keystrokes) to prevent unnecessary re‑renders.
+7. **Dispose Correctly**  ⟶ Implement `IAsyncDisposable`/`IDisposable` for components or services that allocate unmanaged or JS interop resources, and unregister event handlers.
+8. **Leverage MudBlazor Standard CSS**  ⟶ Favor MudBlazor's built-in classes and theme system; CSS isolation and BEM naming are optional.
+9. **Centralize Themeing**  ⟶ Expose a single `MudTheme` in `MainLayout`/`App.razor` and use theme variables rather than hard‑coded MudBlazor parameters for brand consistency.
+10. **Wrap JS Interop**  ⟶ Encapsulate JavaScript calls in C# extension methods (`IJSRuntime.InvokeMyPluginAsync(...)`) to avoid scattered string literals and enable unit testing via `IJSRuntime` mocks.
+11. **Skip Prerendering**  ⟶ Do **not** enable `render-mode="ServerPrerendered"`; render components only after the realtime Blazor circuit is established to avoid known hydration issues.
+12. **Error Handling with `ErrorBoundary`**  ⟶ Wrap pages in `<ErrorBoundary>` (or `MudErrorBoundary`) and log exceptions with `ILogger`; surface friendly error messages via MudBlazor `Snackbar`.
+13. **Accessibility (WCAG 2.1 AA)**  ⟶ Provide `aria-*` attributes, keyboard navigation, and sufficient color contrast; verify using browser DevTools and tools like WAVE.
+14. **Progressive Enhancement**  ⟶ Use feature flags or `IOptionsSnapshot` to roll out experimental components, allowing safe toggling in production.
