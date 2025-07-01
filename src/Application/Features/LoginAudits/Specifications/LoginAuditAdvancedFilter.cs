@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel;
@@ -16,10 +16,6 @@ public enum LoginAuditListView
     TODAY,
     [Description("View of the last 30 days")]
     LAST_30_DAYS,
-    [Description("Successful Logins")]
-    Successful,
-    [Description("Failed Logins")]
-    Failed
 }
 
 public class LoginAuditAdvancedFilter : PaginationFilter
