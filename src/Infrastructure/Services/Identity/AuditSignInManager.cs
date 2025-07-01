@@ -134,9 +134,6 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
             // Save to database
             await _context.LoginAudits.AddAsync(loginAudit);
             await _context.SaveChangesAsync(CancellationToken.None);
-
-            _logger.LogInformation("Login audit logged for user {UserName}, Success: {Success}, Provider: {Provider}, IP: {IpAddress}", 
-                userName, success, provider, ipAddress);
         }
         catch (Exception ex)
         {
