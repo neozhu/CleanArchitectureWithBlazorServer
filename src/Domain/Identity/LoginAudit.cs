@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Domain.Identity;
 public class LoginAudit : IEntity<string>
 {
     public string Id { get; set; }= Guid.CreateVersion7().ToString();
-    public DateTimeOffset LoginTimeUtc { get; set; }
+    public DateTime LoginTimeUtc { get; set; }
     public string UserId { get; set; }= string.Empty;
     public string UserName { get; set; } = string.Empty;
     public string? IpAddress { get; set; }

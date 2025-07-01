@@ -23,6 +23,7 @@ using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using FluentEmail.MailKitSmtp;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
@@ -244,6 +245,17 @@ public static class DependencyInjection
             .AddSignInManager()
             .AddClaimsPrincipalFactory<MultiTenantUserClaimsPrincipalFactory>()
             .AddDefaultTokenProviders();
+
+        // Add LoginAuditService
+        services.AddScoped<LoginAuditService>();
+
+        // Replace the default SignInManager with AuditSignInManager
+        var signInManagerDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(SignInManager<ApplicationUser>));
+        if (signInManagerDescriptor != null)
+        {
+            services.Remove(signInManagerDescriptor);
+        }
+        services.AddScoped<SignInManager<ApplicationUser>, AuditSignInManager<ApplicationUser>>();
 
         // Add the custom role validator MultiTenantRoleValidator to override the default validation logic.
         // Ensures role names are unique within each tenant.

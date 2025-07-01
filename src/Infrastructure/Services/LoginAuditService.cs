@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
@@ -59,7 +59,7 @@ public class LoginAuditService
             BrowserInfo = browserInfo,
             Provider = provider,
             Success = success,
-            LoginTimeUtc = DateTimeOffset.UtcNow
+            LoginTimeUtc = DateTime.UtcNow
         };
 
         // Enrich with geolocation information if IP address is available
