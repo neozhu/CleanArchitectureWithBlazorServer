@@ -259,4 +259,22 @@
   <data name="Two-Factor Authentication" xml:space="preserve">
     <value>Autenticación en dos pasos</value>
   </data>
+  <data name="Login Time" xml:space="preserve">
+    <value>Hora de inicio de sesión</value>
+  </data>
+  <data name="Search by IP, Browser, Region, or Provider" xml:space="preserve">
+    <value>Buscar por IP, navegador, región o proveedor</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>Proveedor</value>
+  </data>
+  <data name="Region" xml:space="preserve">
+    <value>Región</value>
+  </data>
+  <data name="IP Address" xml:space="preserve">
+    <value>Dirección IP</value>
+  </data>
+  <data name="Login History" xml:space="preserve">
+    <value>Historial de inicio de sesión</value>
+  </data>
 </root>

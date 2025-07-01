@@ -259,4 +259,22 @@
   <data name="Two-Factor Authentication" xml:space="preserve">
     <value>2단계 인증</value>
   </data>
+  <data name="Login Time" xml:space="preserve">
+    <value>로그인 시간</value>
+  </data>
+  <data name="Search by IP, Browser, Region, or Provider" xml:space="preserve">
+    <value>IP, 브라우저, 지역 또는 제공업체로 검색</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>제공업체</value>
+  </data>
+  <data name="Region" xml:space="preserve">
+    <value>지역</value>
+  </data>
+  <data name="IP Address" xml:space="preserve">
+    <value>IP 주소</value>
+  </data>
+  <data name="Login History" xml:space="preserve">
+    <value>로그인 기록</value>
+  </data>
 </root>

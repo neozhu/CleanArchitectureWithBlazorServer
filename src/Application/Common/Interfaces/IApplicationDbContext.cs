@@ -3,6 +3,7 @@
 
 
 using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -17,6 +18,7 @@ public interface IApplicationDbContext
     DbSet<Product> Products { get; set; }
     DbSet<Tenant> Tenants { get; set; }
     DbSet<Contact> Contacts { get; set; }
+    DbSet<LoginAudit> LoginAudits { get; set; }
     ChangeTracker ChangeTracker { get; }
 
     DbSet<DataProtectionKey> DataProtectionKeys { get; set; }

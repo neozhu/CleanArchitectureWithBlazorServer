@@ -208,4 +208,10 @@
   <data name="Contacts" xml:space="preserve">
     <value>Kontakte</value>
   </data>
+  <data name="Login History" xml:space="preserve">
+    <value>Anmeldeverlauf</value>
+  </data>
+  <data name="Login Audits" xml:space="preserve">
+    <value>Anmeldeprüfungen</value>
+  </data>
 </root>

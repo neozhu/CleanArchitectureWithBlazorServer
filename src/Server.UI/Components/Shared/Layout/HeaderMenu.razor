@@ -1,7 +1,7 @@
 ﻿@inject IStringLocalizer<HeaderMenu> L
 <MudAppBar Class=""
            Elevation="0"
-           Style="background: --mud-palette-appbar-background">
+           Style="backdrop-filter: blur(6px) !important; -webkit-backdrop-filter: blur(6px) !important">
     <MudTooltip Arrow="true" Text="@L["Toggle menu"]">
         <MudToggleIconButton Class="mr-3"
                              Color="@Color.Default"
@@ -50,7 +50,7 @@
         <MudSpacer/>
         <NotificationMenu/>
     </MudHidden>
-    <UserMenu OnSettingClick="OnSettingClick"/>
+
     <MudDivider Class="mx-3 my-5" DividerType="DividerType.Middle" Vertical="true" FlexItem="true"></MudDivider>
     <MudText Color="@Color.Primary" Typo="Typo.h5">
         @L[ApplicationSettings.Company]

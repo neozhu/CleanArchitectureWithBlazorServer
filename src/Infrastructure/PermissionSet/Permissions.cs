@@ -58,6 +58,23 @@ public static partial class Permissions
         public const string Purge = "Permissions.Logs.Purge";
     }
 
+    [DisplayName("Login Audit Permissions")]
+    [Description("Set permissions for login audit operations.")]
+    public static class LoginAudits
+    {
+        [Description("Allows viewing login audit details.")]
+        public const string View = "Permissions.LoginAudits.View";
+
+        [Description("Allows searching for login audit records.")]
+        public const string Search = "Permissions.LoginAudits.Search";
+
+        [Description("Allows exporting login audit records.")]
+        public const string Export = "Permissions.LoginAudits.Export";
+
+        [Description("Allows viewing all users' login audits.")]
+        public const string ViewAll = "Permissions.LoginAudits.ViewAll";
+    }
+
     [DisplayName("Picklist Permissions")]
     [Description("Set permissions for picklist operations.")]
     public static class PicklistSets
@@ -245,6 +262,13 @@ public class AuditTrailsAccessRights
     public bool Export { get; set; }
 }
 
+public class LoginAuditsAccessRights
+{
+    public bool View { get; set; }
+    public bool Search { get; set; }
+    public bool Export { get; set; }
+    public bool ViewAll { get; set; }
+}
 public class TenantsAccessRights
 {
     public bool View { get; set; }

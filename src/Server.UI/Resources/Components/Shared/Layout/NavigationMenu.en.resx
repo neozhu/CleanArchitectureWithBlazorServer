@@ -208,4 +208,10 @@
   <data name="Contacts" xml:space="preserve">
     <value>Contacts</value>
   </data>
+  <data name="Login History" xml:space="preserve">
+    <value>Login History</value>
+  </data>
+  <data name="Login Audits" xml:space="preserve">
+    <value>Login Audits</value>
+  </data>
 </root>

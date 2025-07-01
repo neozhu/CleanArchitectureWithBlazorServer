@@ -208,4 +208,10 @@
   <data name="Contacts" xml:space="preserve">
     <value>Contactes</value>
   </data>
+  <data name="Login History" xml:space="preserve">
+    <value>Historial d'inici de sessió</value>
+  </data>
+  <data name="Login Audits" xml:space="preserve">
+    <value>Auditories d'inici de sessió</value>
+  </data>
 </root>
