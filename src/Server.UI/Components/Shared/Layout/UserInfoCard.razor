@@ -1,0 +1,97 @@
+@using CleanArchitecture.Blazor.Application.Common.Security
+@inject IStringLocalizer<UserInfoCard> L
+@inject UserProfileStateService UserProfileStateService
+@implements IDisposable
+
+<div class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+        @if (UserProfile is null || string.IsNullOrEmpty(UserProfile.UserId))
+        {
+            <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+            <MudStack Justify="Justify.Center" Spacing="0" Style="flex: 1;">
+                <MudSkeleton Width="100px" Height="16px" />
+                <MudSkeleton Width="120px" Height="14px" />
+            </MudStack>
+        }
+        else
+        {
+            <MudAvatar Style="width: 32px; height: 32px;">
+                @if (string.IsNullOrEmpty(UserProfile.ProfilePictureDataUrl))
+                {
+                    @(string.IsNullOrEmpty(UserProfile.UserName) ? "" : UserProfile.UserName.First())
+                }
+                else
+                {
+                    <MudImage Src="@UserProfile.ProfilePictureDataUrl"></MudImage>
+                }
+            </MudAvatar>
+            
+            <MudStack Justify="Justify.SpaceBetween" Spacing="0" Style="flex: 1; min-width: 0;">
+                <MudText Typo="Typo.body2" Style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    @UserProfile.DisplayName
+                </MudText>
+                <MudText Typo="Typo.caption" Style="color: #6F6F6F; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    @UserProfile.Email
+                </MudText>
+            </MudStack>
+        }
+        
+        <MudMenu AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" LockScroll="true">
+            <ActivatorContent>
+                <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" />
+            </ActivatorContent>
+            <ChildContent>
+                <div style="min-width: 200px;">
+                    <MudMenuItem Href="/user/profile">
+                        <div class="d-flex align-center">
+                            <MudIcon Class="mx-2" Icon="@Icons.Material.Filled.Person" />
+                            <MudText>@L["Profile"]</MudText>
+                        </div>
+                    </MudMenuItem>
+                    <MudMenuItem OnClick="OnSettingClick">
+                        <div class="d-flex align-center">
+                            <MudIcon Class="mx-2" Icon="@Icons.Material.Filled.Settings" />
+                            <MudText>@L["Settings"]</MudText>
+                        </div>
+                    </MudMenuItem>
+                    <MudDivider Class="my-2" />
+                    <div class="mx-4 mb-2">
+                        <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
+                            <input type="hidden" name="ReturnUrl" value="/pages/authentication/login" />
+                            <MudButton Color="Color.Primary"
+                                      ButtonType="ButtonType.Submit"
+                                      FullWidth="true"
+                                      StartIcon="@Icons.Material.Filled.Logout"
+                                      Variant="Variant.Outlined"
+                                      Size="Size.Small">
+                                @L["Logout"]
+                            </MudButton>
+                        </form>
+                    </div>
+                </div>
+            </ChildContent>
+        </MudMenu>
+    </MudStack>
+</div>
+
+@code
+{
+    [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
+    
+    private UserProfile UserProfile => UserProfileStateService.UserProfile;
+
+    protected override void OnInitialized()
+    {
+        UserProfileStateService.OnChange += UserProfileStateService_OnChange;
+    }
+
+    public void Dispose()
+    {
+        UserProfileStateService.OnChange -= UserProfileStateService_OnChange;
+    }
+
+    private async Task UserProfileStateService_OnChange()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+}

@@ -259,4 +259,22 @@
   <data name="Two-Factor Authentication" xml:space="preserve">
     <value>双重身份验证</value>
   </data>
+  <data name="Login History" xml:space="preserve">
+    <value>登录历史</value>
+  </data>
+  <data name="Search by IP, Browser, Region, or Provider" xml:space="preserve">
+    <value>按 IP、浏览器、地区或提供商搜索</value>
+  </data>
+  <data name="Login Time" xml:space="preserve">
+    <value>登录时间</value>
+  </data>
+  <data name="IP Address" xml:space="preserve">
+    <value>IP地址</value>
+  </data>
+  <data name="Region" xml:space="preserve">
+    <value>地区</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>提供商</value>
+  </data>
 </root>

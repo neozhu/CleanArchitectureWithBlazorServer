@@ -259,4 +259,22 @@
   <data name="Two-Factor Authentication" xml:space="preserve">
     <value>二要素認証（2FA）</value>
   </data>
+  <data name="Login Time" xml:space="preserve">
+    <value>ログイン時間</value>
+  </data>
+  <data name="Search by IP, Browser, Region, or Provider" xml:space="preserve">
+    <value>IP、ブラウザ、地域、プロバイダーで検索</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>プロバイダー</value>
+  </data>
+  <data name="Region" xml:space="preserve">
+    <value>地域</value>
+  </data>
+  <data name="IP Address" xml:space="preserve">
+    <value>IPアドレス</value>
+  </data>
+  <data name="Login History" xml:space="preserve">
+    <value>ログイン履歴</value>
+  </data>
 </root>
