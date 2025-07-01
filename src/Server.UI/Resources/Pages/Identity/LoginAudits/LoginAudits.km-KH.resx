@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,97 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Blazor" xml:space="preserve">
-    <value>Blazor</value>
+  <data name="Login Time" xml:space="preserve">
+    <value>ពេលវេលាចូល</value>
   </data>
-  <data name="Blazor Dashboard" xml:space="preserve">
-    <value>Tableau de bord Blazor</value>
+  <data name="IP Address" xml:space="preserve">
+    <value>អាសយដ្ឋាន IP</value>
   </data>
-  <data name="Company" xml:space="preserve">
-    <value>Entreprise</value>
+  <data name="Provider" xml:space="preserve">
+    <value>អ្នកផ្តល់សេវា</value>
   </data>
-  <data name="@2024 Copyright" xml:space="preserve">
-    <value>Droit d'auteur @2024</value>
+  <data name="Success" xml:space="preserve">
+    <value>ជោគជ័យ</value>
   </data>
-  <data name="version" xml:space="preserve">
-    <value>version</value>
+  <data name="No login audit records found" xml:space="preserve">
+    <value>រកមិនឃើញកំណត់ត្រាសវនកម្មចូលទេ។</value>
   </data>
-  <data name="Coming Soon" xml:space="preserve">
-    <value>Bientôt disponible</value>
+  <data name="Login Status" xml:space="preserve">
+    <value>ស្ថានភាពចូល</value>
   </data>
-  <data name="WIP" xml:space="preserve">
-    <value>WIP</value>
+  <data name="Search" xml:space="preserve">
+    <value>ស្វែងរក</value>
   </data>
-  <data name="New" xml:space="preserve">
-    <value>Nouveau</value>
+  <data name="Successful" xml:space="preserve">
+    <value>ជោគជ័យ</value>
   </data>
-  <data name="Completed" xml:space="preserve">
-    <value>Complété</value>
+  <data name="Browser Info" xml:space="preserve">
+    <value>ព័ត៌មានកម្មវិធីរុករក</value>
   </data>
-  <data name="Application" xml:space="preserve">
-    <value>Application</value>
+  <data name="Failed" xml:space="preserve">
+    <value>បរាជ័យ</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Accueil</value>
+  <data name="Browser" xml:space="preserve">
+    <value>កម្មវិធីរុករក</value>
   </data>
-  <data name="E-Commerce" xml:space="preserve">
-    <value>Commerce électronique</value>
+  <data name="Region" xml:space="preserve">
+    <value>តំបន់</value>
   </data>
-  <data name="Products" xml:space="preserve">
-    <value>Produits</value>
+  <data name="User Name" xml:space="preserve">
+    <value>ឈ្មោះអ្នកប្រើប្រាស់</value>
   </data>
-  <data name="Documents" xml:space="preserve">
-    <value>Documents</value>
-  </data>
-  <data name="Analytics" xml:space="preserve">
-    <value>Analytiques</value>
-  </data>
-  <data name="Banking" xml:space="preserve">
-    <value>Banque</value>
-  </data>
-  <data name="Booking" xml:space="preserve">
-    <value>Réservation</value>
-  </data>
-  <data name="MANAGEMENT" xml:space="preserve">
-    <value>GESTION</value>
-  </data>
-  <data name="Authorization" xml:space="preserve">
-    <value>Autorisation</value>
-  </data>
-  <data name="Multi-Tenant" xml:space="preserve">
-    <value>Multi-locataire</value>
-  </data>
-  <data name="Users" xml:space="preserve">
-    <value>Utilisateurs</value>
-  </data>
-  <data name="Roles" xml:space="preserve">
-    <value>Rôles</value>
-  </data>
-  <data name="Profile" xml:space="preserve">
-    <value>Profil</value>
-  </data>
-  <data name="System" xml:space="preserve">
-    <value>Système</value>
-  </data>
-  <data name="Picklist" xml:space="preserve">
-    <value>Liste de sélection</value>
-  </data>
-  <data name="Audit Trails" xml:space="preserve">
-    <value>Audit Trails</value>
-  </data>
-  <data name="Logs" xml:space="preserve">
-    <value>Journaux</value>
-  </data>
-  <data name="Jobs" xml:space="preserve">
-    <value>Jobs</value>
-  </data>
-  <data name="Contacts" xml:space="preserve">
-    <value>Contacts</value>
-  </data>
-  <data name="Login History" xml:space="preserve">
-    <value>Historique de connexion</value>
+  <data name="View recent login activities and audit information." xml:space="preserve">
+    <value>មើលសកម្មភាពចូលថ្មីៗ និងព័ត៌មានសវនកម្ម។</value>
   </data>
   <data name="Login Audits" xml:space="preserve">
-    <value>Audits de connexion</value>
+    <value>ចូល សវនកម្ម</value>
   </data>
 </root>

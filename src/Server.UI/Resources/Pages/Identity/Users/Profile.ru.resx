@@ -259,4 +259,22 @@
   <data name="Two-Factor Authentication" xml:space="preserve">
     <value>Двухфакторная аутентификация</value>
   </data>
+  <data name="Login Time" xml:space="preserve">
+    <value>Время входа</value>
+  </data>
+  <data name="Search by IP, Browser, Region, or Provider" xml:space="preserve">
+    <value>Поиск по IP, браузеру, региону или провайдеру</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>Провайдер</value>
+  </data>
+  <data name="Region" xml:space="preserve">
+    <value>Регион</value>
+  </data>
+  <data name="IP Address" xml:space="preserve">
+    <value>IP-адрес</value>
+  </data>
+  <data name="Login History" xml:space="preserve">
+    <value>История входов</value>
+  </data>
 </root>

@@ -91,4 +91,16 @@
   <data name="No login audit records found" xml:space="preserve">
     <value>No login audit records found</value>
   </data>
+  <data name="Browser Info" xml:space="preserve">
+    <value>Browser Info</value>
+  </data>
+  <data name="Login Status" xml:space="preserve">
+    <value>Login Status</value>
+  </data>
+  <data name="Successful" xml:space="preserve">
+    <value>Successful</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
 </root>

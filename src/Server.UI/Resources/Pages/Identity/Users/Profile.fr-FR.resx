@@ -255,4 +255,22 @@
   <data name="All recovery codes have been copied to the clipboard." xml:space="preserve">
     <value>Tous les codes de récupération ont été copiés dans le presse-papiers.</value>
   </data>
+  <data name="Login Time" xml:space="preserve">
+    <value>Heure de connexion</value>
+  </data>
+  <data name="Search by IP, Browser, Region, or Provider" xml:space="preserve">
+    <value>Recherche par IP, navigateur, région ou fournisseur</value>
+  </data>
+  <data name="Provider" xml:space="preserve">
+    <value>Fournisseur</value>
+  </data>
+  <data name="Region" xml:space="preserve">
+    <value>Région</value>
+  </data>
+  <data name="IP Address" xml:space="preserve">
+    <value>Adresse IP</value>
+  </data>
+  <data name="Login History" xml:space="preserve">
+    <value>Historique de connexion</value>
+  </data>
 </root>

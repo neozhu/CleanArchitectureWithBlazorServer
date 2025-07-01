@@ -1,6 +1,6 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.GetMyLoginHistory
-
+@inject IStringLocalizer<CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Profile> Localizer
 
 
 
@@ -17,7 +17,7 @@
             <MudTextField T="string"
                           Value="_searchKeyword"
                           ValueChanged="OnSearchKeyChanged"
-                          Placeholder="Search by IP, Browser, Region, or Provider"
+                          Placeholder="@Localizer["Search by IP, Browser, Region, or Provider"]"
                           Adornment="Adornment.End"
                           AdornmentIcon="@Icons.Material.Filled.Search"
                           IconSize="MudBlazor.Size.Medium"
@@ -27,23 +27,23 @@
     </ToolBarContent>
     <Columns>
         <PropertyColumn Property="x => x.LoginTimeUtc"
-                        Title="Login Time"
+                        Title="@Localizer["Login Time"]"
                         Format="yyyy-MM-dd HH:mm:ss" />
         <PropertyColumn Property="x => x.IpAddress"
-                        Title="IP Address" />
+                        Title="@Localizer["IP Address"]" />
         <PropertyColumn Property="x => x.Region"
-                        Title="Region" />
+                        Title="@Localizer["Region"]" />
         <PropertyColumn Property="x => x.Provider"
-                        Title="Provider" />
-        <TemplateColumn Title="Status">
+                        Title="@Localizer["Provider"]" />
+        <TemplateColumn Title="@Localizer["Status"]">
             <CellTemplate>
                 @if (context.Item.Success)
                 {
-                    <MudChip Color="Color.Success" Size="MudBlazor.Size.Small">Success</MudChip>
+                    <MudChip Color="Color.Success" Size="MudBlazor.Size.Small">@Localizer["Success"]</MudChip>
                 }
                 else
                 {
-                    <MudChip Color="Color.Error" Size="MudBlazor.Size.Small">Failed</MudChip>
+                    <MudChip Color="Color.Error" Size="MudBlazor.Size.Small">@Localizer["Failed"]</MudChip>
                 }
             </CellTemplate>
         </TemplateColumn>

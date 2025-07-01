@@ -44,7 +44,7 @@
                         <MudSelectItem T="bool?" Value="@((bool?)true)">@L["Successful"]</MudSelectItem>
                         <MudSelectItem T="bool?" Value="@((bool?)false)">@L["Failed"]</MudSelectItem>
                     </MudSelect>
-                    <MudTextField T="string" Style="min-width:200px" ValueChanged="@(OnSearch)" Value="@_loginAuditsQuery.Keyword" Placeholder="Search" Adornment="Adornment.End"
+                    <MudTextField T="string" Style="min-width:200px" ValueChanged="@(OnSearch)" Value="@_loginAuditsQuery.Keyword" Placeholder="@L["Search"]" Adornment="Adornment.End"
                     AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium">
                     </MudTextField>
                 </MudStack>

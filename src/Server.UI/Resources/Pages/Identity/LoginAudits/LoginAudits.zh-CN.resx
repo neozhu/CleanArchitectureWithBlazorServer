@@ -91,4 +91,16 @@
   <data name="No login audit records found" xml:space="preserve">
     <value>未找到登录审计记录</value>
   </data>
+  <data name="Browser Info" xml:space="preserve">
+    <value>浏览器信息</value>
+  </data>
+  <data name="Login Status" xml:space="preserve">
+    <value>登录状态</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>查询</value>
+  </data>
+  <data name="Successful" xml:space="preserve">
+    <value>成功的</value>
+  </data>
 </root>

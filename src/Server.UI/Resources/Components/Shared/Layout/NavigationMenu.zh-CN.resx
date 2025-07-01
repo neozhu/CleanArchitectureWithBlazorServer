@@ -211,4 +211,7 @@
   <data name="Contacts" xml:space="preserve">
     <value>联系人</value>
   </data>
+  <data name="Login History" xml:space="preserve">
+    <value>登录历史</value>
+  </data>
 </root>
