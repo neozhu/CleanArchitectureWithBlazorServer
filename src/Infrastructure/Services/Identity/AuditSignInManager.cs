@@ -173,13 +173,21 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
                 return "127.0.0.1"; // Normalize localhost
             }
 
-            return remoteIp;
+            return SanitizeInput(remoteIp);
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Failed to get client IP address");
             return null;
         }
+
+    private string SanitizeInput(string? input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return string.Empty;
+        // Remove newline characters and trim whitespace
+        return input.Replace("\r", "").Replace("\n", "").Trim();
+    }
     }
 
     private string? GetBrowserInfo(HttpContext httpContext)
