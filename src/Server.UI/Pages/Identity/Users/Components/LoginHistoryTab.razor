@@ -82,7 +82,9 @@
             PageNumber = state.Page + 1,
             PageSize = state.PageSize,
             OrderBy = state.SortDefinitions.FirstOrDefault()?.SortBy ?? "LoginTimeUtc",
-            SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending == true ? "desc" : "asc"
+            SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true
+                                              ? SortDirection.Descending.ToString()
+                                              : SortDirection.Ascending.ToString()
         };
 
         var result = await Mediator.Send(query);

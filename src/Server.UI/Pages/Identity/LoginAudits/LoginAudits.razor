@@ -114,7 +114,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Title = L["Login Audits"];
+        Title = L["Login History"];
         _accessRights = await PermissionService.GetAccessRightsAsync<LoginAuditsAccessRights>();
     }
 
