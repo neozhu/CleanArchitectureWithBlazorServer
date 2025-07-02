@@ -1,0 +1,187 @@
+﻿@using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
+@using CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.GetSecuritySummary
+@using CleanArchitecture.Blazor.Domain.Enums
+@inject IStringLocalizer<SecurityStatusIndicator> Localizer
+@inject ISnackbar Snackbar
+
+@if (_securitySummary != null && _securitySummary.HasSecurityWarnings)
+{
+    <MudAlert Severity="GetAlertSeverity(_securitySummary.RiskLevel)" 
+              Variant="Variant.Outlined"
+              Class="mb-3 d-flex flex-row align-center"
+              ContentAlignment="HorizontalAlignment.Start"
+              
+              ShowCloseIcon="false"
+              NoIcon="true">
+        <div class="d-flex align-center flex-grow-1 justify-space-between flex-wrap">
+            <div class="d-flex align-center flex-grow-1 min-width-0">
+                <MudIcon Icon="@GetRiskIcon(_securitySummary.RiskLevel)" 
+                         Color="@GetRiskIconColor(_securitySummary.RiskLevel)" 
+                         Size="MudBlazor.Size.Medium"
+                         Class="mr-3 flex-shrink-0" />
+                <div class="flex-grow-1 min-width-0">
+                    <MudText Typo="Typo.subtitle2" Class="font-weight-medium">
+                        @Localizer["Security Alert"] - @_securitySummary.RiskLevel @Localizer["Risk Level"]
+                    </MudText>
+                    <MudText Typo="Typo.body2" Class="text-wrap text-break">
+                        @GetSecurityMessage(_securitySummary)
+                    </MudText>
+                </div>
+            </div>
+            <MudSpacer  />
+            @if (ShowAnalysisButton)
+            {
+                <div class="flex-shrink-0">
+                    <MudButton Variant="Variant.Outlined" 
+                              Size="MudBlazor.Size.Small" 
+                              OnClick="OnAnalysisRequested"
+                              Color="@GetButtonColor(_securitySummary.RiskLevel)"
+                              StartIcon="@Icons.Material.Filled.Analytics"
+                              Class="text-nowrap">
+                        @Localizer["View Details"]
+                    </MudButton>
+                </div>
+            }
+        </div>
+    </MudAlert>
+}
+else if (_isLoading)
+{
+    <MudAlert Severity="Severity.Normal" 
+              Variant="Variant.Outlined" 
+              Class="mb-3" 
+              ShowCloseIcon="false"
+              NoIcon="true">
+        <div class="d-flex align-center gap-3">
+            <MudSkeleton Width="32px" Height="32px" SkeletonType="SkeletonType.Circle" Class="flex-shrink-0" />
+            <div class="flex-grow-1">
+                <MudSkeleton Height="20px" Width="60%" Class="mb-2" />
+                <MudSkeleton Height="16px" Width="80%" />
+            </div>
+            <MudSkeleton Width="100px" Height="32px" Class="flex-shrink-0" />
+        </div>
+    </MudAlert>
+}
+
+@code {
+    [Parameter] public string UserId { get; set; } = string.Empty;
+    [Parameter] public bool ShowAnalysisButton { get; set; } = true;
+    [Parameter] public EventCallback OnAnalysisRequested { get; set; }
+
+    private SecuritySummaryDto? _securitySummary;
+    private bool _isLoading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(UserId))
+        {
+            await LoadSecuritySummary();
+        }
+    }
+
+    private async Task LoadSecuritySummary()
+    {
+        _isLoading = true;
+        try
+        {
+            var query = new GetSecuritySummaryQuery { UserId = UserId };
+            var result = await Mediator.Send(query);
+            
+            if (result.Succeeded)
+            {
+                _securitySummary = result.Data;
+            }
+            else
+            {
+                // Silently fail for security summary to avoid UI clutter
+                _securitySummary = null;
+            }
+        }
+        catch
+        {
+            // Silently fail for security summary
+            _securitySummary = null;
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private Severity GetAlertSeverity(SecurityRiskLevel riskLevel)
+    {
+        return riskLevel switch
+        {
+            SecurityRiskLevel.Low => Severity.Info,
+            SecurityRiskLevel.Medium => Severity.Warning,
+            SecurityRiskLevel.High => Severity.Error,
+            SecurityRiskLevel.Critical => Severity.Error,
+            _ => Severity.Normal
+        };
+    }
+
+    private string GetRiskIcon(SecurityRiskLevel riskLevel)
+    {
+        return riskLevel switch
+        {
+            SecurityRiskLevel.Low => Icons.Material.Filled.Info,
+            SecurityRiskLevel.Medium => Icons.Material.Filled.Warning,
+            SecurityRiskLevel.High => Icons.Material.Filled.Error,
+            SecurityRiskLevel.Critical => Icons.Material.Filled.GppBad,
+            _ => Icons.Material.Filled.Security
+        };
+    }
+
+    private Color GetRiskIconColor(SecurityRiskLevel riskLevel)
+    {
+        return riskLevel switch
+        {
+            SecurityRiskLevel.Low => Color.Info,
+            SecurityRiskLevel.Medium => Color.Warning,
+            SecurityRiskLevel.High => Color.Error,
+            SecurityRiskLevel.Critical => Color.Error,
+            _ => Color.Default
+        };
+    }
+
+    private Color GetButtonColor(SecurityRiskLevel riskLevel)
+    {
+        return riskLevel switch
+        {
+            SecurityRiskLevel.Low => Color.Info,
+            SecurityRiskLevel.Medium => Color.Warning,
+            SecurityRiskLevel.High => Color.Error,
+            SecurityRiskLevel.Critical => Color.Error,
+            _ => Color.Primary
+        };
+    }
+
+    private string GetSecurityMessage(SecuritySummaryDto summary)
+    {
+        var messages = new List<string>();
+
+        if (summary.NewIpAddressesCount > 0)
+        {
+            messages.Add($"{summary.NewIpAddressesCount} new IP address(es)");
+        }
+
+        if (summary.NewDevicesCount > 0)
+        {
+            messages.Add($"{summary.NewDevicesCount} new device(s)");
+        }
+
+        if (summary.FailedLoginsLast7Days > 0)
+        {
+            messages.Add($"{summary.FailedLoginsLast7Days} failed login(s) in last 7 days");
+        }
+
+        var baseMessage = string.Join(", ", messages);
+        
+        if (summary.ShouldChangePassword)
+        {
+            return $"{baseMessage}. We recommend changing your password.";
+        }
+
+        return baseMessage.Any() ? $"Detected: {baseMessage}" : "Security monitoring active";
+    }
+} 
