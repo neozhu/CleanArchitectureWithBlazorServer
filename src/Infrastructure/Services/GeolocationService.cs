@@ -43,7 +43,7 @@ public class GeolocationService : IGeolocationService
 
         try
         {
-            var url = $"https://ipapi.co/{ipAddress}/country/";
+            var url = $"http://ipapi.co/{ipAddress}/country/";
 
             var response = await _httpClient.GetAsync(url, cancellationToken);
             
@@ -94,8 +94,9 @@ public class GeolocationService : IGeolocationService
 
         try
         {
+            //ipAddress = "180.107.106.63";
             // Using HTTPS for secure communication
-            var url = $"https://ip-api.com/json/{ipAddress}";
+            var url = $"http://ip-api.com/json/{ipAddress}";
 
             var response = await _httpClient.GetAsync(url, cancellationToken);
             

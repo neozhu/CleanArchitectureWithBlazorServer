@@ -50,7 +50,8 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
     {
         var result = await base.PasswordSignInAsync(user, password, isPersistent, lockoutOnFailure);
         var userName = await UserManager.GetUserNameAsync(user) ?? "Unknown";
-        await LogLoginAuditAsync(userName, result.Succeeded, "Local", result);
+        var userId= await UserManager.GetUserIdAsync(user) ?? "Unknown";
+        await LogLoginAuditAsync(userId,userName, result.Succeeded, "Local", result);
         return result;
     }
 
@@ -61,8 +62,8 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
         // Try to get user information from external login
         var info = await GetExternalLoginInfoAsync();
         var userName = info?.Principal?.Identity?.Name ?? "External User";
-        
-        await LogLoginAuditAsync(userName, result.Succeeded, loginProvider, result);
+        var userId = info?.Principal?.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Unknown";
+        await LogLoginAuditAsync(userId, userName, result.Succeeded, loginProvider, result);
         return result;
     }
 
@@ -70,14 +71,16 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
     {
         await base.SignInAsync(user, isPersistent, authenticationMethod);
         var userName = await UserManager.GetUserNameAsync(user) ?? "Unknown";
-        await LogLoginAuditAsync(userName, true, authenticationMethod ?? "Direct", null);
+        var userId = await UserManager.GetUserIdAsync(user) ?? "Unknown";
+        await LogLoginAuditAsync(userId,userName, true, authenticationMethod ?? "Direct", null);
     }
 
     public override async Task SignInAsync(TUser user, AuthenticationProperties authenticationProperties, string? authenticationMethod = null)
     {
         await base.SignInAsync(user, authenticationProperties, authenticationMethod);
         var userName = await UserManager.GetUserNameAsync(user) ?? "Unknown";
-        await LogLoginAuditAsync(userName, true, authenticationMethod ?? "Direct", null);
+        var userId = await UserManager.GetUserIdAsync(user) ?? "Unknown";
+        await LogLoginAuditAsync(userId, userName, true, authenticationMethod ?? "Direct", null);
     }
 
     public override async Task<SignInResult> TwoFactorSignInAsync(string provider, string code, bool isPersistent, bool rememberClient)
@@ -86,17 +89,19 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
         
         // Get user from two factor info
         var userName = "Unknown";
+        var userId = "Unknown";
         var user = await GetTwoFactorAuthenticationUserAsync();
         if (user != null)
         {
             userName = await UserManager.GetUserNameAsync(user) ?? "Unknown";
+            userId = await UserManager.GetUserIdAsync(user) ?? "Unknown";
         }
         
-        await LogLoginAuditAsync(userName, result.Succeeded, $"2FA-{provider}", result);
+        await LogLoginAuditAsync(userId,userName, result.Succeeded, $"2FA-{provider}", result);
         return result;
     }
 
-    private async Task LogLoginAuditAsync(string userName, bool success, string provider, SignInResult? result)
+    private async Task LogLoginAuditAsync(string userId,string userName, bool success, string provider, SignInResult? result)
     {
         try
         {
@@ -107,16 +112,7 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
                 return;
             }
 
-            // Get user ID if possible
-            string? userId = null;
-            if (success)
-            {
-                var user = await UserManager.FindByNameAsync(userName);
-                if (user != null)
-                {
-                    userId = await UserManager.GetUserIdAsync(user);
-                }
-            }
+            
 
             // Extract client information
             var ipAddress = GetClientIpAddress(httpContext);
