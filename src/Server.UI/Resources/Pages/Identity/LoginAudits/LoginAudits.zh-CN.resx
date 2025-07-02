@@ -61,8 +61,8 @@
   <data name="Login Audits" xml:space="preserve">
     <value>登录审计</value>
   </data>
-  <data name="View recent login activities and audit information." xml:space="preserve">
-    <value>查看最近的登录活动和审计信息。</value>
+  <data name="View recent login activities and audit information" xml:space="preserve">
+    <value>查看最近的登录活动和审计信息</value>
   </data>
   <data name="Login Time" xml:space="preserve">
     <value>登录时间</value>

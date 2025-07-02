@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
     <!-- 
         Microsoft ResX Schema 
@@ -162,7 +162,7 @@
     <value>Фотографии продукта</value>
   </data>
     <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
-    <value>Рекомендуемый размер для загрузки изображений — 640X320.</value>
+    <value>Рекомендуемый размер для загрузки изображений — 640X320</value>
   </data>
     <data name="Upload picture" xml:space="preserve">
     <value>Загрузить изображение</value>

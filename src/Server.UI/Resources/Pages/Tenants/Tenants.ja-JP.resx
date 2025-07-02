@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
         Microsoft ResX Schema 
@@ -143,7 +143,7 @@
     <value>テナント名</value>
   </data>
   <data name="Tenant name is required!" xml:space="preserve">
-    <value>テナント名は必須です。</value>
+    <value>テナント名は必須です!</value>
   </data>
   <data name="Tenants" xml:space="preserve">
     <value>テナント</value>

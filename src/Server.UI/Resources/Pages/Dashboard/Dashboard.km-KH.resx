@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
+  <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,137 +59,132 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
-                xmlns="">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root" xmlns="">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="Discord Members" xml:space="preserve">
+  </resheader>
+  <data name="Discord Members" xml:space="preserve">
     <value>សមាជិកជម្លោះ</value>
   </data>
-    <data name="Contributors" xml:space="preserve">
+  <data name="Contributors" xml:space="preserve">
     <value>អ្នករួមចំណែក</value>
   </data>
-    <data name="GitHub Stars" xml:space="preserve">
+  <data name="GitHub Stars" xml:space="preserve">
     <value>ផ្កាយ GitHub</value>
   </data>
-    <data name="Global scale" xml:space="preserve">
+  <data name="Global scale" xml:space="preserve">
     <value>មាត្រដ្ឋានសកល</value>
   </data>
-    <data name="Global Spread" xml:space="preserve">
+  <data name="Global Spread" xml:space="preserve">
     <value>ការរីករាលដាលជាសកល</value>
   </data>
-    <data name="Graphite on roof" xml:space="preserve">
+  <data name="Graphite on roof" xml:space="preserve">
     <value>ក្រាហ្វិចនៅលើដំបូល</value>
   </data>
-    <data name="Join us and be part of the library’s success!" xml:space="preserve">
+  <data name="Join us and be part of the library’s success!" xml:space="preserve">
     <value>ចូលរួមជាមួយពួកយើង និងជាផ្នែកមួយនៃភាពជោគជ័យរបស់បណ្ណាល័យ!</value>
   </data>
-    <data name="MudBlazor is growing quickly" xml:space="preserve">
+  <data name="MudBlazor is growing quickly" xml:space="preserve">
     <value>MudBlazor កំពុងរីកចម្រើនយ៉ាងឆាប់រហ័ស</value>
   </data>
-    <data name="Reactor Type" xml:space="preserve">
+  <data name="Reactor Type" xml:space="preserve">
     <value>ប្រភេទរ៉េអាក់ទ័រ</value>
   </data>
-    <data name="Read More" xml:space="preserve">
+  <data name="Read More" xml:space="preserve">
     <value>អាន​បន្ថែម</value>
   </data>
-    <data name="Roentgen" xml:space="preserve">
+  <data name="Roentgen" xml:space="preserve">
     <value>រ៉ង់ហ្គេន</value>
   </data>
-    <data name="See all 137 reviews" xml:space="preserve">
+  <data name="See all 137 reviews" xml:space="preserve">
     <value>មើលការវាយតម្លៃទាំងអស់ 137</value>
   </data>
-    <data name="This is the type of uranium used in the RBMK reactors." xml:space="preserve">
-    <value>នេះគឺជាប្រភេទអ៊ុយរ៉ាញ៉ូមដែលប្រើក្នុងម៉ាស៊ីនរ៉េអាក់ទ័រ RBMK ។</value>
+  <data name="This is the type of uranium used in the RBMK reactors." xml:space="preserve">
+    <value>នេះគឺជាប្រភេទអ៊ុយរ៉ាញ៉ូមដែលប្រើក្នុងម៉ាស៊ីនរ៉េអាក់ទ័រ RBMK .</value>
   </data>
-    <data name="Total Downloads" xml:space="preserve">
+  <data name="Total Downloads" xml:space="preserve">
     <value>ការទាញយកសរុប</value>
   </data>
-    <data name="Uranium-235" xml:space="preserve">
+  <data name="Uranium-235" xml:space="preserve">
     <value>អ៊ុយរ៉ាញ៉ូម -២៣៥</value>
   </data>
-    <data
-        name="We are dedicated to improving every aspect of MudBlazor to be your number one choice when looking for a Blazor component library."
-        xml:space="preserve">
-    <value>យើងឧទ្ទិសដល់ការកែលម្អគ្រប់ទិដ្ឋភាពនៃ MudBlazor ឱ្យក្លាយជាជម្រើសទី 1 របស់អ្នកនៅពេលស្វែងរកបណ្ណាល័យសមាសធាតុ Blazor ។</value>
+  <data name="We are dedicated to improving every aspect of MudBlazor to be your number one choice when looking for a Blazor component library." xml:space="preserve">
+    <value>យើងឧទ្ទិសដល់ការកែលម្អគ្រប់ទិដ្ឋភាពនៃ MudBlazor ឱ្យក្លាយជាជម្រើសទី 1 របស់អ្នកនៅពេលស្វែងរកបណ្ណាល័យសមាសធាតុ Blazor.</value>
   </data>
-    <data
-        name="We are growing every day, developers from all over the world are using MudBlazor and are engaged with the community."
-        xml:space="preserve">
-    <value>យើងកំពុងរីកចម្រើនជារៀងរាល់ថ្ងៃ អ្នកអភិវឌ្ឍន៍មកពីជុំវិញពិភពលោកកំពុងប្រើប្រាស់ MudBlazor ហើយត្រូវបានចូលរួមជាមួយសហគមន៍។</value>
+  <data name="We are growing every day, developers from all over the world are using MudBlazor and are engaged with the community." xml:space="preserve">
+    <value>យើងកំពុងរីកចម្រើនជារៀងរាល់ថ្ងៃ អ្នកអភិវឌ្ឍន៍មកពីជុំវិញពិភពលោកកំពុងប្រើប្រាស់ MudBlazor ហើយត្រូវបានចូលរួមជាមួយសហគមន៍.</value>
   </data>
-    <data name="Molar mass" xml:space="preserve">
+  <data name="Molar mass" xml:space="preserve">
     <value>ម៉ាសម៉ូឡា</value>
   </data>
-    <data name="Name" xml:space="preserve">
+  <data name="Name" xml:space="preserve">
     <value>ឈ្មោះ</value>
   </data>
-    <data name="Sign" xml:space="preserve">
+  <data name="Sign" xml:space="preserve">
     <value>សញ្ញា</value>
   </data>
-    <data name="Nr" xml:space="preserve">
+  <data name="Nr" xml:space="preserve">
     <value>លេខ</value>
   </data>
-    <data name="Position" xml:space="preserve">
+  <data name="Position" xml:space="preserve">
     <value>ទីតាំង</value>
   </data>
 </root>

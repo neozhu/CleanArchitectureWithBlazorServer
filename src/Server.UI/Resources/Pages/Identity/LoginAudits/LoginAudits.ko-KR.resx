@@ -130,7 +130,7 @@
     <value>성공</value>
   </data>
   <data name="No login audit records found" xml:space="preserve">
-    <value>로그인 감사 기록을 찾을 수 없습니다.</value>
+    <value>로그인 감사 기록을 찾을 수 없습니다</value>
   </data>
   <data name="Login Status" xml:space="preserve">
     <value>로그인 상태</value>
@@ -156,8 +156,8 @@
   <data name="User Name" xml:space="preserve">
     <value>사용자 이름</value>
   </data>
-  <data name="View recent login activities and audit information." xml:space="preserve">
-    <value>최근 로그인 활동 및 감사 정보를 확인합니다.</value>
+  <data name="View recent login activities and audit information" xml:space="preserve">
+    <value>최근 로그인 활동 및 감사 정보를 확인합니다</value>
   </data>
   <data name="Login Audits" xml:space="preserve">
     <value>로그인 감사</value>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
         Microsoft ResX Schema 
@@ -122,13 +122,13 @@
         </value>
   </resheader>
   <data name="Create a new Tenant" xml:space="preserve">
-    <value>បង្កើតអ្នកជួលថ្មី។</value>
+    <value>បង្កើតអ្នកជួលថ្មី</value>
   </data>
   <data name="Edit the Tenant" xml:space="preserve">
     <value>កែសម្រួលអ្នកជួល</value>
   </data>
   <data name="Multi-Tenant" xml:space="preserve">
-    <value>ភតិកៈច្រើន។</value>
+    <value>ពហុភតិកៈ</value>
   </data>
   <data name="Tenant" xml:space="preserve">
     <value>អ្នក​ជួល</value>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
     <!-- 
         Microsoft ResX Schema 
@@ -159,7 +159,7 @@
     <value>តម្លៃគន្លឹះ</value>
   </data>
     <data name="New Values" xml:space="preserve">
-    <value>តម្លៃថ្មី។</value>
+    <value>តម្លៃថ្មី</value>
   </data>
     <data name="Old Values" xml:space="preserve">
     <value>តម្លៃចាស់</value>

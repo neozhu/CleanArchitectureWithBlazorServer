@@ -61,8 +61,8 @@
   <data name="Login Audits" xml:space="preserve">
     <value>Login Audits</value>
   </data>
-  <data name="View recent login activities and audit information." xml:space="preserve">
-    <value>View recent login activities and audit information.</value>
+  <data name="View recent login activities and audit information" xml:space="preserve">
+    <value>View recent login activities and audit information</value>
   </data>
   <data name="Login Time" xml:space="preserve">
     <value>Login Time</value>

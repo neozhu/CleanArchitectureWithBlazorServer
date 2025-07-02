@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
       Microsoft ResX Schema 
@@ -176,10 +176,10 @@
     <value>ការគ្រប់គ្រង</value>
   </data>
   <data name="Multi-Tenant" xml:space="preserve">
-    <value>ភតិកៈច្រើន។</value>
+    <value>ពហុភតិកៈ</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>ថ្មី។</value>
+    <value>ថ្មី</value>
   </data>
   <data name="Picklist" xml:space="preserve">
     <value>បញ្ជីជ្រើសរើស</value>

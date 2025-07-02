@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
     <!-- 
       Microsoft ResX Schema 
@@ -165,7 +165,7 @@
     <value>유닛 검색</value>
   </data>
     <data name="The recommended size for uploading images is 640X320" xml:space="preserve">
-    <value>이미지 업로드 권장 크기는 640X320입니다.</value>
+    <value>이미지 업로드 권장 크기는 640X320입니다</value>
   </data>
     <data name="Unit" xml:space="preserve">
     <value>단위</value>

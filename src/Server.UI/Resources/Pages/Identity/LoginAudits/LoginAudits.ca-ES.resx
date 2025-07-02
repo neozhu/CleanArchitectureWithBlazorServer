@@ -156,8 +156,8 @@
   <data name="User Name" xml:space="preserve">
     <value>Nom d'usuari</value>
   </data>
-  <data name="View recent login activities and audit information." xml:space="preserve">
-    <value>Visualitza les activitats d'inici de sessió recents i la informació d'auditoria.</value>
+  <data name="View recent login activities and audit information" xml:space="preserve">
+    <value>Visualitza les activitats d'inici de sessió recents i la informació d'auditoria</value>
   </data>
   <data name="Login Audits" xml:space="preserve">
     <value>Auditories d'inici de sessió</value>

@@ -156,8 +156,8 @@
   <data name="User Name" xml:space="preserve">
     <value>ユーザー名</value>
   </data>
-  <data name="View recent login activities and audit information." xml:space="preserve">
-    <value>最近のログインアクティビティと監査情報を表示します。</value>
+  <data name="View recent login activities and audit information" xml:space="preserve">
+    <value>最近のログインアクティビティと監査情報を表示します</value>
   </data>
   <data name="Login Audits" xml:space="preserve">
     <value>ログイン監査</value>

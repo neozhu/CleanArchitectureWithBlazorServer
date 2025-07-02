@@ -128,7 +128,7 @@
     <value>ドキュメントタイプ</value>
   </data>
   <data name="Document type is required!" xml:space="preserve">
-    <value>書類の種類は必須です。</value>
+    <value>書類の種類は必須です!</value>
   </data>
   <data name="Documents" xml:space="preserve">
     <value>書類</value>

@@ -155,10 +155,10 @@
     <value>បង្ហោះដោយជោគជ័យ</value>
   </data>
   <data name="{0} job started." xml:space="preserve">
-    <value>ការងារ {0} បានចាប់ផ្តើម។</value>
+    <value>ការងារ {0} បានចាប់ផ្តើម.</value>
   </data>
   <data name="{0} recognize completed." xml:space="preserve">
-    <value>{0} ទទួលស្គាល់ថាបានបញ្ចប់។</value>
+    <value>{0} ទទួលស្គាល់ថាបានបញ្ចប់.</value>
   </data>
   <data name="Choose files" xml:space="preserve">
     <value>ជ្រើសរើសឯកសារ</value>
@@ -167,10 +167,10 @@
     <value>មាតិកា</value>
   </data>
   <data name="Only .jpg and .png files are allowed." xml:space="preserve">
-    <value>មានតែឯកសារ .jpg និង .png ត្រូវបានអនុញ្ញាត។</value>
+    <value>មានតែឯកសារ .jpg និង .png ត្រូវបានអនុញ្ញាត.</value>
   </data>
   <data name="Please click [Choose Files] button to upload your photo." xml:space="preserve">
-    <value>សូមចុចប៊ូតុង [ជ្រើសរើសឯកសារ] ដើម្បីបង្ហោះរូបថតរបស់អ្នក។</value>
+    <value>សូមចុចប៊ូតុង [ជ្រើសរើសឯកសារ] ដើម្បីបង្ហោះរូបថតរបស់អ្នក.</value>
   </data>
   <data name="Recognize result" xml:space="preserve">
     <value>ទទួលស្គាល់លទ្ធផល</value>

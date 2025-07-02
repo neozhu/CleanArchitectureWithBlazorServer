@@ -156,8 +156,8 @@
   <data name="User Name" xml:space="preserve">
     <value>Benutzername</value>
   </data>
-  <data name="View recent login activities and audit information." xml:space="preserve">
-    <value>Letzte Anmeldeaktivitäten und Audit-Informationen anzeigen.</value>
+  <data name="View recent login activities and audit information" xml:space="preserve">
+    <value>Letzte Anmeldeaktivitäten und Audit-Informationen anzeigen</value>
   </data>
   <data name="Login Audits" xml:space="preserve">
     <value>Anmelde-Audits</value>

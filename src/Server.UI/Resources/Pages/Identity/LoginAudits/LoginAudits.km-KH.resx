@@ -130,7 +130,7 @@
     <value>ជោគជ័យ</value>
   </data>
   <data name="No login audit records found" xml:space="preserve">
-    <value>រកមិនឃើញកំណត់ត្រាសវនកម្មចូលទេ។</value>
+    <value>រកមិនឃើញកំណត់ត្រាសវនកម្មចូលទេ</value>
   </data>
   <data name="Login Status" xml:space="preserve">
     <value>ស្ថានភាពចូល</value>
@@ -156,8 +156,8 @@
   <data name="User Name" xml:space="preserve">
     <value>ឈ្មោះអ្នកប្រើប្រាស់</value>
   </data>
-  <data name="View recent login activities and audit information." xml:space="preserve">
-    <value>មើលសកម្មភាពចូលថ្មីៗ និងព័ត៌មានសវនកម្ម។</value>
+  <data name="View recent login activities and audit information" xml:space="preserve">
+    <value>មើលសកម្មភាពចូលថ្មីៗ និងព័ត៌មានសវនកម្ម</value>
   </data>
   <data name="Login Audits" xml:space="preserve">
     <value>ចូល សវនកម្ម</value>
