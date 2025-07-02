@@ -9,6 +9,7 @@
 @inject IOnlineUserTracker OnlineUserTracker
 @inject IStringLocalizer<ActiveUserSession> L
 @inject ICurrentUserAccessor SessionInfoAccessor
+@inject IJSRuntime JS
 @if (State.HasValue && State.LastNonErrorValue.Any())
 {
     <div class="d-flex flex-row gap-2 my-3 gap-2 my-3">
@@ -38,7 +39,7 @@
 
 
 @code {
-
+    
     private string sessionId = Guid.NewGuid().ToString();
     private string? currentUserId;
     [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;

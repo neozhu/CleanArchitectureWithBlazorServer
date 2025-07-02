@@ -129,257 +129,257 @@
   <data name="Product Permissions" xml:space="preserve">
     <value>Produkt-Berechtigungen</value>
   </data>
-  <data name="Allows viewing product details." xml:space="preserve">
-    <value>Erlaubt das Anzeigen von Produktdetails.</value>
+  <data name="Allows viewing product details" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Produktdetails</value>
   </data>
-  <data name="Allows creating new product records." xml:space="preserve">
-    <value>Erlaubt das Erstellen neuer Produktdatensätze.</value>
+  <data name="Allows creating new product records" xml:space="preserve">
+    <value>Erlaubt das Erstellen neuer Produktdatensätze</value>
   </data>
-  <data name="Allows modifying existing product details." xml:space="preserve">
-    <value>Erlaubt das Ändern bestehender Produktdetails.</value>
+  <data name="Allows modifying existing product details" xml:space="preserve">
+    <value>Erlaubt das Ändern bestehender Produktdetails</value>
   </data>
-  <data name="Allows deleting product records." xml:space="preserve">
-    <value>Erlaubt das Löschen von Produktdatensätzen.</value>
+  <data name="Allows deleting product records" xml:space="preserve">
+    <value>Erlaubt das Löschen von Produktdatensätzen</value>
   </data>
-  <data name="Allows printing product details." xml:space="preserve">
-    <value>Erlaubt das Drucken von Produktdetails.</value>
+  <data name="Allows printing product details" xml:space="preserve">
+    <value>Erlaubt das Drucken von Produktdetails</value>
   </data>
-  <data name="Allows searching for product records." xml:space="preserve">
-    <value>Erlaubt das Suchen nach Produktdatensätzen.</value>
+  <data name="Allows searching for product records" xml:space="preserve">
+    <value>Erlaubt das Suchen nach Produktdatensätzen</value>
   </data>
-  <data name="Allows exporting product records." xml:space="preserve">
-    <value>Erlaubt das Exportieren von Produktdatensätzen.</value>
+  <data name="Allows exporting product records" xml:space="preserve">
+    <value>Erlaubt das Exportieren von Produktdatensätzen</value>
   </data>
-  <data name="Allows importing product records." xml:space="preserve">
-    <value>Erlaubt das Importieren von Produktdatensätzen.</value>
+  <data name="Allows importing product records" xml:space="preserve">
+    <value>Erlaubt das Importieren von Produktdatensätzen</value>
   </data>
   <data name="Audit Permissions" xml:space="preserve">
     <value>Audit-Berechtigungen</value>
   </data>
-  <data name="Allows viewing audit trail details." xml:space="preserve">
-    <value>Erlaubt das Anzeigen von Audit-Trail-Details.</value>
+  <data name="Allows viewing audit trail details" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Audit-Trail-Details</value>
   </data>
-  <data name="Allows searching for audit trail records." xml:space="preserve">
-    <value>Erlaubt das Suchen nach Audit-Trail-Datensätzen.</value>
+  <data name="Allows searching for audit trail records" xml:space="preserve">
+    <value>Erlaubt das Suchen nach Audit-Trail-Datensätzen</value>
   </data>
-  <data name="Allows exporting audit trail records." xml:space="preserve">
-    <value>Erlaubt das Exportieren von Audit-Trail-Datensätzen.</value>
+  <data name="Allows exporting audit trail records" xml:space="preserve">
+    <value>Erlaubt das Exportieren von Audit-Trail-Datensätzen</value>
   </data>
   <data name="Log Permissions" xml:space="preserve">
     <value>Protokoll-Berechtigungen</value>
   </data>
-  <data name="Allows viewing log details." xml:space="preserve">
-    <value>Erlaubt das Anzeigen von Protokolldetails.</value>
+  <data name="Allows viewing log details" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Protokolldetails</value>
   </data>
-  <data name="Allows searching for log records." xml:space="preserve">
-    <value>Erlaubt das Suchen nach Protokolldatensätzen.</value>
+  <data name="Allows searching for log records" xml:space="preserve">
+    <value>Erlaubt das Suchen nach Protokolldatensätzen</value>
   </data>
-  <data name="Allows exporting log records." xml:space="preserve">
-    <value>Erlaubt das Exportieren von Protokolldatensätzen.</value>
+  <data name="Allows exporting log records" xml:space="preserve">
+    <value>Erlaubt das Exportieren von Protokolldatensätzen</value>
   </data>
-  <data name="Allows purging log records." xml:space="preserve">
-    <value>Erlaubt das Bereinigen von Protokolldatensätzen.</value>
+  <data name="Allows purging log records" xml:space="preserve">
+    <value>Erlaubt das Bereinigen von Protokolldatensätzen</value>
   </data>
   <data name="Picklist Permissions" xml:space="preserve">
     <value>Auswahllisten-Berechtigungen</value>
   </data>
-  <data name="Allows viewing picklist set details." xml:space="preserve">
-    <value>Erlaubt das Anzeigen von Auswahllistensatz-Details.</value>
+  <data name="Allows viewing picklist set details" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Auswahllistensatz-Details</value>
   </data>
-  <data name="Allows creating new picklist sets." xml:space="preserve">
-    <value>Erlaubt das Erstellen neuer Auswahllistensätze.</value>
+  <data name="Allows creating new picklist sets" xml:space="preserve">
+    <value>Erlaubt das Erstellen neuer Auswahllistensätze</value>
   </data>
-  <data name="Allows modifying existing picklist sets." xml:space="preserve">
-    <value>Erlaubt das Ändern bestehender Auswahllistensätze.</value>
+  <data name="Allows modifying existing picklist sets" xml:space="preserve">
+    <value>Erlaubt das Ändern bestehender Auswahllistensätze</value>
   </data>
-  <data name="Allows deleting picklist sets." xml:space="preserve">
-    <value>Erlaubt das Löschen von Auswahllistensätzen.</value>
+  <data name="Allows deleting picklist sets" xml:space="preserve">
+    <value>Erlaubt das Löschen von Auswahllistensätzen</value>
   </data>
-  <data name="Allows searching for picklist set records." xml:space="preserve">
-    <value>Erlaubt das Suchen nach Auswahllistensatz-Datensätzen.</value>
+  <data name="Allows searching for picklist set records" xml:space="preserve">
+    <value>Erlaubt das Suchen nach Auswahllistensatz-Datensätzen</value>
   </data>
-  <data name="Allows exporting picklist set records." xml:space="preserve">
-    <value>Erlaubt das Exportieren von Auswahllistensatz-Datensätzen.</value>
+  <data name="Allows exporting picklist set records" xml:space="preserve">
+    <value>Erlaubt das Exportieren von Auswahllistensatz-Datensätzen</value>
   </data>
-  <data name="Allows importing picklist set records." xml:space="preserve">
-    <value>Erlaubt das Importieren von Auswahllistensatz-Datensätzen.</value>
+  <data name="Allows importing picklist set records" xml:space="preserve">
+    <value>Erlaubt das Importieren von Auswahllistensatz-Datensätzen</value>
   </data>
   <data name="User Permissions" xml:space="preserve">
     <value>Benutzer-Berechtigungen</value>
   </data>
-  <data name="Allows viewing user details." xml:space="preserve">
-    <value>Erlaubt das Anzeigen von Benutzerdetails.</value>
+  <data name="Allows viewing user details" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Benutzerdetails</value>
   </data>
-  <data name="Allows creating new user accounts." xml:space="preserve">
-    <value>Erlaubt das Erstellen neuer Benutzerkonten.</value>
+  <data name="Allows creating new user accounts" xml:space="preserve">
+    <value>Erlaubt das Erstellen neuer Benutzerkonten</value>
   </data>
-  <data name="Allows modifying existing user details." xml:space="preserve">
-    <value>Erlaubt das Ändern bestehender Benutzerdetails.</value>
+  <data name="Allows modifying existing user details" xml:space="preserve">
+    <value>Erlaubt das Ändern bestehender Benutzerdetails</value>
   </data>
-  <data name="Allows deleting user accounts." xml:space="preserve">
-    <value>Erlaubt das Löschen von Benutzerkonten.</value>
+  <data name="Allows deleting user accounts" xml:space="preserve">
+    <value>Erlaubt das Löschen von Benutzerkonten</value>
   </data>
-  <data name="Allows searching for user records." xml:space="preserve">
-    <value>Erlaubt das Suchen nach Benutzerdatensätzen.</value>
+  <data name="Allows searching for user records" xml:space="preserve">
+    <value>Erlaubt das Suchen nach Benutzerdatensätzen</value>
   </data>
-  <data name="Allows importing user records." xml:space="preserve">
-    <value>Erlaubt das Importieren von Benutzerdatensätzen.</value>
+  <data name="Allows importing user records" xml:space="preserve">
+    <value>Erlaubt das Importieren von Benutzerdatensätzen</value>
   </data>
-  <data name="Allows exporting user records." xml:space="preserve">
-    <value>Erlaubt das Exportieren von Benutzerdatensätzen.</value>
+  <data name="Allows exporting user records" xml:space="preserve">
+    <value>Erlaubt das Exportieren von Benutzerdatensätzen</value>
   </data>
-  <data name="Allows managing user roles." xml:space="preserve">
-    <value>Erlaubt das Verwalten von Benutzerrollen.</value>
+  <data name="Allows managing user roles" xml:space="preserve">
+    <value>Erlaubt das Verwalten von Benutzerrollen</value>
   </data>
-  <data name="Allows resetting user passwords." xml:space="preserve">
-    <value>Erlaubt das Zurücksetzen von Benutzerpasswörtern.</value>
+  <data name="Allows resetting user passwords" xml:space="preserve">
+    <value>Erlaubt das Zurücksetzen von Benutzerpasswörtern</value>
   </data>
-  <data name="Allows sending password reset emails." xml:space="preserve">
-    <value>Erlaubt das Senden von E-Mails zur Passwort-Zurücksetzung.</value>
+  <data name="Allows sending password reset emails" xml:space="preserve">
+    <value>Erlaubt das Senden von E-Mails zur Passwort-Zurücksetzung</value>
   </data>
-  <data name="Allows managing user permissions." xml:space="preserve">
-    <value>Erlaubt das Verwalten von Benutzerberechtigungen.</value>
+  <data name="Allows managing user permissions" xml:space="preserve">
+    <value>Erlaubt das Verwalten von Benutzerberechtigungen</value>
   </data>
-  <data name="Allows deactivating user accounts." xml:space="preserve">
-    <value>Erlaubt das Deaktivieren von Benutzerkonten.</value>
+  <data name="Allows deactivating user accounts" xml:space="preserve">
+    <value>Erlaubt das Deaktivieren von Benutzerkonten</value>
   </data>
-  <data name="Allows viewing users' online status." xml:space="preserve">
-    <value>Erlaubt das Anzeigen des Online-Status von Benutzern.</value>
+  <data name="Allows viewing users' online status" xml:space="preserve">
+    <value>Erlaubt das Anzeigen des Online-Status von Benutzern</value>
   </data>
   <data name="Role Permissions" xml:space="preserve">
     <value>Rollen-Berechtigungen</value>
   </data>
-  <data name="Allows viewing role details." xml:space="preserve">
-    <value>Erlaubt das Anzeigen von Rollendetails.</value>
+  <data name="Allows viewing role details" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Rollendetails</value>
   </data>
-  <data name="Allows creating new roles." xml:space="preserve">
-    <value>Erlaubt das Erstellen neuer Rollen.</value>
+  <data name="Allows creating new roles" xml:space="preserve">
+    <value>Erlaubt das Erstellen neuer Rollen</value>
   </data>
-  <data name="Allows modifying existing role details." xml:space="preserve">
-    <value>Erlaubt das Ändern bestehender Rollendetails.</value>
+  <data name="Allows modifying existing role details" xml:space="preserve">
+    <value>Erlaubt das Ändern bestehender Rollendetails</value>
   </data>
-  <data name="Allows deleting roles." xml:space="preserve">
-    <value>Erlaubt das Löschen von Rollen.</value>
+  <data name="Allows deleting roles" xml:space="preserve">
+    <value>Erlaubt das Löschen von Rollen</value>
   </data>
-  <data name="Allows searching for role records." xml:space="preserve">
-    <value>Erlaubt das Suchen nach Rollendatensätzen.</value>
+  <data name="Allows searching for role records" xml:space="preserve">
+    <value>Erlaubt das Suchen nach Rollendatensätzen</value>
   </data>
-  <data name="Allows exporting role records." xml:space="preserve">
-    <value>Erlaubt das Exportieren von Rollendatensätzen.</value>
+  <data name="Allows exporting role records" xml:space="preserve">
+    <value>Erlaubt das Exportieren von Rollendatensätzen</value>
   </data>
-  <data name="Allows importing role records." xml:space="preserve">
-    <value>Erlaubt das Importieren von Rollendatensätzen.</value>
+  <data name="Allows importing role records" xml:space="preserve">
+    <value>Erlaubt das Importieren von Rollendatensätzen</value>
   </data>
-  <data name="Allows managing permissions for roles." xml:space="preserve">
-    <value>Erlaubt das Verwalten von Berechtigungen für Rollen.</value>
+  <data name="Allows managing permissions for roles" xml:space="preserve">
+    <value>Erlaubt das Verwalten von Berechtigungen für Rollen</value>
   </data>
-  <data name="Allows managing role-specific navigation menus." xml:space="preserve">
-    <value>Erlaubt das Verwalten rollenspezifischer Navigationsmenüs.</value>
+  <data name="Allows managing role-specific navigation menus" xml:space="preserve">
+    <value>Erlaubt das Verwalten rollenspezifischer Navigationsmenüs</value>
   </data>
   <data name="Tenant Permissions" xml:space="preserve">
     <value>Mandanten-Berechtigungen</value>
   </data>
-  <data name="Allows viewing tenant details." xml:space="preserve">
-    <value>Erlaubt das Anzeigen von Mandantendetails.</value>
+  <data name="Allows viewing tenant details" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Mandantendetails</value>
   </data>
-  <data name="Allows creating new tenants." xml:space="preserve">
-    <value>Erlaubt das Erstellen neuer Mandanten.</value>
+  <data name="Allows creating new tenants" xml:space="preserve">
+    <value>Erlaubt das Erstellen neuer Mandanten</value>
   </data>
-  <data name="Allows modifying existing tenant details." xml:space="preserve">
-    <value>Erlaubt das Ändern bestehender Mandantendetails.</value>
+  <data name="Allows modifying existing tenant details" xml:space="preserve">
+    <value>Erlaubt das Ändern bestehender Mandantendetails</value>
   </data>
-  <data name="Allows deleting tenant records." xml:space="preserve">
-    <value>Erlaubt das Löschen von Mandantendatensätzen.</value>
+  <data name="Allows deleting tenant records" xml:space="preserve">
+    <value>Erlaubt das Löschen von Mandantendatensätzen</value>
   </data>
-  <data name="Allows searching for tenant records." xml:space="preserve">
-    <value>Erlaubt das Suchen nach Mandantendatensätzen.</value>
+  <data name="Allows searching for tenant records" xml:space="preserve">
+    <value>Erlaubt das Suchen nach Mandantendatensätzen</value>
   </data>
   <data name="Dashboard Permissions" xml:space="preserve">
     <value>Dashboard-Berechtigungen</value>
   </data>
-  <data name="Allows viewing dashboard data." xml:space="preserve">
-    <value>Erlaubt das Anzeigen von Dashboard-Daten.</value>
+  <data name="Allows viewing dashboard data" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Dashboard-Daten</value>
   </data>
   <data name="Document Permissions" xml:space="preserve">
     <value>Dokument-Berechtigungen</value>
   </data>
-  <data name="Allows viewing document details." xml:space="preserve">
-    <value>Erlaubt das Anzeigen von Dokumentdetails.</value>
+  <data name="Allows viewing document details" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Dokumentdetails</value>
   </data>
-  <data name="Allows creating new document records." xml:space="preserve">
-    <value>Erlaubt das Erstellen neuer Dokumentdatensätze.</value>
+  <data name="Allows creating new document records" xml:space="preserve">
+    <value>Erlaubt das Erstellen neuer Dokumentdatensätze</value>
   </data>
-  <data name="Allows modifying existing document details." xml:space="preserve">
-    <value>Erlaubt das Ändern bestehender Dokumentdetails.</value>
+  <data name="Allows modifying existing document details" xml:space="preserve">
+    <value>Erlaubt das Ändern bestehender Dokumentdetails</value>
   </data>
-  <data name="Allows deleting document records." xml:space="preserve">
-    <value>Erlaubt das Löschen von Dokumentdatensätzen.</value>
+  <data name="Allows deleting document records" xml:space="preserve">
+    <value>Erlaubt das Löschen von Dokumentdatensätzen</value>
   </data>
-  <data name="Allows searching for document records." xml:space="preserve">
-    <value>Erlaubt das Suchen nach Dokumentdatensätzen.</value>
+  <data name="Allows searching for document records" xml:space="preserve">
+    <value>Erlaubt das Suchen nach Dokumentdatensätzen</value>
   </data>
-  <data name="Allows exporting document records." xml:space="preserve">
-    <value>Erlaubt das Exportieren von Dokumentdatensätzen.</value>
+  <data name="Allows exporting document records" xml:space="preserve">
+    <value>Erlaubt das Exportieren von Dokumentdatensätzen</value>
   </data>
-  <data name="Allows importing document records." xml:space="preserve">
-    <value>Erlaubt das Importieren von Dokumentdatensätzen.</value>
+  <data name="Allows importing document records" xml:space="preserve">
+    <value>Erlaubt das Importieren von Dokumentdatensätzen</value>
   </data>
-  <data name="Allows downloading documents." xml:space="preserve">
-    <value>Erlaubt das Herunterladen von Dokumenten.</value>
+  <data name="Allows downloading documents" xml:space="preserve">
+    <value>Erlaubt das Herunterladen von Dokumenten</value>
   </data>
-  <data name="Allows viewing contact details." xml:space="preserve">
-    <value>Erlaubt das Anzeigen von Kontaktdetails.</value>
+  <data name="Allows viewing contact details" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Kontaktdetails</value>
   </data>
-  <data name="Allows creating new contact records." xml:space="preserve">
-    <value>Erlaubt das Erstellen neuer Kontaktdatensätze.</value>
+  <data name="Allows creating new contact records" xml:space="preserve">
+    <value>Erlaubt das Erstellen neuer Kontaktdatensätze</value>
   </data>
-  <data name="Allows modifying existing contact details." xml:space="preserve">
-    <value>Erlaubt das Ändern bestehender Kontaktdetails.</value>
+  <data name="Allows modifying existing contact details" xml:space="preserve">
+    <value>Erlaubt das Ändern bestehender Kontaktdetails</value>
   </data>
-  <data name="Allows deleting contact records." xml:space="preserve">
-    <value>Erlaubt das Löschen von Kontaktdatensätzen.</value>
+  <data name="Allows deleting contact records" xml:space="preserve">
+    <value>Erlaubt das Löschen von Kontaktdatensätzen</value>
   </data>
-  <data name="Allows printing contact details." xml:space="preserve">
-    <value>Erlaubt das Drucken von Kontaktdetails.</value>
+  <data name="Allows printing contact details" xml:space="preserve">
+    <value>Erlaubt das Drucken von Kontaktdetails</value>
   </data>
-  <data name="Allows searching for contact records." xml:space="preserve">
-    <value>Erlaubt das Suchen nach Kontaktdatensätzen.</value>
+  <data name="Allows searching for contact records" xml:space="preserve">
+    <value>Erlaubt das Suchen nach Kontaktdatensätzen</value>
   </data>
-  <data name="Allows exporting contact records." xml:space="preserve">
-    <value>Erlaubt das Exportieren von Kontaktdatensätzen.</value>
+  <data name="Allows exporting contact records" xml:space="preserve">
+    <value>Erlaubt das Exportieren von Kontaktdatensätzen</value>
   </data>
-  <data name="Allows importing contact records." xml:space="preserve">
-    <value>Erlaubt das Importieren von Kontaktdatensätzen.</value>
+  <data name="Allows importing contact records" xml:space="preserve">
+    <value>Erlaubt das Importieren von Kontaktdatensätzen</value>
   </data>
-  <data name="Set permissions for product operations." xml:space="preserve">
-    <value>Berechtigungen für Produktoperationen festlegen.</value>
+  <data name="Set permissions for product operations" xml:space="preserve">
+    <value>Berechtigungen für Produktoperationen festlegen</value>
   </data>
-  <data name="Set permissions for audit operations." xml:space="preserve">
-    <value>Berechtigungen für Audit-Operationen festlegen.</value>
+  <data name="Set permissions for audit operations" xml:space="preserve">
+    <value>Berechtigungen für Audit-Operationen festlegen</value>
   </data>
-  <data name="Set permissions for log operations." xml:space="preserve">
-    <value>Berechtigungen für Protokoll-Operationen festlegen.</value>
+  <data name="Set permissions for log operations" xml:space="preserve">
+    <value>Berechtigungen für Protokoll-Operationen festlegen</value>
   </data>
-  <data name="Set permissions for picklist operations." xml:space="preserve">
-    <value>Berechtigungen für Auswahllisten-Operationen festlegen.</value>
+  <data name="Set permissions for picklist operations" xml:space="preserve">
+    <value>Berechtigungen für Auswahllisten-Operationen festlegen</value>
   </data>
-  <data name="Set permissions for user operations." xml:space="preserve">
-    <value>Berechtigungen für Benutzer-Operationen festlegen.</value>
+  <data name="Set permissions for user operations" xml:space="preserve">
+    <value>Berechtigungen für Benutzer-Operationen festlegen</value>
   </data>
-  <data name="Set permissions for role operations." xml:space="preserve">
-    <value>Berechtigungen für Rollen-Operationen festlegen.</value>
+  <data name="Set permissions for role operations" xml:space="preserve">
+    <value>Berechtigungen für Rollen-Operationen festlegen</value>
   </data>
-  <data name="Set permissions for tenant operations." xml:space="preserve">
-    <value>Berechtigungen für Mandanten-Operationen festlegen.</value>
+  <data name="Set permissions for tenant operations" xml:space="preserve">
+    <value>Berechtigungen für Mandanten-Operationen festlegen</value>
   </data>
-  <data name="Set permissions for dashboard operations." xml:space="preserve">
-    <value>Berechtigungen für Dashboard-Operationen festlegen.</value>
+  <data name="Set permissions for dashboard operations" xml:space="preserve">
+    <value>Berechtigungen für Dashboard-Operationen festlegen</value>
   </data>
-  <data name="Set permissions for document operations." xml:space="preserve">
-    <value>Berechtigungen für Dokument-Operationen festlegen.</value>
+  <data name="Set permissions for document operations" xml:space="preserve">
+    <value>Berechtigungen für Dokument-Operationen festlegen</value>
   </data>
-  <data name="Set permissions for contact operations." xml:space="preserve">
-    <value>Berechtigungen für Kontakt-Operationen festlegen.</value>
+  <data name="Set permissions for contact operations" xml:space="preserve">
+    <value>Berechtigungen für Kontakt-Operationen festlegen</value>
   </data>
   <data name="ManageNavigation" xml:space="preserve">
     <value>Navigation verwalten</value>

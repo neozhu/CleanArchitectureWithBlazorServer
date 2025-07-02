@@ -129,257 +129,257 @@
   <data name="Product Permissions" xml:space="preserve">
     <value>제품 권한</value>
   </data>
-  <data name="Allows viewing product details." xml:space="preserve">
+  <data name="Allows viewing product details" xml:space="preserve">
     <value>제품 세부 정보 보기 허용</value>
   </data>
-  <data name="Allows creating new product records." xml:space="preserve">
+  <data name="Allows creating new product records" xml:space="preserve">
     <value>새로운 제품 레코드 생성 허용</value>
   </data>
-  <data name="Allows modifying existing product details." xml:space="preserve">
+  <data name="Allows modifying existing product details" xml:space="preserve">
     <value>기존 제품 세부 정보 수정 허용</value>
   </data>
-  <data name="Allows deleting product records." xml:space="preserve">
+  <data name="Allows deleting product records" xml:space="preserve">
     <value>제품 레코드 삭제 허용</value>
   </data>
-  <data name="Allows printing product details." xml:space="preserve">
+  <data name="Allows printing product details" xml:space="preserve">
     <value>제품 세부 정보 인쇄 허용</value>
   </data>
-  <data name="Allows searching for product records." xml:space="preserve">
+  <data name="Allows searching for product records" xml:space="preserve">
     <value>제품 레코드 검색 허용</value>
   </data>
-  <data name="Allows exporting product records." xml:space="preserve">
+  <data name="Allows exporting product records" xml:space="preserve">
     <value>제품 레코드 내보내기 허용</value>
   </data>
-  <data name="Allows importing product records." xml:space="preserve">
+  <data name="Allows importing product records" xml:space="preserve">
     <value>제품 레코드 가져오기 허용</value>
   </data>
   <data name="Audit Permissions" xml:space="preserve">
     <value>감사 권한</value>
   </data>
-  <data name="Allows viewing audit trail details." xml:space="preserve">
+  <data name="Allows viewing audit trail details" xml:space="preserve">
     <value>감사 추적 세부 정보 보기 허용</value>
   </data>
-  <data name="Allows searching for audit trail records." xml:space="preserve">
+  <data name="Allows searching for audit trail records" xml:space="preserve">
     <value>감사 추적 레코드 검색 허용</value>
   </data>
-  <data name="Allows exporting audit trail records." xml:space="preserve">
+  <data name="Allows exporting audit trail records" xml:space="preserve">
     <value>감사 추적 레코드 내보내기 허용</value>
   </data>
   <data name="Log Permissions" xml:space="preserve">
     <value>로그 권한</value>
   </data>
-  <data name="Allows viewing log details." xml:space="preserve">
+  <data name="Allows viewing log details" xml:space="preserve">
     <value>로그 세부 정보 보기 허용</value>
   </data>
-  <data name="Allows searching for log records." xml:space="preserve">
+  <data name="Allows searching for log records" xml:space="preserve">
     <value>로그 레코드 검색 허용</value>
   </data>
-  <data name="Allows exporting log records." xml:space="preserve">
+  <data name="Allows exporting log records" xml:space="preserve">
     <value>로그 레코드 내보내기 허용</value>
   </data>
-  <data name="Allows purging log records." xml:space="preserve">
+  <data name="Allows purging log records" xml:space="preserve">
     <value>로그 레코드 삭제 허용</value>
   </data>
   <data name="Picklist Permissions" xml:space="preserve">
     <value>선택 목록 권한</value>
   </data>
-  <data name="Allows viewing picklist set details." xml:space="preserve">
+  <data name="Allows viewing picklist set details" xml:space="preserve">
     <value>선택 목록 집합 세부 정보 보기 허용</value>
   </data>
-  <data name="Allows creating new picklist sets." xml:space="preserve">
+  <data name="Allows creating new picklist sets" xml:space="preserve">
     <value>새로운 선택 목록 집합 생성 허용</value>
   </data>
-  <data name="Allows modifying existing picklist sets." xml:space="preserve">
+  <data name="Allows modifying existing picklist sets" xml:space="preserve">
     <value>기존 선택 목록 집합 수정 허용</value>
   </data>
-  <data name="Allows deleting picklist sets." xml:space="preserve">
+  <data name="Allows deleting picklist sets" xml:space="preserve">
     <value>선택 목록 집합 삭제 허용</value>
   </data>
-  <data name="Allows searching for picklist set records." xml:space="preserve">
+  <data name="Allows searching for picklist set records" xml:space="preserve">
     <value>선택 목록 집합 레코드 검색 허용</value>
   </data>
-  <data name="Allows exporting picklist set records." xml:space="preserve">
+  <data name="Allows exporting picklist set records" xml:space="preserve">
     <value>선택 목록 세트 레코드 내보내기 허용</value>
   </data>
-  <data name="Allows importing picklist set records." xml:space="preserve">
+  <data name="Allows importing picklist set records" xml:space="preserve">
     <value>선택 목록 세트 레코드 가져오기 허용</value>
   </data>
   <data name="User Permissions" xml:space="preserve">
     <value>사용자 권한</value>
   </data>
-  <data name="Allows viewing user details." xml:space="preserve">
+  <data name="Allows viewing user details" xml:space="preserve">
     <value>사용자 세부 정보 보기 허용</value>
   </data>
-  <data name="Allows creating new user accounts." xml:space="preserve">
+  <data name="Allows creating new user accounts" xml:space="preserve">
     <value>새 사용자 계정 만들기 허용</value>
   </data>
-  <data name="Allows modifying existing user details." xml:space="preserve">
+  <data name="Allows modifying existing user details" xml:space="preserve">
     <value>기존 사용자 세부 정보 수정 허용</value>
   </data>
-  <data name="Allows deleting user accounts." xml:space="preserve">
+  <data name="Allows deleting user accounts" xml:space="preserve">
     <value>사용자 계정 삭제 허용</value>
   </data>
-  <data name="Allows searching for user records." xml:space="preserve">
+  <data name="Allows searching for user records" xml:space="preserve">
     <value>사용자 레코드 검색 허용</value>
   </data>
-  <data name="Allows importing user records." xml:space="preserve">
+  <data name="Allows importing user records" xml:space="preserve">
     <value>사용자 레코드 가져오기 허용</value>
   </data>
-  <data name="Allows exporting user records." xml:space="preserve">
+  <data name="Allows exporting user records" xml:space="preserve">
     <value>사용자 레코드 내보내기 허용</value>
   </data>
-  <data name="Allows managing user roles." xml:space="preserve">
+  <data name="Allows managing user roles" xml:space="preserve">
     <value>사용자 역할 관리 허용</value>
   </data>
-  <data name="Allows resetting user passwords." xml:space="preserve">
+  <data name="Allows resetting user passwords" xml:space="preserve">
     <value>사용자 비밀번호 재설정 허용</value>
   </data>
-  <data name="Allows sending password reset emails." xml:space="preserve">
+  <data name="Allows sending password reset emails" xml:space="preserve">
     <value>비밀번호 재설정 이메일 보내기 허용</value>
   </data>
-  <data name="Allows managing user permissions." xml:space="preserve">
+  <data name="Allows managing user permissions" xml:space="preserve">
     <value>사용자 권한 관리 허용</value>
   </data>
-  <data name="Allows deactivating user accounts." xml:space="preserve">
+  <data name="Allows deactivating user accounts" xml:space="preserve">
     <value>사용자 계정 비활성화 허용</value>
   </data>
-  <data name="Allows viewing users' online status." xml:space="preserve">
+  <data name="Allows viewing users' online status" xml:space="preserve">
     <value>사용자 온라인 상태 보기 허용</value>
   </data>
   <data name="Role Permissions" xml:space="preserve">
     <value>역할 권한</value>
   </data>
-  <data name="Allows viewing role details." xml:space="preserve">
+  <data name="Allows viewing role details" xml:space="preserve">
     <value>역할 세부 정보 보기 허용</value>
   </data>
-  <data name="Allows creating new roles." xml:space="preserve">
+  <data name="Allows creating new roles" xml:space="preserve">
     <value>새 역할 만들기 허용</value>
   </data>
-  <data name="Allows modifying existing role details." xml:space="preserve">
+  <data name="Allows modifying existing role details" xml:space="preserve">
     <value>기존 역할 세부 정보 수정 허용</value>
   </data>
-  <data name="Allows deleting roles." xml:space="preserve">
+  <data name="Allows deleting roles" xml:space="preserve">
     <value>역할 삭제 허용</value>
   </data>
-  <data name="Allows searching for role records." xml:space="preserve">
+  <data name="Allows searching for role records" xml:space="preserve">
     <value>역할 레코드 검색 허용</value>
   </data>
-  <data name="Allows exporting role records." xml:space="preserve">
+  <data name="Allows exporting role records" xml:space="preserve">
     <value>역할 레코드 내보내기 허용</value>
   </data>
-  <data name="Allows importing role records." xml:space="preserve">
+  <data name="Allows importing role records" xml:space="preserve">
     <value>역할 레코드 가져오기 허용</value>
   </data>
-  <data name="Allows managing permissions for roles." xml:space="preserve">
+  <data name="Allows managing permissions for roles" xml:space="preserve">
     <value>역할 레코드 가져오기 허용</value>
   </data>
-  <data name="Allows managing role-specific navigation menus." xml:space="preserve">
+  <data name="Allows managing role-specific navigation menus" xml:space="preserve">
     <value>역할 권한 관리 허용</value>
   </data>
   <data name="Tenant Permissions" xml:space="preserve">
     <value>역할별 탐색 메뉴 관리 허용</value>
   </data>
-  <data name="Allows viewing tenant details." xml:space="preserve">
+  <data name="Allows viewing tenant details" xml:space="preserve">
     <value>테넌트 권한</value>
   </data>
-  <data name="Allows creating new tenants." xml:space="preserve">
+  <data name="Allows creating new tenants" xml:space="preserve">
     <value>테넌트 세부 정보 보기 허용</value>
   </data>
-  <data name="Allows modifying existing tenant details." xml:space="preserve">
+  <data name="Allows modifying existing tenant details" xml:space="preserve">
     <value>새 테넌트 생성 허용</value>
   </data>
-  <data name="Allows deleting tenant records." xml:space="preserve">
+  <data name="Allows deleting tenant records" xml:space="preserve">
     <value>기존 테넌트 세부 정보 수정 허용</value>
   </data>
-  <data name="Allows searching for tenant records." xml:space="preserve">
+  <data name="Allows searching for tenant records" xml:space="preserve">
     <value>테넌트 레코드 삭제 허용</value>
   </data>
   <data name="Dashboard Permissions" xml:space="preserve">
     <value>테넌트 레코드 검색 허용</value>
   </data>
-  <data name="Allows viewing dashboard data." xml:space="preserve">
+  <data name="Allows viewing dashboard data" xml:space="preserve">
     <value>대시보드 권한</value>
   </data>
   <data name="Document Permissions" xml:space="preserve">
     <value>대시보드 데이터 보기 허용</value>
   </data>
-  <data name="Allows viewing document details." xml:space="preserve">
+  <data name="Allows viewing document details" xml:space="preserve">
     <value>문서 권한</value>
   </data>
-  <data name="Allows creating new document records." xml:space="preserve">
+  <data name="Allows creating new document records" xml:space="preserve">
     <value>문서 세부 정보 보기 허용</value>
   </data>
-  <data name="Allows modifying existing document details." xml:space="preserve">
+  <data name="Allows modifying existing document details" xml:space="preserve">
     <value>새 문서 레코드 생성 허용</value>
   </data>
-  <data name="Allows deleting document records." xml:space="preserve">
+  <data name="Allows deleting document records" xml:space="preserve">
     <value>기존 문서 세부 정보 수정 허용</value>
   </data>
-  <data name="Allows searching for document records." xml:space="preserve">
+  <data name="Allows searching for document records" xml:space="preserve">
     <value>문서 레코드 삭제 허용</value>
   </data>
-  <data name="Allows exporting document records." xml:space="preserve">
+  <data name="Allows exporting document records" xml:space="preserve">
     <value>문서 레코드 검색 허용</value>
   </data>
-  <data name="Allows importing document records." xml:space="preserve">
+  <data name="Allows importing document records" xml:space="preserve">
     <value>문서 레코드 내보내기 허용</value>
   </data>
-  <data name="Allows downloading documents." xml:space="preserve">
+  <data name="Allows downloading documents" xml:space="preserve">
     <value>문서 레코드 가져오기 허용</value>
   </data>
-  <data name="Allows viewing contact details." xml:space="preserve">
+  <data name="Allows viewing contact details" xml:space="preserve">
     <value>연락처 권한</value>
   </data>
-  <data name="Allows creating new contact records." xml:space="preserve">
+  <data name="Allows creating new contact records" xml:space="preserve">
     <value>연락처 세부 정보 보기 허용</value>
   </data>
-  <data name="Allows modifying existing contact details." xml:space="preserve">
+  <data name="Allows modifying existing contact details" xml:space="preserve">
     <value>새 연락처 레코드 생성 허용</value>
   </data>
-  <data name="Allows deleting contact records." xml:space="preserve">
+  <data name="Allows deleting contact records" xml:space="preserve">
     <value>기존 연락처 세부 정보 수정 허용</value>
   </data>
-  <data name="Allows printing contact details." xml:space="preserve">
+  <data name="Allows printing contact details" xml:space="preserve">
     <value>연락처 레코드 삭제 허용</value>
   </data>
-  <data name="Allows searching for contact records." xml:space="preserve">
+  <data name="Allows searching for contact records" xml:space="preserve">
     <value>연락처 세부 정보 인쇄 허용</value>
   </data>
-  <data name="Allows exporting contact records." xml:space="preserve">
+  <data name="Allows exporting contact records" xml:space="preserve">
     <value>연락처 레코드 검색 허용</value>
   </data>
-  <data name="Allows importing contact records." xml:space="preserve">
+  <data name="Allows importing contact records" xml:space="preserve">
     <value>연락처 레코드 내보내기 허용</value>
   </data>
-  <data name="Set permissions for product operations." xml:space="preserve">
+  <data name="Set permissions for product operations" xml:space="preserve">
     <value>연락처 레코드 가져오기 허용</value>
   </data>
-  <data name="Set permissions for audit operations." xml:space="preserve">
+  <data name="Set permissions for audit operations" xml:space="preserve">
     <value>제품 운영 권한 설정</value>
   </data>
-  <data name="Set permissions for log operations." xml:space="preserve">
+  <data name="Set permissions for log operations" xml:space="preserve">
     <value>감사 운영 권한 설정</value>
   </data>
-  <data name="Set permissions for picklist operations." xml:space="preserve">
-    <value>로그 작업에 대한 권한을 설정합니다.</value>
+  <data name="Set permissions for picklist operations" xml:space="preserve">
+    <value>로그 작업에 대한 권한을 설정합니다</value>
   </data>
-  <data name="Set permissions for user operations." xml:space="preserve">
-    <value>선택 목록 작업에 대한 권한을 설정합니다.</value>
+  <data name="Set permissions for user operations" xml:space="preserve">
+    <value>선택 목록 작업에 대한 권한을 설정합니다</value>
   </data>
-  <data name="Set permissions for role operations." xml:space="preserve">
-    <value>사용자 작업에 대한 권한을 설정합니다.</value>
+  <data name="Set permissions for role operations" xml:space="preserve">
+    <value>사용자 작업에 대한 권한을 설정합니다</value>
   </data>
-  <data name="Set permissions for tenant operations." xml:space="preserve">
-    <value>역할 작업에 대한 권한을 설정합니다.</value>
+  <data name="Set permissions for tenant operations" xml:space="preserve">
+    <value>역할 작업에 대한 권한을 설정합니다</value>
   </data>
-  <data name="Set permissions for dashboard operations." xml:space="preserve">
-    <value>테넌트 작업에 대한 권한을 설정합니다.</value>
+  <data name="Set permissions for dashboard operations" xml:space="preserve">
+    <value>테넌트 작업에 대한 권한을 설정합니다</value>
   </data>
-  <data name="Set permissions for document operations." xml:space="preserve">
-    <value>대시보드 작업에 대한 권한을 설정합니다.</value>
+  <data name="Set permissions for document operations" xml:space="preserve">
+    <value>대시보드 작업에 대한 권한을 설정합니다</value>
   </data>
-  <data name="Set permissions for contact operations." xml:space="preserve">
-    <value>문서 작업에 대한 권한을 설정합니다.</value>
+  <data name="Set permissions for contact operations" xml:space="preserve">
+    <value>문서 작업에 대한 권한을 설정합니다</value>
   </data>
   <data name="ManageNavigation" xml:space="preserve">
     <value>탐색 관리</value>

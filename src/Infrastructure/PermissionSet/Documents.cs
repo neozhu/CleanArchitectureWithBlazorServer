@@ -6,32 +6,32 @@ public static partial class Permissions
 {
 
     [DisplayName("Document Permissions")]
-    [Description("Set permissions for document operations.")]
+    [Description("Set permissions for document operations")]
     public static class Documents
     {
-        [Description("Allows viewing document details.")]
-        public const string View = "Permissions.Documents.View";
+        [Description("Allows viewing document details")]
+        public const string View = "PermissionsDocumentsView";
 
-        [Description("Allows creating new document records.")]
-        public const string Create = "Permissions.Documents.Create";
+        [Description("Allows creating new document records")]
+        public const string Create = "PermissionsDocumentsCreate";
 
-        [Description("Allows modifying existing document details.")]
-        public const string Edit = "Permissions.Documents.Edit";
+        [Description("Allows modifying existing document details")]
+        public const string Edit = "PermissionsDocumentsEdit";
 
-        [Description("Allows deleting document records.")]
-        public const string Delete = "Permissions.Documents.Delete";
+        [Description("Allows deleting document records")]
+        public const string Delete = "PermissionsDocumentsDelete";
 
-        [Description("Allows searching for document records.")]
-        public const string Search = "Permissions.Documents.Search";
+        [Description("Allows searching for document records")]
+        public const string Search = "PermissionsDocumentsSearch";
 
-        [Description("Allows exporting document records.")]
-        public const string Export = "Permissions.Documents.Export";
+        [Description("Allows exporting document records")]
+        public const string Export = "PermissionsDocumentsExport";
 
-        [Description("Allows importing document records.")]
-        public const string Import = "Permissions.Documents.Import";
+        [Description("Allows importing document records")]
+        public const string Import = "PermissionsDocumentsImport";
 
-        [Description("Allows downloading documents.")]
-        public const string Download = "Permissions.Documents.Download";
+        [Description("Allows downloading documents")]
+        public const string Download = "PermissionsDocumentsDownload";
     }
 }
 

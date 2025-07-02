@@ -28,181 +28,181 @@ public static partial class Permissions
 
 
     [DisplayName("Audit Permissions")]
-    [Description("Set permissions for audit operations.")]
+    [Description("Set permissions for audit operations")]
     public static class AuditTrails
     {
-        [Description("Allows viewing audit trail details.")]
-        public const string View = "Permissions.AuditTrails.View";
+        [Description("Allows viewing audit trail details")]
+        public const string View = "PermissionsAuditTrailsView";
 
-        [Description("Allows searching for audit trail records.")]
-        public const string Search = "Permissions.AuditTrails.Search";
+        [Description("Allows searching for audit trail records")]
+        public const string Search = "PermissionsAuditTrailsSearch";
 
-        [Description("Allows exporting audit trail records.")]
-        public const string Export = "Permissions.AuditTrails.Export";
+        [Description("Allows exporting audit trail records")]
+        public const string Export = "PermissionsAuditTrailsExport";
     }
 
     [DisplayName("Log Permissions")]
-    [Description("Set permissions for log operations.")]
+    [Description("Set permissions for log operations")]
     public static class Logs
     {
-        [Description("Allows viewing log details.")]
-        public const string View = "Permissions.Logs.View";
+        [Description("Allows viewing log details")]
+        public const string View = "PermissionsLogsView";
 
-        [Description("Allows searching for log records.")]
-        public const string Search = "Permissions.Logs.Search";
+        [Description("Allows searching for log records")]
+        public const string Search = "PermissionsLogsSearch";
 
-        [Description("Allows exporting log records.")]
-        public const string Export = "Permissions.Logs.Export";
+        [Description("Allows exporting log records")]
+        public const string Export = "PermissionsLogsExport";
 
-        [Description("Allows purging log records.")]
-        public const string Purge = "Permissions.Logs.Purge";
+        [Description("Allows purging log records")]
+        public const string Purge = "PermissionsLogsPurge";
     }
 
     [DisplayName("Login Audit Permissions")]
-    [Description("Set permissions for login audit operations.")]
+    [Description("Set permissions for login audit operations")]
     public static class LoginAudits
     {
-        [Description("Allows viewing login audit details.")]
-        public const string View = "Permissions.LoginAudits.View";
+        [Description("Allows viewing login audit details")]
+        public const string View = "PermissionsLoginAuditsView";
 
-        [Description("Allows searching for login audit records.")]
-        public const string Search = "Permissions.LoginAudits.Search";
+        [Description("Allows searching for login audit records")]
+        public const string Search = "PermissionsLoginAuditsSearch";
 
-        [Description("Allows exporting login audit records.")]
-        public const string Export = "Permissions.LoginAudits.Export";
+        [Description("Allows exporting login audit records")]
+        public const string Export = "PermissionsLoginAuditsExport";
 
-        [Description("Allows viewing all users' login audits.")]
-        public const string ViewAll = "Permissions.LoginAudits.ViewAll";
+        [Description("Allows viewing all users' login audits")]
+        public const string ViewAll = "PermissionsLoginAuditsViewAll";
     }
 
     [DisplayName("Picklist Permissions")]
-    [Description("Set permissions for picklist operations.")]
+    [Description("Set permissions for picklist operations")]
     public static class PicklistSets
     {
-        [Description("Allows viewing picklist set details.")]
-        public const string View = "Permissions.PicklistSets.View";
+        [Description("Allows viewing picklist set details")]
+        public const string View = "PermissionsPicklistSetsView";
 
-        [Description("Allows creating new picklist sets.")]
-        public const string Create = "Permissions.PicklistSets.Create";
+        [Description("Allows creating new picklist sets")]
+        public const string Create = "PermissionsPicklistSetsCreate";
 
-        [Description("Allows modifying existing picklist sets.")]
-        public const string Edit = "Permissions.PicklistSets.Edit";
+        [Description("Allows modifying existing picklist sets")]
+        public const string Edit = "PermissionsPicklistSetsEdit";
 
-        [Description("Allows deleting picklist sets.")]
-        public const string Delete = "Permissions.PicklistSets.Delete";
+        [Description("Allows deleting picklist sets")]
+        public const string Delete = "PermissionsPicklistSetsDelete";
 
-        [Description("Allows searching for picklist set records.")]
-        public const string Search = "Permissions.PicklistSets.Search";
+        [Description("Allows searching for picklist set records")]
+        public const string Search = "PermissionsPicklistSetsSearch";
 
-        [Description("Allows exporting picklist set records.")]
-        public const string Export = "Permissions.PicklistSets.Export";
+        [Description("Allows exporting picklist set records")]
+        public const string Export = "PermissionsPicklistSetsExport";
 
-        [Description("Allows importing picklist set records.")]
-        public const string Import = "Permissions.PicklistSets.Import";
+        [Description("Allows importing picklist set records")]
+        public const string Import = "PermissionsPicklistSetsImport";
     }
 
     [DisplayName("User Permissions")]
-    [Description("Set permissions for user operations.")]
+    [Description("Set permissions for user operations")]
     public static class Users
     {
-        [Description("Allows viewing user details.")]
-        public const string View = "Permissions.Users.View";
+        [Description("Allows viewing user details")]
+        public const string View = "PermissionsUsersView";
 
-        [Description("Allows creating new user accounts.")]
-        public const string Create = "Permissions.Users.Create";
+        [Description("Allows creating new user accounts")]
+        public const string Create = "PermissionsUsersCreate";
 
-        [Description("Allows modifying existing user details.")]
-        public const string Edit = "Permissions.Users.Edit";
+        [Description("Allows modifying existing user details")]
+        public const string Edit = "PermissionsUsersEdit";
 
-        [Description("Allows deleting user accounts.")]
-        public const string Delete = "Permissions.Users.Delete";
+        [Description("Allows deleting user accounts")]
+        public const string Delete = "PermissionsUsersDelete";
 
-        [Description("Allows searching for user records.")]
-        public const string Search = "Permissions.Users.Search";
+        [Description("Allows searching for user records")]
+        public const string Search = "PermissionsUsersSearch";
 
-        [Description("Allows importing user records.")]
-        public const string Import = "Permissions.Users.Import";
+        [Description("Allows importing user records")]
+        public const string Import = "PermissionsUsersImport";
 
-        [Description("Allows exporting user records.")]
-        public const string Export = "Permissions.Users.Export";
+        [Description("Allows exporting user records")]
+        public const string Export = "PermissionsUsersExport";
 
-        [Description("Allows managing user roles.")]
-        public const string ManageRoles = "Permissions.Users.ManageRoles";
+        [Description("Allows managing user roles")]
+        public const string ManageRoles = "PermissionsUsersManageRoles";
 
-        [Description("Allows resetting user passwords.")]
-        public const string RestPassword = "Permissions.Users.RestPassword";
+        [Description("Allows resetting user passwords")]
+        public const string RestPassword = "PermissionsUsersRestPassword";
 
-        [Description("Allows sending password reset emails.")]
-        public const string SendRestPasswordMail = "Permissions.Users.SendRestPasswordMail";
+        [Description("Allows sending password reset emails")]
+        public const string SendRestPasswordMail = "PermissionsUsersSendRestPasswordMail";
 
-        [Description("Allows managing user permissions.")]
-        public const string ManagePermissions = "Permissions.Users.ManagePermissions";
+        [Description("Allows managing user permissions")]
+        public const string ManagePermissions = "PermissionsUsersManagePermissions";
 
-        [Description("Allows deactivating user accounts.")]
-        public const string Deactivation = "Permissions.Users.Deactivation";
+        [Description("Allows deactivating user accounts")]
+        public const string Deactivation = "PermissionsUsersDeactivation";
 
-        [Description("Allows viewing users' online status.")]
-        public const string ViewOnlineStatus = "Permissions.Users.ViewOnlineStatus";
+        [Description("Allows viewing users' online status")]
+        public const string ViewOnlineStatus = "PermissionsUsersViewOnlineStatus";
     }
 
     [DisplayName("Role Permissions")]
-    [Description("Set permissions for role operations.")]
+    [Description("Set permissions for role operations")]
     public static class Roles
     {
-        [Description("Allows viewing role details.")]
-        public const string View = "Permissions.Roles.View";
+        [Description("Allows viewing role details")]
+        public const string View = "PermissionsRolesView";
 
-        [Description("Allows creating new roles.")]
-        public const string Create = "Permissions.Roles.Create";
+        [Description("Allows creating new roles")]
+        public const string Create = "PermissionsRolesCreate";
 
-        [Description("Allows modifying existing role details.")]
-        public const string Edit = "Permissions.Roles.Edit";
+        [Description("Allows modifying existing role details")]
+        public const string Edit = "PermissionsRolesEdit";
 
-        [Description("Allows deleting roles.")]
-        public const string Delete = "Permissions.Roles.Delete";
+        [Description("Allows deleting roles")]
+        public const string Delete = "PermissionsRolesDelete";
 
-        [Description("Allows searching for role records.")]
-        public const string Search = "Permissions.Roles.Search";
+        [Description("Allows searching for role records")]
+        public const string Search = "PermissionsRolesSearch";
 
-        [Description("Allows exporting role records.")]
-        public const string Export = "Permissions.Roles.Export";
+        [Description("Allows exporting role records")]
+        public const string Export = "PermissionsRolesExport";
 
-        [Description("Allows importing role records.")]
-        public const string Import = "Permissions.Roles.Import";
+        [Description("Allows importing role records")]
+        public const string Import = "PermissionsRolesImport";
 
-        [Description("Allows managing permissions for roles.")]
-        public const string ManagePermissions = "Permissions.Roles.ManagePermissions";
+        [Description("Allows managing permissions for roles")]
+        public const string ManagePermissions = "PermissionsRolesManagePermissions";
 
-        [Description("Allows managing role-specific navigation menus.")]
-        public const string ManageNavigation = "Permissions.Roles.ManageNavigation";
+        [Description("Allows managing role-specific navigation menus")]
+        public const string ManageNavigation = "PermissionsRolesManageNavigation";
     }
 
     [DisplayName("Tenant Permissions")]
-    [Description("Set permissions for tenant operations.")]
+    [Description("Set permissions for tenant operations")]
     public static class Tenants
     {
-        [Description("Allows viewing tenant details.")]
-        public const string View = "Permissions.Tenants.View";
+        [Description("Allows viewing tenant details")]
+        public const string View = "PermissionsTenantsView";
 
-        [Description("Allows creating new tenants.")]
-        public const string Create = "Permissions.Tenants.Create";
+        [Description("Allows creating new tenants")]
+        public const string Create = "PermissionsTenantsCreate";
 
-        [Description("Allows modifying existing tenant details.")]
-        public const string Edit = "Permissions.Tenants.Edit";
+        [Description("Allows modifying existing tenant details")]
+        public const string Edit = "PermissionsTenantsEdit";
 
-        [Description("Allows deleting tenant records.")]
-        public const string Delete = "Permissions.Tenants.Delete";
+        [Description("Allows deleting tenant records")]
+        public const string Delete = "PermissionsTenantsDelete";
 
-        [Description("Allows searching for tenant records.")]
-        public const string Search = "Permissions.Tenants.Search";
+        [Description("Allows searching for tenant records")]
+        public const string Search = "PermissionsTenantsSearch";
     }
 
     [DisplayName("Dashboard Permissions")]
-    [Description("Set permissions for dashboard operations.")]
+    [Description("Set permissions for dashboard operations")]
     public static class Dashboards
     {
-        [Description("Allows viewing dashboard data.")]
-        public const string View = "Permissions.Dashboards.View";
+        [Description("Allows viewing dashboard data")]
+        public const string View = "PermissionsDashboardsView";
     }
 
 

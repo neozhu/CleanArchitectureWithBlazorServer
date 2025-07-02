@@ -9,32 +9,32 @@ public static partial class Permissions
 {
 
     [DisplayName("Contact Permissions")]
-    [Description("Set permissions for contact operations.")]
+    [Description("Set permissions for contact operations")]
     public static class Contacts
     {
-        [Description("Allows viewing contact details.")]
-        public const string View = "Permissions.Contacts.View";
+        [Description("Allows viewing contact details")]
+        public const string View = "PermissionsContactsView";
 
-        [Description("Allows creating new contact records.")]
-        public const string Create = "Permissions.Contacts.Create";
+        [Description("Allows creating new contact records")]
+        public const string Create = "PermissionsContactsCreate";
 
-        [Description("Allows modifying existing contact details.")]
-        public const string Edit = "Permissions.Contacts.Edit";
+        [Description("Allows modifying existing contact details")]
+        public const string Edit = "PermissionsContactsEdit";
 
-        [Description("Allows deleting contact records.")]
-        public const string Delete = "Permissions.Contacts.Delete";
+        [Description("Allows deleting contact records")]
+        public const string Delete = "PermissionsContactsDelete";
 
-        [Description("Allows printing contact details.")]
-        public const string Print = "Permissions.Contacts.Print";
+        [Description("Allows printing contact details")]
+        public const string Print = "PermissionsContactsPrint";
 
-        [Description("Allows searching for contact records.")]
-        public const string Search = "Permissions.Contacts.Search";
+        [Description("Allows searching for contact records")]
+        public const string Search = "PermissionsContactsSearch";
 
-        [Description("Allows exporting contact records.")]
-        public const string Export = "Permissions.Contacts.Export";
+        [Description("Allows exporting contact records")]
+        public const string Export = "PermissionsContactsExport";
 
-        [Description("Allows importing contact records.")]
-        public const string Import = "Permissions.Contacts.Import";
+        [Description("Allows importing contact records")]
+        public const string Import = "PermissionsContactsImport";
     }
 }
 

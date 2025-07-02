@@ -129,257 +129,257 @@
   <data name="Product Permissions" xml:space="preserve">
     <value>产品权限</value>
   </data>
-  <data name="Allows viewing product details." xml:space="preserve">
-    <value>允许查看产品详情。</value>
+  <data name="Allows viewing product details" xml:space="preserve">
+    <value>允许查看产品详情</value>
   </data>
-  <data name="Allows creating new product records." xml:space="preserve">
-    <value>允许创建新的产品记录。</value>
+  <data name="Allows creating new product records" xml:space="preserve">
+    <value>允许创建新的产品记录</value>
   </data>
-  <data name="Allows modifying existing product details." xml:space="preserve">
-    <value>允许修改现有产品详情。</value>
+  <data name="Allows modifying existing product details" xml:space="preserve">
+    <value>允许修改现有产品详情</value>
   </data>
-  <data name="Allows deleting product records." xml:space="preserve">
-    <value>允许删除产品记录。</value>
+  <data name="Allows deleting product records" xml:space="preserve">
+    <value>允许删除产品记录</value>
   </data>
-  <data name="Allows printing product details." xml:space="preserve">
-    <value>允许打印产品详情。</value>
+  <data name="Allows printing product details" xml:space="preserve">
+    <value>允许打印产品详情</value>
   </data>
-  <data name="Allows searching for product records." xml:space="preserve">
-    <value>允许搜索产品记录。</value>
+  <data name="Allows searching for product records" xml:space="preserve">
+    <value>允许搜索产品记录</value>
   </data>
-  <data name="Allows exporting product records." xml:space="preserve">
-    <value>允许导出产品记录。</value>
+  <data name="Allows exporting product records" xml:space="preserve">
+    <value>允许导出产品记录</value>
   </data>
-  <data name="Allows importing product records." xml:space="preserve">
-    <value>允许导入产品记录。</value>
+  <data name="Allows importing product records" xml:space="preserve">
+    <value>允许导入产品记录</value>
   </data>
   <data name="Audit Permissions" xml:space="preserve">
     <value>审计权限</value>
   </data>
-  <data name="Allows viewing audit trail details." xml:space="preserve">
-    <value>允许查看审计跟踪详情。</value>
+  <data name="Allows viewing audit trail details" xml:space="preserve">
+    <value>允许查看审计跟踪详情</value>
   </data>
-  <data name="Allows searching for audit trail records." xml:space="preserve">
-    <value>允许搜索审计跟踪记录。</value>
+  <data name="Allows searching for audit trail records" xml:space="preserve">
+    <value>允许搜索审计跟踪记录</value>
   </data>
-  <data name="Allows exporting audit trail records." xml:space="preserve">
-    <value>允许导出审计跟踪记录。</value>
+  <data name="Allows exporting audit trail records" xml:space="preserve">
+    <value>允许导出审计跟踪记录</value>
   </data>
   <data name="Log Permissions" xml:space="preserve">
     <value>日志权限</value>
   </data>
-  <data name="Allows viewing log details." xml:space="preserve">
-    <value>允许查看日志详情。</value>
+  <data name="Allows viewing log details" xml:space="preserve">
+    <value>允许查看日志详情</value>
   </data>
-  <data name="Allows searching for log records." xml:space="preserve">
-    <value>允许搜索日志记录。</value>
+  <data name="Allows searching for log records" xml:space="preserve">
+    <value>允许搜索日志记录</value>
   </data>
-  <data name="Allows exporting log records." xml:space="preserve">
-    <value>允许导出日志记录。</value>
+  <data name="Allows exporting log records" xml:space="preserve">
+    <value>允许导出日志记录</value>
   </data>
-  <data name="Allows purging log records." xml:space="preserve">
-    <value>允许清除日志记录。</value>
+  <data name="Allows purging log records" xml:space="preserve">
+    <value>允许清除日志记录</value>
   </data>
   <data name="Picklist Permissions" xml:space="preserve">
     <value>选择列表权限</value>
   </data>
-  <data name="Allows viewing picklist set details." xml:space="preserve">
-    <value>允许查看选择列表集详情。</value>
+  <data name="Allows viewing picklist set details" xml:space="preserve">
+    <value>允许查看选择列表集详情</value>
   </data>
-  <data name="Allows creating new picklist sets." xml:space="preserve">
-    <value>允许创建新的选择列表集。</value>
+  <data name="Allows creating new picklist sets" xml:space="preserve">
+    <value>允许创建新的选择列表集</value>
   </data>
-  <data name="Allows modifying existing picklist sets." xml:space="preserve">
-    <value>允许修改现有选择列表集。</value>
+  <data name="Allows modifying existing picklist sets" xml:space="preserve">
+    <value>允许修改现有选择列表集</value>
   </data>
-  <data name="Allows deleting picklist sets." xml:space="preserve">
-    <value>允许删除选择列表集。</value>
+  <data name="Allows deleting picklist sets" xml:space="preserve">
+    <value>允许删除选择列表集</value>
   </data>
-  <data name="Allows searching for picklist set records." xml:space="preserve">
-    <value>允许搜索选择列表集记录。</value>
+  <data name="Allows searching for picklist set records" xml:space="preserve">
+    <value>允许搜索选择列表集记录</value>
   </data>
-  <data name="Allows exporting picklist set records." xml:space="preserve">
-    <value>允许导出选择列表集记录。</value>
+  <data name="Allows exporting picklist set records" xml:space="preserve">
+    <value>允许导出选择列表集记录</value>
   </data>
-  <data name="Allows importing picklist set records." xml:space="preserve">
-    <value>允许导入选择列表集记录。</value>
+  <data name="Allows importing picklist set records" xml:space="preserve">
+    <value>允许导入选择列表集记录</value>
   </data>
   <data name="User Permissions" xml:space="preserve">
     <value>用户权限</value>
   </data>
-  <data name="Allows viewing user details." xml:space="preserve">
-    <value>允许查看用户详情。</value>
+  <data name="Allows viewing user details" xml:space="preserve">
+    <value>允许查看用户详情</value>
   </data>
-  <data name="Allows creating new user accounts." xml:space="preserve">
-    <value>允许创建新的用户账户。</value>
+  <data name="Allows creating new user accounts" xml:space="preserve">
+    <value>允许创建新的用户账户</value>
   </data>
-  <data name="Allows modifying existing user details." xml:space="preserve">
-    <value>允许修改现有用户详情。</value>
+  <data name="Allows modifying existing user details" xml:space="preserve">
+    <value>允许修改现有用户详情</value>
   </data>
-  <data name="Allows deleting user accounts." xml:space="preserve">
-    <value>允许删除用户账户。</value>
+  <data name="Allows deleting user accounts" xml:space="preserve">
+    <value>允许删除用户账户</value>
   </data>
-  <data name="Allows searching for user records." xml:space="preserve">
-    <value>允许搜索用户记录。</value>
+  <data name="Allows searching for user records" xml:space="preserve">
+    <value>允许搜索用户记录</value>
   </data>
-  <data name="Allows importing user records." xml:space="preserve">
-    <value>允许导入用户记录。</value>
+  <data name="Allows importing user records" xml:space="preserve">
+    <value>允许导入用户记录</value>
   </data>
-  <data name="Allows exporting user records." xml:space="preserve">
-    <value>允许导出用户记录。</value>
+  <data name="Allows exporting user records" xml:space="preserve">
+    <value>允许导出用户记录</value>
   </data>
-  <data name="Allows managing user roles." xml:space="preserve">
-    <value>允许管理用户角色。</value>
+  <data name="Allows managing user roles" xml:space="preserve">
+    <value>允许管理用户角色</value>
   </data>
-  <data name="Allows resetting user passwords." xml:space="preserve">
-    <value>允许重置用户密码。</value>
+  <data name="Allows resetting user passwords" xml:space="preserve">
+    <value>允许重置用户密码</value>
   </data>
-  <data name="Allows sending password reset emails." xml:space="preserve">
-    <value>允许发送密码重置电子邮件。</value>
+  <data name="Allows sending password reset emails" xml:space="preserve">
+    <value>允许发送密码重置电子邮件</value>
   </data>
-  <data name="Allows managing user permissions." xml:space="preserve">
-    <value>允许管理用户权限。</value>
+  <data name="Allows managing user permissions" xml:space="preserve">
+    <value>允许管理用户权限</value>
   </data>
-  <data name="Allows deactivating user accounts." xml:space="preserve">
-    <value>允许停用用户账户。</value>
+  <data name="Allows deactivating user accounts" xml:space="preserve">
+    <value>允许停用用户账户</value>
   </data>
-  <data name="Allows viewing users' online status." xml:space="preserve">
-    <value>允许查看用户在线状态。</value>
+  <data name="Allows viewing users' online status" xml:space="preserve">
+    <value>允许查看用户在线状态</value>
   </data>
   <data name="Role Permissions" xml:space="preserve">
     <value>角色权限</value>
   </data>
-  <data name="Allows viewing role details." xml:space="preserve">
-    <value>允许查看角色详情。</value>
+  <data name="Allows viewing role details" xml:space="preserve">
+    <value>允许查看角色详情</value>
   </data>
-  <data name="Allows creating new roles." xml:space="preserve">
-    <value>允许创建新的角色。</value>
+  <data name="Allows creating new roles" xml:space="preserve">
+    <value>允许创建新的角色</value>
   </data>
-  <data name="Allows modifying existing role details." xml:space="preserve">
-    <value>允许修改现有角色详情。</value>
+  <data name="Allows modifying existing role details" xml:space="preserve">
+    <value>允许修改现有角色详情</value>
   </data>
-  <data name="Allows deleting roles." xml:space="preserve">
-    <value>允许删除角色。</value>
+  <data name="Allows deleting roles" xml:space="preserve">
+    <value>允许删除角色</value>
   </data>
-  <data name="Allows searching for role records." xml:space="preserve">
-    <value>允许搜索角色记录。</value>
+  <data name="Allows searching for role records" xml:space="preserve">
+    <value>允许搜索角色记录</value>
   </data>
-  <data name="Allows exporting role records." xml:space="preserve">
-    <value>允许导出角色记录。</value>
+  <data name="Allows exporting role records" xml:space="preserve">
+    <value>允许导出角色记录</value>
   </data>
-  <data name="Allows importing role records." xml:space="preserve">
-    <value>允许导入角色记录。</value>
+  <data name="Allows importing role records" xml:space="preserve">
+    <value>允许导入角色记录</value>
   </data>
-  <data name="Allows managing permissions for roles." xml:space="preserve">
-    <value>允许管理角色的权限。</value>
+  <data name="Allows managing permissions for roles" xml:space="preserve">
+    <value>允许管理角色的权限</value>
   </data>
-  <data name="Allows managing role-specific navigation menus." xml:space="preserve">
-    <value>允许管理角色特定的导航菜单。</value>
+  <data name="Allows managing role-specific navigation menus" xml:space="preserve">
+    <value>允许管理角色特定的导航菜单</value>
   </data>
   <data name="Tenant Permissions" xml:space="preserve">
     <value>租户权限</value>
   </data>
-  <data name="Allows viewing tenant details." xml:space="preserve">
-    <value>允许查看租户详情。</value>
+  <data name="Allows viewing tenant details" xml:space="preserve">
+    <value>允许查看租户详情</value>
   </data>
-  <data name="Allows creating new tenants." xml:space="preserve">
-    <value>允许创建新的租户。</value>
+  <data name="Allows creating new tenants" xml:space="preserve">
+    <value>允许创建新的租户</value>
   </data>
-  <data name="Allows modifying existing tenant details." xml:space="preserve">
-    <value>允许修改现有租户详情。</value>
+  <data name="Allows modifying existing tenant details" xml:space="preserve">
+    <value>允许修改现有租户详情</value>
   </data>
-  <data name="Allows deleting tenant records." xml:space="preserve">
-    <value>允许删除租户记录。</value>
+  <data name="Allows deleting tenant records" xml:space="preserve">
+    <value>允许删除租户记录</value>
   </data>
-  <data name="Allows searching for tenant records." xml:space="preserve">
-    <value>允许搜索租户记录。</value>
+  <data name="Allows searching for tenant records" xml:space="preserve">
+    <value>允许搜索租户记录</value>
   </data>
   <data name="Dashboard Permissions" xml:space="preserve">
     <value>仪表板权限</value>
   </data>
-  <data name="Allows viewing dashboard data." xml:space="preserve">
-    <value>允许查看仪表板数据。</value>
+  <data name="Allows viewing dashboard data" xml:space="preserve">
+    <value>允许查看仪表板数据</value>
   </data>
   <data name="Document Permissions" xml:space="preserve">
     <value>文档权限</value>
   </data>
-  <data name="Allows viewing document details." xml:space="preserve">
-    <value>允许查看文档详情。</value>
+  <data name="Allows viewing document details" xml:space="preserve">
+    <value>允许查看文档详情</value>
   </data>
-  <data name="Allows creating new document records." xml:space="preserve">
-    <value>允许创建新的文档记录。</value>
+  <data name="Allows creating new document records" xml:space="preserve">
+    <value>允许创建新的文档记录</value>
   </data>
-  <data name="Allows modifying existing document details." xml:space="preserve">
-    <value>允许修改现有文档详情。</value>
+  <data name="Allows modifying existing document details" xml:space="preserve">
+    <value>允许修改现有文档详情</value>
   </data>
-  <data name="Allows deleting document records." xml:space="preserve">
-    <value>允许删除文档记录。</value>
+  <data name="Allows deleting document records" xml:space="preserve">
+    <value>允许删除文档记录</value>
   </data>
-  <data name="Allows searching for document records." xml:space="preserve">
-    <value>允许搜索文档记录。</value>
+  <data name="Allows searching for document records" xml:space="preserve">
+    <value>允许搜索文档记录</value>
   </data>
-  <data name="Allows exporting document records." xml:space="preserve">
-    <value>允许导出文档记录。</value>
+  <data name="Allows exporting document records" xml:space="preserve">
+    <value>允许导出文档记录</value>
   </data>
-  <data name="Allows importing document records." xml:space="preserve">
-    <value>允许导入文档记录。</value>
+  <data name="Allows importing document records" xml:space="preserve">
+    <value>允许导入文档记录</value>
   </data>
-  <data name="Allows downloading documents." xml:space="preserve">
-    <value>允许下载文档。</value>
+  <data name="Allows downloading documents" xml:space="preserve">
+    <value>允许下载文档</value>
   </data>
-  <data name="Allows viewing contact details." xml:space="preserve">
-    <value>允许查看联系人详情。</value>
+  <data name="Allows viewing contact details" xml:space="preserve">
+    <value>允许查看联系人详情</value>
   </data>
-  <data name="Allows creating new contact records." xml:space="preserve">
-    <value>允许创建新的联系人记录。</value>
+  <data name="Allows creating new contact records" xml:space="preserve">
+    <value>允许创建新的联系人记录</value>
   </data>
-  <data name="Allows modifying existing contact details." xml:space="preserve">
-    <value>允许修改现有联系人详情。</value>
+  <data name="Allows modifying existing contact details" xml:space="preserve">
+    <value>允许修改现有联系人详情</value>
   </data>
-  <data name="Allows deleting contact records." xml:space="preserve">
-    <value>允许删除联系人记录。</value>
+  <data name="Allows deleting contact records" xml:space="preserve">
+    <value>允许删除联系人记录</value>
   </data>
-  <data name="Allows printing contact details." xml:space="preserve">
-    <value>允许打印联系人详情。</value>
+  <data name="Allows printing contact details" xml:space="preserve">
+    <value>允许打印联系人详情</value>
   </data>
-  <data name="Allows searching for contact records." xml:space="preserve">
-    <value>允许搜索联系人记录。</value>
+  <data name="Allows searching for contact records" xml:space="preserve">
+    <value>允许搜索联系人记录</value>
   </data>
-  <data name="Allows exporting contact records." xml:space="preserve">
-    <value>允许导出联系人记录。</value>
+  <data name="Allows exporting contact records" xml:space="preserve">
+    <value>允许导出联系人记录</value>
   </data>
-  <data name="Allows importing contact records." xml:space="preserve">
-    <value>允许导入联系人记录。</value>
+  <data name="Allows importing contact records" xml:space="preserve">
+    <value>允许导入联系人记录</value>
   </data>
-  <data name="Set permissions for product operations." xml:space="preserve">
-    <value>设置产品操作权限。</value>
+  <data name="Set permissions for product operations" xml:space="preserve">
+    <value>设置产品操作权限</value>
   </data>
-  <data name="Set permissions for audit operations." xml:space="preserve">
-    <value>设置审计操作权限。</value>
+  <data name="Set permissions for audit operations" xml:space="preserve">
+    <value>设置审计操作权限</value>
   </data>
-  <data name="Set permissions for log operations." xml:space="preserve">
-    <value>设置日志操作权限。</value>
+  <data name="Set permissions for log operations" xml:space="preserve">
+    <value>设置日志操作权限</value>
   </data>
-  <data name="Set permissions for picklist operations." xml:space="preserve">
-    <value>设置选择列表操作权限。</value>
+  <data name="Set permissions for picklist operations" xml:space="preserve">
+    <value>设置选择列表操作权限</value>
   </data>
-  <data name="Set permissions for user operations." xml:space="preserve">
-    <value>设置用户操作权限。</value>
+  <data name="Set permissions for user operations" xml:space="preserve">
+    <value>设置用户操作权限</value>
   </data>
-  <data name="Set permissions for role operations." xml:space="preserve">
-    <value>设置角色操作权限。</value>
+  <data name="Set permissions for role operations" xml:space="preserve">
+    <value>设置角色操作权限</value>
   </data>
-  <data name="Set permissions for tenant operations." xml:space="preserve">
-    <value>设置租户操作权限。</value>
+  <data name="Set permissions for tenant operations" xml:space="preserve">
+    <value>设置租户操作权限</value>
   </data>
-  <data name="Set permissions for dashboard operations." xml:space="preserve">
-    <value>设置仪表板操作权限。</value>
+  <data name="Set permissions for dashboard operations" xml:space="preserve">
+    <value>设置仪表板操作权限</value>
   </data>
-  <data name="Set permissions for document operations." xml:space="preserve">
-    <value>设置文档操作权限。</value>
+  <data name="Set permissions for document operations" xml:space="preserve">
+    <value>设置文档操作权限</value>
   </data>
-  <data name="Set permissions for contact operations." xml:space="preserve">
-    <value>设置联系人操作权限。</value>
+  <data name="Set permissions for contact operations" xml:space="preserve">
+    <value>设置联系人操作权限</value>
   </data>
   <data name="ManageNavigation" xml:space="preserve">
     <value>管理导航</value>

@@ -34,7 +34,7 @@
                 Area = user.Tenant?.Name,
                 ProfileUrl = user.ProfilePictureDataUrl,
                 ImageUrl = user.ProfilePictureDataUrl,
-                IsLoggedUser = UserProfile.UserName == user.UserName,
+                IsLoggedUser = UserProfile?.UserName == user.UserName, 
                 Size = string.Empty,
                 Tags = user.PhoneNumber ?? user.Email,
                 PositionName = roles != null && roles.Count > 0 ? string.Join(',', roles) : string.Empty,

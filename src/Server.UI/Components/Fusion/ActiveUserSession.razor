@@ -7,6 +7,7 @@
 @inject IUserSessionTracker UserSessionTracker
 @inject ICurrentUserAccessor CurrentUserAccessor
 @inject IStringLocalizer<ActiveUserSession> L
+@inject  IJSRuntime JS
 
 @if (!string.IsNullOrEmpty(currentUserId) && State.Value.Any())
 {
@@ -20,14 +21,13 @@
     private string? currentUserId => CurrentUserAccessor.SessionInfo?.UserId;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
+    
     protected override async Task OnInitializedAsync()
     {
         if (CurrentUserAccessor.SessionInfo != null)
         {
             await UserSessionTracker.AddUserSession(PageComponent, CurrentUserAccessor.SessionInfo);
         }
-
-
     }
 
     protected override ComputedState<string[]>.Options GetStateOptions()
@@ -38,7 +38,6 @@
         var result = await UserSessionTracker.GetUserSessions(PageComponent,cancellationToken);
         if (result.Any())
         {
-
             return result.Where(x => x.UserId!=currentUserId).Select(x=>x.UserName??string.Empty).ToArray();
         }
 

@@ -188,13 +188,13 @@
     <value>全名</value>
   </data>
   <data name="2FA is currently enabled." xml:space="preserve">
-    <value>已启用双重身份验证（2FA）。</value>
+    <value>已启用双重身份验证（2FA）</value>
   </data>
   <data name="Two-Factor Authentication (2FA)" xml:space="preserve">
     <value>双重身份验证（2FA）</value>
   </data>
   <data name="2FA is currently disabled." xml:space="preserve">
-    <value>双重身份验证（2FA）已禁用。</value>
+    <value>双重身份验证（2FA）已禁用</value>
   </data>
   <data name="Disable 2FA" xml:space="preserve">
     <value>禁用双重身份验证</value>

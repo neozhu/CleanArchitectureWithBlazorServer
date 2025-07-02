@@ -5,32 +5,32 @@ namespace CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 public static partial class Permissions
 {
     [DisplayName("Product Permissions")]
-    [Description("Set permissions for product operations.")]
+    [Description("Set permissions for product operations")]
     public static class Products
     {
-        [Description("Allows viewing product details.")]
-        public const string View = "Permissions.Products.View";
+        [Description("Allows viewing product details")]
+        public const string View = "PermissionsProductsView";
 
-        [Description("Allows creating new product records.")]
-        public const string Create = "Permissions.Products.Create";
+        [Description("Allows creating new product records")]
+        public const string Create = "PermissionsProductsCreate";
 
-        [Description("Allows modifying existing product details.")]
-        public const string Edit = "Permissions.Products.Edit";
+        [Description("Allows modifying existing product details")]
+        public const string Edit = "PermissionsProductsEdit";
 
-        [Description("Allows deleting product records.")]
-        public const string Delete = "Permissions.Products.Delete";
+        [Description("Allows deleting product records")]
+        public const string Delete = "PermissionsProductsDelete";
 
-        [Description("Allows printing product details.")]
-        public const string Print = "Permissions.Products.Print";
+        [Description("Allows printing product details")]
+        public const string Print = "PermissionsProductsPrint";
 
-        [Description("Allows searching for product records.")]
-        public const string Search = "Permissions.Products.Search";
+        [Description("Allows searching for product records")]
+        public const string Search = "PermissionsProductsSearch";
 
-        [Description("Allows exporting product records.")]
-        public const string Export = "Permissions.Products.Export";
+        [Description("Allows exporting product records")]
+        public const string Export = "PermissionsProductsExport";
 
-        [Description("Allows importing product records.")]
-        public const string Import = "Permissions.Products.Import";
+        [Description("Allows importing product records")]
+        public const string Import = "PermissionsProductsImport";
     }
 }
 
