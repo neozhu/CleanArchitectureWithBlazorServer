@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
         Microsoft ResX Schema 
@@ -15,8 +15,8 @@
         ... ado.net/XML headers & schema ...
         <resheader name="resmimetype">text/microsoft-resx</resheader>
         <resheader name="version">2.0</resheader>
-        <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-        <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+        <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ..</resheader>
+        <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ..</resheader>
         <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
         <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
         <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
@@ -121,14 +121,14 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
-  <data name="{0} session changed." xml:space="preserve">
-    <value>{0} សម័យបានផ្លាស់ប្តូរ។</value>
+  <data name="{0} session changed" xml:space="preserve">
+    <value>{0} សម័យបានផ្លាស់ប្តូរ</value>
   </data>
   <data name="Assign Roles" xml:space="preserve">
     <value>កំណត់តួនាទី</value>
   </data>
-  <data name="Click upload a photo." xml:space="preserve">
-    <value>ចុចបង្ហោះរូបថត។</value>
+  <data name="Click upload a photo" xml:space="preserve">
+    <value>ចុចបង្ហោះរូបថត</value>
   </data>
   <data name="Confirm New Password" xml:space="preserve">
     <value>បញ្ជាក់​លេខសំងាត់​ថ្មី</value>
@@ -137,7 +137,7 @@
     <value>បញ្ជាក់ពាក្យសម្ងាត់គឺចាំបាច់!</value>
   </data>
   <data name="Create a new user" xml:space="preserve">
-    <value>បង្កើតអ្នកប្រើប្រាស់ថ្មី។</value>
+    <value>បង្កើតអ្នកប្រើប្រាស់ថ្មី</value>
   </data>
   <data name="Edit the user" xml:space="preserve">
     <value>កែសម្រួលអ្នកប្រើប្រាស់</value>
@@ -160,7 +160,7 @@
   <data name="Phone Number" xml:space="preserve">
     <value>លេខទូរសព្ទ</value>
   </data>
-  <data name="Reset password successfully." xml:space="preserve">
+  <data name="Reset password successfully" xml:space="preserve">
     <value>កំណត់ពាក្យសម្ងាត់ឡើងវិញដោយជោគជ័យ</value>
   </data>
   <data name="Search by user name" xml:space="preserve">
@@ -223,7 +223,7 @@
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>អ៊ីមែល / លេខទូរស័ព្ទ</value>
   </data>
-  <data name="Permission removed successfully." xml:space="preserve">
+  <data name="Permission removed successfully" xml:space="preserve">
     <value>ការអនុញ្ញាតត្រូវបានដកចេញដោយជោគជ័យ</value>
   </data>
   <data name="Reset Password" xml:space="preserve">
@@ -232,44 +232,44 @@
   <data name="Display Name / PhoneNumber" xml:space="preserve">
     <value>បង្ហាញឈ្មោះ/លេខទូរស័ព្ទ</value>
   </data>
-  <data name="Permission assigned successfully." xml:space="preserve">
+  <data name="Permission assigned successfully" xml:space="preserve">
     <value>ការអនុញ្ញាតត្រូវបានផ្តល់ដោយជោគជ័យ</value>
   </data>
-  <data name="The user updated successfully." xml:space="preserve">
-    <value>អ្នកប្រើប្រាស់បានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ។</value>
+  <data name="The user updated successfully" xml:space="preserve">
+    <value>អ្នកប្រើប្រាស់បានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ</value>
   </data>
-  <data name="The user has been inactivated." xml:space="preserve">
-    <value>អ្នកប្រើប្រាស់ត្រូវបានអសកម្ម។</value>
+  <data name="The user has been inactivated" xml:space="preserve">
+    <value>អ្នកប្រើប្រាស់ត្រូវបានអសកម្ម</value>
   </data>
-  <data name="The user has been activated." xml:space="preserve">
-    <value>អ្នកប្រើប្រាស់ត្រូវបានធ្វើឱ្យសកម្ម។</value>
+  <data name="The user has been activated" xml:space="preserve">
+    <value>អ្នកប្រើប្រាស់ត្រូវបានធ្វើឱ្យសកម្ម</value>
   </data>
-  <data name="Recovery email sent. Please check your inbox to set a new password." xml:space="preserve">
-    <value>បានផ្ញើអ៊ីមែលសង្គ្រោះ។ សូមពិនិត្យមើលប្រអប់សំបុត្ររបស់អ្នកដើម្បីកំណត់ពាក្យសម្ងាត់ថ្មី។</value>
+  <data name="Recovery email sent. Please check your inbox to set a new password" xml:space="preserve">
+    <value>បានផ្ញើអ៊ីមែលសង្គ្រោះ។ សូមពិនិត្យមើលប្រអប់សំបុត្ររបស់អ្នកដើម្បីកំណត់ពាក្យសម្ងាត់ថ្មី</value>
   </data>
-  <data name="New user created successfully." xml:space="preserve">
-    <value>អ្នកប្រើប្រាស់ថ្មីបានបង្កើតដោយជោគជ័យ។</value>
+  <data name="New user created successfully" xml:space="preserve">
+    <value>អ្នកប្រើប្រាស់ថ្មីបានបង្កើតដោយជោគជ័យ</value>
   </data>
   <data name="Active" xml:space="preserve">
     <value>សកម្ម</value>
   </data>
-  <data name="Authorization has been changed." xml:space="preserve">
-    <value>ការអនុញ្ញាតត្រូវបានផ្លាស់ប្តូរ។</value>
+  <data name="Authorization has been changed" xml:space="preserve">
+    <value>ការអនុញ្ញាតត្រូវបានផ្លាស់ប្តូរ</value>
   </data>
-  <data name="We send a verification link to this email address. The link expires after 72 hours." xml:space="preserve">
-    <value>យើងផ្ញើតំណផ្ទៀងផ្ទាត់ទៅកាន់អាសយដ្ឋានអ៊ីមែលនេះ។ តំណផុតកំណត់បន្ទាប់ពី 72 ម៉ោង។</value>
+  <data name="We send a verification link to this email address. The link expires after 72 hours" xml:space="preserve">
+    <value>យើងផ្ញើតំណផ្ទៀងផ្ទាត់ទៅកាន់អាសយដ្ឋានអ៊ីមែលនេះ។ តំណផុតកំណត់បន្ទាប់ពី 72 ម៉ោង</value>
   </data>
   <data name="You cannot delete your own account!" xml:space="preserve">
     <value>អ្នកមិនអាចលុបគណនីផ្ទាល់ខ្លួនរបស់អ្នកបានទេ!</value>
   </data>
-  <data name="Click to change status to active." xml:space="preserve">
-    <value>ចុចដើម្បីផ្លាស់ប្តូរស្ថានភាពទៅជាសកម្ម។</value>
+  <data name="Click to change status to active" xml:space="preserve">
+    <value>ចុចដើម្បីផ្លាស់ប្តូរស្ថានភាពទៅជាសកម្ម</value>
   </data>
-  <data name="Verification email sent to {0}." xml:space="preserve">
-    <value>អ៊ីមែលផ្ទៀងផ្ទាត់បានផ្ញើទៅ {0}។</value>
+  <data name="Verification email sent to {0}" xml:space="preserve">
+    <value>អ៊ីមែលផ្ទៀងផ្ទាត់បានផ្ញើទៅ {0}</value>
   </data>
-  <data name="A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login." xml:space="preserve">
-    <value>ពាក្យសម្ងាត់ថ្មីសម្រាប់ {0} ត្រូវបានផ្ញើតាមអ៊ីមែល។ អ្នកប្រើប្រាស់នឹងតម្រូវឱ្យបញ្ចូលពាក្យសម្ងាត់ថ្មីនៅពេលចូលដំបូង។</value>
+  <data name="A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login" xml:space="preserve">
+    <value>ពាក្យសម្ងាត់ថ្មីសម្រាប់ {0} ត្រូវបានផ្ញើតាមអ៊ីមែល។ អ្នកប្រើប្រាស់នឹងតម្រូវឱ្យបញ្ចូលពាក្យសម្ងាត់ថ្មីនៅពេលចូលដំបូង</value>
   </data>
   <data name="Full Name" xml:space="preserve">
     <value>ឈ្មោះ​ពេញ</value>
@@ -277,17 +277,17 @@
   <data name="Inactive" xml:space="preserve">
     <value>អសកម្ម</value>
   </data>
-  <data name="Click to change status to inactive." xml:space="preserve">
-    <value>ចុចដើម្បីប្តូរស្ថានភាពទៅជាអសកម្ម។</value>
+  <data name="Click to change status to inactive" xml:space="preserve">
+    <value>ចុចដើម្បីប្តូរស្ថានភាពទៅជាអសកម្ម</value>
   </data>
-  <data name="No permission to change status." xml:space="preserve">
-    <value>គ្មានការអនុញ្ញាតក្នុងការផ្លាស់ប្តូរស្ថានភាព។</value>
+  <data name="No permission to change status" xml:space="preserve">
+    <value>គ្មានការអនុញ្ញាតក្នុងការផ្លាស់ប្តូរស្ថានភាព</value>
   </data>
   <data name="Send Reset Password Email" xml:space="preserve">
     <value>ផ្ញើអ៊ីមែលកំណត់ពាក្យសម្ងាត់ឡើងវិញ</value>
   </data>
-  <data name="No roles available for this tenant." xml:space="preserve">
-    <value>មិនមានតួនាទីសម្រាប់ភតិកៈនេះទេ។</value>
+  <data name="No roles available for this tenant" xml:space="preserve">
+    <value>មិនមានតួនាទីសម្រាប់ភតិកៈនេះទេ</value>
   </data>
   <data name="Search by role name" xml:space="preserve">
     <value>ស្វែងរកតាមឈ្មោះតួនាទី</value>

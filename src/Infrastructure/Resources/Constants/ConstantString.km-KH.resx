@@ -152,7 +152,7 @@
     <value>បិទ</value>
   </data>
   <data name="New" xml:space="preserve">
-    <value>ថ្មី។</value>
+    <value>ថ្មី</value>
   </data>
   <data name="Create a new {0}" xml:space="preserve">
     <value>បង្កើត {0} ថ្មី</value>
@@ -287,7 +287,7 @@
     <value>ក្លូន</value>
   </data>
   <data name="Save &amp; New" xml:space="preserve">
-    <value>រក្សាទុក &amp; ថ្មី។</value>
+    <value>រក្សាទុក &amp; ថ្មី</value>
   </data>
   <data name="Selected Total" xml:space="preserve">
     <value>សរុបដែលបានជ្រើសរើស</value>

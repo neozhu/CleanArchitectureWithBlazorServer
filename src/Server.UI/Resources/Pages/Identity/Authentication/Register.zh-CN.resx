@@ -160,9 +160,6 @@
   <data name="Confirm Password" xml:space="preserve">
     <value>确认密码</value>
   </data>
-  <data name="You are already logged in." xml:space="preserve">
-    <value>您已经登录。</value>
-  </data>
   <data name="Tenant" xml:space="preserve">
     <value>租户</value>
   </data>

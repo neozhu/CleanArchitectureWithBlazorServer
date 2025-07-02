@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
         Microsoft ResX Schema 
@@ -159,9 +159,6 @@
   </data>
   <data name="Confirm Password" xml:space="preserve">
     <value>បញ្ជាក់ពាក្យសម្ងាត់</value>
-  </data>
-  <data name="You are already logged in." xml:space="preserve">
-    <value>អ្នក​បាន​ចូល​រួច​ហើយ។</value>
   </data>
   <data name="Tenant" xml:space="preserve">
     <value>អ្នកជួល</value>

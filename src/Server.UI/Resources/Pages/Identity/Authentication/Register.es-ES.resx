@@ -160,9 +160,6 @@
   <data name="Confirm Password" xml:space="preserve">
     <value>Confirmar contraseña</value>
   </data>
-  <data name="You are already logged in." xml:space="preserve">
-    <value>Ya se ha autentificado.</value>
-  </data>
   <data name="Tenant" xml:space="preserve">
     <value>Inquilino</value>
   </data>

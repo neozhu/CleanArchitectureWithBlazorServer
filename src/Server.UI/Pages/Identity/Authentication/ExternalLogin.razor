@@ -20,9 +20,9 @@
 <PageTitle>@L["External Login"]</PageTitle>
 
 <MudText Typo="Typo.h4" GutterBottom="true">@L["External Login"]</MudText>
-<MudText Typo="Typo.h6" GutterBottom="true">@string.Format(L["Associate your {0} account."], ProviderDisplayName)</MudText>
+<MudText Typo="Typo.h6" GutterBottom="true">@string.Format(L["Associate your {0} account"], ProviderDisplayName)</MudText>
 
-<MudText Typo="Typo.body1"> @string.Format(L["You've successfully authenticated with {0}. Please enter an email address for this site below and click the Register button to finish logging in."], ProviderDisplayName)</MudText>
+<MudText Typo="Typo.body1"> @string.Format(L["You've successfully authenticated with {0}. Please enter an email address for this site below and click the Register button to finish logging in"], ProviderDisplayName)</MudText>
 
 
 <div class="d-flex flex-column gap-y-3">
@@ -282,7 +282,7 @@
     {
         if (!UserManager.SupportsUserEmail)
         {
-            throw new NotSupportedException(L["The default UI requires a user store with email support."]);
+            throw new NotSupportedException(L["The default UI requires a user store with email support"]);
         }
 
         return (IUserEmailStore<ApplicationUser>)UserStore;

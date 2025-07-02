@@ -24,8 +24,8 @@ public class ResetPasswordFormModelValidator : AbstractValidator<ResetPasswordFo
         _localizer = localizer;
         _identitySettings = identitySettings;
         RuleFor(x => x.UserName)
-            .NotEmpty().WithMessage(_localizer["User name cannot be empty."])
-            .Length(2, 100).WithMessage(_localizer["User name must be between 2 and 100 characters."]);
+            .NotEmpty().WithMessage(_localizer["User name cannot be empty"])
+            .Length(2, 100).WithMessage(_localizer["User name must be between 2 and 100 characters"]);
         RuleFor(p => p.Password).NotEmpty().WithMessage(_localizer["Password cannot be empty"])
             .MinimumLength(_identitySettings.RequiredLength)
             .WithMessage(_localizer["Password must be at least {0} characters long", _identitySettings.RequiredLength])

@@ -15,8 +15,8 @@
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ..</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ..</resheader>
     <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
     <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
@@ -120,8 +120,8 @@
   <data name="Assign Roles" xml:space="preserve">
     <value>Attribuer des rôles</value>
   </data>
-  <data name="Click upload a photo." xml:space="preserve">
-    <value>Cliquez sur télécharger une photo.</value>
+  <data name="Click upload a photo" xml:space="preserve">
+    <value>Cliquez sur télécharger une photo</value>
   </data>
   <data name="Confirm New Password" xml:space="preserve">
     <value>Confirmer le nouveau mot de passe</value>
@@ -153,7 +153,7 @@
   <data name="Phone Number" xml:space="preserve">
     <value>Numéro de téléphone</value>
   </data>
-  <data name="Reset password successfully." xml:space="preserve">
+  <data name="Reset password successfully" xml:space="preserve">
     <value>Réinitialiser le mot de passe avec succès</value>
   </data>
   <data name="Search by user name" xml:space="preserve">
@@ -183,8 +183,8 @@
   <data name="Users" xml:space="preserve">
     <value>Utilisateurs</value>
   </data>
-  <data name="{0} session changed." xml:space="preserve">
-    <value>La session {0} a été modifiée.</value>
+  <data name="{0} session changed" xml:space="preserve">
+    <value>La session {0} a été modifiée</value>
   </data>
   <data name="Superior Name" xml:space="preserve">
     <value>Nom du supérieur</value>
@@ -219,7 +219,7 @@
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>E-mail/numéro de téléphone</value>
   </data>
-  <data name="Permission removed successfully." xml:space="preserve">
+  <data name="Permission removed successfully" xml:space="preserve">
     <value>Autorisation supprimée avec succès</value>
   </data>
   <data name="Reset Password" xml:space="preserve">
@@ -228,50 +228,50 @@
   <data name="Display Name / PhoneNumber" xml:space="preserve">
     <value>Nom d'affichage/numéro de téléphone</value>
   </data>
-  <data name="Permission assigned successfully." xml:space="preserve">
+  <data name="Permission assigned successfully" xml:space="preserve">
     <value>Autorisation attribuée avec succès</value>
   </data>
-  <data name="Recovery email sent. Please check your inbox to set a new password." xml:space="preserve">
-    <value>E-mail de récupération envoyé. Veuillez vérifier votre boîte de réception pour définir un nouveau mot de passe.</value>
+  <data name="Recovery email sent. Please check your inbox to set a new password" xml:space="preserve">
+    <value>E-mail de récupération envoyé. Veuillez vérifier votre boîte de réception pour définir un nouveau mot de passe</value>
   </data>
-  <data name="The user has been activated." xml:space="preserve">
-    <value>L'utilisateur a été activé.</value>
+  <data name="The user has been activated" xml:space="preserve">
+    <value>L'utilisateur a été activé</value>
   </data>
-  <data name="The user has been inactivated." xml:space="preserve">
-    <value>L'utilisateur a été inactivé.</value>
+  <data name="The user has been inactivated" xml:space="preserve">
+    <value>L'utilisateur a été inactivé</value>
   </data>
-  <data name="New user created successfully." xml:space="preserve">
-    <value>Nouvel utilisateur créé avec succès.</value>
+  <data name="New user created successfully" xml:space="preserve">
+    <value>Nouvel utilisateur créé avec succès</value>
   </data>
-  <data name="The user updated successfully." xml:space="preserve">
-    <value>L'utilisateur a mis à jour avec succès.</value>
+  <data name="The user updated successfully" xml:space="preserve">
+    <value>L'utilisateur a mis à jour avec succès</value>
   </data>
   <data name="Full Name" xml:space="preserve">
     <value>Nom et prénom</value>
   </data>
-  <data name="We send a verification link to this email address. The link expires after 72 hours." xml:space="preserve">
-    <value>Nous envoyons un lien de vérification à cette adresse e-mail. Le lien expire après 72 heures.</value>
+  <data name="We send a verification link to this email address. The link expires after 72 hours" xml:space="preserve">
+    <value>Nous envoyons un lien de vérification à cette adresse e-mail. Le lien expire après 72 heures</value>
   </data>
-  <data name="Click to change status to active." xml:space="preserve">
-    <value>Cliquez pour changer le statut en actif.</value>
+  <data name="Click to change status to active" xml:space="preserve">
+    <value>Cliquez pour changer le statut en actif</value>
   </data>
   <data name="You cannot delete your own account!" xml:space="preserve">
     <value>Vous ne pouvez pas supprimer votre propre compte !</value>
   </data>
-  <data name="Verification email sent to {0}." xml:space="preserve">
-    <value>E-mail de vérification envoyé à {0}.</value>
+  <data name="Verification email sent to {0}" xml:space="preserve">
+    <value>E-mail de vérification envoyé à {0}</value>
   </data>
-  <data name="A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login." xml:space="preserve">
-    <value>Un nouveau mot de passe pour {0} a été envoyé par e-mail. L'utilisateur devra saisir un nouveau mot de passe lors de la connexion initiale.</value>
+  <data name="A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login" xml:space="preserve">
+    <value>Un nouveau mot de passe pour {0} a été envoyé par e-mail. L'utilisateur devra saisir un nouveau mot de passe lors de la connexion initiale</value>
   </data>
-  <data name="Authorization has been changed." xml:space="preserve">
-    <value>L'autorisation a été modifiée.</value>
+  <data name="Authorization has been changed" xml:space="preserve">
+    <value>L'autorisation a été modifiée</value>
   </data>
   <data name="Active" xml:space="preserve">
     <value>Actif</value>
   </data>
-  <data name="Click to change status to inactive." xml:space="preserve">
-    <value>Cliquez pour changer le statut en inactif.</value>
+  <data name="Click to change status to inactive" xml:space="preserve">
+    <value>Cliquez pour changer le statut en inactif</value>
   </data>
   <data name="Inactive" xml:space="preserve">
     <value>Inactive</value>
@@ -279,11 +279,11 @@
   <data name="Send Reset Password Email" xml:space="preserve">
     <value>Envoyer un e-mail de réinitialisation du mot de passe</value>
   </data>
-  <data name="No permission to change status." xml:space="preserve">
-    <value>Aucune autorisation de changer de statut.</value>
+  <data name="No permission to change status" xml:space="preserve">
+    <value>Aucune autorisation de changer de statut</value>
   </data>
-  <data name="No roles available for this tenant." xml:space="preserve">
-    <value>Aucun rôle n'est disponible pour ce locataire.</value>
+  <data name="No roles available for this tenant" xml:space="preserve">
+    <value>Aucun rôle n'est disponible pour ce locataire</value>
   </data>
   <data name="Search by role name" xml:space="preserve">
     <value>Recherche par nom de rôle</value>

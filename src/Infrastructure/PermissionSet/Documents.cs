@@ -10,28 +10,28 @@ public static partial class Permissions
     public static class Documents
     {
         [Description("Allows viewing document details")]
-        public const string View = "PermissionsDocumentsView";
+        public const string View = "Permissions.Documents.View";
 
         [Description("Allows creating new document records")]
-        public const string Create = "PermissionsDocumentsCreate";
+        public const string Create = "Permissions.Documents.Create";
 
         [Description("Allows modifying existing document details")]
-        public const string Edit = "PermissionsDocumentsEdit";
+        public const string Edit = "Permissions.Documents.Edit";
 
         [Description("Allows deleting document records")]
-        public const string Delete = "PermissionsDocumentsDelete";
+        public const string Delete = "Permissions.Documents.Delete";
 
         [Description("Allows searching for document records")]
-        public const string Search = "PermissionsDocumentsSearch";
+        public const string Search = "Permissions.Documents.Search";
 
         [Description("Allows exporting document records")]
-        public const string Export = "PermissionsDocumentsExport";
+        public const string Export = "Permissions.Documents.Export";
 
         [Description("Allows importing document records")]
-        public const string Import = "PermissionsDocumentsImport";
+        public const string Import = "Permissions.Documents.Import";
 
         [Description("Allows downloading documents")]
-        public const string Download = "PermissionsDocumentsDownload";
+        public const string Download = "Permissions.Documents.Download";
     }
 }
 

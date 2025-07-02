@@ -121,8 +121,8 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
-  <data name="authentication is required, click sign in." xml:space="preserve">
-    <value>l'autenticació és necessària, feu clic a Iniciar sessió.</value>
+  <data name="authentication is required, click sign in" xml:space="preserve">
+    <value>l'autenticació és necessària, feu clic a Iniciar sessió</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel · lar</value>
@@ -163,14 +163,14 @@
   <data name="Profile" xml:space="preserve">
     <value>Perfil</value>
   </data>
-  <data name="Search..." xml:space="preserve">
-    <value>Cerca...</value>
+  <data name="Search" xml:space="preserve">
+    <value>Cerca</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Configuració</value>
   </data>
-  <data name="Sorry, there's nothing at this address." xml:space="preserve">
-    <value>Ho sentim, no hi ha res en aquesta adreça.</value>
+  <data name="Sorry, there's nothing at this address" xml:space="preserve">
+    <value>Ho sentim, no hi ha res en aquesta adreça</value>
   </data>
   <data name="Themes" xml:space="preserve">
     <value>Temes</value>
@@ -178,8 +178,8 @@
   <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
     <value>Esteu provant de tancar la sessió de l'aplicació. Realment voleu tancar la sessió?</value>
   </data>
-  <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
-    <value>No estàs autoritzat per estar aquí. Per obtenir més informació, poseu-vos en contacte amb l'administrador del vostre sistema.</value>
+  <data name="You are not authorized to be here. For more information, contact your system administrator" xml:space="preserve">
+    <value>No estàs autoritzat per estar aquí. Per obtenir més informació, poseu-vos en contacte amb l'administrador del vostre sistema</value>
   </data>
   <data name="authentication is required, click" xml:space="preserve">
     <value>l'autenticació és necessària, feu clic</value>
@@ -187,11 +187,11 @@
   <data name="sign in" xml:space="preserve">
     <value>inicieu la sessió</value>
   </data>
-  <data name="{0} has logged out." xml:space="preserve">
-    <value>{0} ha tancat la sessió.</value>
+  <data name="{0} has logged out" xml:space="preserve">
+    <value>{0} ha tancat la sessió</value>
   </data>
-  <data name="{0} has logged in." xml:space="preserve">
-    <value>{0} ha iniciat sessió.</value>
+  <data name="{0} has logged in" xml:space="preserve">
+    <value>{0} ha iniciat sessió</value>
   </data>
   <data name="User Profile" xml:space="preserve">
     <value>Perfil d'usuari</value>
@@ -205,7 +205,7 @@
   <data name="Please wait, we are authorizing you..." xml:space="preserve">
     <value>Espereu, us estem autoritzant...</value>
   </data>
-  <data name="You are not authorized to view this page." xml:space="preserve">
-    <value>No estàs autoritzat per veure aquesta pàgina.</value>
+  <data name="You are not authorized to view this page" xml:space="preserve">
+    <value>No estàs autoritzat per veure aquesta pàgina</value>
   </data>
 </root>

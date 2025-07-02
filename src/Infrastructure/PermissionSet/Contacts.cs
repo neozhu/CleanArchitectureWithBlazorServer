@@ -13,28 +13,28 @@ public static partial class Permissions
     public static class Contacts
     {
         [Description("Allows viewing contact details")]
-        public const string View = "PermissionsContactsView";
+        public const string View = "Permissions.Contacts.View";
 
         [Description("Allows creating new contact records")]
-        public const string Create = "PermissionsContactsCreate";
+        public const string Create = "Permissions.Contacts.Create";
 
         [Description("Allows modifying existing contact details")]
-        public const string Edit = "PermissionsContactsEdit";
+        public const string Edit = "Permissions.Contacts.Edit";
 
         [Description("Allows deleting contact records")]
-        public const string Delete = "PermissionsContactsDelete";
+        public const string Delete = "Permissions.Contacts.Delete";
 
         [Description("Allows printing contact details")]
-        public const string Print = "PermissionsContactsPrint";
+        public const string Print = "Permissions.Contacts.Print";
 
         [Description("Allows searching for contact records")]
-        public const string Search = "PermissionsContactsSearch";
+        public const string Search = "Permissions.Contacts.Search";
 
         [Description("Allows exporting contact records")]
-        public const string Export = "PermissionsContactsExport";
+        public const string Export = "Permissions.Contacts.Export";
 
         [Description("Allows importing contact records")]
-        public const string Import = "PermissionsContactsImport";
+        public const string Import = "Permissions.Contacts.Import";
     }
 }
 

@@ -56,7 +56,7 @@
                 await UserManager.UpdateAsync(user);
             }
 
-            statusMessage = result.Succeeded ? L["Thank you for confirming your email."] : L["Error confirming your email."];
+            statusMessage = result.Succeeded ? L["Thank you for confirming your email"] : L["Error confirming your email"];
             error = result.Succeeded ? false : true;
         }
     }

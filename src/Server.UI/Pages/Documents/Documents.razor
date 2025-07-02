@@ -269,7 +269,7 @@
             }
             else
             {
-                Snackbar.Add(string.Format(_localizer["{0}: {1} completed."], e.Id, e.Message), Severity.Success);
+                Snackbar.Add(string.Format(_localizer["{0}: {1} completed"], e.Id, e.Message), Severity.Success);
             }
         });
     }
@@ -280,7 +280,7 @@
         InvokeAsync(async () =>
         {
             await _dataGrid.ReloadServerData();
-            Snackbar.Add(string.Format(_localizer["{0}: {1} job started."], e.Id, e.Message), Severity.Info);
+            Snackbar.Add(string.Format(_localizer["{0}: {1} job started"], e.Id, e.Message), Severity.Info);
         });
     }
 

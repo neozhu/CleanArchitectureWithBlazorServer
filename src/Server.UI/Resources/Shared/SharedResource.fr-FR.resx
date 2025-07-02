@@ -120,8 +120,8 @@
   <data name="authentication is required, click" xml:space="preserve">
     <value>Une authentification est requise, cliquez sur</value>
   </data>
-  <data name="authentication is required, click sign in." xml:space="preserve">
-    <value>Une authentification est requise, cliquez sur s'identifier.</value>
+  <data name="authentication is required, click sign in" xml:space="preserve">
+    <value>Une authentification est requise, cliquez sur s'identifier</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annuler</value>
@@ -162,8 +162,8 @@
   <data name="Profile" xml:space="preserve">
     <value>Profil</value>
   </data>
-  <data name="Search..." xml:space="preserve">
-    <value>Rechercher...</value>
+  <data name="Search" xml:space="preserve">
+    <value>Rechercher</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Paramètres</value>
@@ -171,8 +171,8 @@
   <data name="sign in" xml:space="preserve">
     <value>connexion</value>
   </data>
-  <data name="Sorry, there's nothing at this address." xml:space="preserve">
-    <value>Désolé, il n'y a rien à cette adresse.</value>
+  <data name="Sorry, there's nothing at this address" xml:space="preserve">
+    <value>Désolé, il n'y a rien à cette adresse</value>
   </data>
   <data name="Themes" xml:space="preserve">
     <value>Thèmes</value>
@@ -180,8 +180,8 @@
   <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
     <value>Vous tentez de vous déconnecter de l'application. Voulez-vous vraiment vous déconnecter ?</value>
   </data>
-  <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
-    <value>Vous n'êtes pas autorisé à être ici. Pour plus d'informations, contactez votre administrateur système.</value>
+  <data name="You are not authorized to be here. For more information, contact your system administrator" xml:space="preserve">
+    <value>Vous n'êtes pas autorisé à être ici. Pour plus d'informations, contactez votre administrateur système</value>
   </data>
   <data name="Notification" xml:space="preserve">
     <value>Notification</value>
@@ -189,14 +189,14 @@
   <data name="User Profile" xml:space="preserve">
     <value>Profil de l'utilisateur</value>
   </data>
-  <data name="{0} has logged in." xml:space="preserve">
-    <value>{0} s'est connecté.</value>
+  <data name="{0} has logged in" xml:space="preserve">
+    <value>{0} s'est connecté</value>
   </data>
-  <data name="{0} has logged out." xml:space="preserve">
-    <value>{0} s'est déconnecté.</value>
+  <data name="{0} has logged out" xml:space="preserve">
+    <value>{0} s'est déconnecté</value>
   </data>
-  <data name="You are not authorized to view this page." xml:space="preserve">
-    <value>Vous n'êtes pas autorisé à consulter cette page.</value>
+  <data name="You are not authorized to view this page" xml:space="preserve">
+    <value>Vous n'êtes pas autorisé à consulter cette page</value>
   </data>
   <data name="Please wait, we are authorizing you..." xml:space="preserve">
     <value>Veuillez patienter, nous vous autorisons...</value>

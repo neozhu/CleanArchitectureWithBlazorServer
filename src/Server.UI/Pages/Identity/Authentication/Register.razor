@@ -298,7 +298,7 @@
     {
         if (!UserManager.SupportsUserEmail)
         {
-            throw new NotSupportedException(L["The default UI requires a user store with email support."]);
+            throw new NotSupportedException(L["The default UI requires a user store with email support"]);
         }
 
         return (IUserEmailStore<ApplicationUser>)UserStore;

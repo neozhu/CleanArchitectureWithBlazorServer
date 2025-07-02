@@ -9,7 +9,7 @@
             <MudTextField @bind-Value="@_search"
                           Class="mb-3"
                           Clearable="true"
-                          Placeholder="@L["Search..."]"
+                          Placeholder="@L["Search"]"
                           TextChanged="@(SearchPages)"
                           Immediate="true"/>
             <MudList T="string" 
@@ -50,7 +50,7 @@
         _pagesFiltered = _pages;
 
         _hotKeysContext = HotKeys.CreateContext()
-            .Add(Key.Escape, () => MudDialog.Close(), "Close command palette.");
+            .Add(Key.Escape, () => MudDialog.Close(), "Close command palette");
     }
 
     private void SearchPages(string value)

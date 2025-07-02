@@ -2,7 +2,7 @@
 
 <MudDialog>
     <DialogContent>
-        <MudText Class="mb-4">@Localizer["Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in."]</MudText>
+        <MudText Class="mb-4">@Localizer["Store these recovery codes in a secure location. If you lose access to your authenticator device, you can use these codes to log in"]</MudText>
         
         <MudPaper Elevation="0" Class="pa-4 mud-background-gray">
             <div class="d-flex justify-space-between mb-4">
@@ -37,7 +37,7 @@
     {
         var codesText = string.Join(Environment.NewLine, RecoveryCodes);
         await JS.InvokeVoidAsync("navigator.clipboard.writeText", codesText);
-        Snackbar.Add(Localizer["All recovery codes have been copied to the clipboard."], Severity.Success);
+        Snackbar.Add(Localizer["All recovery codes have been copied to the clipboard"], Severity.Success);
     }
 
     private async Task DownloadRecoveryCodes()

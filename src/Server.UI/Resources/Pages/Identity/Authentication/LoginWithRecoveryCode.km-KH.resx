@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
     <!-- 
       Microsoft ResX Schema 
@@ -15,8 +15,8 @@
       ... ado.net/XML headers & schema ...
       <resheader name="resmimetype">text/microsoft-resx</resheader>
       <resheader name="version">2.0</resheader>
-      <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-      <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+      <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ..</resheader>
+      <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ..</resheader>
       <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
       <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
       <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
@@ -122,8 +122,8 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="Error: Invalid recovery code entered." xml:space="preserve">
-    <value>កំហុស៖ បញ្ចូលលេខកូដសង្គ្រោះមិនត្រឹមត្រូវ។</value>
+    <data name="Error: Invalid recovery code entered" xml:space="preserve">
+    <value>កំហុស៖ បញ្ចូលលេខកូដសង្គ្រោះមិនត្រឹមត្រូវ</value>
   </data>
     <data name="Recovery Code" xml:space="preserve">
     <value>លេខកូដសង្គ្រោះ</value>
@@ -134,12 +134,12 @@
     <data name="Sign In" xml:space="preserve">
     <value>ចូល</value>
   </data>
-    <data name="Unable to load two-factor authentication user." xml:space="preserve">
-    <value>មិនអាចផ្ទុកអ្នកប្រើប្រាស់ការផ្ទៀងផ្ទាត់ពីរកត្តាបានទេ។</value>
+    <data name="Unable to load two-factor authentication user" xml:space="preserve">
+    <value>មិនអាចផ្ទុកអ្នកប្រើប្រាស់ការផ្ទៀងផ្ទាត់ពីរកត្តាបានទេ</value>
   </data>
     <data
-        name="You have requested to log in with a recovery code. This login will not be remembered until you provide an authenticator app code at log in or disable 2FA and log in again."
+        name="You have requested to log in with a recovery code. This login will not be remembered until you provide an authenticator app code at log in or disable 2FA and log in again"
         xml:space="preserve">
-    <value>អ្នកបានស្នើសុំចូលដោយប្រើលេខកូដសង្គ្រោះ។ ការចូលនេះនឹងមិនត្រូវបានចងចាំទេ រហូតដល់អ្នកផ្តល់លេខកូដកម្មវិធីផ្ទៀងផ្ទាត់នៅពេលចូល ឬបិទ 2FA ហើយចូលម្តងទៀត។</value>
+    <value>អ្នកបានស្នើសុំចូលដោយប្រើលេខកូដសង្គ្រោះ។ ការចូលនេះនឹងមិនត្រូវបានចងចាំទេ រហូតដល់អ្នកផ្តល់លេខកូដកម្មវិធីផ្ទៀងផ្ទាត់នៅពេលចូល ឬបិទ 2FA ហើយចូលម្តងទៀត</value>
   </data>
 </root>

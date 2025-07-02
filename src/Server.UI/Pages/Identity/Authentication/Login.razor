@@ -119,12 +119,12 @@
         var user = await UserManager.FindByNameAsync(Input.UserName);
         if (user == null)
         {
-            errorMessage = L["Error: User does not exist."];
+            errorMessage = L["Error: User does not exist"];
             return;
         }
         else if (!user.IsActive)
         {
-            errorMessage = L["Error: Your account is inactive. Please contact support."];
+            errorMessage = L["Error: Your account is inactive. Please contact support"];
             return;
         }
 
@@ -156,11 +156,11 @@
         }
         else if (result.IsNotAllowed)
         {
-            errorMessage = L["Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps."];
+            errorMessage = L["Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps"];
         }
         else
         {
-            errorMessage = L["Error: Invalid login attempt."];
+            errorMessage = L["Error: Invalid login attempt"];
         }
     }
 

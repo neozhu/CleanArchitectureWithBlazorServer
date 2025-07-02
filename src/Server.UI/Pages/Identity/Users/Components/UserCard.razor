@@ -27,7 +27,7 @@
             {
                 <MudStack Row Spacing="1">
                     <MudText Typo="Typo.body2" Class="mud-text-secondary">@Item.Email</MudText>
-                    <MudTooltip Text="@L["We send a verification link to this email address. The link expires after 72 hours."]" Delay="300">
+                    <MudTooltip Text="@L["We send a verification link to this email address. The link expires after 72 hours"]" Delay="300">
                         <MudLink OnClick="@(()=>SendVerify())" Style="font-weight:700">@L["[Verify]"]</MudLink>
                     </MudTooltip>
                 </MudStack>

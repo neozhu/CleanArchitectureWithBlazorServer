@@ -284,7 +284,7 @@
     <value>제출하다</value>
   </data>
   <data name="Update successfully" xml:space="preserve">
-    <value>업데이트가 성공적으로 완료되었습니다.</value>
+    <value>업데이트가 성공적으로 완료되었습니다</value>
   </data>
   <data name="Uploading..." xml:space="preserve">
     <value>업로드 중...</value>

@@ -121,17 +121,17 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
-  <data name="authentication is required, click sign in." xml:space="preserve">
-    <value>需要登录后访问, 单击“登录”.</value>
+  <data name="authentication is required, click sign in" xml:space="preserve">
+    <value>需要登录后访问, 单击“登录”</value>
   </data>
   <data name="Go Home" xml:space="preserve">
     <value>返回首页</value>
   </data>
-  <data name="Sorry, there's nothing at this address." xml:space="preserve">
-    <value>对不起, 没有这个地址.</value>
+  <data name="Sorry, there's nothing at this address" xml:space="preserve">
+    <value>对不起, 没有这个地址</value>
   </data>
-  <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
-    <value>你无权来这里。有关更多信息，请与系统管理员联系。</value>
+  <data name="You are not authorized to be here. For more information, contact your system administrator" xml:space="preserve">
+    <value>你无权来这里。有关更多信息，请与系统管理员联系</value>
   </data>
   <data name="Logout" xml:space="preserve">
     <value>注销</value>
@@ -178,7 +178,7 @@
   <data name="Notifications" xml:space="preserve">
     <value>通知</value>
   </data>
-  <data name="Search..." xml:space="preserve">
+  <data name="Search" xml:space="preserve">
     <value>搜索</value>
   </data>
   <data name="sign in" xml:space="preserve">
@@ -193,10 +193,10 @@
   <data name="User Profile" xml:space="preserve">
     <value>用户信息</value>
   </data>
-  <data name="{0} has logged out." xml:space="preserve">
-    <value>{0} 已经注销.</value>
+  <data name="{0} has logged out" xml:space="preserve">
+    <value>{0} 已经注销</value>
   </data>
-  <data name="{0} has logged in." xml:space="preserve">
+  <data name="{0} has logged in" xml:space="preserve">
     <value>{0} 登录</value>
   </data>
   <data name="Contact Administrator" xml:space="preserve">
@@ -205,7 +205,7 @@
   <data name="Please wait, we are authorizing you..." xml:space="preserve">
     <value>请稍候，我们正在授权您...</value>
   </data>
-  <data name="You are not authorized to view this page." xml:space="preserve">
-    <value>您无权查看此页面。</value>
+  <data name="You are not authorized to view this page" xml:space="preserve">
+    <value>您无权查看此页面</value>
   </data>
 </root>

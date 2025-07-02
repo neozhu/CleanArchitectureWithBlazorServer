@@ -121,8 +121,8 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
-  <data name="authentication is required, click sign in." xml:space="preserve">
-    <value>eine Authentifizierung erforderlich ist, klicken Sie auf "Anmelden".</value>
+  <data name="authentication is required, click sign in" xml:space="preserve">
+    <value>eine Authentifizierung erforderlich ist, klicken Sie auf "Anmelden"</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
@@ -163,14 +163,14 @@
   <data name="Profile" xml:space="preserve">
     <value>Profil</value>
   </data>
-  <data name="Search..." xml:space="preserve">
-    <value>Suchen...</value>
+  <data name="Search" xml:space="preserve">
+    <value>Suchen</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
   </data>
-  <data name="Sorry, there's nothing at this address." xml:space="preserve">
-    <value>Sorry, unter dieser Adresse gibt es nichts.</value>
+  <data name="Sorry, there's nothing at this address" xml:space="preserve">
+    <value>Sorry, unter dieser Adresse gibt es nichts</value>
   </data>
   <data name="Themes" xml:space="preserve">
     <value>Themen</value>
@@ -178,20 +178,20 @@
   <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
     <value>Sie versuchen, sich von der Anwendung abzumelden. Möchten Sie sich wirklich abmelden?</value>
   </data>
-  <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
-    <value>Sie sind nicht berechtigt, hier zu sein. Für weitere Informationen wenden Sie sich bitte an Ihren Systemadministrator.</value>
+  <data name="You are not authorized to be here. For more information, contact your system administrator" xml:space="preserve">
+    <value>Sie sind nicht berechtigt, hier zu sein. Für weitere Informationen wenden Sie sich bitte an Ihren Systemadministrator</value>
   </data>
   <data name="authentication is required, click" xml:space="preserve">
-    <value>eine Authentifizierung erforderlich ist, klicken Sie auf </value>
+    <value>eine Authentifizierung erforderlich ist, klicken Sie auf</value>
   </data>
   <data name="sign in" xml:space="preserve">
     <value>sign in</value>
   </data>
-  <data name="{0} has logged out." xml:space="preserve">
-    <value>{0} hat sich abgemeldet.</value>
+  <data name="{0} has logged out" xml:space="preserve">
+    <value>{0} hat sich abgemeldet</value>
   </data>
-  <data name="{0} has logged in." xml:space="preserve">
-    <value>{0} hat sich angemeldet.</value>
+  <data name="{0} has logged in" xml:space="preserve">
+    <value>{0} hat sich angemeldet</value>
   </data>
   <data name="User Profile" xml:space="preserve">
     <value>Benutzerprofil</value>
@@ -205,7 +205,7 @@
   <data name="Please wait, we are authorizing you..." xml:space="preserve">
     <value>Bitte warten, wir autorisieren Sie...</value>
   </data>
-  <data name="You are not authorized to view this page." xml:space="preserve">
-    <value>Sie sind nicht berechtigt, diese Seite anzuzeigen.</value>
+  <data name="You are not authorized to view this page" xml:space="preserve">
+    <value>Sie sind nicht berechtigt, diese Seite anzuzeigen</value>
   </data>
 </root>

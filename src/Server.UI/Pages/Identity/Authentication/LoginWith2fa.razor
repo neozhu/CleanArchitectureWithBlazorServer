@@ -11,7 +11,7 @@
 <PageTitle>@L["Two-factor authentication"]</PageTitle>
 <MudText Typo="Typo.h4" GutterBottom="true">@L["Two-factor authentication"]</MudText>
 
-<MudText Typo="Typo.body1">@L["Your login is secured with two-factor authentication via email. Please enter the code sent to your email address below."]</MudText>
+<MudText Typo="Typo.body1">@L["Your login is secured with two-factor authentication via email. Please enter the code sent to your email address below"]</MudText>
 
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
@@ -81,7 +81,7 @@
     {
         // Ensure the user has gone through the username & password screen first
         user = await SignInManager.GetTwoFactorAuthenticationUserAsync() ??
-               throw new InvalidOperationException(L["Unable to load two-factor authentication user."]);
+               throw new InvalidOperationException(L["Unable to load two-factor authentication user"]);
     }
 
     private async Task OnValidSubmitAsync()
@@ -90,7 +90,7 @@
         var isCodeValid = await UserManager.VerifyTwoFactorTokenAsync(user, SignInManager.Options.Tokens.AuthenticatorTokenProvider, authenticatorCode);
         if (!isCodeValid)
         {
-            message = L["Error: Invalid authenticator code."];
+            message = L["Error: Invalid authenticator code"];
             return;
         }
 
@@ -109,7 +109,7 @@
         else
         {
             Logger.LogWarning("Invalid authenticator code entered for user with ID '{UserId}'.", userId);
-            message = L["Error: Invalid authenticator code."];
+            message = L["Error: Invalid authenticator code"];
         }
     }
 

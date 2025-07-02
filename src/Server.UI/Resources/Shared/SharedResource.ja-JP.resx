@@ -121,8 +121,8 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
-  <data name="authentication is required, click sign in." xml:space="preserve">
-    <value>認証が必要な場合は、サインインをクリックしてください。</value>
+  <data name="authentication is required, click sign in" xml:space="preserve">
+    <value>認証が必要な場合は、サインインをクリックしてください</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>キャンセル</value>
@@ -163,14 +163,14 @@
   <data name="Profile" xml:space="preserve">
     <value>プロフィール</value>
   </data>
-  <data name="Search..." xml:space="preserve">
-    <value>検索...</value>
+  <data name="Search" xml:space="preserve">
+    <value>検索</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>設定項目</value>
   </data>
-  <data name="Sorry, there's nothing at this address." xml:space="preserve">
-    <value>このアドレスには何もありません。</value>
+  <data name="Sorry, there's nothing at this address" xml:space="preserve">
+    <value>このアドレスには何もありません</value>
   </data>
   <data name="Themes" xml:space="preserve">
     <value>テーマ</value>
@@ -178,20 +178,20 @@
   <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
     <value>アプリケーションからログアウトしようとしています。本当にログアウトしますか？</value>
   </data>
-  <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
-    <value>あなたはここにいる権限がありません。詳細については、システム管理者にお問い合わせください。</value>
+  <data name="You are not authorized to be here. For more information, contact your system administrator" xml:space="preserve">
+    <value>あなたはここにいる権限がありません。詳細については、システム管理者にお問い合わせください</value>
   </data>
   <data name="authentication is required, click" xml:space="preserve">
-    <value>認証が必要な場合は、サインインをクリックしてください。</value>
+    <value>認証が必要な場合は、サインインをクリックしてください</value>
   </data>
   <data name="sign in" xml:space="preserve">
     <value>sign in</value>
   </data>
-  <data name="{0} has logged out." xml:space="preserve">
-    <value>{0} がログアウトしました。</value>
+  <data name="{0} has logged out" xml:space="preserve">
+    <value>{0} がログアウトしました</value>
   </data>
-  <data name="{0} has logged in." xml:space="preserve">
-    <value>{0} がログインしました。</value>
+  <data name="{0} has logged in" xml:space="preserve">
+    <value>{0} がログインしました</value>
   </data>
   <data name="User Profile" xml:space="preserve">
     <value>ユーザープロフィール</value>
@@ -205,7 +205,7 @@
   <data name="Please wait, we are authorizing you..." xml:space="preserve">
     <value>しばらくお待ちください。承認中です...</value>
   </data>
-  <data name="You are not authorized to view this page." xml:space="preserve">
-    <value>このページを表示する権限がありません。</value>
+  <data name="You are not authorized to view this page" xml:space="preserve">
+    <value>このページを表示する権限がありません</value>
   </data>
 </root>

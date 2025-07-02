@@ -120,8 +120,8 @@
   <data name="Forgot Password?" xml:space="preserve">
     <value>Mot de passe oublié ?</value>
   </data>
-  <data name="No worries! Just enter your email address below and we'll send you a link to reset your password." xml:space="preserve">
-    <value>Pas de souci ! Entrez simplement votre adresse e-mail ci-dessous et nous vous enverrons un lien pour réinitialiser votre mot de passe.</value>
+  <data name="No worries! Just enter your email address below and we'll send you a link to reset your password" xml:space="preserve">
+    <value>Pas de souci ! Entrez simplement votre adresse e-mail ci-dessous et nous vous enverrons un lien pour réinitialiser votre mot de passe</value>
   </data>
   <data name="E-mail" xml:space="preserve">
     <value>E-mail</value>
@@ -132,13 +132,13 @@
   <data name="Send E-mail" xml:space="preserve">
     <value>Envoyer un e-mail</value>
   </data>
-  <data name="You are already logged in." xml:space="preserve">
-    <value>Vous êtes déjà connecté.</value>
+  <data name="You are already logged in" xml:space="preserve">
+    <value>Vous êtes déjà connecté</value>
   </data>
   <data name="Forgot Password" xml:space="preserve">
     <value>Mot de passe oublié</value>
   </data>
-  <data name="The email has been sent, please check the email:{0}." xml:space="preserve">
-    <value>L'e-mail a été envoyé. Veuillez le vérifier : {0}.</value>
+  <data name="The email has been sent, please check the email:{0}" xml:space="preserve">
+    <value>L'e-mail a été envoyé. Veuillez le vérifier : {0}</value>
   </data>
 </root>

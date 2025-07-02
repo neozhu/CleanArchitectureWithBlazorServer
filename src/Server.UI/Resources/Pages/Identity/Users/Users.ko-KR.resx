@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
       Microsoft ResX Schema 
@@ -15,8 +15,8 @@
       ... ado.net/XML headers & schema ...
       <resheader name="resmimetype">text/microsoft-resx</resheader>
       <resheader name="version">2.0</resheader>
-      <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-      <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+      <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, .</resheader>
+      <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, .</resheader>
       <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
       <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
       <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
@@ -121,8 +121,8 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
-  <data name="{0} session changed." xml:space="preserve">
-    <value>{0} 세션이 변경되었습니다.</value>
+  <data name="{0} session changed" xml:space="preserve">
+    <value>{0} 세션이 변경되었습니다</value>
   </data>
   <data name="Assign Roles" xml:space="preserve">
     <value>역할 할당</value>
@@ -130,8 +130,8 @@
   <data name="Assigned Roles" xml:space="preserve">
     <value>할당된 역할</value>
   </data>
-  <data name="Click upload a photo." xml:space="preserve">
-    <value>사진 업로드를 클릭하세요.</value>
+  <data name="Click upload a photo" xml:space="preserve">
+    <value>사진 업로드를 클릭하세요</value>
   </data>
   <data name="Confirm New Password" xml:space="preserve">
     <value>새 암호를 확인합니다</value>
@@ -175,8 +175,8 @@
   <data name="password is required!" xml:space="preserve">
     <value>비밀번호는 필수입니다!</value>
   </data>
-  <data name="Permission removed successfully." xml:space="preserve">
-    <value>권한이 삭제되었습니다.</value>
+  <data name="Permission removed successfully" xml:space="preserve">
+    <value>권한이 삭제되었습니다</value>
   </data>
   <data name="Phone Number" xml:space="preserve">
     <value>전화 번호</value>
@@ -187,8 +187,8 @@
   <data name="Reset Password" xml:space="preserve">
     <value>암호를 재설정</value>
   </data>
-  <data name="Reset password successfully." xml:space="preserve">
-    <value>비밀번호를 재설정했습니다.</value>
+  <data name="Reset password successfully" xml:space="preserve">
+    <value>비밀번호를 재설정했습니다</value>
   </data>
   <data name="Search by user name" xml:space="preserve">
     <value>사용자 이름 검색</value>
@@ -232,44 +232,44 @@
   <data name="Display Name / PhoneNumber" xml:space="preserve">
     <value>표시 이름/전화번호</value>
   </data>
-  <data name="Permission assigned successfully." xml:space="preserve">
-    <value>권한이 할당되었습니다.</value>
+  <data name="Permission assigned successfully" xml:space="preserve">
+    <value>권한이 할당되었습니다</value>
   </data>
-  <data name="The user updated successfully." xml:space="preserve">
-    <value>사용자가 성공적으로 업데이트되었습니다.</value>
+  <data name="The user updated successfully" xml:space="preserve">
+    <value>사용자가 성공적으로 업데이트되었습니다</value>
   </data>
-  <data name="The user has been inactivated." xml:space="preserve">
-    <value>사용자가 비활성화되었습니다.</value>
+  <data name="The user has been inactivated" xml:space="preserve">
+    <value>사용자가 비활성화되었습니다</value>
   </data>
-  <data name="The user has been activated." xml:space="preserve">
-    <value>사용자가 활성화되었습니다.</value>
+  <data name="The user has been activated" xml:space="preserve">
+    <value>사용자가 활성화되었습니다</value>
   </data>
-  <data name="Recovery email sent. Please check your inbox to set a new password." xml:space="preserve">
-    <value>복구 이메일이 전송되었습니다. 새 비밀번호를 설정하려면 받은 편지함을 확인하세요.</value>
+  <data name="Recovery email sent. Please check your inbox to set a new password" xml:space="preserve">
+    <value>복구 이메일이 전송되었습니다. 새 비밀번호를 설정하려면 받은 편지함을 확인하세요</value>
   </data>
-  <data name="New user created successfully." xml:space="preserve">
-    <value>새 사용자가 성공적으로 생성되었습니다.</value>
+  <data name="New user created successfully" xml:space="preserve">
+    <value>새 사용자가 성공적으로 생성되었습니다</value>
   </data>
   <data name="Active" xml:space="preserve">
     <value>활성</value>
   </data>
-  <data name="Authorization has been changed." xml:space="preserve">
-    <value>권한이 변경되었습니다.</value>
+  <data name="Authorization has been changed" xml:space="preserve">
+    <value>권한이 변경되었습니다</value>
   </data>
-  <data name="We send a verification link to this email address. The link expires after 72 hours." xml:space="preserve">
-    <value>이 이메일 주소로 확인 링크를 보냅니다. 링크는 72시간 후에 만료됩니다.</value>
+  <data name="We send a verification link to this email address. The link expires after 72 hours" xml:space="preserve">
+    <value>이 이메일 주소로 확인 링크를 보냅니다. 링크는 72시간 후에 만료됩니다</value>
   </data>
   <data name="You cannot delete your own account!" xml:space="preserve">
     <value>자신의 계정을 삭제할 수 없습니다!</value>
   </data>
-  <data name="Click to change status to active." xml:space="preserve">
-    <value>클릭하여 상태를 활성으로 변경합니다.</value>
+  <data name="Click to change status to active" xml:space="preserve">
+    <value>클릭하여 상태를 활성으로 변경합니다</value>
   </data>
-  <data name="Verification email sent to {0}." xml:space="preserve">
-    <value>확인 이메일이 {0}으로 전송되었습니다.</value>
+  <data name="Verification email sent to {0}" xml:space="preserve">
+    <value>확인 이메일이 {0}으로 전송되었습니다</value>
   </data>
-  <data name="A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login." xml:space="preserve">
-    <value>{0}의 새 비밀번호가 이메일을 통해 전송되었습니다. 사용자는 초기 로그인 시 새 비밀번호를 입력해야 합니다.</value>
+  <data name="A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login" xml:space="preserve">
+    <value>{0}의 새 비밀번호가 이메일을 통해 전송되었습니다. 사용자는 초기 로그인 시 새 비밀번호를 입력해야 합니다</value>
   </data>
   <data name="Full Name" xml:space="preserve">
     <value>전체 이름</value>
@@ -277,17 +277,17 @@
   <data name="Inactive" xml:space="preserve">
     <value>비활성</value>
   </data>
-  <data name="Click to change status to inactive." xml:space="preserve">
-    <value>상태를 비활성으로 변경하려면 클릭하세요.</value>
+  <data name="Click to change status to inactive" xml:space="preserve">
+    <value>상태를 비활성으로 변경하려면 클릭하세요</value>
   </data>
-  <data name="No permission to change status." xml:space="preserve">
-    <value>상태를 변경할 수 있는 권한이 없습니다.</value>
+  <data name="No permission to change status" xml:space="preserve">
+    <value>상태를 변경할 수 있는 권한이 없습니다</value>
   </data>
   <data name="Send Reset Password Email" xml:space="preserve">
     <value>비밀번호 재설정 이메일 보내기</value>
   </data>
-  <data name="No roles available for this tenant." xml:space="preserve">
-    <value>이 테넌트에 대한 역할이 없습니다.</value>
+  <data name="No roles available for this tenant" xml:space="preserve">
+    <value>이 테넌트에 대한 역할이 없습니다</value>
   </data>
   <data name="Search by role name" xml:space="preserve">
     <value>역할 이름으로 검색</value>

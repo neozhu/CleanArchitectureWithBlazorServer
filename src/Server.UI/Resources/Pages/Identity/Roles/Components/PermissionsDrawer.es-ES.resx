@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Assign / Unassign all permission set" xml:space="preserve">
-    <value>Aquí está la traducción al español:</value>
+    <value>Asignar/Desasignar todos los conjuntos de permisos</value>
   </data>
   <data name="Contact Permissions" xml:space="preserve">
     <value>Permite descargar documentos</value>

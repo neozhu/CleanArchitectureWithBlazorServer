@@ -32,13 +32,13 @@ public static partial class Permissions
     public static class AuditTrails
     {
         [Description("Allows viewing audit trail details")]
-        public const string View = "PermissionsAuditTrailsView";
+        public const string View = "Permissions.AuditTrails.View";
 
         [Description("Allows searching for audit trail records")]
-        public const string Search = "PermissionsAuditTrailsSearch";
+        public const string Search = "Permissions.AuditTrails.Search";
 
         [Description("Allows exporting audit trail records")]
-        public const string Export = "PermissionsAuditTrailsExport";
+        public const string Export = "Permissions.AuditTrails.Export";
     }
 
     [DisplayName("Log Permissions")]
@@ -46,16 +46,16 @@ public static partial class Permissions
     public static class Logs
     {
         [Description("Allows viewing log details")]
-        public const string View = "PermissionsLogsView";
+        public const string View = "Permissions.Logs.View";
 
         [Description("Allows searching for log records")]
-        public const string Search = "PermissionsLogsSearch";
+        public const string Search = "Permissions.Logs.Search";
 
         [Description("Allows exporting log records")]
-        public const string Export = "PermissionsLogsExport";
+        public const string Export = "Permissions.Logs.Export";
 
         [Description("Allows purging log records")]
-        public const string Purge = "PermissionsLogsPurge";
+        public const string Purge = "Permissions.Logs.Purge";
     }
 
     [DisplayName("Login Audit Permissions")]
@@ -63,16 +63,16 @@ public static partial class Permissions
     public static class LoginAudits
     {
         [Description("Allows viewing login audit details")]
-        public const string View = "PermissionsLoginAuditsView";
+        public const string View = "Permissions.LoginAudits.View";
 
         [Description("Allows searching for login audit records")]
-        public const string Search = "PermissionsLoginAuditsSearch";
+        public const string Search = "Permissions.LoginAudits.Search";
 
         [Description("Allows exporting login audit records")]
-        public const string Export = "PermissionsLoginAuditsExport";
+        public const string Export = "Permissions.LoginAudits.Export";
 
         [Description("Allows viewing all users' login audits")]
-        public const string ViewAll = "PermissionsLoginAuditsViewAll";
+        public const string ViewAll = "Permissions.LoginAudits.ViewAll";
     }
 
     [DisplayName("Picklist Permissions")]
@@ -80,25 +80,25 @@ public static partial class Permissions
     public static class PicklistSets
     {
         [Description("Allows viewing picklist set details")]
-        public const string View = "PermissionsPicklistSetsView";
+        public const string View = "Permissions.PicklistSets.View";
 
         [Description("Allows creating new picklist sets")]
-        public const string Create = "PermissionsPicklistSetsCreate";
+        public const string Create = "Permissions.PicklistSets.Create";
 
         [Description("Allows modifying existing picklist sets")]
-        public const string Edit = "PermissionsPicklistSetsEdit";
+        public const string Edit = "Permissions.PicklistSets.Edit";
 
         [Description("Allows deleting picklist sets")]
-        public const string Delete = "PermissionsPicklistSetsDelete";
+        public const string Delete = "Permissions.PicklistSets.Delete";
 
         [Description("Allows searching for picklist set records")]
-        public const string Search = "PermissionsPicklistSetsSearch";
+        public const string Search = "Permissions.PicklistSets.Search";
 
         [Description("Allows exporting picklist set records")]
-        public const string Export = "PermissionsPicklistSetsExport";
+        public const string Export = "Permissions.PicklistSets.Export";
 
         [Description("Allows importing picklist set records")]
-        public const string Import = "PermissionsPicklistSetsImport";
+        public const string Import = "Permissions.PicklistSets.Import";
     }
 
     [DisplayName("User Permissions")]
@@ -106,43 +106,43 @@ public static partial class Permissions
     public static class Users
     {
         [Description("Allows viewing user details")]
-        public const string View = "PermissionsUsersView";
+        public const string View = "Permissions.Users.View";
 
         [Description("Allows creating new user accounts")]
-        public const string Create = "PermissionsUsersCreate";
+        public const string Create = "Permissions.Users.Create";
 
         [Description("Allows modifying existing user details")]
-        public const string Edit = "PermissionsUsersEdit";
+        public const string Edit = "Permissions.Users.Edit";
 
         [Description("Allows deleting user accounts")]
-        public const string Delete = "PermissionsUsersDelete";
+        public const string Delete = "Permissions.Users.Delete";
 
         [Description("Allows searching for user records")]
-        public const string Search = "PermissionsUsersSearch";
+        public const string Search = "Permissions.Users.Search";
 
         [Description("Allows importing user records")]
-        public const string Import = "PermissionsUsersImport";
+        public const string Import = "Permissions.Users.Import";
 
         [Description("Allows exporting user records")]
-        public const string Export = "PermissionsUsersExport";
+        public const string Export = "Permissions.Users.Export";
 
         [Description("Allows managing user roles")]
-        public const string ManageRoles = "PermissionsUsersManageRoles";
+        public const string ManageRoles = "Permissions.Users.ManageRoles";
 
         [Description("Allows resetting user passwords")]
-        public const string RestPassword = "PermissionsUsersRestPassword";
+        public const string RestPassword = "Permissions.Users.RestPassword";
 
         [Description("Allows sending password reset emails")]
-        public const string SendRestPasswordMail = "PermissionsUsersSendRestPasswordMail";
+        public const string SendRestPasswordMail = "Permissions.Users.SendRestPasswordMail";
 
         [Description("Allows managing user permissions")]
-        public const string ManagePermissions = "PermissionsUsersManagePermissions";
+        public const string ManagePermissions = "Permissions.Users.ManagePermissions";
 
         [Description("Allows deactivating user accounts")]
-        public const string Deactivation = "PermissionsUsersDeactivation";
+        public const string Deactivation = "Permissions.Users.Deactivation";
 
         [Description("Allows viewing users' online status")]
-        public const string ViewOnlineStatus = "PermissionsUsersViewOnlineStatus";
+        public const string ViewOnlineStatus = "Permissions.Users.ViewOnlineStatus";
     }
 
     [DisplayName("Role Permissions")]
@@ -150,31 +150,31 @@ public static partial class Permissions
     public static class Roles
     {
         [Description("Allows viewing role details")]
-        public const string View = "PermissionsRolesView";
+        public const string View = "Permissions.Roles.View";
 
         [Description("Allows creating new roles")]
-        public const string Create = "PermissionsRolesCreate";
+        public const string Create = "Permissions.Roles.Create";
 
         [Description("Allows modifying existing role details")]
-        public const string Edit = "PermissionsRolesEdit";
+        public const string Edit = "Permissions.Roles.Edit";
 
         [Description("Allows deleting roles")]
-        public const string Delete = "PermissionsRolesDelete";
+        public const string Delete = "Permissions.Roles.Delete";
 
         [Description("Allows searching for role records")]
-        public const string Search = "PermissionsRolesSearch";
+        public const string Search = "Permissions.Roles.Search";
 
         [Description("Allows exporting role records")]
-        public const string Export = "PermissionsRolesExport";
+        public const string Export = "Permissions.Roles.Export";
 
         [Description("Allows importing role records")]
-        public const string Import = "PermissionsRolesImport";
+        public const string Import = "Permissions.Roles.Import";
 
         [Description("Allows managing permissions for roles")]
-        public const string ManagePermissions = "PermissionsRolesManagePermissions";
+        public const string ManagePermissions = "Permissions.Roles.ManagePermissions";
 
         [Description("Allows managing role-specific navigation menus")]
-        public const string ManageNavigation = "PermissionsRolesManageNavigation";
+        public const string ManageNavigation = "Permissions.Roles.ManageNavigation";
     }
 
     [DisplayName("Tenant Permissions")]
@@ -182,19 +182,19 @@ public static partial class Permissions
     public static class Tenants
     {
         [Description("Allows viewing tenant details")]
-        public const string View = "PermissionsTenantsView";
+        public const string View = "Permissions.Tenants.View";
 
         [Description("Allows creating new tenants")]
-        public const string Create = "PermissionsTenantsCreate";
+        public const string Create = "Permissions.Tenants.Create";
 
         [Description("Allows modifying existing tenant details")]
-        public const string Edit = "PermissionsTenantsEdit";
+        public const string Edit = "Permissions.Tenants.Edit";
 
         [Description("Allows deleting tenant records")]
-        public const string Delete = "PermissionsTenantsDelete";
+        public const string Delete = "Permissions.Tenants.Delete";
 
         [Description("Allows searching for tenant records")]
-        public const string Search = "PermissionsTenantsSearch";
+        public const string Search = "Permissions.Tenants.Search";
     }
 
     [DisplayName("Dashboard Permissions")]
@@ -202,7 +202,7 @@ public static partial class Permissions
     public static class Dashboards
     {
         [Description("Allows viewing dashboard data")]
-        public const string View = "PermissionsDashboardsView";
+        public const string View = "Permissions.Dashboards.View";
     }
 
 

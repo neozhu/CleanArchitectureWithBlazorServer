@@ -158,7 +158,7 @@
     <value>비밀번호에는 소문자가 하나 이상 포함되어야 합니다</value>
   </data>
   <data name="Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)" xml:space="preserve">
-    <value>비밀번호에는 영숫자가 아닌 문자(예: @, !, ?, *, .)가 하나 이상 포함되어야 합니다.</value>
+    <value>비밀번호에는 영숫자가 아닌 문자(예: @, !, ?, *, .)가 하나 이상 포함되어야 합니다</value>
   </data>
   <data name="Password must contain at least one uppercase letter" xml:space="preserve">
     <value>비밀번호에는 대문자가 하나 이상 포함되어야 합니다</value>

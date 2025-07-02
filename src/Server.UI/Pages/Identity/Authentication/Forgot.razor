@@ -15,7 +15,7 @@
     <DataAnnotationsValidator/>
 
     <MudText Typo="Typo.h4" GutterBottom="true">@L["Forgot Password?"]</MudText>
-    <MudText Typo="Typo.body1">@L["No worries! Just enter your email address below and we'll send you a link to reset your password."]</MudText>
+    <MudText Typo="Typo.body1">@L["No worries! Just enter your email address below and we'll send you a link to reset your password"]</MudText>
     <StatusMessage Message="@Message" Error="true"/>
     <div class="mud-input-control mud-input-outlined-with-label my-4">
         <div class="mud-input-control-input-container">
@@ -66,13 +66,13 @@
         var user = await UserManager.FindByEmailAsync(Input.Email);
         if (user is null)
         {
-            Message = L["No user found with the provided email address."];
+            Message = L["No user found with the provided email address"];
             return;
         }
 
         if (!await UserManager.IsEmailConfirmedAsync(user))
         {
-            Message = L["Your email address has not been confirmed. Please check your inbox for a confirmation email or request a new confirmation link."];
+            Message = L["Your email address has not been confirmed. Please check your inbox for a confirmation email or request a new confirmation link"];
             return;
         }
 

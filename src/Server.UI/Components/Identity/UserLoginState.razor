@@ -38,7 +38,7 @@
 
         InvokeAsync(() =>
         {
-            Snackbar.Add(string.Format(L["{0} has logged in."], args.UserName), Severity.Info);
+            Snackbar.Add(string.Format(L["{0} has logged in"], args.UserName), Severity.Info);
         });
     }
 
@@ -48,7 +48,7 @@
 
         InvokeAsync(() =>
         {
-            Snackbar.Add(string.Format(L["{0} has logged out."], args.UserName));
+            Snackbar.Add(string.Format(L["{0} has logged out"], args.UserName));
 
         });
     }

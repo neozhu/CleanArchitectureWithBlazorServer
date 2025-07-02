@@ -160,9 +160,6 @@
   <data name="User name is required!" xml:space="preserve">
       <value>User name is required!</value>
   </data>
-  <data name="You are already logged in." xml:space="preserve">
-    <value>You are already logged in.</value>
-  </data>
   <data name="Tenant" xml:space="preserve">
     <value>Tenant</value>
   </data>

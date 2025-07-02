@@ -13,7 +13,7 @@
 <MudText Typo="Typo.h4" GutterBottom="true">@L["Recovery code verification"]</MudText>
 
 <MudText Typo="Typo.body1">
-    @L["You have requested to log in with a recovery code. This login will not be remembered until you provide an authenticator app code at log in or disable 2FA and log in again."]
+    @L["You have requested to log in with a recovery code. This login will not be remembered until you provide an authenticator app code at log in or disable 2FA and log in again"]
 </MudText>
 
 <div class="d-flex flex-column gap-y-3">
@@ -67,7 +67,7 @@
     {
         // Ensure the user has gone through the username & password screen first
         user = await SignInManager.GetTwoFactorAuthenticationUserAsync() ??
-               throw new InvalidOperationException(L["Unable to load two-factor authentication user."]);
+               throw new InvalidOperationException(L["Unable to load two-factor authentication user"]);
     }
 
     private async Task OnValidSubmitAsync()
@@ -91,7 +91,7 @@
         else
         {
             Logger.LogWarning("Invalid recovery code entered for user with ID '{UserId}' ", userId);
-            message = L["Error: Invalid recovery code entered."];
+            message = L["Error: Invalid recovery code entered"];
         }
     }
 

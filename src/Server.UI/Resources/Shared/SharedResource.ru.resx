@@ -121,8 +121,8 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
-  <data name="authentication is required, click sign in." xml:space="preserve">
-    <value>требуется аутентификация, нажмите войти.</value>
+  <data name="authentication is required, click sign in" xml:space="preserve">
+    <value>требуется аутентификация, нажмите войти</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Отменить</value>
@@ -163,14 +163,14 @@
   <data name="Profile" xml:space="preserve">
     <value>Профиль</value>
   </data>
-  <data name="Search..." xml:space="preserve">
-    <value>Поиск...</value>
+  <data name="Search" xml:space="preserve">
+    <value>Поиск</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Настройки</value>
   </data>
-  <data name="Sorry, there's nothing at this address." xml:space="preserve">
-    <value>Извините, по этому адресу ничего нет.</value>
+  <data name="Sorry, there's nothing at this address" xml:space="preserve">
+    <value>Извините, по этому адресу ничего нет</value>
   </data>
   <data name="Themes" xml:space="preserve">
     <value>Темы</value>
@@ -178,20 +178,20 @@
   <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
     <value>Вы пытаетесь выйти из приложения. Вы действительно хотите выйти из приложения?</value>
   </data>
-  <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
-    <value>Вы не авторизованы здесь. Для получения дополнительной информации обратитесь к своему системному администратору.</value>
+  <data name="You are not authorized to be here. For more information, contact your system administrator" xml:space="preserve">
+    <value>Вы не авторизованы здесь. Для получения дополнительной информации обратитесь к своему системному администратору</value>
   </data>
   <data name="authentication is required, click" xml:space="preserve">
-    <value>требуется аутентификация, нажмите</value>
+    <value>требуется аутентификация, нажмит</value>
   </data>
   <data name="sign in" xml:space="preserve">
     <value>sign in</value>
   </data>
-  <data name="{0} has logged out." xml:space="preserve">
-    <value>{0} вышел из системы.</value>
+  <data name="{0} has logged out" xml:space="preserve">
+    <value>{0} вышел из системы</value>
   </data>
-  <data name="{0} has logged in." xml:space="preserve">
-    <value>{0} вошел в систему.</value>
+  <data name="{0} has logged in" xml:space="preserve">
+    <value>{0} вошел в систему</value>
   </data>
   <data name="User Profile" xml:space="preserve">
     <value>Профиль пользователя</value>
@@ -205,7 +205,7 @@
   <data name="Please wait, we are authorizing you..." xml:space="preserve">
     <value>Подождите, пожалуйста, мы вас авторизуем...</value>
   </data>
-  <data name="You are not authorized to view this page." xml:space="preserve">
-    <value>У вас нет прав для просмотра этой страницы.</value>
+  <data name="You are not authorized to view this page" xml:space="preserve">
+    <value>У вас нет прав для просмотра этой страницы</value>
   </data>
 </root>

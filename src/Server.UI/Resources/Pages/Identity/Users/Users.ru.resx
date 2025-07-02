@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
         Microsoft ResX Schema 
@@ -15,8 +15,8 @@
         ... ado.net/XML headers & schema ...
         <resheader name="resmimetype">text/microsoft-resx</resheader>
         <resheader name="version">2.0</resheader>
-        <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-        <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+        <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, .</resheader>
+        <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, .</resheader>
         <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
         <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
         <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
@@ -121,14 +121,14 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
-  <data name="{0} session changed." xml:space="preserve">
-    <value>Сеанс {0} изменен.</value>
+  <data name="{0} session changed" xml:space="preserve">
+    <value>Сеанс {0} изменен</value>
   </data>
   <data name="Assign Roles" xml:space="preserve">
     <value>Назначить роли</value>
   </data>
-  <data name="Click upload a photo." xml:space="preserve">
-    <value>Нажмите загрузить фотографию.</value>
+  <data name="Click upload a photo" xml:space="preserve">
+    <value>Нажмите загрузить фотографию</value>
   </data>
   <data name="Confirm New Password" xml:space="preserve">
     <value>Подтвердите новый пароль</value>
@@ -160,7 +160,7 @@
   <data name="Phone Number" xml:space="preserve">
     <value>Номер телефона</value>
   </data>
-  <data name="Reset password successfully." xml:space="preserve">
+  <data name="Reset password successfully" xml:space="preserve">
     <value>Сбросить пароль успешно</value>
   </data>
   <data name="Search by user name" xml:space="preserve">
@@ -223,7 +223,7 @@
   <data name="Email / PhoneNumber" xml:space="preserve">
     <value>Электронная почта/номер телефона</value>
   </data>
-  <data name="Permission removed successfully." xml:space="preserve">
+  <data name="Permission removed successfully" xml:space="preserve">
     <value>Разрешение успешно удалено</value>
   </data>
   <data name="Reset Password" xml:space="preserve">
@@ -232,44 +232,44 @@
   <data name="Display Name / PhoneNumber" xml:space="preserve">
     <value>Отображаемое имя/номер телефона</value>
   </data>
-  <data name="Permission assigned successfully." xml:space="preserve">
+  <data name="Permission assigned successfully" xml:space="preserve">
     <value>Разрешение успешно получено</value>
   </data>
-  <data name="The user updated successfully." xml:space="preserve">
-    <value>Пользователь успешно обновился.</value>
+  <data name="The user updated successfully" xml:space="preserve">
+    <value>Пользователь успешно обновился</value>
   </data>
-  <data name="The user has been inactivated." xml:space="preserve">
-    <value>Пользователь деактивирован.</value>
+  <data name="The user has been inactivated" xml:space="preserve">
+    <value>Пользователь деактивирован</value>
   </data>
-  <data name="The user has been activated." xml:space="preserve">
-    <value>Пользователь активирован.</value>
+  <data name="The user has been activated" xml:space="preserve">
+    <value>Пользователь активирован</value>
   </data>
-  <data name="Recovery email sent. Please check your inbox to set a new password." xml:space="preserve">
-    <value>Письмо для восстановления отправлено. Пожалуйста, проверьте свой почтовый ящик, чтобы установить новый пароль.</value>
+  <data name="Recovery email sent. Please check your inbox to set a new password" xml:space="preserve">
+    <value>Письмо для восстановления отправлено. Пожалуйста, проверьте свой почтовый ящик, чтобы установить новый пароль</value>
   </data>
-  <data name="New user created successfully." xml:space="preserve">
-    <value>Новый пользователь успешно создан.</value>
+  <data name="New user created successfully" xml:space="preserve">
+    <value>Новый пользователь успешно создан</value>
   </data>
   <data name="Active" xml:space="preserve">
     <value>Активно</value>
   </data>
-  <data name="Authorization has been changed." xml:space="preserve">
-    <value>Авторизация изменена.</value>
+  <data name="Authorization has been changed" xml:space="preserve">
+    <value>Авторизация изменена</value>
   </data>
-  <data name="We send a verification link to this email address. The link expires after 72 hours." xml:space="preserve">
-    <value>Мы отправляем ссылку для проверки на этот адрес электронной почты. Ссылка истекает через 72 часа.</value>
+  <data name="We send a verification link to this email address. The link expires after 72 hours" xml:space="preserve">
+    <value>Мы отправляем ссылку для проверки на этот адрес электронной почты. Ссылка истекает через 72 часа</value>
   </data>
   <data name="You cannot delete your own account!" xml:space="preserve">
     <value>Вы не можете удалить свою учетную запись!</value>
   </data>
-  <data name="Click to change status to active." xml:space="preserve">
-    <value>Нажмите, чтобы изменить статус на активный.</value>
+  <data name="Click to change status to active" xml:space="preserve">
+    <value>Нажмите, чтобы изменить статус на активный</value>
   </data>
-  <data name="Verification email sent to {0}." xml:space="preserve">
-    <value>Письмо с подтверждением отправлено на {0}.</value>
+  <data name="Verification email sent to {0}" xml:space="preserve">
+    <value>Письмо с подтверждением отправлено на {0}</value>
   </data>
-  <data name="A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login." xml:space="preserve">
-    <value>Новый пароль для {0} был отправлен по электронной почте. Пользователю потребуется ввести новый пароль при первом входе в систему.</value>
+  <data name="A new password for {0} has been sent via email. The user will be required to enter a new password upon initial login" xml:space="preserve">
+    <value>Новый пароль для {0} был отправлен по электронной почте. Пользователю потребуется ввести новый пароль при первом входе в систему</value>
   </data>
   <data name="Full Name" xml:space="preserve">
     <value>Полное имя</value>
@@ -277,17 +277,17 @@
   <data name="Inactive" xml:space="preserve">
     <value>Неактивный</value>
   </data>
-  <data name="Click to change status to inactive." xml:space="preserve">
-    <value>Нажмите, чтобы изменить статус на неактивный.</value>
+  <data name="Click to change status to inactive" xml:space="preserve">
+    <value>Нажмите, чтобы изменить статус на неактивный</value>
   </data>
-  <data name="No permission to change status." xml:space="preserve">
-    <value>Нет разрешения на изменение статуса.</value>
+  <data name="No permission to change status" xml:space="preserve">
+    <value>Нет разрешения на изменение статуса</value>
   </data>
   <data name="Send Reset Password Email" xml:space="preserve">
     <value>Отправить электронное письмо для сброса пароля</value>
   </data>
-  <data name="No roles available for this tenant." xml:space="preserve">
-    <value>Для этого арендатора нет доступных ролей.</value>
+  <data name="No roles available for this tenant" xml:space="preserve">
+    <value>Для этого арендатора нет доступных ролей</value>
   </data>
   <data name="Search by role name" xml:space="preserve">
     <value>Поиск по названию роли</value>

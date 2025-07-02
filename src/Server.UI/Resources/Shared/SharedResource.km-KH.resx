@@ -121,8 +121,8 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
-  <data name="authentication is required, click sign in." xml:space="preserve">
-    <value>ការផ្ទៀងផ្ទាត់ត្រូវបានទាមទារ សូមចុចចូល។</value>
+  <data name="authentication is required, click sign in" xml:space="preserve">
+    <value>ការផ្ទៀងផ្ទាត់ត្រូវបានទាមទារ សូមចុចចូល</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>បោះបង់</value>
@@ -149,7 +149,7 @@
     <value>ការបញ្ជាក់ការចាកចេញ</value>
   </data>
   <data name="Mark as read" xml:space="preserve">
-    <value>សម្គាល់ថាបានអានហើយ។</value>
+    <value>សម្គាល់ថាបានអានហើយ</value>
   </data>
   <data name="Mode" xml:space="preserve">
     <value>របៀប</value>
@@ -163,14 +163,14 @@
   <data name="Profile" xml:space="preserve">
     <value>ប្រវត្តិរូប</value>
   </data>
-  <data name="Search..." xml:space="preserve">
-    <value>ស្វែងរក...</value>
+  <data name="Search" xml:space="preserve">
+    <value>ស្វែងរក</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>ការកំណត់</value>
   </data>
-  <data name="Sorry, there's nothing at this address." xml:space="preserve">
-    <value>សូមអភ័យទោស មិនមានអ្វីនៅអាសយដ្ឋាននេះទេ។</value>
+  <data name="Sorry, there's nothing at this address" xml:space="preserve">
+    <value>សូមអភ័យទោស មិនមានអ្វីនៅអាសយដ្ឋាននេះទេ</value>
   </data>
   <data name="Themes" xml:space="preserve">
     <value>ស្បែក</value>
@@ -178,8 +178,8 @@
   <data name="You are attempting to log out of application. Do you really want to log out?" xml:space="preserve">
     <value>អ្នកកំពុងព្យាយាមចេញពីកម្មវិធី។ តើអ្នកពិតជាចង់ចេញពីគណនីមែនទេ?</value>
   </data>
-  <data name="You are not authorized to be here. For more information, contact your system administrator." xml:space="preserve">
-    <value>អ្នកមិនត្រូវបានអនុញ្ញាតឱ្យនៅទីនេះទេ។ សម្រាប់ព័ត៌មានបន្ថែម សូមទាក់ទងអ្នកគ្រប់គ្រងប្រព័ន្ធរបស់អ្នក។</value>
+  <data name="You are not authorized to be here. For more information, contact your system administrator" xml:space="preserve">
+    <value>អ្នកមិនត្រូវបានអនុញ្ញាតឱ្យនៅទីនេះទេ។ សម្រាប់ព័ត៌មានបន្ថែម សូមទាក់ទងអ្នកគ្រប់គ្រងប្រព័ន្ធរបស់អ្នក</value>
   </data>
   <data name="authentication is required, click" xml:space="preserve">
     <value>ការផ្ទៀងផ្ទាត់ត្រូវបានទាមទារ ចុច</value>
@@ -187,11 +187,11 @@
   <data name="sign in" xml:space="preserve">
     <value>ចូល</value>
   </data>
-  <data name="{0} has logged out." xml:space="preserve">
-    <value>{0} បាន​ចេញ។</value>
+  <data name="{0} has logged out" xml:space="preserve">
+    <value>{0} បាន​ចេញ</value>
   </data>
-  <data name="{0} has logged in." xml:space="preserve">
-    <value>{0} បាន​ចូល។</value>
+  <data name="{0} has logged in" xml:space="preserve">
+    <value>{0} បាន​ចូល</value>
   </data>
   <data name="User Profile" xml:space="preserve">
     <value>កម្រងព័ត៌មានអ្នកប្រើប្រាស់</value>
@@ -205,7 +205,7 @@
   <data name="Please wait, we are authorizing you..." xml:space="preserve">
     <value>សូមរង់ចាំ យើងកំពុងផ្តល់សិទ្ធិឱ្យអ្នក...</value>
   </data>
-  <data name="You are not authorized to view this page." xml:space="preserve">
-    <value>អ្នកមិនត្រូវបានអនុញ្ញាតឱ្យមើលទំព័រនេះទេ។</value>
+  <data name="You are not authorized to view this page" xml:space="preserve">
+    <value>អ្នកមិនត្រូវបានអនុញ្ញាតឱ្យមើលទំព័រនេះទេ</value>
   </data>
 </root>

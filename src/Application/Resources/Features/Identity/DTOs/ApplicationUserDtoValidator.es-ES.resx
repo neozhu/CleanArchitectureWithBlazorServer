@@ -158,7 +158,7 @@
     <value>La contraseña debe contener al menos una letra minúscula</value>
   </data>
   <data name="Password must contain at least one non-alphanumeric character (e.g., @, !, ?, *, .)" xml:space="preserve">
-    <value>La contraseña debe contener al menos un carácter no alfanumérico (por ejemplo, @, !, ?, *, .).</value>
+    <value>La contraseña debe contener al menos un carácter no alfanumérico (por ejemplo, @, !, ?, *, .)</value>
   </data>
   <data name="Password must contain at least one uppercase letter" xml:space="preserve">
     <value>La contraseña debe contener al menos una letra mayúscula</value>

@@ -17,7 +17,7 @@
 @code {
     [Parameter]
     public string PageComponent { get; set; } = nameof(ActiveUserSession);
-    private string Message => $"{string.Join(", ", State.Value)} {L["has this dialog open."]}";
+    private string Message => $"{string.Join(", ", State.Value)} {L["has this dialog open"]}";
     private string? currentUserId => CurrentUserAccessor.SessionInfo?.UserId;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);

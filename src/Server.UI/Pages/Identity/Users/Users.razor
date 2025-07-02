@@ -203,13 +203,13 @@
                 <div>
                     @if (!context.Item.IsActive || (context.Item.LockoutEnd is not null && context.Item.LockoutEnd > DateTime.UtcNow))
                     {
-                        <MudTooltip Text="@Localizer["Click to change status to active."]" Delay="300">
+                        <MudTooltip Text="@Localizer["Click to change status to active"]" Delay="300">
                             <MudCheckBox T="bool" Color="Color.Error" Value="context.Item.IsActive" ValueChanged="@(() => ToggleUserActiveStatusAsync(context.Item))" />
                         </MudTooltip>
                     }
                     else
                     {
-                        <MudTooltip Text="@Localizer["Click to change status to inactive."]" Delay="300">
+                        <MudTooltip Text="@Localizer["Click to change status to inactive"]" Delay="300">
                             <MudCheckBox T="bool" Color="Color.Success" Value="context.Item.IsActive" ValueChanged="@(() => ToggleUserActiveStatusAsync(context.Item))" />
                         </MudTooltip>
                     }
@@ -412,7 +412,7 @@
             return;
         }
 
-        Snackbar.Add(Localizer["New user created successfully."], Severity.Info);
+        Snackbar.Add(Localizer["New user created successfully"], Severity.Info);
         await AssignRolesToUserAsync(newUser, model.AssignedRoles);
         Logger.LogInformation("User created: {UserName} (ID: {UserId})", newUser.UserName, newUser.Id);
         UserService.Refresh();
@@ -449,7 +449,7 @@
             {
                 await _userManager.AddToRolesAsync(user, model.AssignedRoles);
             }
-            Snackbar.Add(Localizer["User updated successfully."], Severity.Info);
+            Snackbar.Add(Localizer["User updated successfully"], Severity.Info);
             await RefreshDataGrid();
             UserService.Refresh();
             await OnlineUserTracker.Update(model.Id, model.UserName, model.DisplayName ?? string.Empty, model.ProfilePictureDataUrl ?? string.Empty);
@@ -571,7 +571,7 @@
             Navigation.ToAbsoluteUri(ConfirmEmail.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = model.Id, ["code"] = code, ["returnUrl"] = "/" });
         await Mediator.Publish(new UserActivationNotification(callbackUrl, model.Email, model.Id, model.UserName));
-        Snackbar.Add(string.Format(Localizer["Verification email sent to {0}."], model.Email), Severity.Info);
+        Snackbar.Add(string.Format(Localizer["Verification email sent to {0}"], model.Email), Severity.Info);
         Logger.LogInformation("Verification email sent to {UserName} (ID: {UserId})", model.UserName, model.Id);
     }
 
@@ -585,7 +585,7 @@
             Navigation.ToAbsoluteUri(ResetPassword.PageUrl).AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = user.Id, ["token"] = code });
         await Mediator.Publish(new ResetPasswordNotification(callbackUrl, model.Email, model.UserName));
-        Snackbar.Add(string.Format(Localizer["A new password for {0} has been sent via email. The user will be required to change it upon first login."], model.UserName), Severity.Info);
+        Snackbar.Add(string.Format(Localizer["A new password for {0} has been sent via email. The user will be required to change it upon first login"], model.UserName), Severity.Info);
     }
 
     private async Task ResetPasswordDialog(ApplicationUserDto model)
@@ -614,7 +614,7 @@
                 user.EmailConfirmed = true;
                 await _userManager.UpdateAsync(user);
             }
-            Snackbar.Add(Localizer["Reset password successfully."], Severity.Info);
+            Snackbar.Add(Localizer["Reset password successfully"], Severity.Info);
         }
         else
         {
@@ -647,7 +647,7 @@
         {
             model.IsActive = true;
             model.LockoutEnd = null;
-            Snackbar.Add(Localizer["The user has been activated."], Severity.Info);
+            Snackbar.Add(Localizer["The user has been activated"], Severity.Info);
         }
         else
         {
@@ -666,7 +666,7 @@
         {
             model.IsActive = false;
             model.LockoutEnd = DateTimeOffset.MaxValue;
-            Snackbar.Add(Localizer["The user has been inactivated."], Severity.Info);
+            Snackbar.Add(Localizer["The user has been inactivated"], Severity.Info);
         }
         else
         {
@@ -692,7 +692,7 @@
         try
         {
             await _permissionAssignmentService.AssignBulkAsync(models);
-            Snackbar.Add(Localizer["Authorization has been changed."], Severity.Info);
+            Snackbar.Add(Localizer["Authorization has been changed"], Severity.Info);
         }
         finally
         {
@@ -707,7 +707,7 @@
         {
             model.Assigned = !model.Assigned;
             await _permissionAssignmentService.AssignAsync(model);
-            Snackbar.Add(model.Assigned ? Localizer["Permission assigned successfully."] : Localizer["Permission removed successfully."], Severity.Info);
+            Snackbar.Add(model.Assigned ? Localizer["Permission assigned successfully"] : Localizer["Permission removed successfully"], Severity.Info);
         }
         finally
         {

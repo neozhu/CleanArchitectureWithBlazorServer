@@ -160,9 +160,6 @@
   <data name="User name is required!" xml:space="preserve">
     <value>사용자 이름이 필요합니다!</value>
   </data>
-  <data name="You are already logged in." xml:space="preserve">
-    <value>귀하는 이미 로그인하셨습니다.</value>
-  </data>
   <data name="Tenant" xml:space="preserve">
     <value>임차인</value>
   </data>
