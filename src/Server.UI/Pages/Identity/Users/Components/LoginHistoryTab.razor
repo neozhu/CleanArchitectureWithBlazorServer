@@ -1,8 +1,14 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.GetMyLoginHistory
+@using CleanArchitecture.Blazor.Server.UI.Components.Security
 @inject IStringLocalizer<CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Profile> Localizer
 
-
+<!-- Security Status Indicator -->
+@if (UserProfile?.UserId != null)
+{
+    <SecurityStatusIndicator UserId="@UserProfile.UserId" 
+                           OnAnalysisRequested="OnSecurityAnalysisRequested" />
+}
 
 <MudDataGrid T="LoginAuditDto"
              @ref="_dataGrid"
@@ -102,8 +108,13 @@
     {
         _searchKeyword = val;
         await _dataGrid!.ReloadServerData();
-
     }
 
-
+    private void OnSecurityAnalysisRequested()
+    {
+        // This could navigate to the Security Analysis tab or show a dialog
+        // For now, we'll just show a message
+        // In a real implementation, you might want to use NavigationManager
+        // or emit an event to the parent component
+    }
 }
