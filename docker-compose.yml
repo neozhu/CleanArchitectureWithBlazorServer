@@ -5,33 +5,35 @@ services:
     image: ${DOCKER_REGISTRY-}blazorserver
     build:
       context: .
-      dockerfile: .
+      dockerfile: Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - UseInMemoryDatabase=false
-      - DatabaseSettings__DBProvider=mssql
-      - DatabaseSettings__ConnectionString=Server=sqldb;Database=BlazorDashboardDb;User=sa;Password=Password@123;MultipleActiveResultSets=true
-      - AppConfigurationSettings__ApplicationUrl=https://architecture.blazorserver.com
-      - SmtpClientOptions__Server=
-      - SmtpClientOptions__Port=
-      - SmtpClientOptions__User=
-      - SmtpClientOptions__Password=
-      - SmtpClientOptions__DefaultFromEmail=
-      - Authentication__Microsoft__ClientId=
-      - Authentication__Microsoft__ClientSecret=
-      - Authentication__Google__ClientId=
-      - Authentication__Google__ClientSecret=
-      - ASPNETCORE_HTTP_PORTS=80
-      - ASPNETCORE_HTTPS_PORTS=443
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      #- ASPNETCORE_Kestrel__Certificates__Default__Password=Password@123
-      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.aspnet/https/CleanArchitecture.Blazor.Server.UI.pfx
-    volumes:
-      - ${APPDATA}\microsoft\UserSecrets\:/root/.microsoft/usersecrets:ro
-      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - UseInMemoryDatabase=${USE_IN_MEMORY_DATABASE}
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=${ASPNETCORE_URLS}
+      - ASPNETCORE_HTTP_PORTS=${ASPNETCORE_HTTP_PORTS}
+      - ASPNETCORE_HTTPS_PORTS=${ASPNETCORE_HTTPS_PORTS}
+      - AppConfigurationSettings__ApplicationUrl=${APP_URL}
+      - AppConfigurationSettings__AppName=${APP_NAME}
+      - DatabaseSettings__DBProvider=${DB_PROVIDER}
+      - DatabaseSettings__ConnectionString=${DB_CONNECTION_STRING}
+      - AI__GEMINI_API_KEY=${GEMINI_API_KEY}
+      - SmtpClientOptions__User=${SMTP_USER}
+      - SmtpClientOptions__Port=${SMTP_PORT}
+      - SmtpClientOptions__Server=${SMTP_SERVER}
+      - SmtpClientOptions__Password=${SMTP_PASSWORD}
+      - SmtpClientOptions__DefaultFromEmail=${SMTP_DEFAULT_FROM}
+      - Authentication__Microsoft__ClientId=${MS_CLIENT_ID}
+      - Authentication__Microsoft__ClientSecret=${MS_CLIENT_SECRET}
+      - Authentication__Google__ClientId=${GOOGLE_CLIENT_ID}
+      - Authentication__Google__ClientSecret=${GOOGLE_CLIENT_SECRET}
+      - Minio__Endpoint=${MINIO_ENDPOINT}
+      - Minio__AccessKey=${MINIO_ACCESS_KEY}
+      - Minio__SecretKey=${MINIO_SECRET_KEY}
+      - Minio__BucketName=${MINIO_BUCKET}
+ 
     ports:
-      - "5000:80"
-      - "5001:443"
+      - "5005:80"
+      - "5006:443"
     depends_on:
       - sqldb
     restart: on-failure
@@ -39,18 +41,11 @@ services:
   sqldb:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     environment:
-      - "SA_PASSWORD=Password@123"
-      - "ACCEPT_EULA=Y"
-      - MSSQL_DATA_DIR=/var/opt/mssql/data
-      - MSSQL_LOG_DIR=/var/opt/mssql/log
-      - MSSQL_BACKUP_DIR=/var/opt/mssql/backup
-    ports:
-      - "1433:1433"
+      - SA_PASSWORD=${SQL_SERVER_PASSWORD}
+      - ACCEPT_EULA=Y
     volumes:
-      - ${USERPROFILE}\mssql_data:/var/opt/mssql/data
-      - ${USERPROFILE}\mssql_log:/var/opt/mssql/log
-      - ${USERPROFILE}\mssql_backup:/var/opt/mssql/backup
+      - mssql_data:/var/opt/mssql
+    restart: on-failure
+
 volumes:
   mssql_data:
-  mssql_log:
-  mssql_backup:
