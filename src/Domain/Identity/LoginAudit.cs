@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CleanArchitecture.Blazor.Domain.Common.Entities;
+﻿using CleanArchitecture.Blazor.Domain.Common.Entities;
 
 namespace CleanArchitecture.Blazor.Domain.Identity;
-public class LoginAudit : IEntity<string>
+public class LoginAudit : BaseAuditableEntity
 {
-    public string Id { get; set; }= Guid.CreateVersion7().ToString();
     public DateTime LoginTimeUtc { get; set; }
     public string UserId { get; set; }= string.Empty;
     public string UserName { get; set; } = string.Empty;
