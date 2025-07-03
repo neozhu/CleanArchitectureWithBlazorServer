@@ -53,22 +53,6 @@ jobs:
         tags: blazordevlab/cleanarchitectureblazorserver:latest
 
 
-        
-    - name: Update version in docker-compose files
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      run: |
-        echo "Updating docker-compose files with version ${{ steps.version.outputs.version }}"
-        sed -i 's#blazordevlab/cleanarchitectureblazorserver:[0-9a-zA-Z\.\-]*#blazordevlab/cleanarchitectureblazorserver:${{ steps.version.outputs.version }}#' deploy/docker-compose.yml
-        sed -i 's#blazordevlab/cleanarchitectureblazorserver:[0-9a-zA-Z\.\-]*#blazordevlab/cleanarchitectureblazorserver:${{ steps.version.outputs.version }}#' deploy/docker-compose-db.yml
-
-    - name: Create Pull Request
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      uses: peter-evans/create-pull-request@v4
-      with:
-        commit-message: "Update Docker Compose files to version ${{ steps.version.outputs.version }}"
-        title: "Update Docker Compose to version ${{ steps.version.outputs.version }}"
-        body: "Automatically updating Docker Compose version references to match the latest build version ${{ steps.version.outputs.version }}"
-        branch: update-compose-version-${{ steps.version.outputs.version }}
 
           
      
