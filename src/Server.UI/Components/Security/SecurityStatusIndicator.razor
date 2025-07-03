@@ -2,74 +2,25 @@
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.GetSecuritySummary
 @using CleanArchitecture.Blazor.Domain.Enums
 @inject IStringLocalizer<SecurityStatusIndicator> Localizer
-@inject ISnackbar Snackbar
 
-@if (_securitySummary != null && _securitySummary.HasSecurityWarnings)
+@if (_securitySummary != null && !_isHidden)
 {
     <MudAlert Severity="GetAlertSeverity(_securitySummary.RiskLevel)" 
               Variant="Variant.Outlined"
-              Class="mb-3 d-flex flex-row align-center"
-              ContentAlignment="HorizontalAlignment.Start"
-              
-              ShowCloseIcon="false"
-              NoIcon="true">
-        <div class="d-flex align-center flex-grow-1 justify-space-between flex-wrap">
-            <div class="d-flex align-center flex-grow-1 min-width-0">
-                <MudIcon Icon="@GetRiskIcon(_securitySummary.RiskLevel)" 
-                         Color="@GetRiskIconColor(_securitySummary.RiskLevel)" 
-                         Size="MudBlazor.Size.Medium"
-                         Class="mr-3 flex-shrink-0" />
-                <div class="flex-grow-1 min-width-0">
-                    <MudText Typo="Typo.subtitle2" Class="font-weight-medium">
-                        @Localizer["Security Alert"] - @_securitySummary.RiskLevel @Localizer["Risk Level"]
-                    </MudText>
-                    <MudText Typo="Typo.body2" Class="text-wrap text-break">
-                        @GetSecurityMessage(_securitySummary)
-                    </MudText>
-                </div>
-            </div>
-            <MudSpacer  />
-            @if (ShowAnalysisButton)
-            {
-                <div class="flex-shrink-0">
-                    <MudButton Variant="Variant.Outlined" 
-                              Size="MudBlazor.Size.Small" 
-                              OnClick="OnAnalysisRequested"
-                              Color="@GetButtonColor(_securitySummary.RiskLevel)"
-                              StartIcon="@Icons.Material.Filled.Analytics"
-                              Class="text-nowrap">
-                        @Localizer["View Details"]
-                    </MudButton>
-                </div>
-            }
-        </div>
+              Class="@Class"
+              ShowCloseIcon="true"
+              CloseIconClicked="OnCloseClicked">
+        @GetSecurityMessage(_securitySummary)
     </MudAlert>
 }
-else if (_isLoading)
-{
-    <MudAlert Severity="Severity.Normal" 
-              Variant="Variant.Outlined" 
-              Class="mb-3" 
-              ShowCloseIcon="false"
-              NoIcon="true">
-        <div class="d-flex align-center gap-3">
-            <MudSkeleton Width="32px" Height="32px" SkeletonType="SkeletonType.Circle" Class="flex-shrink-0" />
-            <div class="flex-grow-1">
-                <MudSkeleton Height="20px" Width="60%" Class="mb-2" />
-                <MudSkeleton Height="16px" Width="80%" />
-            </div>
-            <MudSkeleton Width="100px" Height="32px" Class="flex-shrink-0" />
-        </div>
-    </MudAlert>
-}
+
 
 @code {
     [Parameter] public string UserId { get; set; } = string.Empty;
-    [Parameter] public bool ShowAnalysisButton { get; set; } = true;
-    [Parameter] public EventCallback OnAnalysisRequested { get; set; }
-
+    [Parameter] public string Class { get; set; } = string.Empty;
     private SecuritySummaryDto? _securitySummary;
     private bool _isLoading = true;
+    private bool _isHidden = false;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -108,6 +59,12 @@ else if (_isLoading)
         }
     }
 
+    private void OnCloseClicked()
+    {
+        _isHidden = true;
+        StateHasChanged();
+    }
+
     private Severity GetAlertSeverity(SecurityRiskLevel riskLevel)
     {
         return riskLevel switch
@@ -117,42 +74,6 @@ else if (_isLoading)
             SecurityRiskLevel.High => Severity.Error,
             SecurityRiskLevel.Critical => Severity.Error,
             _ => Severity.Normal
-        };
-    }
-
-    private string GetRiskIcon(SecurityRiskLevel riskLevel)
-    {
-        return riskLevel switch
-        {
-            SecurityRiskLevel.Low => Icons.Material.Filled.Info,
-            SecurityRiskLevel.Medium => Icons.Material.Filled.Warning,
-            SecurityRiskLevel.High => Icons.Material.Filled.Error,
-            SecurityRiskLevel.Critical => Icons.Material.Filled.GppBad,
-            _ => Icons.Material.Filled.Security
-        };
-    }
-
-    private Color GetRiskIconColor(SecurityRiskLevel riskLevel)
-    {
-        return riskLevel switch
-        {
-            SecurityRiskLevel.Low => Color.Info,
-            SecurityRiskLevel.Medium => Color.Warning,
-            SecurityRiskLevel.High => Color.Error,
-            SecurityRiskLevel.Critical => Color.Error,
-            _ => Color.Default
-        };
-    }
-
-    private Color GetButtonColor(SecurityRiskLevel riskLevel)
-    {
-        return riskLevel switch
-        {
-            SecurityRiskLevel.Low => Color.Info,
-            SecurityRiskLevel.Medium => Color.Warning,
-            SecurityRiskLevel.High => Color.Error,
-            SecurityRiskLevel.Critical => Color.Error,
-            _ => Color.Primary
         };
     }
 

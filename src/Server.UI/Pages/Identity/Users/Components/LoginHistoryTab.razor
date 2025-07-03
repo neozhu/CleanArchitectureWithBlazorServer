@@ -6,8 +6,8 @@
 <!-- Security Status Indicator -->
 @if (UserProfile?.UserId != null)
 {
-    <SecurityStatusIndicator UserId="@UserProfile.UserId" 
-                           OnAnalysisRequested="OnSecurityAnalysisRequested" />
+    <SecurityStatusIndicator Class="mb-3" UserId="@UserProfile.UserId" 
+                           />
 }
 
 <MudDataGrid T="LoginAuditDto"
