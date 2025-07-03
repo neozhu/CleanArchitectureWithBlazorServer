@@ -2,27 +2,27 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel;
+using CleanArchitecture.Blazor.Domain.Enums;
+using AutoMapper;
 
 namespace CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs;
 
-[Description("Login Audits")]
-public class LoginAuditDto
+[Description("User Login Risk Summary")]
+public class UserLoginRiskSummaryDto
 {
     [Description("Id")] public int Id { get; set; }
-    [Description("Login Time")] public DateTime LoginTimeUtc { get; set; }
     [Description("User Id")] public string UserId { get; set; } = string.Empty;
     [Description("User Name")] public string UserName { get; set; } = string.Empty;
-    [Description("IP Address")] public string? IpAddress { get; set; }
-    [Description("Browser Info")] public string? BrowserInfo { get; set; }
-    [Description("Region")] public string? Region { get; set; }
-    [Description("Provider")] public string? Provider { get; set; }
-    [Description("Success")] public bool Success { get; set; }
+    [Description("Risk Level")] public SecurityRiskLevel RiskLevel { get; set; }
+    [Description("Risk Score")] public int RiskScore { get; set; }
+    [Description("Description")] public string? Description { get; set; }
+    [Description("Advice")] public string? Advice { get; set; }
 
     private class Mapping : Profile
     {
         public Mapping()
         {
-            CreateMap<Domain.Identity.LoginAudit, LoginAuditDto>().ReverseMap();
+            CreateMap<Domain.Identity.UserLoginRiskSummary, UserLoginRiskSummaryDto>().ReverseMap();
         }
     }
-}
+} 

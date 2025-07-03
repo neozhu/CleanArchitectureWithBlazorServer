@@ -1,0 +1,150 @@
+@using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
+@using CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.GetUserLoginRiskSummary
+@using CleanArchitecture.Blazor.Domain.Enums
+@inject ISender Mediator
+@inject IStringLocalizer<UserLoginRiskSummaryIndicator> L
+
+<div class="@Class">
+    @if (_loading)
+    {
+        <MudProgressLinear Color="Color.Default" Indeterminate="true" />
+    }
+    else if (_riskSummary != null && ShouldShowRisk())
+    {
+        <MudPaper Class="pa-4 mb-4" Style="@GetRiskStyle()">
+            <div class="d-flex align-center justify-space-between mb-3">
+                <div class="d-flex align-center">
+                    <MudIcon Icon="@GetRiskIcon()" 
+                             Size="Size.Large" 
+                             Color="@GetRiskColor()" 
+                             Class="mr-3" />
+                    <div>
+                        <MudText Typo="Typo.subtitle1" Class="font-weight-bold">
+                            @L["Security Risk Level"]: @L[_riskSummary.RiskLevel.ToString()]
+                        </MudText>
+                        <MudText Typo="Typo.body2" Class="text--secondary font-weight-medium">
+                            @L["Risk Score"]: @_riskSummary.RiskScore
+                        </MudText>
+                    </div>
+                </div>
+                <MudIconButton Icon="@Icons.Material.Filled.Close" 
+                               Size="Size.Small" 
+                               Color="Color.Default"
+                               OnClick="@(() => _isDismissed = true)"
+                               Title="@L["Dismiss"]" />
+            </div>
+            
+            @if (!string.IsNullOrEmpty(_riskSummary.Description) || !string.IsNullOrEmpty(_riskSummary.Advice))
+            {
+                <MudDivider Class="mb-3" />
+                <div class="d-flex flex-column ga-3">
+                    @if (!string.IsNullOrEmpty(_riskSummary.Description))
+                    {
+                        <div>
+                            <MudText Typo="Typo.body2" Class="font-weight-bold mb-1">
+                                @L["Risk Factors"]:
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="text--secondary">
+                                @_riskSummary.Description
+                            </MudText>
+                        </div>
+                    }
+                    
+                    @if (!string.IsNullOrEmpty(_riskSummary.Advice))
+                    {
+                        <div>
+                            <MudText Typo="Typo.body2" Class="font-weight-bold mb-1">
+                                @L["Security Recommendations"]:
+                            </MudText>
+                            <MudText Typo="Typo.body2" Class="text--secondary">
+                                @_riskSummary.Advice
+                            </MudText>
+                        </div>
+                    }
+                </div>
+            }
+        </MudPaper>
+    }
+</div>
+
+@code {
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public required string UserId { get; set; }
+
+    private UserLoginRiskSummaryDto? _riskSummary;
+    private bool _loading = true;
+    private bool _isDismissed = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRiskSummaryAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(UserId))
+        {
+            await LoadRiskSummaryAsync();
+        }
+    }
+
+    private async Task LoadRiskSummaryAsync()
+    {
+        try
+        {
+            _loading = true;
+            var query = new GetUserLoginRiskSummaryQuery { UserId = UserId };
+            _riskSummary = await Mediator.Send(query);
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't show to user to avoid breaking the UI
+            Console.WriteLine($"Error loading risk summary: {ex.Message}");
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private bool ShouldShowRisk()
+    {
+        return !_isDismissed && 
+               _riskSummary?.RiskLevel is SecurityRiskLevel.Medium 
+                                      or SecurityRiskLevel.High 
+                                      or SecurityRiskLevel.Critical;
+    }
+
+    private Color GetRiskColor()
+    {
+        return _riskSummary?.RiskLevel switch
+        {
+            SecurityRiskLevel.Critical => Color.Error,
+            SecurityRiskLevel.High => Color.Error,
+            SecurityRiskLevel.Medium => Color.Warning,
+            _ => Color.Default
+        };
+    }
+
+    private string GetRiskStyle()
+    {
+        return _riskSummary?.RiskLevel switch
+        {
+            SecurityRiskLevel.Critical => "border-left: 4px solid var(--mud-palette-error); background-color: var(--mud-palette-error-lighten);",
+            SecurityRiskLevel.High => "border-left: 4px solid var(--mud-palette-error); background-color: var(--mud-palette-error-lighten);",
+            SecurityRiskLevel.Medium => "border-left: 4px solid var(--mud-palette-warning); background-color: var(--mud-palette-warning-lighten);",
+            _ => ""
+        };
+    }
+
+    private string GetRiskIcon()
+    {
+        return _riskSummary?.RiskLevel switch
+        {
+            SecurityRiskLevel.Critical => Icons.Material.Filled.Error,
+            SecurityRiskLevel.High => Icons.Material.Filled.Warning,
+            SecurityRiskLevel.Medium => Icons.Material.Filled.Info,
+            _ => Icons.Material.Filled.Shield
+        };
+    }
+} 
