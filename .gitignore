@@ -359,3 +359,6 @@ MigrationBackup/
 
 **/Files/
 src/Server.UI/appsettings.development.json
+
+# docker
+.env
