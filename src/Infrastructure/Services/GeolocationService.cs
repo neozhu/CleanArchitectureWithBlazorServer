@@ -13,6 +13,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 public class GeolocationService : IGeolocationService
 {
     private readonly HttpClient _httpClient;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<GeolocationService> _logger;
     private readonly JsonSerializerOptions _jsonOptions;
 
@@ -21,9 +22,10 @@ public class GeolocationService : IGeolocationService
     /// </summary>
     /// <param name="httpClient">The HTTP client for making API requests.</param>
     /// <param name="logger">The logger instance.</param>
-    public GeolocationService(HttpClient httpClient, ILogger<GeolocationService> logger)
+    public GeolocationService(IServiceScopeFactory scopeFactory, ILogger<GeolocationService> logger)
     {
-        _httpClient = httpClient;
+        _httpClient = scopeFactory.CreateScope().ServiceProvider.GetRequiredService<HttpClient>();
+        _scopeFactory = scopeFactory;
         _logger = logger;
         _jsonOptions = new JsonSerializerOptions
         {
