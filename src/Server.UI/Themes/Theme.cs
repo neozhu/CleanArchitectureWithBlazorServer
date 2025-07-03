@@ -8,172 +8,179 @@ public static class Theme
         {
             PaletteLight = new PaletteLight
             {
-                Primary = "#5052ba", 
-                Secondary = "#7D7D7D", 
-                Success = "#0CAD39", 
-                Info = "#4099f3", 
-                Warning = "#f54a00", 
-                Error = "rgba(244,67,54,1)",
+                Primary = "#2563eb", // Modern blue, professional and trustworthy
+                Secondary = "#6b7280", // Neutral gray, clean and professional
+                Success = "#10b981", // Fresh green, success
+                Info = "#0ea5e9", // Info blue, clear
+                Warning = "#f59e0b", // Gentle orange, warning
+                Error = "#ef4444", // Clear red, error
                 ErrorContrastText = "#ffffff",
-                ErrorDarken = "rgb(242,28,13)",
-                ErrorLighten = "rgb(246,96,85)",
-                Tertiary = "#20c997",
-                Black = "#111", 
+                ErrorDarken = "#dc2626",
+                ErrorLighten = "#f87171",
+                Tertiary = "#8b5cf6", // Modern purple, tech sense
+                Black = "#0f172a", // Deep blue-black, more texture
                 White = "#ffffff", 
-                AppbarBackground = "rgba(245, 245, 245, 0.8)",
-                AppbarText = "#424242",
-                Background = "#f5f5f5", 
+                AppbarBackground = "#f8fafc", // Very light blue-gray, modern
+                AppbarText = "#1e293b",
+                Background = "#f8fafc", // Very light blue-gray, modern
                 Surface = "#ffffff", 
                 DrawerBackground = "#ffffff",
-                TextPrimary = "#000000", 
-                TextSecondary = "#757575", 
-                SecondaryContrastText = "#F5F5F5", 
-                TextDisabled = "#B0B0B0", 
-                ActionDefault = "#80838b", 
-                ActionDisabled = "rgba(128, 131, 139, 0.3)",
-                ActionDisabledBackground = "rgba(128, 131, 139, 0.12)",
-                Divider = "#e2e5e8", 
-                DividerLight = "rgba(128, 131, 139, 0.15)",
-                TableLines = "#eff0f2", 
-                LinesDefault = "#e2e5e8", 
-                LinesInputs = "#e2e5e8",
-               
-
+                TextPrimary = "#1e293b", // Deep blue-gray, modern professional
+                TextSecondary = "#64748b", // Neutral gray, hierarchy
+                SecondaryContrastText = "#ffffff", 
+                TextDisabled = "#94a3b8", // Soft gray
+                ActionDefault = "#64748b", 
+                ActionDisabled = "rgba(100, 116, 139, 0.4)",
+                ActionDisabledBackground = "rgba(100, 116, 139, 0.1)",
+                Divider = "#e2e8f0", // Elegant divider
+                DividerLight = "rgba(100, 116, 139, 0.12)",
+                TableLines = "#f1f5f9", // Table lines, elegant
+                LinesDefault = "#e2e8f0", 
+                LinesInputs = "#d1d5db",
             },
             PaletteDark = new PaletteDark
             {
-                Primary = "#0170f3", 
-                Secondary = "#A5A5A5", 
-                Success = "#0CAD39", 
-                Info = "#4099f3", 
-                Warning = "#ff6800",
-                Error = "#f33f33",
-                ErrorContrastText = "#ffffff",
-                ErrorDarken = "#e02d48",
-                ErrorLighten = "#ff3333",
-                Tertiary = "#ff0080",
-                Black = "#000000", 
-                White = "#ffffff", 
-                Background = "#111111", 
-                Surface = "#222222",
-                AppbarBackground = "rgba(17,17,17,0.8)",
-                AppbarText = "rgba(255, 255, 255, 0.75)",
-                DrawerText = "rgba(255, 255, 255, 0.75)",
-                DrawerBackground = "#222222",
-                TextPrimary = "#DADADA", 
-                TextSecondary = "#A6A6A6",
-                TextDisabled = "rgba(255, 255, 255, 0.38)",
-                ActionDefault = "#e8eaed", 
-                ActionDisabled = "rgba(255, 255, 255, 0.26)",
-                ActionDisabledBackground = "rgba(255, 255, 255, 0.12)",
-                Divider = "#333333", 
-                DividerLight = "rgba(255, 255, 255, 0.06)",
-                TableLines = "rgba(63, 68, 82, 0.6)",
-                LinesDefault = "#333333", 
-                LinesInputs = "rgba(255, 255, 255, 0.3)",
-                DarkContrastText= "#FAFAFA",
-                SecondaryContrastText = "#D5D5D5",
-                PrimaryContrastText = "#FAFAFA",
-                
+                Primary = "#fafafa", // shadcn/ui white primary
+                Secondary = "#71717a", // Neutral gray
+                Success = "#22c55e", // Green for success
+                Info = "#06b6d4", // Cyan for info
+                Warning = "#f59e0b", // Orange for warning
+                Error = "#ef4444", // Red for error
+                ErrorContrastText = "#fafafa",
+                ErrorDarken = "#dc2626",
+                ErrorLighten = "#f87171",
+                Tertiary = "#a855f7", // Purple
+                Black = "#020817", 
+                White = "#fafafa", 
+                Background = "#0c0a09", // shadcn/ui dark background
+                Surface = "#171717", // Deeper surface color
+                AppbarBackground = "#0c0a09",
+                AppbarText = "#fafafa",
+                DrawerText = "#fafafa",
+                DrawerBackground = "#0c0a09",
+                TextPrimary = "#e5e5e5", // shadcn/ui white text
+                TextSecondary = "#a1a1aa", // Neutral gray secondary text
+                TextDisabled = "rgba(161, 161, 170, 0.5)",
+                ActionDefault = "#a1a1aa", 
+                ActionDisabled = "rgba(161, 161, 170, 0.3)",
+                ActionDisabledBackground = "rgba(161, 161, 170, 0.1)",
+                Divider = "#27272a", // shadcn/ui divider color
+                DividerLight = "rgba(161, 161, 170, 0.1)",
+                TableLines = "rgba(39, 39, 42, 0.8)",
+                LinesDefault = "#27272a", 
+                LinesInputs = "rgba(161, 161, 170, 0.2)",
+                DarkContrastText= "#020817",
+                SecondaryContrastText = "#fafafa",
+                PrimaryContrastText = "#020817",
             },
             LayoutProperties = new LayoutProperties
             {
-                AppbarHeight = "80px",
-                DefaultBorderRadius = "6px",
-                DrawerWidthLeft = "256px",
+                AppbarHeight = "64px", // More modern height
+                DefaultBorderRadius = "8px", // More modern border radius
+                DrawerWidthLeft = "280px", // Wider sidebar
             },
             Typography = new Typography
             {
                 Default = new DefaultTypography
                 {
-                    FontSize = ".8125rem",
+                    FontSize = ".875rem", // 14px, modern standard
                     FontWeight = "400",
-                    LineHeight = "1.4",
+                    LineHeight = "1.5",
                     LetterSpacing = "normal",
-                    FontFamily = ["Public Sans", "Roboto", "Arial", "sans-serif"]
+                    FontFamily = ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"]
                 },
                 H1 = new H1Typography
                 {
-                    FontSize = "2.25rem",    
+                    FontSize = "2.25rem", // 36px   
                     FontWeight = "700",        
-                    LineHeight = "2.5",       
+                    LineHeight = "1.2",       
+                    LetterSpacing = "-0.025em"
                 },
                 H2 = new H2Typography
                 {
-                    FontSize = "1.875rem",     
-                    FontWeight = "700",
-                    LineHeight = "2.25",
+                    FontSize = "1.875rem", // 30px    
+                    FontWeight = "600",
+                    LineHeight = "1.25",
+                    LetterSpacing = "-0.025em"
                 },
                 H3 = new H3Typography
                 {
-                    FontSize = "1.5rem",      
-                    FontWeight = "700",
-                    LineHeight = "2",
+                    FontSize = "1.5rem", // 24px     
+                    FontWeight = "600",
+                    LineHeight = "1.33",
+                    LetterSpacing = "-0.025em"
                 },
                 H4 = new H4Typography
                 {
-                    FontSize = "1.25rem",      
-                    FontWeight = "700",
-                    LineHeight = "1.75",
+                    FontSize = "1.25rem", // 20px     
+                    FontWeight = "600",
+                    LineHeight = "1.4",
+                    LetterSpacing = "-0.025em"
                 },
                 H5 = new H5Typography
                 {
-                    FontSize = "1.125rem",     
+                    FontSize = "1.125rem", // 18px    
                     FontWeight = "600",
-                    LineHeight = "1.75",
+                    LineHeight = "1.44",
+                    LetterSpacing = "-0.025em"
                 },
                 H6 = new H6Typography
                 {
-                    FontSize = "1rem",        
+                    FontSize = "1rem", // 16px       
                     FontWeight = "600",
                     LineHeight = "1.5",
+                    LetterSpacing = "-0.025em"
                 },
                 Button = new ButtonTypography
                 {
-                    FontSize = ".8125rem",
+                    FontSize = ".875rem", // 14px
                     FontWeight = "500",
-                    LineHeight = "1.75",
-                    LetterSpacing = ".02857em",
-                    TextTransform = "uppercase"
+                    LineHeight = "1.5",
+                    LetterSpacing = ".025em",
+                    TextTransform = "none" // Modern design does not use uppercase
                 },
                 Subtitle1 = new Subtitle1Typography
                 {
-                    FontSize = ".8125rem",
-                    FontWeight = "400",
+                    FontSize = "1rem", // 16px
+                    FontWeight = "500",
                     LineHeight = "1.5",
-                    LetterSpacing = "normal",
+                    LetterSpacing = "-0.025em",
                 },
                 Subtitle2 = new Subtitle2Typography
                 {
-                    FontSize = ".875rem",
+                    FontSize = ".875rem", // 14px
                     FontWeight = "500",
-                    LineHeight = "1.57",
+                    LineHeight = "1.43",
+                    LetterSpacing = "-0.025em"
                 },
                 Body1 = new Body1Typography
                 {
-                    FontSize = "0.8125rem",
+                    FontSize = "1rem", // 16px
                     FontWeight = "400",
                     LineHeight = "1.5",
+                    LetterSpacing = "-0.025em"
                 },
                 Body2 = new Body2Typography
                 {
-                    FontSize = ".75rem",
+                    FontSize = ".875rem", // 14px
                     FontWeight = "400",
-                    LineHeight = "1.4",
+                    LineHeight = "1.43",
+                    LetterSpacing = "-0.025em"
                 },
                 Caption = new CaptionTypography
                 {
-                    FontSize = "0.625rem",
+                    FontSize = "0.75rem", // 12px
                     FontWeight = "400",
-                    LineHeight = "1.4",
-                    LetterSpacing = "normal"
+                    LineHeight = "1.33",
+                    LetterSpacing = "0.025em"
                 },
                 Overline = new OverlineTypography
                 {
-                    FontSize = "0.625rem",
-                    FontWeight = "300",
-                    LineHeight = "1.5",
-                    LetterSpacing = "0.1em"
+                    FontSize = "0.75rem", // 12px
+                    FontWeight = "500",
+                    LineHeight = "1.33",
+                    LetterSpacing = "0.1em",
+                    TextTransform = "uppercase"
                 }
             }
         };
