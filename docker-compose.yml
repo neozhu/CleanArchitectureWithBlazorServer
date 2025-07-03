@@ -6,8 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    env_file:
-      - .env
     environment:
       - UseInMemoryDatabase=${USE_IN_MEMORY_DATABASE}
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
@@ -42,8 +40,6 @@ services:
 
   sqldb:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
-    env_file:
-      - .env
     environment:
       - SA_PASSWORD=${SQL_SERVER_PASSWORD}
       - ACCEPT_EULA=Y
