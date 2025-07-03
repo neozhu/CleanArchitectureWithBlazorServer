@@ -6,6 +6,7 @@ using ActualLab.Fusion;
 using ActualLab.Fusion.Blazor;
 using ActualLab.Fusion.Blazor.Authentication;
 using ActualLab.Fusion.Extensions;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Fusion;
@@ -16,6 +17,7 @@ using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
+using CleanArchitecture.Blazor.Infrastructure.Services;
 using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services.Gemini;
 using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
@@ -204,6 +206,10 @@ public static class DependencyInjection
             client.Timeout = TimeSpan.FromSeconds(10);
             client.DefaultRequestHeaders.Add("User-Agent", "CleanArchitectureBlazorServer/1.0");
         });
+
+        // Add other services
+        services.AddScoped<IGeolocationService, GeolocationService>();
+        services.AddScoped<ISecurityAnalysisService, SecurityAnalysisService>();
 
         return services
             .AddScoped<IValidationService, ValidationService>()

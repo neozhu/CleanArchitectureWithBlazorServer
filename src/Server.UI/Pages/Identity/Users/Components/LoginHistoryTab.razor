@@ -1,14 +1,13 @@
 ﻿@using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.GetMyLoginHistory
 @using CleanArchitecture.Blazor.Server.UI.Components.Security
+
 @inject IStringLocalizer<CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Profile> Localizer
 
-<!-- Security Status Indicator -->
-@if (UserProfile?.UserId != null)
-{
-    <SecurityStatusIndicator Class="mb-3" UserId="@UserProfile.UserId" 
-                           />
-}
+<!-- UserLoginRiskSummary Indicator -->
+
+    <UserLoginRiskSummaryIndicator Class="mb-3" UserId="@UserProfile.UserId"  />
+
 
 <MudDataGrid T="LoginAuditDto"
              @ref="_dataGrid"

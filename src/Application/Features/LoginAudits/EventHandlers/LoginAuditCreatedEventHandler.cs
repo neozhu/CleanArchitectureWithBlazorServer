@@ -8,36 +8,44 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Domain.Enums;
 using CleanArchitecture.Blazor.Domain.Identity;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using Microsoft.Extensions.DependencyInjection;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Application.Features.LoginAudits.EventHandlers;
 
 public class LoginAuditCreatedEventHandler : INotificationHandler<LoginAuditCreatedEvent>
 {
     private readonly IGeolocationService _geolocationService;
-    private readonly IApplicationDbContext _dbContext;
-    private readonly ILogger<LoginAuditCreatedEventHandler> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-        public LoginAuditCreatedEventHandler(
-            IGeolocationService geolocationService,
-            IApplicationDbContext dbContext,
-            ILogger<LoginAuditCreatedEventHandler> logger
-            )
-        {
+    private readonly ILogger<LoginAuditCreatedEventHandler> _logger;
+    private readonly ISecurityAnalysisService _securityAnalysisService;
+
+    public LoginAuditCreatedEventHandler(
+        IGeolocationService geolocationService,
+        IServiceScopeFactory scopeFactory,
+        ILogger<LoginAuditCreatedEventHandler> logger,
+        ISecurityAnalysisService securityAnalysisService)
+    {
         _geolocationService = geolocationService;
-        _dbContext = dbContext;
+        _scopeFactory = scopeFactory;
         _logger = logger;
-        }
-        public async Task Handle(LoginAuditCreatedEvent notification, CancellationToken cancellationToken)
-        {
-            _logger.LogInformation("Handled domain event '{EventType}' with notification: {@Notification} ", notification.GetType().Name, notification);
+        _securityAnalysisService = securityAnalysisService;
+    }
+
+    public async Task Handle(LoginAuditCreatedEvent notification, CancellationToken cancellationToken)
+    {
+        //_logger.LogInformation("Handled domain event '{EventType}' with notification: {@Notification} ", notification.GetType().Name, notification);
 
         if (!string.IsNullOrEmpty(notification.Item.IpAddress) && !notification.Item.IpAddress.StartsWith("127") && string.IsNullOrEmpty(notification.Item.Region))
         {
             var geolocation = await _geolocationService.GetGeolocationAsync(notification.Item.IpAddress, cancellationToken);
-            if (geolocation != null) {
+            if (geolocation != null)
+            {
                 var regionParts = new List<string>();
 
                 if (!string.IsNullOrEmpty(geolocation.City))
@@ -52,9 +60,12 @@ public class LoginAuditCreatedEventHandler : INotificationHandler<LoginAuditCrea
                     regionParts.Add(geolocation.Country);
 
                 var region = regionParts.Count > 0 ? string.Join(", ", regionParts) : null;
-                await _dbContext.LoginAudits.Where(x => x.Id == notification.Item.Id).ExecuteUpdateAsync(x => x.SetProperty(y => y.Region, region));
+                var dbcntext = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IApplicationDbContext>();
+                await dbcntext.LoginAudits.Where(x => x.Id == notification.Item.Id).ExecuteUpdateAsync(x => x.SetProperty(y => y.Region, region));
             }
         }
-      
-        }
+
+        // Analyze account security using the dedicated service
+        await _securityAnalysisService.AnalyzeUserSecurityAsync(notification.Item, cancellationToken);
+    }
 }
