@@ -17,7 +17,6 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
 {
     private readonly IApplicationDbContext _context;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly LoginAuditService _loginAuditService;
     private readonly ILogger<AuditSignInManager<TUser>> _logger;
 
     public AuditSignInManager(
@@ -29,13 +28,11 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
         IAuthenticationSchemeProvider schemes,
         IUserConfirmation<TUser> confirmation,
         IApplicationDbContext context,
-        LoginAuditService loginAuditService,
         ILogger<AuditSignInManager<TUser>> auditLogger)
         : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation)
     {
         _context = context;
         _httpContextAccessor = contextAccessor;
-        _loginAuditService = loginAuditService;
         _logger = auditLogger;
     }
 
@@ -119,14 +116,15 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
             var browserInfo = GetBrowserInfo(httpContext);
 
             // Create login audit using the service
-            var loginAudit = await _loginAuditService.CreateLoginAuditAsync(
-                userId ?? string.Empty,
-                userName,
-                ipAddress,
-                browserInfo,
-                provider,
-                success);
-
+            var loginAudit = new LoginAudit() {
+                LoginTimeUtc = DateTime.UtcNow,
+                UserId = userId ?? string.Empty,
+                UserName=userName,
+                IpAddress= ipAddress,
+                BrowserInfo= browserInfo,
+                Provider= provider,
+                Success= success};
+            loginAudit.AddDomainEvent(new Domain.Events.LoginAuditCreatedEvent(loginAudit));
             // Save to database
             await _context.LoginAudits.AddAsync(loginAudit);
             await _context.SaveChangesAsync(CancellationToken.None);

@@ -246,8 +246,7 @@ public static class DependencyInjection
             .AddClaimsPrincipalFactory<MultiTenantUserClaimsPrincipalFactory>()
             .AddDefaultTokenProviders();
 
-        // Add LoginAuditService
-        services.AddScoped<LoginAuditService>();
+   
 
         // Replace the default SignInManager with AuditSignInManager
         var signInManagerDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(SignInManager<ApplicationUser>));

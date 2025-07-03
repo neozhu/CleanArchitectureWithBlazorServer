@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
@@ -44,11 +44,11 @@ public class AnalyzeAccountSecurityQueryTests
 
         var loginAudits = new List<LoginAudit>
         {
-            new() { Id = "1", UserId = userId, LoginTimeUtc = DateTime.UtcNow.AddDays(-1), 
+            new() { Id = 1, UserId = userId, LoginTimeUtc = DateTime.UtcNow.AddDays(-1), 
                    IpAddress = "192.168.1.1", Region = "US", BrowserInfo = "Chrome", Success = true },
-            new() { Id = "2", UserId = userId, LoginTimeUtc = DateTime.UtcNow.AddDays(-2), 
+            new() { Id = 2, UserId = userId, LoginTimeUtc = DateTime.UtcNow.AddDays(-2), 
                    IpAddress = "192.168.1.2", Region = "CA", BrowserInfo = "Firefox", Success = true },
-            new() { Id = "3", UserId = userId, LoginTimeUtc = DateTime.UtcNow.AddDays(-3), 
+            new() { Id = 3, UserId = userId, LoginTimeUtc = DateTime.UtcNow.AddDays(-3), 
                    IpAddress = "192.168.1.1", Region = "US", BrowserInfo = "Chrome", Success = false }
         };
 
