@@ -15,22 +15,22 @@ public class UserPreference
     public static readonly List<string> PrimaryColors = new()
     {
         "#2d4275",
-        "#7928ca",
-        "#4CAF50",
-        "#f97316",
-        "#f33f33",
-        "#ff0080"
+        "#7f22fe",
+        "#5ea500",
+        "#fcc800",
+        "#e7000b",
+        "#171717"
     };
 
     // List of available dark primary colors
     public static readonly List<string> DarkPrimaryColors = new()
     {
-        "#0170f3",
-        "#7928ca",
-        "#50e3c2",
-        "#f33f33",
-        "#ff0080",
-        "#666666"
+        "#2b7fff",
+        "#8e51ff",
+        "#5ea500",
+        "#ff6900",
+        "#ff2056",
+        "#e5e5e5"
     };
     /// <summary>
     /// Indicates whether the dark mode is enabled.

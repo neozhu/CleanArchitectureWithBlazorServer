@@ -8,7 +8,7 @@ public static class Theme
         {
             PaletteLight = new PaletteLight
             {
-                Primary = "#2563eb", // Modern blue, professional and trustworthy
+                Primary = "#2d4275", // Modern blue, professional and trustworthy
                 Secondary = "#6b7280", // Neutral gray, clean and professional
                 Success = "#10b981", // Fresh green, success
                 Info = "#0ea5e9", // Info blue, clear
@@ -21,20 +21,20 @@ public static class Theme
                 Black = "#0f172a", // Deep blue-black, more texture
                 White = "#ffffff", 
                 AppbarBackground = "#f8fafc", // Very light blue-gray, modern
-                AppbarText = "#1e293b",
+                AppbarText = "#0a0a0a",
                 Background = "#f8fafc", // Very light blue-gray, modern
                 Surface = "#ffffff", 
                 DrawerBackground = "#ffffff",
-                TextPrimary = "#1e293b", // Deep blue-gray, modern professional
-                TextSecondary = "#64748b", // Neutral gray, hierarchy
+                TextPrimary = "#0a0a0a", // Deep blue-gray, modern professional
+                TextSecondary = "#737373", // Neutral gray, hierarchy
                 SecondaryContrastText = "#ffffff", 
                 TextDisabled = "#94a3b8", // Soft gray
                 ActionDefault = "#64748b", 
                 ActionDisabled = "rgba(100, 116, 139, 0.4)",
                 ActionDisabledBackground = "rgba(100, 116, 139, 0.1)",
-                Divider = "#e2e8f0", // Elegant divider
+                Divider = "#e5e5e5", // Elegant divider
                 DividerLight = "rgba(100, 116, 139, 0.12)",
-                TableLines = "#f1f5f9", // Table lines, elegant
+                TableLines = "#e5e5e5", // Table lines, elegant
                 LinesDefault = "#e2e8f0", 
                 LinesInputs = "#d1d5db",
             },
@@ -64,10 +64,10 @@ public static class Theme
                 ActionDefault = "#a1a1aa", 
                 ActionDisabled = "rgba(161, 161, 170, 0.3)",
                 ActionDisabledBackground = "rgba(161, 161, 170, 0.1)",
-                Divider = "#27272a", // shadcn/ui divider color
+                Divider = "rgba(255, 255, 255, 0.1)", // shadcn/ui divider color
                 DividerLight = "rgba(161, 161, 170, 0.1)",
-                TableLines = "rgba(39, 39, 42, 0.8)",
-                LinesDefault = "#27272a", 
+                TableLines = "rgba(255, 255, 255, 0.1)",
+                LinesDefault = "rgba(255, 255, 255, 0.1)", 
                 LinesInputs = "rgba(161, 161, 170, 0.2)",
                 DarkContrastText= "#020817",
                 SecondaryContrastText = "#fafafa",

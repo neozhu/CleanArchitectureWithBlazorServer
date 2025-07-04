@@ -93,26 +93,105 @@
         <PropertyColumn Style="width:120px" Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x => x.UserName)]" />
     </Columns>
     <ChildRowContent>
-        <MudCard Elevation="0">
-            <MudCardHeader>
+        <MudCard Elevation="0" Class="ma-2">
+            <MudCardHeader Class="pb-2">
                 <CardHeaderContent>
-                    <MudText Typo="Typo.body1">
-                        <strong>@context.Item.Level</strong>
-                    </MudText>
+                    <MudStack Row Spacing="2" AlignItems="AlignItems.Center">
+                        <MudIcon Icon="@Icons.Material.Filled.Article" Size="Size.Medium" />
+                        <MudText Typo="Typo.h6">@L["Log Details"]</MudText>
+                        <MudSpacer />
+                        @switch (context.Item.Level)
+                        {
+                            case "Information":
+                                <MudChip Color="Color.Info" Size="Size.Small" Icon="@Icons.Material.Filled.Info">@context.Item.Level</MudChip>
+                                break;
+                            case "Warning":
+                                <MudChip Color="Color.Warning" Size="Size.Small" Icon="@Icons.Material.Filled.Warning">@context.Item.Level</MudChip>
+                                break;
+                            case "Error":
+                                <MudChip Color="Color.Error" Size="Size.Small" Icon="@Icons.Material.Filled.Error">@context.Item.Level</MudChip>
+                                break;
+                            case "Critical":
+                                <MudChip Color="Color.Error" Size="Size.Small" Icon="@Icons.Material.Filled.ErrorOutline">@context.Item.Level</MudChip>
+                                break;
+                            case "Trace":
+                            case "Debug":
+                            default:
+                                <MudChip Size="Size.Small" Icon="@Icons.Material.Filled.BugReport">@context.Item.Level</MudChip>
+                                break;
+                        }
+                    </MudStack>
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent Class="pt-0">
-                <MudText>@L[_currentDto.GetMemberDescription(x => x.Message)]</MudText>
-                <MudText Typo="Typo.body2">@context.Item.Message</MudText>
-                @if (!string.IsNullOrEmpty(context.Item.Exception))
-                {
-                    <MudText Color="Color.Error">@L[_currentDto.GetMemberDescription(x => x.Exception)]</MudText>
-                    <MudText Color="Color.Warning" Typo="Typo.body2">@context.Item.Exception</MudText>
-                }
-                <MudText>@L[_currentDto.GetMemberDescription(x => x.ClientIP)]</MudText>
-                <MudText Typo="Typo.body2">@context.Item.ClientIP</MudText>
-                <MudText>@L[_currentDto.GetMemberDescription(x => x.ClientAgent)]</MudText>
-                <MudText Typo="Typo.body2">@context.Item.ClientAgent</MudText>
+                <MudGrid Spacing="3">
+                    <!-- Message Section -->
+                    <MudItem xs="12">
+                        <MudStack Spacing="1">
+                                <MudText Typo="Typo.body2" Style="word-break: break-word;">@context.Item.Message</MudText>
+                        </MudStack>
+                    </MudItem>
+
+                    <!-- Exception Section -->
+                    @if (!string.IsNullOrEmpty(context.Item.Exception))
+                    {
+                        <MudItem xs="12">
+                            <MudStack Spacing="1">
+                                <MudStack Row Spacing="1" AlignItems="AlignItems.Center">
+                                    <MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Color="Color.Error" />
+                                    <MudText Typo="Typo.subtitle2" Color="Color.Error">@L[_currentDto.GetMemberDescription(x => x.Exception)]</MudText>
+                                </MudStack>
+                                <MudPaper Elevation="1" Class="pa-3" Style="background-color: var(--mud-palette-error-lighten); border-left: 4px solid var(--mud-palette-error);">
+                                    <MudText Typo="Typo.body2" Style="word-break: break-word; font-family: monospace;">@context.Item.Exception</MudText>
+                                </MudPaper>
+                            </MudStack>
+                        </MudItem>
+                    }
+
+                    <!-- Client Information Section -->
+                    <MudItem xs="12" md="6">
+                        <MudStack Spacing="2">
+                            <MudStack Row Spacing="1" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.Computer" Size="Size.Small" Color="Color.Secondary" />
+                                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@L["Client Information"]</MudText>
+                            </MudStack>
+                            <MudStack Spacing="1" Class="ml-4">
+                                <MudStack Row Spacing="1">
+                
+                                    <MudText Typo="Typo.caption">@L[_currentDto.GetMemberDescription(x => x.ClientIP)]:</MudText>
+                                    <MudText Typo="Typo.body2">@context.Item.ClientIP</MudText>
+                                </MudStack>
+                                <MudStack Row Spacing="1">
+                                    <MudText Typo="Typo.caption">@L[_currentDto.GetMemberDescription(x => x.ClientAgent)]:</MudText>
+                                    <MudText Typo="Typo.body2" Style="word-break: break-word;">@context.Item.ClientAgent</MudText>
+                                </MudStack>
+                                
+                            </MudStack>
+                        </MudStack>
+                    </MudItem>
+
+                    <!-- User Information Section -->
+                    <MudItem xs="12" md="6">
+                        <MudStack Spacing="2">
+                            <MudStack Row Spacing="1" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" Color="Color.Secondary" />
+                                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@L["User Information"]</MudText>
+                            </MudStack>
+                            <MudStack Spacing="1" Class="ml-4">
+                                <MudStack Row Spacing="1">
+                          
+                                    <MudText Typo="Typo.caption">@L[_currentDto.GetMemberDescription(x => x.UserName)]:</MudText>
+                                    <MudText Typo="Typo.body2">@(!string.IsNullOrEmpty(context.Item.UserName) ? context.Item.UserName : L["Anonymous"])</MudText>
+                                </MudStack>
+                                <MudStack Row Spacing="1">
+                 
+                                    <MudText Typo="Typo.caption">@L[_currentDto.GetMemberDescription(x => x.TimeStamp)]:</MudText>
+                                    <UtcToLocal UTCDateTime="@context.Item.TimeStamp"></UtcToLocal>
+                                </MudStack>
+                            </MudStack>
+                        </MudStack>
+                    </MudItem>
+                </MudGrid>
             </MudCardContent>
         </MudCard>
     </ChildRowContent>
