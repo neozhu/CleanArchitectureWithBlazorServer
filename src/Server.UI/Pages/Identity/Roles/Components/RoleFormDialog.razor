@@ -43,9 +43,8 @@
         </MudForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel" Disabled="@_processing">@ConstantString.Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit" Disabled="@_processing" 
-                  StartIcon="@Icons.Material.Filled.Save">
+        <MudButton OnClick="Cancel" >@ConstantString.Cancel</MudButton>
+        <MudButton OnClick="Submit" Disabled="@_processing">
             @ConstantString.Save
         </MudButton>
     </DialogActions>

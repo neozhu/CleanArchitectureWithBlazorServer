@@ -61,7 +61,7 @@
                                              Size="Size.Small"
                                              Value="@permission.Assigned"
                                              Disabled="@permission.IsInherit"
-                                             ValueChanged="@(s => OnAssignChanged.InvokeAsync(permission))"
+                                                 ValueChanged="@(s => OnCheckChanged(s,permission))"
                                              Color="@(permission.IsInherit ? Color.Default : Color.Primary)">
                                 </MudCheckBox>
                                 <div class="d-flex flex-column ml-2">
@@ -131,6 +131,12 @@
         {
             UpdateFilteredPermissions();
         }
+    }
+    private void OnCheckChanged(bool isChecked, PermissionModel? permission)
+    {
+        if (permission == null) return;
+        permission.Assigned = isChecked;
+        OnAssignChanged.InvokeAsync(permission);
     }
 
     private void UpdateFilteredPermissions()

@@ -361,7 +361,6 @@
         _isProcessing = true;
         try
         {
-            model.Assigned = !model.Assigned;
             await _permissionAssignmentService.AssignAsync(model);
             Snackbar.Add(model.Assigned ? _localizer["Permission assigned successfully"] : _localizer["Permission removed successfully"], Severity.Info);
         }

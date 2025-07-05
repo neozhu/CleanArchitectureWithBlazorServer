@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -76,6 +76,5 @@ public class UserPermissionAssignmentService : IPermissionAssignmentService
     private void InvalidateCache(string userId)
     {
         _cache.Remove($"{CacheKeyPrefix}{userId}");
-        _logger.LogDebug("User permissions cache cleared for {UserId}", userId);
     }
 } 
