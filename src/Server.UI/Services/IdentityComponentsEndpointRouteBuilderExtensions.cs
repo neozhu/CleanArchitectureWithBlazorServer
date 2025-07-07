@@ -16,6 +16,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
     public static readonly string PerformExternalLogin = "/pages/authentication/performexternallogin";
 
     public static readonly string Logout = "/pages/authentication/logout";
+    public static readonly string Login = "/pages/authentication/login";
 
     // These endpoints are required by the Identity Razor components defined in the /Components/Account/Pages directory of this project.
     public static IEndpointConventionBuilder MapAdditionalIdentityEndpoints(this IEndpointRouteBuilder endpoints)
@@ -26,6 +27,68 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
         ArgumentNullException.ThrowIfNull(endpoints);
 
         var accountGroup = endpoints.MapGroup("/pages/authentication");
+
+        accountGroup.MapPost("login", async (
+            HttpContext context,
+            [FromServices] SignInManager<ApplicationUser> signInManager,
+            [FromServices] UserManager<ApplicationUser> userManager,
+            [FromForm] string userName,
+            [FromForm] string password,
+            [FromForm] bool rememberMe,
+            [FromForm] string? returnUrl) =>
+        {
+            try
+            {
+                // Check if the user exists
+                var user = await userManager.FindByNameAsync(userName);
+                if (user == null)
+                {
+                    return Results.BadRequest("User does not exist");
+                }
+                
+                if (!user.IsActive)
+                {
+                    return Results.BadRequest("Your account is inactive. Please contact support");
+                }
+
+                // Check password
+                var checkResult = await signInManager.CheckPasswordSignInAsync(user, password, true);
+                if (!checkResult.Succeeded)
+                {
+                    if (checkResult.RequiresTwoFactor)
+                    {
+                        // For two-factor authentication, redirect to 2FA page
+                        var safeReturnUrl = string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl;
+                        return Results.Redirect($"/account/loginwith2fa?returnUrl={Uri.EscapeDataString(safeReturnUrl)}&rememberMe={rememberMe}");
+                    }
+                    else if (checkResult.IsLockedOut)
+                    {
+                        return Results.Redirect("/account/lockout");
+                    }
+                    else if (checkResult.IsNotAllowed)
+                    {
+                        return Results.BadRequest("Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps");
+                    }
+                    else
+                    {
+                        return Results.BadRequest("Invalid login attempt");
+                    }
+                }
+
+                // Perform actual sign in
+                await signInManager.SignInAsync(user, rememberMe);
+                logger.LogInformation("{UserName} has logged in successfully.", userName);
+                
+                // Redirect to return URL or home page
+                var redirectUrl = string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl;
+                return Results.Redirect(redirectUrl);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error during login for user {UserName}", userName);
+                return Results.StatusCode(500);
+            }
+        }).DisableAntiforgery();
 
         accountGroup.MapPost("/performexternallogin", (
             HttpContext context,
@@ -114,4 +177,11 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
         return accountGroup;
     }
+}
+
+public class LoginRequest
+{
+    public string UserName { get; set; } = "";
+    public string Password { get; set; } = "";
+    public bool RememberMe { get; set; } = true;
 }
