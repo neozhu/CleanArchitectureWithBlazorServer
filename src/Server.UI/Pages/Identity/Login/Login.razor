@@ -74,7 +74,7 @@
 @code {
     private UserManager<ApplicationUser> _userManager = null!;
     private SignInManager<ApplicationUser> _signInManager = null!;
-    private IdentityRedirectManager _redirectManager = null!;
+  
     public const string PageUrl = "/account/login";
     private string? errorMessage;
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
@@ -105,7 +105,6 @@
         _title = L["Sign In"];
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
-        _redirectManager = ScopedServices.GetRequiredService<IdentityRedirectManager>();
         return Task.CompletedTask;
     }
 
@@ -146,12 +145,15 @@
             var factorUser = (await _signInManager.GetTwoFactorAuthenticationUserAsync()) ?? throw new InvalidOperationException("Unable to load two-factor authentication user.");
             var token = await _userManager.GenerateTwoFactorTokenAsync(factorUser, "Email");
             await Mediator.Publish(new SendFactorCodeNotification(factorUser.Email ?? string.Empty, factorUser.UserName ?? string.Empty, token));
-            _redirectManager.RedirectTo(LoginWith2fa.PageUrl, new Dictionary<string, object?> { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
+            var url = Navigation.GetUriWithQueryParameters(
+                Navigation.ToAbsoluteUri(LoginWith2fa.PageUrl).AbsoluteUri,
+                new Dictionary<string, object?> { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
+            Navigation.NavigateTo(url, forceLoad: true);
         }
         else if (result.IsLockedOut)
         {
             Logger.LogWarning("{UserName} has locked out.", Input.UserName);
-            _redirectManager.RedirectTo(Lockout.PageUrl);
+            Navigation.NavigateTo(Lockout.PageUrl, forceLoad: true);
         }
         else if (result.IsNotAllowed)
         {
