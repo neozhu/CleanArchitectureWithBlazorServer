@@ -6,6 +6,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendFactorCode
 @using System.ComponentModel.DataAnnotations
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Register
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Forgot
 @inherits OwningComponentBase
 @inject ILogger<Login> Logger
 @inject IStringLocalizer<Login> L
@@ -27,7 +28,6 @@
                           Label="@L["User name"]"
                           Variant="Variant.Outlined"
                           For="@(() => Input.UserName)"
-                          AutoComplete="username"
                           Required="true"
                           RequiredError="@L["User name cannot be empty"]"
                           Class="my-4" />
@@ -37,7 +37,6 @@
                           Variant="Variant.Outlined"
                           For="@(() => Input.Password)"
                           InputType="@_passwordInputType"
-                          AutoComplete="current-password"
                           Required="true"
                           RequiredError="@L["Password cannot be empty"]"
                           Class="my-4"

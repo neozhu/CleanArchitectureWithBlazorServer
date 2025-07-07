@@ -1,6 +1,8 @@
 ﻿@page "/account/registerconfirmation"
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
+@using CleanArchitecture.Blazor.Server.UI.Services
+@using Microsoft.AspNetCore.Identity
 
 @inherits OwningComponentBase
 
@@ -14,9 +16,10 @@
 
 @if (EmailConfirmationLink is not null)
 {
-    <MudText>@L["This app does not currently have a real email sender registered."]  </MudText>
-    <MudText>@L["how to configure a real email sender. Normally this would be emailed:"]</MudText>
-    <MudButton href="@EmailConfirmationLink">@L["Click here to confirm your account"]</MudButton>
+    <MudText>@L["For testing purposes, you can directly access the email confirmation link below"]</MudText>
+    <MudButton href="@EmailConfirmationLink" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large">
+        <MudText>@L["Confirm Account"]</MudText>
+    </MudButton>
 }
 else
 {

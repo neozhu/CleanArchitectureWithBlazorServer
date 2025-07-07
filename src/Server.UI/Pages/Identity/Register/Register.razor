@@ -42,7 +42,6 @@
                           Label="@L["User Name"]"
                           Variant="Variant.Outlined"
                           Required="true"
-                          AutoComplete="username"
                           Placeholder="user name"
                           Class="my-4"
                           For="@(() => Input.UserName)" />
@@ -52,7 +51,6 @@
                           Label="@L["E-mail"]"
                           Variant="Variant.Outlined"
                           Required="true"
-                          AutoComplete="email"
                           Placeholder="email"
                           Class="my-4"
                           For="@(() => Input.Email)" />
@@ -62,7 +60,6 @@
                           Variant="Variant.Outlined"
                           Required="true"
                           InputType="@(isPasswordVisible ? InputType.Text : InputType.Password)"
-                          AutoComplete="current-password"
                           Placeholder="password"
                           Class="my-4"
                           For="@(() => Input.Password)"
@@ -74,7 +71,6 @@
                           Variant="Variant.Outlined"
                           Required="true"
                           InputType="@(isConfirmPasswordVisible ? InputType.Text : InputType.Password)"
-                          AutoComplete="new-password"
                           Placeholder="Confirm password"
                           Class="my-4"
                           For="@(() => Input.ConfirmPassword)"
