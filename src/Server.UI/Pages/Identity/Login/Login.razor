@@ -1,16 +1,15 @@
 ﻿@page "/account/login"
-@layout AuthLayout
+
 @using Microsoft.AspNetCore.Authentication
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendFactorCode
 @using System.ComponentModel.DataAnnotations
-
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Register
 @inherits OwningComponentBase
 @inject ILogger<Login> Logger
 @inject IStringLocalizer<Login> L
-@inject IJSRuntime JSRuntime
-@inject NavigationManager NavigationManager
+
 
 
 <PageTitle>@_title</PageTitle>
@@ -141,7 +140,7 @@
                 loginUrl += $"&returnUrl={Uri.EscapeDataString(ReturnUrl)}";
             }
             
-            NavigationManager.NavigateTo(loginUrl, forceLoad: true);
+            Navigation.NavigateTo(loginUrl, forceLoad: true);
         }
         else if (result.RequiresTwoFactor)
         {

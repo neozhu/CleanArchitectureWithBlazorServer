@@ -1,25 +1,26 @@
-﻿@page "/pages/authentication/confirmemail"
+﻿@page "/account/confirmemail"
 @using CleanArchitecture.Blazor.Domain.Identity
 @using System.Text
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.SendWelcome
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
 
+@inherits OwningComponentBase
 @inject IStringLocalizer<ConfirmEmail> L
-@inject UserManager<ApplicationUser> UserManager
-@inject IdentityRedirectManager RedirectManager
+
 @inject ILogger<ConfirmEmail> Logger
 <PageTitle>@L["Confirm email"]</PageTitle>
-<div class="d-flex flex-column gap-y-3">
-    <MudText Typo="Typo.h4" GutterBottom="true">@L["Confirm email"]</MudText>
-    <StatusMessage Message="@statusMessage" Error="@error"/>
-    <a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@Login.PageUrl">@L["Return to Login"]</a>
-</div>
+
+<MudText Typo="Typo.h4" GutterBottom="true">@L["Confirm email"]</MudText>
+<StatusMessage Message="@statusMessage" Error="@error" />
+<MudButton href="@Login.PageUrl">@L["Return to Login"]</MudButton>
 
 @code {
-    public const string PageUrl = "/pages/authentication/confirmemail";
+    public const string PageUrl = "/account/confirmemail";
+    private UserManager<ApplicationUser> _userManager = null!;
+
     private string? statusMessage;
 
-    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
 
     [SupplyParameterFromQuery] private string? UserId { get; set; }
 
@@ -28,22 +29,25 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+
+
         if (UserId is null || Code is null)
         {
-            RedirectManager.RedirectTo("");
+            Navigation.NavigateTo(Login.PageUrl);
+            return;
         }
 
-        var user = await UserManager.FindByIdAsync(UserId);
+        var user = await _userManager.FindByIdAsync(UserId);
         if (user is null)
         {
-            HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
             statusMessage = string.Format(L["Error loading user with ID {0}"], UserId);
             error = true;
         }
         else
         {
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
-            var result = await UserManager.ConfirmEmailAsync(user, code);
+            var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
             {
                 var callbackUrl = Navigation.GetUriWithQueryParameters(
@@ -53,7 +57,7 @@
                 await Mediator.Publish(new SendWelcomeNotification(callbackUrl, user.Email!, user.UserName!));
                 Logger.LogInformation("{UserName} Activated Successfully!", user.Email);
                 user.IsActive = true;
-                await UserManager.UpdateAsync(user);
+                await _userManager.UpdateAsync(user);
             }
 
             statusMessage = result.Succeeded ? L["Thank you for confirming your email"] : L["Error confirming your email"];
