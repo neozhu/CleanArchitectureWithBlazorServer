@@ -28,24 +28,40 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
         var accountGroup = endpoints.MapGroup("/pages/authentication");
 
-        accountGroup.MapPost("login", async (
+        accountGroup.MapGet("login", async (
             HttpContext context,
             [FromServices] SignInManager<ApplicationUser> signInManager,
             [FromServices] UserManager<ApplicationUser> userManager,
-            [FromForm] string userName,
-            [FromForm] string password,
-            [FromForm] bool rememberMe,
-            [FromForm] string? returnUrl) =>
+            [FromQuery] string userName,
+            [FromQuery] string password,
+            [FromQuery] bool rememberMe = false,
+            [FromQuery] string? returnUrl = null) =>
         {
             try
             {
+                // Security check: Only allow requests from the same origin
+                var referer = context.Request.Headers.Referer.ToString();
+                var host = context.Request.Host.ToString();
+                var scheme = context.Request.Scheme;
+                var expectedOrigin = $"{scheme}://{host}";
+
+                if (string.IsNullOrEmpty(referer) || !referer.StartsWith(expectedOrigin, StringComparison.OrdinalIgnoreCase))
+                {
+                    logger.LogWarning("Login attempt from unauthorized origin. Referer: {Referer}, Expected: {Expected}", referer, expectedOrigin);
+                    return Results.Forbid();
+                }
+                // Validate parameters
+                if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+                {
+                    return Results.BadRequest("Username and password are required");
+                }
                 // Check if the user exists
                 var user = await userManager.FindByNameAsync(userName);
                 if (user == null)
                 {
                     return Results.BadRequest("User does not exist");
                 }
-                
+
                 if (!user.IsActive)
                 {
                     return Results.BadRequest("Your account is inactive. Please contact support");
@@ -78,7 +94,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 // Perform actual sign in
                 await signInManager.SignInAsync(user, rememberMe);
                 logger.LogInformation("{UserName} has logged in successfully.", userName);
-                
+
                 // Redirect to return URL or home page
                 var redirectUrl = string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl;
                 return Results.Redirect(redirectUrl);
@@ -88,7 +104,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 logger.LogError(ex, "Error during login for user {UserName}", userName);
                 return Results.StatusCode(500);
             }
-        }).DisableAntiforgery();
+        });
 
         accountGroup.MapPost("/performexternallogin", (
             HttpContext context,

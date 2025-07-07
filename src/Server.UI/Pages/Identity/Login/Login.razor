@@ -10,6 +10,7 @@
 @inject ILogger<Login> Logger
 @inject IStringLocalizer<Login> L
 @inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 
 
 <PageTitle>@_title</PageTitle>
@@ -72,44 +73,6 @@
     </div>
 </div>
 
-<script>
-    window.submitLoginForm = function (loginData, returnUrl) {
-        // Create a form element
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/pages/authentication/login';
-
-        // Add form fields
-        const userNameInput = document.createElement('input');
-        userNameInput.type = 'hidden';
-        userNameInput.name = 'UserName';
-        userNameInput.value = loginData.userName;
-        form.appendChild(userNameInput);
-
-        const passwordInput = document.createElement('input');
-        passwordInput.type = 'hidden';
-        passwordInput.name = 'Password';
-        passwordInput.value = loginData.password;
-        form.appendChild(passwordInput);
-
-        const rememberMeInput = document.createElement('input');
-        rememberMeInput.type = 'hidden';
-        rememberMeInput.name = 'RememberMe';
-        rememberMeInput.value = loginData.rememberMe;
-        form.appendChild(rememberMeInput);
-
-        const returnUrlInput = document.createElement('input');
-        returnUrlInput.type = 'hidden';
-        returnUrlInput.name = 'ReturnUrl';
-        returnUrlInput.value = returnUrl;
-        form.appendChild(returnUrlInput);
-
-        // Add the form to the body and submit it
-        document.body.appendChild(form);
-        form.submit();
-    };
-</script>
-
 @code {
     private UserManager<ApplicationUser> _userManager = null!;
     private SignInManager<ApplicationUser> _signInManager = null!;
@@ -171,24 +134,14 @@
         var result = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, true);
         if (result.Succeeded)
         {
-            // Use JavaScript to submit form to backend API for actual login
-            try
+            // Direct redirect to GET login endpoint
+            var loginUrl = $"/pages/authentication/login?userName={Uri.EscapeDataString(Input.UserName)}&password={Uri.EscapeDataString(Input.Password)}&rememberMe={Input.RememberMe}";
+            if (!string.IsNullOrEmpty(ReturnUrl))
             {
-                var loginData = new
-                {
-                    UserName = Input.UserName,
-                    Password = Input.Password,
-                    RememberMe = Input.RememberMe
-                };
-
-                await JSRuntime.InvokeVoidAsync("submitLoginForm", loginData, ReturnUrl ?? "/");
+                loginUrl += $"&returnUrl={Uri.EscapeDataString(ReturnUrl)}";
             }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "Error submitting login form");
-                errorMessage = L["Error: Login failed"];
-                Snackbar.Add(errorMessage, Severity.Error);
-            }
+            
+            NavigationManager.NavigateTo(loginUrl, forceLoad: true);
         }
         else if (result.RequiresTwoFactor)
         {
