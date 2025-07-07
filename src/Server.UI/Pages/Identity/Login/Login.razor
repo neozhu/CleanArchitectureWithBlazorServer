@@ -128,9 +128,7 @@
 
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, true);
-        if (result.Succeeded)
-        {
+       
             // Direct redirect to GET login endpoint
             var loginUrl = $"/pages/authentication/login?userName={Uri.EscapeDataString(Input.UserName)}&password={Uri.EscapeDataString(Input.Password)}&rememberMe={Input.RememberMe}";
             if (!string.IsNullOrEmpty(ReturnUrl))
@@ -139,32 +137,32 @@
             }
             
             Navigation.NavigateTo(loginUrl, forceLoad: true);
-        }
-        else if (result.RequiresTwoFactor)
-        {
-            var factorUser = (await _signInManager.GetTwoFactorAuthenticationUserAsync()) ?? throw new InvalidOperationException("Unable to load two-factor authentication user.");
-            var token = await _userManager.GenerateTwoFactorTokenAsync(factorUser, "Email");
-            await Mediator.Publish(new SendFactorCodeNotification(factorUser.Email ?? string.Empty, factorUser.UserName ?? string.Empty, token));
-            var url = Navigation.GetUriWithQueryParameters(
-                Navigation.ToAbsoluteUri(LoginWith2fa.PageUrl).AbsoluteUri,
-                new Dictionary<string, object?> { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
-            Navigation.NavigateTo(url, forceLoad: true);
-        }
-        else if (result.IsLockedOut)
-        {
-            Logger.LogWarning("{UserName} has locked out.", Input.UserName);
-            Navigation.NavigateTo(Lockout.PageUrl, forceLoad: true);
-        }
-        else if (result.IsNotAllowed)
-        {
-            errorMessage = L["Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps"];
-            Snackbar.Add(errorMessage, Severity.Error);
-        }
-        else
-        {
-            errorMessage = L["Error: Invalid login attempt"];
-            Snackbar.Add(errorMessage, Severity.Error);
-        }
+        // }
+        // else if (result.RequiresTwoFactor)
+        // {
+        //     var factorUser = (await _signInManager.GetTwoFactorAuthenticationUserAsync()) ?? throw new InvalidOperationException("Unable to load two-factor authentication user.");
+        //     var token = await _userManager.GenerateTwoFactorTokenAsync(factorUser, "Email");
+        //     await Mediator.Publish(new SendFactorCodeNotification(factorUser.Email ?? string.Empty, factorUser.UserName ?? string.Empty, token));
+        //     var url = Navigation.GetUriWithQueryParameters(
+        //         Navigation.ToAbsoluteUri(LoginWith2fa.PageUrl).AbsoluteUri,
+        //         new Dictionary<string, object?> { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
+        //     Navigation.NavigateTo(url, forceLoad: true);
+        // }
+        // else if (result.IsLockedOut)
+        // {
+        //     Logger.LogWarning("{UserName} has locked out.", Input.UserName);
+        //     Navigation.NavigateTo(Lockout.PageUrl, forceLoad: true);
+        // }
+        // else if (result.IsNotAllowed)
+        // {
+        //     errorMessage = L["Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps"];
+        //     Snackbar.Add(errorMessage, Severity.Error);
+        // }
+        // else
+        // {
+        //     errorMessage = L["Error: Invalid login attempt"];
+        //     Snackbar.Add(errorMessage, Severity.Error);
+        // }
     }
 
     public sealed class InputModel

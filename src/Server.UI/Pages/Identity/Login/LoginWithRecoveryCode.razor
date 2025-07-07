@@ -1,11 +1,9 @@
-﻿@page "/pages/authentication/loginwithrecoverycode"
+﻿@page "/account/loginwithrecoverycode"
 @using CleanArchitecture.Blazor.Domain.Identity
 @using System.ComponentModel.DataAnnotations
 
+@inherits OwningComponentBase
 @inject IStringLocalizer<LoginWithRecoveryCode> L
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
-@inject IdentityRedirectManager RedirectManager
 @inject ILogger<LoginWithRecoveryCode> Logger
 
 <PageTitle>@L["Recovery code verification"]</PageTitle>
@@ -58,15 +56,18 @@
     public const string PageUrl = "/pages/authentication/loginwithrecoverycode";
     private string? message;
     private ApplicationUser user = default!;
-
-    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
+    private SignInManager<ApplicationUser> _signInManager = null!;
+    private UserManager<ApplicationUser> _userManager = null!;
+    private InputModel Input { get; set; } = new();
 
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
+        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         // Ensure the user has gone through the username & password screen first
-        user = await SignInManager.GetTwoFactorAuthenticationUserAsync() ??
+        user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ??
                throw new InvalidOperationException(L["Unable to load two-factor authentication user"]);
     }
 
@@ -74,19 +75,19 @@
     {
         var recoveryCode = Input.RecoveryCode.Replace(" ", string.Empty);
 
-        var result = await SignInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
+        var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
 
-        var userId = await UserManager.GetUserIdAsync(user);
+        var userId = await _userManager.GetUserIdAsync(user);
 
         if (result.Succeeded)
         {
             Logger.LogInformation("User with ID '{UserId}' logged in with a recovery code.", userId);
-            RedirectManager.RedirectTo(ReturnUrl);
+            Navigation.NavigateTo(ReturnUrl);
         }
         else if (result.IsLockedOut)
         {
             Logger.LogWarning("User account locked out.");
-            RedirectManager.RedirectTo(Lockout.PageUrl);
+            Navigation.NavigateTo(Lockout.PageUrl);
         }
         else
         {

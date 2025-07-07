@@ -1,10 +1,12 @@
 ﻿@page "/account/loginwith2fa"
 @using CleanArchitecture.Blazor.Domain.Identity
 @using System.ComponentModel.DataAnnotations
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
 
 @inherits OwningComponentBase
 @inject IStringLocalizer<LoginWith2fa> L
 @inject ILogger<LoginWith2fa> Logger
+
 
 <PageTitle>@L["Two-factor authentication"]</PageTitle>
 <MudText Typo="Typo.h4" GutterBottom="true">@L["Two-factor authentication"]</MudText>
@@ -18,38 +20,33 @@
             <input type="hidden" name="RememberMe" value="@RememberMe"/>
             <DataAnnotationsValidator/>
             <StatusMessage Message="@message" Error="true"/>
-            <div class="mud-input-control mud-input-outlined-with-label my-4">
-                <div class="mud-input-control-input-container">
-                    <!--!--><!--!-->
-                    <div class="mud-input mud-input-outlined mud-input-outlined-with-label mud-shrink mud-typography-subtitle1">
-                        <InputText @bind-Value="Input.TwoFactorCode" class="mud-input-slot mud-input-root mud-input-root-outlined" type="text" autocomplete="off" aria-required="true"/>
-                        <div class="mud-input-slot mud-input-root mud-input-root-outlined" style="display:none"></div>
-                        <!--!-->
-                        <fieldset class="mud-input-outlined-border"><legend>@L["Authenticator code"]</legend></fieldset>
-                    </div>
-                    <!--!-->
-                    <label class="mud-input-label mud-input-label-animated mud-input-label-outlined mud-input-label-inputcontrol" for="twoFactorCode">@L["Authenticator code"]</label>
-                </div>
-                <div class="mud-input-helper-text mud-input-error">
-                    <div class="d-flex">
-                        <ValidationMessage For="() => Input.TwoFactorCode" class="mud-input-error"/>
-                    </div>
-                </div>
-            </div>
+            <MudTextField @bind-Value="Input.TwoFactorCode" 
+                          Label="@L["Authenticator code"]"
+                          Variant="Variant.Outlined"
+                          Class="my-4"
+                          Required="true"
+                          RequiredError="@L["Authenticator code is required"]"
+                          For="@(() => Input.TwoFactorCode)" 
+                          HelperText="@L["Enter the 6-7 digit code from your authenticator app"]"
+                          InputType="InputType.Text"
+                          Immediate="true"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="Icons.Material.Filled.Security"
+                          AdornmentColor="Color.Primary" />
 
-            <div class="checkbox mb-3">
-                <label for="remember-machine" class="form-label">
-                    <InputCheckbox @bind-Value="Input.RememberMachine"/>
-                    Remember this machine
-                </label>
-            </div>
+            <MudCheckBox @bind-Value="Input.RememberMachine" 
+                         Label="@L["Remember this machine"]"
+                         Color="Color.Primary"
+                          />
             <div>
                 <MudButton Variant="Variant.Filled"
                            Color="Color.Primary"
                            Size="Size.Large"
                            ButtonType="ButtonType.Submit"
-                           FullWidth="true">
-                    <MudText>@L["Sign In"]</MudText>
+                           FullWidth="true"
+                           StartIcon="Icons.Material.Filled.Login"
+                           Class="mt-3">
+                    @L["Sign In"]
                 </MudButton>
             </div>
         </EditForm>
@@ -59,7 +56,13 @@
     <MudText Typo="Typo.body1">
         @L["Don't have access to your authenticator device? You can"]
     </MudText>
-    <a class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple" href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")">log in with a recovery code</a>. 
+    <MudButton Variant="Variant.Outlined" 
+               Color="Color.Primary"
+               href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")"
+               StartIcon="Icons.Material.Filled.Key"
+               Class="mt-2">
+        Log in with a recovery code
+    </MudButton>
    
 </div>
 
@@ -77,42 +80,22 @@
     [SupplyParameterFromQuery] private bool RememberMe { get; set; }
 
 
-    protected override async Task OnInitializedAsync()
+    protected override  Task OnInitializedAsync()
     {
         _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         // Ensure the user has gone through the username & password screen first
-        user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ??
-               throw new InvalidOperationException(L["Unable to load two-factor authentication user"]);
+        return Task.CompletedTask;
     }
 
-    private async Task OnValidSubmitAsync()
+    private  Task OnValidSubmitAsync()
     {
         var authenticatorCode = Input.TwoFactorCode!.Replace(" ", string.Empty).Replace("-", string.Empty);
-        var isCodeValid = await _userManager.VerifyTwoFactorTokenAsync(user, _signInManager.Options.Tokens.AuthenticatorTokenProvider, authenticatorCode);
-        if (!isCodeValid)
-        {
-            message = L["Error: Invalid authenticator code"];
-            return;
-        }
-
-        var result = await _signInManager.TwoFactorSignInAsync(_signInManager.Options.Tokens.AuthenticatorTokenProvider, authenticatorCode, RememberMe, RememberMe);
-        var userId = await _userManager.GetUserIdAsync(user);
-        if (result.Succeeded)
-        {
-            Logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", userId);
-            Navigation.NavigateTo("/");
-        }
-        else if (result.IsLockedOut)
-        {
-            Logger.LogWarning("User with ID '{UserId}' account locked out.", userId);
-            Navigation.NavigateTo(Lockout.PageUrl);
-        }
-        else
-        {
-            Logger.LogWarning("Invalid authenticator code entered for user with ID '{UserId}'.", userId);
-            message = L["Error: Invalid authenticator code"];
-        }
+        var url = Navigation.GetUriWithQueryParameters(
+                Navigation.ToAbsoluteUri(IdentityComponentsEndpointRouteBuilderExtensions.TwofaVerify).AbsoluteUri,
+                new Dictionary<string, object?> { ["token"] = authenticatorCode, ["returnUrl"] = ReturnUrl, ["remember"] = Input.RememberMachine });
+        Navigation.NavigateTo(url, forceLoad: true);
+        return Task.CompletedTask;
     }
 
     private sealed class InputModel
