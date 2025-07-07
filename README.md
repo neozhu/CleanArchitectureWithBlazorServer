@@ -29,15 +29,10 @@ Feel free to reach out to me for collaboration
 ## ❤️ Support This Project
 
 If you find this project helpful, please consider supporting its development:
-
-### 🌍 For International Users
 - **PayPal**: [paypal.me/hualinz](https://paypal.me/hualinz)
 - **GitHub Sponsors**: Click the "Sponsor" button at the top of this repository
 
-### 🇨🇳 For Chinese Users / 中国用户
-- **微信支付 / WeChat Pay**: 扫描下方二维码 / Scan the QR code below
 
-<img src="doc/wechat-qr-code.jpg" width="200" alt="微信支付二维码 / WeChat Payment QR Code" />
 
 Your support helps maintain and improve this project. Thank you! 🙏
 
@@ -283,23 +278,11 @@ https://github.com/neozhu/CleanArchitectureWithBlazorServer/assets/1549611/2b332
 
 ![image](https://user-images.githubusercontent.com/1549611/185576711-31ab3081-ba22-43f3-b837-c8f1de981442.png)
 
-  ![image](doc/orgchart.png)
+![image](doc/orgchart.png)
 
-## About
 
-Coming up.
 
-## ❤️ Support
 
-If this project has been helpful to you, please consider:
-
-- ⭐ **Star this repository** to show your support
-- 💰 **[Sponsor via PayPal](https://paypal.me/hualinz)** for international users
-- 🎁 **微信赞助 / WeChat Sponsor** for Chinese users (QR code coming soon)
-- 📢 **Share** this project with others who might find it useful
-- 🐛 **Report bugs** or 💡 **suggest features** via GitHub Issues
-
-Your support keeps this project alive and growing! 🚀
 
 ## License
 
