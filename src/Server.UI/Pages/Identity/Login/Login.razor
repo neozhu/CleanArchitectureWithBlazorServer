@@ -17,38 +17,38 @@
 
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
-        <EditForm Model="Input"  OnValidSubmit="OnSubmit" FormName="login">
+        <EditForm Model="Input" OnValidSubmit="OnSubmit" FormName="login">
             <DataAnnotationsValidator />
             <MudText Typo="Typo.h4" GutterBottom="true">@L["Sign In"]</MudText>
             <MudText>
-                @L["Don't have an account?"] <MudLink Href="@Register.PageUrl" Target="_self">@L["Sign Up"]</MudLink>
+                @L["Do not have an account?"] <MudLink Href="@Register.PageUrl" Target="_self">@L["Sign Up"]</MudLink>
             </MudText>
             <!--user name-->
-            <MudTextField @bind-Value="Input.UserName" 
+            <MudTextField @bind-Value="Input.UserName"
                           Label="@L["User name"]"
                           Variant="Variant.Outlined"
                           For="@(() => Input.UserName)"
                           Required="true"
-                          RequiredError="@L["User name cannot be empty"]"
+                          RequiredError="@L["User name is required"]"
                           Class="my-4" />
             <!--password-->
-            <MudTextField @bind-Value="Input.Password" 
+            <MudTextField @bind-Value="Input.Password"
                           Label="@L["Password"]"
                           Variant="Variant.Outlined"
                           For="@(() => Input.Password)"
                           InputType="@_passwordInputType"
                           Required="true"
-                          RequiredError="@L["Password cannot be empty"]"
+                          RequiredError="@L["Password is required"]"
                           Class="my-4"
                           Adornment="Adornment.End"
                           AdornmentIcon="@_passwordIcon"
                           OnAdornmentClick="TogglePasswordVisibility" />
 
-            
+
             <div Class="d-flex justify-space-between align-center mb-1">
-                <MudCheckBox @bind-Value="Input.RememberMe" 
-                            For="@(() => Input.RememberMe)"
-                            Color="Color.Primary">
+                <MudCheckBox @bind-Value="Input.RememberMe"
+                             For="@(() => Input.RememberMe)"
+                             Color="Color.Primary">
                     @L["Remember me"]
                 </MudCheckBox>
                 <MudLink Href="@Forgot.PageUrl">@L["Forgot password?"]</MudLink>
@@ -74,7 +74,7 @@
 @code {
     private UserManager<ApplicationUser> _userManager = null!;
     private SignInManager<ApplicationUser> _signInManager = null!;
-  
+
     public const string PageUrl = "/account/login";
     private string? errorMessage;
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
@@ -100,7 +100,7 @@
         _passwordIcon = _passwordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
     }
 
-    protected override  Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
         _title = L["Sign In"];
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
@@ -115,63 +115,42 @@
         var user = await _userManager.FindByNameAsync(Input.UserName);
         if (user == null)
         {
-            errorMessage = L["Error: User does not exist"];
+            errorMessage = L["The specified user does not exist."];
             Snackbar.Add(errorMessage, Severity.Error);
             return;
         }
         else if (!user.IsActive)
         {
-            errorMessage = L["Error: Your account is inactive. Please contact support"];
+            errorMessage = L["Your account is inactive. Please contact support for assistance."];
             Snackbar.Add(errorMessage, Severity.Error);
             return;
         }
-
-        // This doesn't count login failures towards account lockout
-        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-       
+        var result = await _userManager.CheckPasswordAsync(user, Input.Password);
+        if (result)
+        {
             // Direct redirect to GET login endpoint
             var loginUrl = $"/pages/authentication/login?userName={Uri.EscapeDataString(Input.UserName)}&password={Uri.EscapeDataString(Input.Password)}&rememberMe={Input.RememberMe}";
             if (!string.IsNullOrEmpty(ReturnUrl))
             {
                 loginUrl += $"&returnUrl={Uri.EscapeDataString(ReturnUrl)}";
             }
-            
+
             Navigation.NavigateTo(loginUrl, forceLoad: true);
-        // }
-        // else if (result.RequiresTwoFactor)
-        // {
-        //     var factorUser = (await _signInManager.GetTwoFactorAuthenticationUserAsync()) ?? throw new InvalidOperationException("Unable to load two-factor authentication user.");
-        //     var token = await _userManager.GenerateTwoFactorTokenAsync(factorUser, "Email");
-        //     await Mediator.Publish(new SendFactorCodeNotification(factorUser.Email ?? string.Empty, factorUser.UserName ?? string.Empty, token));
-        //     var url = Navigation.GetUriWithQueryParameters(
-        //         Navigation.ToAbsoluteUri(LoginWith2fa.PageUrl).AbsoluteUri,
-        //         new Dictionary<string, object?> { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
-        //     Navigation.NavigateTo(url, forceLoad: true);
-        // }
-        // else if (result.IsLockedOut)
-        // {
-        //     Logger.LogWarning("{UserName} has locked out.", Input.UserName);
-        //     Navigation.NavigateTo(Lockout.PageUrl, forceLoad: true);
-        // }
-        // else if (result.IsNotAllowed)
-        // {
-        //     errorMessage = L["Error: Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps"];
-        //     Snackbar.Add(errorMessage, Severity.Error);
-        // }
-        // else
-        // {
-        //     errorMessage = L["Error: Invalid login attempt"];
-        //     Snackbar.Add(errorMessage, Severity.Error);
-        // }
+        }
+        else
+        {
+            errorMessage = L["The username or password is incorrect. Please try again."];
+            Snackbar.Add(errorMessage, Severity.Error);
+        }
     }
 
     public sealed class InputModel
     {
-        [Required(ErrorMessage = "User name cannot be empty")]
+        [Required(ErrorMessage = "User name is required")]
         [StringLength(100, ErrorMessage = "Name length can't be more than 100.")]
         public string UserName { get; set; } = "";
 
-        [Required(ErrorMessage = "Password cannot be empty")]
+        [Required(ErrorMessage = "Password is required")]
         [StringLength(30, ErrorMessage = "Password must be at least 6 characters long.", MinimumLength = 6)]
         public string Password { get; set; } = "";
 

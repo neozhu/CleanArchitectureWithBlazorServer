@@ -11,7 +11,7 @@
 <PageTitle>@L["Two-factor authentication"]</PageTitle>
 <MudText Typo="Typo.h4" GutterBottom="true">@L["Two-factor authentication"]</MudText>
 
-<MudText Typo="Typo.body1">@L["Your login is secured with two-factor authentication via email. Please enter the code sent to your email address below"]</MudText>
+<MudText Typo="Typo.body1">@L["Your login is secured with two-factor authentication. Please enter the verification code from your authenticator app on your mobile device."]</MudText>
 
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
@@ -25,9 +25,9 @@
                           Variant="Variant.Outlined"
                           Class="my-4"
                           Required="true"
-                          RequiredError="@L["Authenticator code is required"]"
+                          RequiredError="@L["Authenticator code is required."]"
                           For="@(() => Input.TwoFactorCode)" 
-                          HelperText="@L["Enter the 6-7 digit code from your authenticator app"]"
+                          HelperText="@L["Enter the 6-7 digit code from your mobile authenticator app"]"
                           InputType="InputType.Text"
                           Immediate="true"
                           Adornment="Adornment.End"
@@ -54,7 +54,7 @@
 
     
     <MudText Typo="Typo.body1">
-        @L["Don't have access to your authenticator device? You can"]
+        @L["If you do not have access to your authenticator device, you may"]
     </MudText>
     <MudButton Variant="Variant.Outlined" 
                Color="Color.Primary"
@@ -93,7 +93,7 @@
         var authenticatorCode = Input.TwoFactorCode!.Replace(" ", string.Empty).Replace("-", string.Empty);
         var url = Navigation.GetUriWithQueryParameters(
                 Navigation.ToAbsoluteUri(IdentityComponentsEndpointRouteBuilderExtensions.TwofaVerify).AbsoluteUri,
-                new Dictionary<string, object?> { ["token"] = authenticatorCode, ["returnUrl"] = ReturnUrl, ["remember"] = Input.RememberMachine });
+                new Dictionary<string, object?> { ["token"] = Uri.EscapeDataString(authenticatorCode), ["returnUrl"] = Uri.EscapeDataString(ReturnUrl??"/"), ["remember"] = Input.RememberMachine });
         Navigation.NavigateTo(url, forceLoad: true);
         return Task.CompletedTask;
     }

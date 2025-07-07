@@ -19,6 +19,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
     public static readonly string Logout = "/pages/authentication/logout";
     public static readonly string Login = "/pages/authentication/login";
     public static readonly string TwofaVerify = "/pages/authentication/2fa/verify";
+    public static readonly string TwofaRecovery = "/pages/authentication/2fa/recovery";
 
     // These endpoints are required by the Identity Razor components defined in the /Components/Account/Pages directory of this project.
     public static IEndpointConventionBuilder MapAdditionalIdentityEndpoints(this IEndpointRouteBuilder endpoints)
@@ -70,7 +71,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 }
 
                 // Check password
-                var checkResult = await signInManager.PasswordSignInAsync(user, password,true, true);
+                var checkResult = await signInManager.PasswordSignInAsync(user, password, true, true);
                 if (!checkResult.Succeeded)
                 {
                     if (checkResult.RequiresTwoFactor)
@@ -111,7 +112,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
         accountGroup.MapGet("2fa/verify", async (HttpContext context,
             [FromServices] SignInManager<ApplicationUser> signInManager,
             [FromQuery] string token,
-            [FromQuery] bool remember, 
+            [FromQuery] bool remember,
             [FromQuery] string? returnUrl = null
             ) =>
         {
@@ -158,8 +159,60 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                     return Results.BadRequest("Invalid token");
                 }
             }
-    
+
         });
+
+        accountGroup.MapGet("2fa/recovery", async (HttpContext context,
+            [FromServices] SignInManager<ApplicationUser> signInManager,
+            [FromQuery] string code,
+            [FromQuery] string? returnUrl = null) =>
+        {
+            // Security check: Only allow requests from the same origin
+            var referer = context.Request.Headers.Referer.ToString();
+            var host = context.Request.Host.ToString();
+            var scheme = context.Request.Scheme;
+            var expectedOrigin = $"{scheme}://{host}";
+
+            if (string.IsNullOrEmpty(referer) || !referer.StartsWith(expectedOrigin, StringComparison.OrdinalIgnoreCase))
+            {
+                logger.LogWarning("Login attempt from unauthorized origin. Referer: {Referer}, Expected: {Expected}", referer, expectedOrigin);
+                return Results.Forbid();
+            }
+
+            // Validate parameters
+            if (string.IsNullOrEmpty(code))
+            {
+                return Results.BadRequest("Code is required");
+            }
+
+            var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                return Results.NotFound();
+            }
+
+            var result = await signInManager.TwoFactorRecoveryCodeSignInAsync(code);
+            if (result.Succeeded)
+            {
+                return Results.Redirect("/");
+            }
+            else
+            {
+                if (result.IsLockedOut)
+                {
+                    return Results.Redirect("/account/lockout");
+                }
+                else if (result.IsNotAllowed)
+                {
+                    return Results.BadRequest("Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps");
+                }
+                else
+                {
+                    return Results.BadRequest("Invalid code");
+                }
+            }
+        });
+
         accountGroup.MapPost("/performexternallogin", (
             HttpContext context,
             [FromServices] SignInManager<ApplicationUser> signInManager,
@@ -214,7 +267,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             return TypedResults.Challenge(properties, [provider]);
         });
 
- 
+
 
         manageGroup.MapPost("/DownloadPersonalData", async (
             HttpContext context,

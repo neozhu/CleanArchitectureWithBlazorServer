@@ -31,7 +31,6 @@
     {
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
 
-
         if (UserId is null || Code is null)
         {
             Navigation.NavigateTo(Login.PageUrl);
@@ -41,7 +40,7 @@
         var user = await _userManager.FindByIdAsync(UserId);
         if (user is null)
         {
-            statusMessage = string.Format(L["Error loading user with ID {0}"], UserId);
+            statusMessage = L[$"There was an error confirming your email. Please contact support or try again. (User ID: {UserId})"];
             error = true;
         }
         else
@@ -60,8 +59,8 @@
                 await _userManager.UpdateAsync(user);
             }
 
-            statusMessage = result.Succeeded ? L["Thank you for confirming your email"] : L["Error confirming your email"];
-            error = result.Succeeded ? false : true;
+            statusMessage = result.Succeeded ? L["Thank you for confirming your email. Your account is now active."] : L["There was an error confirming your email. Please contact support or try again."];
+            error = !result.Succeeded;
         }
     }
 

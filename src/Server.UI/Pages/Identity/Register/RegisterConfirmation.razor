@@ -16,14 +16,14 @@
 
 @if (EmailConfirmationLink is not null)
 {
-    <MudText>@L["For testing purposes, you can directly access the email confirmation link below"]</MudText>
+    <MudText>@L["For testing purposes, you can directly access the email confirmation link below."]</MudText>
     <MudButton href="@EmailConfirmationLink" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large">
         <MudText>@L["Confirm Account"]</MudText>
     </MudButton>
 }
 else
 {
-    <MudText Typo="Typo.body1">@L["Please check your email to confirm your account"]</MudText>
+    <MudText Typo="Typo.body1">@L["Please check your email and follow the instructions to confirm your account."]</MudText>
 }
 
 @code {
