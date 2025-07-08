@@ -54,6 +54,92 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
     /// </summary>
     public static readonly string PerformLinkExternalLogin = "/pages/authentication/performlinkexternallogin";
 
+    // Redirect URLs for various authentication scenarios
+    private static class RedirectUrls
+    {
+        public const string Home = "/";
+        public const string Login = "/account/login";
+        public const string Lockout = "/account/lockout";
+        public const string InvalidUser = "/account/invaliduser";
+        public const string LoginWith2Fa = "/account/loginwith2fa";
+    }
+
+    /// <summary>
+    /// Validates that the request originates from the same domain to prevent CSRF attacks.
+    /// </summary>
+    /// <param name="context">The HTTP context of the request.</param>
+    /// <param name="logger">Logger for security warnings.</param>
+    /// <returns>True if the origin is valid, false otherwise.</returns>
+    private static bool ValidateRequestOrigin(HttpContext context, ILogger logger)
+    {
+        var referer = context.Request.Headers.Referer.ToString();
+        var host = context.Request.Host.ToString();
+        var scheme = context.Request.Scheme;
+        var expectedOrigin = $"{scheme}://{host}";
+
+        if (string.IsNullOrEmpty(referer) || !referer.StartsWith(expectedOrigin, StringComparison.OrdinalIgnoreCase))
+        {
+            logger.LogWarning("Request from unauthorized origin. Referer: {Referer}, Expected: {Expected}", referer, expectedOrigin);
+            return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Handles common sign-in result scenarios and returns appropriate responses.
+    /// </summary>
+    /// <param name="result">The sign-in result to handle.</param>
+    /// <param name="returnUrl">The URL to redirect to on success.</param>
+    /// <param name="rememberMe">Whether to remember the user for 2FA.</param>
+    /// <returns>An IResult representing the appropriate response.</returns>
+    private static Microsoft.AspNetCore.Http.IResult HandleSignInResult(Microsoft.AspNetCore.Identity.SignInResult result, string? returnUrl, bool rememberMe = false)
+    {
+        if (result.Succeeded)
+        {
+            var redirectUrl = (string.IsNullOrEmpty(returnUrl) || returnUrl == "%2F") ? RedirectUrls.Home : returnUrl;
+            return Results.Redirect(redirectUrl);
+        }
+        
+        if (result.RequiresTwoFactor)
+        {
+            var safeReturnUrl = (string.IsNullOrEmpty(returnUrl) || returnUrl == "%2F") ? RedirectUrls.Home : returnUrl;
+            return Results.Redirect($"{RedirectUrls.LoginWith2Fa}?returnUrl={Uri.EscapeDataString(safeReturnUrl)}&rememberMe={rememberMe}");
+        }
+        
+        if (result.IsLockedOut)
+        {
+            return Results.Redirect(RedirectUrls.Lockout);
+        }
+        
+        if (result.IsNotAllowed)
+        {
+            return Results.Redirect(RedirectUrls.InvalidUser);
+        }
+        
+        return Results.Redirect(RedirectUrls.InvalidUser);
+    }
+
+    /// <summary>
+    /// Creates a standardized error response with logging.
+    /// </summary>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="message">The error message.</param>
+    /// <param name="statusCode">The HTTP status code (default: 400).</param>
+    /// <returns>An IResult representing the error response.</returns>
+    private static Microsoft.AspNetCore.Http.IResult CreateErrorResponse(ILogger logger, string message, int statusCode = 400)
+    {
+        logger.LogWarning("Authentication error: {Message}", message);
+        return statusCode switch
+        {
+            400 => Results.BadRequest(message),
+            401 => Results.Unauthorized(),
+            403 => Results.Forbid(),
+            404 => Results.NotFound(message),
+            500 => Results.StatusCode(500),
+            _ => Results.BadRequest(message)
+        };
+    }
+
     /// <summary>
     /// Maps additional Identity endpoints required by the Identity Razor components.
     /// These endpoints handle authentication, authorization, and user management operations.
@@ -83,14 +169,8 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             try
             {
                 // Security validation: Ensure request originates from the same domain to prevent CSRF attacks
-                var referer = context.Request.Headers.Referer.ToString();
-                var host = context.Request.Host.ToString();
-                var scheme = context.Request.Scheme;
-                var expectedOrigin = $"{scheme}://{host}";
-
-                if (string.IsNullOrEmpty(referer) || !referer.StartsWith(expectedOrigin, StringComparison.OrdinalIgnoreCase))
+                if (!ValidateRequestOrigin(context, logger))
                 {
-                    logger.LogWarning("Login attempt from unauthorized origin. Referer: {Referer}, Expected: {Expected}", referer, expectedOrigin);
                     return Results.Forbid();
                 }
                 
@@ -115,36 +195,14 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
                 // Attempt password-based sign-in with lockout protection
                 var checkResult = await signInManager.PasswordSignInAsync(user, password, true, true);
-                if (!checkResult.Succeeded)
+                if (checkResult.Succeeded)
                 {
-                    if (checkResult.RequiresTwoFactor)
-                    {
-                        // Redirect to two-factor authentication page
-                        var safeReturnUrl = string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl;
-                        return Results.Redirect($"/account/loginwith2fa?returnUrl={Uri.EscapeDataString(safeReturnUrl)}&rememberMe={rememberMe}");
-                    }
-                    else if (checkResult.IsLockedOut)
-                    {
-                        return Results.Redirect("/account/lockout");
-                    }
-                    else if (checkResult.IsNotAllowed)
-                    {
-                        // Account exists but is not allowed to sign in (e.g., email not confirmed)
-                        return Results.Redirect("/account/invaliduser");
-                    }
-                    else
-                    {
-                        return Results.Redirect("/account/invaliduser");
-                    }
+                    // Successful authentication - create authentication session
+                    await signInManager.SignInAsync(user, rememberMe);
+                    logger.LogInformation("{UserName} has logged in successfully.", userName);
                 }
 
-                // Successful authentication - create authentication session
-                await signInManager.SignInAsync(user, rememberMe);
-                logger.LogInformation("{UserName} has logged in successfully.", userName);
-
-                // Redirect to the originally requested page or home
-                var redirectUrl = string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl;
-                return Results.Redirect(redirectUrl);
+                return HandleSignInResult(checkResult, returnUrl, rememberMe);
             }
             catch (Exception ex)
             {
@@ -162,14 +220,8 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             ) =>
         {
             // Origin validation for security
-            var referer = context.Request.Headers.Referer.ToString();
-            var host = context.Request.Host.ToString();
-            var scheme = context.Request.Scheme;
-            var expectedOrigin = $"{scheme}://{host}";
-
-            if (string.IsNullOrEmpty(referer) || !referer.StartsWith(expectedOrigin, StringComparison.OrdinalIgnoreCase))
+            if (!ValidateRequestOrigin(context, logger))
             {
-                logger.LogWarning("Login attempt from unauthorized origin. Referer: {Referer}, Expected: {Expected}", referer, expectedOrigin);
                 return Results.Forbid();
             }
             
@@ -187,28 +239,8 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             }
             
             // Verify the authenticator token
-            var result = await signInManager.TwoFactorAuthenticatorSignInAsync(token,
-                                  remember, remember);
-            if (result.Succeeded)
-            {
-                return Results.Redirect("/");
-            }
-            else
-            {
-                if (result.IsLockedOut)
-                {
-                    return Results.Redirect("/account/lockout");
-                }
-                else if (result.IsNotAllowed)
-                {
-                    return Results.BadRequest("Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps");
-                }
-                else
-                {
-                    return Results.BadRequest("Invalid token");
-                }
-            }
-
+            var result = await signInManager.TwoFactorAuthenticatorSignInAsync(token, remember, remember);
+            return HandleSignInResult(result, returnUrl);
         });
 
         // Configure two-factor authentication recovery code endpoint
@@ -218,14 +250,8 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             [FromQuery] string? returnUrl = null) =>
         {
             // Security validation for request origin
-            var referer = context.Request.Headers.Referer.ToString();
-            var host = context.Request.Host.ToString();
-            var scheme = context.Request.Scheme;
-            var expectedOrigin = $"{scheme}://{host}";
-
-            if (string.IsNullOrEmpty(referer) || !referer.StartsWith(expectedOrigin, StringComparison.OrdinalIgnoreCase))
+            if (!ValidateRequestOrigin(context, logger))
             {
-                logger.LogWarning("Login attempt from unauthorized origin. Referer: {Referer}, Expected: {Expected}", referer, expectedOrigin);
                 return Results.Forbid();
             }
 
@@ -244,25 +270,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
             // Attempt sign-in with recovery code
             var result = await signInManager.TwoFactorRecoveryCodeSignInAsync(code);
-            if (result.Succeeded)
-            {
-                return Results.Redirect("/");
-            }
-            else
-            {
-                if (result.IsLockedOut)
-                {
-                    return Results.Redirect("/account/lockout");
-                }
-                else if (result.IsNotAllowed)
-                {
-                    return Results.BadRequest("Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps");
-                }
-                else
-                {
-                    return Results.BadRequest("Invalid code");
-                }
-            }
+            return HandleSignInResult(result, returnUrl);
         });
 
         // Configure external login initiation endpoint
