@@ -1,8 +1,9 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
 using CleanArchitecture.Blazor.Domain.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using CleanArchitecture.Blazor.Infrastructure.Constants.User;
-using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Authentication;
+using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -20,6 +21,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
     public static readonly string Login = "/pages/authentication/login";
     public static readonly string TwofaVerify = "/pages/authentication/2fa/verify";
     public static readonly string TwofaRecovery = "/pages/authentication/2fa/recovery";
+    public static readonly string PerformLinkExternalLogin = "/pages/authentication/performlinkexternallogin";
 
     // These endpoints are required by the Identity Razor components defined in the /Components/Account/Pages directory of this project.
     public static IEndpointConventionBuilder MapAdditionalIdentityEndpoints(this IEndpointRouteBuilder endpoints)
@@ -223,12 +225,12 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             IEnumerable<KeyValuePair<string, StringValues>> query =
             [
                 new KeyValuePair<string, StringValues>("ReturnUrl", returnUrl),
-                new KeyValuePair<string, StringValues>("Action", ExternalLogin.LoginCallbackAction)
+                new KeyValuePair<string, StringValues>("Action", LinkExternalLogin.LoginCallbackAction)
             ];
 
             var redirectUrl = UriHelper.BuildRelative(
                 context.Request.PathBase,
-                ExternalLogin.PageUrl,
+                LinkExternalLogin.PageUrl,
                 QueryString.Create(query));
 
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -236,7 +238,127 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             return TypedResults.Challenge(properties, [provider]);
         });
 
+        accountGroup.MapGet("externallogin", async (
+            HttpContext context,
+            [FromServices] SignInManager<ApplicationUser> signInManager,
+            [FromQuery] string action,
+            [FromQuery] string? remoteError,
+            [FromQuery] string? returnUrl) =>
+        {
 
+            if (!string.IsNullOrEmpty(remoteError))
+            {
+                logger.LogWarning("External login error: {RemoteError}", remoteError);
+                return Results.BadRequest($"External login error: {remoteError}");
+            }
+            var info = await signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                logger.LogWarning("No external login info found.");
+                return Results.BadRequest("No external login info found.");
+            }
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var provider = info.LoginProvider;
+            if (action == "LoginCallback")
+            {
+                var result = await signInManager.ExternalLoginSignInAsync(
+                            info.LoginProvider,
+                            info.ProviderKey,
+                            false,
+                            false);
+                if (result.Succeeded)
+                {
+                    logger.LogInformation("User {UserName} logged in with external provider {Provider}.", info.Principal.Identity?.Name, info.LoginProvider);
+                    return Results.Redirect(string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl);
+                }
+                else if (result.IsLockedOut)
+                {
+                    logger.LogWarning("User {UserName} is locked out.", info.Principal.Identity?.Name);
+                    return Results.Redirect("/account/lockout");
+                }
+                else if (result.IsNotAllowed)
+                {
+                    logger.LogWarning("User {UserName} is not allowed to log in.", info.Principal.Identity?.Name);
+                    return Results.Redirect("/account/invaliduser");
+                }
+            }
+      
+            return Results.Redirect($"/account/linkexternallogin?email={email}&provider={provider}&logincallback={action}&returnUrl={returnUrl}");
+        });
+        accountGroup.MapGet("/performlinkexternallogin", async (
+           HttpContext context,
+           [FromServices] SignInManager<ApplicationUser> signInManager,
+           [FromServices] RoleManager<ApplicationRole> roleManager,
+           [FromServices] UserManager<ApplicationUser> userManager,
+           [FromQuery] string action,
+           [FromQuery] string tenantId,
+           [FromQuery] string timezoneId,
+           [FromQuery] string languageCode) =>
+        {
+            var info = await signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                logger.LogWarning("No external login info found for linking.");
+                return Results.BadRequest("No external login info found for linking.");
+            }
+            var user = new ApplicationUser()
+            {
+                TenantId = tenantId,
+                TimeZoneId = timezoneId,
+                LanguageCode = languageCode,
+                UserName = info.Principal.FindFirstValue(ClaimTypes.Email) ?? info.Principal.Identity?.Name,
+                Email = info.Principal.FindFirstValue(ClaimTypes.Email) ?? info.Principal.Identity?.Name,
+                DisplayName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? info.Principal.Identity?.Name,
+                Provider = info.LoginProvider,
+                IsActive = true,
+                EmailConfirmed = true,
+            };
+            var role = await roleManager.Roles.Where(x => x.TenantId == user.TenantId && x.Name == RoleName.Basic).FirstOrDefaultAsync();
+            if (role is null)
+            {
+                role = new ApplicationRole
+                {
+                    Name = RoleName.Basic,
+                    NormalizedName = RoleName.Basic.ToUpperInvariant(),
+                    TenantId = user.TenantId
+                };
+                var roleResult = await roleManager.CreateAsync(role);
+                if (!roleResult.Succeeded)
+                {
+                    logger.LogError("Failed to create role {RoleName} for tenant {TenantId}", RoleName.Basic, user.TenantId);
+                    return Results.BadRequest("Failed to create role for tenant.");
+                }
+            }
+            var userResult = await userManager.CreateAsync(user);
+            if (!userResult.Succeeded)
+            {
+                logger.LogError("Failed to create user {UserName} for tenant {TenantId}", user.UserName, user.TenantId);
+                return Results.BadRequest("Failed to create user.");
+            }
+            userResult = await userManager.AddToRoleAsync(user, role.Name!);
+            if (!userResult.Succeeded)
+            {
+                logger.LogError("Failed to add user {UserName} to role {RoleName} for tenant {TenantId}", user.UserName, role.Name, user.TenantId);
+                return Results.BadRequest("Failed to add user to role.");
+            }
+            userResult = await userManager.AddLoginAsync(user, info);
+            if (!userResult.Succeeded)
+            {
+                logger.LogError("Failed to add external login for user {UserName} with provider {Provider}", user.UserName, info.LoginProvider);
+                return Results.BadRequest("Failed to add external login.");
+            }
+            if (action == "LoginCallback")
+            {
+                await signInManager.SignInAsync(user, true);
+                logger.LogInformation("User {UserName} linked external account {Provider} successfully.", user.UserName, info.LoginProvider);
+                return Results.Redirect("/");
+            }
+            else
+            {
+                return Results.Redirect("/account/login");
+            }
+
+        });
         accountGroup.MapPost("/logout", async (
             ClaimsPrincipal user,
             SignInManager<ApplicationUser> signInManager,
@@ -247,26 +369,9 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             return TypedResults.LocalRedirect($"{returnUrl}");
         }).RequireAuthorization().DisableAntiforgery();
 
-        var manageGroup = accountGroup.MapGroup("/Manage").RequireAuthorization();
+        var manageGroup = accountGroup.MapGroup("/manage").RequireAuthorization();
 
-        manageGroup.MapPost("/LinkExternalLogin", async (
-            HttpContext context,
-            [FromServices] SignInManager<ApplicationUser> signInManager,
-            [FromForm] string provider) =>
-        {
-            // Clear the existing external cookie to ensure a clean login process
-            await context.SignOutAsync(IdentityConstants.ExternalScheme).ConfigureAwait(false);
-
-            var redirectUrl = UriHelper.BuildRelative(
-                context.Request.PathBase,
-                ExternalLogins.PageUrl,
-                QueryString.Create("Action", ExternalLogins.LinkLoginCallbackAction));
-
-            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl,
-                signInManager.UserManager.GetUserId(context.User));
-            logger.LogInformation("{UserName} is linking external login provider {Provider} with redirect URL {RedirectUrl}", context.User.Identity?.Name, provider, redirectUrl);
-            return TypedResults.Challenge(properties, [provider]);
-        });
+       
 
 
 
