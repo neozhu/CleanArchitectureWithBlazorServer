@@ -29,7 +29,7 @@ else
 @code {
     private UserManager<ApplicationUser> _userManager = null!;
 
-    private IdentityRedirectManager redirectManager = null!;
+
     public const string PageUrl = "/account/registerconfirmation";
     [SupplyParameterFromQuery] private string? EmailConfirmationLink { get; set; }
     private string? statusMessage;
@@ -43,10 +43,11 @@ else
     {
 
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        redirectManager = ScopedServices.GetRequiredService<IdentityRedirectManager>();
+
         if (Email is null)
         {
-            redirectManager.RedirectTo("/");
+            Navigation.NavigateTo("/");
+            return;
         }
 
         var user = await _userManager.FindByEmailAsync(Email);

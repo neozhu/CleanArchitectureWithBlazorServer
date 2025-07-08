@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Authentication
 @using CleanArchitecture.Blazor.Domain.Identity
-@inject SignInManager<ApplicationUser> SignInManager
-@inject IdentityRedirectManager RedirectManager
+@inherits OwningComponentBase
+
 @inject IStringLocalizer<ExternalLoginPicker> L
 @if (externalLogins.Length == 0)
 {
@@ -25,12 +25,13 @@ else
 
 @code {
     private AuthenticationScheme[] externalLogins = [];
-
+    private SignInManager<ApplicationUser> _signInManager = null!;
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        externalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToArray();
+        _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
+        externalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToArray();
     }
 
 }
