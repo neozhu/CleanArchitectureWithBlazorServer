@@ -16,7 +16,7 @@ namespace CleanArchitecture.Blazor.Server.UI.Services;
 internal static class IdentityComponentsEndpointRouteBuilderExtensions
 {
     public static readonly string PerformExternalLogin = "/pages/authentication/performexternallogin";
-
+    public static readonly string ExternalLogin = "/pages/authentication/externallogin";
     public static readonly string Logout = "/pages/authentication/logout";
     public static readonly string Login = "/pages/authentication/login";
     public static readonly string TwofaVerify = "/pages/authentication/2fa/verify";
@@ -230,7 +230,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
             var redirectUrl = UriHelper.BuildRelative(
                 context.Request.PathBase,
-                LinkExternalLogin.PageUrl,
+                ExternalLogin,
                 QueryString.Create(query));
 
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -282,8 +282,19 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                     return Results.Redirect("/account/invaliduser");
                 }
             }
-      
-            return Results.Redirect($"/account/linkexternallogin?email={email}&provider={provider}&logincallback={action}&returnUrl={returnUrl}");
+            IEnumerable<KeyValuePair<string, StringValues>> query =
+            [
+                new KeyValuePair<string, StringValues>("ReturnUrl", returnUrl),
+                new KeyValuePair<string, StringValues>("logincallback", action),
+                new KeyValuePair<string, StringValues>("email", email),
+                new KeyValuePair<string, StringValues>("provider", provider),
+            ];
+
+            var redirectUrl = UriHelper.BuildRelative(
+                context.Request.PathBase,
+                LinkExternalLogin.PageUrl,
+                QueryString.Create(query));
+            return Results.Redirect(redirectUrl);
         });
         accountGroup.MapGet("/performlinkexternallogin", async (
            HttpContext context,
