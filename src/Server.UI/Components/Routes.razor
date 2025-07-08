@@ -1,23 +1,23 @@
 ﻿@inject IStringLocalizer<SharedResource> L
 @inject LayoutService LayoutService
+@using CleanArchitecture.Blazor.Server.UI.Components.Shared
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <Authorizing>
-                    <MudPaper Class="pa-6 text-center">
-                        <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" Class="mb-4" />
-                        <MudText Typo="Typo.h6">@L["Please wait, we are authorizing you..."]</MudText>
-                    </MudPaper>
+                    <div style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+                        <MudPaper Class="pa-8" Elevation="1" Style="max-width: 400px; text-align: center;">
+                            <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Medium" Class="mb-4" />
+                            <MudText Typo="Typo.h6" Color="Color.Default">@L["Please wait, we are authorizing you..."]</MudText>
+                        </MudPaper>
+                    </div>
                 </Authorizing>
                 <NotAuthorized>
-                    <MudPaper Class="pa-6 text-center">
-                        <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" Size="Size.Large" Class="mb-4" />
-                        <MudText Typo="Typo.h5">@L["You are not authorized to view this page"]</MudText>
-                        <MudText Typo="Typo.body1" Class="mt-2">@L["If you need access to this page, please contact the administrator"]</MudText>
-                        <MudButton Color="Color.Primary" Class="mt-4">@L["Contact Administrator"]</MudButton>
-                    </MudPaper>
+                    <ErrorPageComponent Type="ErrorPageComponent.ErrorType.AccessDenied" 
+                                       ShowIcon="false" 
+                                       ShowContactButton="true" />
                 </NotAuthorized>
             </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1"/>

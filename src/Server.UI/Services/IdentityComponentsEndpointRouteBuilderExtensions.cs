@@ -96,13 +96,13 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
     {
         if (result.Succeeded)
         {
-            var redirectUrl = (string.IsNullOrEmpty(returnUrl) || returnUrl == "%2F") ? RedirectUrls.Home : returnUrl;
+            var redirectUrl = string.IsNullOrEmpty(returnUrl) ? RedirectUrls.Home : returnUrl;
             return Results.Redirect(redirectUrl);
         }
         
         if (result.RequiresTwoFactor)
         {
-            var safeReturnUrl = (string.IsNullOrEmpty(returnUrl) || returnUrl == "%2F") ? RedirectUrls.Home : returnUrl;
+            var safeReturnUrl = string.IsNullOrEmpty(returnUrl) ? RedirectUrls.Home : returnUrl;
             return Results.Redirect($"{RedirectUrls.LoginWith2Fa}?returnUrl={Uri.EscapeDataString(safeReturnUrl)}&rememberMe={rememberMe}");
         }
         

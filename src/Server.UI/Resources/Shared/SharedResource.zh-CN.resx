@@ -208,4 +208,37 @@
   <data name="You are not authorized to view this page" xml:space="preserve">
     <value>您无权查看此页面</value>
   </data>
+  <data name="Page Not Found" xml:space="preserve">
+    <value>页面未找到</value>
+  </data>
+  <data name="Return Home" xml:space="preserve">
+    <value>返回首页</value>
+  </data>
+  <data name="Go Back" xml:space="preserve">
+    <value>返回上页</value>
+  </data>
+  <data name="Contact Support" xml:space="preserve">
+    <value>联系技术支持</value>
+  </data>
+  <data name="Access Denied" xml:space="preserve">
+    <value>访问被拒绝</value>
+  </data>
+  <data name="You don't have permission to access this resource. If you believe this is an error, please contact your administrator." xml:space="preserve">
+    <value>您没有访问此资源的权限。如果您认为这是错误，请联系管理员。</value>
+  </data>
+  <data name="The page you're looking for doesn't exist or has been moved. Please verify the URL and try again." xml:space="preserve">
+    <value>您要查找的页面不存在或已被移动。请验证URL并重试。</value>
+  </data>
+  <data name="If you believe this page should exist, please check the URL for typos or contact our support team." xml:space="preserve">
+    <value>如果您认为此页面应该存在，请检查URL是否有错误或联系我们的技术支持团队。</value>
+  </data>
+  <data name="Server Error" xml:space="preserve">
+    <value>服务器错误</value>
+  </data>
+  <data name="An unexpected error occurred. Please try again later." xml:space="preserve">
+    <value>发生了意外错误，请稍后再试。</value>
+  </data>
+  <data name="Try Again" xml:space="preserve">
+    <value>重试</value>
+  </data>
 </root>

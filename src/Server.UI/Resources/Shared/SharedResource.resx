@@ -208,4 +208,37 @@
   <data name="Contact Administrator" xml:space="preserve">
     <value>Contact Administrator</value>
   </data>
+  <data name="Page Not Found" xml:space="preserve">
+    <value>Page Not Found</value>
+  </data>
+  <data name="Return Home" xml:space="preserve">
+    <value>Return Home</value>
+  </data>
+  <data name="Go Back" xml:space="preserve">
+    <value>Go Back</value>
+  </data>
+  <data name="Contact Support" xml:space="preserve">
+    <value>Contact Support</value>
+  </data>
+  <data name="Access Denied" xml:space="preserve">
+    <value>Access Denied</value>
+  </data>
+  <data name="You don't have permission to access this resource. If you believe this is an error, please contact your administrator." xml:space="preserve">
+    <value>You don't have permission to access this resource. If you believe this is an error, please contact your administrator.</value>
+  </data>
+  <data name="The page you're looking for doesn't exist or has been moved. Please verify the URL and try again." xml:space="preserve">
+    <value>The page you're looking for doesn't exist or has been moved. Please verify the URL and try again.</value>
+  </data>
+  <data name="If you believe this page should exist, please check the URL for typos or contact our support team." xml:space="preserve">
+    <value>If you believe this page should exist, please check the URL for typos or contact our support team.</value>
+  </data>
+  <data name="Server Error" xml:space="preserve">
+    <value>Server Error</value>
+  </data>
+  <data name="An unexpected error occurred. Please try again later." xml:space="preserve">
+    <value>An unexpected error occurred. Please try again later.</value>
+  </data>
+  <data name="Try Again" xml:space="preserve">
+    <value>Try Again</value>
+  </data>
 </root>
