@@ -5,18 +5,14 @@
 @inject IStringLocalizer<ExternalLoginPicker> L
 @if (externalLogins.Length == 0)
 {
-    <div>
-        <p>
-            @L["There are no external authentication services configured. See this"] <a href="https://go.microsoft.com/fwlink/?LinkID=532715">@L["article about setting up this ASP.NET application to support logging in via external services"]</a>.]
-        </p>
-    </div>
+    <MudText>@L["There are no external authentication services configured."]</MudText>
 }
 else
 {
     <form class="form-horizontal" action="@IdentityComponentsEndpointRouteBuilderExtensions.PerformExternalLogin" method="post">
         <div>
-            <AntiforgeryToken/>
-            <input type="hidden" name="ReturnUrl" value="@ReturnUrl"/>
+            <AntiforgeryToken />
+            <input type="hidden" name="ReturnUrl" value="@ReturnUrl" />
             <div class="d-flex flex-column flex-grow-1 gap-y-2">
                 @foreach (var provider in externalLogins)
                 {

@@ -86,11 +86,12 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                     }
                     else if (checkResult.IsNotAllowed)
                     {
-                        return Results.BadRequest("Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps");
+                        //var message="Your account is not allowed to log in. Please ensure your account has been activated and you have completed all required steps";
+                        return Results.Redirect("/account/invaliduser");
                     }
                     else
                     {
-                        return Results.BadRequest("Invalid login attempt");
+                        return Results.Redirect("/account/invaliduser");
                     }
                 }
 
