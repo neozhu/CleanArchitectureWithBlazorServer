@@ -4,7 +4,7 @@
     {
         var uri = new Uri(Navigation.Uri);
         var returnUrl = uri.PathAndQuery.TrimStart('/');
-        Navigation.NavigateTo($"/pages/authentication/login?returnUrl={returnUrl}", true);
+        Navigation.NavigateTo($"/account/login?returnUrl={returnUrl}", true);
      
     }
 

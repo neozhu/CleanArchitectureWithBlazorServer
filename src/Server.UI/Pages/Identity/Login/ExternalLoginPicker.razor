@@ -1,0 +1,37 @@
+﻿@using Microsoft.AspNetCore.Authentication
+@using CleanArchitecture.Blazor.Domain.Identity
+@inherits OwningComponentBase
+
+@inject IStringLocalizer<ExternalLoginPicker> L
+@if (externalLogins.Length == 0)
+{
+    <MudText>@L["There are no external authentication services configured."]</MudText>
+}
+else
+{
+    <form class="form-horizontal" action="@IdentityComponentsEndpointRouteBuilderExtensions.PerformExternalLogin" method="post">
+        <div>
+            <AntiforgeryToken />
+            <input type="hidden" name="ReturnUrl" value="@ReturnUrl" />
+            <div class="d-flex flex-column flex-grow-1 gap-y-2">
+                @foreach (var provider in externalLogins)
+                {
+                    <button type="submit" class="mud-button-root mud-button mud-button-outlined mud-button-filled-secondary mud-button-filled-size-medium mud-width-full mud-ripple" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@string.Format(L["Login with {0}"], provider.DisplayName)</button>
+                }
+            </div>
+        </div>
+    </form>
+}
+
+@code {
+    private AuthenticationScheme[] externalLogins = [];
+    private SignInManager<ApplicationUser> _signInManager = null!;
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
+        externalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToArray();
+    }
+
+}

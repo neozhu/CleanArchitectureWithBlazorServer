@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <base href="/"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <link href="@Assets["_content/MudBlazor/MudBlazor.min.css"]" rel="stylesheet"/>
+    <link href="@Assets["css/app.css"]" rel="stylesheet"/>
+    <HeadOutlet @rendermode="RenderModeForPage"/>
+    <ImportMap />
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Blazor Server project template with Clean Architecture principles. A demo showcasing fast and easy web app creation using .NET Blazor." />
+    <meta name="keywords" content="Blazor Server Project Template, Clean Architecture, Dashboard, .NET, Web Applications" />
+    <meta name="author" content="neo.js.cn@gmail.com" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Clean Architecture With Blazor Server - Dashboard" />
+    <meta property="og:description" content="Blazor Server project template with Clean Architecture principles. A demo showcasing fast and easy web app creation using .NET Blazor." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.blazorserver.com" />
+    <meta property="og:image" content="img/blazorstudio.png" />
+    <title>Clean Architecture With Blazor Server - Dashboard</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W1TQBGC3QH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-W1TQBGC3QH');
+    </script>
+</head>
+
+<body>
+    <Routes @rendermode="RenderModeForPage"/>
+    <script src="_framework/blazor.web.js"></script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   
+</body>
+
+</html>
+
+@code {
+   private IComponentRenderMode? RenderModeForPage =>  new InteractiveServerRenderMode(false);
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+}

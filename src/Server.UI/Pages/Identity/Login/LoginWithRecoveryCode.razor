@@ -1,0 +1,80 @@
+﻿@page "/account/loginwithrecoverycode"
+@using CleanArchitecture.Blazor.Domain.Identity
+@using System.ComponentModel.DataAnnotations
+
+@inherits OwningComponentBase
+@inject IStringLocalizer<LoginWithRecoveryCode> L
+@inject ILogger<LoginWithRecoveryCode> Logger
+
+<PageTitle>@L["Two-Factor Authentication - Recovery Code Verification"]</PageTitle>
+
+<MudText Typo="Typo.h4" GutterBottom="true">@L["Two-Factor Authentication Recovery"]</MudText>
+
+<MudText Typo="Typo.body1" Class="mb-4">
+    @L["Please enter your recovery code to complete the authentication process. For security purposes, this session will require re-authentication for future logins unless you configure an authenticator application or disable two-factor authentication."]
+</MudText>
+
+<div class="d-flex flex-column gap-y-3">
+    <div class="d-flex flex-column">
+        <EditForm Model="Input" FormName="login-with-recovery-code" OnValidSubmit="OnValidSubmitAsync">
+            <DataAnnotationsValidator/>
+         
+
+            <MudTextField @bind-Value="Input.RecoveryCode"
+                          Label="@L["Recovery Code"]"
+                          Variant="Variant.Outlined"
+                          For="@(() => Input.RecoveryCode)"
+                          Required="true"
+                          HelperText="@L["Enter the 8-character recovery code from your backup codes"]"
+                          Class="my-4" />
+
+            <div>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           ButtonType="ButtonType.Submit"
+                           FullWidth="true">
+                    <MudText>@L["Verify Recovery Code"]</MudText>
+                </MudButton>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    public const string PageUrl = "/account/loginwithrecoverycode";
+
+   
+    private SignInManager<ApplicationUser> _signInManager = null!;
+    private UserManager<ApplicationUser> _userManager = null!;
+    private InputModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+
+    protected override  Task OnInitializedAsync()
+    {
+        _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
+        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        return Task.CompletedTask;
+    }
+
+    private Task OnValidSubmitAsync()
+    {
+        var recoveryCode = Input.RecoveryCode.Replace(" ", string.Empty);
+        
+        var url = Navigation.GetUriWithQueryParameters(
+               Navigation.ToAbsoluteUri(IdentityComponentsEndpointRouteBuilderExtensions.TwofaRecovery).AbsoluteUri,
+               new Dictionary<string, object?> { ["recoveryCode"] = Uri.EscapeDataString(recoveryCode), ["returnUrl"] = Uri.EscapeDataString(ReturnUrl ?? "/") });
+        Navigation.NavigateTo(url, forceLoad: true);
+        return Task.CompletedTask;
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Recovery Code")]
+        public string RecoveryCode { get; set; } = "";
+    }
+
+}
