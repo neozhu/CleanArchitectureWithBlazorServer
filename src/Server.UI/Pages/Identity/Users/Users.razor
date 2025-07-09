@@ -4,6 +4,8 @@
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
 @using CleanArchitecture.Blazor.Infrastructure.Persistence
 @using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Forgot
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Register
 @using CleanArchitecture.Blazor.Server.UI.Services.Identity
 @using CleanArchitecture.Blazor.Server.UI.Components.UtcToLocalTime
 @using Microsoft.AspNetCore.WebUtilities
@@ -20,6 +22,7 @@
 @using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
 @using System.Security.Claims
 @using System.Globalization
+@using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
 @using ZiggyCreatures.Caching.Fusion
 
 @attribute [Authorize(Policy = Permissions.Users.View)]

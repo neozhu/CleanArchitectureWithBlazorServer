@@ -1,22 +1,34 @@
 ﻿@page "/404"
-@inject IStringLocalizer<SharedResource> L
-<PageTitle>Not found</PageTitle>
-<MudPaper Class="pa-16 ma-2" Elevation="3" Style="max-width: 100%;
-  height: 475px;
-  margin: 0;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;">
 
-    <h1 style="font-size: 48px; margin: 0;">
-        404 Error.
-    </h1>
-    <p style=" font-size: 16px;  width: 35%;  margin: 16px auto 24px; text-align: center;"> We can't find the page you're looking for.</p>
-    <MudButton Variant="Variant.Filled" Size="Size.Small" Href="/">@L["Go Home"]</MudButton>
-</MudPaper>
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using CleanArchitecture.Blazor.Server.UI.Components.Shared
+
+<PageTitle>Page Not Found - 404</PageTitle>
+
+<ErrorPageComponent Type="@_errorType" 
+                   MinHeight="80vh" 
+                   ShowBackButton="true" />
 
 @code {
+    private ErrorPageComponent.ErrorType _errorType = ErrorPageComponent.ErrorType.NotFound;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var currentPath = Navigation.ToBaseRelativePath(Navigation.Uri);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var isAuthenticated = authState.User?.Identity?.IsAuthenticated ?? false;
+        
+        // Simple check: if user is authenticated and path contains admin-like keywords
+        if (isAuthenticated && IsLikelyProtectedPath(currentPath))
+        {
+            _errorType = ErrorPageComponent.ErrorType.AccessDenied;
+        }
+    }
+
+    private bool IsLikelyProtectedPath(string path)
+    {
+        var protectedPaths = new[] { "admin", "management", "system", "users", "tenants", "roles", "audit" };
+        return protectedPaths.Any(p => path.Contains(p, StringComparison.OrdinalIgnoreCase));
+    }
 }

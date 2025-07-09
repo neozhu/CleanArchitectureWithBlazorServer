@@ -1,0 +1,22 @@
+﻿@if (!string.IsNullOrEmpty(DisplayMessage))
+{
+    <MudAlert Severity="@GetSeverity()" 
+              Variant="Variant.Outlined" 
+              Class="mb-3">
+        @DisplayMessage
+    </MudAlert>
+}
+
+@code {
+   
+
+    [Parameter] public string? Message { get; set; }
+    [Parameter] public bool Error { get; set; }
+    private string? DisplayMessage => Message;
+
+    private Severity GetSeverity()
+    {
+        return Error ? Severity.Error : Severity.Info;
+    }
+
+}
