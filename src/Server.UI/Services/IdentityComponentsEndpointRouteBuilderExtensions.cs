@@ -96,8 +96,13 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
     {
         if (result.Succeeded)
         {
-            var redirectUrl = string.IsNullOrEmpty(returnUrl) ? RedirectUrls.Home : returnUrl;
-            return Results.Redirect(redirectUrl);
+            var decodedUrl = Uri.UnescapeDataString(returnUrl ?? "");
+
+            if (string.IsNullOrEmpty(decodedUrl) || !decodedUrl.StartsWith("/"))
+            {
+                decodedUrl = RedirectUrls.Home;
+            }
+            return Results.Redirect(decodedUrl);
         }
         
         if (result.RequiresTwoFactor)
@@ -119,26 +124,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
         return Results.Redirect(RedirectUrls.InvalidUser);
     }
 
-    /// <summary>
-    /// Creates a standardized error response with logging.
-    /// </summary>
-    /// <param name="logger">The logger instance.</param>
-    /// <param name="message">The error message.</param>
-    /// <param name="statusCode">The HTTP status code (default: 400).</param>
-    /// <returns>An IResult representing the error response.</returns>
-    private static Microsoft.AspNetCore.Http.IResult CreateErrorResponse(ILogger logger, string message, int statusCode = 400)
-    {
-        logger.LogWarning("Authentication error: {Message}", message);
-        return statusCode switch
-        {
-            400 => Results.BadRequest(message),
-            401 => Results.Unauthorized(),
-            403 => Results.Forbid(),
-            404 => Results.NotFound(message),
-            500 => Results.StatusCode(500),
-            _ => Results.BadRequest(message)
-        };
-    }
+    
 
     /// <summary>
     /// Maps additional Identity endpoints required by the Identity Razor components.
@@ -246,7 +232,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
         // Configure two-factor authentication recovery code endpoint
         accountGroup.MapGet("2fa/recovery", async (HttpContext context,
             [FromServices] SignInManager<ApplicationUser> signInManager,
-            [FromQuery] string code,
+            [FromQuery] string recoveryCode,
             [FromQuery] string? returnUrl = null) =>
         {
             // Security validation for request origin
@@ -256,9 +242,9 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             }
 
             // Validate recovery code parameter
-            if (string.IsNullOrEmpty(code))
+            if (string.IsNullOrEmpty(recoveryCode))
             {
-                return Results.BadRequest("Code is required");
+                return Results.BadRequest("Recovery code is required");
             }
 
             // Get user from 2FA session
@@ -269,7 +255,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             }
 
             // Attempt sign-in with recovery code
-            var result = await signInManager.TwoFactorRecoveryCodeSignInAsync(code);
+            var result = await signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
             return HandleSignInResult(result, returnUrl);
         });
 

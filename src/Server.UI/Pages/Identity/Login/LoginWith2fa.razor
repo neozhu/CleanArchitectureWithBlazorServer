@@ -15,11 +15,11 @@
 
 <div class="d-flex flex-column gap-y-3">
     <div class="d-flex flex-column">
-        <EditForm Model="Input" FormName="login-with-2fa" OnValidSubmit="OnValidSubmitAsync" method="post">
+        <EditForm Model="Input" FormName="login-with-2fa" OnValidSubmit="OnValidSubmitAsync">
             <input type="hidden" name="ReturnUrl" value="@ReturnUrl"/>
             <input type="hidden" name="RememberMe" value="@RememberMe"/>
             <DataAnnotationsValidator/>
-            <StatusMessage Message="@message" Error="true"/>
+    
             <MudTextField @bind-Value="Input.TwoFactorCode" 
                           Label="@L["Authenticator code"]"
                           Variant="Variant.Outlined"
@@ -61,7 +61,7 @@
                href="@($"{LoginWithRecoveryCode.PageUrl}?ReturnUrl={ReturnUrl}")"
                StartIcon="Icons.Material.Filled.Key"
                Class="mt-2">
-        Log in with a recovery code
+        @L["Log in with a recovery code"]
     </MudButton>
    
 </div>
@@ -70,8 +70,8 @@
     public const string PageUrl = "/account/loginwith2fa";
     private SignInManager<ApplicationUser> _signInManager = null!;
     private UserManager<ApplicationUser> _userManager = null!;
-    private string? message;
-    private ApplicationUser user = default!;
+
+ 
 
     private InputModel Input { get; set; } = new();
 
