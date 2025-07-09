@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -58,28 +58,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Please enter your new password below. Ensure your password is strong and memorable." xml:space="preserve">
-    <value>Please enter your new password below. Ensure your password is strong and memorable.</value>
+  <data name="Access Denied" xml:space="preserve">
+    <value>Zugriff verweigert</value>
   </data>
-  <data name="New Password" xml:space="preserve">
-    <value>New Password</value>
+  <data name="Your account is not allowed to sign in. This may be due to your account being inactive, email not confirmed, or other restrictions. Please contact support for assistance." xml:space="preserve">
+    <value>Ihr Konto darf sich nicht anmelden. Dies kann daran liegen, dass Ihr Konto inaktiv ist, die E-Mail nicht bestätigt wurde oder andere Einschränkungen vorliegen. Bitte wenden Sie sich für Hilfe an den Support.</value>
   </data>
-  <data name="Confirm New Password" xml:space="preserve">
-    <value>Confirm New Password</value>
+  <data name="Back to Login" xml:space="preserve">
+    <value>Zurück zur Anmeldung</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="Go Home" xml:space="preserve">
+    <value>Zur Startseite</value>
   </data>
-  <data name="Reset Your Password" xml:space="preserve">
-    <value>Reset Your Password</value>
-  </data>
-  <data name="Invalid password reset link. Please try again." xml:space="preserve">
-    <value>Invalid password reset link. Please try again.</value>
-  </data>
-  <data name="User not found. Please check the link and try again." xml:space="preserve">
-    <value>User not found. Please check the link and try again.</value>
-  </data>
-  <data name="There was an error resetting your password. Please try again." xml:space="preserve">
-    <value>There was an error resetting your password. Please try again.</value>
-  </data>
-</root>
+</root> 

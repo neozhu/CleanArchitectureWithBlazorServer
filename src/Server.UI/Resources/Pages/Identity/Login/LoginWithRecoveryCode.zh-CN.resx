@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -58,28 +58,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Please enter your new password below. Ensure your password is strong and memorable." xml:space="preserve">
-    <value>Please enter your new password below. Ensure your password is strong and memorable.</value>
+  <data name="Two-Factor Authentication - Recovery Code Verification" xml:space="preserve">
+    <value>双重身份验证 - 恢复代码验证</value>
   </data>
-  <data name="New Password" xml:space="preserve">
-    <value>New Password</value>
+  <data name="Two-Factor Authentication Recovery" xml:space="preserve">
+    <value>双重身份验证恢复</value>
   </data>
-  <data name="Confirm New Password" xml:space="preserve">
-    <value>Confirm New Password</value>
+  <data name="Please enter your recovery code to complete the authentication process. For security purposes, this session will require re-authentication for future logins unless you configure an authenticator application or disable two-factor authentication." xml:space="preserve">
+    <value>请输入您的恢复代码以完成身份验证过程。出于安全考虑，除非您配置身份验证应用程序或禁用双重身份验证，否则此会话将需要重新验证以进行将来的登录。</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="Recovery Code" xml:space="preserve">
+    <value>恢复代码</value>
   </data>
-  <data name="Reset Your Password" xml:space="preserve">
-    <value>Reset Your Password</value>
+  <data name="Enter the 8-character recovery code from your backup codes" xml:space="preserve">
+    <value>输入您备份代码中的8字符恢复代码</value>
   </data>
-  <data name="Invalid password reset link. Please try again." xml:space="preserve">
-    <value>Invalid password reset link. Please try again.</value>
+  <data name="Verify Recovery Code" xml:space="preserve">
+    <value>验证恢复代码</value>
   </data>
-  <data name="User not found. Please check the link and try again." xml:space="preserve">
-    <value>User not found. Please check the link and try again.</value>
-  </data>
-  <data name="There was an error resetting your password. Please try again." xml:space="preserve">
-    <value>There was an error resetting your password. Please try again.</value>
-  </data>
-</root>
+</root> 

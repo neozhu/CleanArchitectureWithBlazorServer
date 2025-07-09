@@ -1,7 +1,6 @@
 ﻿@page "/account/invaliduser"
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
 @inject IStringLocalizer<InvalidUser> L
-@inject IStringLocalizer<SharedResource> SharedL
 <PageTitle>@L["Access Denied"]</PageTitle>
 
 <div class="d-flex flex-column align-center">
@@ -20,7 +19,7 @@
                    Variant="Variant.Outlined" 
                    Color="Color.Primary" 
                    Size="Size.Medium">
-            @SharedL["Go Home"]
+            @L["Go Home"]
         </MudButton>
     </div>
 </div>

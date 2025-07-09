@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -58,28 +58,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Please enter your new password below. Ensure your password is strong and memorable." xml:space="preserve">
-    <value>Please enter your new password below. Ensure your password is strong and memorable.</value>
+  <data name="Sign In" xml:space="preserve">
+    <value>Anmelden</value>
   </data>
-  <data name="New Password" xml:space="preserve">
-    <value>New Password</value>
+  <data name="Do not have an account?" xml:space="preserve">
+    <value>Haben Sie kein Konto?</value>
   </data>
-  <data name="Confirm New Password" xml:space="preserve">
-    <value>Confirm New Password</value>
+  <data name="Sign Up" xml:space="preserve">
+    <value>Registrieren</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="User name" xml:space="preserve">
+    <value>Benutzername</value>
   </data>
-  <data name="Reset Your Password" xml:space="preserve">
-    <value>Reset Your Password</value>
+  <data name="User name is required" xml:space="preserve">
+    <value>Benutzername ist erforderlich</value>
   </data>
-  <data name="Invalid password reset link. Please try again." xml:space="preserve">
-    <value>Invalid password reset link. Please try again.</value>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
   </data>
-  <data name="User not found. Please check the link and try again." xml:space="preserve">
-    <value>User not found. Please check the link and try again.</value>
+  <data name="Password is required" xml:space="preserve">
+    <value>Passwort ist erforderlich</value>
   </data>
-  <data name="There was an error resetting your password. Please try again." xml:space="preserve">
-    <value>There was an error resetting your password. Please try again.</value>
+  <data name="Remember me" xml:space="preserve">
+    <value>Angemeldet bleiben</value>
   </data>
-</root>
+  <data name="Forgot password?" xml:space="preserve">
+    <value>Passwort vergessen?</value>
+  </data>
+  <data name="The specified user does not exist." xml:space="preserve">
+    <value>Der angegebene Benutzer existiert nicht.</value>
+  </data>
+  <data name="Your account is inactive. Please contact support for assistance." xml:space="preserve">
+    <value>Ihr Konto ist inaktiv. Bitte wenden Sie sich an den Support für Hilfe.</value>
+  </data>
+  <data name="The username or password is incorrect. Please try again." xml:space="preserve">
+    <value>Der Benutzername oder das Passwort ist falsch. Bitte versuchen Sie es erneut.</value>
+  </data>
+</root> 

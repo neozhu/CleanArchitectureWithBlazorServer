@@ -1,10 +1,10 @@
 ﻿@page "/404"
-@inject IStringLocalizer<SharedResource> L
+
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @using CleanArchitecture.Blazor.Server.UI.Components.Shared
 
-<PageTitle>@L["Page Not Found"] - 404</PageTitle>
+<PageTitle>Page Not Found - 404</PageTitle>
 
 <ErrorPageComponent Type="@_errorType" 
                    MinHeight="80vh" 

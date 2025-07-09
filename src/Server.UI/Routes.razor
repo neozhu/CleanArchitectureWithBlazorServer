@@ -1,5 +1,4 @@
-﻿@inject IStringLocalizer<SharedResource> L
-@inject LayoutService LayoutService
+﻿@inject LayoutService LayoutService
 @using CleanArchitecture.Blazor.Server.UI.Components.Shared
 
 <CascadingAuthenticationState>
@@ -10,7 +9,7 @@
                     <div style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
                         <MudPaper Class="pa-8" Elevation="1" Style="max-width: 400px; text-align: center;">
                             <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Medium" Class="mb-4" />
-                            <MudText Typo="Typo.h6" Color="Color.Default">@L["Please wait, we are authorizing you..."]</MudText>
+                            <MudText Typo="Typo.h6" Color="Color.Default">"Please wait, we are authorizing you..."</MudText>
                         </MudPaper>
                     </div>
                 </Authorizing>
@@ -25,7 +24,3 @@
     </Router>
 </CascadingAuthenticationState>
 
-@code
-{
-
-}

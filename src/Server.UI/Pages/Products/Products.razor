@@ -219,7 +219,7 @@
     {
         Title = L[_currentDto.GetClassDescription()];
         _accessRights = await PermissionService.GetAccessRightsAsync<ProductsAccessRights>();
-        throw new Exception("This is a test exception to demonstrate error handling in the Products page.");
+        
     }
 
     private async Task<GridData<ProductDto>> ServerReload(GridState<ProductDto> state)

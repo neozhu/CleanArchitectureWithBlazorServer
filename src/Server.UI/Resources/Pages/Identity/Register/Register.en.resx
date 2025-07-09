@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -28,9 +28,9 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
               <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
@@ -39,7 +39,7 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -58,28 +58,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Please enter your new password below. Ensure your password is strong and memorable." xml:space="preserve">
-    <value>Please enter your new password below. Ensure your password is strong and memorable.</value>
+  <data name="Sign Up" xml:space="preserve">
+    <value>Sign Up</value>
   </data>
-  <data name="New Password" xml:space="preserve">
-    <value>New Password</value>
+  <data name="Have an account?" xml:space="preserve">
+    <value>Have an account?</value>
   </data>
-  <data name="Confirm New Password" xml:space="preserve">
-    <value>Confirm New Password</value>
+  <data name="Sign In" xml:space="preserve">
+    <value>Sign In</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="Tenant" xml:space="preserve">
+    <value>Tenant</value>
   </data>
-  <data name="Reset Your Password" xml:space="preserve">
-    <value>Reset Your Password</value>
+  <data name="User Name" xml:space="preserve">
+    <value>User Name</value>
   </data>
-  <data name="Invalid password reset link. Please try again." xml:space="preserve">
-    <value>Invalid password reset link. Please try again.</value>
+  <data name="E-mail" xml:space="preserve">
+    <value>E-mail</value>
   </data>
-  <data name="User not found. Please check the link and try again." xml:space="preserve">
-    <value>User not found. Please check the link and try again.</value>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
   </data>
-  <data name="There was an error resetting your password. Please try again." xml:space="preserve">
-    <value>There was an error resetting your password. Please try again.</value>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>Confirm Password</value>
   </data>
-</root>
+  <data name="Time Zone" xml:space="preserve">
+    <value>Time Zone</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="I agree to the terms and privacy" xml:space="preserve">
+    <value>I agree to the terms and privacy</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+</root> 

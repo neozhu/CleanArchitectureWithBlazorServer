@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -58,28 +58,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Please enter your new password below. Ensure your password is strong and memorable." xml:space="preserve">
-    <value>Please enter your new password below. Ensure your password is strong and memorable.</value>
+  <data name="External Login" xml:space="preserve">
+    <value>外部登录</value>
   </data>
-  <data name="New Password" xml:space="preserve">
-    <value>New Password</value>
+  <data name="Associate your {0} account" xml:space="preserve">
+    <value>关联您的 {0} 账户</value>
   </data>
-  <data name="Confirm New Password" xml:space="preserve">
-    <value>Confirm New Password</value>
+  <data name="Authentication with {0} has been completed successfully. Please provide the required information below to complete your account registration and access the system" xml:space="preserve">
+    <value>使用 {0} 的身份验证已成功完成。请在下方提供所需信息以完成账户注册并访问系统</value>
   </data>
-  <data name="Reset Password" xml:space="preserve">
-    <value>Reset Password</value>
+  <data name="Tenant" xml:space="preserve">
+    <value>租户</value>
   </data>
-  <data name="Reset Your Password" xml:space="preserve">
-    <value>Reset Your Password</value>
+  <data name="Email" xml:space="preserve">
+    <value>邮箱</value>
   </data>
-  <data name="Invalid password reset link. Please try again." xml:space="preserve">
-    <value>Invalid password reset link. Please try again.</value>
+  <data name="Time Zone" xml:space="preserve">
+    <value>时区</value>
   </data>
-  <data name="User not found. Please check the link and try again." xml:space="preserve">
-    <value>User not found. Please check the link and try again.</value>
+  <data name="Language" xml:space="preserve">
+    <value>语言</value>
   </data>
-  <data name="There was an error resetting your password. Please try again." xml:space="preserve">
-    <value>There was an error resetting your password. Please try again.</value>
+  <data name="Complete Registration" xml:space="preserve">
+    <value>完成注册</value>
   </data>
-</root>
+  <data name="Provider is not set." xml:space="preserve">
+    <value>提供商未设置。</value>
+  </data>
+</root> 
