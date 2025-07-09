@@ -1,0 +1,138 @@
+﻿@inject IStringLocalizer<ErrorPageComponent> L
+@inject IJSRuntime JSRuntime
+
+<div style="display: flex; justify-content: center; align-items: center; min-height: @MinHeight; padding: 2rem;">
+    <MudPaper Class="pa-8" Elevation="1" Style="max-width: 500px; text-align: center;">
+        
+        @if (ShowIcon)
+        {
+            <MudIcon Icon="@GetErrorIcon()" Color="@GetErrorColor()" Style="font-size: 3.5rem;" Class="mb-4" />
+        }
+        
+        <MudText Typo="Typo.h3" Class="mb-2" Style="font-weight: 300;">
+            @ErrorCode
+        </MudText>
+        
+        <MudText Typo="Typo.h6" Class="mb-4" Color="Color.Default">
+            @Title
+        </MudText>
+        
+        <MudText Typo="Typo.body1" Class="mb-6" Color="Color.Secondary" Style="line-height: 1.5;">
+            @Description
+        </MudText>
+        
+        <MudStack Row Justify="Justify.Center" Spacing="2">
+            @if (ShowHomeButton)
+            {
+                <MudButton Variant="Variant.Filled" 
+                          Color="Color.Primary" 
+                          StartIcon="@Icons.Material.Filled.Home"
+                          Href="/">
+                    @L["Return Home"]
+                </MudButton>
+            }
+            
+            @if (ShowBackButton)
+            {
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Primary" 
+                          StartIcon="@Icons.Material.Filled.ArrowBack"
+                          OnClick="GoBack">
+                    @L["Go Back"]
+                </MudButton>
+            }
+            
+            @if (ShowContactButton)
+            {
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Primary" 
+                          StartIcon="@Icons.Material.Filled.ContactSupport"
+                          OnClick="OnContactClick">
+                    @ContactButtonText
+                </MudButton>
+            }
+        </MudStack>
+        
+    </MudPaper>
+</div>
+
+@code {
+    [Parameter] public string ErrorCode { get; set; } = "404";
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Description { get; set; } = "";
+    [Parameter] public string MinHeight { get; set; } = "60vh";
+    [Parameter] public bool ShowIcon { get; set; } = true;
+    [Parameter] public bool ShowHomeButton { get; set; } = true;
+    [Parameter] public bool ShowBackButton { get; set; } = false;
+    [Parameter] public bool ShowContactButton { get; set; } = false;
+    [Parameter] public string ContactButtonText { get; set; } = "";
+    [Parameter] public EventCallback OnContactClick { get; set; }
+    [Parameter] public ErrorType Type { get; set; } = ErrorType.NotFound;
+
+    public enum ErrorType
+    {
+        NotFound,
+        AccessDenied,
+        ServerError,
+        Custom
+    }
+
+    protected override void OnInitialized()
+    {
+        // Set defaults based on error type if not explicitly provided
+        if (string.IsNullOrEmpty(Title))
+        {
+            Title = Type switch
+            {
+                ErrorType.AccessDenied => L["Access Denied"],
+                ErrorType.ServerError => L["Server Error"],
+                _ => L["Page Not Found"]
+            };
+        }
+
+        if (string.IsNullOrEmpty(Description))
+        {
+            Description = Type switch
+            {
+                ErrorType.AccessDenied => L["You don't have permission to access this resource. If you believe this is an error, please contact your administrator."],
+                ErrorType.ServerError => L["An unexpected error occurred. Please try again later."],
+                _ => L["The page you're looking for doesn't exist or has been moved. Please verify the URL and try again."]
+            };
+        }
+
+        if (string.IsNullOrEmpty(ContactButtonText))
+        {
+            ContactButtonText = Type == ErrorType.AccessDenied ? L["Contact Administrator"] : L["Contact Support"];
+        }
+
+        if (Type == ErrorType.AccessDenied)
+        {
+            ErrorCode = "403";
+        }
+    }
+
+    private string GetErrorIcon()
+    {
+        return Type switch
+        {
+            ErrorType.AccessDenied => Icons.Material.Filled.NoAccounts,
+            ErrorType.ServerError => Icons.Material.Filled.Error,
+            _ => Icons.Material.Filled.SearchOff
+        };
+    }
+
+    private Color GetErrorColor()
+    {
+        return Type switch
+        {
+            ErrorType.AccessDenied => Color.Warning,
+            ErrorType.ServerError => Color.Error,
+            _ => Color.Error
+        };
+    }
+
+    private async Task GoBack()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
+    }
+} 

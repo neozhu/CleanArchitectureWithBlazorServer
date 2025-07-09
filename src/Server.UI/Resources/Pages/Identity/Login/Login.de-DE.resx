@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Sign In" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+  <data name="Do not have an account?" xml:space="preserve">
+    <value>Haben Sie kein Konto?</value>
+  </data>
+  <data name="Sign Up" xml:space="preserve">
+    <value>Registrieren</value>
+  </data>
+  <data name="User name" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="User name is required" xml:space="preserve">
+    <value>Benutzername ist erforderlich</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="Password is required" xml:space="preserve">
+    <value>Passwort ist erforderlich</value>
+  </data>
+  <data name="Remember me" xml:space="preserve">
+    <value>Angemeldet bleiben</value>
+  </data>
+  <data name="Forgot password?" xml:space="preserve">
+    <value>Passwort vergessen?</value>
+  </data>
+  <data name="The specified user does not exist." xml:space="preserve">
+    <value>Der angegebene Benutzer existiert nicht.</value>
+  </data>
+  <data name="Your account is inactive. Please contact support for assistance." xml:space="preserve">
+    <value>Ihr Konto ist inaktiv. Bitte wenden Sie sich an den Support für Hilfe.</value>
+  </data>
+  <data name="The username or password is incorrect. Please try again." xml:space="preserve">
+    <value>Der Benutzername oder das Passwort ist falsch. Bitte versuchen Sie es erneut.</value>
+  </data>
+</root> 
