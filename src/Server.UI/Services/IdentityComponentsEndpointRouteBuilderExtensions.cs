@@ -79,7 +79,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
         if (string.IsNullOrEmpty(referer) || !referer.StartsWith(expectedOrigin, StringComparison.OrdinalIgnoreCase))
         {
-            logger.LogWarning("Request from unauthorized origin. Referer: {Referer}, Expected: {Expected}", referer, expectedOrigin);
+            logger.LogError("Request from unauthorized origin. ");
             return false;
         }
         return true;
@@ -185,14 +185,14 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 {
                     // Successful authentication - create authentication session
                     await signInManager.SignInAsync(user, rememberMe);
-                    logger.LogInformation("{UserName} has logged in successfully.", userName);
+                    logger.LogInformation("{UserId} has logged in successfully.", user.Id);
                 }
 
                 return HandleSignInResult(checkResult, returnUrl, rememberMe);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error during login for user {UserName}", userName);
+                logger.LogError(ex, "Error during login for user {UserId}", user.Id);
                 return Results.StatusCode(500);
             }
         });
@@ -296,7 +296,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             // Handle errors from external provider
             if (!string.IsNullOrEmpty(remoteError))
             {
-                logger.LogWarning("External login error: {RemoteError}", remoteError);
+                logger.LogError("External login error: {RemoteError}", remoteError);
                 return Results.BadRequest($"External login error: {remoteError}");
             }
             
@@ -304,7 +304,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                logger.LogWarning("No external login info found.");
+                logger.LogError("No external login info found.");
                 return Results.BadRequest("No external login info found.");
             }
             
@@ -400,7 +400,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 var roleResult = await roleManager.CreateAsync(role);
                 if (!roleResult.Succeeded)
                 {
-                    logger.LogError("Failed to create role {RoleName} for tenant {TenantId}", RoleName.Basic, user.TenantId);
+                    logger.LogError("Failed to create role.");
                     return Results.BadRequest("Failed to create role for tenant.");
                 }
             }
@@ -409,7 +409,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             var userResult = await userManager.CreateAsync(user);
             if (!userResult.Succeeded)
             {
-                logger.LogError("Failed to create user {UserName} for tenant {TenantId}", user.UserName, user.TenantId);
+                logger.LogError("Failed to create user.);
                 return Results.BadRequest("Failed to create user.");
             }
             
