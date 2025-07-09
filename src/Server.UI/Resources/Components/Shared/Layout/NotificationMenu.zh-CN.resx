@@ -58,13 +58,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Profile" xml:space="preserve">
-    <value>用户资料</value>
+  <data name="Notification" xml:space="preserve">
+    <value>通知</value>
   </data>
-  <data name="Settings" xml:space="preserve">
-    <value>设置</value>
+  <data name="Notifications" xml:space="preserve">
+    <value>通知</value>
   </data>
-  <data name="Logout" xml:space="preserve">
-    <value>退出登录</value>
+  <data name="Mark as read" xml:space="preserve">
+    <value>标记为已读</value>
   </data>
-</root>
+  <data name="Nothing new :(" xml:space="preserve">
+    <value>暂无新内容 :(</value>
+  </data>
+</root> 
