@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Application.Common.Security
+﻿@using CleanArchitecture.Blazor.Application.Common.Security
 @inject IStringLocalizer<UserInfoCard> L
 @inject UserProfileStateService UserProfileStateService
 @implements IDisposable
@@ -57,7 +57,7 @@
                     <MudDivider Class="my-2" />
                     <div class="mx-4 mb-2">
                         <form action="@IdentityComponentsEndpointRouteBuilderExtensions.Logout" method="post">
-                            <input type="hidden" name="ReturnUrl" value="/pages/authentication/login" />
+                            <input type="hidden" name="ReturnUrl" value="/account/login" />
                             <MudButton Color="Color.Primary"
                                       ButtonType="ButtonType.Submit"
                                       FullWidth="true"
