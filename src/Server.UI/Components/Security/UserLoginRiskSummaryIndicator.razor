@@ -1,4 +1,4 @@
-@using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
+﻿@using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.GetUserLoginRiskSummary
 @using CleanArchitecture.Blazor.Domain.Enums
 @inject ISender Mediator
@@ -31,7 +31,7 @@
                                Size="Size.Small" 
                                Color="Color.Default"
                                OnClick="@(() => _isDismissed = true)"
-                               Title="@L["Dismiss"]" />
+                               title="@L["Dismiss"]" />
             </div>
             
             @if (!string.IsNullOrEmpty(_riskSummary.Description) || !string.IsNullOrEmpty(_riskSummary.Advice))

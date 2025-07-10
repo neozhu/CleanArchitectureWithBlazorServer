@@ -219,6 +219,7 @@
     {
         Title = L[_currentDto.GetClassDescription()];
         _accessRights = await PermissionService.GetAccessRightsAsync<ProductsAccessRights>();
+        
     }
 
     private async Task<GridData<ProductDto>> ServerReload(GridState<ProductDto> state)
