@@ -192,7 +192,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error during login for user {UserId}", user.Id);
+                logger.LogError(ex, "Error during login for user {userName}", userName);
                 return Results.StatusCode(500);
             }
         });
@@ -409,7 +409,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             var userResult = await userManager.CreateAsync(user);
             if (!userResult.Succeeded)
             {
-                logger.LogError("Failed to create user.);
+                logger.LogError("Failed to create user.");
                 return Results.BadRequest("Failed to create user.");
             }
             
