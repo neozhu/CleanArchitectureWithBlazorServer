@@ -299,7 +299,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 logger.LogError("External login error: {RemoteError}", remoteError);
                 return Results.BadRequest($"External login error: {remoteError}");
             }
-            
+        
             // Retrieve external login information from the authentication context
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
@@ -312,7 +312,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             var provider = info.LoginProvider;
             
-            if (action == "LoginCallback")
+            if (!string.IsNullOrEmpty(action) && action == "LoginCallback")
             {
                 // Attempt to sign in using external login information
                 var result = await signInManager.ExternalLoginSignInAsync(
