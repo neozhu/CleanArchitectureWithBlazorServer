@@ -7,7 +7,6 @@
 
 @inherits ComputedStateComponent<List<SessionInfo>>
 @inject IOnlineUserTracker OnlineUserTracker
-@inject IStringLocalizer<ActiveUserSession> L
 @inject ICurrentUserAccessor SessionInfoAccessor
 @inject IJSRuntime JS
 @if (State.HasValue && State.LastNonErrorValue.Any())
