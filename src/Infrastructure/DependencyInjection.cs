@@ -46,7 +46,7 @@ public static class DependencyInjection
     private const string SMTP_CLIENT_OPTIONS_DEFAULT_FROM_EMAIL = "SmtpClientOptions:DefaultFromEmail";
     private const string EMAIL_TEMPLATES_PATH = "Resources/EmailTemplates";
     private const string DEFAULT_FROM_EMAIL = "noreply@blazorserver.com";
-    private const string LOGIN_PATH = "/pages/authentication/login";
+    private const string LOGIN_PATH = "/account/login";
     private const int DEFAULT_LOCKOUT_TIME_SPAN_MINUTES = 5;
     private const int MAX_FAILED_ACCESS_ATTEMPTS = 5;
 

@@ -26,49 +26,10 @@ public static class LocalizationConstants
         },
         new()
         {
-            Code = "ru-RU",
-            DisplayName = "русский (Россия)"
-        },
-        new()
-        {
-            Code = "fr-FR",
-            DisplayName = "français (France)"
-        },
-        new()
-        {
-            Code = "ja-JP",
-            DisplayName = "日本語 (日本)"
-        },
-        new()
-        {
-            Code = "km-KH",
-            DisplayName = "ខ្មែរ (កម្ពុជា)"
-        },
-        new()
-        {
-            Code = "ca-ES",
-            DisplayName = "català (Espanya)"
-        },
-        new()
-        {
-            Code = "es-ES",
-            DisplayName = "español (España)"
-        },
-        new()
-        {
             Code = "zh-CN",
             DisplayName = "中文（简体，中国）"
         },
-        new()
-        {
-            Code = "ar-iq",
-            DisplayName = "Arabic"
-        },
-        new()
-        {
-            Code = "ko-kr",
-            DisplayName = "한국어(대한민국)"
-        }
+ 
     };
 }
 
