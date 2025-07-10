@@ -417,7 +417,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             userResult = await userManager.AddToRoleAsync(user, role.Name!);
             if (!userResult.Succeeded)
             {
-                logger.LogError("Failed to add user {UserName} to role {RoleName} for tenant {TenantId}", user.UserName, role.Name, user.TenantId);
+                logger.LogError("Failed to add user to role for user {UserId}", user.Id);
                 return Results.BadRequest("Failed to add user to role.");
             }
             
@@ -425,7 +425,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             userResult = await userManager.AddLoginAsync(user, info);
             if (!userResult.Succeeded)
             {
-                logger.LogError("Failed to add external login for user {UserName} with provider {Provider}", user.UserName, info.LoginProvider);
+                logger.LogError("Failed to add external login for user {UserId} with provider {Provider}", user.Id, info.LoginProvider);
                 return Results.BadRequest("Failed to add external login.");
             }
             
@@ -433,7 +433,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             {
                 // Sign in the newly created user
                 await signInManager.SignInAsync(user, true);
-                logger.LogInformation("User {UserName} linked external account {Provider} successfully.", user.UserName, info.LoginProvider);
+                logger.LogInformation("User {UserId} linked external account {Provider} successfully.", user.Id, info.LoginProvider);
                 return Results.Redirect("/");
             }
             else
