@@ -170,7 +170,7 @@ public static class Theme
                 Caption = new CaptionTypography
                 {
                     FontSize = "0.75rem", // 12px
-                    FontWeight = "400",
+                    FontWeight = "500",
                     LineHeight = "1.33",
                     LetterSpacing = "0.025em"
                 },

@@ -104,10 +104,9 @@
         Data = await Mediator.Send(new SystemLogsTimeLineChatDataQuery());
     }
 
-    private void LayoutServiceOnMajorUpdateOccurred(object? sender, EventArgs e)
+    private async Task LayoutServiceOnMajorUpdateOccurred()
     {
-        InvokeAsync(async () =>
-        {
+       
             var isDarkMode = LayoutService.IsDarkMode;
             var colors = isDarkMode ? new List<string> { "#0277BD", "#039BE5" } : new List<string> { "#1976D2", "#90CAF9" };
             Options.Theme.Mode = isDarkMode ? Mode.Dark : Mode.Light;
@@ -116,7 +115,7 @@
             await Chart.UpdateOptionsAsync(true, true, false);
             await Chart.RenderAsync();
             StateHasChanged();
-        });
+        
     }
 
 

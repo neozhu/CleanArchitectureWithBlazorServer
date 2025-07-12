@@ -116,7 +116,7 @@ public class LayoutService
 
         // Subtitles
         CurrentTheme.Typography.Subtitle1.FontSize = FormatFontSize(UserPreferences.Subtitle1FontSize);
-        CurrentTheme.Typography.Subtitle2.FontSize = FormatFontSize(UserPreferences.Subtitle2FontSize); ;
+        CurrentTheme.Typography.Subtitle2.FontSize = FormatFontSize(UserPreferences.Subtitle2FontSize); 
     }
 
     /// <summary>
@@ -127,13 +127,23 @@ public class LayoutService
 
     #region Events and System Preferences
 
-    public event EventHandler? MajorUpdateOccurred;
+    public event Func<Task>? MajorUpdateOccurred;
 
     /// <summary>
     /// Raises the MajorUpdateOccurred event.
     /// </summary>
-    private void OnMajorUpdateOccurred() =>
-        MajorUpdateOccurred?.Invoke(this, EventArgs.Empty);
+    private async Task OnMajorUpdateOccurred()
+    {
+        if (MajorUpdateOccurred is not null)
+        {
+            var handlers = MajorUpdateOccurred.GetInvocationList();
+            foreach (Func<Task> handler in handlers)
+            {
+                await handler();
+            }
+        }
+        }
+       
 
     /// <summary>
     /// Handles system preference changes (e.g., system dark mode).

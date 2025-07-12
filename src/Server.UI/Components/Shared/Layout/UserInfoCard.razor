@@ -30,8 +30,8 @@
                 <MudText Typo="Typo.body2" Style="font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                     @UserProfile.DisplayName
                 </MudText>
-                <MudText Typo="Typo.caption" Style="color: #6F6F6F; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                    @UserProfile.Email
+                <MudText Typo="Typo.caption" Class="mud-secondary-text" Style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    @UserProfile.DefaultRole
                 </MudText>
             </MudStack>
         }
@@ -42,6 +42,15 @@
             </ActivatorContent>
             <ChildContent>
                 <div style="min-width: 200px;">
+                    @if (UserProfile is not null)
+                    {
+                        <div class="mx-4 mt-2 mb-3">
+                            <MudText Typo="Typo.body2" Class="mud-secondary-text" Style="font-weight: 500;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                @UserProfile.Email
+                            </MudText>
+                        </div>
+                        <MudDivider Class="my-2" />
+                    }
                     <MudMenuItem Href="/user/profile">
                         <div class="d-flex align-center">
                             <MudIcon Class="mx-2" Icon="@Icons.Material.Filled.Person" />
