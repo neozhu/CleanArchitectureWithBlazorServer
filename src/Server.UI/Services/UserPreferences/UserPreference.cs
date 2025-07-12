@@ -57,14 +57,14 @@ public class UserPreference
     public string DarkPrimaryColor { get; set; } = DarkPrimaryColors[0];
 
     /// <summary>
-    /// Returns a darker version of the primary color.
+    /// Returns a darker version of the primary color for hover states.
     /// </summary>
-    public string PrimaryDarken => AdjustBrightness(PrimaryColor, 0.7);
+    public string PrimaryDarken => AdjustBrightnessForHover(PrimaryColor, true);
 
     /// <summary>
     /// Returns a lighter version of the primary color.
     /// </summary>
-    public string PrimaryLighten => AdjustBrightness(PrimaryColor, 0.7);
+    public string PrimaryLighten => AdjustBrightnessForHover(PrimaryColor, false);
 
     /// <summary>
     /// The secondary color.
@@ -156,6 +156,77 @@ public class UserPreference
 
         // Adjust lightness
         l = Math.Clamp(l * factor, 0.0, 1.0);
+
+        // Convert HSL back to Color
+        Color adjustedColor = HslToColor(h, s, l);
+
+        // Return the hex representation
+        return ColorTranslator.ToHtml(adjustedColor);
+    }
+
+    /// <summary>
+    /// Adjusts the color for UI interaction states (hover, focus) with better visual contrast.
+    /// </summary>
+    /// <param name="hexColor">The base hex color code.</param>
+    /// <param name="isDarkening">True to create a darker variant, false to create a lighter variant.</param>
+    /// <returns>The adjusted hex color code optimized for UI interactions.</returns>
+    private string AdjustBrightnessForHover(string hexColor, bool isDarkening)
+    {
+        if (string.IsNullOrWhiteSpace(hexColor))
+            throw new ArgumentException("Color code cannot be null or empty.", nameof(hexColor));
+
+        // Parse the hex color using ColorTranslator
+        Color color = ColorTranslator.FromHtml(hexColor);
+
+        // Convert RGB to HSL
+        ColorToHsl(color, out double h, out double s, out double l);
+
+        if (isDarkening)
+        {
+            // For darkening (hover states), use a more sophisticated approach
+            if (l > 0.8)
+            {
+                // Very light colors: reduce lightness significantly
+                l = Math.Max(l - 0.15, 0.0);
+            }
+            else if (l > 0.5)
+            {
+                // Medium-light colors: moderate reduction
+                l = Math.Max(l - 0.1, 0.0);
+            }
+            else if (l > 0.2)
+            {
+                // Medium-dark colors: small reduction with saturation boost
+                l = Math.Max(l - 0.08, 0.0);
+                s = Math.Min(s + 0.1, 1.0);
+            }
+            else
+            {
+                // Very dark colors: minimal change, slight saturation boost
+                l = Math.Max(l - 0.05, 0.0);
+                s = Math.Min(s + 0.15, 1.0);
+            }
+        }
+        else
+        {
+            // For lightening
+            if (l < 0.2)
+            {
+                // Very dark colors: increase lightness significantly
+                l = Math.Min(l + 0.2, 1.0);
+            }
+            else if (l < 0.5)
+            {
+                // Medium-dark colors: moderate increase
+                l = Math.Min(l + 0.15, 1.0);
+            }
+            else
+            {
+                // Light colors: small increase with slight saturation reduction
+                l = Math.Min(l + 0.1, 1.0);
+                s = Math.Max(s - 0.05, 0.0);
+            }
+        }
 
         // Convert HSL back to Color
         Color adjustedColor = HslToColor(h, s, l);

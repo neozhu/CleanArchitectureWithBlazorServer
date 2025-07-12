@@ -77,8 +77,6 @@ public class LayoutService
         CurrentTheme.PaletteDark.Primary = UserPreferences.DarkPrimaryColor;
         CurrentTheme.PaletteLight.PrimaryDarken = UserPreferences.PrimaryDarken;
         CurrentTheme.PaletteLight.PrimaryLighten = UserPreferences.PrimaryLighten;
-        CurrentTheme.PaletteDark.PrimaryDarken = UserPreferences.PrimaryDarken;
-        CurrentTheme.PaletteDark.PrimaryLighten = UserPreferences.PrimaryLighten;
 
         // Update layout properties
         CurrentTheme.LayoutProperties.DefaultBorderRadius = UserPreferences.BorderRadius + "px";
