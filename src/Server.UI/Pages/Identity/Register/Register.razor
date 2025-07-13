@@ -158,6 +158,7 @@
         user.TimeZoneId = Input.TimeZoneId;
         user.Email = Input.Email;
         user.UserName = Input.UserName;
+        user.Created = DateTime.UtcNow;
         var role = await _roleManager.Roles.Where(x=>x.TenantId== Input.TenantId && x.Name==RoleName.Basic).FirstOrDefaultAsync();
         if (role is null){
             role = new ApplicationRole
@@ -191,7 +192,7 @@
         }
 
         var userId = await _userManager.GetUserIdAsync(user);
-        Logger.LogInformation("New user account created. Username: {UserName}, User ID: {UserId}, Tenant ID: {TenantId}, Assigned Role: {RoleName}.",
+        Logger.LogInformation("New user account created. User ID: {UserId}, Tenant ID: {TenantId}.",
             Input.UserName,
             userId,
             Input.TenantId,

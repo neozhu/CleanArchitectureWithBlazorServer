@@ -58,10 +58,7 @@ public class ApplicationUserDto
     public DateTime? Created { get; set; }
     [Description("Created By")]
     public string? CreatedBy { get; set; }
-    [Description("Created By User")]
-    public ApplicationUserDto? CreatedByUser { get; set; }
-    [Description("Last Modified By User")]
-    public ApplicationUserDto? LastModifiedByUser { get; set; }
+ 
     public UserProfile ToUserProfile()
     {
         return new UserProfile
@@ -112,35 +109,9 @@ public class ApplicationUserDto
                     AssignedRoles = y.Superior.UserRoles.Select(r => r.Role.Name).ToArray(),
                     TimeZoneId = y.Superior.TimeZoneId,
                     LanguageCode = y.Superior.LanguageCode
-                } : null))
-                .ForMember(x => x.CreatedByUser, s => s.MapFrom(y => y.CreatedByUser != null ? new ApplicationUserDto()
-                {
-                    Id = y.CreatedByUser.Id,
-                    UserName = y.CreatedByUser.UserName,
-                    DisplayName = y.CreatedByUser.DisplayName,
-                    Email = y.CreatedByUser.Email,
-                    PhoneNumber = y.CreatedByUser.PhoneNumber,
-                    ProfilePictureDataUrl = y.CreatedByUser.ProfilePictureDataUrl,
-                    IsActive = y.CreatedByUser.IsActive,
-                    TenantId = y.CreatedByUser.TenantId,
-                    AssignedRoles = y.CreatedByUser.UserRoles.Select(r => r.Role.Name).ToArray(),
-                    TimeZoneId = y.CreatedByUser.TimeZoneId,
-                    LanguageCode = y.CreatedByUser.LanguageCode
-                } : null))
-                .ForMember(x => x.LastModifiedByUser, s => s.MapFrom(y => y.LastModifiedByUser != null ? new ApplicationUserDto()
-                {
-                    Id = y.LastModifiedByUser.Id,
-                    UserName = y.LastModifiedByUser.UserName,
-                    DisplayName = y.LastModifiedByUser.DisplayName,
-                    Email = y.LastModifiedByUser.Email,
-                    PhoneNumber = y.LastModifiedByUser.PhoneNumber,
-                    ProfilePictureDataUrl = y.LastModifiedByUser.ProfilePictureDataUrl,
-                    IsActive = y.LastModifiedByUser.IsActive,
-                    TenantId = y.LastModifiedByUser.TenantId,
-                    AssignedRoles = y.LastModifiedByUser.UserRoles.Select(r => r.Role.Name).ToArray(),
-                    TimeZoneId = y.LastModifiedByUser.TimeZoneId,
-                    LanguageCode = y.LastModifiedByUser.LanguageCode
                 } : null));
+                 
+                 
 
         }
     }

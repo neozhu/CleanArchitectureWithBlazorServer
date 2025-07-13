@@ -55,7 +55,7 @@ public static class DependencyInjection
     {
         services.AddSettings(configuration)
             .AddDatabase(configuration)
-            .AddServices()
+            .AddServices(configuration)
             .AddMessageServices(configuration);
 
         services
@@ -165,7 +165,7 @@ public static class DependencyInjection
         }
     }
 
-    private static IServiceCollection AddServices(this IServiceCollection services)
+    private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<PicklistService>()
             .AddSingleton<IPicklistService>(sp =>
@@ -209,6 +209,9 @@ public static class DependencyInjection
 
         // Add other services
         services.AddScoped<IGeolocationService, GeolocationService>();
+        
+        // Configure SecurityAnalysisService with options
+        services.Configure<SecurityAnalysisOptions>(configuration.GetSection(SecurityAnalysisOptions.SectionName));
         services.AddScoped<ISecurityAnalysisService, SecurityAnalysisService>();
 
         return services

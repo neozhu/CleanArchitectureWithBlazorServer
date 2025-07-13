@@ -184,7 +184,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
                 if (checkResult.Succeeded)
                 {
                     // Successful authentication - create authentication session
-                    await signInManager.SignInAsync(user, rememberMe);
+                    //await signInManager.SignInAsync(user, rememberMe);
                     logger.LogInformation("{UserId} has logged in successfully.", user.Id);
                 }
 

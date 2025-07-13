@@ -30,8 +30,6 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 
         builder.HasOne(x => x.Superior).WithMany().HasForeignKey(u => u.SuperiorId);
         builder.HasOne(x => x.Tenant).WithMany().HasForeignKey(u => u.TenantId);
-        builder.HasOne(x=>x.CreatedByUser).WithMany().HasForeignKey(x=>x.CreatedBy);
-        builder.HasOne(x => x.LastModifiedByUser).WithMany().HasForeignKey(x => x.LastModifiedBy);
         builder.Navigation(e => e.Tenant).AutoInclude();
     }
 }

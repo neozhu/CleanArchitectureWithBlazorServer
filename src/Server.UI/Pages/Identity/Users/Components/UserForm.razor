@@ -98,14 +98,9 @@
                 }
             </MudGrid>
         </MudItem>
-        <MudItem sm="6" xs="12">
-            <MudTextField For="@(() => Model.CreatedBy)" Disabled Value="Model.CreatedByUser?.UserName" Label="@L[Model.GetMemberDescription(x => x.CreatedBy)]" />
-        </MudItem>
+
         <MudItem sm="6" xs="12">
             <MudTextField T="string" Disabled Value="@(Model.Created.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x => x.Created)]" />
-        </MudItem>
-        <MudItem sm="6" xs="12">
-            <MudTextField For="@(() => Model.LastModifiedBy)" Disabled Value="Model.LastModifiedByUser?.UserName" Label="@L[Model.GetMemberDescription(x => x.LastModifiedBy)]" />
         </MudItem>
         <MudItem sm="6" xs="12">
             <MudTextField T="string" Disabled Value="@(Model.LastModified.ToLocalTime(UserProfile?.LocalTimeOffset))" Label="@L[Model.GetMemberDescription(x => x.LastModified)]" />

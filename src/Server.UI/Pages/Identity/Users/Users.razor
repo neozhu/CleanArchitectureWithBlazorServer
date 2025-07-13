@@ -319,11 +319,8 @@
             _isLoading = true;
             var predicate = CreateSearchPredicate();
             var totalCount = await _userManager.Users.CountAsync(predicate);
-            var testd = await _userManager.Users.Where(predicate).Include(x => x.CreatedByUser).Include(x => x.LastModifiedByUser).ToListAsync();
             var data = await _userManager.Users.Where(predicate)
                 .Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
-                .Include(x => x.CreatedByUser)
-                .Include(x => x.LastModifiedByUser)
                 .Include(x => x.Superior)
                 .EfOrderBySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize)
@@ -404,7 +401,6 @@
             IsActive = model.IsActive,
             LanguageCode = model.LanguageCode,
             TimeZoneId = model.TimeZoneId,
-            CreatedBy = UserProfile?.UserId,
             Created = DateTime.UtcNow
         };
 
@@ -443,7 +439,6 @@
         user.SuperiorId = model.Superior?.Id;
         user.LanguageCode = model.LanguageCode;
         user.TimeZoneId = model.TimeZoneId;
-        user.LastModifiedBy = UserProfile?.UserId;
         user.LastModified = DateTime.UtcNow;
         var updateResult = await _userManager.UpdateAsync(user);
         if (updateResult.Succeeded)
@@ -644,7 +639,6 @@
         user.IsActive = true;
         user.LockoutEnd = null;
         user.LastModified = DateTime.UtcNow;
-        user.LastModifiedBy = UserProfile?.UserId;
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {
@@ -663,7 +657,6 @@
         user.IsActive = false;
         user.LockoutEnd = DateTimeOffset.MaxValue;
         user.LastModified = DateTime.UtcNow;
-        user.LastModifiedBy = UserProfile?.UserId;
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {
