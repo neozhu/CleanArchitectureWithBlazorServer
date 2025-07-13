@@ -117,31 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Two-factor authentication" xml:space="preserve">
-    <value>Zwei-Faktor-Authentifizierung</value>
+  <data name="High Risk" xml:space="preserve">
+    <value>High Risk</value>
   </data>
-  <data name="Your login is secured with two-factor authentication. Please enter the verification code from your authenticator app on your mobile device." xml:space="preserve">
-    <value>Ihre Anmeldung ist mit Zwei-Faktor-Authentifizierung gesichert. Bitte geben Sie den Bestätigungscode aus Ihrer Authentifizierungs-App auf Ihrem Mobilgerät ein.</value>
+  <data name="Low Risk" xml:space="preserve">
+    <value>Low Risk</value>
   </data>
-  <data name="Authenticator code" xml:space="preserve">
-    <value>Authentifizierungscode</value>
+  <data name="Medium Risk" xml:space="preserve">
+    <value>Medium Risk</value>
   </data>
-  <data name="Authenticator code is required." xml:space="preserve">
-    <value>Authentifizierungscode ist erforderlich.</value>
+  <data name="No security analysis data available" xml:space="preserve">
+    <value>No security analysis data available</value>
   </data>
-  <data name="Enter the 6-7 digit code from your mobile authenticator app" xml:space="preserve">
-    <value>Geben Sie den 6-7-stelligen Code aus Ihrer mobilen Authentifizierungs-App ein</value>
+  <data name="Security Risk Analysis Dashboard" xml:space="preserve">
+    <value>Security Risk Analysis Dashboard</value>
   </data>
-  <data name="Remember this machine" xml:space="preserve">
-    <value>Dieses Gerät merken</value>
-  </data>
-  <data name="Sign In" xml:space="preserve">
-    <value>Anmelden</value>
-  </data>
-  <data name="If you do not have access to your authenticator device, you may" xml:space="preserve">
-    <value>Wenn Sie keinen Zugang zu Ihrem Authentifizierungsgerät haben, können Sie</value>
-  </data>
-  <data name="Log in with a recovery code" xml:space="preserve">
-    <value>Mit einem Wiederherstellungscode anmelden</value>
+  <data name="Total Users" xml:space="preserve">
+    <value>Total Users</value>
   </data>
 </root>

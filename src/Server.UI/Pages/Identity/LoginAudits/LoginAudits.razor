@@ -4,6 +4,7 @@
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Specifications
 @using CleanArchitecture.Blazor.Application.Features.LoginAudits.Caching
 @using CleanArchitecture.Blazor.Server.UI.Components.UtcToLocalTime
+@using CleanArchitecture.Blazor.Server.UI.Components.Security
 @using MudBlazor
 
 @attribute [Authorize(Policy = Permissions.LoginAudits.View)]
@@ -11,6 +12,9 @@
 @inject IMediator Mediator
 
 <PageTitle>@Title</PageTitle>
+
+<!-- Security Risk Dashboard -->
+<SecurityRiskDashboard />
 
 <MudDataGrid T="LoginAuditDto"
              ServerData="@(ServerReload)"
