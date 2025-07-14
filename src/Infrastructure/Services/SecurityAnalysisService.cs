@@ -1,13 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Domain.Enums;
 using CleanArchitecture.Blazor.Domain.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 using ZiggyCreatures.Caching.Fusion;
 
@@ -49,6 +44,7 @@ public class SecurityAnalysisService : ISecurityAnalysisService
 
             // Invalidate cache for the user's risk summary
             await _fusionCache.RemoveAsync($"UserLoginRiskSummary_{loginAudit.UserId}", token: cancellationToken);
+            await _fusionCache.RemoveByTagAsync("userloginrisksummary", token: cancellationToken);
 
             _logger.LogInformation("Security analysis completed for user {UserId}. Risk Level: {RiskLevel}, Score: {RiskScore}, Factors: {FactorCount}", 
                 loginAudit.UserId, analysisResult.RiskLevel, analysisResult.RiskScore, analysisResult.RiskFactors.Count);

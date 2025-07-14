@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
-using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Common.Security;
 public class ChangeUserProfileModel

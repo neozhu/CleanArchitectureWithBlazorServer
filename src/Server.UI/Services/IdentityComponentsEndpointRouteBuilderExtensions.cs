@@ -2,9 +2,7 @@
 using System.Text.Json;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
-using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;

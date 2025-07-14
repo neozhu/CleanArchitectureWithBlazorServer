@@ -1,9 +1,4 @@
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using CleanArchitecture.Blazor.Application.Common.Security;
-
-namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 /// <summary>
 /// Abstraction for loading and assigning permission claims to a specific security principal (user or role).

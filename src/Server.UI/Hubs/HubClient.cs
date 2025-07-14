@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using CleanArchitecture.Blazor.Infrastructure.Constants.User;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 

@@ -4,7 +4,6 @@
 using CleanArchitecture.Blazor.Application.Features.SystemLogs.Caching;
 using CleanArchitecture.Blazor.Application.Features.SystemLogs.DTOs;
 using CleanArchitecture.Blazor.Application.Features.SystemLogs.Specifications;
-using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Features.SystemLogs.Queries.PaginationQuery;
 

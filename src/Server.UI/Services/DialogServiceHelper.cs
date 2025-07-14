@@ -1,7 +1,4 @@
-using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
-using Microsoft.AspNetCore.Components;
-using MediatR;
-using MudBlazor;
+﻿using CleanArchitecture.Blazor.Server.UI.Components.Dialogs;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 
