@@ -45,6 +45,8 @@ services:
       - ACCEPT_EULA=Y
     volumes:
       - mssql_data:/var/opt/mssql
+    ports:
+      - "3433:1433"
     restart: on-failure
 
 volumes:
