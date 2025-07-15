@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.GetA
 public class GetAllLoginAuditsQuery : ICacheableRequest<IEnumerable<LoginAuditDto>>
 {
     public string CacheKey => LoginAuditCacheKey.GetAllCacheKey;
-    public IEnumerable<string>? Tags => new[] { "LoginAudits" };
+    public IEnumerable<string>? Tags => LoginAuditCacheKey.Tags;
 }
 
 public class GetAllLoginAuditsQueryHandler : IRequestHandler<GetAllLoginAuditsQuery, IEnumerable<LoginAuditDto>>
