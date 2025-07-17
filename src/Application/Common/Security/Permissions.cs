@@ -1,10 +1,10 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel;
 using System.Reflection;
 
-namespace CleanArchitecture.Blazor.Infrastructure.PermissionSet;
+namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public static partial class Permissions
 {
@@ -155,7 +155,7 @@ public static partial class Permissions
         [Description("Allows creating new roles")]
         public const string Create = "Permissions.Roles.Create";
 
-        [Description("Allows modifying existing role details")]
+        [Description("Allows modifying existing roles")]
         public const string Edit = "Permissions.Roles.Edit";
 
         [Description("Allows deleting roles")]
@@ -164,17 +164,23 @@ public static partial class Permissions
         [Description("Allows searching for role records")]
         public const string Search = "Permissions.Roles.Search";
 
-        [Description("Allows exporting role records")]
-        public const string Export = "Permissions.Roles.Export";
-
-        [Description("Allows importing role records")]
-        public const string Import = "Permissions.Roles.Import";
-
-        [Description("Allows managing permissions for roles")]
+        [Description("Allows managing role permissions")]
         public const string ManagePermissions = "Permissions.Roles.ManagePermissions";
 
-        [Description("Allows managing role-specific navigation menus")]
-        public const string ManageNavigation = "Permissions.Roles.ManageNavigation";
+        [Description("Allows managing role claims")]
+        public const string ManageClaimsInRole = "Permissions.Roles.ManageClaimsInRole";
+
+        [Description("Allows managing users in role")]
+        public const string ManageUsersInRole = "Permissions.Roles.ManageUsersInRole";
+
+        [Description("Allows viewing role permissions")]
+        public const string ViewPermissions = "Permissions.Roles.ViewPermissions";
+
+        [Description("Allows viewing role claims")]
+        public const string ViewClaimsInRole = "Permissions.Roles.ViewClaimsInRole";
+
+        [Description("Allows viewing users in role")]
+        public const string ViewUsersInRole = "Permissions.Roles.ViewUsersInRole";
     }
 
     [DisplayName("Tenant Permissions")]
@@ -187,97 +193,32 @@ public static partial class Permissions
         [Description("Allows creating new tenants")]
         public const string Create = "Permissions.Tenants.Create";
 
-        [Description("Allows modifying existing tenant details")]
+        [Description("Allows modifying existing tenants")]
         public const string Edit = "Permissions.Tenants.Edit";
 
-        [Description("Allows deleting tenant records")]
+        [Description("Allows deleting tenants")]
         public const string Delete = "Permissions.Tenants.Delete";
 
         [Description("Allows searching for tenant records")]
         public const string Search = "Permissions.Tenants.Search";
+
+        [Description("Allows managing tenant members")]
+        public const string ManageUsers = "Permissions.Tenants.ManageUsers";
     }
 
-    [DisplayName("Dashboard Permissions")]
-    [Description("Set permissions for dashboard operations")]
-    public static class Dashboards
+    [DisplayName("Navigation Menu Permissions")]
+    [Description("Set permissions for navigation menu")]
+    public static class NavigationMenu
     {
-        [Description("Allows viewing dashboard data")]
-        public const string View = "Permissions.Dashboards.View";
+        [Description("Allows viewing the navigation menu")]
+        public const string View = "Permissions.NavigationMenu.View";
     }
 
-
-}
-
-public class PicklistSetsAccessRights
-{
-    public bool View { get; set; }
-    public bool Create { get; set; }
-    public bool Edit { get; set; }
-    public bool Delete { get; set; }
-    public bool Search { get; set; }
-    public bool Export { get; set; }
-    public bool Import { get; set; }
-}
-public class LogsAccessRights
-{
-    public bool View { get; set; }
-    public bool Search { get; set; }
-    public bool Export { get; set; }
-    public bool Purge { get; set; }
-}
-
-public class RolesAccessRights
-{
-    public bool View { get; set; }
-    public bool Create { get; set; }
-    public bool Edit { get; set; }
-    public bool Delete { get; set; }
-    public bool Search { get; set; }
-    public bool Export { get; set; }
-    public bool Import { get; set; }
-    public bool ManagePermissions { get; set; }
-    public bool ManageNavigation { get; set; }
-}
-public class UsersAccessRights
-{
-    public bool View { get; set; }
-    public bool Create { get; set; }
-    public bool Edit { get; set; }
-    public bool Delete { get; set; }
-    public bool Search { get; set; }
-    public bool Import { get; set; }
-    public bool Export { get; set; }
-    public bool ManageRoles { get; set; }
-    public bool RestPassword { get; set; }
-    public bool SendRestPasswordMail { get; set; }
-    public bool ManagePermissions { get; set; }
-    public bool Deactivation { get; set; }
-    public bool ViewOnlineStatus { get; set; }
-}
-
-public class AuditTrailsAccessRights
-{
-    public bool View { get; set; }
-    public bool Search { get; set; }
-    public bool Export { get; set; }
-}
-
-public class LoginAuditsAccessRights
-{
-    public bool View { get; set; }
-    public bool Search { get; set; }
-    public bool Export { get; set; }
-    public bool ViewAll { get; set; }
-}
-public class TenantsAccessRights
-{
-    public bool View { get; set; }
-    public bool Create { get; set; }
-    public bool Edit { get; set; }
-    public bool Delete { get; set; }
-    public bool Search { get; set; }
-}
-public class DashboardsAccessRights
-{
-    public bool View { get; set; }
-}
+    [DisplayName("Hangfire Permissions")]
+    [Description("Set permissions for Hangfire dashboard")]
+    public static class Hangfire
+    {
+        [Description("Allows viewing Hangfire dashboard")]
+        public const string View = "Permissions.Hangfire.View";
+    }
+} 

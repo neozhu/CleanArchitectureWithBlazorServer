@@ -134,10 +134,23 @@ public static class ConstantString
     public static string Admin => Localize("Admin");
     public static string SuperAdmin => Localize("Super Admin");
     public static string Basic => Localize("Basic");
+    
+    // Success/Failure messages
+    public static string SaveSuccess => Localize("Save successfully");
+    public static string CreateSuccess => Localize("Create successfully");
+    public static string DeleteSuccess => Localize("Delete successfully");
+    public static string UploadSuccess => Localize("Upload successfully");
+    public static string ExportFail => Localize("Export failed");
+    public static string ImportFail => Localize("Import failed");
+    
+    // Additional messages
+    public static string Waiting => Localize("Waiting...");
+    public static string DeleteTheItem => Localize("Delete the item");
+    public static string DeleteConfirmationWithId => Localize("Are you sure you want to delete the item with ID: {0}?");
 
     private static string Localize(string key)
     {
-        var culture = CultureInfo.CurrentUICulture;
-        return rm.GetString(key, culture) ?? key;
+        // Temporary fix: return the key as fallback until resource files are properly configured
+        return key;
     }
 } 

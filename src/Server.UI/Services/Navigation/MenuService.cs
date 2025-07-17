@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
+﻿using CleanArchitecture.Blazor.Application.Common.Constants.Roles;
 using CleanArchitecture.Blazor.Server.UI.Models.NavigationMenu;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Navigation;

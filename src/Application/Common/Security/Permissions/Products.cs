@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
-namespace CleanArchitecture.Blazor.Infrastructure.PermissionSet;
+namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public static partial class Permissions
 {
@@ -34,7 +34,6 @@ public static partial class Permissions
     }
 }
 
-
 public class ProductsAccessRights
 {
     public bool View { get; set; }
@@ -45,4 +44,4 @@ public class ProductsAccessRights
     public bool Search { get; set; }
     public bool Export { get; set; }
     public bool Import { get; set; }
-}
+} 

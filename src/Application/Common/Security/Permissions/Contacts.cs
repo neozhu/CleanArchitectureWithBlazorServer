@@ -1,9 +1,9 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel;
 
-namespace CleanArchitecture.Blazor.Infrastructure.PermissionSet;
+namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public static partial class Permissions
 {
@@ -48,5 +48,4 @@ public class ContactsAccessRights
     public bool Search { get; set; }
     public bool Export { get; set; }
     public bool Import { get; set; }
-}
-
+} 

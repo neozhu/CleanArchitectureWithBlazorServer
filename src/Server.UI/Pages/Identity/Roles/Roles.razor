@@ -4,18 +4,18 @@
 @using CleanArchitecture.Blazor.Domain.Identity
 @using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
 @using System.Security.Claims
-@using CleanArchitecture.Blazor.Infrastructure.Persistence
+
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Roles.Components
-@using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes
+@using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes
 @using System.Linq.Expressions
 @using ZiggyCreatures.Caching.Fusion
-@using CleanArchitecture.Blazor.Infrastructure.Constants
-@using CleanArchitecture.Blazor.Infrastructure.PermissionSet
+@using CleanArchitecture.Blazor.Application.Common.Constants
+@using CleanArchitecture.Blazor.Application.Common.Security
 @using System.Data
 @using CleanArchitecture.Blazor.Server.UI.Services.Identity
 
 @attribute [Authorize(Policy = Permissions.Roles.View)]
-@inherits OwningComponentBase<ApplicationDbContext>
+@inherits OwningComponentBase
 @inject ITenantService _tenantService
 @inject IRoleService _roleService
 @inject IFusionCache _fusionCache
@@ -191,7 +191,7 @@
     private bool _isExporting;
     private PermissionHelper _permissionHelper = null!;
     private RolePermissionAssignmentService _permissionAssignmentService = null!;
-    private CleanArchitecture.Blazor.Infrastructure.PermissionSet.RolesAccessRights _accessRights = new();
+    private RolesAccessRights _accessRights = new();
 
     #endregion
 
@@ -200,7 +200,7 @@
     {
         InitializeServices();
         _title = _localizer[_currentDto.GetClassDescription()];
-        _accessRights = await PermissionService.GetAccessRightsAsync<CleanArchitecture.Blazor.Infrastructure.PermissionSet.RolesAccessRights>();
+        _accessRights = await PermissionService.GetAccessRightsAsync<RolesAccessRights>();
     }
 
     private void InitializeServices()

@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Infrastructure.Extensions;
+﻿using CleanArchitecture.Blazor.Application.Common.Extensions;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 

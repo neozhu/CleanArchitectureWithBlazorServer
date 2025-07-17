@@ -1,20 +1,36 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
+
 /// <summary>
-/// Interface for the permission service that provides a method to retrieve access rights
-/// based on an access rights model type.
+/// Permission service interface for Clean Architecture compliance
 /// </summary>
 public interface IPermissionService
 {
     /// <summary>
-    /// Retrieves the access rights for the given access rights model type by checking each permission
-    /// against the current user's authorization state.
+    /// Check if the current user has the specified permission
     /// </summary>
-    /// <typeparam name="TAccessRights">
-    /// The access rights model type. Its name must end with "AccessRights" (e.g., ContactsAccessRights),
-    /// and its properties correspond to the permission names.
-    /// </typeparam>
-    /// <returns>
-    /// An instance of TAccessRights where each boolean property indicates whether the current user has that permission.
-    /// </returns>
-    Task<TAccessRights> GetAccessRightsAsync<TAccessRights>() where TAccessRights : new();
+    /// <param name="permission">Permission to check</param>
+    /// <returns>True if user has permission, false otherwise</returns>
+    Task<bool> HasPermissionAsync(string permission);
+
+    /// <summary>
+    /// Get access rights for a specific type
+    /// </summary>
+    /// <typeparam name="T">Access rights type</typeparam>
+    /// <returns>Access rights object with populated permissions</returns>
+    Task<T> GetAccessRightsAsync<T>() where T : new();
+
+    /// <summary>
+    /// Get all permissions for the current user
+    /// </summary>
+    /// <returns>List of permissions</returns>
+    Task<List<string>> GetUserPermissionsAsync();
+
+    /// <summary>
+    /// Get all available permissions in the system
+    /// </summary>
+    /// <returns>List of all registered permissions</returns>
+    List<string> GetAllPermissions();
 }

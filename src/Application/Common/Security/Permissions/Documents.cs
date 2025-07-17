@@ -1,10 +1,12 @@
-﻿using System.ComponentModel;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Infrastructure.PermissionSet;
+using System.ComponentModel;
+
+namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public static partial class Permissions
 {
-
     [DisplayName("Document Permissions")]
     [Description("Set permissions for document operations")]
     public static class Documents
@@ -21,6 +23,9 @@ public static partial class Permissions
         [Description("Allows deleting document records")]
         public const string Delete = "Permissions.Documents.Delete";
 
+        [Description("Allows downloading document files")]
+        public const string Download = "Permissions.Documents.Download";
+
         [Description("Allows searching for document records")]
         public const string Search = "Permissions.Documents.Search";
 
@@ -29,9 +34,6 @@ public static partial class Permissions
 
         [Description("Allows importing document records")]
         public const string Import = "Permissions.Documents.Import";
-
-        [Description("Allows downloading documents")]
-        public const string Download = "Permissions.Documents.Download";
     }
 }
 
@@ -41,8 +43,8 @@ public class DocumentsAccessRights
     public bool Create { get; set; }
     public bool Edit { get; set; }
     public bool Delete { get; set; }
+    public bool Download { get; set; }
     public bool Search { get; set; }
     public bool Export { get; set; }
     public bool Import { get; set; }
-    public bool Download { get; set; }
-}
+} 

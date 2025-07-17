@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using CleanArchitecture.Blazor.Application;
-using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
+using CleanArchitecture.Blazor.Application.Common.Constants.Localization;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Services;

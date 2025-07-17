@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using CleanArchitecture.Blazor.Domain.Identity;
-using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
-using CleanArchitecture.Blazor.Infrastructure.Constants.User;
-using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
+using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Application.Common.Constants.Roles;
+using CleanArchitecture.Blazor.Application.Common.Constants.User;
+using CleanArchitecture.Blazor.Application.Common.Security;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 

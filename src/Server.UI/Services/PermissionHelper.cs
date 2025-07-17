@@ -2,8 +2,8 @@
 using System.ComponentModel;
 using System.Reflection;
 using CleanArchitecture.Blazor.Domain.Identity;
-using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
+using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Application.Common.Security;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using ZiggyCreatures.Caching.Fusion;

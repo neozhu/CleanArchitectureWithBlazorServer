@@ -1,11 +1,12 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Security.Claims;
 using CleanArchitecture.Blazor.Application.Common.Security;
-using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
+using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Application.Common.Constants.Roles;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
+namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {
@@ -103,4 +104,4 @@ public static class ClaimsPrincipalExtensions
     {
         return claimsPrincipal.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToArray();
     }
-}
+} 
