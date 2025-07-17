@@ -242,7 +242,6 @@
     // Data management services
     private UserManager<ApplicationUser> _userManager = null!;
     private RoleManager<ApplicationRole> _roleManager = null!;
-    private PermissionHelper _permissionHelper = null!;
     private UserPermissionAssignmentService _permissionAssignmentService = null!;
 
     // Page state and data
@@ -287,7 +286,6 @@
     {
         _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        _permissionHelper = ScopedServices.GetRequiredService<PermissionHelper>();
         _permissionAssignmentService = ScopedServices.GetRequiredService<UserPermissionAssignmentService>();
     }
 

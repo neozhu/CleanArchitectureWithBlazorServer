@@ -28,9 +28,7 @@
 @using CleanArchitecture.Blazor.Application.Common.Interfaces
 @using CleanArchitecture.Blazor.Application.Common.Models
 @using CleanArchitecture.Blazor.Application.Common.Security
-@using CleanArchitecture.Blazor.Application.Common.Security;
 @using CleanArchitecture.Blazor.Application.Common.Constants
-@using CleanArchitecture.Blazor.Application.Common.Extensions
 @using CleanArchitecture.Blazor.Server.UI.Models
 @using CleanArchitecture.Blazor.Server.UI
 @using CleanArchitecture.Blazor.Server.UI.Shared
@@ -53,7 +51,6 @@
 @inject IApplicationSettings ApplicationSettings
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
-@inject IConfiguration Config
 @inject IAuthorizationService AuthService 
 @inject IValidationService Validator
 @inject IJSRuntime JS

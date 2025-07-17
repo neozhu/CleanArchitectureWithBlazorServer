@@ -83,6 +83,10 @@ public static class DependencyInjection
 
         services.Configure<MinioOptions>(configuration.GetSection(MinioOptions.Key))
             .AddSingleton(s => s.GetRequiredService<IOptions<MinioOptions>>().Value);
+
+        services.Configure<AISettings>(configuration.GetSection(AISettings.Key))
+            .AddSingleton(s => s.GetRequiredService<IOptions<AISettings>>().Value)
+            .AddSingleton<IAISettings>(s => s.GetRequiredService<IOptions<AISettings>>().Value);
         return services;
     }
 

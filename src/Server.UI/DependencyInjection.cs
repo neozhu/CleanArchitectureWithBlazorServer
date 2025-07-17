@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Application.Common.Constants.Localization;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Services;
@@ -91,10 +92,10 @@ public static class DependencyInjection
         services.AddHealthChecks();
 
 
-        services.AddHttpClient("ocr", c =>
+        services.AddHttpClient("ocr", (serviceProvider, c) =>
         {
-            var gemini_api_key = config["AI:GEMINI_API_KEY"];
-            c.BaseAddress = new Uri($"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent?key={gemini_api_key}");
+            var aiSettings = serviceProvider.GetRequiredService<IAISettings>();
+            c.BaseAddress = new Uri($"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent?key={aiSettings.GeminiApiKey}");
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
         services.AddScoped<LocalTimeOffset>();
@@ -103,7 +104,7 @@ public static class DependencyInjection
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddScoped<LayoutService>()
             .AddScoped<DialogServiceHelper>()
-            .AddScoped<PermissionHelper>()
+            .AddScoped<IPermissionHelper, PermissionHelper>()
             .AddScoped<CleanArchitecture.Blazor.Server.UI.Services.Identity.UserPermissionAssignmentService>()
             .AddScoped<CleanArchitecture.Blazor.Server.UI.Services.Identity.RolePermissionAssignmentService>()
             .AddScoped<BlazorDownloadFileService>()
