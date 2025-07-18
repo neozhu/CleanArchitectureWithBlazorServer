@@ -11,10 +11,10 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Fusion;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
-using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Infrastructure.Constants.Database;
-using CleanArchitecture.Blazor.Infrastructure.Constants.User;
-using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
+using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Application.Common.Constants.Database;
+using CleanArchitecture.Blazor.Application.Common.Constants.User;
+using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services.Gemini;
@@ -83,6 +83,10 @@ public static class DependencyInjection
 
         services.Configure<MinioOptions>(configuration.GetSection(MinioOptions.Key))
             .AddSingleton(s => s.GetRequiredService<IOptions<MinioOptions>>().Value);
+
+        services.Configure<AISettings>(configuration.GetSection(AISettings.Key))
+            .AddSingleton(s => s.GetRequiredService<IOptions<AISettings>>().Value)
+            .AddSingleton<IAISettings>(s => s.GetRequiredService<IOptions<AISettings>>().Value);
         return services;
     }
 

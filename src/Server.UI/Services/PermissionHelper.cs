@@ -2,8 +2,8 @@
 using System.ComponentModel;
 using System.Reflection;
 using CleanArchitecture.Blazor.Domain.Identity;
-using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Infrastructure.PermissionSet;
+using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using ZiggyCreatures.Caching.Fusion;
@@ -12,36 +12,9 @@ using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 namespace CleanArchitecture.Blazor.Server.UI.Services;
 
 /// <summary>
-/// Contains information about a permission module.
-/// </summary>
-public class ModuleInfo
-{
-    /// <summary>
-    /// Gets the display name of the module.
-    /// </summary>
-    public string DisplayName { get; }
-
-    /// <summary>
-    /// Gets the description of the module.
-    /// </summary>
-    public string Description { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ModuleInfo"/> class.
-    /// </summary>
-    /// <param name="displayName">Display name of the module.</param>
-    /// <param name="description">Description of the module.</param>
-    public ModuleInfo(string displayName, string description)
-    {
-        DisplayName = displayName;
-        Description = description;
-    }
-}
-
-/// <summary>
 /// Helper class for managing permissions.
 /// </summary>
-public class PermissionHelper
+public class PermissionHelper : IPermissionHelper
 {
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;

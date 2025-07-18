@@ -1,4 +1,4 @@
-﻿using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
+﻿using CleanArchitecture.Blazor.Application.Common.Constants.Localization;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 

@@ -2,6 +2,7 @@
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Domain.Identity;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using Microsoft.AspNetCore.Identity;
 using ZiggyCreatures.Caching.Fusion;
@@ -12,13 +13,13 @@ namespace CleanArchitecture.Blazor.Server.UI.Services.Identity;
 public class UserPermissionAssignmentService : IPermissionAssignmentService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly PermissionHelper _permissionHelper;
+    private readonly IPermissionHelper _permissionHelper;
     private readonly IFusionCache _cache;
     private readonly ILogger<UserPermissionAssignmentService> _logger;
     private const string CacheKeyPrefix = "get-claims-by-";
 
     public UserPermissionAssignmentService(UserManager<ApplicationUser> userManager,
-        PermissionHelper permissionHelper,
+        IPermissionHelper permissionHelper,
         IFusionCache cache,
         ILogger<UserPermissionAssignmentService> logger)
     {

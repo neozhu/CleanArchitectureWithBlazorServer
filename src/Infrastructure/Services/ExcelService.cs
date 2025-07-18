@@ -3,17 +3,13 @@
 
 using System.Data;
 using ClosedXML.Excel;
-using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class ExcelService : IExcelService
 {
-    private readonly IStringLocalizer<ExcelService> _localizer;
-
-    public ExcelService(IStringLocalizer<ExcelService> localizer)
+    public ExcelService()
     {
-        _localizer = localizer;
     }
 
     /// <summary>
@@ -101,7 +97,7 @@ public class ExcelService : IExcelService
         using var workbook = new XLWorkbook(new MemoryStream(data));
         if (!workbook.Worksheets.TryGetWorksheet(sheetName, out var ws))
         {
-            var msg = string.Format(_localizer["Sheet with name {0} does not exist!"], sheetName);
+            var msg = $"Sheet with name {sheetName} does not exist!";
             return await Result<IEnumerable<TEntity>>.FailureAsync(msg);
         }
 
@@ -109,7 +105,7 @@ public class ExcelService : IExcelService
         var lastCellUsed = ws.LastCellUsed()?.Address.ColumnNumber ?? 0;
         if (lastCellUsed == 0)
         {
-            var msg = string.Format(_localizer["Sheet with name {0} is empty!"], sheetName);
+            var msg = $"Sheet with name {sheetName} is empty!";
             return await Result<IEnumerable<TEntity>>.FailureAsync(msg);
         }
 
@@ -130,7 +126,7 @@ public class ExcelService : IExcelService
         {
             if (!dt.Columns.Contains(header))
             {
-                errors.Add(string.Format(_localizer["Header '{0}' does not exist in table!"], header));
+                errors.Add($"Header '{header}' does not exist in table!");
             }
         }
         if (errors.Any())
@@ -168,7 +164,7 @@ public class ExcelService : IExcelService
             }
             catch (Exception e)
             {
-                var errorMsg = string.Format(_localizer["Error in sheet {0}: {1}"], sheetName, e.Message);
+                var errorMsg = $"Error in sheet {sheetName}: {e.Message}";
                 return await Result<IEnumerable<TEntity>>.FailureAsync(errorMsg);
             }
         }
