@@ -11,7 +11,7 @@ public static class LoginAuditCacheKey
     {
         return $"LoginAuditCacheKey:LoginAuditsWithPaginationQuery,{parameters}";
     }
-    public static IEnumerable<string> Tags => new string[] { "loginaudits" };
+    public static IEnumerable<string> Tags => new string[] { "loginaudits","userloginrisksummary", "statistics" };
     public static void Refresh()
     {
         FusionCacheFactory.RemoveByTags(Tags);

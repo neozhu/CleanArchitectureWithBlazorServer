@@ -1,4 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Domain.Identity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 
@@ -8,6 +10,9 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 public class MultiTenantUserManager : UserManager<ApplicationUser>
 {
     private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly IHttpContextAccessor? _httpContextAccessor;
+    private readonly IApplicationDbContext? _context;
+    private readonly ILogger<MultiTenantUserManager>? _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MultiTenantUserManager"/> class.
@@ -32,10 +37,16 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
         IdentityErrorDescriber errors,
         IServiceProvider services,
         RoleManager<ApplicationRole> roleManager,
-        ILogger<UserManager<ApplicationUser>> logger)
+        ILogger<UserManager<ApplicationUser>> logger,
+        IHttpContextAccessor? httpContextAccessor = null,
+        IApplicationDbContext? context = null,
+        ILogger<MultiTenantUserManager>? auditLogger = null)
         : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
     {
         _roleManager = roleManager;
+        _httpContextAccessor = httpContextAccessor;
+        _context = context;
+        _logger = auditLogger;
     }
 
     /// <summary>
@@ -145,6 +156,131 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
         await userRoleStore.RemoveFromRoleAsync(user, normalizedRoleName, CancellationToken.None);
 
         return await UpdateUserAsync(user);
+    }
+
+    public override async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
+    {
+        var result = await base.CheckPasswordAsync(user, password);
+        
+        // Only log failed password checks to avoid duplicate login records
+        if (!result)
+        {
+            var userName = user.UserName ?? "Unknown";
+            var userId = user.Id ?? "Unknown";
+            
+            // Use the injected services to log the failed password check
+            if (_httpContextAccessor != null && _context != null && _logger != null)
+            {
+                await LogPasswordCheckFailureAsync(userId, userName, _httpContextAccessor, _context, _logger);
+            }
+        }
+        
+        return result;
+    }
+
+    private async Task LogPasswordCheckFailureAsync(string userId, string userName, 
+        IHttpContextAccessor httpContextAccessor, IApplicationDbContext context, 
+        ILogger<MultiTenantUserManager> logger)
+    {
+        try
+        {
+            var httpContext = httpContextAccessor.HttpContext;
+            if (httpContext == null)
+            {
+                logger.LogWarning("HttpContext is null, cannot log password check failure for user {UserName}", userName);
+                return;
+            }
+
+            // Extract client information
+            var ipAddress = GetClientIpAddress(httpContext);
+            var browserInfo = GetBrowserInfo(httpContext);
+
+            // Create login audit for failed password check
+            var loginAudit = new LoginAudit()
+            {
+                LoginTimeUtc = DateTime.UtcNow,
+                UserId = userId,
+                UserName = userName,
+                IpAddress = ipAddress,
+                BrowserInfo = browserInfo,
+                Provider = "PasswordCheck",
+                Success = false
+            };
+            
+            loginAudit.AddDomainEvent(new Domain.Events.LoginAuditCreatedEvent(loginAudit));
+            
+            // Save to database
+            await context.LoginAudits.AddAsync(loginAudit);
+            await context.SaveChangesAsync(CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to log password check failure for user {UserName}", userName);
+            // Don't throw - audit failure shouldn't break the password check process
+        }
+    }
+
+    private string? GetClientIpAddress(HttpContext httpContext)
+    {
+        try
+        {
+            // Check for forwarded IP first (when behind proxy/load balancer)
+            var forwardedFor = httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(forwardedFor))
+            {
+                // Take the first IP if there are multiple
+                var firstIp = forwardedFor.Split(',').FirstOrDefault()?.Trim();
+                if (!string.IsNullOrEmpty(firstIp))
+                    return firstIp;
+            }
+
+            // Check for real IP header
+            var realIp = httpContext.Request.Headers["X-Real-IP"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(realIp))
+                return realIp;
+
+            // Fall back to remote IP
+            var remoteIp = httpContext.Connection.RemoteIpAddress?.ToString();
+
+            // Handle localhost scenarios
+            if (remoteIp == "::1" || remoteIp == "127.0.0.1")
+            {
+                return "127.0.0.1"; // Normalize localhost
+            }
+
+            return SanitizeInput(remoteIp);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "Failed to get client IP address");
+            return null;
+        }
+    }
+
+    private string SanitizeInput(string? input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return string.Empty;
+        // Remove newline characters and trim whitespace
+        return input.Replace("\r", "").Replace("\n", "").Trim();
+    }
+
+    private string? GetBrowserInfo(HttpContext httpContext)
+    {
+        try
+        {
+            var userAgent = httpContext.Request.Headers["User-Agent"].FirstOrDefault();
+            if (string.IsNullOrEmpty(userAgent))
+                return null;
+
+            // Truncate if too long to prevent database issues
+            return userAgent.Length > 1000 ? userAgent.Substring(0, 1000) : userAgent;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "Failed to get browser info");
+            return null;
+        }
     }
 
     private IUserRoleStore<ApplicationUser> GetUserRoleStore()

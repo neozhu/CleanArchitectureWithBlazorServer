@@ -828,7 +828,7 @@
             new Dictionary<string, object?> { ["returnUrl"] = "/" });
 
         await Mediator.Publish(new SendWelcomeNotification(callbackUrl, email, userName));
-        Logger.LogInformation("{UserName} activated successfully!", email);
+        Logger.LogInformation("User {UserName} activated successfully!", userName);
     }
 
     #endregion

@@ -103,7 +103,8 @@
         }
 
         StackTrace = Exception.StackTrace;
-        Logger.LogError(Exception, "{Message}. request url: {@url} {@UserName}", Message, Navigation.Uri, userName);
+        var sanitizedUri = Navigation.Uri.Replace("\n", "").Replace("\r", "");
+        Logger.LogError(Exception, "{Message}. request url: {@url} {@UserName}", Message, sanitizedUri, userName);
     }
 
     private void OnRefresh()
