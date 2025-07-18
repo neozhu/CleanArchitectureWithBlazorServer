@@ -5,7 +5,6 @@ using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Localization;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
@@ -13,7 +12,6 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 public class IdentityService : IIdentityService
 {
     private readonly IAuthorizationService _authorizationService;
-    private readonly IStringLocalizer<IdentityService> _localizer;
     private readonly IFusionCache _fusionCache;
     private readonly IMapper _mapper;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
@@ -21,10 +19,8 @@ public class IdentityService : IIdentityService
 
     public IdentityService(
         IServiceScopeFactory scopeFactory,
-        IApplicationSettings appConfig,
         IFusionCache fusionCache,
-        IMapper mapper,
-        IStringLocalizer<IdentityService> localizer)
+        IMapper mapper)
     {
         var scope = scopeFactory.CreateScope();
         _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -32,7 +28,6 @@ public class IdentityService : IIdentityService
         _authorizationService = scope.ServiceProvider.GetRequiredService<IAuthorizationService>();
         _fusionCache = fusionCache;
         _mapper = mapper;
-        _localizer = localizer;
     }
 
     private TimeSpan RefreshInterval => TimeSpan.FromMinutes(60);
@@ -55,14 +50,14 @@ public class IdentityService : IIdentityService
     public async Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default)
     {
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation) ??
-                   throw new NotFoundException(_localizer["User Not Found"]);
+                   throw new NotFoundException("User Not Found");
         return await _userManager.IsInRoleAsync(user, role);
     }
 
     public async Task<bool> AuthorizeAsync(string userId, string policyName, CancellationToken cancellation = default)
     {
         var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation) ??
-                   throw new NotFoundException(_localizer["User Not Found"]);
+                   throw new NotFoundException("User Not Found");
         var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
         var result = await _authorizationService.AuthorizeAsync(principal, policyName);
         return result.Succeeded;
