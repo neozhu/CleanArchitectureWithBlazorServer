@@ -46,13 +46,13 @@
 
 @code {
     public string? Title { get; private set; }
-    MudForm _contactForm=new();
+    MudForm _contactForm = new();
     private bool _saving = false;
     private List<BreadcrumbItem>? _breadcrumbItems;
     private CreateContactCommand _model = new();
     protected override Task OnInitializedAsync()
     {
-        Title = L["Create Contact"];
+        Title = L["New Contact"];
         _breadcrumbItems = new List<BreadcrumbItem>
         {
             new BreadcrumbItem(L["Home"], href: "/"),

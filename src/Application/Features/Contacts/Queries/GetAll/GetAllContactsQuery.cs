@@ -5,8 +5,8 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2025-03-19
-//     Last Modified: 2025-03-19
+//     Created Date: 2025-07-18
+//     Last Modified: 2025-07-18
 //     Description: 
 //       Defines a query to retrieve all contacts from the database. The result 
 //       is cached to improve performance and reduce database load for repeated 
@@ -14,6 +14,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 #nullable enable
+#nullable disable warnings
+
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 

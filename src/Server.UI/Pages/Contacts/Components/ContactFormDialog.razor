@@ -8,7 +8,6 @@
     <DialogContent>
         <MudForm Model="@_model" @ref="@_contactForm" Validation="@(Validator.ValidateValue(_model))">
             <MudGrid>
-                @*TODO: define mudform that should be edit fields, for example:*@
                 <MudItem xs="12" md="6"> 
                         <MudTextField Label="@L[_model.GetMemberDescription(x=>x.Name)]" @bind-Value="_model.Name" For="@(() => _model.Name)" Required="true" RequiredError="@L["name is required!"]"></MudTextField>
                 </MudItem> 
@@ -36,7 +35,7 @@
 </MudDialog>
 
 @code {
-    MudForm? _contactForm;
+    MudForm _contactForm = new();
     private bool _saving = false;
     private bool _savingnew = false;
     [CascadingParameter]
@@ -47,8 +46,8 @@
         try
         {
             _saving = true;
-            await _contactForm!.Validate().ConfigureAwait(false);
-            if (!_contactForm!.IsValid)
+            await _contactForm.Validate().ConfigureAwait(false);
+            if (!_contactForm.IsValid)
                 return;
             var result = await Mediator.Send(_model);
             result.Match(data =>
@@ -70,8 +69,8 @@
         try
         {
             _savingnew = true;
-            await _contactForm!.Validate().ConfigureAwait(false);
-            if (!_contactForm!.IsValid)
+            await _contactForm.Validate().ConfigureAwait(false);
+            if (!_contactForm.IsValid)
                return;
             var result = await Mediator.Send(_model);
             await result.MatchAsync(async data =>

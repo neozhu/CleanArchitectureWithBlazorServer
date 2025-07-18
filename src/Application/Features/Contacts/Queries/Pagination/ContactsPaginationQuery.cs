@@ -5,14 +5,16 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2025-03-19
-//     Last Modified: 2025-03-19
+//     Created Date: 2025-07-18
+//     Last Modified: 2025-07-18
 //     Description: 
 //       Defines a query for retrieving contacts with pagination and filtering 
 //       options. The result is cached to enhance performance for repeated queries.
 // </auto-generated>
 //------------------------------------------------------------------------------
 #nullable enable
+#nullable disable warnings
+
 using CleanArchitecture.Blazor.Application.Features.Contacts.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Caching;
 using CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;

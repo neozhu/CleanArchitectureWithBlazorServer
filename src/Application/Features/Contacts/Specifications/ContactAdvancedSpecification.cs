@@ -5,13 +5,15 @@
 //     See the LICENSE file in the project root for more information.
 //
 //     Author: neozhu
-//     Created Date: 2025-03-19
-//     Last Modified: 2025-03-19
+//     Created Date: 2025-07-18
+//     Last Modified: 2025-07-18
 //     Description: 
 //       Defines a specification for applying advanced filtering options to the 
 //       Contact entity, supporting different views and keyword-based searches.
 // </auto-generated>
 //------------------------------------------------------------------------------
+#nullable enable
+#nullable disable warnings
 
 namespace CleanArchitecture.Blazor.Application.Features.Contacts.Specifications;
 #nullable disable warnings
