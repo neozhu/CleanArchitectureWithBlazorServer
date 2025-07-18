@@ -230,7 +230,7 @@
             var totalCount = await _roleManager.Roles.CountAsync(predicate);
             var roles = await _roleManager.Roles
                 .Where(predicate)
-                .EfOrderBySortDefinitions(state)
+                .ApplySortDefinitions(state)
                 .Skip(state.Page * state.PageSize)
                 .Take(state.PageSize)
                 .ProjectTo<ApplicationRoleDto>(Mapper.ConfigurationProvider)

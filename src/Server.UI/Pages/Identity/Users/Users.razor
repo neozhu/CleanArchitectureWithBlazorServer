@@ -320,7 +320,7 @@
             var data = await _userManager.Users.Where(predicate)
                 .Include(x => x.UserRoles).ThenInclude(ur => ur.Role)
                 .Include(x => x.Superior)
-                .EfOrderBySortDefinitions(state)
+                .ApplySortDefinitions(state)
                 .Skip(state.Page * state.PageSize).Take(state.PageSize)
                 .ProjectTo<ApplicationUserDto>(Mapper.ConfigurationProvider)
                 .ToListAsync();
