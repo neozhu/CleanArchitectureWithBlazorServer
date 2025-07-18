@@ -150,7 +150,31 @@ public static class ConstantString
 
     private static string Localize(string key)
     {
-        // Temporary fix: return the key as fallback until resource files are properly configured
+        try
+        {
+            // Try to get localized string using current UI culture
+            var localizedString = rm.GetString(key, CultureInfo.CurrentUICulture);
+            
+            // If localized string is found and not empty, return it
+            if (!string.IsNullOrEmpty(localizedString))
+            {
+                return localizedString;
+            }
+            
+            // If not found in current culture, try using invariant culture as fallback
+            localizedString = rm.GetString(key, CultureInfo.InvariantCulture);
+            if (!string.IsNullOrEmpty(localizedString))
+            {
+                return localizedString;
+            }
+        }
+        catch (Exception)
+        {
+            // If an exception occurs, fallback to returning the key
+            // This may happen when resource files are missing or corrupted
+        }
+        
+        // Final fallback: return the key itself
         return key;
     }
 } 

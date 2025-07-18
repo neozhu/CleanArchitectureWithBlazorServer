@@ -7,7 +7,6 @@ namespace CleanArchitecture.Blazor.Application.Common.Security;
 
 public static partial class Permissions
 {
-
     [DisplayName("Contact Permissions")]
     [Description("Set permissions for contact operations")]
     public static class Contacts
