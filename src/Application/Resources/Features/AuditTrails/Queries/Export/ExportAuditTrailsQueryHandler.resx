@@ -138,6 +138,9 @@
     <data name="Date Time" xml:space="preserve">
     <value>Date Time</value>
   </data>
+    <data name="Audit Type" xml:space="preserve">
+    <value>Audit Type</value>
+  </data>
     <data name="AuditTrails" xml:space="preserve">
     <value>AuditTrails</value>
   </data>
