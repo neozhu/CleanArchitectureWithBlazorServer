@@ -6,7 +6,6 @@ using ActualLab.Fusion;
 using ActualLab.Fusion.Blazor;
 using ActualLab.Fusion.Blazor.Authentication;
 using ActualLab.Fusion.Extensions;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Features.Fusion;
 using CleanArchitecture.Blazor.Domain.Identity;
@@ -18,7 +17,6 @@ using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services.Gemini;
-using CleanArchitecture.Blazor.Infrastructure.Services.MediatorWrapper;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 using FluentEmail.MailKitSmtp;
 using Microsoft.AspNetCore.Components.Server.Circuits;
@@ -62,7 +60,6 @@ public static class DependencyInjection
             .AddFusionService();
 
         services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
-        services.AddScoped<IScopedMediator, ScopedMediator>();
         services.AddScoped<IPermissionService, PermissionService>();
         return services;
     }
