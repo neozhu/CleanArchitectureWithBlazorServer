@@ -16,6 +16,6 @@ var app = builder.Build();
 
 app.ConfigureServer(builder.Configuration);
 
-//await app.InitializeDatabaseAsync().ConfigureAwait(false);
+await app.InitializeDatabaseAsync().ConfigureAwait(false);
 
 await app.RunAsync().ConfigureAwait(false);

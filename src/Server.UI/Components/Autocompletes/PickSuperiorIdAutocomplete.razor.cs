@@ -1,5 +1,6 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Features.Identity.DTOs;
+using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 namespace CleanArchitecture.Blazor.Server.UI.Components.Autocompletes;
 #nullable disable warnings
@@ -34,6 +35,14 @@ public class PickSuperiorIdAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
     protected override void OnInitialized()
     {
         UserService.OnChange += TenantsService_OnChange;
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await UserService.InitializeAsync();
+        }
+
     }
     private async Task TenantsService_OnChange()
     {

@@ -34,11 +34,13 @@ public class AddEditTenantCommandHandler : IRequestHandler<AddEditTenantCommand,
 
     public AddEditTenantCommandHandler(
         IApplicationDbContextFactory dbContextFactory,
-        IMapper mapper
+        IMapper mapper,
+        ITenantService tenantsService
     )
     {
         _dbContextFactory = dbContextFactory;
         _mapper = mapper;
+        _tenantsService = tenantsService;
     }
 
     public async Task<Result<string>> Handle(AddEditTenantCommand request, CancellationToken cancellationToken)

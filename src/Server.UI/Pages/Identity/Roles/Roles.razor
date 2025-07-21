@@ -200,6 +200,7 @@
         InitializeServices();
         _title = _localizer[_currentDto.GetClassDescription()];
         _accessRights = await PermissionService.GetAccessRightsAsync<RolesAccessRights>();
+        await _tenantService.InitializeAsync();
     }
 
     private void InitializeServices()
@@ -265,7 +266,7 @@
         await InvokeAsync(async () =>
         {
             _selectedRoles = new HashSet<ApplicationRoleDto>();
-            _roleService.Refresh();
+            await _roleService.RefreshAsync();
             await _dataGrid.ReloadServerData();
         });
     }

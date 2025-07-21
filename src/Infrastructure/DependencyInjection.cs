@@ -170,7 +170,6 @@ public static class DependencyInjection
             .AddScoped<IPicklistService>(sp =>
             {
                 var service = sp.GetRequiredService<PicklistService>();
-
                 return service;
             });
 
@@ -178,14 +177,12 @@ public static class DependencyInjection
             .AddScoped<ITenantService>(sp =>
             {
                 var service = sp.GetRequiredService<TenantService>();
-
                 return service;
             });
         services.AddScoped<UserService>()
             .AddScoped<IUserService>(sp =>
             {
                 var service = sp.GetRequiredService<UserService>();
-
                 return service;
             });
 
@@ -193,11 +190,10 @@ public static class DependencyInjection
             .AddScoped<IRoleService>(sp =>
             {
                 var service = sp.GetRequiredService<RoleService>();
-
                 return service;
             });
 
-        // Permission assignment services are registered in Server.UI DI
+
 
         // Configure HttpClient for GeolocationService
         services.AddHttpClient<IGeolocationService, GeolocationService>(client =>
