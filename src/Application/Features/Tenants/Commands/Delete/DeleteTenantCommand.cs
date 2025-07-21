@@ -21,25 +21,21 @@ public class DeleteTenantCommandHandler :
     IRequestHandler<DeleteTenantCommand, Result>
 
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ITenantService _tenantsService;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
 
     public DeleteTenantCommandHandler(
-        ITenantService tenantsService,
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory
     )
     {
-        _tenantsService = tenantsService;
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task<Result> Handle(DeleteTenantCommand request, CancellationToken cancellationToken)
     {
-        var items = await _context.Tenants.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-        foreach (var item in items) _context.Tenants.Remove(item);
-
-        await _context.SaveChangesAsync(cancellationToken);
-        _tenantsService.Refresh();
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var items = await db.Tenants.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+        db.Tenants.RemoveRange(items);
+        await db.SaveChangesAsync(cancellationToken);
         return await Result.SuccessAsync();
     }
 }

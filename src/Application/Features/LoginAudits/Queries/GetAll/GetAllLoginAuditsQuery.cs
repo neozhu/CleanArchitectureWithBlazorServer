@@ -14,20 +14,21 @@ public class GetAllLoginAuditsQuery : ICacheableRequest<IEnumerable<LoginAuditDt
 
 public class GetAllLoginAuditsQueryHandler : IRequestHandler<GetAllLoginAuditsQuery, IEnumerable<LoginAuditDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
 
     public GetAllLoginAuditsQueryHandler(
-        IApplicationDbContext context,
+        IApplicationDbContextFactory dbContextFactory,
         IMapper mapper)
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
     }
 
     public async Task<IEnumerable<LoginAuditDto>> Handle(GetAllLoginAuditsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.LoginAudits
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.LoginAudits
             .OrderByDescending(x => x.LoginTimeUtc)
             .Take(1000) // Limit to latest 1000 records for performance
             .ProjectTo<LoginAuditDto>(_mapper.ConfigurationProvider)

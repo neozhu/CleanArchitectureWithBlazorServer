@@ -6,6 +6,6 @@ public interface IRoleService
 {
     List<ApplicationRoleDto> DataSource { get; }
     event Func<Task>? OnChange;
-    void Initialize();
-    void Refresh();
+    Task InitializeAsync();
+    Task  RefreshAsync();
 }

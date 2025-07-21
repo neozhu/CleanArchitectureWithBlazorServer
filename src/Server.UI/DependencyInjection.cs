@@ -5,6 +5,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Services;
+using CleanArchitecture.Blazor.Server.UI.Services.Identity;
 using CleanArchitecture.Blazor.Server.UI.Services.JsInterop;
 using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
@@ -105,8 +106,8 @@ public static class DependencyInjection
             .AddScoped<LayoutService>()
             .AddScoped<DialogServiceHelper>()
             .AddScoped<IPermissionHelper, PermissionHelper>()
-            .AddScoped<CleanArchitecture.Blazor.Server.UI.Services.Identity.UserPermissionAssignmentService>()
-            .AddScoped<CleanArchitecture.Blazor.Server.UI.Services.Identity.RolePermissionAssignmentService>()
+            .AddScoped<UserPermissionAssignmentService>()
+            .AddScoped<RolePermissionAssignmentService>()
             .AddScoped<BlazorDownloadFileService>()
             .AddScoped<IUserPreferencesService, UserPreferencesService>()
             .AddScoped<IMenuService, MenuService>()
