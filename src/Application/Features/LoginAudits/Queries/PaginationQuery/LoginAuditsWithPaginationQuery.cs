@@ -25,21 +25,22 @@ public class LoginAuditsWithPaginationQuery : LoginAuditAdvancedFilter, ICacheab
 public class LoginAuditsQueryHandler : IRequestHandler<LoginAuditsWithPaginationQuery, PaginatedData<LoginAuditDto>>
 {
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
 
     public LoginAuditsQueryHandler(
         IMapper mapper,
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory
     )
     {
         _mapper = mapper;
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task<PaginatedData<LoginAuditDto>> Handle(LoginAuditsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.LoginAudits.OrderBy($"{request.OrderBy} {request.SortDirection}")
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.LoginAudits.OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectToPaginatedDataAsync<LoginAudit, LoginAuditDto>(request.Specification, request.PageNumber, request.PageSize,
                 _mapper.ConfigurationProvider, cancellationToken);
         return data;

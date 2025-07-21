@@ -10,7 +10,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 public class AuditSignInManager<TUser> : SignInManager<TUser>
     where TUser : class
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger<AuditSignInManager<TUser>> _logger;
 
@@ -22,11 +22,11 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
         ILogger<SignInManager<TUser>> logger,
         IAuthenticationSchemeProvider schemes,
         IUserConfirmation<TUser> confirmation,
-        IApplicationDbContext context,
+        IApplicationDbContextFactory dbContextFactory,
         ILogger<AuditSignInManager<TUser>> auditLogger)
         : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation)
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _httpContextAccessor = contextAccessor;
         _logger = auditLogger;
     }
@@ -121,8 +121,9 @@ public class AuditSignInManager<TUser> : SignInManager<TUser>
                 Success= success};
             loginAudit.AddDomainEvent(new Domain.Events.LoginAuditCreatedEvent(loginAudit));
             // Save to database
-            await _context.LoginAudits.AddAsync(loginAudit);
-            await _context.SaveChangesAsync(CancellationToken.None);
+            await using var db = await _dbContextFactory.CreateAsync();
+            await db.LoginAudits.AddAsync(loginAudit);
+            await db.SaveChangesAsync(CancellationToken.None);
         }
         catch (Exception ex)
         {

@@ -103,17 +103,15 @@ public static class DependencyInjection
                 options.EnableSensitiveDataLogging();
             });
         else
-            services.AddDbContext<ApplicationDbContext>((p, m) =>
+            services.AddDbContextFactory<ApplicationDbContext>((p, m) =>
             {
                 var databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>().Value;
                 m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
                 m.UseExceptionProcessor(databaseSettings.DBProvider);
                 m.UseDatabase(databaseSettings.DBProvider, databaseSettings.ConnectionString);
-            });
+            }, ServiceLifetime.Scoped);
+        services.AddScoped<IApplicationDbContextFactory, ApplicationDbContextFactory>();
 
-        services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
-        services.AddScoped<IApplicationDbContext>(provider =>
-            provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>().CreateDbContext());
         services.AddScoped<ApplicationDbContextInitializer>();
 
         return services;
@@ -129,7 +127,7 @@ public static class DependencyInjection
                 return builder.UseNpgsql(connectionString,
                         e => e.MigrationsAssembly(POSTGRESQL_MIGRATIONS_ASSEMBLY))
                     .UseSnakeCaseNamingConvention();
-                  
+
             case DbProviderKeys.SqlServer:
                 return builder.UseSqlServer(connectionString,
                     e => e.MigrationsAssembly(MSSQL_MIGRATIONS_ASSEMBLY));
@@ -145,7 +143,7 @@ public static class DependencyInjection
 
     private static DbContextOptionsBuilder UseExceptionProcessor(this DbContextOptionsBuilder builder, string dbProvider)
     {
-     
+
         switch (dbProvider.ToLowerInvariant())
         {
             case DbProviderKeys.Npgsql:
@@ -168,34 +166,34 @@ public static class DependencyInjection
 
     private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<PicklistService>()
-            .AddSingleton<IPicklistService>(sp =>
+        services.AddScoped<PicklistService>()
+            .AddScoped<IPicklistService>(sp =>
             {
                 var service = sp.GetRequiredService<PicklistService>();
-                service.Initialize();
+
                 return service;
             });
 
-        services.AddSingleton<TenantService>()
-            .AddSingleton<ITenantService>(sp =>
+        services.AddScoped<TenantService>()
+            .AddScoped<ITenantService>(sp =>
             {
                 var service = sp.GetRequiredService<TenantService>();
-                service.Initialize();
+
                 return service;
             });
-        services.AddSingleton<UserService>()
-            .AddSingleton<IUserService>(sp =>
+        services.AddScoped<UserService>()
+            .AddScoped<IUserService>(sp =>
             {
                 var service = sp.GetRequiredService<UserService>();
-                service.Initialize();
+
                 return service;
             });
 
-        services.AddSingleton<RoleService>()
-            .AddSingleton<IRoleService>(sp =>
+        services.AddScoped<RoleService>()
+            .AddScoped<IRoleService>(sp =>
             {
                 var service = sp.GetRequiredService<RoleService>();
-                service.Initialize();
+
                 return service;
             });
 
@@ -210,7 +208,7 @@ public static class DependencyInjection
 
         // Add other services
         services.AddScoped<IGeolocationService, GeolocationService>();
-        
+
         // Configure SecurityAnalysisService with options
         services.Configure<SecurityAnalysisOptions>(configuration.GetSection(SecurityAnalysisOptions.SectionName));
         services.AddScoped<ISecurityAnalysisService, SecurityAnalysisService>();
@@ -256,7 +254,7 @@ public static class DependencyInjection
             .AddClaimsPrincipalFactory<MultiTenantUserClaimsPrincipalFactory>()
             .AddDefaultTokenProviders();
 
-   
+
 
         // Replace the default SignInManager with AuditSignInManager
         var signInManagerDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(SignInManager<ApplicationUser>));
@@ -302,7 +300,7 @@ public static class DependencyInjection
             // User settings
             options.User.RequireUniqueEmail = true;
             //options.Tokens.EmailConfirmationTokenProvider = "Email";
-            
+
         });
 
         services.AddScoped<IIdentityService, IdentityService>()
@@ -352,7 +350,7 @@ public static class DependencyInjection
         });
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
-        
+
 
         return services;
     }
@@ -371,7 +369,7 @@ public static class DependencyInjection
             // FACTORY TIMEOUTS
             FactorySoftTimeout = TimeSpan.FromSeconds(10),
             FactoryHardTimeout = TimeSpan.FromSeconds(30),
-            AllowTimedOutFactoryBackgroundCompletion = true,    
+            AllowTimedOutFactoryBackgroundCompletion = true,
         });
         return services;
     }

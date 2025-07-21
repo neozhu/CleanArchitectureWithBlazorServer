@@ -37,18 +37,18 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
                  IRequestHandler<CreateContactsTemplateCommand, Result<byte[]>>,
                  IRequestHandler<ImportContactsCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IApplicationDbContextFactory _dbContextFactory;
         private readonly IStringLocalizer<ImportContactsCommandHandler> _localizer;
         private readonly IExcelService _excelService;
         private readonly ContactDto _dto = new();
         private readonly IMapper _mapper;
         public ImportContactsCommandHandler(
-            IApplicationDbContext context,
+            IApplicationDbContextFactory dbContextFactory,
             IMapper mapper,
             IExcelService excelService,
             IStringLocalizer<ImportContactsCommandHandler> localizer)
         {
-            _context = context;
+            _dbContextFactory = dbContextFactory;
             _localizer = localizer;
             _excelService = excelService;
             _mapper = mapper;
@@ -56,6 +56,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
         #nullable disable warnings
         public async Task<Result<int>> Handle(ImportContactsCommand request, CancellationToken cancellationToken)
         {
+            await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
 
            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, ContactDto, object?>>
             {
@@ -70,16 +71,16 @@ namespace CleanArchitecture.Blazor.Application.Features.Contacts.Commands.Import
             {
                 foreach (var dto in result.Data)
                 {
-                    var exists = await _context.Contacts.AnyAsync(x => x.Name == dto.Name, cancellationToken);
+                    var exists = await db.Contacts.AnyAsync(x => x.Name == dto.Name, cancellationToken);
                     if (!exists)
                     {
                         var item = _mapper.Map<Contact>(dto);
                         // add create domain events if this entity implement the IHasDomainEvent interface
 				        // item.AddDomainEvent(new ContactCreatedEvent(item));
-                        await _context.Contacts.AddAsync(item, cancellationToken);
+                        await db.Contacts.AddAsync(item, cancellationToken);
                     }
                  }
-                 await _context.SaveChangesAsync(cancellationToken);
+                 await db.SaveChangesAsync(cancellationToken);
                  return await Result<int>.SuccessAsync(result.Data.Count());
            }
            else

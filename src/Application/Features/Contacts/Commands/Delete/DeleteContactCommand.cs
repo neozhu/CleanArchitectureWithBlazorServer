@@ -30,22 +30,24 @@ public class DeleteContactCommandHandler :
              IRequestHandler<DeleteContactCommand, Result>
 
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     public DeleteContactCommandHandler(
-        IApplicationDbContext context)
+        IApplicationDbContextFactory dbContextFactory
+    )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
     public async Task<Result> Handle(DeleteContactCommand request, CancellationToken cancellationToken)
     {
-        var items = await _context.Contacts.Where(x=>request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var items = await db.Contacts.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
         {
 		    // raise a delete domain event
 			item.AddDomainEvent(new ContactDeletedEvent(item));
-            _context.Contacts.Remove(item);
+            db.Contacts.Remove(item);
         }
-        await _context.SaveChangesAsync(cancellationToken);
+        await db.SaveChangesAsync(cancellationToken);
         return await Result.SuccessAsync();
     }
 
