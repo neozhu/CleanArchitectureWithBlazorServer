@@ -46,28 +46,24 @@ public class UpdateContactCommand: ICacheInvalidatorRequest<Result<int>>
 
 public class UpdateContactCommandHandler : IRequestHandler<UpdateContactCommand, Result<int>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
     public UpdateContactCommandHandler(
-        IMapper mapper,
-        IApplicationDbContext context)
+        IApplicationDbContextFactory dbContextFactory,
+        IMapper mapper
+    )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
     }
     public async Task<Result<int>> Handle(UpdateContactCommand request, CancellationToken cancellationToken)
     {
-
-       var item = await _context.Contacts.FindAsync(request.Id, cancellationToken);
-       if (item == null)
-       {
-           return await Result<int>.FailureAsync($"Contact with id: [{request.Id}] not found.");
-       }
-       item = _mapper.Map(request, item);
-	    // raise a update domain event
-	   item.AddDomainEvent(new ContactUpdatedEvent(item));
-       await _context.SaveChangesAsync(cancellationToken);
-       return await Result<int>.SuccessAsync(item.Id);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var item = await db.Contacts.FindAsync(request.Id, cancellationToken);
+        if (item == null) return await Result<int>.FailureAsync("Contact not found");
+        _mapper.Map(request, item);
+        await db.SaveChangesAsync(cancellationToken);
+        return await Result<int>.SuccessAsync(item.Id);
     }
 }
 

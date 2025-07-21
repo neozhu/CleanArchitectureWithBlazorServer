@@ -9,7 +9,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Gemini;
 
 public class DocumentOcrJob : IDocumentOcrJob
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<DocumentOcrJob> _logger;
     private readonly IApplicationHubWrapper _notificationService;
@@ -17,12 +17,12 @@ public class DocumentOcrJob : IDocumentOcrJob
 
     public DocumentOcrJob(
         IApplicationHubWrapper appNotificationService,
-        IApplicationDbContext context,
+        IApplicationDbContextFactory dbContextFactory,
         IHttpClientFactory httpClientFactory,
         ILogger<DocumentOcrJob> logger)
     {
         _notificationService = appNotificationService;
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _httpClientFactory = httpClientFactory;
         _logger = logger;
         _timer = new Stopwatch();
@@ -40,8 +40,9 @@ public class DocumentOcrJob : IDocumentOcrJob
             using (var client = _httpClientFactory.CreateClient("ocr"))
             {
                 _timer.Start();
+                await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
 
-                var doc = await _context.Documents.FindAsync(id);
+                var doc = await db.Documents.FindAsync(id);
                 if (doc == null)
                 {
                     _logger.LogWarning("Document with Id {Id} not found.", id);
@@ -128,7 +129,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                     doc.Description = "Recognition result: success";
                     doc.Content = markdownText;
 
-                    await _context.SaveChangesAsync(cancellationToken);
+                    await db.SaveChangesAsync(cancellationToken);
                     await _notificationService.JobCompleted(id, doc.Title!);
                     CancelCacheToken();
 
@@ -143,7 +144,7 @@ public class DocumentOcrJob : IDocumentOcrJob
                     doc.Status = JobStatus.Pending;
                     doc.Content = result;
 
-                    await _context.SaveChangesAsync(cancellationToken);
+                    await db.SaveChangesAsync(cancellationToken);
                     await _notificationService.JobCompleted(id, $"Error: {result}");
                     CancelCacheToken();
 

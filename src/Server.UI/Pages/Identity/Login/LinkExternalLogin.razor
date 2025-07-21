@@ -112,16 +112,17 @@
 
 
 
-    protected override  Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         _tenantsService = ScopedServices.GetRequiredService<ITenantService>();
+        await _tenantsService.InitializeAsync();
         if (string.IsNullOrWhiteSpace(Provider))
         {
             message = L["Provider is not set."];
-            return Task.CompletedTask;
+        
         }
         Input.Email = Email ?? "";
-        return Task.CompletedTask;
+     
 
     }
 

@@ -24,7 +24,14 @@ public class PickUserAutocomplete<T> : MudAutocomplete<ApplicationUserDto>
     {
         UserService.OnChange += TenantsService_OnChange;
     }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await UserService.InitializeAsync();
+        }
 
+    }
     private async Task TenantsService_OnChange()
     {
         await InvokeAsync(StateHasChanged);

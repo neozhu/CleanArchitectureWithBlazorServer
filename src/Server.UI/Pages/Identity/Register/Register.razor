@@ -136,17 +136,18 @@
     private UserManager<ApplicationUser> _userManager = null!;
     private RoleManager<ApplicationRole> _roleManager = null!;
     private SignInManager<ApplicationUser> _signInManager = null!;
+    [Inject]
+    private ITenantService _tenantsService { get; set; } = null!;
 
-    private ITenantService _tenantsService = null!;
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Title = L["Sign Up"];
 
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
         _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
-        _tenantsService = ScopedServices.GetRequiredService<ITenantService>();
+       
+        await _tenantsService.InitializeAsync();
 
     }
 
