@@ -306,8 +306,15 @@
         await result.MatchAsync(
             async data =>
             {
-                await BlazorDownloadFileService.DownloadFileAsync($"{L["Contacts"]}.xlsx", result.Data, contentType:"application/octet-stream");
-                Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
+                if (result.Data != null)
+                {
+                    await BlazorDownloadFileService.DownloadFileAsync($"{L["Contacts"]}.xlsx", result.Data, contentType:"application/octet-stream");
+                    Snackbar.Add($"{ConstantString.ExportSuccess}", MudBlazor.Severity.Info);
+                }
+                else
+                {
+                    Snackbar.Add("导出失败", MudBlazor.Severity.Error);
+                }
             },
             errors =>
             {

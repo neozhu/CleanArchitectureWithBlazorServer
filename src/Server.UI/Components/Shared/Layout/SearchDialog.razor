@@ -1,7 +1,5 @@
-﻿@using Toolbelt.Blazor.HotKeys2
+﻿@inject IStringLocalizer<SearchDialog> L
 @inject IStringLocalizer<SearchDialog> L
-@inject HotKeys HotKeys
-@implements IAsyncDisposable
 
 <MudDialog>
     <DialogContent>
@@ -31,26 +29,14 @@
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
 
     private readonly Dictionary<string, string> _pages = new();
-    private HotKeysContext? _hotKeysContext;
     private Dictionary<string, string> _pagesFiltered = new();
     private string _search = string.Empty;
-   
-    public async ValueTask DisposeAsync()
-    {
-        if (_hotKeysContext != null)
-        {
-            await _hotKeysContext.DisposeAsync();
-        }
-    }
 
     protected override void OnInitialized()
     {
         _pages.Add("App", "/");
 
         _pagesFiltered = _pages;
-
-        _hotKeysContext = HotKeys.CreateContext()
-            .Add(Key.Escape, () => MudDialog.Close(), "Close command palette");
     }
 
     private void SearchPages(string value)

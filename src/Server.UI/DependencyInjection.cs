@@ -17,7 +17,7 @@ using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using QuestPDF;
 using QuestPDF.Infrastructure;
-using Toolbelt.Blazor.Extensions.DependencyInjection;
+
 
 
 namespace CleanArchitecture.Blazor.Server.UI;
@@ -62,7 +62,7 @@ public static class DependencyInjection
         services.AddMudPopoverService();
         services.AddMudBlazorSnackbar();
         services.AddMudBlazorDialog();
-        services.AddHotKeys2();
+
 
         services.AddScoped<LocalizationCookiesMiddleware>()
             .Configure<RequestLocalizationOptions>(options =>
