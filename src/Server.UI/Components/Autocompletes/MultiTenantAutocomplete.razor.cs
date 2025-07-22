@@ -18,10 +18,17 @@ public class MultiTenantAutocomplete<T> : MudAutocomplete<TenantDto>
 
     protected override void OnInitialized()
     {
-        base.OnInitialized();
+       
         TenantsService.OnChange += TenantsService_OnChange;
     }
-
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await TenantsService.InitializeAsync();
+        }
+       
+    }
     private async Task TenantsService_OnChange()
     {
         await InvokeAsync(StateHasChanged);

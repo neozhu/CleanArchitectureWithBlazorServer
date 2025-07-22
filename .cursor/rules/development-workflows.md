@@ -27,6 +27,7 @@ alwaysApply: true
    - Add validators in each Command/Query folder
    - Create mapping profiles for AutoMapper
    - Define permissions in `Application/Common/Security/Permissions/`
+   - **Important**: Use `IApplicationDbContextFactory` for database access in handlers
 
 4. **Infrastructure Layer Updates**
    - Configure EF Core mappings in `Infrastructure/Persistence/Configurations/`
@@ -51,16 +52,16 @@ public record Create{Entity}Command(
 
 internal sealed class Create{Entity}CommandHandler : IRequestHandler<Create{Entity}Command, Result<int>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
     private readonly ILogger<Create{Entity}CommandHandler> _logger;
 
     public Create{Entity}CommandHandler(
-        IApplicationDbContext context,
+        IApplicationDbContextFactory dbContextFactory,
         IMapper mapper,
         ILogger<Create{Entity}CommandHandler> logger)
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
         _logger = logger;
     }
@@ -69,9 +70,10 @@ internal sealed class Create{Entity}CommandHandler : IRequestHandler<Create{Enti
     {
         try
         {
+            await using var db = await _dbContextFactory.CreateAsync(ct);
             var entity = new {Entity}(request.Property1, request.Property2);
-            _context.{Entities}.Add(entity);
-            await _context.SaveChangesAsync(ct);
+            db.{Entities}.Add(entity);
+            await db.SaveChangesAsync(ct);
             
             _logger.LogInformation("{Entity} created with ID: {Id}", nameof({Entity}), entity.Id);
             return Result<int>.Success(entity.Id);
@@ -105,18 +107,19 @@ public record Get{Entity}ByIdQuery(int Id) : ICacheableRequest<Result<{Entity}Dt
 
 internal sealed class Get{Entity}ByIdQueryHandler : IRequestHandler<Get{Entity}ByIdQuery, Result<{Entity}Dto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
 
-    public Get{Entity}ByIdQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public Get{Entity}ByIdQueryHandler(IApplicationDbContextFactory dbContextFactory, IMapper mapper)
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
     }
 
     public async Task<Result<{Entity}Dto>> Handle(Get{Entity}ByIdQuery request, CancellationToken ct)
     {
-        var entity = await _context.{Entities}
+        await using var db = await _dbContextFactory.CreateAsync(ct);
+        var entity = await db.{Entities}
             .AsNoTracking()
             .ProjectTo<{Entity}Dto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(x => x.Id == request.Id, ct);
@@ -269,6 +272,96 @@ public record GetCachedDataQuery() : ICacheableRequest<Result<List<DataDto>>>
 public record UpdateEntityCommand(int Id, string Name) : ICacheInvalidatorRequest<Result<int>>;
 ```
 
+## **Database Context Factory Best Practices**
+
+### **Why Use IApplicationDbContextFactory?**
+- **Thread Safety**: Each handler gets its own DbContext instance
+- **Proper Disposal**: `await using` ensures proper cleanup
+- **Dependency Injection**: Factory is registered as singleton, contexts are scoped
+- **Performance**: Avoids long-lived context issues and connection pooling problems
+
+### **Handler Implementation Pattern**
+```csharp
+// ✅ CORRECT - Always use 'await using' pattern
+public class YourHandler : IRequestHandler<YourRequest, Result<YourResponse>>
+{
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly IMapper _mapper;
+
+    public YourHandler(IApplicationDbContextFactory dbContextFactory, IMapper mapper)
+    {
+        _dbContextFactory = dbContextFactory;
+        _mapper = mapper;
+    }
+
+    public async Task<Result<YourResponse>> Handle(YourRequest request, CancellationToken ct)
+    {
+        // Create context instance for this operation
+        await using var db = await _dbContextFactory.CreateAsync(ct);
+        
+        // Perform database operations
+        var entity = await db.YourEntities.FirstOrDefaultAsync(x => x.Id == request.Id, ct);
+        
+        // Save changes if needed
+        await db.SaveChangesAsync(ct);
+        
+        return Result<YourResponse>.Success(response);
+    }
+}
+
+// ❌ WRONG - Don't create multiple contexts in single handler
+public async Task<Result<YourResponse>> Handle(YourRequest request, CancellationToken ct)
+{
+    await using var db1 = await _dbContextFactory.CreateAsync(ct);
+    var entity1 = await db1.Entities1.FirstAsync(ct);
+    
+    await using var db2 = await _dbContextFactory.CreateAsync(ct); // Unnecessary!
+    var entity2 = await db2.Entities2.FirstAsync(ct);
+    
+    // Use single context instead
+}
+
+// ✅ CORRECT - Single context for multiple operations
+public async Task<Result<YourResponse>> Handle(YourRequest request, CancellationToken ct)
+{
+    await using var db = await _dbContextFactory.CreateAsync(ct);
+    var entity1 = await db.Entities1.FirstAsync(ct);
+    var entity2 = await db.Entities2.FirstAsync(ct);
+    
+    // Process both entities with same context
+}
+```
+
+### **Testing with DbContextFactory**
+```csharp
+// Mock setup for DbContextFactory in tests
+private void SetupMockDbContextFactory()
+{
+    _mockDbContextFactory
+        .Setup(x => x.CreateAsync(It.IsAny<CancellationToken>()))
+        .ReturnsAsync(_mockDbContext.Object);
+    
+    // Setup disposal behavior
+    _mockDbContext
+        .Setup(x => x.DisposeAsync())
+        .Returns(ValueTask.CompletedTask);
+}
+
+// Verify factory was called correctly
+[Test]
+public async Task Handle_ShouldCreateSingleDbContext()
+{
+    // Arrange
+    var request = new YourRequest();
+    
+    // Act
+    await _handler.Handle(request, CancellationToken.None);
+    
+    // Assert
+    _mockDbContextFactory.Verify(x => x.CreateAsync(It.IsAny<CancellationToken>()), Times.Once);
+}
+```
+
 ## **Testing Patterns**
 
 ### **Unit Test Template**
@@ -276,7 +369,8 @@ public record UpdateEntityCommand(int Id, string Name) : ICacheInvalidatorReques
 [TestFixture]
 public class {Handler}Tests
 {
-    private Mock<IApplicationDbContext> _mockContext;
+    private Mock<IApplicationDbContextFactory> _mockDbContextFactory;
+    private Mock<IApplicationDbContext> _mockDbContext;
     private Mock<IMapper> _mockMapper;
     private Mock<ILogger<{Handler}>> _mockLogger;
     private {Handler} _handler;
@@ -284,10 +378,17 @@ public class {Handler}Tests
     [SetUp]
     public void SetUp()
     {
-        _mockContext = new Mock<IApplicationDbContext>();
+        _mockDbContextFactory = new Mock<IApplicationDbContextFactory>();
+        _mockDbContext = new Mock<IApplicationDbContext>();
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILogger<{Handler}>>();
-        _handler = new {Handler}(_mockContext.Object, _mockMapper.Object, _mockLogger.Object);
+        
+        // Setup factory to return mock context
+        _mockDbContextFactory
+            .Setup(x => x.CreateAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(_mockDbContext.Object);
+            
+        _handler = new {Handler}(_mockDbContextFactory.Object, _mockMapper.Object, _mockLogger.Object);
     }
 
     [Test]
@@ -316,18 +417,39 @@ public class {Handler}Tests
 
 ### **Database Query Optimization**
 ```csharp
-// Use projection for read-only data
-return await _context.Entities
-    .AsNoTracking()
-    .Where(predicate)
-    .ProjectTo<EntityDto>(_mapper.ConfigurationProvider)
-    .ToListAsync(ct);
+// Use projection for read-only data with DbContextFactory
+public async Task<Result<List<EntityDto>>> Handle(GetEntitiesQuery request, CancellationToken ct)
+{
+    await using var db = await _dbContextFactory.CreateAsync(ct);
+    return await db.Entities
+        .AsNoTracking()
+        .Where(predicate)
+        .ProjectTo<EntityDto>(_mapper.ConfigurationProvider)
+        .ToListAsync(ct);
+}
 
 // Use pagination for large datasets
-var query = _context.Entities.AsQueryable();
-// Apply filters
-var totalItems = await query.CountAsync(ct);
-var items = await query
+public async Task<PaginatedResult<EntityDto>> Handle(GetEntitiesWithPaginationQuery request, CancellationToken ct)
+{
+    await using var db = await _dbContextFactory.CreateAsync(ct);
+    var query = db.Entities.AsQueryable();
+    
+    // Apply filters
+    if (!string.IsNullOrEmpty(request.SearchTerm))
+    {
+        query = query.Where(x => x.Name.Contains(request.SearchTerm));
+    }
+    
+    var totalItems = await query.CountAsync(ct);
+    var items = await query
+        .OrderBy(x => x.Id)
+        .Skip((request.PageNumber - 1) * request.PageSize)
+        .Take(request.PageSize)
+        .ProjectTo<EntityDto>(_mapper.ConfigurationProvider)
+        .ToListAsync(ct);
+        
+    return new PaginatedResult<EntityDto>(items, totalItems, request.PageNumber, request.PageSize);
+}
     .Skip((pageNumber - 1) * pageSize)
     .Take(pageSize)
     .ToListAsync(ct);
@@ -366,6 +488,12 @@ protected override bool ShouldRender()
    - Check EF Core configurations
    - Verify migration status
    - Check connection strings
+
+4. **DbContextFactory Issues**
+   - Ensure `IApplicationDbContextFactory` is registered in DI container
+   - Verify `await using` pattern is used correctly
+   - Check that context is not being disposed too early
+   - Avoid creating multiple contexts in single handler
 
 4. **Performance Issues**
    - Use AsNoTracking for read operations
