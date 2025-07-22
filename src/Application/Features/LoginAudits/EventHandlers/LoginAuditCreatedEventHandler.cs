@@ -60,12 +60,19 @@ public class LoginAuditCreatedEventHandler : INotificationHandler<LoginAuditCrea
                     regionParts.Add(geolocation.Country);
 
                 var region = regionParts.Count > 0 ? string.Join(", ", regionParts) : null;
-                var dbcntext = _scopeFactory.CreateScope().ServiceProvider.GetRequiredService<IApplicationDbContext>();
-                await dbcntext.LoginAudits.Where(x => x.Id == notification.Item.Id).ExecuteUpdateAsync(x => x.SetProperty(y => y.Region, region));
+                using (var scope = _scopeFactory.CreateScope())
+                {
+                    var db = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
+                    await db.LoginAudits.Where(x => x.Id == notification.Item.Id).ExecuteUpdateAsync(x => x.SetProperty(y => y.Region, region));
+                }
             }
         }
 
-        // Analyze account security using the dedicated service
-        await _securityAnalysisService.AnalyzeUserSecurityAsync(notification.Item, cancellationToken);
+        // Analyze account security using the dedicated service in a new scope
+        using (var scope = _scopeFactory.CreateScope())
+        {
+            var securityAnalysisService = scope.ServiceProvider.GetRequiredService<ISecurityAnalysisService>();
+            await securityAnalysisService.AnalyzeUserSecurityAsync(notification.Item, cancellationToken);
+        }
     }
 }

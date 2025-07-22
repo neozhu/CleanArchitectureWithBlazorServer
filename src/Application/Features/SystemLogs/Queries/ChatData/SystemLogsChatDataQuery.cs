@@ -16,22 +16,23 @@ public class SystemLogsTimeLineChatDataQuery : ICacheableRequest<List<SystemLogT
 public class SystemLogsChatDataQueryHandler : IRequestHandler<SystemLogsTimeLineChatDataQuery, List<SystemLogTimeLineDto>>
 
 {
-    private readonly IApplicationDbContext _context;
-    private readonly IStringLocalizer<SystemLogsChatDataQueryHandler> _localizer;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly IMapper _mapper;
 
     public SystemLogsChatDataQueryHandler(
-        IApplicationDbContext context,
-        IStringLocalizer<SystemLogsChatDataQueryHandler> localizer
+        IApplicationDbContextFactory dbContextFactory,
+        IMapper mapper
     )
     {
-        _context = context;
-        _localizer = localizer;
+        _dbContextFactory = dbContextFactory;
+        _mapper = mapper;
     }
 
     public async Task<List<SystemLogTimeLineDto>> Handle(SystemLogsTimeLineChatDataQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.SystemLogs.Where(x => x.TimeStamp >= request.LastDateTime)
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.SystemLogs.Where(x => x.TimeStamp >= request.LastDateTime)
             .GroupBy(x => new { x.TimeStamp.Date })
             .Select(x => new { x.Key.Date, Total = x.Count() })
             .OrderBy(x => x.Date)
