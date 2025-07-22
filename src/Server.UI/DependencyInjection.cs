@@ -99,7 +99,7 @@ public static class DependencyInjection
             c.BaseAddress = new Uri("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent");
             c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             c.DefaultRequestHeaders.Add("x-goog-api-key", aiSettings.GeminiApiKey);
-            // Content-Type 建议在实际请求时设置
+           
         });
         services.AddScoped<LocalTimeOffset>();
         services.AddScoped<HubClient>();
