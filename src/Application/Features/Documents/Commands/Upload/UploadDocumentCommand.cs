@@ -17,15 +17,16 @@ public class UploadDocumentCommand : ICacheInvalidatorRequest<Result<int>>
 
 public class UploadDocumentCommandHandler : IRequestHandler<UploadDocumentCommand, Result<int>>
 {
-    private readonly IApplicationDbContext _context;
+  
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IUploadService _uploadService;
 
     public UploadDocumentCommandHandler(
-        IApplicationDbContext context,
+       IApplicationDbContextFactory dbContextFactory,
         IUploadService uploadService
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _uploadService = uploadService;
     }
 
@@ -49,9 +50,9 @@ public class UploadDocumentCommandHandler : IRequestHandler<UploadDocumentComman
         }
 
         if (!list.Any()) return await Result<int>.SuccessAsync(0);
-
-        await _context.Documents.AddRangeAsync(list, cancellationToken);
-        var result = await _context.SaveChangesAsync(cancellationToken);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        await db.Documents.AddRangeAsync(list, cancellationToken);
+        var result = await db.SaveChangesAsync(cancellationToken);
         return await Result<int>.SuccessAsync(result);
     }
 }

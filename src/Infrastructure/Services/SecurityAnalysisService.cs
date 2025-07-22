@@ -11,36 +11,35 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class SecurityAnalysisService : ISecurityAnalysisService
 {
-    private readonly IServiceScopeFactory _scopeFactory;
+   
     private readonly ILogger<SecurityAnalysisService> _logger;
     private readonly IFusionCache _fusionCache;
     private readonly SecurityAnalysisOptions _options;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     
     // Cache for IP-based analysis to reduce database queries
     private static readonly ConcurrentDictionary<string, DateTime> _lastIpAnalysis = new();
 
     public SecurityAnalysisService(
-        IServiceScopeFactory scopeFactory,
         ILogger<SecurityAnalysisService> logger,
         IFusionCache fusionCache,
-        IOptions<SecurityAnalysisOptions> options)
+        IOptions<SecurityAnalysisOptions> options,
+        IApplicationDbContextFactory dbContextFactory)
     {
-        _scopeFactory = scopeFactory;
         _logger = logger;
         _fusionCache = fusionCache;
         _options = options.Value;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task AnalyzeUserSecurityAsync(LoginAudit loginAudit, CancellationToken cancellationToken = default)
     {
         try
         {
-            using var scope = _scopeFactory.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
-
-            var analysisResult = await PerformSecurityAnalysisAsync(dbContext, loginAudit, cancellationToken);
+            await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+            var analysisResult = await PerformSecurityAnalysisAsync(db, loginAudit, cancellationToken);
             
-            await CreateOrUpdateRiskSummaryAsync(dbContext, loginAudit.UserId, loginAudit.UserName, 
+            await CreateOrUpdateRiskSummaryAsync(db, loginAudit.UserId, loginAudit.UserName, 
                 analysisResult, cancellationToken);
 
             // Invalidate cache for the user's risk summary

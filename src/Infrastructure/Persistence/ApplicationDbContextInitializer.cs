@@ -1,9 +1,10 @@
-﻿using System.Reflection;
-using CleanArchitecture.Blazor.Domain.Identity;
+﻿using System;
+using System.Reflection;
 using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Application.Common.Constants.Roles;
 using CleanArchitecture.Blazor.Application.Common.Constants.User;
 using CleanArchitecture.Blazor.Application.Common.Security;
+using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
 
@@ -15,11 +16,12 @@ public class ApplicationDbContextInitializer
     private readonly UserManager<ApplicationUser> _userManager;
 
     public ApplicationDbContextInitializer(ILogger<ApplicationDbContextInitializer> logger,
-        ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+        IDbContextFactory<ApplicationDbContext> dbContextFactory,
+        UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager)
     {
         _logger = logger;
-        _context = context;
+        _context = dbContextFactory.CreateDbContext();
         _userManager = userManager;
         _roleManager = roleManager;
     }
