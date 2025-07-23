@@ -27,24 +27,24 @@ public class RoleService : IRoleService
 
     public event Func<Task>? OnChange;
 
-    public void Initialize()
+    public async Task InitializeAsync()
     {
-        DataSource = _fusionCache.GetOrSet(CACHEKEY,
+        DataSource = await _fusionCache.GetOrSetAsync(CACHEKEY,
                          _ => _roleManager.Roles
                              .ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider).OrderBy(x => x.TenantId).ThenBy(x => x.Name)
-                             .ToList())
+                             .ToListAsync())
                      ?? new List<ApplicationRoleDto>();
         OnChange?.Invoke();
     }
 
 
-    public void Refresh()
+    public async Task RefreshAsync()
     {
         _fusionCache.Remove(CACHEKEY);
-        DataSource = _fusionCache.GetOrSet(CACHEKEY,
+        DataSource = await _fusionCache.GetOrSetAsync(CACHEKEY,
                          _ => _roleManager.Roles
                              .ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider).OrderBy(x => x.TenantId).ThenBy(x => x.Name)
-                             .ToList())
+                             .ToListAsync())
                      ?? new List<ApplicationRoleDto>();
         OnChange?.Invoke();
     }

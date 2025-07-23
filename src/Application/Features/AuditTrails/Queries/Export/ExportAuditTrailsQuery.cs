@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Export;
 
@@ -15,29 +16,28 @@ public class ExportAuditTrailsQuery : IRequest<byte[]>
 public class ExportAuditTrailsQueryHandler :
     IRequestHandler<ExportAuditTrailsQuery, byte[]>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly IExcelService _excelService;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
+    private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ExportAuditTrailsQueryHandler> _localizer;
 
     public ExportAuditTrailsQueryHandler(
-        IApplicationDbContext context,
-        IExcelService excelService,
+        IApplicationDbContextFactory dbContextFactory,
         IMapper mapper,
+        IExcelService excelService,
         IStringLocalizer<ExportAuditTrailsQueryHandler> localizer
     )
     {
-        _context = context;
-        _excelService = excelService;
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
+        _excelService = excelService;
         _localizer = localizer;
     }
 
     public async Task<byte[]> Handle(ExportAuditTrailsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.AuditTrails
-            .Where(x => x.TableName!.Contains(request.Keyword))
-            .OrderBy($"{request.OrderBy} {request.SortDirection}")
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.AuditTrails.Where(x=>x.TableName.Contains(request.Keyword))
             .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         var result = await _excelService.ExportAsync(data,

@@ -20,10 +20,10 @@ public class PicklistServiceTests : TestBase
     }
 
     [Test]
-    public void ShouldLoadDataSource()
+    public async Task ShouldLoadDataSource()
     {
         var picklist = CreatePicklistService();
-        picklist.Refresh();
+        await picklist.RefreshAsync();
         var count = picklist.DataSource.Count();
         Assert.That(count,Is.EqualTo(4));
   
@@ -34,7 +34,7 @@ public class PicklistServiceTests : TestBase
     {
         await AddAsync(new PicklistSet { Name = Picklist.Brand, Text = "Text5", Value = "Value5" });
         var picklist = CreatePicklistService();
-        picklist.Refresh();
+        await picklist.RefreshAsync();
         var count = picklist.DataSource.Count();
         Assert.That(count, Is.EqualTo(5));
     }

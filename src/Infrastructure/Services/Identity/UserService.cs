@@ -27,24 +27,24 @@ public class UserService : IUserService
 
     public event Func<Task>? OnChange;
 
-    public void Initialize()
+    public async Task InitializeAsync()
     {
-        DataSource = _fusionCache.GetOrSet(CACHEKEY,
+        DataSource =await _fusionCache.GetOrSetAsync(CACHEKEY,
                          _ => _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role)
                              .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x => x.UserName)
-                             .ToList())
+                             .ToListAsync())
                      ?? new List<ApplicationUserDto>();
         OnChange?.Invoke();
     }
 
 
-    public void Refresh()
+    public async Task RefreshAsync()
     {
         _fusionCache.Remove(CACHEKEY);
-        DataSource = _fusionCache.GetOrSet(CACHEKEY,
+        DataSource =await _fusionCache.GetOrSetAsync(CACHEKEY,
                          _ => _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role)
                              .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).OrderBy(x => x.UserName)
-                             .ToList())
+                             .ToListAsync())
                      ?? new List<ApplicationUserDto>();
         OnChange?.Invoke();
     }
