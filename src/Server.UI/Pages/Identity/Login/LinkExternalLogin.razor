@@ -8,6 +8,7 @@
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Register
 @using Microsoft.AspNetCore.WebUtilities
 @using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
+@using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using System.ComponentModel.DataAnnotations
 @using System.Globalization
 
@@ -30,19 +31,16 @@
             <DataAnnotationsValidator/>
             <StatusMessage Message="@message" Error="true"/>
             
-            <MudSelect T="string" 
-                       @bind-Value="Input.TenantId" 
-                       Label="@L["Tenant"]" 
-                       Variant="Variant.Outlined" 
-                       Margin="Margin.Normal"
-                       HelperText="Select your organization or tenant"
-                       Required="true"
-                       RequiredError="Please select a tenant">
-                @foreach (var tenant in _tenantsService.DataSource)
-                {
-                    <MudSelectItem Value="@tenant.Id">@tenant.Name</MudSelectItem>
-                }
-            </MudSelect>
+            <MultiTenantAutocomplete @bind-Value="Input.Tenant"
+                                     T="TenantDto"
+                                     Label="@L["Tenant"]"
+                                     Variant="Variant.Outlined"
+                                     HelperText="Select your organization or tenant"
+                                     Required="true"
+                                     Class="my-4"
+                                     For="@(() => Input.Tenant)" />
+
+             
             
             <MudTextField T="string" 
                           @bind-Value="Input.Email" 
@@ -55,34 +53,21 @@
                           RequiredError="Email address is required"
                           Validation="@(new EmailAddressAttribute() { ErrorMessage = "Please enter a valid email address" })"
                           Placeholder="your.email@company.com"/>
-            
-            <MudSelect T="string" 
-                       @bind-Value="Input.TimeZoneId" 
-                       Label="@L["Time Zone"]" 
-                       Variant="Variant.Outlined" 
-                       Margin="Margin.Normal"
-                       HelperText="Select your local time zone for accurate scheduling"
-                       Required="true"
-                       RequiredError="Please select your time zone">
-                @foreach (var item in TimeZoneInfo.GetSystemTimeZones().ToList())
-                {
-                    <MudSelectItem Value="@item.Id">@item.DisplayName</MudSelectItem>
-                }
-            </MudSelect>
-            
-            <MudSelect T="string" 
-                       @bind-Value="Input.LanguageCode" 
-                       Label="@L["Language"]" 
-                       Variant="Variant.Outlined" 
-                       Margin="Margin.Normal"
-                       HelperText="Choose your preferred interface language"
-                       Required="true"
-                       RequiredError="Please select your preferred language">
-                @foreach (var item in LocalizationConstants.SupportedLanguages.ToList())
-                {
-                    <MudSelectItem Value="@item.Code">@item.DisplayName</MudSelectItem>
-                }
-            </MudSelect>
+
+            <TimeZoneAutocomplete @bind-Value="Input.TimeZoneId"
+                                  T="string"
+                                  Label="@L["Time Zone"]"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  Class="my-4"
+                                  For="@(() => Input.TimeZoneId)" />
+            <LanguageAutocomplete @bind-Value="Input.LanguageCode"
+                                  T="string"
+                                  Label="@L["Language"]"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  Class="my-4"
+                                  For="@(() => Input.LanguageCode)" />
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
                        Size="Size.Large"
@@ -99,7 +84,6 @@
     public const string PageUrl = "/account/linkexternallogin";
     public const string LoginCallbackAction = "LoginCallback";
 
-    private ITenantService _tenantsService = null!;
     private string? message;
 
 
@@ -112,18 +96,14 @@
 
 
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        _tenantsService = ScopedServices.GetRequiredService<ITenantService>();
-        await _tenantsService.InitializeAsync();
         if (string.IsNullOrWhiteSpace(Provider))
         {
             message = L["Provider is not set."];
         
         }
         Input.Email = Email ?? "";
-     
-
     }
 
 
@@ -149,11 +129,13 @@
     private sealed class InputModel
     {
         [Required] [EmailAddress] public string Email { get; set; } = "";
-        [Required] public string TenantId { get; set; } = "";
+        [Required] public string? TenantId => Tenant?.Id;
         [Required] [Display(Name = "Time Zone")]
         public string TimeZoneId { get; set; } = TimeZoneInfo.Local.Id;
         [Required] [Display(Name = "Language")]
         public string LanguageCode { get; set; } = CultureInfo.CurrentCulture.Name;
+        [Required]
+        public TenantDto? Tenant { get; set; }
     }
 
 }

@@ -163,34 +163,11 @@ public static class DependencyInjection
 
     private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<PicklistService>()
-            .AddScoped<IPicklistService>(sp =>
-            {
-                var service = sp.GetRequiredService<PicklistService>();
-                return service;
-            });
-
-        services.AddScoped<TenantService>()
-            .AddScoped<ITenantService>(sp =>
-            {
-                var service = sp.GetRequiredService<TenantService>();
-                return service;
-            });
-        services.AddScoped<UserService>()
-            .AddScoped<IUserService>(sp =>
-            {
-                var service = sp.GetRequiredService<UserService>();
-                return service;
-            });
-
-        services.AddScoped<RoleService>()
-            .AddScoped<IRoleService>(sp =>
-            {
-                var service = sp.GetRequiredService<RoleService>();
-                return service;
-            });
-
-
+        services.AddScoped<IPicklistService, PicklistService>();
+        services.AddScoped<ITenantService, TenantService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IRoleService, RoleService>();
+            
 
         // Configure HttpClient for GeolocationService
         services.AddHttpClient<IGeolocationService, GeolocationService>(client =>

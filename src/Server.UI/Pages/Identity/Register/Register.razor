@@ -10,6 +10,7 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Globalization
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Login
+@using CleanArchitecture.Blazor.Server.UI.Components.Autocompletes
 
 @inherits OwningComponentBase
 
@@ -27,17 +28,13 @@
                 @L["Have an account?"] <MudLink Href="@Login.PageUrl">@L["Sign In"]</MudLink>
             </MudText>
           
-            <MudSelect @bind-Value="Input.TenantId" 
-                       Label="@L["Tenant"]"
-                       Variant="Variant.Outlined"
-                       Required="true"
-                       Class="my-4"
-                       For="@(() => Input.TenantId)">
-                @foreach (var tenant in _tenantsService.DataSource)
-                {
-                    <MudSelectItem Value="@tenant.Id">@tenant.Name</MudSelectItem>
-                }
-            </MudSelect>
+            <MultiTenantAutocomplete @bind-Value="Input.Tenant"
+                        T="TenantDto"
+                        Label="@L["Tenant"]"
+                        Variant="Variant.Outlined"
+                        Required="true"
+                        Class="my-4"
+                        For="@(() => Input.Tenant)" />
             <MudTextField @bind-Value="Input.UserName" 
                           Label="@L["User Name"]"
                           Variant="Variant.Outlined"
@@ -77,28 +74,20 @@
                           Adornment="Adornment.End"
                           AdornmentIcon="@(isConfirmPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
                           OnAdornmentClick="@(() => isConfirmPasswordVisible = !isConfirmPasswordVisible)" />
-            <MudSelect @bind-Value="Input.TimeZoneId" 
-                       Label="@L["Time Zone"]"
-                       Variant="Variant.Outlined"
-                       Required="true"
-                       Class="my-4"
-                       For="@(() => Input.TimeZoneId)">
-                @foreach (var item in TimeZoneInfo.GetSystemTimeZones().ToList())
-                {
-                    <MudSelectItem Value="@item.Id">@item.DisplayName</MudSelectItem>
-                }
-            </MudSelect>
-            <MudSelect @bind-Value="Input.LanguageCode" 
-                       Label="@L["Language"]"
-                       Variant="Variant.Outlined"
-                       Required="true"
-                       Class="my-4"
-                       For="@(() => Input.LanguageCode)">
-                @foreach (var item in LocalizationConstants.SupportedLanguages.ToList())
-                {
-                    <MudSelectItem Value="@item.Code">@item.DisplayName</MudSelectItem>
-                }
-            </MudSelect>
+            <TimeZoneAutocomplete @bind-Value="Input.TimeZoneId" 
+                     T="string"
+                     Label="@L["Time Zone"]"
+                     Variant="Variant.Outlined"
+                     Required="true"
+                     Class="my-4"
+                     For="@(() => Input.TimeZoneId)" />
+            <LanguageAutocomplete @bind-Value="Input.LanguageCode"
+                    T="string"
+                    Label="@L["Language"]"
+                    Variant="Variant.Outlined"
+                    Required="true"
+                    Class="my-4"
+                    For="@(() => Input.LanguageCode)" />
             <div Class="d-flex justify-space-between align-center mb-1">
                 <MudCheckBox @bind-Value="Input.AgreeToTerms" 
                              Label="@L["I agree to the terms and privacy"]"
@@ -136,18 +125,17 @@
     private UserManager<ApplicationUser> _userManager = null!;
     private RoleManager<ApplicationRole> _roleManager = null!;
     private SignInManager<ApplicationUser> _signInManager = null!;
-    [Inject]
-    private ITenantService _tenantsService { get; set; } = null!;
 
-    protected override async Task OnInitializedAsync()
+
+    protected override  Task OnInitializedAsync()
     {
         Title = L["Sign Up"];
 
         _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         _roleManager = ScopedServices.GetRequiredService<RoleManager<ApplicationRole>>();
         _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
-       
-        await _tenantsService.InitializeAsync();
+
+        return Task.CompletedTask;
 
     }
 
@@ -261,11 +249,14 @@
 
         [Required]
         [Display(Name = "Tenant Id")]
-        public string TenantId { get; set; } = "";
+        public string? TenantId => Tenant?.Id;
         [Display(Name = "Time Zone")]
         public string? TimeZoneId { get; set; } = TimeZoneInfo.Local.Id;
         [Display(Name = "Language")]
         public string? LanguageCode { get; set; } = CultureInfo.CurrentCulture.Name;
+        [Display(Name = "Tenant")]
+        [Required]
+        public TenantDto? Tenant { get; set; } = null;
     }
 
 }
