@@ -15,20 +15,21 @@ public class UserProfileStateService : IDisposable
     private UserProfile _userProfile = new UserProfile { Email = "", UserId = "", UserName = "" };
 
     // Dependencies
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMapper _mapper;
     private readonly IFusionCache _fusionCache;
-    private readonly IServiceScope _scope;
+    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILogger<UserProfileStateService> _logger;
 
     public UserProfileStateService(
         IMapper mapper,
         IServiceScopeFactory scopeFactory,
-        IFusionCache fusionCache)
+        IFusionCache fusionCache,
+        ILogger<UserProfileStateService> logger)
     {
-        _scope = scopeFactory.CreateScope();
-        _userManager = _scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        _scopeFactory = scopeFactory;
         _mapper = mapper;
         _fusionCache = fusionCache;
+        _logger = logger;
     }
 
     /// <summary>
@@ -36,20 +37,36 @@ public class UserProfileStateService : IDisposable
     /// </summary>
     public async Task InitializeAsync(string userName)
     {
-        var key = GetApplicationUserCacheKey(userName);
-        var result = await _fusionCache.GetOrSetAsync(
-            key,
-            _ => _userManager.Users
-                        .Where(x => x.UserName == userName)
-                        .Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                        .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
-                        .FirstOrDefaultAsync(),
-            RefreshInterval);
-
-        if (result is not null)
+        if (string.IsNullOrWhiteSpace(userName))
+            return;
+        try
         {
-            _userProfile = result.ToUserProfile();
-            NotifyStateChanged();
+            var key = GetApplicationUserCacheKey(userName);
+            var result = await _fusionCache.GetOrSetAsync(
+                key,
+                async _ =>
+                {
+                    using var scope = _scopeFactory.CreateScope();
+                    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                    
+                    return await userManager.Users
+                                .Where(x => x.UserName == userName)
+                                .Include(x => x.UserRoles).ThenInclude(x => x.Role)
+                                .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
+                                .FirstOrDefaultAsync();
+                },
+                RefreshInterval);
+
+            if (result is not null)
+            {
+                _userProfile = result.ToUserProfile();
+                NotifyStateChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to initialize user profile for {UserName}", userName);
+            throw;
         }
     }
 
@@ -71,8 +88,18 @@ public class UserProfileStateService : IDisposable
     /// </summary>
     public async Task RefreshAsync(string userName)
     {
-        RemoveApplicationUserCache(userName);
-        await InitializeAsync(userName);
+        if (string.IsNullOrWhiteSpace(userName))
+            return;
+        try
+        {
+            RemoveApplicationUserCache(userName);
+            await InitializeAsync(userName);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to refresh user profile for {UserName}", userName);
+            throw;
+        }
     }
 
     /// <summary>
@@ -80,6 +107,8 @@ public class UserProfileStateService : IDisposable
     /// </summary>
     public void UpdateUserProfile(string userName, string? profilePictureDataUrl, string? fullName, string? phoneNumber, string? timeZoneId, string? languageCode)
     {
+        if (string.IsNullOrWhiteSpace(userName))
+            return;
         _userProfile.ProfilePictureDataUrl = profilePictureDataUrl;
         _userProfile.DisplayName = fullName;
         _userProfile.PhoneNumber = phoneNumber;
@@ -91,18 +120,29 @@ public class UserProfileStateService : IDisposable
 
     public event Func<Task>? OnChange;
 
-    private void NotifyStateChanged() => OnChange?.Invoke();
+    private void NotifyStateChanged()
+    {
+        OnChange?.Invoke();
+    }
 
     private string GetApplicationUserCacheKey(string userName)
     {
+        // 这里保留参数校验，防止外部直接调用本方法时出错
+        ArgumentException.ThrowIfNullOrWhiteSpace(userName);
         return $"GetApplicationUserDto:{userName}";
     }
 
     public void RemoveApplicationUserCache(string userName)
     {
-        _fusionCache.Remove(GetApplicationUserCacheKey(userName));
+        if (string.IsNullOrWhiteSpace(userName))
+            return;
+        _fusionCache.Remove(GetApplicationUserCacheKey(userName));   
     }
 
-    public void Dispose() => _scope.Dispose();
+    public void Dispose()
+    {
+        // No longer holding long-lived scope, nothing to dispose
+        GC.SuppressFinalize(this);
+    }
 }
 

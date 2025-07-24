@@ -47,19 +47,20 @@ public class AddEditContactCommand: ICacheInvalidatorRequest<Result<int>>
 public class AddEditContactCommandHandler : IRequestHandler<AddEditContactCommand, Result<int>>
 {
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     public AddEditContactCommandHandler(
         IMapper mapper,
-        IApplicationDbContext context)
+        IApplicationDbContextFactory dbContextFactory)
     {
         _mapper = mapper;
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
     public async Task<Result<int>> Handle(AddEditContactCommand request, CancellationToken cancellationToken)
     {
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
         if (request.Id > 0)
         {
-            var item = await _context.Contacts.FindAsync(request.Id, cancellationToken);
+            var item = await db.Contacts.FindAsync(request.Id, cancellationToken);
             if (item == null)
             {
                 return await Result<int>.FailureAsync($"Contact with id: [{request.Id}] not found.");
@@ -67,7 +68,7 @@ public class AddEditContactCommandHandler : IRequestHandler<AddEditContactComman
             item = _mapper.Map(request, item);
 			// raise a update domain event
 			item.AddDomainEvent(new ContactUpdatedEvent(item));
-            await _context.SaveChangesAsync(cancellationToken);
+            await db.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
         else
@@ -75,8 +76,8 @@ public class AddEditContactCommandHandler : IRequestHandler<AddEditContactComman
             var item = _mapper.Map<Contact>(request);
             // raise a create domain event
 			item.AddDomainEvent(new ContactCreatedEvent(item));
-            _context.Contacts.Add(item);
-            await _context.SaveChangesAsync(cancellationToken);
+            db.Contacts.Add(item);
+            await db.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
        

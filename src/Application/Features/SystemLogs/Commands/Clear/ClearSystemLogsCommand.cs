@@ -15,22 +15,19 @@ public class ClearSystemLogsCommand : ICacheInvalidatorRequest<Result>
 public class ClearSystemLogsCommandHandler : IRequestHandler<ClearSystemLogsCommand, Result>
 
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ILogger<ClearSystemLogsCommandHandler> _logger;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
 
     public ClearSystemLogsCommandHandler(
-        IApplicationDbContext context,
-        ILogger<ClearSystemLogsCommandHandler> logger
+        IApplicationDbContextFactory dbContextFactory
     )
     {
-        _context = context;
-        _logger = logger;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task<Result> Handle(ClearSystemLogsCommand request, CancellationToken cancellationToken)
     {
-        await _context.SystemLogs.ExecuteDeleteAsync();
-        _logger.LogInformation("Logs have been erased");
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        await db.SystemLogs.ExecuteDeleteAsync(cancellationToken);
         return await Result.SuccessAsync();
     }
 }

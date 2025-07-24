@@ -22,21 +22,22 @@ public class TenantsWithPaginationQueryHandler :
     IRequestHandler<TenantsWithPaginationQuery, PaginatedData<TenantDto>>
 {
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
 
     public TenantsWithPaginationQueryHandler(
         IMapper mapper,
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory
     )
     {
         _mapper = mapper;
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task<PaginatedData<TenantDto>> Handle(TenantsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Tenants.OrderBy($"{request.OrderBy} {request.SortDirection}")
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.Tenants.OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectToPaginatedDataAsync<Tenant, TenantDto>(request.Specification, request.PageNumber, request.PageSize,
                 _mapper.ConfigurationProvider, cancellationToken);
         return data;

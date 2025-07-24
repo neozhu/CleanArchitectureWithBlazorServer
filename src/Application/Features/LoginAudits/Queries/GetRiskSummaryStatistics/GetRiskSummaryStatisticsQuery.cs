@@ -1,7 +1,6 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Application.Features.LoginAudits.Caching;
 using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs;
 using CleanArchitecture.Blazor.Domain.Enums;
 
@@ -11,21 +10,23 @@ public class GetRiskSummaryStatisticsQuery : ICacheableRequest<RiskSummaryStatis
 {
     public string CacheKey => "RiskSummaryStatistics";
     public TimeSpan? Expiry => TimeSpan.FromMinutes(15);
-    public IEnumerable<string>? Tags => LoginAuditCacheKey.Tags;
+    public IEnumerable<string>? Tags => new[] { "userloginrisksummary", "statistics" };
 }
 
 public class GetRiskSummaryStatisticsQueryHandler : IRequestHandler<GetRiskSummaryStatisticsQuery, RiskSummaryStatisticsDto>
 {
-    private readonly IApplicationDbContext _context;
 
-    public GetRiskSummaryStatisticsQueryHandler(IApplicationDbContext context)
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+
+    public GetRiskSummaryStatisticsQueryHandler(IApplicationDbContextFactory dbContextFactory)
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task<RiskSummaryStatisticsDto> Handle(GetRiskSummaryStatisticsQuery request, CancellationToken cancellationToken)
     {
-        var summaries = await _context.UserLoginRiskSummaries
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var summaries = await db.UserLoginRiskSummaries
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 

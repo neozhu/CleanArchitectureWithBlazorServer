@@ -38,24 +38,27 @@ services.AddScoped<IYourService, YourService>();
 ```
 
 ### **2. CQRS Implementation Pattern**
+
+#### **Query Handler Pattern**
 ```csharp
 // Query in Application/Features/YourFeature/Queries/
 public record GetYourEntityQuery(int Id) : IRequest<Result<YourEntityDto>>;
 
 internal sealed class GetYourEntityQueryHandler : IRequestHandler<GetYourEntityQuery, Result<YourEntityDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
     
-    public GetYourEntityQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetYourEntityQueryHandler(IApplicationDbContextFactory dbContextFactory, IMapper mapper)
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
     }
     
     public async Task<Result<YourEntityDto>> Handle(GetYourEntityQuery request, CancellationToken ct)
     {
-        var entity = await _context.YourEntities
+        await using var db = await _dbContextFactory.CreateAsync(ct);
+        var entity = await db.YourEntities
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == request.Id, ct);
             
@@ -64,6 +67,52 @@ internal sealed class GetYourEntityQueryHandler : IRequestHandler<GetYourEntityQ
             
         var dto = _mapper.Map<YourEntityDto>(entity);
         return Result<YourEntityDto>.Success(dto);
+    }
+}
+```
+
+#### **Command Handler Pattern**
+```csharp
+// Command in Application/Features/YourFeature/Commands/
+public class AddEditYourEntityCommand : ICacheInvalidatorRequest<Result<int>>
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string CacheKey => YourEntityCacheKey.GetAllCacheKey;
+    public IEnumerable<string>? Tags => YourEntityCacheKey.Tags;
+}
+
+public class AddEditYourEntityCommandHandler : IRequestHandler<AddEditYourEntityCommand, Result<int>>
+{
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly IMapper _mapper;
+
+    public AddEditYourEntityCommandHandler(IApplicationDbContextFactory dbContextFactory, IMapper mapper)
+    {
+        _dbContextFactory = dbContextFactory;
+        _mapper = mapper;
+    }
+
+    public async Task<Result<int>> Handle(AddEditYourEntityCommand request, CancellationToken ct)
+    {
+        await using var db = await _dbContextFactory.CreateAsync(ct);
+        
+        if (request.Id > 0)
+        {
+            var item = await db.YourEntities.SingleOrDefaultAsync(x => x.Id == request.Id, ct);
+            if (item == null) return await Result<int>.FailureAsync($"Entity with id: [{request.Id}] not found.");
+            
+            item = _mapper.Map(request, item);
+            await db.SaveChangesAsync(ct);
+            return await Result<int>.SuccessAsync(item.Id);
+        }
+        else
+        {
+            var item = _mapper.Map<YourEntity>(request);
+            db.YourEntities.Add(item);
+            await db.SaveChangesAsync(ct);
+            return await Result<int>.SuccessAsync(item.Id);
+        }
     }
 }
 ```
@@ -111,6 +160,62 @@ internal sealed class GetYourEntityQueryHandler : IRequestHandler<GetYourEntityQ
 }
 ```
 
+### **4. Database Context Factory Pattern**
+```csharp
+// ✅ CORRECT - Use IApplicationDbContextFactory in Handlers
+public class YourEntityHandler : IRequestHandler<YourRequest, Result<YourResponse>>
+{
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly IMapper _mapper;
+
+    public YourEntityHandler(IApplicationDbContextFactory dbContextFactory, IMapper mapper)
+    {
+        _dbContextFactory = dbContextFactory;
+        _mapper = mapper;
+    }
+
+    public async Task<Result<YourResponse>> Handle(YourRequest request, CancellationToken ct)
+    {
+        // Always use 'await using' pattern for proper disposal
+        await using var db = await _dbContextFactory.CreateAsync(ct);
+        
+        // Your database operations here
+        var entity = await db.YourEntities.FirstOrDefaultAsync(x => x.Id == request.Id, ct);
+        
+        // Don't forget to save changes for write operations
+        if (isWriteOperation)
+        {
+            await db.SaveChangesAsync(ct);
+        }
+        
+        return Result<YourResponse>.Success(response);
+    }
+}
+
+// ❌ WRONG - Direct IApplicationDbContext injection
+public class WrongHandler : IRequestHandler<YourRequest, Result<YourResponse>>
+{
+    private readonly IApplicationDbContext _context; // Don't do this anymore
+    
+    public WrongHandler(IApplicationDbContext context) // Old pattern
+    {
+        _context = context;
+    }
+}
+
+// ❌ WRONG - DbContextFactory in UI layer
+@page "/wrong-pattern"
+@inject IApplicationDbContextFactory DbFactory // Don't inject this in UI
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateAsync(); // Wrong! Use Mediator instead
+        var data = await db.YourEntities.ToListAsync();
+    }
+}
+```
+
 ## **Validation Rules**
 
 ### **Architecture Validation Checklist**
@@ -118,6 +223,8 @@ internal sealed class GetYourEntityQueryHandler : IRequestHandler<GetYourEntityQ
 - [ ] No `using Server.UI` statements in Application/Infrastructure layers
 - [ ] All services have interfaces in Application layer
 - [ ] All data access goes through Mediator (no direct DbContext in UI)
+- [ ] Use `IApplicationDbContextFactory` instead of direct `IApplicationDbContext` injection in handlers
+- [ ] Always use `await using var db = await _dbContextFactory.CreateAsync(ct);` pattern
 - [ ] All configurations use IOptions pattern
 - [ ] All constants are in Application.Common.Constants
 - [ ] All permissions are in Application.Common.Security
@@ -150,13 +257,40 @@ services.AddScoped<ISomeService, SomeService>();
 
 ### **Fix: Direct database access in UI**
 ```csharp
-// ❌ WRONG
+// ❌ WRONG - Direct DbContext injection
 @inject ApplicationDbContext Context
 var data = await Context.YourEntities.ToListAsync();
 
-// ✅ CORRECT
+// ❌ WRONG - DbContextFactory injection in UI
+@inject IApplicationDbContextFactory DbContextFactory
+await using var db = await DbContextFactory.CreateAsync();
+var data = await db.YourEntities.ToListAsync();
+
+// ✅ CORRECT - Use Mediator pattern
 // 1. Create query in Application layer
 public record GetYourEntitiesQuery : IRequest<Result<List<YourEntityDto>>>;
+public class GetYourEntitiesQueryHandler : IRequestHandler<GetYourEntitiesQuery, Result<List<YourEntityDto>>>
+{
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly IMapper _mapper;
+    
+    public GetYourEntitiesQueryHandler(IApplicationDbContextFactory dbContextFactory, IMapper mapper)
+    {
+        _dbContextFactory = dbContextFactory;
+        _mapper = mapper;
+    }
+    
+    public async Task<Result<List<YourEntityDto>>> Handle(GetYourEntitiesQuery request, CancellationToken ct)
+    {
+        await using var db = await _dbContextFactory.CreateAsync(ct);
+        var entities = await db.YourEntities
+            .AsNoTracking()
+            .ProjectTo<YourEntityDto>(_mapper.ConfigurationProvider)
+            .ToListAsync(ct);
+        return Result<List<YourEntityDto>>.Success(entities);
+    }
+}
+
 // 2. Inject Mediator in UI
 @inject IMediator Mediator
 var result = await Mediator.Send(new GetYourEntitiesQuery());
@@ -182,10 +316,13 @@ services.Configure<YourSettings>(config.GetSection("Section"));
 ## **Performance Guidelines**
 
 ### **Database Queries**
+- Always use `await using var db = await _dbContextFactory.CreateAsync(ct);` pattern for proper disposal
 - Use `AsNoTracking()` for read-only queries
 - Use `ProjectTo<TDto>()` for efficiency
 - Include only needed data with `Select()`
 - Use proper indexing strategies
+- Pass `CancellationToken` to all async database operations
+- Avoid multiple DbContext instances in single handler - create once per handler execution
 
 ### **Caching Strategy**
 - Apply `[FusionCacheEvict]` attributes on commands that modify data

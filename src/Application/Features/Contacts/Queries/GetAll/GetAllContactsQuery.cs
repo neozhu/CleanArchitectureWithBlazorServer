@@ -30,21 +30,23 @@ public class GetAllContactsQuery : ICacheableRequest<IEnumerable<ContactDto>>
 public class GetAllContactsQueryHandler :
      IRequestHandler<GetAllContactsQuery, IEnumerable<ContactDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
     public GetAllContactsQueryHandler(
-        IMapper mapper,
-        IApplicationDbContext context)
+        IApplicationDbContextFactory dbContextFactory,
+        IMapper mapper
+    )
     {
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
-        _context = context;
     }
 
     public async Task<IEnumerable<ContactDto>> Handle(GetAllContactsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Contacts.ProjectTo<ContactDto>(_mapper.ConfigurationProvider)
-                                                .AsNoTracking()
-                                                .ToListAsync(cancellationToken);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.Contacts
+            .ProjectTo<ContactDto>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
         return data;
     }
 }

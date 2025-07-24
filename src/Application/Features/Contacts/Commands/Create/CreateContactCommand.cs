@@ -43,23 +43,24 @@ public class CreateContactCommand: ICacheInvalidatorRequest<Result<int>>
     
     public class CreateContactCommandHandler : IRequestHandler<CreateContactCommand, Result<int>>
     {
+        private readonly IApplicationDbContextFactory _dbContextFactory;
         private readonly IMapper _mapper;
-        private readonly IApplicationDbContext _context;
         public CreateContactCommandHandler(
-            IMapper mapper,
-            IApplicationDbContext context)
+            IApplicationDbContextFactory dbContextFactory,
+            IMapper mapper
+        )
         {
+            _dbContextFactory = dbContextFactory;
             _mapper = mapper;
-            _context = context;
         }
         public async Task<Result<int>> Handle(CreateContactCommand request, CancellationToken cancellationToken)
         {
-           var item = _mapper.Map<Contact>(request);
-           // raise a create domain event
-	       item.AddDomainEvent(new ContactCreatedEvent(item));
-           _context.Contacts.Add(item);
-           await _context.SaveChangesAsync(cancellationToken);
-           return  await Result<int>.SuccessAsync(item.Id);
+            await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+            var item = _mapper.Map<Contact>(request);
+            item.AddDomainEvent(new ContactCreatedEvent(item));
+            db.Contacts.Add(item);
+            await db.SaveChangesAsync(cancellationToken);
+            return await Result<int>.SuccessAsync(item.Id);
         }
     }
 

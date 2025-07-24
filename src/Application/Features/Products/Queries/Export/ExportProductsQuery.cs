@@ -16,30 +16,31 @@ public class ExportProductsQuery : ProductAdvancedFilter, IRequest<Result<byte[]
 public class ExportProductsQueryHandler :
     IRequestHandler<ExportProductsQuery, Result<byte[]>>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly IExcelService _excelService;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
+    private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ExportProductsQueryHandler> _localizer;
     private readonly IPDFService _pdfService;
 
     public ExportProductsQueryHandler(
-        IApplicationDbContext context,
-        IExcelService excelService,
+        IApplicationDbContextFactory dbContextFactory,
         IMapper mapper,
+        IExcelService excelService,
         IPDFService pdfService,
         IStringLocalizer<ExportProductsQueryHandler> localizer
     )
     {
-        _context = context;
-        _excelService = excelService;
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
+        _excelService = excelService;
         _pdfService = pdfService;
         _localizer = localizer;
     }
 #nullable disable warnings
     public async Task<Result<byte[]>> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Products.ApplySpecification(request.Specification)
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.Products.ApplySpecification(request.Specification)
             .AsNoTracking()
             .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

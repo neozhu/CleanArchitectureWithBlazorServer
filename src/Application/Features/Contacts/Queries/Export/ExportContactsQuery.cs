@@ -36,27 +36,28 @@ public class ExportContactsQuery : ContactAdvancedFilter, ICacheableRequest<Resu
 public class ExportContactsQueryHandler :
          IRequestHandler<ExportContactsQuery, Result<byte[]>>
 {
+        private readonly IApplicationDbContextFactory _dbContextFactory;
         private readonly IMapper _mapper;
-        private readonly IApplicationDbContext _context;
         private readonly IExcelService _excelService;
         private readonly IStringLocalizer<ExportContactsQueryHandler> _localizer;
         private readonly ContactDto _dto = new();
         public ExportContactsQueryHandler(
+            IApplicationDbContextFactory dbContextFactory,
             IMapper mapper,
-            IApplicationDbContext context,
             IExcelService excelService,
             IStringLocalizer<ExportContactsQueryHandler> localizer
             )
         {
+            _dbContextFactory = dbContextFactory;
             _mapper = mapper;
-            _context = context;
             _excelService = excelService;
             _localizer = localizer;
         }
         #nullable disable warnings
         public async Task<Result<byte[]>> Handle(ExportContactsQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.Contacts.ApplySpecification(request.Specification)
+            await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+            var data = await db.Contacts.ApplySpecification(request.Specification)
                        .OrderBy($"{request.OrderBy} {request.SortDirection}")
                        .ProjectTo<ContactDto>(_mapper.ConfigurationProvider)
                        .AsNoTracking()

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using Microsoft.Extensions.Hosting;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
 public static class HostExtensions
@@ -17,4 +18,6 @@ public static class HostExtensions
             }
         }
     }
+
+   
 }
