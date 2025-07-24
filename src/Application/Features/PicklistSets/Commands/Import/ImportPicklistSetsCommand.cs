@@ -24,18 +24,21 @@ public class ImportPicklistSetsCommandHandler :
     IRequestHandler<ImportPicklistSetsCommand, Result>
 {
     private readonly IValidator<AddEditPicklistSetCommand> _addValidator;
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly IMapper _mapper;
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ImportPicklistSetsCommandHandler> _localizer;
 
     public ImportPicklistSetsCommandHandler(
-        IApplicationDbContext context,
+        IApplicationDbContextFactory dbContextFactory,
+        IMapper mapper,
         IExcelService excelService,
         IStringLocalizer<ImportPicklistSetsCommandHandler> localizer,
         IValidator<AddEditPicklistSetCommand> addValidator
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
+        _mapper = mapper;
         _excelService = excelService;
         _localizer = localizer;
         _addValidator = addValidator;
@@ -45,6 +48,7 @@ public class ImportPicklistSetsCommandHandler :
 #nullable disable warnings
     public async Task<Result> Handle(ImportPicklistSetsCommand request, CancellationToken cancellationToken)
     {
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
         var result = await _excelService.ImportAsync(request.Data,
             new Dictionary<string, Func<DataRow, PicklistSet, object?>>
             {
@@ -74,12 +78,12 @@ public class ImportPicklistSetsCommandHandler :
                     cancellationToken);
                 if (validationResult.IsValid)
                 {
-                    var exist = await _context.PicklistSets.AnyAsync(x => x.Name == item.Name && x.Value == item.Value,
+                    var exist = await db.PicklistSets.AnyAsync(x => x.Name == item.Name && x.Value == item.Value,
                         cancellationToken);
                     if (exist) continue;
 
                     item.AddDomainEvent(new CreatedEvent<PicklistSet>(item));
-                    await _context.PicklistSets.AddAsync(item, cancellationToken);
+                    await db.PicklistSets.AddAsync(item, cancellationToken);
                 }
                 else
                 {
@@ -91,7 +95,7 @@ public class ImportPicklistSetsCommandHandler :
 
             if (errorsOccurred) return await Result.FailureAsync(errors.ToArray());
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await db.SaveChangesAsync(cancellationToken);
             return await Result.SuccessAsync();
         }
     }

@@ -4,11 +4,7 @@
 <div style="display: flex; justify-content: center; align-items: center; min-height: @MinHeight; padding: 2rem;">
     <MudPaper Class="pa-8" Elevation="1" Style="max-width: 500px; text-align: center;">
         
-        @if (ShowIcon)
-        {
-            <MudIcon Icon="@GetErrorIcon()" Color="@GetErrorColor()" Style="font-size: 3.5rem;" Class="mb-4" />
-        }
-        
+
         <MudText Typo="Typo.h3" Class="mb-2" Style="font-weight: 300;">
             @ErrorCode
         </MudText>
@@ -61,7 +57,6 @@
     [Parameter] public string Title { get; set; } = "";
     [Parameter] public string Description { get; set; } = "";
     [Parameter] public string MinHeight { get; set; } = "60vh";
-    [Parameter] public bool ShowIcon { get; set; } = true;
     [Parameter] public bool ShowHomeButton { get; set; } = true;
     [Parameter] public bool ShowBackButton { get; set; } = false;
     [Parameter] public bool ShowContactButton { get; set; } = false;

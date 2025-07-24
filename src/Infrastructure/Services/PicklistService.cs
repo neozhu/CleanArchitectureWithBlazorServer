@@ -6,17 +6,16 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
 public class PicklistService : IPicklistService
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
     private readonly IFusionCache _fusionCache;
 
     public PicklistService(
         IMapper mapper,
         IFusionCache fusionCache,
-        IServiceScopeFactory scopeFactory)
+        IApplicationDbContextFactory dbContextFactory)
     {
-        var scope = scopeFactory.CreateScope();
-        _context = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
         _fusionCache = fusionCache;
     }
@@ -25,23 +24,25 @@ public class PicklistService : IPicklistService
     public List<PicklistSetDto> DataSource { get; private set; } = new();
 
 
-    public void Initialize()
+    public async Task InitializeAsync()
     {
+        await using var db = await _dbContextFactory.CreateAsync();
         DataSource = _fusionCache.GetOrSet(PicklistSetCacheKey.PicklistCacheKey,
-            _ => _context.PicklistSets.ProjectTo<PicklistSetDto>(_mapper.ConfigurationProvider)
+            _ => db.PicklistSets.ProjectTo<PicklistSetDto>(_mapper.ConfigurationProvider)
                 .OrderBy(x => x.Name).ThenBy(x => x.Value)
                 .ToList()
         ) ?? new List<PicklistSetDto>();
     }
 
-    public void Refresh()
+    public async Task RefreshAsync()
     {
         _fusionCache.Remove(PicklistSetCacheKey.PicklistCacheKey);
+        await using var db = await _dbContextFactory.CreateAsync();
         DataSource = _fusionCache.GetOrSet(PicklistSetCacheKey.PicklistCacheKey,
-            _ => _context.PicklistSets.ProjectTo<PicklistSetDto>(_mapper.ConfigurationProvider)
+            _ => db.PicklistSets.ProjectTo<PicklistSetDto>(_mapper.ConfigurationProvider)
                 .OrderBy(x => x.Name).ThenBy(x => x.Value)
                 .ToList()
         ) ?? new List<PicklistSetDto>();
-        OnChange?.Invoke();
+        if (OnChange != null) await OnChange.Invoke();
     }
 }

@@ -27,37 +27,34 @@ public class AddEditPicklistSetCommand : ICacheInvalidatorRequest<Result<int>>
 
 public class AddEditPicklistSetCommandHandler : IRequestHandler<AddEditPicklistSetCommand, Result<int>>
 {
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
 
     public AddEditPicklistSetCommandHandler(
-        IMapper mapper,
-        IApplicationDbContext context)
+        IApplicationDbContextFactory dbContextFactory,
+        IMapper mapper
+    )
     {
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
-        _context = context;
     }
 
     public async Task<Result<int>> Handle(AddEditPicklistSetCommand request, CancellationToken cancellationToken)
     {
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
         if (request.Id > 0)
         {
-            var item = await _context.PicklistSets.FindAsync(request.Id, cancellationToken);
-            if (item == null)
-            {
-                return await Result<int>.FailureAsync($"Picklist with id: [{request.Id}] not found.");
-            }
+            var item = await db.PicklistSets.FindAsync(request.Id, cancellationToken);
+            if (item == null) return await Result<int>.FailureAsync($"PicklistSet with id: [{request.Id}] not found.");
             item = _mapper.Map(request, item);
-            item.AddDomainEvent(new UpdatedEvent<PicklistSet>(item));
-            await _context.SaveChangesAsync(cancellationToken);
+            await db.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {
             var keyValue = _mapper.Map<PicklistSet>(request);
-            keyValue.AddDomainEvent(new UpdatedEvent<PicklistSet>(keyValue));
-            _context.PicklistSets.Add(keyValue);
-            await _context.SaveChangesAsync(cancellationToken);
+            db.PicklistSets.Add(keyValue);
+            await db.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(keyValue.Id);
         }
     }

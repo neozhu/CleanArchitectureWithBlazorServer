@@ -17,19 +17,21 @@ public class GetAllTenantsQueryHandler :
     IRequestHandler<GetAllTenantsQuery, IEnumerable<TenantDto>>
 {
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+
     public GetAllTenantsQueryHandler(
         IMapper mapper,
-        IApplicationDbContext context
+       IApplicationDbContextFactory dbContextFactory
     )
     {
         _mapper = mapper;
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task<IEnumerable<TenantDto>> Handle(GetAllTenantsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.Tenants
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.Tenants
             .ProjectTo<TenantDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         return data;
