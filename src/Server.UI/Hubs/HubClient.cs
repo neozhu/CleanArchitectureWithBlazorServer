@@ -55,52 +55,40 @@ public sealed class HubClient : IAsyncDisposable
     }
 
     // Handle the result of async event invocations
-    private async Task OnLoginEventAsync(string connectionId, string userName)
+    private Task OnLoginEventAsync(string connectionId, string userName)
     {
-        if (LoginEvent != null)
-        {
-            await Task.Run(() => LoginEvent?.Invoke(this, new UserStateChangeEventArgs(connectionId, userName))).ConfigureAwait(false);
-        }
+        LoginEvent?.Invoke(this, new UserStateChangeEventArgs(connectionId, userName));
+        return Task.CompletedTask;
     }
 
-    private async Task OnLogoutEventAsync(string connectionId, string userName)
+    private Task OnLogoutEventAsync(string connectionId, string userName)
     {
-        if (LogoutEvent != null)
-        {
-            await Task.Run(() => LogoutEvent?.Invoke(this, new UserStateChangeEventArgs(connectionId, userName))).ConfigureAwait(false);
-        }
+        LogoutEvent?.Invoke(this, new UserStateChangeEventArgs(connectionId, userName));
+        return Task.CompletedTask;
     }
 
-    private async Task OnJobStartedEventAsync( int id, string message)
+    private Task OnJobStartedEventAsync(int id, string message)
     {
-        if (JobStartedEvent != null)
-        {
-            await Task.Run(() => JobStartedEvent?.Invoke(this, new JobStartedEventArgs(id, message))).ConfigureAwait(false);
-        }
+        JobStartedEvent?.Invoke(this, new JobStartedEventArgs(id, message));
+        return Task.CompletedTask;
     }
 
-    private async Task OnJobCompletedEventAsync( int id, string message)
+    private Task OnJobCompletedEventAsync(int id, string message)
     {
-        if (JobCompletedEvent != null)
-        {
-            await Task.Run(() => JobCompletedEvent?.Invoke(this, new JobCompletedEventArgs(id, message))).ConfigureAwait(false);
-        }
+        JobCompletedEvent?.Invoke(this, new JobCompletedEventArgs(id, message));
+        return Task.CompletedTask;
     }
 
-    private async Task OnNotificationReceivedEventAsync( string message)
+    private Task OnNotificationReceivedEventAsync(string message)
     {
-        if (NotificationReceivedEvent != null)
-        {
-            await Task.Run(() => NotificationReceivedEvent?.Invoke(this, new NotificationReceivedEventArgs(message))).ConfigureAwait(false);
-        }
+        NotificationReceivedEvent?.Invoke(this, new NotificationReceivedEventArgs(message));
+        return Task.CompletedTask;
     }
 
-    private async Task OnMessageReceivedEventAsync( string from,string message)
+    private Task OnMessageReceivedEventAsync(string from, string message)
     {
-        if (MessageReceivedEvent != null)
-        {
-            await Task.Run(() => MessageReceivedEvent?.Invoke(this, new MessageReceivedEventArgs(from, message))).ConfigureAwait(false);
-        }
+        MessageReceivedEvent?.Invoke(this, new MessageReceivedEventArgs(from, message));
+        return Task.CompletedTask;
     }
     
     public async ValueTask DisposeAsync()
