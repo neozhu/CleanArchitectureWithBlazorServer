@@ -15,21 +15,22 @@ public class GetAllPicklistSetsQuery : ICacheableRequest<IEnumerable<PicklistSet
 
 public class GetAllPicklistSetsQueryHandler : IRequestHandler<GetAllPicklistSetsQuery, IEnumerable<PicklistSetDto>>
 {
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
 
     public GetAllPicklistSetsQueryHandler(
-        IMapper mapper,
-        IApplicationDbContext context)
+        IApplicationDbContextFactory dbContextFactory,
+        IMapper mapper
+    )
     {
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
-        _context = context;
     }
 
-    public async Task<IEnumerable<PicklistSetDto>> Handle(GetAllPicklistSetsQuery request,
-        CancellationToken cancellationToken)
+    public async Task<IEnumerable<PicklistSetDto>> Handle(GetAllPicklistSetsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.PicklistSets.OrderBy(x => x.Name).ThenBy(x => x.Value)
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.PicklistSets.OrderBy(x => x.Name).ThenBy(x => x.Value)
             .ProjectTo<PicklistSetDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         return data;

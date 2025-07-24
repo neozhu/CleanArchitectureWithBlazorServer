@@ -6,6 +6,6 @@ public interface IUserService
 {
     List<ApplicationUserDto> DataSource { get; }
     event Func<Task>? OnChange;
-    void Initialize();
-    void Refresh();
+    Task InitializeAsync();
+    Task RefreshAsync();
 }

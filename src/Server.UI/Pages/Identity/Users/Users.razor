@@ -278,7 +278,9 @@
         _title = Localizer[_currentUserDto.GetClassDescription()];
         InitializeServices();
         _accessRights = await PermissionService.GetAccessRightsAsync<UsersAccessRights>();
+        await RoleService.InitializeAsync();
         _roles = RoleService.DataSource;
+        await  TenantService.InitializeAsync();
     }
 
     private void InitializeServices()
@@ -411,7 +413,7 @@
         Snackbar.Add(Localizer["New user created successfully"], Severity.Info);
         await AssignRolesToUserAsync(newUser, model.AssignedRoles);
         Logger.LogInformation("User created: {UserName} (ID: {UserId})", newUser.UserName, newUser.Id);
-        UserService.Refresh();
+        await UserService.RefreshAsync();
         await RefreshDataGrid();
     }
 
@@ -446,7 +448,7 @@
             }
             Snackbar.Add(Localizer["User updated successfully"], Severity.Info);
             await RefreshDataGrid();
-            UserService.Refresh();
+            await  UserService.RefreshAsync();
             await OnlineUserTracker.Update(model.Id, model.UserName, model.DisplayName ?? string.Empty, model.ProfilePictureDataUrl ?? string.Empty);
         }
         else
@@ -512,7 +514,7 @@
             Logger.LogInformation("User deleted: {UserName} (ID: {UserId})", user.UserName, user.Id);
             Snackbar.Add(ConstantString.DeleteSuccess, Severity.Info);
             await RefreshDataGrid();
-            UserService.Refresh();
+            await UserService.RefreshAsync();
         }
         else
         {
@@ -549,7 +551,7 @@
         }
         Snackbar.Add(ConstantString.DeleteSuccess, Severity.Info);
         await RefreshDataGrid();
-        UserService.Refresh();
+        await UserService.RefreshAsync();
     }
 
     #endregion

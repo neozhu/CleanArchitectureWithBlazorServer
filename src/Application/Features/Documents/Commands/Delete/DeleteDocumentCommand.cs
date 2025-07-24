@@ -19,25 +19,26 @@ public class DeleteDocumentCommand : ICacheInvalidatorRequest<Result>
 public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentCommand, Result>
 
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
 
     public DeleteDocumentCommandHandler(
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task<Result> Handle(DeleteDocumentCommand request, CancellationToken cancellationToken)
     {
-        var items = await _context.Documents.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var items = await db.Documents.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
         foreach (var item in items)
         {
             item.AddDomainEvent(new DeletedEvent<Document>(item));
-            _context.Documents.Remove(item);
+            db.Documents.Remove(item);
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await db.SaveChangesAsync(cancellationToken);
         return await Result.SuccessAsync();
     }
 }

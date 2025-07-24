@@ -25,21 +25,22 @@ public class DocumentsWithPaginationQuery : AdvancedDocumentsFilter, ICacheableR
 public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuery, PaginatedData<DocumentDto>>
 {
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
 
     public DocumentsQueryHandler(
         IMapper mapper,
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory
     )
     {
         _mapper = mapper;
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task<PaginatedData<DocumentDto>> Handle(DocumentsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Documents.OrderBy($"{request.OrderBy} {request.SortDirection}")
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.Documents.OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectToPaginatedDataAsync<Document, DocumentDto>(request.Specification, request.PageNumber, request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
 
         return data;
