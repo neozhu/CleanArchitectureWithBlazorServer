@@ -26,21 +26,22 @@ public class ProductsWithPaginationQuery : ProductAdvancedFilter, ICacheableRequ
 public class ProductsWithPaginationQueryHandler :
     IRequestHandler<ProductsWithPaginationQuery, PaginatedData<ProductDto>>
 {
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
     public ProductsWithPaginationQueryHandler(
-        IMapper mapper,
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory,
+        IMapper mapper
     )
     {
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
-        _context = context;
     }
 
     public async Task<PaginatedData<ProductDto>> Handle(ProductsWithPaginationQuery request,
         CancellationToken cancellationToken)
     {
-        var data = await _context.Products.OrderBy($"{request.OrderBy} {request.SortDirection}")
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.Products.OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectToPaginatedDataAsync<Product, ProductDto>(request.Specification, request.PageNumber,
                  request.PageSize, _mapper.ConfigurationProvider, cancellationToken);
         return data;

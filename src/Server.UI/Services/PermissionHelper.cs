@@ -14,14 +14,12 @@ namespace CleanArchitecture.Blazor.Server.UI.Services;
 /// <summary>
 /// Helper class for managing permissions.
 /// </summary>
-public class PermissionHelper : IPermissionHelper
+public class PermissionHelper : IPermissionHelper, IDisposable
 {
-    private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly IFusionCache _fusionCache;
     private readonly TimeSpan _refreshInterval;
+    private readonly IServiceScopeFactory _scopeFactory;
     private const string ClaimsCacheKeyPrefix = "get-claims-by-";
-    private readonly IServiceScope _scope;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PermissionHelper"/> class.
@@ -30,11 +28,10 @@ public class PermissionHelper : IPermissionHelper
     /// <param name="fusionCache">The fusion cache.</param>
     public PermissionHelper(IServiceScopeFactory scopeFactory, IFusionCache fusionCache)
     {
-        _scope = scopeFactory.CreateScope();
-        _userManager = _scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        _roleManager = _scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        _scopeFactory = scopeFactory;
         _fusionCache = fusionCache;
-        _refreshInterval = TimeSpan.FromSeconds(30);    }
+        _refreshInterval = TimeSpan.FromSeconds(30);
+    }
     
     /// <summary>
     /// Gets all permissions for a user by user ID.
@@ -99,16 +96,20 @@ public class PermissionHelper : IPermissionHelper
         var key = $"get-inherited-claims-by-{userId}";
         return await _fusionCache.GetOrSetAsync(key, async _ =>
         {
-            var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(false)
+            using var scope = _scopeFactory.CreateScope();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            
+            var user = await userManager.FindByIdAsync(userId).ConfigureAwait(false)
                                     ?? throw new NotFoundException($"not found application user: {userId}");
-            var roles = (await _userManager.GetRolesAsync(user)).ToArray();
+            var roles = (await userManager.GetRolesAsync(user)).ToArray();
             var inheritClaims = new List<Claim>();
             if (roles is not null && roles.Any())
             {
-                var assigendRoles = await _roleManager.Roles.Where(x => roles.Contains(x.Name) && x.TenantId == user.TenantId).ToListAsync();
+                var assigendRoles = await roleManager.Roles.Where(x => roles.Contains(x.Name) && x.TenantId == user.TenantId).ToListAsync();
                 foreach (var role in assigendRoles)
                 {
-                    var claims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
+                    var claims = await roleManager.GetClaimsAsync(role).ConfigureAwait(false);
                     inheritClaims.AddRange(claims);
                 }
                 inheritClaims = inheritClaims.Distinct(new ClaimComparer()).ToList();
@@ -128,9 +129,12 @@ public class PermissionHelper : IPermissionHelper
         var key = $"{ClaimsCacheKeyPrefix}{userId}";
         return await _fusionCache.GetOrSetAsync(key, async _ =>
         {
-            var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(false)
+            using var scope = _scopeFactory.CreateScope();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            
+            var user = await userManager.FindByIdAsync(userId).ConfigureAwait(false)
                        ?? throw new NotFoundException($"not found application user: {userId}");
-            var userClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
+            var userClaims = await userManager.GetClaimsAsync(user).ConfigureAwait(false);
             return userClaims;
 
         }, _refreshInterval).ConfigureAwait(false);    }
@@ -186,9 +190,12 @@ public class PermissionHelper : IPermissionHelper
         var key = $"{ClaimsCacheKeyPrefix}{roleId}";
         return await _fusionCache.GetOrSetAsync(key, async _ =>
         {
-            var role = await _roleManager.FindByIdAsync(roleId).ConfigureAwait(false)
+            using var scope = _scopeFactory.CreateScope();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            
+            var role = await roleManager.FindByIdAsync(roleId).ConfigureAwait(false)
                        ?? throw new NotFoundException($"not found application role: {roleId}");
-            return await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
+            return await roleManager.GetClaimsAsync(role).ConfigureAwait(false);
         }, _refreshInterval).ConfigureAwait(false);    }
     
     /// <summary>
@@ -258,5 +265,11 @@ public class PermissionHelper : IPermissionHelper
         {
             return HashCode.Combine(obj.Type, obj.Value);
         }
+    }
+
+    public void Dispose()
+    {
+        // No long-lived resources to dispose
+        GC.SuppressFinalize(this);
     }
 }

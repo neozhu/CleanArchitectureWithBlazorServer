@@ -32,47 +32,37 @@ public class AddEditDocumentCommand : ICacheInvalidatorRequest<Result<int>>
 
 public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentCommand, Result<int>>
 {
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
-    private readonly IUploadService _uploadService;
+    private readonly IStringLocalizer<AddEditDocumentCommandHandler> _localizer;
 
     public AddEditDocumentCommandHandler(
+        IApplicationDbContextFactory dbContextFactory,
         IMapper mapper,
-        IApplicationDbContext context,
-        IUploadService uploadService
+        IStringLocalizer<AddEditDocumentCommandHandler> localizer
     )
     {
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
-        _context = context;
-        _uploadService = uploadService;
+        _localizer = localizer;
     }
 
     public async Task<Result<int>> Handle(AddEditDocumentCommand request, CancellationToken cancellationToken)
     {
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        Document document;
         if (request.Id > 0)
         {
-            var document = await _context.Documents.FindAsync(request.Id, cancellationToken);
-            if (document == null)
-            {
-                return await Result<int>.FailureAsync($"Document with id: [{request.Id}] not found.");
-            }
-            document.AddDomainEvent(new UpdatedEvent<Document>(document));
-            if (request.UploadRequest != null) document.URL = await _uploadService.UploadAsync(request.UploadRequest);
-            document.Title = request.Title;
-            document.Description = request.Description;
-            document.IsPublic = request.IsPublic;
-            document.DocumentType = request.DocumentType;
-            await _context.SaveChangesAsync(cancellationToken);
-            return await Result<int>.SuccessAsync(document.Id);
+            document = await db.Documents.FindAsync(request.Id, cancellationToken);
+            if (document == null) return await Result<int>.FailureAsync(_localizer["Document Not Found!"]);
+            document = _mapper.Map(request, document);
         }
         else
         {
-            var document = _mapper.Map<Document>(request);
-            if (request.UploadRequest != null) document.URL = await _uploadService.UploadAsync(request.UploadRequest);
-            document.AddDomainEvent(new CreatedEvent<Document>(document));
-            _context.Documents.Add(document);
-            await _context.SaveChangesAsync(cancellationToken);
-            return await Result<int>.SuccessAsync(document.Id);
+            document = _mapper.Map<Document>(request);
+            db.Documents.Add(document);
         }
+        await db.SaveChangesAsync(cancellationToken);
+        return await Result<int>.SuccessAsync(document.Id);
     }
 }

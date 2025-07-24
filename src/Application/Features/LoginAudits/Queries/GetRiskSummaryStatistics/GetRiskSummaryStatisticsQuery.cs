@@ -1,8 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using CleanArchitecture.Blazor.Application.Features.LoginAudits.Caching;
-using CleanArchitecture.Blazor.Application.Features.LoginAudits.DTOs;
 using CleanArchitecture.Blazor.Domain.Enums;
 
 namespace CleanArchitecture.Blazor.Application.Features.LoginAudits.Queries.GetRiskSummaryStatistics;
@@ -11,7 +9,7 @@ public class GetRiskSummaryStatisticsQuery : ICacheableRequest<RiskSummaryStatis
 {
     public string CacheKey => "RiskSummaryStatistics";
     public TimeSpan? Expiry => TimeSpan.FromMinutes(15);
-    public IEnumerable<string>? Tags => LoginAuditCacheKey.Tags;
+    public IEnumerable<string>? Tags => new[] { "userloginrisksummary", "statistics" };
 }
 
 public class GetRiskSummaryStatisticsQueryHandler : IRequestHandler<GetRiskSummaryStatisticsQuery, RiskSummaryStatisticsDto>
