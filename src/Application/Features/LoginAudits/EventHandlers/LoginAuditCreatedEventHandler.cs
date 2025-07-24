@@ -39,8 +39,6 @@ public class LoginAuditCreatedEventHandler : INotificationHandler<LoginAuditCrea
 
     public async Task Handle(LoginAuditCreatedEvent notification, CancellationToken cancellationToken)
     {
-        //_logger.LogInformation("Handled domain event '{EventType}' with notification: {@Notification} ", notification.GetType().Name, notification);
-
         if (!string.IsNullOrEmpty(notification.Item.IpAddress) && !notification.Item.IpAddress.StartsWith("127") && string.IsNullOrEmpty(notification.Item.Region))
         {
             var geolocation = await _geolocationService.GetGeolocationAsync(notification.Item.IpAddress, cancellationToken);
@@ -62,7 +60,8 @@ public class LoginAuditCreatedEventHandler : INotificationHandler<LoginAuditCrea
                 var region = regionParts.Count > 0 ? string.Join(", ", regionParts) : null;
                 using (var scope = _scopeFactory.CreateScope())
                 {
-                    var db = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
+                    var dbContextFactory = scope.ServiceProvider.GetRequiredService<IApplicationDbContextFactory>();
+                    await using var db = await dbContextFactory.CreateAsync(cancellationToken);
                     await db.LoginAudits.Where(x => x.Id == notification.Item.Id).ExecuteUpdateAsync(x => x.SetProperty(y => y.Region, region));
                 }
             }
