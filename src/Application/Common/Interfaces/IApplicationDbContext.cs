@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 
-public interface IApplicationDbContext
+public interface IApplicationDbContext: IAsyncDisposable
 {
     DbSet<SystemLog> SystemLogs { get; set; }
     DbSet<AuditTrail> AuditTrails { get; set; }
