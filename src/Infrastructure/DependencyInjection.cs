@@ -48,23 +48,19 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddSettings(configuration)
-            .AddDatabase(configuration)
-            .AddServices(configuration)
-            .AddMessageServices(configuration);
-
-        services
-            .AddAuthenticationService(configuration)
-            .AddFusionCacheService()
-            .AddSessionInfoService()
-            .AddFusionService();
-
-        services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
-        services.AddScoped<IPermissionService, PermissionService>();
-        return services;
+        return services
+            .AddApplicationSettings(configuration)
+            .AddDatabaseServices(configuration)
+            .AddIdentityAndSecurity(configuration)
+            .AddBusinessServices(configuration)
+            .AddCachingServices()
+            .AddNotificationServices(configuration)
+            .AddSessionManagement()
+            .AddFusionServices();
     }
 
-    private static IServiceCollection AddSettings(this IServiceCollection services,
+    #region Configuration and Settings
+    private static IServiceCollection AddApplicationSettings(this IServiceCollection services,
         IConfiguration configuration)
     {
         services.Configure<IdentitySettings>(configuration.GetSection(IDENTITY_SETTINGS_KEY))
@@ -86,8 +82,10 @@ public static class DependencyInjection
             .AddSingleton<IAISettings>(s => s.GetRequiredService<IOptions<AISettings>>().Value);
         return services;
     }
+    #endregion
 
-    private static IServiceCollection AddDatabase(this IServiceCollection services,
+    #region Database and Persistence
+    private static IServiceCollection AddDatabaseServices(this IServiceCollection services,
         IConfiguration configuration)
     {
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>()
@@ -160,8 +158,10 @@ public static class DependencyInjection
                 throw new InvalidOperationException($"DB Provider {dbProvider} is not supported.");
         }
     }
+    #endregion
 
-    private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
+    #region Business Services
+    private static IServiceCollection AddBusinessServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IPicklistService, PicklistService>();
         services.AddScoped<ITenantService, TenantService>();
@@ -176,9 +176,6 @@ public static class DependencyInjection
             client.DefaultRequestHeaders.Add("User-Agent", "CleanArchitectureBlazorServer/1.0");
         });
 
-        // Add other services
-        services.AddScoped<IGeolocationService, GeolocationService>();
-
         // Configure SecurityAnalysisService with options
         services.Configure<SecurityAnalysisOptions>(configuration.GetSection(SecurityAnalysisOptions.SectionName));
         services.AddScoped<ISecurityAnalysisService, SecurityAnalysisService>();
@@ -191,8 +188,10 @@ public static class DependencyInjection
             .AddScoped<IPDFService, PDFService>()
             .AddTransient<IDocumentOcrJob, DocumentOcrJob>();
     }
+    #endregion
 
-    private static IServiceCollection AddMessageServices(this IServiceCollection services,
+    #region Notification Services
+    private static IServiceCollection AddNotificationServices(this IServiceCollection services,
         IConfiguration configuration)
     {
         var smtpClientOptions = new SmtpClientOptions();
@@ -210,8 +209,10 @@ public static class DependencyInjection
 
         return services;
     }
+    #endregion
 
-    private static IServiceCollection AddAuthenticationService(this IServiceCollection services,
+    #region Identity and Security
+    private static IServiceCollection AddIdentityAndSecurity(this IServiceCollection services,
         IConfiguration configuration)
     {
 
@@ -324,8 +325,10 @@ public static class DependencyInjection
 
         return services;
     }
+    #endregion
 
-    private static IServiceCollection AddFusionCacheService(this IServiceCollection services)
+    #region Caching Services
+    private static IServiceCollection AddCachingServices(this IServiceCollection services)
     {
         services.AddMemoryCache();
         services.AddFusionCache().WithDefaultEntryOptions(new FusionCacheEntryOptions
@@ -343,22 +346,30 @@ public static class DependencyInjection
         });
         return services;
     }
+    #endregion
 
-    private static IServiceCollection AddSessionInfoService(this IServiceCollection services)
+    #region Session Management
+    private static IServiceCollection AddSessionManagement(this IServiceCollection services)
     {
         services.AddScoped<ICurrentUserContext, CurrentUserContext>();
         services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
         services.AddScoped<ICurrentUserContextSetter, CurrentUserContextSetter>();
         services.AddScoped<CircuitHandler, UserSessionCircuitHandler>();
+        services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
+        services.AddScoped<IPermissionService, PermissionService>();
         return services;
     }
+    #endregion
 
-    private static void AddFusionService(this IServiceCollection services)
+    #region Fusion Services
+    private static IServiceCollection AddFusionServices(this IServiceCollection services)
     {
         var fusion = services.AddFusion();
         fusion.AddBlazor().AddAuthentication();
         fusion.AddFusionTime();
         fusion.AddService<IUserSessionTracker, UserSessionTracker>();
         fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
+        return services;
     }
+    #endregion
 }

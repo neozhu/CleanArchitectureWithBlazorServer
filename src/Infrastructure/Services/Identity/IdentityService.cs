@@ -9,23 +9,18 @@ using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
-public class IdentityService : IIdentityService
+public class IdentityService : IIdentityService, IDisposable
 {
-    private readonly IAuthorizationService _authorizationService;
     private readonly IFusionCache _fusionCache;
     private readonly IMapper _mapper;
-    private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public IdentityService(
         IServiceScopeFactory scopeFactory,
         IFusionCache fusionCache,
         IMapper mapper)
     {
-        var scope = scopeFactory.CreateScope();
-        _userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        _userClaimsPrincipalFactory =scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
-        _authorizationService = scope.ServiceProvider.GetRequiredService<IAuthorizationService>();
+        _scopeFactory = scopeFactory;
         _fusionCache = fusionCache;
         _mapper = mapper;
     }
@@ -36,37 +31,58 @@ public class IdentityService : IIdentityService
     {
         var key = $"GetUserNameAsync:{userId}";
         var user = await _fusionCache.GetOrSetAsync(key,
-             _ => _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId), RefreshInterval);
+             async _ =>
+             {
+                 using var scope = _scopeFactory.CreateScope();
+                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                 return await userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation);
+             }, RefreshInterval);
         return user?.UserName;
     }
 
     public string GetUserName(string userId)
     {
         var key = $"GetUserName-byId:{userId}";
-        var user = _fusionCache.GetOrSet(key, _ => _userManager.Users.SingleOrDefault(u => u.Id == userId), RefreshInterval);
+        var user = _fusionCache.GetOrSet(key, _ =>
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            return userManager.Users.SingleOrDefault(u => u.Id == userId);
+        }, RefreshInterval);
         return user?.UserName ?? string.Empty;
     }
 
     public async Task<bool> IsInRoleAsync(string userId, string role, CancellationToken cancellation = default)
     {
-        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation) ??
+        using var scope = _scopeFactory.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        
+        var user = await userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation) ??
                    throw new NotFoundException("User Not Found");
-        return await _userManager.IsInRoleAsync(user, role);
+        return await userManager.IsInRoleAsync(user, role);
     }
 
     public async Task<bool> AuthorizeAsync(string userId, string policyName, CancellationToken cancellation = default)
     {
-        var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation) ??
+        using var scope = _scopeFactory.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var userClaimsPrincipalFactory = scope.ServiceProvider.GetRequiredService<IUserClaimsPrincipalFactory<ApplicationUser>>();
+        var authorizationService = scope.ServiceProvider.GetRequiredService<IAuthorizationService>();
+        
+        var user = await userManager.Users.SingleOrDefaultAsync(u => u.Id == userId, cancellation) ??
                    throw new NotFoundException("User Not Found");
-        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
-        var result = await _authorizationService.AuthorizeAsync(principal, policyName);
+        var principal = await userClaimsPrincipalFactory.CreateAsync(user);
+        var result = await authorizationService.AuthorizeAsync(principal, policyName);
         return result.Succeeded;
     }
 
     public async Task<IDictionary<string, string?>> FetchUsers(string roleName,
         CancellationToken cancellation = default)
     {
-        var result = await _userManager.Users
+        using var scope = _scopeFactory.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        
+        var result = await userManager.Users
             .Where(x => x.UserRoles.Any(y => y.Role.Name == roleName))
             .Include(x => x.UserRoles)
             .ToDictionaryAsync(x => x.UserName!, y => y.DisplayName, cancellation);
@@ -79,9 +95,17 @@ public class IdentityService : IIdentityService
     {
         var key = GetApplicationUserCacheKey(userName);
         var result = await _fusionCache.GetOrSetAsync(key,
-            _ =>  _userManager.Users.Where(x => x.UserName == userName).Include(x => x.UserRoles)
-                .ThenInclude(x => x.Role).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(cancellation), RefreshInterval);
+            async _ =>
+            {
+                using var scope = _scopeFactory.CreateScope();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                return await userManager.Users
+                    .Where(x => x.UserName == userName)
+                    .Include(x => x.UserRoles)
+                    .ThenInclude(x => x.Role)
+                    .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(cancellation);
+            }, RefreshInterval);
         return result;
     }
 
@@ -91,14 +115,17 @@ public class IdentityService : IIdentityService
         Func<string?, CancellationToken, Task<List<ApplicationUserDto>?>> getUsersByTenantId =
             async (tenantId, token) =>
             {
+                using var scope = _scopeFactory.CreateScope();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                
                 if (string.IsNullOrEmpty(tenantId))
                 {
-                    return await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role)
-                    .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
+                    return await userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role)
+                    .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync(token);
                 }
-                return await _userManager.Users.Where(x => x.TenantId == tenantId).Include(x => x.UserRoles)
+                return await userManager.Users.Where(x => x.TenantId == tenantId).Include(x => x.UserRoles)
                     .ThenInclude(x => x.Role)
-                    .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
+                    .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync(token);
             };
         var result = await _fusionCache.GetOrSetAsync(key, _=>getUsersByTenantId(tenantId, cancellation), RefreshInterval);
         return result;
@@ -112,5 +139,11 @@ public class IdentityService : IIdentityService
     private string GetApplicationUserCacheKey(string userName)
     {
         return $"GetApplicationUserDto:{userName}";
+    }
+
+    public void Dispose()
+    {
+        // No long-lived resources to dispose
+        GC.SuppressFinalize(this);
     }
 }

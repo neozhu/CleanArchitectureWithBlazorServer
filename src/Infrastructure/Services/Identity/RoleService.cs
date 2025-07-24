@@ -4,12 +4,12 @@ using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
-public class RoleService : IRoleService
+public class RoleService : IRoleService, IDisposable
 {
     private const string CACHEKEY = "ALL-ApplicationRoleDto";
     private readonly IMapper _mapper;
     private readonly IFusionCache _fusionCache;
-    private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public RoleService(
         IMapper mapper,
@@ -18,8 +18,7 @@ public class RoleService : IRoleService
     {
         _mapper = mapper;
         _fusionCache = fusionCache;
-        var scope = scopeFactory.CreateScope();
-        _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        _scopeFactory = scopeFactory;
         DataSource = new List<ApplicationRoleDto>();
     }
 
@@ -30,9 +29,16 @@ public class RoleService : IRoleService
     public async Task InitializeAsync()
     {
         DataSource = await _fusionCache.GetOrSetAsync(CACHEKEY,
-                         _ => _roleManager.Roles
-                             .ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider).OrderBy(x => x.TenantId).ThenBy(x => x.Name)
-                             .ToListAsync())
+                         async _ =>
+                         {
+                             using var scope = _scopeFactory.CreateScope();
+                             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+                             return await roleManager.Roles
+                                 .ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider)
+                                 .OrderBy(x => x.TenantId)
+                                 .ThenBy(x => x.Name)
+                                 .ToListAsync();
+                         })
                      ?? new List<ApplicationRoleDto>();
         OnChange?.Invoke();
     }
@@ -42,10 +48,23 @@ public class RoleService : IRoleService
     {
         _fusionCache.Remove(CACHEKEY);
         DataSource = await _fusionCache.GetOrSetAsync(CACHEKEY,
-                         _ => _roleManager.Roles
-                             .ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider).OrderBy(x => x.TenantId).ThenBy(x => x.Name)
-                             .ToListAsync())
+                         async _ =>
+                         {
+                             using var scope = _scopeFactory.CreateScope();
+                             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+                             return await roleManager.Roles
+                                 .ProjectTo<ApplicationRoleDto>(_mapper.ConfigurationProvider)
+                                 .OrderBy(x => x.TenantId)
+                                 .ThenBy(x => x.Name)
+                                 .ToListAsync();
+                         })
                      ?? new List<ApplicationRoleDto>();
         OnChange?.Invoke();
+    }
+
+    public void Dispose()
+    {
+        // No long-lived resources to dispose
+        GC.SuppressFinalize(this);
     }
 }
