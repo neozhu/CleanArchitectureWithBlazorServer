@@ -37,6 +37,8 @@ public class UserProfileStateService : IDisposable
     /// </summary>
     public async Task InitializeAsync(string userName)
     {
+        if (string.IsNullOrWhiteSpace(userName))
+            return;
         try
         {
             var key = GetApplicationUserCacheKey(userName);
@@ -86,8 +88,8 @@ public class UserProfileStateService : IDisposable
     /// </summary>
     public async Task RefreshAsync(string userName)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(userName);
-        
+        if (string.IsNullOrWhiteSpace(userName))
+            return;
         try
         {
             RemoveApplicationUserCache(userName);
@@ -105,14 +107,13 @@ public class UserProfileStateService : IDisposable
     /// </summary>
     public void UpdateUserProfile(string userName, string? profilePictureDataUrl, string? fullName, string? phoneNumber, string? timeZoneId, string? languageCode)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(userName);
-        
+        if (string.IsNullOrWhiteSpace(userName))
+            return;
         _userProfile.ProfilePictureDataUrl = profilePictureDataUrl;
         _userProfile.DisplayName = fullName;
         _userProfile.PhoneNumber = phoneNumber;
         _userProfile.TimeZoneId = timeZoneId;
         _userProfile.LanguageCode = languageCode;
-        
         RemoveApplicationUserCache(userName);
         NotifyStateChanged();
     }
@@ -126,13 +127,15 @@ public class UserProfileStateService : IDisposable
 
     private string GetApplicationUserCacheKey(string userName)
     {
+        // 这里保留参数校验，防止外部直接调用本方法时出错
         ArgumentException.ThrowIfNullOrWhiteSpace(userName);
         return $"GetApplicationUserDto:{userName}";
     }
 
     public void RemoveApplicationUserCache(string userName)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(userName);
+        if (string.IsNullOrWhiteSpace(userName))
+            return;
         _fusionCache.Remove(GetApplicationUserCacheKey(userName));   
     }
 
