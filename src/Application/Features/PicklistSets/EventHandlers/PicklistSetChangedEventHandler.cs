@@ -17,12 +17,12 @@ public class PicklistSetChangedEventHandler : INotificationHandler<UpdatedEvent<
         _logger = logger;
     }
 
-    public Task Handle(UpdatedEvent<PicklistSet> notification, CancellationToken cancellationToken)
+    public async Task Handle(UpdatedEvent<PicklistSet> notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Handled domain event '{EventType}' with notification: {@Notification} ",
              notification.GetType().Name,
              notification);
-        _picklistService.Refresh();
-        return Task.CompletedTask;
+        await _picklistService.RefreshAsync();
+   
     }
 }

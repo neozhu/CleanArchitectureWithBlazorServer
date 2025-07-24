@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MediatorWrapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure;
@@ -98,7 +97,7 @@ public class Testing
     public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
     {
         using var scope = _scopeFactory.CreateScope();
-        var mediator = scope.ServiceProvider.GetService<IScopedMediator>();
+        var mediator = scope.ServiceProvider.GetService<IMediator>();
         return await mediator.Send(request);
     }
 

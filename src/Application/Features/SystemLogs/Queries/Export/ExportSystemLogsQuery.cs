@@ -14,29 +14,28 @@ public class ExportSystemLogsQuery : IRequest<byte[]>
 
 public class ExportSystemLogsQueryHandler : IRequestHandler<ExportSystemLogsQuery, byte[]>
 {
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ExportSystemLogsQueryHandler> _localizer;
 
     public ExportSystemLogsQueryHandler(
+        IApplicationDbContextFactory dbContextFactory,
         IMapper mapper,
-        IApplicationDbContext context,
         IExcelService excelService,
         IStringLocalizer<ExportSystemLogsQueryHandler> localizer
     )
     {
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
-        _context = context;
         _excelService = excelService;
         _localizer = localizer;
     }
 
     public async Task<byte[]> Handle(ExportSystemLogsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.SystemLogs
-            .Where(x => x.Message!.Contains(request.Keyword) || x.Exception!.Contains(request.Keyword))
-            .OrderBy($"{request.OrderBy} {request.SortDirection}")
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.SystemLogs.Where(x => x.Message!.Contains(request.Keyword) || x.Exception!.Contains(request.Keyword))
             .ProjectTo<SystemLogDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         var result = await _excelService.ExportAsync(data,

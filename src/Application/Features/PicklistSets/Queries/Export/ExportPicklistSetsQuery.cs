@@ -15,19 +15,19 @@ public class ExportPicklistSetsQuery : IRequest<byte[]>
 public class ExportPicklistSetsQueryHandler :
     IRequestHandler<ExportPicklistSetsQuery, byte[]>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
     private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ExportPicklistSetsQueryHandler> _localizer;
 
     public ExportPicklistSetsQueryHandler(
-        IApplicationDbContext context,
+        IApplicationDbContextFactory dbContextFactory,
         IMapper mapper,
         IExcelService excelService,
         IStringLocalizer<ExportPicklistSetsQueryHandler> localizer
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
         _excelService = excelService;
         _localizer = localizer;
@@ -36,9 +36,9 @@ public class ExportPicklistSetsQueryHandler :
 #pragma warning disable CS8604
     public async Task<byte[]> Handle(ExportPicklistSetsQuery request, CancellationToken cancellationToken)
     {
-        var data = await _context.PicklistSets.Where(x =>
-                x.Description.Contains(request.Keyword) || x.Value.Contains(request.Keyword) ||
-                x.Text.Contains(request.Keyword))
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+        var data = await db.PicklistSets.Where(x =>
+                (string.IsNullOrEmpty(request.Keyword) || x.Value.Contains(request.Keyword) || x.Text.Contains(request.Keyword)))
             .OrderBy($"{request.OrderBy} {request.SortDirection}")
             .ProjectTo<PicklistSetDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);

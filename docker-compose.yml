@@ -16,7 +16,7 @@ services:
       - AppConfigurationSettings__AppName=${APP_NAME}
       - DatabaseSettings__DBProvider=${DB_PROVIDER}
       - DatabaseSettings__ConnectionString=${DB_CONNECTION_STRING}
-      - AI__GEMINI_API_KEY=${GEMINI_API_KEY}
+      - AI__GeminiApiKey=${GEMINI_API_KEY}
       - SmtpClientOptions__User=${SMTP_USER}
       - SmtpClientOptions__Port=${SMTP_PORT}
       - SmtpClientOptions__Server=${SMTP_SERVER}

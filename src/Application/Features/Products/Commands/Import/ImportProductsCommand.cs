@@ -29,19 +29,19 @@ public class ImportProductsCommandHandler :
     IRequestHandler<CreateProductsTemplateCommand, Result<byte[]>>,
     IRequestHandler<ImportProductsCommand, Result<int>>
 {
-    private readonly IApplicationDbContext _context;
-    private readonly IExcelService _excelService;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
+    private readonly IExcelService _excelService;
     private readonly IStringLocalizer<ImportProductsCommandHandler> _localizer;
 
     public ImportProductsCommandHandler(
-        IApplicationDbContext context,
-        IExcelService excelService, 
+        IApplicationDbContextFactory dbContextFactory,
         IMapper mapper,
+        IExcelService excelService,
         IStringLocalizer<ImportProductsCommandHandler> localizer
     )
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _localizer = localizer;
         _excelService = excelService;
         _mapper = mapper;
@@ -64,6 +64,7 @@ public class ImportProductsCommandHandler :
 #nullable disable warnings
     public async Task<Result<int>> Handle(ImportProductsCommand request, CancellationToken cancellationToken)
     {
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
         var result = await _excelService.ImportAsync(request.Data,
             new Dictionary<string, Func<DataRow, ProductDto, object?>>
             {
@@ -90,10 +91,10 @@ public class ImportProductsCommandHandler :
             foreach (var dto in result.Data!)
             {
                 var item = _mapper.Map<Product>(dto);
-                await _context.Products.AddAsync(item, cancellationToken);
+                await db.Products.AddAsync(item, cancellationToken);
             }
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await db.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(result.Data.Count());
         }
     }

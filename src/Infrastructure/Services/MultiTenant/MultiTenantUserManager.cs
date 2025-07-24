@@ -10,9 +10,9 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
 public class MultiTenantUserManager : UserManager<ApplicationUser>
 {
     private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly IHttpContextAccessor? _httpContextAccessor;
-    private readonly IApplicationDbContext? _context;
-    private readonly ILogger<MultiTenantUserManager>? _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly ILogger<MultiTenantUserManager> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MultiTenantUserManager"/> class.
@@ -38,14 +38,14 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
         IServiceProvider services,
         RoleManager<ApplicationRole> roleManager,
         ILogger<UserManager<ApplicationUser>> logger,
-        IHttpContextAccessor? httpContextAccessor = null,
-        IApplicationDbContext? context = null,
-        ILogger<MultiTenantUserManager>? auditLogger = null)
+        IHttpContextAccessor httpContextAccessor ,
+        IApplicationDbContextFactory dbContextFactory ,
+        ILogger<MultiTenantUserManager> auditLogger )
         : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
     {
         _roleManager = roleManager;
         _httpContextAccessor = httpContextAccessor;
-        _context = context;
+        _dbContextFactory = dbContextFactory;
         _logger = auditLogger;
     }
 
@@ -169,9 +169,9 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
             var userId = user.Id ?? "Unknown";
             
             // Use the injected services to log the failed password check
-            if (_httpContextAccessor != null && _context != null && _logger != null)
+            if (_httpContextAccessor != null && _dbContextFactory != null && _logger != null)
             {
-                await LogPasswordCheckFailureAsync(userId, userName, _httpContextAccessor, _context, _logger);
+                await LogPasswordCheckFailureAsync(userId, userName, _httpContextAccessor, _dbContextFactory, _logger);
             }
         }
         
@@ -179,9 +179,10 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
     }
 
     private async Task LogPasswordCheckFailureAsync(string userId, string userName, 
-        IHttpContextAccessor httpContextAccessor, IApplicationDbContext context, 
+        IHttpContextAccessor httpContextAccessor, IApplicationDbContextFactory dbContextFactory, 
         ILogger<MultiTenantUserManager> logger)
     {
+        await using var db = await dbContextFactory.CreateAsync();
         try
         {
             var httpContext = httpContextAccessor.HttpContext;
@@ -210,8 +211,8 @@ public class MultiTenantUserManager : UserManager<ApplicationUser>
             loginAudit.AddDomainEvent(new Domain.Events.LoginAuditCreatedEvent(loginAudit));
             
             // Save to database
-            await context.LoginAudits.AddAsync(loginAudit);
-            await context.SaveChangesAsync(CancellationToken.None);
+            await db.LoginAudits.AddAsync(loginAudit);
+            await db.SaveChangesAsync(CancellationToken.None);
         }
         catch (Exception ex)
         {

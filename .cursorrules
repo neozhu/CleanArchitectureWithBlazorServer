@@ -1,409 +1,283 @@
-# Clean Architecture Blazor Server Rules
+# Clean Architecture Blazor Server Project Rules (v1.1)
+> Maintainer: [Fill in]  Last Updated: 2024-06-XX
 
-## 🏗️ **ARCHITECTURE PRINCIPLES**
+---
 
-### **Layer Dependency Rules** (CRITICAL - NEVER VIOLATE)
+## Table of Contents
+1. Project Structure & Layer Dependencies (A-1)
+2. Service & Interface Rules (A-2)
+3. Data Access & CQRS (A-3)
+4. Configuration & Constants (A-4)
+5. Blazor Component Standards (A-5)
+6. Dependency Injection & Registration (A-6)
+7. Testing & Documentation (A-7)
+8. Security & Permissions (A-8)
+9. Performance & Optimization (A-9)
+10. Pre-commit Checklist (A-10)
+
+---
+
+## 1. Project Structure & Layer Dependencies (A-1)
+
+**Authoritative Project Structure:**
+- The canonical project structure is defined by the solution file: `CleanArchitecture.Blazor.slnx`.
+- All architectural and code rules must align with the structure and boundaries established in this solution file.
+
+**Solution Layout (from CleanArchitecture.Blazor.slnx):**
 ```
-✅ ALLOWED DEPENDENCIES:
+/Solution Items/
+  - .dockerignore
+  - .editorconfig
+  - .gitignore
+  - CleanArchitecture.Blazor.nuspec
+  - Dockerfile
+  - README.md
+/src/
+  - Application/Application.csproj
+  - Domain/Domain.csproj
+  - Infrastructure/Infrastructure.csproj
+  - Server.UI/Server.UI.csproj
+/src/Migrators/
+  - Migrators.MSSQL/Migrators.MSSQL.csproj
+  - Migrators.PostgreSQL/Migrators.PostgreSQL.csproj
+  - Migrators.SqLite/Migrators.SqLite.csproj
+/tests/
+  - Application.IntegrationTests/Application.IntegrationTests.csproj
+  - Application.UnitTests/Application.UnitTests.csproj
+  - Domain.UnitTests/Domain.UnitTests.csproj
+docker-compose.dcproj
+```
+
+**Feature-to-UI Mapping:**
+- For each business feature, there is a corresponding folder/object in `Application/Features/<FeatureName>/` and a web UI implementation in `Pages/<FeatureName>/`.
+- Example:
+  - Application logic: `src/Application/Features/Contacts/`
+  - Web UI: `src/Server.UI/Pages/Contacts/`
+
+**Allowed Dependencies:**
+```
 UI → Application → Domain
 Infrastructure → Application → Domain
-
-❌ FORBIDDEN DEPENDENCIES:
-Application → Infrastructure
-Application → UI  
-Domain → Application
-Domain → Infrastructure
-Domain → UI
-UI → Infrastructure (except Program.cs DI setup)
 ```
 
-### **Project Structure**
-```
-src/
-├── Domain/           # Core business entities, no dependencies
-├── Application/      # Business logic, interfaces, DTOs
-├── Infrastructure/   # External concerns, implements Application interfaces
-└── Server.UI/        # Blazor Server UI, depends only on Application
-```
+**Forbidden Dependencies:**
+- Application → Infrastructure
+- Application → UI
+- Domain → Application
+- Domain → Infrastructure
+- Domain → UI
+- UI → Infrastructure (except Program.cs for DI)
 
-## 📋 **CODING STANDARDS**
-
-### **Service Implementation Rules**
-1. **ALWAYS create interfaces in Application layer first**
-   ```csharp
-   // ✅ Application/Common/Interfaces/IYourService.cs
-   public interface IYourService
-   {
-       Task<Result<T>> DoSomethingAsync(RequestDto request);
-   }
-   
-   // ✅ Infrastructure/Services/YourService.cs  
-   public class YourService : IYourService
-   {
-       // Implementation
-   }
-   ```
-
-2. **NEVER implement services directly in UI layer without interfaces**
-   ```csharp
-   // ❌ WRONG - Direct implementation in UI
-   public class SomeUIService 
-   
-   // ✅ CORRECT - Interface first
-   public interface ISomeUIService  // in Application
-   public class SomeUIService : ISomeUIService  // in UI
-   ```
-
-### **Data Access Rules**
-1. **ALWAYS use CQRS pattern for data operations**
-   ```csharp
-   // ✅ CORRECT - Use Mediator
-   var result = await Mediator.Send(new GetUsersQuery());
-   
-   // ❌ WRONG - Direct DbContext access in UI
-   @inject ApplicationDbContext Context
-   var users = await Context.Users.ToListAsync();
-   ```
-
-2. **NEVER inherit from DbContext in UI components**
-   ```csharp
-   // ❌ WRONG
-   @inherits OwningComponentBase<ApplicationDbContext>
-   
-   // ✅ CORRECT
-   @inject IMediator Mediator
-   ```
-
-### **Configuration Management Rules**
-1. **ALWAYS use IOptions pattern for configuration**
-   ```csharp
-   // ✅ CORRECT - Interface in Application
-   public interface IYourSettings
-   {
-       string SomeProperty { get; }
-   }
-   
-   // ✅ CORRECT - Implementation in Infrastructure
-   public class YourSettings : IYourSettings
-   {
-       public const string Key = "YourSection";
-       public string SomeProperty { get; set; } = string.Empty;
-   }
-   ```
-
-2. **NEVER inject IConfiguration directly in UI layer**
-   ```csharp
-   // ❌ WRONG
-   @inject IConfiguration Config
-   
-   // ✅ CORRECT
-   @inject IYourSettings Settings
-   ```
-
-### **Permission Management Rules**
-1. **ALWAYS define permissions in Application.Common.Security**
-   ```csharp
-   // ✅ CORRECT - in Application/Common/Security/Permissions/
-   public static class YourModulePermissions
-   {
-       public const string View = "Permissions.YourModule.View";
-       public const string Create = "Permissions.YourModule.Create";
-   }
-   ```
-
-2. **ALWAYS use IPermissionService for permission checks**
-   ```csharp
-   // ✅ CORRECT
-   @inject IPermissionService PermissionService
-   var hasPermission = await PermissionService.HasPermissionAsync(Permissions.Users.View);
-   
-   // ❌ WRONG - Direct authorization
-   @inject IAuthorizationService AuthService
-   ```
-
-### **Constants and Enums Rules**
-1. **ALWAYS place constants in Application.Common.Constants**
-   ```csharp
-   // ✅ CORRECT - Application/Common/Constants/
-   public static class YourConstants
-   {
-       public const string SomeValue = "value";
-   }
-   
-   // ❌ WRONG - Constants in Infrastructure or UI
-   ```
-
-2. **AVOID magic strings - use constants instead**
-   ```csharp
-   // ❌ WRONG
-   var claim = "Permissions.Users.View";
-   
-   // ✅ CORRECT  
-   var claim = Permissions.Users.View;
-   ```
-
-## 🎯 **BLAZOR SPECIFIC RULES**
-
-### **Component Injection Rules**
+**Anti-pattern Example:**
 ```csharp
-// ✅ ALWAYS use these standard injections in _Imports.razor
-@inject IApplicationSettings ApplicationSettings
-@inject ISnackbar Snackbar
-@inject IDialogService DialogService
-@inject IAuthorizationService AuthService
-@inject IValidationService Validator
-@inject IJSRuntime JS
-@inject IMediator Mediator
-@inject NavigationManager Navigation
-@inject IPermissionService PermissionService
-@inject IMapper Mapper
-
-// ❌ NEVER inject these in UI
-@inject ApplicationDbContext
-@inject IConfiguration
+// ❌ UI layer referencing Infrastructure.Services
+@inject Infrastructure.Services;
 ```
-
-### **Component Structure Rules**
-1. **Group related components in feature folders**
-   ```
-   Pages/
-   ├── Products/
-   │   ├── Products.razor
-   │   └── Components/
-   │       ├── ProductForm.razor
-   │       └── ProductList.razor
-   ```
-
-2. **Use proper authorization attributes**
-   ```csharp
-   @attribute [Authorize(Policy = Permissions.Products.View)]
-   ```
-
-## 📦 **DEPENDENCY INJECTION RULES**
-
-### **Service Registration Patterns**
+**Correct Pattern:**
 ```csharp
-// ✅ Application Layer (Application/DependencyInjection.cs)
-services.AddMediatR(config => { /* MediatR setup */ });
-services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-// ✅ Infrastructure Layer (Infrastructure/DependencyInjection.cs)  
-services.AddScoped<IUserService, UserService>();
-services.Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"));
-
-// ✅ UI Layer (Server.UI/DependencyInjection.cs)
-services.AddScoped<IPermissionHelper, PermissionHelper>();
-services.AddMudServices();
-```
-
-### **Interface Registration Rules**
-```csharp
-// ✅ ALWAYS register both interface and implementation
-services.AddScoped<IYourService, YourService>();
-
-// ✅ For configuration classes
-services.Configure<YourSettings>(config.GetSection(YourSettings.Key))
-    .AddSingleton<IYourSettings>(s => s.GetRequiredService<IOptions<YourSettings>>().Value);
-```
-
-## 🔍 **CODE QUALITY RULES**
-
-### **Naming Conventions**
-1. **Interfaces**: Start with 'I' (IUserService)
-2. **DTOs**: End with 'Dto' (UserDto)  
-3. **Commands**: End with 'Command' (CreateUserCommand)
-4. **Queries**: End with 'Query' (GetUsersQuery)
-5. **Validators**: End with 'Validator' (CreateUserCommandValidator)
-6. **Specifications**: End with 'Specification' (UserActiveSpecification)
-
-### **File Organization**
-```csharp
-// ✅ Feature-based organization in Application layer
-Application/
-├── Features/
-│   └── Users/
-│       ├── Commands/
-│       ├── Queries/
-│       ├── DTOs/
-│       ├── Specifications/
-│       └── Caching/
-```
-
-### **Error Handling**
-```csharp
-// ✅ ALWAYS use Result pattern
-public async Task<Result<UserDto>> GetUserAsync(string id)
-{
-    try 
-    {
-        // implementation
-        return Result<UserDto>.Success(userDto);
-    }
-    catch (Exception ex)
-    {
-        return Result<UserDto>.Failure($"Error: {ex.Message}");
-    }
-}
-```
-
-## 🚫 **ANTI-PATTERNS TO AVOID**
-
-### **Architecture Violations**
-```csharp
-// ❌ NEVER do these
-using Infrastructure.Services;           // in UI layer
-using Infrastructure.Persistence;        // in UI layer  
-using Infrastructure.Configurations;     // in UI layer
-using Server.UI.Services;               // in Application layer
-```
-
-### **Direct Database Access**
-```csharp
-// ❌ NEVER in UI components
-@inject ApplicationDbContext Context
-var users = await Context.Users.ToListAsync();
-
-// ✅ ALWAYS use CQRS
-var result = await Mediator.Send(new GetUsersQuery());
-```
-
-### **Configuration Anti-patterns**
-```csharp
-// ❌ NEVER access config directly in UI
-@inject IConfiguration Config
-var value = Config["SomeSection:SomeKey"];
-
-// ✅ ALWAYS use typed settings
-@inject ISomeSettings Settings  
-var value = Settings.SomeProperty;
-```
-
-## 🎨 **UI/UX GUIDELINES**
-
-### **MudBlazor Standards**
-```csharp
-// ✅ Standard MudBlazor patterns
-<MudDataGrid ServerData="ServerReload" 
-             FixedHeader="true"
-             Loading="@_loading"
-             MultiSelection="true" />
-
-// ✅ Consistent snackbar usage
-Snackbar.Add(L["Success message"], Severity.Success);
-```
-
-### **Localization Rules**
-```csharp
-// ✅ ALWAYS use IStringLocalizer
-@inject IStringLocalizer<YourComponent> L
-<MudText>@L["Your localized text"]</MudText>
-
-// ❌ NEVER hardcode text
-<MudText>Hardcoded English text</MudText>
-```
-
-## 📝 **DOCUMENTATION STANDARDS**
-
-### **XML Documentation**
-```csharp
-/// <summary>
-/// Brief description of what this method does.
-/// </summary>
-/// <param name="parameter">Parameter description.</param>
-/// <returns>Return value description.</returns>
-public async Task<Result<T>> MethodAsync(ParameterType parameter)
-```
-
-### **Comments for Complex Logic**
-```csharp
-// Explain WHY, not WHAT
-// We use reflection here to automatically map permissions to AccessRights properties
-// based on naming conventions (e.g., "Create" property maps to "Permissions.Module.Create")
-```
-
-## 🔒 **SECURITY GUIDELINES**
-
-### **Authorization Patterns**
-```csharp
-// ✅ Page-level authorization
-@attribute [Authorize(Policy = Permissions.Users.View)]
-
-// ✅ Conditional rendering based on permissions
-@if (await PermissionService.HasPermissionAsync(Permissions.Users.Create))
-{
-    <MudButton>Create User</MudButton>
-}
-```
-
-### **Input Validation**
-```csharp
-// ✅ ALWAYS use FluentValidation
-public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
-{
-    public CreateUserCommandValidator()
-    {
-        RuleFor(x => x.Email).NotEmpty().EmailAddress();
-    }
-}
-```
-
-## 🚀 **PERFORMANCE CONSIDERATIONS**
-
-### **Caching Patterns**
-```csharp
-// ✅ Use FusionCache for performance
-[FusionCacheEvict(GlobalCacheKeys.GetCacheKey<User>())]
-public class DeleteUserCommand : IRequest<Result<int>>
-```
-
-### **Query Optimization**
-```csharp
-// ✅ Use ProjectTo for efficient queries
-return await query.ProjectTo<UserDto>(_mapper.ConfigurationProvider)
-                 .ToListAsync(cancellationToken);
-```
-
-## 📊 **TESTING GUIDELINES**
-
-### **Unit Test Structure**
-```csharp
-// ✅ Arrange-Act-Assert pattern
-[Test]
-public async Task Handle_ValidCommand_ShouldCreateUser()
-{
-    // Arrange
-    var command = new CreateUserCommand { /* properties */ };
-    
-    // Act  
-    var result = await _handler.Handle(command, CancellationToken.None);
-    
-    // Assert
-    result.Succeeded.Should().BeTrue();
-}
+// ✅ Inject via Application layer interface
+@inject IYourService YourService
 ```
 
 ---
 
-## 📋 **BEFORE EVERY COMMIT CHECKLIST**
+## 2. Service & Interface Rules (A-2)
+- All service interfaces must be defined in `src/Application/Common/Interfaces/`.
+- Implementations go in `src/Infrastructure/Services/`.
+- Register services in `Infrastructure/DependencyInjection.cs`:
+  ```csharp
+  services.AddScoped<IYourService, YourService>();
+  ```
+- Never implement services directly in the UI layer; always use interfaces.
 
-- [ ] No direct dependencies from UI to Infrastructure (except Program.cs)
+---
+
+## 3. Data Access & CQRS (A-3)
+- All data access must use CQRS (MediatR).
+- All database access must use `IApplicationDbContextFactory.CreateAsync` to obtain a DbContext instance. Never inject or instantiate DbContext directly in UI or Application layers.
+- UI layer must never access DbContext directly.
+- Use ProjectTo, paging, and caching for query optimization.
+- Example:
+  ```csharp
+  // ✅ Application layer
+  public record GetUsersQuery : IRequest<List<UserDto>>;
+  // UI layer
+  var users = await Mediator.Send(new GetUsersQuery());
+  // To access DbContext in handlers:
+  await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
+  ```
+- Anti-pattern:
+  ```csharp
+  // ❌ UI layer direct DbContext access
+  @inject ApplicationDbContext Context
+  var users = await Context.Users.ToListAsync();
+  // ❌ Direct new or injection of DbContext
+  var dbContext = new ApplicationDbContext(...);
+  [Inject] public ApplicationDbContext Db { get; set; }
+  ```
+
+---
+
+## 4. Configuration & Constants (A-4)
+- Use IOptions<T> for configuration. Define interfaces in Application, implement and register in Infrastructure.
+- Place all constants and permissions in `Application/Common/Constants/` and `Application/Common/Security/`.
+- Example:
+  ```csharp
+  // Application/Common/Interfaces/IAppSettings.cs
+  public interface IAppSettings { string SomeProp { get; } }
+  // Infrastructure/Configurations/AppSettings.cs
+  public class AppSettings : IAppSettings { ... }
+  // Registration
+  services.Configure<AppSettings>(config.GetSection(AppSettings.Key))
+      .AddSingleton<IAppSettings>(s => s.GetRequiredService<IOptions<AppSettings>>().Value);
+  ```
+- Never inject IConfiguration directly in the UI layer.
+
+---
+
+## 5. Blazor Component Standards (A-5)
+- Standard injections in `_Imports.razor`:
+  ```csharp
+  @inject IApplicationSettings ApplicationSettings
+  @inject ISnackbar Snackbar
+  @inject IDialogService DialogService
+  @inject IValidationService Validator
+  @inject IJSRuntime JS
+  @inject IMediator Mediator
+  @inject NavigationManager Navigation
+  @inject IPermissionService PermissionService
+  @inject IMapper Mapper
+  ```
+- Never inject DbContext or IConfiguration in UI components.
+- Organize components by feature. Example (actual Contacts structure):
+  ```
+  Pages/
+    Contacts/
+      Contacts.razor
+      CreateContact.razor
+      EditContact.razor
+      ViewContact.razor
+      Components/
+        ContactFormDialog.razor
+  ```
+- Other features (e.g., Products, Identity/Users) follow a similar pattern: a main feature folder, main page(s), and a Components subfolder for reusable UI parts.
+- Authorization usage:
+  ```csharp
+  @attribute [Authorize(Policy = Permissions.Products.View)]
+  ```
+- Localization usage:
+  ```csharp
+  @inject IStringLocalizer<YourComponent> L
+  <MudText>@L["Your localized text"]</MudText>
+  ```
+
+---
+
+## 6. Dependency Injection & Registration (A-6)
+- Application layer registers MediatR, FluentValidation:
+  ```csharp
+  // Application/DependencyInjection.cs
+  services.AddMediatR(config => { /* ... */ });
+  services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+  ```
+- Infrastructure layer registers services and configuration:
+  ```csharp
+  // Infrastructure/DependencyInjection.cs
+  services.AddScoped<IUserService, UserService>();
+  services.Configure<DatabaseSettings>(config.GetSection("DatabaseSettings"));
+  ```
+- UI layer registers UI-related services:
+  ```csharp
+  // Server.UI/DependencyInjection.cs
+  services.AddScoped<IPermissionHelper, PermissionHelper>();
+  services.AddMudServices();
+  ```
+
+---
+
+## 7. Testing & Documentation (A-7)
+- Use Arrange-Act-Assert for unit tests.
+- All public APIs must have XML documentation.
+- Test example:
+  ```csharp
+  [Test]
+  public async Task Handle_ValidCommand_ShouldCreateUser()
+  {
+      // Arrange
+      var command = new CreateUserCommand { /* ... */ };
+      // Act
+      var result = await _handler.Handle(command, CancellationToken.None);
+      // Assert
+      result.Succeeded.Should().BeTrue();
+  }
+  ```
+- XML doc example:
+  ```csharp
+  /// <summary>
+  /// Get user info.
+  /// </summary>
+  /// <param name="id">User ID</param>
+  /// <returns>User info</returns>
+  public async Task<Result<UserDto>> GetUserAsync(string id)
+  ```
+
+---
+
+## 8. Security & Permissions (A-8)
+- Define all permission constants in `Application/Common/Security/Permissions/`.
+- For feature-level permission checks in Blazor components, use access rights objects with `PermissionService.GetAccessRightsAsync<TAccessRights>()`. Example:
+  ```csharp
+  // In OnInitializedAsync or a method
+  _accessRights = await PermissionService.GetAccessRightsAsync<ContactsAccessRights>();
+  if (_accessRights.Create)
+  {
+      // ... show create button, etc.
+  }
+  ```
+- For single permission checks, you can use:
+  ```csharp
+  var hasPermission = await PermissionService.HasPermissionAsync(Permissions.Users.Create);
+  if (hasPermission)
+  {
+      // ...
+  }
+  ```
+- Page-level authorization:
+  ```csharp
+  @attribute [Authorize(Policy = Permissions.Users.View)]
+  ```
+- Never use IAuthorizationService directly for permission checks in UI.
+
+---
+
+## 9. Performance & Optimization (A-9)
+- Use FusionCache for caching.
+- Optimize queries with ProjectTo, paging, and selecting only required fields.
+- Use FluentValidation for input validation.
+- Example:
+  ```csharp
+  public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
+  {
+      public CreateUserCommandValidator()
+      {
+          RuleFor(x => x.Email).NotEmpty().EmailAddress();
+      }
+  }
+  ```
+
+---
+
+## 10. Pre-commit Checklist (A-10)
+- [ ] No UI layer dependency on Infrastructure (except Program.cs)
 - [ ] All services have interfaces in Application layer
-- [ ] No direct DbContext access in UI components
-- [ ] No direct IConfiguration injection in UI
-- [ ] All constants are in Application.Common.Constants
-- [ ] All permissions are in Application.Common.Security
-- [ ] Proper error handling with Result pattern
+- [ ] No direct DbContext access in UI
+- [ ] No IConfiguration injection in UI
+- [ ] All constants and permissions in Application layer
+- [ ] Use Result pattern for error handling
 - [ ] XML documentation for public APIs
 - [ ] Unit tests for new business logic
 - [ ] Authorization attributes on new pages/components
 
-## 🎯 **CONTEXT ENGINEERING BEST PRACTICES**
+---
 
-When working with Cursor AI, always:
-1. **Reference the specific layer** you're working in
-2. **Mention the pattern** you want to follow (CQRS, Repository, etc.)
-3. **Specify the interfaces** that need to be implemented
-4. **Include the namespace structure** in your requests
-5. **Ask for the complete implementation** including registration in DI container
-
-Example prompt: "Create a new IProductService interface in Application layer following CQRS pattern, with corresponding ProductService implementation in Infrastructure layer, and register it in Infrastructure.DependencyInjection."
+> For more details and anti-patterns, see code blocks in each section. Add team-specific conventions as needed.

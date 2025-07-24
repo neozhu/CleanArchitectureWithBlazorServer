@@ -33,38 +33,34 @@ public class AddEditProductCommand : ICacheInvalidatorRequest<Result<int>>
 
 public class AddEditProductCommandHandler : IRequestHandler<AddEditProductCommand, Result<int>>
 {
+    private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
 
     public AddEditProductCommandHandler(
-        IMapper mapper,
-        IApplicationDbContext context
+        IApplicationDbContextFactory dbContextFactory,
+        IMapper mapper
     )
     {
+        _dbContextFactory = dbContextFactory;
         _mapper = mapper;
-        _context = context;
     }
 
     public async Task<Result<int>> Handle(AddEditProductCommand request, CancellationToken cancellationToken)
     {
+        await using var db = await _dbContextFactory.CreateAsync(cancellationToken);
         if (request.Id > 0)
         {
-            var item = await _context.Products.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-            if (item == null)
-            {
-                return await Result<int>.FailureAsync($"Prduct with id: [{request.Id}] not found.");
-            }
+            var item = await db.Products.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            if (item == null) return await Result<int>.FailureAsync($"Product with id: [{request.Id}] not found.");
             item = _mapper.Map(request, item);
-            item.AddDomainEvent(new UpdatedEvent<Product>(item));
-            await _context.SaveChangesAsync(cancellationToken);
+            await db.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
         else
         {
             var item = _mapper.Map<Product>(request);
-            item.AddDomainEvent(new CreatedEvent<Product>(item));
-            _context.Products.Add(item);
-            await _context.SaveChangesAsync(cancellationToken);
+            db.Products.Add(item);
+            await db.SaveChangesAsync(cancellationToken);
             return await Result<int>.SuccessAsync(item.Id);
         }
     }

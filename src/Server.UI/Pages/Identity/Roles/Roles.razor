@@ -139,9 +139,9 @@
                 }
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn Property="x => x.TenantId" Title="@_localizer[_currentDto.GetMemberDescription(x => x.TenantName)]">
+        <PropertyColumn Property="x => x.TenantId" Title="@_localizer[_currentDto.GetMemberDescription(x => x.Tenant)]">
             <CellTemplate>
-                <MudText>@context.Item.TenantName</MudText>
+                <MudText>@context.Item.Tenant?.Name</MudText>
             </CellTemplate>
             <FooterTemplate>
                 @_localizer["Selected"]: @_selectedRoles.Count
@@ -200,6 +200,7 @@
         InitializeServices();
         _title = _localizer[_currentDto.GetClassDescription()];
         _accessRights = await PermissionService.GetAccessRightsAsync<RolesAccessRights>();
+        await _tenantService.InitializeAsync();
     }
 
     private void InitializeServices()
@@ -265,7 +266,7 @@
         await InvokeAsync(async () =>
         {
             _selectedRoles = new HashSet<ApplicationRoleDto>();
-            _roleService.Refresh();
+            await _roleService.RefreshAsync();
             await _dataGrid.ReloadServerData();
         });
     }
@@ -292,7 +293,7 @@
             var existingRole = await _roleManager.FindByIdAsync(item.Id);
             if (existingRole is not null)
             {
-                existingRole.TenantId = item.TenantId;
+                existingRole.TenantId = item.Tenant?.Id;
                 existingRole.Description = item.Description;
                 existingRole.Name = item.Name;
                 return await _roleManager.UpdateAsync(existingRole);
@@ -316,7 +317,7 @@
         {
             var applicationRole = new ApplicationRole
             {
-                TenantId = model.TenantId,
+                TenantId = model.Tenant?.Id,
                 Name = model.Name,
                 Description = model.Description
             };
@@ -458,7 +459,7 @@
                 new Dictionary<string, Func<ApplicationRoleDto, object?>>
                 {
                     { _localizer["Id"], item => item.Id },
-                    { _localizer["Tenant Name"], item => item.TenantName },
+                    { _localizer["Tenant Name"], item => item.Tenant.Name },
                     { _localizer["Name"], item => item.Name },
                     { _localizer["Normalized Name"], item => item.NormalizedName },
                     { _localizer["Description"], item => item.Description }
