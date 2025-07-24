@@ -92,7 +92,6 @@ public class UserProfileStateService : IDisposable
         {
             RemoveApplicationUserCache(userName);
             await InitializeAsync(userName);
-            _logger.LogDebug("User profile refreshed for {UserName}", userName);
         }
         catch (Exception ex)
         {
@@ -120,19 +119,9 @@ public class UserProfileStateService : IDisposable
 
     public event Func<Task>? OnChange;
 
-    private async void NotifyStateChanged()
+    private void NotifyStateChanged()
     {
-        try
-        {
-            if (OnChange != null)
-            {
-                await OnChange.Invoke();
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error occurred while notifying state change");
-        }
+        OnChange?.Invoke();
     }
 
     private string GetApplicationUserCacheKey(string userName)
