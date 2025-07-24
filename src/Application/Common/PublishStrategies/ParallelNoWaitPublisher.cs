@@ -1,7 +1,16 @@
-﻿namespace CleanArchitecture.Blazor.Application.Common.PublishStrategies;
+﻿using Microsoft.Extensions.Logging;
+
+namespace CleanArchitecture.Blazor.Application.Common.PublishStrategies;
 
 public class ParallelNoWaitPublisher : INotificationPublisher
 {
+    private readonly ILogger<ParallelNoWaitPublisher> _logger;
+
+    public ParallelNoWaitPublisher(ILogger<ParallelNoWaitPublisher> logger)
+    {
+        _logger = logger;
+    }
+
     public Task Publish(IEnumerable<NotificationHandlerExecutor> handlerExecutors, INotification notification,
         CancellationToken cancellationToken)
     {
@@ -18,9 +27,10 @@ public class ParallelNoWaitPublisher : INotificationPublisher
                 {
                     await handler.HandlerCallback(notification, cancellationToken).ConfigureAwait(false);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // 静默处理异常，保持 NoWait 语义
+                    // Log exception while maintaining NoWait semantics
+                    _logger.LogError(ex, "Failed to execute notification handler for {NotificationType}", notification.GetType().Name);
                 }
             }, cancellationToken);
         }
