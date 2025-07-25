@@ -40,6 +40,7 @@ services:
 
   sqldb:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
+    user: "0"
     environment:
       - SA_PASSWORD=${SQL_SERVER_PASSWORD}
       - ACCEPT_EULA=Y
