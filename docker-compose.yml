@@ -44,10 +44,11 @@ services:
       - SA_PASSWORD=${SQL_SERVER_PASSWORD}
       - ACCEPT_EULA=Y
     volumes:
-      - mssql_data:/var/opt/mssql
+      - mssql_v:/var/opt/mssql
     ports:
       - "3433:1433"
     restart: on-failure
 
 volumes:
-  mssql_data:
+  mssql_v:
+    driver: local
