@@ -43,18 +43,8 @@ services:
     environment:
       - SA_PASSWORD=${SQL_SERVER_PASSWORD}
       - ACCEPT_EULA=Y
-    volumes:
-      - mssql_v:/var/opt/mssql/data
-      - mssql_v_log:/var/opt/mssql/log
-      - mssql_v_secrets:/var/opt/mssql/secrets
     ports:
       - "3433:1433"
     restart: on-failure
 
-volumes:
-  mssql_v:
-    driver: local
-  mssql_v_log:
-    driver: local
-  mssql_v_secrets:
-    driver: local
+
