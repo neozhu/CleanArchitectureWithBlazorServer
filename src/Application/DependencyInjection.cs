@@ -19,7 +19,7 @@ public static class DependencyInjection
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            //config.NotificationPublisher = new ParallelNoWaitPublisher();
+            config.NotificationPublisherType = typeof(ChannelBasedNoWaitPublisher);
             config.AddRequestPreProcessor(typeof(IRequestPreProcessor<>), typeof(ValidationPreProcessor<>));
             config.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
             config.AddOpenBehavior(typeof(FusionCacheBehaviour<,>));

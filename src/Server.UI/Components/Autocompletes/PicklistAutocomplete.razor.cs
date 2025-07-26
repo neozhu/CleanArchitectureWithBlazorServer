@@ -28,6 +28,14 @@ public class PicklistAutocomplete<T> : MudAutocomplete<string>
         PicklistService.OnChange += PicklistService_OnChange;
         await base.OnInitializedAsync();
     }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await PicklistService.InitializeAsync();
+        }
+    }
+         
 
     private async Task PicklistService_OnChange()
     {

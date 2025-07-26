@@ -5,6 +5,21 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 public static class ValidationExtensions
 {
     public static async Task<List<ValidationFailure>> ValidateAsync<TRequest>(
+        this IEnumerable<IValidator<TRequest>> validators, TRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (!validators.Any()) return new List<ValidationFailure>();
+
+        var validationResults = await Task.WhenAll(
+            validators.Select(v => v.ValidateAsync(new ValidationContext<TRequest>(request), cancellationToken)));
+
+        return validationResults
+            .SelectMany(r => r.Errors)
+            .Where(f => f != null)
+            .ToList();
+    }
+
+    public static async Task<List<ValidationFailure>> ValidateAsync<TRequest>(
         this IEnumerable<IValidator<TRequest>> validators, ValidationContext<TRequest> validationContext,
         CancellationToken cancellationToken = default)
     {
