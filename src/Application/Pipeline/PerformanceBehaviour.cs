@@ -33,25 +33,31 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        Stopwatch? timer = null;
+        var timer = Stopwatch.StartNew();
 
         // Increment ExecutionCount in a thread-safe manner.
         Interlocked.Increment(ref RequestCounter.ExecutionCount);
-        if (RequestCounter.ExecutionCount > 3) timer = Stopwatch.StartNew();
 
         var response = await next().ConfigureAwait(false);
 
-        timer?.Stop();
-        var elapsedMilliseconds = timer?.ElapsedMilliseconds;
+        timer.Stop();
+        var elapsedMilliseconds = timer.ElapsedMilliseconds;
 
-        if (elapsedMilliseconds > 500)
+        // Use higher threshold during startup (first 50 requests or 60 seconds)
+        var isStartupPhase = RequestCounter.ExecutionCount <= 50 || 
+                            (DateTime.UtcNow - RequestCounter.StartTime).TotalSeconds < 60;
+        
+        var threshold = isStartupPhase ? 2000 : 500;
+
+        if (elapsedMilliseconds > threshold)
         {
             var requestName = typeof(TRequest).Name;
             var userName = _currentUserAccessor.SessionInfo?.UserName;
+            var phase = isStartupPhase ? "Startup" : "Runtime";
 
             _logger.LogWarning(
-    "Long-running request detected: {RequestName} ({ElapsedMilliseconds}ms) {@Request} by {UserName}",
-    requestName, elapsedMilliseconds, request, userName);
+                "Long-running request [{Phase}]: {RequestName} ({ElapsedMilliseconds}ms) {@Request} by {UserName}",
+                phase, requestName, elapsedMilliseconds, request, userName);
         }
 
         return response;
@@ -59,11 +65,11 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
 }
 
 /// <summary>
-///     Static class that holds the ExecutionCount in a shared context between different
+///     Static class that holds the ExecutionCount and StartTime in a shared context between different
 ///     instances of our PerformanceBehaviour class, regardless of the type of TRequest.
-///     This allows to keep track of the number of requests application-wide.
 /// </summary>
 public static class RequestCounter
 {
     public static int ExecutionCount;
+    public static readonly DateTime StartTime = DateTime.UtcNow;
 }
