@@ -151,4 +151,7 @@
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
+  <data name="No available tenants" xml:space="preserve">
+    <value>No available tenants</value>
+  </data>
 </root>

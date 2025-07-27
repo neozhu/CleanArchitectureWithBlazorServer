@@ -151,4 +151,7 @@
   <data name="Description" xml:space="preserve">
     <value>描述</value>
   </data>
+  <data name="No available tenants" xml:space="preserve">
+    <value>没有可用的租户</value>
+  </data>
 </root>

@@ -151,4 +151,7 @@
   <data name="Description" xml:space="preserve">
     <value>Beschreibung</value>
   </data>
+  <data name="No available tenants" xml:space="preserve">
+    <value>Keine verfügbaren Mandanten</value>
+  </data>
 </root>
