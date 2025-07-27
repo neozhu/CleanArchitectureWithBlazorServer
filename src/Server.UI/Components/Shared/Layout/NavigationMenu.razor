@@ -10,14 +10,8 @@
            Open="DrawerOpen"
            OpenChanged="@(e => DrawerOpenChanged.InvokeAsync(e))"
            Variant="DrawerVariant.Responsive">
-    <MudDrawerHeader Class="align-center d-flex align-center pa-0">
-        <MudIcon Class="ml-6 mr-2"
-                 Color="Color.Primary"
-                 Icon="@Icons.Custom.Brands.MudBlazor"
-                 Size="Size.Large"/>
-        <MudText Typo="Typo.h6">
-            @L[ApplicationSettings.AppName]
-        </MudText>
+    <MudDrawerHeader Class="d-flex pa-0">
+        <TenantSelector />
     </MudDrawerHeader>
 
     <MudNavMenu>

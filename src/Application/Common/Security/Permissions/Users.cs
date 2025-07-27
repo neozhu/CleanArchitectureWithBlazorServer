@@ -49,6 +49,12 @@ public static partial class Permissions
 
         [Description("Allows viewing users' online status")]
         public const string ViewOnlineStatus = "Permissions.Users.ViewOnlineStatus";
+
+        [Description("Allows switching between available tenants")]
+        public const string SwitchTenants = "Permissions.Users.SwitchTenants";
+
+        [Description("Allows switching to any tenant (admin privilege)")]
+        public const string SwitchToAnyTenant = "Permissions.Users.SwitchToAnyTenant";
     }
 }
 
@@ -67,4 +73,6 @@ public class UsersAccessRights
     public bool ManagePermissions { get; set; }
     public bool Deactivation { get; set; }
     public bool ViewOnlineStatus { get; set; }
+    public bool SwitchTenants { get; set; }
+    public bool SwitchToAnyTenant { get; set; }
 } 

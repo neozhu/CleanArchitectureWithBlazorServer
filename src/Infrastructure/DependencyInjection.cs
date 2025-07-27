@@ -167,6 +167,7 @@ public static class DependencyInjection
         services.AddScoped<ITenantService, TenantService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<ITenantSwitchService, TenantSwitchService>();
             
 
         // Configure HttpClient for GeolocationService
