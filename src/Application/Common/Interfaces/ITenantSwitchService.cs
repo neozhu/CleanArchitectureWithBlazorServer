@@ -1,4 +1,4 @@
-using CleanArchitecture.Blazor.Application.Common.Models;
+﻿using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
@@ -13,7 +13,7 @@ public interface ITenantSwitchService
     /// </summary>
     /// <param name="userId">User ID</param>
     /// <returns>List of available tenants</returns>
-    Task<List<TenantDto>> GetAvailableTenantsAsync(string userId);
+    Task<List<TenantDto>> GetAvailableTenantsAsync();
     
     /// <summary>
     /// Switch user to specified tenant

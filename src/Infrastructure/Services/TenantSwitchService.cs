@@ -1,12 +1,9 @@
-﻿using System.Security.Claims;
-using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
-using CleanArchitecture.Blazor.Application.Common.Interfaces;
-using CleanArchitecture.Blazor.Application.Common.Models;
+﻿using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
+using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
 using CleanArchitecture.Blazor.Domain.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
@@ -19,6 +16,8 @@ public class TenantSwitchService : ITenantSwitchService
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IPermissionService _permissionService;
     private readonly UserProfileStateService _userProfileStateService;
+    private readonly IFusionCache _fusionCache;
+    private readonly IMapper _mapper;
     private readonly ILogger<TenantSwitchService> _logger;
 
     public TenantSwitchService(
@@ -26,44 +25,55 @@ public class TenantSwitchService : ITenantSwitchService
         IServiceScopeFactory serviceScopeFactory,
         IPermissionService permissionService,
         UserProfileStateService userProfileStateService,
+        IFusionCache fusionCache,
+        IMapper mapper,
         ILogger<TenantSwitchService> logger)
     {
         _dbContextFactory = dbContextFactory;
         _serviceScopeFactory = serviceScopeFactory;
         _permissionService = permissionService;
         _userProfileStateService = userProfileStateService;
+        _fusionCache = fusionCache;
+        _mapper = mapper;
         _logger = logger;
     }
 
     /// <summary>
     /// Get list of available tenants for the specified user
     /// </summary>
-    public async Task<List<TenantDto>> GetAvailableTenantsAsync(string userId)
+    public async Task<List<TenantDto>> GetAvailableTenantsAsync()
     {
         try
         {
-            await using var db = await _dbContextFactory.CreateAsync();
-            
-            // Get all tenants that the user can switch to
-            var availableTenants = new List<TenantDto>();
-            
             // Check if user has permission to switch to any tenant
             var canSwitchToAnyTenant = await _permissionService.HasPermissionAsync(Permissions.Users.SwitchToAnyTenant);
             
             if (canSwitchToAnyTenant)
             {
-                // User can switch to any tenant
-                var allTenants = await db.Tenants
-                    .Select(t => new TenantDto { Id = t.Id, Name = t.Name, Description = t.Description })
-                    .ToListAsync();
-                    
-                availableTenants.AddRange(allTenants);
+                // User can switch to any tenant - use cached data
+                var allTenants = await _fusionCache.GetOrSetAsync(
+                    TenantCacheKey.GetAllCacheKey,
+                    async _ =>
+                    {
+                        await using var db = await _dbContextFactory.CreateAsync();
+                        return await db.Tenants
+                            .ProjectTo<TenantDto>(_mapper.ConfigurationProvider)
+                            .OrderBy(x => x.Name)
+                            .ToListAsync();
+                    },
+                    tags: TenantCacheKey.Tags
+                );
+                
+                return allTenants ?? new List<TenantDto>();
             }
-            return availableTenants.ToList();
+            
+            // User has limited access - return empty list for now
+            // This could be extended to implement user-specific tenant filtering logic
+            return new List<TenantDto>();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to get available tenants for user {UserId}", userId);
+            _logger.LogError(ex, "Failed to get available tenants");
             return new List<TenantDto>();
         }
     }
@@ -373,4 +383,4 @@ public class TenantSwitchService : ITenantSwitchService
             return null;
         }
     }
-} 
+}

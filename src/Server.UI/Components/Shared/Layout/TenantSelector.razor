@@ -20,7 +20,7 @@
     }
     else
     {
-        <MudIcon Class="ml-6 mr-2"
+        <MudIcon Class="ml-4 mr-2"
                  Color="Color.Primary"
                  Icon="@Icons.Custom.Brands.MudBlazor"
                  Size="Size.Large" />
@@ -78,7 +78,7 @@
                                 </MudStack>
                                 @if (tenant.Id == UserProfile?.TenantId)
                                 {
-                                    <MudIcon Icon="@Icons.Material.Filled.Check" Class="ml-3" Color="Color.Primary" />
+                                    <MudIcon Icon="@Icons.Material.Filled.Check" Class="ml-2" Color="Color.Primary" />
                                 }
                             </div>
                         </MudMenuItem>
@@ -117,17 +117,15 @@
 
     private async Task UserProfileStateService_OnChange()
     {
-        await  LoadAvailableTenants();
         await InvokeAsync(StateHasChanged);
     }
 
     private async Task LoadAvailableTenants()
     {
 
-        if (!string.IsNullOrEmpty(UserProfile?.UserId))
-        {
-            _availableTenants = await TenantSwitchService.GetAvailableTenantsAsync(UserProfile.UserId);
-        }
+      
+            _availableTenants = await TenantSwitchService.GetAvailableTenantsAsync();
+       
 
     }
 
