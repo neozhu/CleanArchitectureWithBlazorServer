@@ -88,11 +88,11 @@ public class ApplicationDbContextInitializer
     {
         if (await _context.Tenants.AnyAsync()) return;
 
-        _logger.LogInformation("Seeding tenants...");
+        _logger.LogInformation("Seeding organizations...");
         var tenants = new[]
         {
-                new Tenant { Name = "Master", Description = "Master Site" },
-                new Tenant { Name = "Slave", Description = "Slave Site" }
+                new Tenant { Name = "Main", Description = "Main Site" },
+                new Tenant { Name = "Europe", Description = "Europe Site" }
             };
 
         await _context.Tenants.AddRangeAsync(tenants);

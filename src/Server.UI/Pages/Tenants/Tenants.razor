@@ -244,6 +244,6 @@
             {
                 await _tenantGrid.ReloadServerData();
                 _selectedItems.Clear();
-            });
+            }, "_model", new DialogOptions() { MaxWidth = MaxWidth.Small, CloseButton=true });
     }
 }

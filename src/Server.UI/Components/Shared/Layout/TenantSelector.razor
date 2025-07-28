@@ -34,7 +34,7 @@
                         @L[ApplicationSettings.AppName]
                     </MudText>
                     <MudText Typo="Typo.subtitle1" Class="mud-secondary-text">
-                        @(UserProfile?.TenantName ?? "No Tenant")
+                        @(UserProfile?.TenantName ?? "No Organization")
                     </MudText>
                 </MudStack>
                 <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown" Size="Size.Small" Class="ml-3" />
@@ -58,7 +58,7 @@
                     {
                         <MudMenuItem Disabled="true">
                             <div class="d-flex align-center">
-                                <MudText>@L["No available tenants"]</MudText>
+                                <MudText>@L["No available organization"]</MudText>
                             </div>
                         </MudMenuItem>
                     }
@@ -88,7 +88,7 @@
                 {
                     <MudMenuItem Disabled="true">
                         <div class="d-flex align-center">
-                            <MudText>@L["Loading tenants..."]</MudText>
+                            <MudText>@L["Loading organizations..."]</MudText>
                         </div>
                     </MudMenuItem>
                 }

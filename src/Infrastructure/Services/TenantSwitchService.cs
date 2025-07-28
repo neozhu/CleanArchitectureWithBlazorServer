@@ -104,7 +104,34 @@ public class TenantSwitchService : ITenantSwitchService
 
             // Get user's current role names
             var currentRoleNames = await userManager.GetRolesAsync(user);
-            
+
+            // Get all roles in the system
+            var allRoles = await roleManager.Roles.ToListAsync();
+            // Find all roles the user currently has (across all tenants)
+            var userRoleEntities = allRoles
+                .Where(r => currentRoleNames.Contains(r.Name!))
+                .ToList();
+
+            // Remove all roles from other tenants (not the target tenant)
+            var rolesToRemove = userRoleEntities
+                .Where(r => r.TenantId != tenantId)
+                .Select(r => r.Name)
+                .ToList();
+            if (rolesToRemove.Any())
+            {
+                await userManager.RemoveFromRolesAsync(user, rolesToRemove);
+            }
+
+            // Remove roles in the target tenant before re-assigning (avoid duplicates)
+            var targetTenantRoles = userRoleEntities
+                .Where(r => r.TenantId == tenantId)
+                .Select(r => r.Name)
+                .ToList();
+            if (targetTenantRoles.Any())
+            {
+                await userManager.RemoveFromRolesAsync(user, targetTenantRoles);
+            }
+
             // Find roles with same names in the new tenant
             var newTenantRoles = await roleManager.Roles
                 .Where(r => r.TenantId == tenantId)
@@ -118,7 +145,6 @@ public class TenantSwitchService : ITenantSwitchService
             {
                 // Find role with same name in the new tenant
                 var matchingRole = newTenantRoles.FirstOrDefault(r => r.Name == currentRoleName);
-                
                 if (matchingRole != null)
                 {
                     // Found matching role, add to assignment list
@@ -157,16 +183,13 @@ public class TenantSwitchService : ITenantSwitchService
 
             // Update user's tenant ID
             user.TenantId = tenantId;
-            
-            // Remove current roles
-            await userManager.RemoveFromRolesAsync(user, currentRoleNames);
-            
-            // Assign new roles
+
+            // Assign new roles for the target tenant
             if (rolesToAssign.Any())
             {
                 await userManager.AddToRolesAsync(user, rolesToAssign);
             }
-            
+
             // Update database
             await userManager.UpdateAsync(user);
             

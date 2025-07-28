@@ -37,6 +37,7 @@
 @inject IMailService MailService
 @inject IRoleService RoleService
 @inject IStringLocalizer<Users> Localizer
+@inject UserProfileStateService UserProfileStateService
 @inject ILogger<Users> Logger
 
 <PageTitle>@_title</PageTitle>
@@ -448,7 +449,8 @@
             }
             Snackbar.Add(Localizer["User updated successfully"], Severity.Info);
             await RefreshDataGrid();
-            await  UserService.RefreshAsync();
+            await UserService.RefreshAsync();
+            await UserProfileStateService.RefreshAsync(user.UserName);
             await OnlineUserTracker.Update(model.Id, model.UserName, model.DisplayName ?? string.Empty, model.ProfilePictureDataUrl ?? string.Empty);
         }
         else
