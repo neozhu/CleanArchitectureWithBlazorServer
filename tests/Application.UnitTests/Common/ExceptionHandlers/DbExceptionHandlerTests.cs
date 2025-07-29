@@ -28,7 +28,7 @@ public class DbExceptionHandlerTests
     public void Setup()
     {
         _mockLogger = new Mock<ILogger<DbExceptionHandler<TestRequest, Result, DbUpdateException>>>();
-        _handler = new DbExceptionHandler<TestRequest, Result, DbUpdateException>(_mockLogger.Object);
+        _handler = new DbExceptionHandler<TestRequest, Result, DbUpdateException>();
     }
 
     [Test]
@@ -183,57 +183,9 @@ public class DbExceptionHandlerTests
         Assert.That(result.Errors[0], Does.Contain("database error occurred"));
     }
 
-    [Test]
-    public async Task Handle_LogsErrorWithCorrectInformation()
-    {
-        // Arrange
-        var request = new TestRequest();
-        var exception = new DbUpdateException("Test exception");
-        var state = new RequestExceptionHandlerState<Result>();
 
-        // Act
-        await _handler.Handle(request, exception, state, CancellationToken.None);
 
-        // Assert
-        _mockLogger.Verify(
-            x => x.Log(
-                LogLevel.Error,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Database constraint violation")),
-                exception,
-                It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-            Times.Once);
-    }
 
-    [Test]
-    public async Task Handle_LogsWithCorrectErrorType()
-    {
-        // Arrange
-        var request = new TestRequest();
-        var exception = new UniqueConstraintException("Test unique exception", new Exception());
-        var state = new RequestExceptionHandlerState<Result>();
-
-        // Act
-        await _handler.Handle(request, exception, state, CancellationToken.None);
-
-        // Assert
-        _mockLogger.Verify(
-            x => x.Log(
-                LogLevel.Error,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Duplicate entry")),
-                exception,
-                It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-            Times.Once);
-    }
-
-    [Test]
-    public void Constructor_WithNullLogger_ThrowsArgumentNullException()
-    {
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => 
-            new DbExceptionHandler<TestRequest, Result, DbUpdateException>(null!));
-    }
 
     [Test]
     public async Task Handle_CachePerformance_UsesCompiledExpression()
@@ -283,7 +235,7 @@ public class DbExceptionHandlerGenericTests
     public void Setup()
     {
         _mockLogger = new Mock<ILogger<DbExceptionHandler<TestRequestGeneric, Result<string>, DbUpdateException>>>();
-        _handler = new DbExceptionHandler<TestRequestGeneric, Result<string>, DbUpdateException>(_mockLogger.Object);
+        _handler = new DbExceptionHandler<TestRequestGeneric, Result<string>, DbUpdateException>();
     }
 
     [Test]
@@ -311,7 +263,7 @@ public class DbExceptionHandlerGenericTests
     {
         // Arrange
         var mockLogger = new Mock<ILogger<DbExceptionHandler<TestRequestGenericInt, Result<int>, DbUpdateException>>>();
-        var handler = new DbExceptionHandler<TestRequestGenericInt, Result<int>, DbUpdateException>(mockLogger.Object);
+        var handler = new DbExceptionHandler<TestRequestGenericInt, Result<int>, DbUpdateException>();
         var request = new TestRequestGenericInt();
         var exception = new CannotInsertNullException("Cannot insert null", new Exception());
         var state = new RequestExceptionHandlerState<Result<int>>();
@@ -339,7 +291,7 @@ public class DbExceptionHandlerPerformanceTests
     {
         // Arrange
         var mockLogger = new Mock<ILogger<DbExceptionHandler<TestRequest, Result, DbUpdateException>>>();
-        var handler = new DbExceptionHandler<TestRequest, Result, DbUpdateException>(mockLogger.Object);
+        var handler = new DbExceptionHandler<TestRequest, Result, DbUpdateException>();
         var tasks = new List<Task>();
 
         // Act - Create multiple concurrent tasks

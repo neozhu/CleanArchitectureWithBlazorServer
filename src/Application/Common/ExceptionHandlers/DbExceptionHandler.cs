@@ -1,7 +1,5 @@
-using EntityFramework.Exceptions.Common;
+﻿using EntityFramework.Exceptions.Common;
 using System.Collections.Concurrent;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 
@@ -12,30 +10,20 @@ namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 public sealed class DbExceptionHandler<TRequest, TResponse, TException> :
     IRequestExceptionHandler<TRequest, TResponse, TException>
     where TRequest : IRequest<TResponse>
-    where TResponse : Result
+    where TResponse : IResult
     where TException : DbUpdateException
 {
-    private readonly ILogger<DbExceptionHandler<TRequest, TResponse, TException>> _logger;
-
     // Cache compiled factories per TResponse type to avoid repeated reflection
     private static readonly ConcurrentDictionary<Type, Func<string[], object>> FailureFactoryCache = new();
 
     // Common constraint-name prefixes to strip
     private static readonly string[] ConstraintPrefixes = ["PK_", "FK_", "IX_", "UQ_", "UC_"];
-
-    public DbExceptionHandler(ILogger<DbExceptionHandler<TRequest, TResponse, TException>> logger)
-        => _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
     public Task Handle(
         TRequest request,
         TException exception,
         RequestExceptionHandlerState<TResponse> state,
         CancellationToken cancellationToken)
     {
-        _logger.LogError(exception,
-            "Database constraint violation in {RequestType}: {ErrorType}",
-            typeof(TRequest).Name, GetErrorType(exception));
-
         var errors = GetUserFriendlyErrors(exception);
         var failureResult = CreateFailureResult(errors);
 
@@ -133,19 +121,8 @@ public sealed class DbExceptionHandler<TRequest, TResponse, TException> :
     /// </summary>
     private string[] GetGenericDatabaseErrors(DbUpdateException exception)
     {
-        _logger.LogWarning("Unhandled database exception: {ExceptionType}", exception.GetType().Name);
         return ["A database error occurred. Please try again or contact support if the issue persists."];
     }
-
-    private static string GetErrorType(DbUpdateException exception) => exception switch
-    {
-        UniqueConstraintException => "Duplicate entry",
-        CannotInsertNullException => "Missing required data",
-        MaxLengthExceededException => "Data too long",
-        NumericOverflowException => "Invalid number range",
-        ReferenceConstraintException => "Constraint violation",
-        _ => exception.GetType().Name
-    };
 
     #region Helper Methods
 

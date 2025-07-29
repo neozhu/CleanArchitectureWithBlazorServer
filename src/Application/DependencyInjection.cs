@@ -16,7 +16,7 @@ public static class DependencyInjection
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddTransient(typeof(IRequestExceptionHandler<,,>), typeof(DbExceptionHandler<,,>));
+      
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
@@ -27,11 +27,10 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(CacheInvalidationBehaviour<,>));
 
         });
+      
+
         services.AddScoped<UserProfileStateService>();
         return services;
     }
-    public static void InitializeCacheFactory(this IHost host)
-    {
-        FusionCacheFactory.Configure(host.Services);
-    }
+    
 }

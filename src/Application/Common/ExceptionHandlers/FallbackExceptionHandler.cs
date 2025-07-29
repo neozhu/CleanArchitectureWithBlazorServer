@@ -1,17 +1,17 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 
-public class GlobalExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
-    where TRequest : IRequest<IResult>
+public sealed class FallbackExceptionHandler<TRequest, TResponse, TException> : IRequestExceptionHandler<TRequest, TResponse, TException>
+    where TRequest : IRequest<TResponse>
     where TResponse : IResult
     where TException : Exception
 {
-    private readonly ILogger<GlobalExceptionHandler<TRequest, TResponse, TException>> _logger;
+    private readonly ILogger<FallbackExceptionHandler<TRequest, TResponse, TException>> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GlobalExceptionHandler{TRequest, TResponse, TException}"/> class.
     /// </summary>
     /// <param name="logger">The logger.</param>
-    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler<TRequest, TResponse, TException>> logger)
+    public FallbackExceptionHandler(ILogger<FallbackExceptionHandler<TRequest, TResponse, TException>> logger)
     {
         _logger = logger;
     }

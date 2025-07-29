@@ -5,15 +5,15 @@ using System.Net;
 
 namespace CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 
-public class NotFoundException : ServerException
+public class NotFoundException : Exception
 {
     public NotFoundException(string message)
-        : base(message, HttpStatusCode.NotFound)
+        : base(message)
     {
     }
 
     public NotFoundException(string name, object key)
-        : base($"Entity \"{name}\" with key ({key}) was not found.", HttpStatusCode.NotFound)
+        : base($"Entity \"{name}\" with key ({key}) was not found.")
     {
     }
 }

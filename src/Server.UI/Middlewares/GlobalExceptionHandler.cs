@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Server.UI.Middlewares;
@@ -37,13 +36,12 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
 
     private static (int statusCode, string title) MapExceptionWithStatusCode(Exception exception)
     {
-        if (exception is not ServerException && exception.InnerException != null)
+        if (exception.InnerException != null)
             while (exception.InnerException != null)
                 exception = exception.InnerException;
         return exception switch
         {
             ArgumentOutOfRangeException => (StatusCodes.Status400BadRequest, exception.Message),
-            ServerException => (StatusCodes.Status500InternalServerError, exception.Message),
             KeyNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "We are sorry for the inconvenience but we are on it.")
         };
