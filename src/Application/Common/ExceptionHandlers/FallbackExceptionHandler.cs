@@ -28,6 +28,30 @@ public sealed class FallbackExceptionHandler<TRequest, TResponse, TException> : 
         CancellationToken cancellationToken)
     {
         TResponse failureResult;
+        string[] errorMessages;
+
+        // Handle specific exception types with custom error messages
+        switch (exception)
+        {
+            case NotFoundException notFoundEx:
+                errorMessages = new[] { notFoundEx.Message };
+                _logger.LogWarning(notFoundEx, "Entity not found: {Message}", notFoundEx.Message);
+                break;
+
+            case ValidationException validationEx:
+                var validationErrors = validationEx.Errors?
+                    .Select(error => $"{error.PropertyName}: {error.ErrorMessage}")
+                    .ToArray() ?? new[] { "Validation failed" };
+                errorMessages = validationErrors.Any() ? validationErrors : new[] { "Validation failed with unknown errors" };
+                _logger.LogWarning(validationEx, "Validation failed with {ErrorCount} errors", validationErrors.Length);
+                break;
+
+            default:
+                errorMessages = new[] { $"An unexpected error occurred: {exception.Message}" };
+                _logger.LogError(exception, "Unhandled exception occurred: {ExceptionType}", exception.GetType().Name);
+                break;
+        }
+
         if (typeof(TResponse).IsGenericType && typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))
         {
             // Get the type parameter T in Result<T>
@@ -38,18 +62,17 @@ public sealed class FallbackExceptionHandler<TRequest, TResponse, TException> : 
                 .MakeGenericType(resultType)
                 .GetMethod("Failure", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string[]) }, null);
 
-            var failureResultObj = failureMethod?.Invoke(null, new object[] { new[] { exception.Message } });
+            var failureResultObj = failureMethod?.Invoke(null, new object[] { errorMessages });
 
             failureResult = (TResponse)(failureResultObj ?? throw new ArgumentNullException(nameof(failureResultObj)));
         }
         else
         {
-            failureResult = (TResponse)(object)Result.Failure(exception.Message);
+            failureResult = (TResponse)(object)Result.Failure(errorMessages);
         }
 
         // Set the handled response
         state.SetHandled(failureResult!);
-        _logger.LogError(exception, exception.Message);
         return Task.CompletedTask;
     }
 }
