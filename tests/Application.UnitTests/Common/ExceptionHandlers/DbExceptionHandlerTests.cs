@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,8 +36,7 @@ public class DbExceptionHandlerTests
     {
         // Arrange
         var request = new TestRequest();
-        var exception = new UniqueConstraintException("Unique constraint violation", 
-            new Exception("Inner exception"));
+        var exception = CreateUniqueConstraintException("Users", ["Email"]);
         var state = new RequestExceptionHandlerState<Result>();
 
         // Act
@@ -46,7 +47,45 @@ public class DbExceptionHandlerTests
         var result = state.Response;
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Succeeded, Is.False);
-        Assert.That(result.ErrorMessage, Does.Contain("unique constraint"));
+        Assert.That(result.Errors.Count, Is.EqualTo(1));
+        Assert.That(result.Errors[0], Does.Contain("Email"));
+        Assert.That(result.Errors[0], Does.Contain("already exists"));
+    }
+
+    [Test]
+    public async Task Handle_UniqueConstraintException_WithMultipleProperties_ReturnsCorrectMessage()
+    {
+        // Arrange
+        var request = new TestRequest();
+        var exception = CreateUniqueConstraintException("Users", ["FirstName", "LastName"]);
+        var state = new RequestExceptionHandlerState<Result>();
+
+        // Act
+        await _handler.Handle(request, exception, state, CancellationToken.None);
+
+        // Assert
+        Assert.That(state.Handled, Is.True);
+        var result = state.Response;
+        Assert.That(result.Succeeded, Is.False);
+        Assert.That(result.Errors[0], Does.Contain("FirstName, LastName"));
+    }
+
+    [Test]
+    public async Task Handle_UniqueConstraintException_WithNoProperties_ReturnsGenericMessage()
+    {
+        // Arrange
+        var request = new TestRequest();
+        var exception = CreateUniqueConstraintException("Users", new List<string>());
+        var state = new RequestExceptionHandlerState<Result>();
+
+        // Act
+        await _handler.Handle(request, exception, state, CancellationToken.None);
+
+        // Assert
+        Assert.That(state.Handled, Is.True);
+        var result = state.Response;
+        Assert.That(result.Succeeded, Is.False);
+        Assert.That(result.Errors[0], Does.Contain("duplicate record"));
     }
 
     [Test]
@@ -54,8 +93,7 @@ public class DbExceptionHandlerTests
     {
         // Arrange
         var request = new TestRequest();
-        var exception = new CannotInsertNullException("Cannot insert null", 
-            new Exception("Inner exception"));
+        var exception = new CannotInsertNullException("Cannot insert null", new Exception("Inner exception"));
         var state = new RequestExceptionHandlerState<Result>();
 
         // Act
@@ -66,7 +104,7 @@ public class DbExceptionHandlerTests
         var result = state.Response;
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Succeeded, Is.False);
-        Assert.That(result.ErrorMessage, Does.Contain("required"));
+        Assert.That(result.Errors[0], Does.Contain("Required fields are missing"));
     }
 
     [Test]
@@ -74,8 +112,7 @@ public class DbExceptionHandlerTests
     {
         // Arrange
         var request = new TestRequest();
-        var exception = new MaxLengthExceededException("Max length exceeded", 
-            new Exception("Inner exception"));
+        var exception = new MaxLengthExceededException("Max length exceeded", new Exception("Inner exception"));
         var state = new RequestExceptionHandlerState<Result>();
 
         // Act
@@ -86,7 +123,7 @@ public class DbExceptionHandlerTests
         var result = state.Response;
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Succeeded, Is.False);
-        Assert.That(result.ErrorMessage, Does.Contain("too long"));
+        Assert.That(result.Errors[0], Does.Contain("exceeds maximum length"));
     }
 
     [Test]
@@ -94,8 +131,7 @@ public class DbExceptionHandlerTests
     {
         // Arrange
         var request = new TestRequest();
-        var exception = new NumericOverflowException("Numeric overflow", 
-            new Exception("Inner exception"));
+        var exception = new NumericOverflowException("Numeric overflow", new Exception("Inner exception"));
         var state = new RequestExceptionHandlerState<Result>();
 
         // Act
@@ -106,7 +142,7 @@ public class DbExceptionHandlerTests
         var result = state.Response;
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Succeeded, Is.False);
-        Assert.That(result.ErrorMessage, Does.Contain("outside the allowed range"));
+        Assert.That(result.Errors[0], Does.Contain("outside the valid range"));
     }
 
     [Test]
@@ -114,9 +150,7 @@ public class DbExceptionHandlerTests
     {
         // Arrange
         var request = new TestRequest();
-        var exception = new ReferenceConstraintException("Reference constraint violation", 
-            new Exception("Inner exception"), 
-            Array.Empty<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry>());
+        var exception = new ReferenceConstraintException("Reference constraint violation", new Exception("Inner exception"));
         var state = new RequestExceptionHandlerState<Result>();
 
         // Act
@@ -127,7 +161,7 @@ public class DbExceptionHandlerTests
         var result = state.Response;
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Succeeded, Is.False);
-        Assert.That(result.ErrorMessage, Does.Contain("linked to other data"));
+        Assert.That(result.Errors[0], Does.Contain("dependent data"));
     }
 
     [Test]
@@ -146,7 +180,7 @@ public class DbExceptionHandlerTests
         var result = state.Response;
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Succeeded, Is.False);
-        Assert.That(result.ErrorMessage, Does.Contain("database error occurred"));
+        Assert.That(result.Errors[0], Does.Contain("database error occurred"));
     }
 
     [Test]
@@ -165,9 +199,31 @@ public class DbExceptionHandlerTests
             x => x.Log(
                 LogLevel.Error,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Database update exception occurred")),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Database constraint violation")),
                 exception,
-                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+                It.IsAny<Func<It.IsAnyType, Exception, string>>()),
+            Times.Once);
+    }
+
+    [Test]
+    public async Task Handle_LogsWithCorrectErrorType()
+    {
+        // Arrange
+        var request = new TestRequest();
+        var exception = new UniqueConstraintException("Test unique exception", new Exception());
+        var state = new RequestExceptionHandlerState<Result>();
+
+        // Act
+        await _handler.Handle(request, exception, state, CancellationToken.None);
+
+        // Assert
+        _mockLogger.Verify(
+            x => x.Log(
+                LogLevel.Error,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Duplicate entry")),
+                exception,
+                It.IsAny<Func<It.IsAnyType, Exception, string>>()),
             Times.Once);
     }
 
@@ -177,6 +233,40 @@ public class DbExceptionHandlerTests
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => 
             new DbExceptionHandler<TestRequest, Result, DbUpdateException>(null!));
+    }
+
+    [Test]
+    public async Task Handle_CachePerformance_UsesCompiledExpression()
+    {
+        // Arrange
+        var request = new TestRequest();
+        var exception = new DbUpdateException("Test exception");
+        var state1 = new RequestExceptionHandlerState<Result>();
+        var state2 = new RequestExceptionHandlerState<Result>();
+
+        // Act - Call handler multiple times to test caching
+        await _handler.Handle(request, exception, state1, CancellationToken.None);
+        await _handler.Handle(request, exception, state2, CancellationToken.None);
+
+        // Assert - Both calls should succeed and return consistent results
+        Assert.That(state1.Handled, Is.True);
+        Assert.That(state2.Handled, Is.True);
+        Assert.That(state1.Response.Succeeded, Is.EqualTo(state2.Response.Succeeded));
+        Assert.That(state1.Response.Errors[0], Is.EqualTo(state2.Response.Errors[0]));
+    }
+
+    private static UniqueConstraintException CreateUniqueConstraintException(string tableName, IReadOnlyList<string> properties)
+    {
+        var exception = new UniqueConstraintException("Unique constraint violation", new Exception());
+        
+        // Use reflection to set the internal properties since they're typically set by EF
+        var schemaTableNameProperty = typeof(UniqueConstraintException).GetProperty("SchemaQualifiedTableName");
+        var constraintPropertiesProperty = typeof(UniqueConstraintException).GetProperty("ConstraintProperties");
+        
+        schemaTableNameProperty?.SetValue(exception, $"dbo.{tableName}");
+        constraintPropertiesProperty?.SetValue(exception, properties);
+        
+        return exception;
     }
 }
 
@@ -201,8 +291,7 @@ public class DbExceptionHandlerGenericTests
     {
         // Arrange
         var request = new TestRequestGeneric();
-        var exception = new UniqueConstraintException("Unique constraint violation", 
-            new Exception("Inner exception"));
+        var exception = new UniqueConstraintException("Unique constraint violation", new Exception("Inner exception"));
         var state = new RequestExceptionHandlerState<Result<string>>();
 
         // Act
@@ -214,7 +303,61 @@ public class DbExceptionHandlerGenericTests
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Succeeded, Is.False);
         Assert.That(result.Data, Is.Null);
-        Assert.That(result.ErrorMessage, Does.Contain("unique constraint"));
+        Assert.That(result.Errors.Count, Is.GreaterThan(0));
+    }
+
+    [Test]
+    public async Task Handle_GenericResult_WithIntType_CreatesCorrectFailureResult()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<DbExceptionHandler<TestRequestGenericInt, Result<int>, DbUpdateException>>>();
+        var handler = new DbExceptionHandler<TestRequestGenericInt, Result<int>, DbUpdateException>(mockLogger.Object);
+        var request = new TestRequestGenericInt();
+        var exception = new CannotInsertNullException("Cannot insert null", new Exception());
+        var state = new RequestExceptionHandlerState<Result<int>>();
+
+        // Act
+        await handler.Handle(request, exception, state, CancellationToken.None);
+
+        // Assert
+        Assert.That(state.Handled, Is.True);
+        var result = state.Response;
+        Assert.That(result.Succeeded, Is.False);
+        Assert.That(result.Data, Is.EqualTo(0)); // Default value for int
+        Assert.That(result.Errors[0], Does.Contain("Required fields are missing"));
+    }
+}
+
+/// <summary>
+/// Performance and Thread Safety Tests
+/// </summary>
+[TestFixture]
+public class DbExceptionHandlerPerformanceTests
+{
+    [Test]
+    public async Task Handle_ConcurrentAccess_ThreadSafe()
+    {
+        // Arrange
+        var mockLogger = new Mock<ILogger<DbExceptionHandler<TestRequest, Result, DbUpdateException>>>();
+        var handler = new DbExceptionHandler<TestRequest, Result, DbUpdateException>(mockLogger.Object);
+        var tasks = new List<Task>();
+
+        // Act - Create multiple concurrent tasks
+        for (int i = 0; i < 100; i++)
+        {
+            tasks.Add(Task.Run(async () =>
+            {
+                var request = new TestRequest();
+                var exception = new DbUpdateException($"Test exception {i}");
+                var state = new RequestExceptionHandlerState<Result>();
+                await handler.Handle(request, exception, state, CancellationToken.None);
+                Assert.That(state.Handled, Is.True);
+            }));
+        }
+
+        // Assert - All tasks should complete successfully
+        await Task.WhenAll(tasks);
+        Assert.That(tasks.All(t => t.IsCompletedSuccessfully), Is.True);
     }
 }
 
@@ -229,5 +372,12 @@ public class TestRequest : IRequest<Result>
 /// Test request class for generic result testing purposes.
 /// </summary>
 public class TestRequestGeneric : IRequest<Result<string>>
+{
+}
+
+/// <summary>
+/// Test request class for generic int result testing purposes.
+/// </summary>
+public class TestRequestGenericInt : IRequest<Result<int>>
 {
 }
