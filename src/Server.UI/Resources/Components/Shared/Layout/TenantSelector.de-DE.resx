@@ -123,7 +123,7 @@
   <data name="Loading organizations..." xml:space="preserve">
     <value>Organisationen werden geladen...</value>
   </data>
-  <data name="No available organizations" xml:space="preserve">
+  <data name="No available organization" xml:space="preserve">
     <value>Keine verfügbaren Organisationen</value>
   </data>
 </root>

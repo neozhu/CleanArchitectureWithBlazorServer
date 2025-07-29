@@ -3,6 +3,11 @@
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @using CleanArchitecture.Blazor.Application.Common.Constants
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
+@inject IStringLocalizer<CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Profile> Localizer
+@inject IUploadService UploadService
+@inject UserManager<ApplicationUser> UserManager
+@inject UserProfileStateService UserProfileStateService
+@inject IOnlineUserTracker OnlineUserTracker
 
 @if (ProfileModel != null)
 {
@@ -137,12 +142,7 @@ else
 
 @code {
     [CascadingParameter] private UserProfile? UserProfile { get; set; }
-    public ChangeUserProfileModel ProfileModel { get; set; } = null!;
-    [Inject] public IStringLocalizer<CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Profile> Localizer { get; set; } = null!;
-    [Inject] public IUploadService UploadService { get; set; } = null!;
-    [Inject] public UserManager<ApplicationUser> UserManager { get; set; } = null!;
-    [Inject] public UserProfileStateService UserProfileStateService { get; set; } = null!;
-    [Inject] public IOnlineUserTracker OnlineUserTracker { get; set; } = null!;
+    public ChangeUserProfileModel? ProfileModel { get; set; } = null!;
 
     private MudForm? _profileForm;
     private bool _submitting;
