@@ -2,7 +2,6 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
@@ -12,17 +11,14 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 public class UserContextLoader : IUserContextLoader
 {
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly ILogger<UserContextLoader> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserContextLoader"/> class.
     /// </summary>
     /// <param name="scopeFactory">The service scope factory.</param>
-    /// <param name="logger">The logger.</param>
-    public UserContextLoader(IServiceScopeFactory scopeFactory, ILogger<UserContextLoader> logger)
+    public UserContextLoader(IServiceScopeFactory scopeFactory)
     {
         _scopeFactory = scopeFactory;
-        _logger = logger;
     }
 
     /// <summary>
@@ -33,11 +29,8 @@ public class UserContextLoader : IUserContextLoader
     /// <returns>The loaded UserContext, or null if the user is not authenticated.</returns>
     public async Task<UserContext?> LoadAsync(ClaimsPrincipal principal, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("UserContextLoader: LoadAsync called for user {UserName}", principal?.Identity?.Name ?? "anonymous");
-        
         if (principal?.Identity?.IsAuthenticated != true)
         {
-            _logger.LogInformation("UserContextLoader: User is not authenticated");
             return null;
         }
 
@@ -48,12 +41,10 @@ public class UserContextLoader : IUserContextLoader
             var user = await userManager.GetUserAsync(principal);
             if (user == null)
             {
-                _logger.LogWarning("UserContextLoader: User not found in database");
                 return null;
             }
 
             var roles = await userManager.GetRolesAsync(user);
-            _logger.LogInformation("UserContextLoader: Loaded user {UserName} with {RoleCount} roles", user.UserName, roles.Count);
 
             return new UserContext(
                 UserId: user.Id,
@@ -66,9 +57,8 @@ public class UserContextLoader : IUserContextLoader
                 SuperiorId: user.SuperiorId
             );
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            _logger.LogError(ex, "UserContextLoader: Error loading user context");
             return null;
         }
     }
@@ -82,17 +72,14 @@ public class UserContextLoader : IUserContextLoader
     /// <returns>The loaded UserContext, or null if the user is not authenticated.</returns>
     public async Task<UserContext?> LoadAndSetAsync(ClaimsPrincipal principal, IUserContextAccessor accessor, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("UserContextLoader: LoadAndSetAsync called");
         var context = await LoadAsync(principal, cancellationToken);
         if (context != null)
         {
             accessor.Set(context);
-            _logger.LogInformation("UserContextLoader: Set user context for {UserName}", context.UserName);
         }
         else
         {
             accessor.Clear();
-            _logger.LogInformation("UserContextLoader: Cleared user context");
         }
         return context;
     }

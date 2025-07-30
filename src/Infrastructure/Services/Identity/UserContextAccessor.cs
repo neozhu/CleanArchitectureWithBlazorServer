@@ -1,5 +1,4 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
@@ -9,25 +8,11 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 public class UserContextAccessor : IUserContextAccessor
 {
     private static readonly AsyncLocal<Stack<UserContext>> _contextStack = new();
-    private readonly ILogger<UserContextAccessor> _logger;
-
-    public UserContextAccessor(ILogger<UserContextAccessor> logger)
-    {
-        _logger = logger;
-    }
 
     /// <summary>
     /// Gets the current user context.
     /// </summary>
-    public UserContext? Current 
-    { 
-        get 
-        { 
-            var current = _contextStack.Value?.Count > 0 ? _contextStack.Value.Peek() : null;
-            _logger.LogDebug("UserContextAccessor: Current user context is {UserName}", current?.UserName ?? "null");
-            return current;
-        }
-    }
+    public UserContext? Current => _contextStack.Value?.Count > 0 ? _contextStack.Value.Peek() : null;
 
     /// <summary>
     /// Pushes a new user context onto the stack.
@@ -62,7 +47,6 @@ public class UserContextAccessor : IUserContextAccessor
     /// <param name="context">The user context to set.</param>
     public void Set(UserContext context)
     {
-        _logger.LogInformation("UserContextAccessor: Setting user context for {UserName}", context.UserName);
         if (_contextStack.Value == null)
         {
             _contextStack.Value = new Stack<UserContext>();
@@ -80,7 +64,6 @@ public class UserContextAccessor : IUserContextAccessor
     /// </summary>
     public void Clear()
     {
-        _logger.LogInformation("UserContextAccessor: Clearing user context");
         _contextStack.Value?.Clear();
     }
 
