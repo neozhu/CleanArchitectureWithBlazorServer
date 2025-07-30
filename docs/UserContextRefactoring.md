@@ -2,7 +2,7 @@
 
 ## 概述
 
-本次重构将原有的 `SessionInfo` 和 `ICurrentUserAccessor` 替换为新的 `UserContext` 和 `IUserContextAccessor` 架构。
+本次重构将原有的 `ICurrentUserAccessor` 替换为新的 `UserContext` 和 `IUserContextAccessor` 架构。
 
 ## 新架构组件
 
@@ -140,6 +140,8 @@ var sessionInfo = new SessionInfo(userId, userName, displayName, ipAddress, tena
 var userContext = new UserContext(userId, userName, tenantId, email, roles, superiorId);
 ```
 
+> **注意：** `SessionInfo` 已被完全移除，所有 Fusion 组件现在直接使用 `UserContext`。
+
 ## 优势
 
 1. **线程安全**：使用 `AsyncLocal` 确保线程安全
@@ -153,5 +155,5 @@ var userContext = new UserContext(userId, userName, tenantId, email, roles, supe
 
 1. `IUserContextAccessor` 注册为 `Singleton`，但内部使用 `AsyncLocal` 确保线程安全
 2. 在 SignalR 连接中，`UserContextHubFilter` 会自动设置用户上下文
-3. 现有的 `ICurrentUserAccessor` 通过适配器继续工作，但建议逐步迁移到新架构
+3. 现有的 `ICurrentUserAccessor` 已被完全移除，所有代码现在使用新的 `IUserContextAccessor`
 4. 新的 `UserContext` 不包含 `IPAddress` 和 `ProfilePictureDataUrl`，如果需要这些信息，可以扩展 `UserContext` 或使用其他方式获取 

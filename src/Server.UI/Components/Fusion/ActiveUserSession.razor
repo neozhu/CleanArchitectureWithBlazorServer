@@ -27,17 +27,7 @@
         var currentUser = UserContextAccessor.Current;
         if (currentUser != null)
         {
-            // 创建SessionInfo用于兼容性
-            var sessionInfo = new SessionInfo(
-                currentUser.UserId,
-                currentUser.UserName,
-                currentUser.UserName, // DisplayName
-                "", // IPAddress
-                currentUser.TenantId,
-                "", // ProfilePictureDataUrl
-                UserPresence.Available
-            );
-            await UserSessionTracker.AddUserSession(PageComponent, sessionInfo);
+            await UserSessionTracker.AddUserSession(PageComponent, currentUser);
         }
     }
 

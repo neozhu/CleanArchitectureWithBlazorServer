@@ -69,7 +69,7 @@ public class Testing
             var mockUserContextAccessor = new Mock<IUserContextAccessor>();
             if (!string.IsNullOrEmpty(_currentUserId))
             {
-                var userContext = new UserContext(_currentUserId, "admin");
+                var userContext = new UserContext(_currentUserId, "admin", null, "admin@example.com");
                 mockUserContextAccessor.Setup(x => x.Current).Returns(userContext);
             }
             return mockUserContextAccessor.Object;

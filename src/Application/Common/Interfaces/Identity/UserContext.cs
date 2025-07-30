@@ -9,5 +9,6 @@ public sealed record UserContext(
     string? TenantId = null,
     string? Email = null,
     IReadOnlyList<string>? Roles = null,
+    string? ProfilePictureDataUrl = null,
     string? SuperiorId = null
 ); 

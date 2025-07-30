@@ -5,7 +5,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Fusion
 
 
-@inherits ComputedStateComponent<List<SessionInfo>>
+@inherits ComputedStateComponent<List<UserContext>>
 @inject IOnlineUserTracker OnlineUserTracker
 @inject IUserContextAccessor UserContextAccessor
 @inject IJSRuntime JS
@@ -50,24 +50,14 @@
         if (currentUser != null)
         {
             currentUserId = currentUser.UserId;
-            // 创建SessionInfo用于兼容性
-            var sessionInfo = new SessionInfo(
-                currentUser.UserId,
-                currentUser.UserName,
-                currentUser.UserName, // DisplayName
-                "", // IPAddress
-                currentUser.TenantId,
-                "", // ProfilePictureDataUrl
-                UserPresence.Available
-            );
-            await OnlineUserTracker.Initial(sessionInfo);
+            await OnlineUserTracker.Initial(currentUser);
         }
     }
 
-    protected override ComputedState<List<SessionInfo>>.Options GetStateOptions()
+    protected override ComputedState<List<UserContext>>.Options GetStateOptions()
      => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
 
-    protected override Task<List<SessionInfo>> ComputeState(CancellationToken cancellationToken)
+    protected override Task<List<UserContext>> ComputeState(CancellationToken cancellationToken)
     {
         return OnlineUserTracker.GetOnlineUsers(cancellationToken);
     }
