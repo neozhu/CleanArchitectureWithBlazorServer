@@ -45,14 +45,6 @@ public class UserContextLoader : IUserContextLoader
         }
 
         var cacheKey = $"UserContext:{userId}";
-        var cacheOptions = new FusionCacheEntryOptions
-        {
-            Duration = TimeSpan.FromMinutes(30), // Cache for 30 minutes
-            JitterMaxDuration = TimeSpan.FromMinutes(5), // Add jitter to prevent cache stampede
-            IsFailSafeEnabled = true,
-            FailSafeMaxDuration = TimeSpan.FromHours(2), // Keep stale data for up to 2 hours
-            FailSafeThrottleDuration = TimeSpan.FromSeconds(30)
-        };
 
         return await _fusionCache.GetOrSetAsync(
             cacheKey,
@@ -86,7 +78,7 @@ public class UserContextLoader : IUserContextLoader
                     return null;
                 }
             },
-            cacheOptions,
+            options:null,
             cancellationToken
         );
     }
@@ -104,11 +96,5 @@ public class UserContextLoader : IUserContextLoader
         }
     }
 
-    /// <summary>
-    /// Clears all user context caches.
-    /// </summary>
-    public void ClearAllUserContextCaches()
-    {
-        _fusionCache.RemoveByPrefix("UserContext:");
-    }
+    
 } 
