@@ -1,5 +1,4 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.SignalR;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
@@ -17,13 +16,12 @@ public class UserContextHubFilter : IHubFilter
     /// <summary>
     /// Initializes a new instance of the <see cref="UserContextHubFilter"/> class.
     /// </summary>
+    /// <param name="scopeFactory">The service scope factory.</param>
     /// <param name="userContextAccessor">The user context accessor.</param>
-    /// <param name="userContextLoader">The user context loader.</param>
-    public UserContextHubFilter(IServiceScopeFactory scopeFactory,IUserContextAccessor userContextAccessor)
+    public UserContextHubFilter(IServiceScopeFactory scopeFactory, IUserContextAccessor userContextAccessor)
     {
         _scopeFactory = scopeFactory;
         _userContextAccessor = userContextAccessor;
-  
     }
 
     /// <summary>
@@ -37,7 +35,14 @@ public class UserContextHubFilter : IHubFilter
         invocationContext.Context.Items.TryGetValue(Key, out var val);
         var user = val as UserContext;
 
-        using (_userContextAccessor.Push(user))
+        if (user != null)
+        {
+            using (_userContextAccessor.Push(user))
+            {
+                return await next(invocationContext);
+            }
+        }
+        else
         {
             return await next(invocationContext);
         }
@@ -63,5 +68,18 @@ public class UserContextHubFilter : IHubFilter
         await next(context);
     }
 
-     
+    /// <summary>
+    /// Called when a client disconnects from the hub.
+    /// </summary>
+    /// <param name="context">The hub context.</param>
+    /// <param name="exception">The exception that caused the disconnection, if any.</param>
+    /// <param name="next">The next filter in the pipeline.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public async Task OnDisconnectedAsync(HubLifetimeContext context, Exception? exception, Func<HubLifetimeContext, Exception?, Task> next)
+    {
+        // Clear user context when client disconnects
+        _userContextAccessor.Clear();
+        
+        await next(context, exception);
+    }
 } 
