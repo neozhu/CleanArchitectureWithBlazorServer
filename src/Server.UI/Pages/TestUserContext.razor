@@ -1,0 +1,99 @@
+@page "/test-user-context"
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@inject IUserContextAccessor UserContextAccessor
+@inject IUserContextLoader UserContextLoader
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Test User Context</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudPaper Class="pa-4">
+        <MudText Typo="Typo.h4" Class="mb-4">User Context Test</MudText>
+        
+        <MudText Typo="Typo.h6" Class="mb-2">Current User Context:</MudText>
+        @if (UserContextAccessor.Current != null)
+        {
+            <MudCard Class="mb-4">
+                <MudCardContent>
+                    <MudText><strong>User ID:</strong> @UserContextAccessor.Current.UserId</MudText>
+                    <MudText><strong>User Name:</strong> @UserContextAccessor.Current.UserName</MudText>
+                    <MudText><strong>Display Name:</strong> @UserContextAccessor.Current.DisplayName</MudText>
+                    <MudText><strong>Email:</strong> @UserContextAccessor.Current.Email</MudText>
+                    <MudText><strong>Tenant ID:</strong> @UserContextAccessor.Current.TenantId</MudText>
+                    <MudText><strong>Superior ID:</strong> @UserContextAccessor.Current.SuperiorId</MudText>
+                    @if (UserContextAccessor.Current.Roles != null && UserContextAccessor.Current.Roles.Any())
+                    {
+                        <MudText><strong>Roles:</strong> @string.Join(", ", UserContextAccessor.Current.Roles)</MudText>
+                    }
+                </MudCardContent>
+            </MudCard>
+        }
+        else
+        {
+            <MudAlert Severity="Severity.Warning" Class="mb-4">
+                No user context found! UserContextAccessor.Current is null.
+            </MudAlert>
+        }
+        
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadUserContext">
+            Load User Context
+        </MudButton>
+        
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="ClearUserContext" Class="ml-2">
+            Clear User Context
+        </MudButton>
+        
+        @if (!string.IsNullOrEmpty(Message))
+        {
+            <MudAlert Severity="@MessageSeverity" Class="mt-4">
+                @Message
+            </MudAlert>
+        }
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private string Message = string.Empty;
+    private Severity MessageSeverity = Severity.Info;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        StateHasChanged();
+    }
+    
+    private async Task LoadUserContext()
+    {
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var userContext = await UserContextLoader.LoadAndSetAsync(authState.User, UserContextAccessor);
+            
+            if (userContext != null)
+            {
+                Message = $"Successfully loaded user context for: {userContext.UserName}";
+                MessageSeverity = Severity.Success;
+            }
+            else
+            {
+                Message = "Failed to load user context. User might not be authenticated.";
+                MessageSeverity = Severity.Warning;
+            }
+        }
+        catch (Exception ex)
+        {
+            Message = $"Error loading user context: {ex.Message}";
+            MessageSeverity = Severity.Error;
+        }
+        
+        StateHasChanged();
+    }
+    
+    private void ClearUserContext()
+    {
+        UserContextAccessor.Clear();
+        Message = "User context cleared.";
+        MessageSeverity = Severity.Info;
+        StateHasChanged();
+    }
+} 
