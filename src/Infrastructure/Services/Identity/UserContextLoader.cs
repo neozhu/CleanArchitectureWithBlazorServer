@@ -2,6 +2,7 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
@@ -11,14 +12,17 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 public class UserContextLoader : IUserContextLoader
 {
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IFusionCache _fusionCache;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserContextLoader"/> class.
     /// </summary>
     /// <param name="scopeFactory">The service scope factory.</param>
-    public UserContextLoader(IServiceScopeFactory scopeFactory)
+    /// <param name="fusionCache">The fusion cache instance.</param>
+    public UserContextLoader(IServiceScopeFactory scopeFactory, IFusionCache fusionCache)
     {
         _scopeFactory = scopeFactory;
+        _fusionCache = fusionCache;
     }
 
     /// <summary>
@@ -34,53 +38,77 @@ public class UserContextLoader : IUserContextLoader
             return null;
         }
 
-        try
-        {
-            using var scope = _scopeFactory.CreateScope();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var user = await userManager.GetUserAsync(principal);
-            if (user == null)
-            {
-                return null;
-            }
-
-            var roles = await userManager.GetRolesAsync(user);
-
-            return new UserContext(
-                UserId: user.Id,
-                UserName: user.UserName ?? string.Empty,
-                DisplayName: user.DisplayName,
-                TenantId: user.TenantId,
-                Email: user.Email,
-                Roles: roles.ToList().AsReadOnly(),
-                ProfilePictureDataUrl: user.ProfilePictureDataUrl,
-                SuperiorId: user.SuperiorId
-            );
-        }
-        catch (Exception)
+        var userId = principal.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
         {
             return null;
+        }
+
+        var cacheKey = $"UserContext:{userId}";
+        var cacheOptions = new FusionCacheEntryOptions
+        {
+            Duration = TimeSpan.FromMinutes(30), // Cache for 30 minutes
+            JitterMaxDuration = TimeSpan.FromMinutes(5), // Add jitter to prevent cache stampede
+            IsFailSafeEnabled = true,
+            FailSafeMaxDuration = TimeSpan.FromHours(2), // Keep stale data for up to 2 hours
+            FailSafeThrottleDuration = TimeSpan.FromSeconds(30)
+        };
+
+        return await _fusionCache.GetOrSetAsync(
+            cacheKey,
+            async _ =>
+            {
+                try
+                {
+                    using var scope = _scopeFactory.CreateScope();
+                    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                    var user = await userManager.GetUserAsync(principal);
+                    if (user == null)
+                    {
+                        return null;
+                    }
+
+                    var roles = await userManager.GetRolesAsync(user);
+
+                    return new UserContext(
+                        UserId: user.Id,
+                        UserName: user.UserName ?? string.Empty,
+                        DisplayName: user.DisplayName,
+                        TenantId: user.TenantId,
+                        Email: user.Email,
+                        Roles: roles.ToList().AsReadOnly(),
+                        ProfilePictureDataUrl: user.ProfilePictureDataUrl,
+                        SuperiorId: user.SuperiorId
+                    );
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            },
+            cacheOptions,
+            cancellationToken
+        );
+    }
+
+    /// <summary>
+    /// Clears the cached user context for a specific user.
+    /// </summary>
+    /// <param name="userId">The user ID to clear cache for.</param>
+    public void ClearUserContextCache(string userId)
+    {
+        if (!string.IsNullOrEmpty(userId))
+        {
+            var cacheKey = $"UserContext:{userId}";
+            _fusionCache.Remove(cacheKey);
         }
     }
 
     /// <summary>
-    /// Loads user context from the provided ClaimsPrincipal and sets it in the accessor.
+    /// Clears all user context caches.
     /// </summary>
-    /// <param name="principal">The ClaimsPrincipal containing user information.</param>
-    /// <param name="accessor">The user context accessor to set the context in.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The loaded UserContext, or null if the user is not authenticated.</returns>
-    public async Task<UserContext?> LoadAndSetAsync(ClaimsPrincipal principal, IUserContextAccessor accessor, CancellationToken cancellationToken = default)
+    public void ClearAllUserContextCaches()
     {
-        var context = await LoadAsync(principal, cancellationToken);
-        if (context != null)
-        {
-            accessor.Set(context);
-        }
-        else
-        {
-            accessor.Clear();
-        }
-        return context;
+        _fusionCache.RemoveByPrefix("UserContext:");
     }
 } 

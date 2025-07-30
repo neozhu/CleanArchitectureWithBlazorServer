@@ -16,4 +16,6 @@ public interface IUserContextAccessor
     /// <param name="context">The user context to push.</param>
     /// <returns>A disposable object that will pop the context when disposed.</returns>
     IDisposable Push(UserContext context);
+
+    void Clear();
 } 
