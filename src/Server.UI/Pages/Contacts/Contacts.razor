@@ -167,8 +167,6 @@
     private bool _uploading;
     private bool _exporting;
     [CascadingParameter]
-    private Task<AuthenticationState> AuthState { get; set; } = default!;
-    [CascadingParameter]
     private UserProfile? UserProfile { get; set; }
 
 

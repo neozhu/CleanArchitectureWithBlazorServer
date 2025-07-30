@@ -18,7 +18,7 @@
     [Parameter]
     public string PageComponent { get; set; } = nameof(ActiveUserSession);
     private string Message => $"{string.Join(", ", State.Value)} {L["has this dialog open"]}";
-    private string? currentUserId => UserContextAccessor.Current?.UserId;
+    private string? currentUserId;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
     
@@ -27,6 +27,7 @@
         var currentUser = UserContextAccessor.Current;
         if (currentUser != null)
         {
+            currentUserId = currentUser.UserId;
             await UserSessionTracker.AddUserSession(PageComponent, currentUser);
         }
     }

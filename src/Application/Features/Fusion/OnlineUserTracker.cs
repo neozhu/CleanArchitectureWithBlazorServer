@@ -23,7 +23,7 @@ public class OnlineUserTracker : IOnlineUserTracker
     /// </summary>
     /// <param name="userContext">The user context.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    public virtual async Task Initial(UserContext? userContext, CancellationToken cancellationToken = default)
+    public virtual async Task Initialize(UserContext? userContext, CancellationToken cancellationToken = default)
     {
         if (Invalidation.IsActive)
             return;

@@ -41,7 +41,6 @@
     
     private string sessionId = Guid.NewGuid().ToString();
     private string? currentUserId;
-    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(5);
     protected override async Task OnInitializedAsync()
@@ -50,7 +49,7 @@
         if (currentUser != null)
         {
             currentUserId = currentUser.UserId;
-            await OnlineUserTracker.Initial(currentUser);
+            await OnlineUserTracker.Initialize(currentUser);
         }
     }
 
