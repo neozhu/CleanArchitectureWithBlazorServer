@@ -127,7 +127,6 @@ public class UserProfileStateService : IDisposable
 
     private string GetApplicationUserCacheKey(string userName)
     {
-        // 这里保留参数校验，防止外部直接调用本方法时出错
         ArgumentException.ThrowIfNullOrWhiteSpace(userName);
         return $"GetApplicationUserDto:{userName}";
     }
