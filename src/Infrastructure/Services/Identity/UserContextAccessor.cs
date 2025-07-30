@@ -1,18 +1,22 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-
-namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
+﻿namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 /// <summary>
 /// Implementation of IUserContextAccessor using AsyncLocal for call chain isolation.
 /// </summary>
 public class UserContextAccessor : IUserContextAccessor
 {
-    private static readonly AsyncLocal<Stack<UserContext>> _contextStack = new();
+    private sealed class Node
+    {
+        public UserContext? Value;
+        public Node? Parent;
+    }
 
+
+    private readonly AsyncLocal<Node?> _current = new();
     /// <summary>
     /// Gets the current user context.
     /// </summary>
-    public UserContext? Current => _contextStack.Value?.Count > 0 ? _contextStack.Value.Peek() : null;
+    public UserContext? Current => _current.Value?.Value;
 
     /// <summary>
     /// Pushes a new user context onto the stack.
@@ -21,23 +25,29 @@ public class UserContextAccessor : IUserContextAccessor
     /// <returns>A disposable object that will pop the context when disposed.</returns>
     public IDisposable Push(UserContext context)
     {
-        if (_contextStack.Value == null)
+        var node = new Node
         {
-            _contextStack.Value = new Stack<UserContext>();
-        }
-
-        _contextStack.Value.Push(context);
-        return new UserContextScope(this);
+            Value = context,
+            Parent = _current.Value
+        };
+        _current.Value = node;
+        return new Pop(this, node.Parent);
     }
 
-    /// <summary>
-    /// Pops the current user context from the stack.
-    /// </summary>
-    public void Pop()
+    private sealed class Pop : IDisposable
     {
-        if (_contextStack.Value?.Count > 0)
+        private readonly UserContextAccessor _owner;
+        private readonly Node? _restore;
+
+        public Pop(UserContextAccessor owner, Node? restore)
         {
-            _contextStack.Value.Pop();
+            _owner = owner;
+            _restore = restore;
+        }
+
+        public void Dispose()
+        {
+            _owner._current.Value = _restore;
         }
     }
 
@@ -47,16 +57,11 @@ public class UserContextAccessor : IUserContextAccessor
     /// <param name="context">The user context to set.</param>
     public void Set(UserContext context)
     {
-        if (_contextStack.Value == null)
+        _current.Value = new Node
         {
-            _contextStack.Value = new Stack<UserContext>();
-        }
-        else
-        {
-            _contextStack.Value.Clear();
-        }
-
-        _contextStack.Value.Push(context);
+            Value = context,
+            Parent = null
+        };
     }
 
     /// <summary>
@@ -64,24 +69,6 @@ public class UserContextAccessor : IUserContextAccessor
     /// </summary>
     public void Clear()
     {
-        _contextStack.Value?.Clear();
-    }
-
-    /// <summary>
-    /// Disposable scope for managing user context lifecycle.
-    /// </summary>
-    private class UserContextScope : IDisposable
-    {
-        private readonly UserContextAccessor _accessor;
-
-        public UserContextScope(UserContextAccessor accessor)
-        {
-            _accessor = accessor;
-        }
-
-        public void Dispose()
-        {
-            _accessor.Pop();
-        }
+        _current.Value = null;
     }
 } 

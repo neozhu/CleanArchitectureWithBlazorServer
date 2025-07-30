@@ -49,7 +49,7 @@ public class UserSessionCircuitHandler : CircuitHandler, IDisposable
             try
             {
                 var state = await task;
-                await _userContextLoader.LoadAndSetAsync(state.User, _userContextAccessor);
+                //await _userContextLoader.LoadAndSetAsync(state.User, _userContextAccessor);
             }
             catch
             {
@@ -67,7 +67,7 @@ public class UserSessionCircuitHandler : CircuitHandler, IDisposable
     public override async Task OnConnectionUpAsync(Circuit circuit, CancellationToken cancellationToken)
     {
         var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
-        await _userContextLoader.LoadAndSetAsync(state.User, _userContextAccessor);
+        //await _userContextLoader.LoadAndSetAsync(state.User, _userContextAccessor);
         
         var usersStateContainer = _serviceProvider.GetRequiredService<IUsersStateContainer>();
         
@@ -103,7 +103,7 @@ public class UserSessionCircuitHandler : CircuitHandler, IDisposable
             usersStateContainer.Remove(circuit.Id);
         }
 
-        _userContextAccessor.Clear();
+      
         await base.OnConnectionDownAsync(circuit, cancellationToken);
     }
 

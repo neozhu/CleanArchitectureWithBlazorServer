@@ -1,4 +1,5 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.SignalR;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
@@ -8,18 +9,21 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 /// </summary>
 public class UserContextHubFilter : IHubFilter
 {
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly IUserContextAccessor _userContextAccessor;
-    private readonly IUserContextLoader _userContextLoader;
+
+    private const string Key = "__user_ctx";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserContextHubFilter"/> class.
     /// </summary>
     /// <param name="userContextAccessor">The user context accessor.</param>
     /// <param name="userContextLoader">The user context loader.</param>
-    public UserContextHubFilter(IUserContextAccessor userContextAccessor, IUserContextLoader userContextLoader)
+    public UserContextHubFilter(IServiceScopeFactory scopeFactory,IUserContextAccessor userContextAccessor)
     {
+        _scopeFactory = scopeFactory;
         _userContextAccessor = userContextAccessor;
-        _userContextLoader = userContextLoader;
+  
     }
 
     /// <summary>
@@ -30,20 +34,12 @@ public class UserContextHubFilter : IHubFilter
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async ValueTask<object?> InvokeMethodAsync(HubInvocationContext invocationContext, Func<HubInvocationContext, ValueTask<object?>> next)
     {
-        var user = invocationContext.Context.User;
-        if (user?.Identity?.IsAuthenticated == true)
-        {
-            await _userContextLoader.LoadAndSetAsync(user, _userContextAccessor);
-        }
+        invocationContext.Context.Items.TryGetValue(Key, out var val);
+        var user = val as UserContext;
 
-        try
+        using (_userContextAccessor.Push(user))
         {
             return await next(invocationContext);
-        }
-        finally
-        {
-            // Clear the context after the method invocation
-            _userContextAccessor.Clear();
         }
     }
 
@@ -55,40 +51,17 @@ public class UserContextHubFilter : IHubFilter
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task OnConnectedAsync(HubLifetimeContext context, Func<HubLifetimeContext, Task> next)
     {
-        var user = context.Context.User;
-        if (user?.Identity?.IsAuthenticated == true)
+        var principal = context.Context.User;
+        if (principal?.Identity?.IsAuthenticated == true)
         {
-            await _userContextLoader.LoadAndSetAsync(user, _userContextAccessor);
+            await using var scope = _scopeFactory.CreateAsyncScope();
+            var loader = scope.ServiceProvider.GetRequiredService<IUserContextLoader>();
+            var userContext = await loader.LoadAsync(principal, context.Context.ConnectionAborted);
+            context.Context.Items[Key] = userContext;
         }
 
-        try
-        {
-            await next(context);
-        }
-        finally
-        {
-            // Clear the context when the connection is closed
-            _userContextAccessor.Clear();
-        }
+        await next(context);
     }
 
-    /// <summary>
-    /// Called when a client disconnects from the hub.
-    /// </summary>
-    /// <param name="context">The hub context.</param>
-    /// <param name="exception">The exception that caused the disconnection, if any.</param>
-    /// <param name="next">The next filter in the pipeline.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task OnDisconnectedAsync(HubLifetimeContext context, Exception? exception, Func<HubLifetimeContext, Exception?, Task> next)
-    {
-        try
-        {
-            await next(context, exception);
-        }
-        finally
-        {
-            // Clear the context when the connection is closed
-            _userContextAccessor.Clear();
-        }
-    }
+     
 } 
