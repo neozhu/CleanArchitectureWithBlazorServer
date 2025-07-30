@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 public static class DependencyInjection
@@ -355,7 +356,6 @@ public static class DependencyInjection
         // User context management
         services.AddSingleton<IUserContextAccessor, UserContextAccessor>();
         services.AddScoped<IUserContextLoader, UserContextLoader>();
-        services.AddScoped<IHubFilter, UserContextHubFilter>();
         
         // Circuit and state management
         services.AddScoped<CircuitHandler, UserSessionCircuitHandler>();

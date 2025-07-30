@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 /// <summary>
 /// Represents the current user context with essential user information.
@@ -6,6 +6,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 public sealed record UserContext(
     string UserId,
     string UserName,
+    string? DisplayName = null,
     string? TenantId = null,
     string? Email = null,
     IReadOnlyList<string>? Roles = null,

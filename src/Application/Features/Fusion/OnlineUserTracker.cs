@@ -68,8 +68,8 @@ public class OnlineUserTracker : IOnlineUserTracker
         var userSessions = _activeUserSessions.Where(s => s.UserId == userId).ToList();
         foreach (var session in userSessions)
         {
-            var updatedSession = new UserContext(userId, userName, session.TenantId, session.Email, session.Roles, session.SuperiorId);
-            _activeUserSessions = _activeUserSessions.Remove(session).Add(updatedSession);
+            //var updatedSession = new UserContext(userId, userName, session.TenantId, session.Email, session.Roles, session.SuperiorId);
+            //_activeUserSessions = _activeUserSessions.Remove(session).Add(updatedSession);
             using var invalidating = Invalidation.Begin();
             _ = await GetOnlineUsers(cancellationToken).ConfigureAwait(false);
         }

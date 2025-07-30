@@ -1,5 +1,6 @@
-using CleanArchitecture.Blazor.Application.Common.Extensions;
+﻿using CleanArchitecture.Blazor.Application.Common.Extensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
@@ -33,13 +34,9 @@ public class UserContextLoader : IUserContextLoader
             return null;
         }
 
-        var userId = principal.GetUserId();
-        if (string.IsNullOrEmpty(userId))
-        {
-            return null;
-        }
+        
 
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.GetUserAsync(principal);
         if (user == null)
         {
             return null;
@@ -50,6 +47,7 @@ public class UserContextLoader : IUserContextLoader
         return new UserContext(
             UserId: user.Id,
             UserName: user.UserName ?? string.Empty,
+            DisplayName: user.DisplayName,
             TenantId: user.TenantId,
             Email: user.Email,
             Roles: roles.ToList().AsReadOnly(),

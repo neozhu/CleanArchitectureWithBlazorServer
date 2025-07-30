@@ -11,6 +11,7 @@ using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
 using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
+using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Localization;
@@ -87,7 +88,12 @@ public static class DependencyInjection
         services.AddControllers();
 
         services.AddScoped<IApplicationHubWrapper, ServerHubWrapper>()
-            .AddSignalR(options=>options.MaximumReceiveMessageSize=64*1024);
+            .AddSignalR(options =>
+            {
+                options.MaximumReceiveMessageSize = 64 * 1024;
+                // 注册 UserContextHubFilter
+                options.AddFilter<UserContextHubFilter>();
+            });
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
         services.AddHealthChecks();
