@@ -8,13 +8,13 @@ namespace CleanArchitecture.Blazor.Application.Pipeline;
 public class GlobalExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly IUserContextAccessor _userContextAccessor;
     private readonly ILogger<TRequest> _logger;
 
-    public GlobalExceptionBehaviour(ILogger<TRequest> logger, ICurrentUserAccessor currentUserAccessor)
+    public GlobalExceptionBehaviour(ILogger<TRequest> logger, IUserContextAccessor userContextAccessor)
     {
         _logger = logger;
-        _currentUserAccessor = currentUserAccessor;
+        _userContextAccessor = userContextAccessor;
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
@@ -27,7 +27,7 @@ public class GlobalExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<T
         catch (Exception ex)
         {
             var requestName = typeof(TRequest).Name;
-            var userName = _currentUserAccessor.SessionInfo?.UserName;
+            var userName = _userContextAccessor.Current?.UserName;
             _logger.LogError(ex,
                 "Request: {RequestName} by User: {UserName} failed. Error: {ErrorMessage}. Request Details: {@Request}",
                 requestName,

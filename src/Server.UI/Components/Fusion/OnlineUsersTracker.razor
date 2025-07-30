@@ -7,7 +7,7 @@
 
 @inherits ComputedStateComponent<List<SessionInfo>>
 @inject IOnlineUserTracker OnlineUserTracker
-@inject ICurrentUserAccessor SessionInfoAccessor
+@inject IUserContextAccessor UserContextAccessor
 @inject IJSRuntime JS
 @if (State.HasValue && State.LastNonErrorValue.Any())
 {
@@ -46,10 +46,21 @@
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(5);
     protected override async Task OnInitializedAsync()
     {
-        if (SessionInfoAccessor.SessionInfo!=null)
+        var currentUser = UserContextAccessor.Current;
+        if (currentUser != null)
         {
-            currentUserId = SessionInfoAccessor.SessionInfo?.UserId;
-            await OnlineUserTracker.Initial(SessionInfoAccessor.SessionInfo);
+            currentUserId = currentUser.UserId;
+            // 创建SessionInfo用于兼容性
+            var sessionInfo = new SessionInfo(
+                currentUser.UserId,
+                currentUser.UserName,
+                currentUser.UserName, // DisplayName
+                "", // IPAddress
+                currentUser.TenantId,
+                "", // ProfilePictureDataUrl
+                UserPresence.Available
+            );
+            await OnlineUserTracker.Initial(sessionInfo);
         }
     }
 

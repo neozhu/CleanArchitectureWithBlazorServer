@@ -352,18 +352,15 @@ public static class DependencyInjection
     #region Session Management
     private static IServiceCollection AddSessionManagement(this IServiceCollection services)
     {
-        // Legacy session management (to be deprecated)
-        services.AddScoped<ICurrentUserContext, CurrentUserContext>();
-        services.AddScoped<ICurrentUserAccessor, CurrentUserAccessorAdapter>();
-        services.AddScoped<ICurrentUserContextSetter, CurrentUserContextSetter>();
-        services.AddScoped<CircuitHandler, UserSessionCircuitHandler>();
-        services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
-        services.AddScoped<IPermissionService, PermissionService>();
-
-        // New user context management
+        // User context management
         services.AddSingleton<IUserContextAccessor, UserContextAccessor>();
         services.AddScoped<IUserContextLoader, UserContextLoader>();
         services.AddScoped<IHubFilter, UserContextHubFilter>();
+        
+        // Circuit and state management
+        services.AddScoped<CircuitHandler, UserSessionCircuitHandler>();
+        services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
+        services.AddScoped<IPermissionService, PermissionService>();
 
         return services;
     }
