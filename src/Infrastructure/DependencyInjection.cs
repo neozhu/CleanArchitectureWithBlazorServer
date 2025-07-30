@@ -354,8 +354,9 @@ public static class DependencyInjection
     private static IServiceCollection AddSessionManagement(this IServiceCollection services)
     {
         // User context management
+        services.AddSingleton<IHubFilter, UserContextHubFilter>();
         services.AddSingleton<IUserContextAccessor, UserContextAccessor>();
-        services.AddScoped<IUserContextLoader, UserContextLoader>();
+        services.AddSingleton<IUserContextLoader, UserContextLoader>();
         
         // Circuit and state management
         services.AddScoped<CircuitHandler, UserSessionCircuitHandler>();
