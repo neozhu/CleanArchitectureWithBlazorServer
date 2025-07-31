@@ -14,25 +14,34 @@ public static class ClaimsPrincipalExtensions
         ClaimsPrincipal claimsPrincipal
     )
     {
-        var profile = new UserProfile { Email = "", UserId = "", UserName = "" };
-        if (claimsPrincipal.Identity?.IsAuthenticated ?? false)
+        if (!(claimsPrincipal.Identity?.IsAuthenticated ?? false))
         {
-            profile.UserId = claimsPrincipal.GetUserId() ?? "";
-            profile.UserName = claimsPrincipal.GetUserName() ?? "";
-            profile.TenantId = claimsPrincipal.GetTenantId();
-            profile.TenantName = claimsPrincipal.GetTenantName();
-            profile.PhoneNumber = claimsPrincipal.GetPhoneNumber();
-            profile.SuperiorName = claimsPrincipal.GetSuperiorName();
-            profile.SuperiorId = claimsPrincipal.GetSuperiorId();
-            profile.Email = claimsPrincipal.GetEmail() ?? "";
-            profile.DisplayName = claimsPrincipal.GetDisplayName();
-            profile.AssignedRoles = claimsPrincipal.GetRoles();
-            profile.DefaultRole = profile.AssignedRoles.Any() ? profile.AssignedRoles.First() : RoleName.Basic;
-            profile.ProfilePictureDataUrl = claimsPrincipal.GetProfilePictureDataUrl();
-            profile.IsActive = true;
+            return UserProfile.Empty;
         }
 
-        return profile;
+        var userId = claimsPrincipal.GetUserId() ?? "";
+        var userName = claimsPrincipal.GetUserName() ?? "";
+        var email = claimsPrincipal.GetEmail() ?? "";
+        var roles = claimsPrincipal.GetRoles();
+
+        return new UserProfile(
+            UserId: userId,
+            UserName: userName,
+            Email: email,
+            Provider: null, // Not available from claims
+            SuperiorName: claimsPrincipal.GetSuperiorName(),
+            SuperiorId: claimsPrincipal.GetSuperiorId(),
+            ProfilePictureDataUrl: claimsPrincipal.GetProfilePictureDataUrl(),
+            DisplayName: claimsPrincipal.GetDisplayName(),
+            PhoneNumber: claimsPrincipal.GetPhoneNumber(),
+            DefaultRole: roles?.Length > 0 ? roles.First() : RoleName.Basic,
+            AssignedRoles: roles,
+            IsActive: true,
+            TenantId: claimsPrincipal.GetTenantId(),
+            TenantName: claimsPrincipal.GetTenantName(),
+            TimeZoneId: null, // Not available from claims
+            LanguageCode: null // Not available from claims
+        );
     }
 
     public static string? GetEmail(this ClaimsPrincipal claimsPrincipal)

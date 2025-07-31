@@ -5,7 +5,7 @@
 @using CleanArchitecture.Blazor.Application.Features.Fusion
 @inherits ComputedStateComponent<string[]>
 @inject IUserSessionTracker UserSessionTracker
-@inject ICurrentUserAccessor CurrentUserAccessor
+@inject IUserContextAccessor UserContextAccessor
 @inject IStringLocalizer<ActiveUserSession> L
 @inject  IJSRuntime JS
 
@@ -18,15 +18,17 @@
     [Parameter]
     public string PageComponent { get; set; } = nameof(ActiveUserSession);
     private string Message => $"{string.Join(", ", State.Value)} {L["has this dialog open"]}";
-    private string? currentUserId => CurrentUserAccessor.SessionInfo?.UserId;
+    private string? currentUserId;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
     
     protected override async Task OnInitializedAsync()
     {
-        if (CurrentUserAccessor.SessionInfo != null)
+        var currentUser = UserContextAccessor.Current;
+        if (currentUser != null)
         {
-            await UserSessionTracker.AddUserSession(PageComponent, CurrentUserAccessor.SessionInfo);
+            currentUserId = currentUser.UserId;
+            await UserSessionTracker.AddUserSession(PageComponent, currentUser);
         }
     }
 

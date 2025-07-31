@@ -55,24 +55,24 @@ public class Testing
 
         //startup.ConfigureServices(services);
 
-        // 替换 ICurrentUserAccessor 的注册
-        var currentUserServiceDescriptor = services.FirstOrDefault(d =>
-            d.ServiceType == typeof(ICurrentUserAccessor));
-        if (currentUserServiceDescriptor != null)
+        // 替换 IUserContextAccessor 的注册
+        var userContextServiceDescriptor = services.FirstOrDefault(d =>
+            d.ServiceType == typeof(IUserContextAccessor));
+        if (userContextServiceDescriptor != null)
         {
-            services.Remove(currentUserServiceDescriptor);
+            services.Remove(userContextServiceDescriptor);
         }
 
-        // 使用 Moq 创建 Mock 对象并配置 SessionInfo 属性
-        // 注意：为了确保每次获取的 ICurrentUserAccessor 都能读取最新的 _currentUserId，
-        // 可将 Mock 的创建放在工厂方法内
-        services.AddScoped<ICurrentUserAccessor>(provider =>
+        // 使用 Moq 创建 Mock 对象并配置 Current 属性
+        services.AddSingleton<IUserContextAccessor>(provider =>
         {
-            var mockCurrentUserAccessor = new Mock<ICurrentUserAccessor>();
-            mockCurrentUserAccessor
-                .Setup(x => x.SessionInfo)
-                .Returns(new SessionInfo(_currentUserId,"admin","admin","","","", UserPresence.Available));
-            return mockCurrentUserAccessor.Object;
+            var mockUserContextAccessor = new Mock<IUserContextAccessor>();
+            if (!string.IsNullOrEmpty(_currentUserId))
+            {
+                var userContext = new UserContext(_currentUserId, "admin", null, "admin@example.com");
+                mockUserContextAccessor.Setup(x => x.Current).Returns(userContext);
+            }
+            return mockUserContextAccessor.Object;
         });
 
         _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();

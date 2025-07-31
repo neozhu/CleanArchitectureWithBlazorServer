@@ -1,0 +1,64 @@
+@using CleanArchitecture.Blazor.Application.Common.Extensions
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Common.Security
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@implements IDisposable
+@inject IUserProfileState UserProfileState
+@inject ILogger<UserProfileProvider> Logger
+
+<CascadingValue Value="UserProfileState.Value" Name="UserProfile">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [CascadingParameter] private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthenticationState == null)
+            return;
+
+        try
+        {
+            var authState = await AuthenticationState;
+            var user = authState.User;
+
+            if (user?.Identity?.IsAuthenticated == true)
+            {
+                var userId = user.GetUserId();
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    // Initialize user profile state
+                    await UserProfileState.EnsureInitializedAsync(userId);
+                    
+                    // Subscribe to changes
+                    UserProfileState.Changed += OnUserProfileChanged;
+                    
+                    Logger.LogDebug("User profile state initialized for user {UserId}", userId);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to initialize user profile state");
+        }
+    }
+
+    private void OnUserProfileChanged(object? sender, UserProfile userProfile)
+    {
+        // Use InvokeAsync to ensure UI updates happen on the UI thread
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        if (UserProfileState != null)
+        {
+            UserProfileState.Changed -= OnUserProfileChanged;
+        }
+        GC.SuppressFinalize(this);
+    }
+}
