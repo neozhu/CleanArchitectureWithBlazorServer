@@ -23,7 +23,7 @@ internal class ProductsPaginationQueryTests : TestBase
     [Test]
     public async Task ShouldNotEmptyQuery()
     {
-        var query = new ProductsWithPaginationQuery(){ CurrentUser=new Common.Security.UserProfile(){Email="test@test.com", UserName="test", UserId=Guid.NewGuid().ToString(), TimeZoneId= "Asia/Shanghai" } };
+        var query = new ProductsWithPaginationQuery(){ CurrentUser = new Common.Security.UserProfile(Guid.NewGuid().ToString(), "test", "test@test.com", TimeZoneId: "Asia/Shanghai") };
         var result = await SendAsync(query);
         Assert.That(result.TotalItems, Is.EqualTo(5));
     }
@@ -31,7 +31,7 @@ internal class ProductsPaginationQueryTests : TestBase
     [Test]
     public async Task ShouldNotEmptyKeywordQuery()
     {
-        var query = new ProductsWithPaginationQuery { Keyword = "1" , CurrentUser = new Common.Security.UserProfile() { Email = "test@test.com", UserName = "test", UserId = Guid.NewGuid().ToString(), TimeZoneId = "Asia/Shanghai" } };
+        var query = new ProductsWithPaginationQuery { Keyword = "1" , CurrentUser = new Common.Security.UserProfile(Guid.NewGuid().ToString(), "test", "test@test.com", TimeZoneId: "Asia/Shanghai") };
         var result = await SendAsync(query);
         Assert.That(result.TotalItems, Is.EqualTo(5));
     }
@@ -39,7 +39,7 @@ internal class ProductsPaginationQueryTests : TestBase
     [Test]
     public async Task ShouldNotEmptySpecificationQuery()
     {
-        var query = new ProductsWithPaginationQuery { Keyword = "1", Brand = "Test1", Unit = "EA", Name = "Test1" , CurrentUser = new Common.Security.UserProfile() { Email = "test@test.com", UserName = "test", UserId = Guid.NewGuid().ToString(), TimeZoneId = "Asia/Shanghai" } };
+        var query = new ProductsWithPaginationQuery { Keyword = "1", Brand = "Test1", Unit = "EA", Name = "Test1" , CurrentUser = new Common.Security.UserProfile(Guid.NewGuid().ToString(), "test", "test@test.com", TimeZoneId: "Asia/Shanghai") };
         var result = await SendAsync(query);
         Assert.That(result.TotalItems, Is.EqualTo(1));
     }

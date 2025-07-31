@@ -1,8 +1,9 @@
 ﻿@using CleanArchitecture.Blazor.Application.Common.Security
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs
 @using CleanArchitecture.Blazor.Application.Common.Interfaces
 @inject IStringLocalizer<TenantSelector> L
-@inject UserProfileStateService UserProfileStateService
+@inject IUserProfileState UserProfileState
 @inject ITenantSwitchService TenantSwitchService
 @inject ISnackbar Snackbar
 @inject NavigationManager Navigation
@@ -100,24 +101,24 @@
 
 @code
 {
-    private UserProfile UserProfile => UserProfileStateService.UserProfile;
+    private UserProfile UserProfile => UserProfileState.Value;
     private List<TenantDto>? _availableTenants;
     private bool _isSwitching;
 
     protected override async Task OnInitializedAsync()
     {
-        UserProfileStateService.OnChange += UserProfileStateService_OnChange;
+        UserProfileState.Changed += OnUserProfileChanged;
         await LoadAvailableTenants();
     }
 
     public void Dispose()
     {
-        UserProfileStateService.OnChange -= UserProfileStateService_OnChange;
+        UserProfileState.Changed -= OnUserProfileChanged;
     }
 
-    private async Task UserProfileStateService_OnChange()
+    private void OnUserProfileChanged(object? sender, UserProfile userProfile)
     {
-        await InvokeAsync(StateHasChanged);
+        InvokeAsync(StateHasChanged);
     }
 
     private async Task LoadAvailableTenants()
@@ -147,7 +148,7 @@
                 }
 
                 // Refresh user state
-                await UserProfileStateService.RefreshAsync(UserProfile.UserName);
+                await UserProfileState.RefreshAsync();
                 // Navigate to home page
                 Navigation.NavigateTo("/", true);
             }

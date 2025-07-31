@@ -15,7 +15,7 @@ public class TenantSwitchService : ITenantSwitchService
     private readonly IApplicationDbContextFactory _dbContextFactory;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IPermissionService _permissionService;
-    private readonly UserProfileStateService _userProfileStateService;
+    private readonly IUserProfileState _userProfileState;
     private readonly IFusionCache _fusionCache;
     private readonly IMapper _mapper;
     private readonly ILogger<TenantSwitchService> _logger;
@@ -24,7 +24,7 @@ public class TenantSwitchService : ITenantSwitchService
         IApplicationDbContextFactory dbContextFactory,
         IServiceScopeFactory serviceScopeFactory,
         IPermissionService permissionService,
-        UserProfileStateService userProfileStateService,
+        IUserProfileState userProfileState,
         IFusionCache fusionCache,
         IMapper mapper,
         ILogger<TenantSwitchService> logger)
@@ -32,7 +32,7 @@ public class TenantSwitchService : ITenantSwitchService
         _dbContextFactory = dbContextFactory;
         _serviceScopeFactory = serviceScopeFactory;
         _permissionService = permissionService;
-        _userProfileStateService = userProfileStateService;
+        _userProfileState = userProfileState;
         _fusionCache = fusionCache;
         _mapper = mapper;
         _logger = logger;
@@ -116,20 +116,22 @@ public class TenantSwitchService : ITenantSwitchService
             var rolesToRemove = userRoleEntities
                 .Where(r => r.TenantId != tenantId)
                 .Select(r => r.Name)
+                .Where(name => name != null)
                 .ToList();
             if (rolesToRemove.Any())
             {
-                await userManager.RemoveFromRolesAsync(user, rolesToRemove);
+                await userManager.RemoveFromRolesAsync(user, rolesToRemove!);
             }
 
             // Remove roles in the target tenant before re-assigning (avoid duplicates)
             var targetTenantRoles = userRoleEntities
                 .Where(r => r.TenantId == tenantId)
                 .Select(r => r.Name)
+                .Where(name => name != null)
                 .ToList();
             if (targetTenantRoles.Any())
             {
-                await userManager.RemoveFromRolesAsync(user, targetTenantRoles);
+                await userManager.RemoveFromRolesAsync(user, targetTenantRoles!);
             }
 
             // Find roles with same names in the new tenant
@@ -194,7 +196,7 @@ public class TenantSwitchService : ITenantSwitchService
             await userManager.UpdateAsync(user);
             
             // Refresh user state and cache
-            await _userProfileStateService.RefreshAsync(user.UserName!);
+            await _userProfileState.RefreshAsync();
             
             // Update user claims
             await RefreshUserClaimsAsync(user, userManager);

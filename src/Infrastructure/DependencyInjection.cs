@@ -7,6 +7,7 @@ using ActualLab.Fusion.Blazor;
 using ActualLab.Fusion.Blazor.Authentication;
 using ActualLab.Fusion.Extensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Features.Fusion;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
@@ -277,6 +278,7 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IIdentityService, IdentityService>()
+            .AddScoped<IUserProfileState, UserProfileState>()
             .AddAuthorizationCore(options =>
             {
                 options.AddPolicy("CanPurge", policy => policy.RequireUserName(UserName.Administrator));

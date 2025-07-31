@@ -61,24 +61,24 @@ public class ApplicationUserDto
  
     public UserProfile ToUserProfile()
     {
-        return new UserProfile
-        {
-            UserId = Id,
-            ProfilePictureDataUrl = ProfilePictureDataUrl,
-            Email = Email,
-            PhoneNumber = PhoneNumber,
-            DisplayName = DisplayName,
-            Provider = Provider,
-            UserName = UserName,
-            TenantId = TenantId,
-            TenantName = Tenant?.Name,
-            SuperiorId = SuperiorId,
-            SuperiorName = Superior?.UserName,
-            AssignedRoles = AssignedRoles,
-            DefaultRole = DefaultRole,
-            TimeZoneId = TimeZoneId,
-            LanguageCode = LanguageCode
-        };
+        return new UserProfile(
+            UserId: Id,
+            UserName: UserName,
+            Email: Email,
+            Provider: Provider,
+            SuperiorName: Superior?.UserName,
+            SuperiorId: SuperiorId,
+            ProfilePictureDataUrl: ProfilePictureDataUrl,
+            DisplayName: DisplayName,
+            PhoneNumber: PhoneNumber,
+            DefaultRole: DefaultRole,
+            AssignedRoles: AssignedRoles,
+            IsActive: IsActive,
+            TenantId: TenantId,
+            TenantName: Tenant?.Name,
+            TimeZoneId: TimeZoneId,
+            LanguageCode: LanguageCode
+        );
     }
 
     public bool IsInRole(string role)

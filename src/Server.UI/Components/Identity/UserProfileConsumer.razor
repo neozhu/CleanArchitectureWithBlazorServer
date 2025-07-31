@@ -1,0 +1,107 @@
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@using CleanArchitecture.Blazor.Application.Common.Security
+@implements IDisposable
+@inject IUserProfileState UserProfileState
+@inject ILogger<UserProfileConsumer> Logger
+
+<div class="user-profile-info">
+    <h3>Current User Profile</h3>
+    
+    @if (CurrentProfile != UserProfile.Empty)
+    {
+        <div class="profile-details">
+            <p><strong>Display Name:</strong> @CurrentProfile.DisplayName</p>
+            <p><strong>Email:</strong> @CurrentProfile.Email</p>
+            <p><strong>Username:</strong> @CurrentProfile.UserName</p>
+            <p><strong>Tenant:</strong> @CurrentProfile.TenantName</p>
+            <p><strong>Roles:</strong> @string.Join(", ", CurrentProfile.AssignedRoles ?? Array.Empty<string>())</p>
+            <p><strong>Time Zone:</strong> @CurrentProfile.TimeZoneId</p>
+            <p><strong>Language:</strong> @CurrentProfile.LanguageCode</p>
+        </div>
+        
+        <div class="profile-actions">
+            <button @onclick="RefreshProfile" class="btn btn-primary">
+                Refresh Profile
+            </button>
+            
+            <button @onclick="UpdateLocalProfile" class="btn btn-secondary">
+                Update Local (Demo)
+            </button>
+        </div>
+    }
+    else
+    {
+        <p>User profile not loaded</p>
+    }
+</div>
+
+@code {
+    private UserProfile CurrentProfile = UserProfile.Empty;
+
+    protected override void OnInitialized()
+    {
+        // Get current state
+        CurrentProfile = UserProfileState.Value;
+        
+        // Subscribe to changes
+        UserProfileState.Changed += OnUserProfileChanged;
+    }
+
+    private void OnUserProfileChanged(object? sender, UserProfile userProfile)
+    {
+        Logger.LogInformation("User profile changed: {DisplayName}", userProfile.DisplayName);
+        CurrentProfile = userProfile;
+        
+        // Update UI on the correct thread
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RefreshProfile()
+    {
+        try
+        {
+            await UserProfileState.RefreshAsync();
+            Logger.LogInformation("User profile refreshed successfully");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to refresh user profile");
+        }
+    }
+
+    private void UpdateLocalProfile()
+    {
+        // Example of local update (e.g., after saving to database)
+        UserProfileState.UpdateLocal(
+            displayName: CurrentProfile.DisplayName + " (Updated)",
+            languageCode: "en-US"
+        );
+    }
+
+    public void Dispose()
+    {
+        UserProfileState.Changed -= OnUserProfileChanged;
+        GC.SuppressFinalize(this);
+    }
+}
+
+<style>
+    .user-profile-info {
+        border: 1px solid #ddd;
+        padding: 16px;
+        border-radius: 8px;
+        margin: 16px 0;
+    }
+
+    .profile-details p {
+        margin: 8px 0;
+    }
+
+    .profile-actions {
+        margin-top: 16px;
+    }
+
+    .profile-actions button {
+        margin-right: 8px;
+    }
+</style>
