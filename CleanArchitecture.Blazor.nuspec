@@ -2,16 +2,15 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>CleanArchitecture.Blazor.Solution.Template</id>
-        <version>1.0.2</version>
+        <version>1.1.0</version>
         <title>Clean Architecture Blazor Solution Template</title>
         <authors>hl.z</authors>
-        <description>Clean Architecture Blazor Solution Template for .NET 8.</description>
+        <description>Clean Architecture Blazor Solution Template for .NET 9.</description>
         <summary>
-            A Clean Architecture Blazor Server Solution Template for creating a Single-Page Application (SPA) with
-            ASP.NET Core.
+            A Clean Architecture Blazor Server dashboard application template for .NET 9.
         </summary>
         <releaseNotes>
-            1.0.2
+            1.1.0
             - 🌈 Integrate Stl.Fusion for real-time updates 
             - 🐛 fixed ocr process issue 
             - 🌈 Implement Google and Microsoft External Provider Authentication 
