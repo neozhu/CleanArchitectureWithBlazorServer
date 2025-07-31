@@ -61,12 +61,13 @@
         UserProfileState.Changed += OnUserProfileChanged;
         
         var userId = state.User.GetUserId();
-        if (!string.IsNullOrEmpty(userId))
+        if (state.User.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(userId))
         {
             await UserProfileState.EnsureInitializedAsync(userId);
+            UserProfile = UserProfileState.Value;
         }
         
-        UserProfile = UserProfileState.Value;
+      
     }
      
 
