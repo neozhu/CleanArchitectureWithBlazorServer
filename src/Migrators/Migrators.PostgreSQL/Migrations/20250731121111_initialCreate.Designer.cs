@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241013032450_CreatedByUser_ApplicationUser")]
-    partial class CreatedByUser_ApplicationUser
+    [Migration("20250731121111_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -46,6 +46,16 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("date_time");
+
+                    b.Property<string>("DebugView")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
+                        .HasColumnName("debug_view");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
+                        .HasColumnName("error_message");
 
                     b.Property<string>("NewValues")
                         .HasColumnType("text")
@@ -218,77 +228,6 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.ToTable("documents", (string)null);
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Logger", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClientAgent")
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)")
-                        .HasColumnName("client_agent");
-
-                    b.Property<string>("ClientIP")
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)")
-                        .HasColumnName("client_ip");
-
-                    b.Property<string>("Exception")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("text")
-                        .HasColumnName("exception");
-
-                    b.Property<string>("Level")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)")
-                        .HasColumnName("level");
-
-                    b.Property<string>("LogEvent")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("text")
-                        .HasColumnName("log_event");
-
-                    b.Property<string>("Message")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("text")
-                        .HasColumnName("message");
-
-                    b.Property<string>("MessageTemplate")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("text")
-                        .HasColumnName("message_template");
-
-                    b.Property<string>("Properties")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("text")
-                        .HasColumnName("properties");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("time_stamp");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)")
-                        .HasColumnName("user_name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_loggers");
-
-                    b.HasIndex("Level")
-                        .HasDatabaseName("ix_loggers_level");
-
-                    b.HasIndex("TimeStamp")
-                        .HasDatabaseName("ix_loggers_time_stamp");
-
-                    b.ToTable("loggers", (string)null);
-                });
-
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.PicklistSet", b =>
                 {
                     b.Property<int>("Id")
@@ -413,6 +352,77 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.ToTable("products", (string)null);
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.SystemLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClientAgent")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("client_agent");
+
+                    b.Property<string>("ClientIP")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("client_ip");
+
+                    b.Property<string>("Exception")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
+                        .HasColumnName("exception");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("level");
+
+                    b.Property<string>("LogEvent")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
+                        .HasColumnName("log_event");
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
+                        .HasColumnName("message");
+
+                    b.Property<string>("MessageTemplate")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
+                        .HasColumnName("message_template");
+
+                    b.Property<string>("Properties")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("text")
+                        .HasColumnName("properties");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("time_stamp");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("user_name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_system_logs");
+
+                    b.HasIndex("Level")
+                        .HasDatabaseName("ix_system_logs_level");
+
+                    b.HasIndex("TimeStamp")
+                        .HasDatabaseName("ix_system_logs_time_stamp");
+
+                    b.ToTable("system_logs", (string)null);
+                });
+
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Tenant", b =>
                 {
                     b.Property<string>("Id")
@@ -491,11 +501,11 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasName("pk_asp_net_roles");
 
                     b.HasIndex("NormalizedName")
-                        .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.HasIndex("TenantId")
-                        .HasDatabaseName("ix_asp_net_roles_tenant_id");
+                    b.HasIndex("TenantId", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_asp_net_roles_tenant_id_name");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -565,11 +575,6 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("created");
 
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)")
-                        .HasColumnName("created_by");
-
                     b.Property<string>("DisplayName")
                         .HasMaxLength(450)
                         .HasColumnType("character varying(450)")
@@ -600,11 +605,6 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_modified");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("character varying(450)")
-                        .HasColumnName("last_modified_by");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean")
@@ -688,12 +688,6 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_asp_net_users");
-
-                    b.HasIndex("CreatedBy")
-                        .HasDatabaseName("ix_asp_net_users_created_by");
-
-                    b.HasIndex("LastModifiedBy")
-                        .HasDatabaseName("ix_asp_net_users_last_modified_by");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -831,6 +825,159 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.LoginAudit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BrowserInfo")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("browser_info");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)")
+                        .HasColumnName("ip_address");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("last_modified");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<DateTime>("LoginTimeUtc")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("login_time_utc");
+
+                    b.Property<string>("Provider")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("provider");
+
+                    b.Property<string>("Region")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("region");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("boolean")
+                        .HasColumnName("success");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("user_name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_login_audits");
+
+                    b.HasIndex("LoginTimeUtc")
+                        .HasDatabaseName("ix_login_audits_login_time_utc");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_login_audits_user_id");
+
+                    b.HasIndex("UserId", "LoginTimeUtc")
+                        .HasDatabaseName("ix_login_audits_user_id_login_time_utc");
+
+                    b.ToTable("login_audits", (string)null);
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.UserLoginRiskSummary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36)
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Advice")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("advice");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("last_modified");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<string>("RiskLevel")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("risk_level");
+
+                    b.Property<int>("RiskScore")
+                        .HasColumnType("integer")
+                        .HasColumnName("risk_score");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("character varying(450)")
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("user_name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_user_login_risk_summaries");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_user_login_risk_summaries_user_id");
+
+                    b.HasIndex("UserName")
+                        .HasDatabaseName("ix_user_login_risk_summaries_user_name");
+
+                    b.ToTable("user_login_risk_summaries", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
                 {
                     b.Property<int>("Id")
@@ -869,26 +1016,26 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Document", b =>
                 {
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Owner")
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_documents_users_created_by");
+                        .HasConstraintName("fk_documents_asp_net_users_created_by");
 
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifier")
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifiedByUser")
                         .WithMany()
                         .HasForeignKey("LastModifiedBy")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_documents_users_last_modified_by");
+                        .HasConstraintName("fk_documents_asp_net_users_last_modified_by");
 
                     b.HasOne("CleanArchitecture.Blazor.Domain.Entities.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId")
                         .HasConstraintName("fk_documents_tenants_tenant_id");
 
-                    b.Navigation("LastModifier");
+                    b.Navigation("CreatedByUser");
 
-                    b.Navigation("Owner");
+                    b.Navigation("LastModifiedByUser");
 
                     b.Navigation("Tenant");
                 });
@@ -917,16 +1064,6 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", b =>
                 {
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("fk_asp_net_users_asp_net_users_created_by");
-
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastModifiedBy")
-                        .HasConstraintName("fk_asp_net_users_asp_net_users_last_modified_by");
-
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Superior")
                         .WithMany()
                         .HasForeignKey("SuperiorId")
@@ -936,10 +1073,6 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .WithMany()
                         .HasForeignKey("TenantId")
                         .HasConstraintName("fk_asp_net_users_tenants_tenant_id");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastModifiedByUser");
 
                     b.Navigation("Superior");
 
@@ -1001,6 +1134,26 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                         .HasConstraintName("fk_asp_net_user_tokens_asp_net_users_user_id");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.LoginAudit", b =>
+                {
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_login_audits_asp_net_users_user_id");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.UserLoginRiskSummary", b =>
+                {
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_user_login_risk_summaries_asp_net_users_user_id");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationRole", b =>

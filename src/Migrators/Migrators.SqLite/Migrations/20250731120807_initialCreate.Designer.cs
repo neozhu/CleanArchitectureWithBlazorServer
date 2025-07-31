@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250703065032_LoginAudit_Id")]
-    partial class LoginAudit_Id
+    [Migration("20250731120807_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.AuditTrail", b =>
                 {
@@ -449,10 +449,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.Property<DateTime?>("Created")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(450)
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("DisplayName")
                         .HasMaxLength(450)
                         .HasColumnType("TEXT");
@@ -475,10 +471,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("LastModified")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
@@ -545,10 +537,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastModifiedBy");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -664,7 +652,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasMaxLength(36)
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("BrowserInfo")
@@ -722,6 +709,61 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.HasIndex("UserId", "LoginTimeUtc");
 
                     b.ToTable("LoginAudits");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.UserLoginRiskSummary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36)
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Advice")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RiskLevel")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RiskScore")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserName");
+
+                    b.ToTable("UserLoginRiskSummaries");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
@@ -798,14 +840,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", b =>
                 {
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "LastModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("LastModifiedBy");
-
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Superior")
                         .WithMany()
                         .HasForeignKey("SuperiorId");
@@ -813,10 +847,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.HasOne("CleanArchitecture.Blazor.Domain.Entities.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("LastModifiedByUser");
 
                     b.Navigation("Superior");
 
@@ -876,6 +906,15 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.LoginAudit", b =>
+                {
+                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.UserLoginRiskSummary", b =>
                 {
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", null)
                         .WithMany()

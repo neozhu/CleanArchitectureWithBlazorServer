@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -46,28 +47,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Loggers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Message = table.Column<string>(type: "TEXT", maxLength: 2147483647, nullable: true),
-                    MessageTemplate = table.Column<string>(type: "TEXT", maxLength: 2147483647, nullable: true),
-                    Level = table.Column<string>(type: "TEXT", maxLength: 450, nullable: false),
-                    TimeStamp = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Exception = table.Column<string>(type: "TEXT", maxLength: 2147483647, nullable: true),
-                    UserName = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    ClientIP = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    ClientAgent = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
-                    Properties = table.Column<string>(type: "TEXT", maxLength: 2147483647, nullable: true),
-                    LogEvent = table.Column<string>(type: "TEXT", maxLength: 2147483647, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Loggers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PicklistSets",
                 columns: table => new
                 {
@@ -107,6 +86,28 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SystemLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Message = table.Column<string>(type: "TEXT", maxLength: 2147483647, nullable: true),
+                    MessageTemplate = table.Column<string>(type: "TEXT", maxLength: 2147483647, nullable: true),
+                    Level = table.Column<string>(type: "TEXT", maxLength: 450, nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Exception = table.Column<string>(type: "TEXT", maxLength: 2147483647, nullable: true),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    ClientIP = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    ClientAgent = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    Properties = table.Column<string>(type: "TEXT", maxLength: 2147483647, nullable: true),
+                    LogEvent = table.Column<string>(type: "TEXT", maxLength: 2147483647, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SystemLogs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -162,9 +163,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     RefreshTokenExpiryTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     SuperiorId = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     TimeZoneId = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     LanguageCode = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -185,16 +184,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_AspNetUsers_CreatedBy",
-                        column: x => x.CreatedBy,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_AspNetUsers_LastModifiedBy",
-                        column: x => x.LastModifiedBy,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AspNetUsers_AspNetUsers_SuperiorId",
                         column: x => x.SuperiorId,
@@ -385,6 +374,64 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "LoginAudits",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    LoginTimeUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 450, nullable: false),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    IpAddress = table.Column<string>(type: "TEXT", maxLength: 45, nullable: true),
+                    BrowserInfo = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
+                    Region = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    Provider = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    Success = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoginAudits", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LoginAudits_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserLoginRiskSummaries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", maxLength: 36, nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 450, nullable: false),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    RiskLevel = table.Column<string>(type: "TEXT", nullable: false),
+                    RiskScore = table.Column<int>(type: "INTEGER", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
+                    Advice = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
+                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true),
+                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 450, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLoginRiskSummaries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserLoginRiskSummaries_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -420,16 +467,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_CreatedBy",
-                table: "AspNetUsers",
-                column: "CreatedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_LastModifiedBy",
-                table: "AspNetUsers",
-                column: "LastModifiedBy");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_SuperiorId",
@@ -468,14 +505,19 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Loggers_Level",
-                table: "Loggers",
-                column: "Level");
+                name: "IX_LoginAudits_LoginTimeUtc",
+                table: "LoginAudits",
+                column: "LoginTimeUtc");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Loggers_TimeStamp",
-                table: "Loggers",
-                column: "TimeStamp");
+                name: "IX_LoginAudits_UserId",
+                table: "LoginAudits",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoginAudits_UserId_LoginTimeUtc",
+                table: "LoginAudits",
+                columns: new[] { "UserId", "LoginTimeUtc" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PicklistSets_Name_Value",
@@ -488,6 +530,26 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 table: "Products",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SystemLogs_Level",
+                table: "SystemLogs",
+                column: "Level");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SystemLogs_TimeStamp",
+                table: "SystemLogs",
+                column: "TimeStamp");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLoginRiskSummaries_UserId",
+                table: "UserLoginRiskSummaries",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLoginRiskSummaries_UserName",
+                table: "UserLoginRiskSummaries",
+                column: "UserName");
         }
 
         /// <inheritdoc />
@@ -521,13 +583,19 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 name: "Documents");
 
             migrationBuilder.DropTable(
-                name: "Loggers");
+                name: "LoginAudits");
 
             migrationBuilder.DropTable(
                 name: "PicklistSets");
 
             migrationBuilder.DropTable(
                 name: "Products");
+
+            migrationBuilder.DropTable(
+                name: "SystemLogs");
+
+            migrationBuilder.DropTable(
+                name: "UserLoginRiskSummaries");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
