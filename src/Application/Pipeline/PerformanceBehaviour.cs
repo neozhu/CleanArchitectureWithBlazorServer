@@ -12,15 +12,15 @@ namespace CleanArchitecture.Blazor.Application.Pipeline;
 public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly ICurrentUserAccessor _currentUserAccessor;
+    private readonly IUserContextAccessor _userContextAccessor;
     private readonly ILogger<PerformanceBehaviour<TRequest, TResponse>> _logger;
 
     public PerformanceBehaviour(
         ILogger<PerformanceBehaviour<TRequest, TResponse>> logger,
-        ICurrentUserAccessor currentUserAccessor)
+        IUserContextAccessor userContextAccessor)
     {
         _logger = logger;
-        _currentUserAccessor = currentUserAccessor;
+        _userContextAccessor = userContextAccessor;
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
         if (elapsedMilliseconds > threshold)
         {
             var requestName = typeof(TRequest).Name;
-            var userName = _currentUserAccessor.SessionInfo?.UserName;
+            var userName = _userContextAccessor.Current?.UserName;
             var phase = isStartupPhase ? "Startup" : "Runtime";
 
             _logger.LogWarning(

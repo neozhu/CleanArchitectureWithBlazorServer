@@ -2,6 +2,7 @@
 using CleanArchitecture.Blazor.Application;
 using CleanArchitecture.Blazor.Application.Common.Constants.Localization;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 using CleanArchitecture.Blazor.Server.UI.Hubs;
 using CleanArchitecture.Blazor.Server.UI.Middlewares;
 using CleanArchitecture.Blazor.Server.UI.Services;
@@ -14,6 +15,7 @@ using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.FileProviders;
 using MudBlazor.Services;
 using QuestPDF;
@@ -87,7 +89,11 @@ public static class DependencyInjection
         services.AddControllers();
 
         services.AddScoped<IApplicationHubWrapper, ServerHubWrapper>()
-            .AddSignalR(options=>options.MaximumReceiveMessageSize=64*1024);
+            .AddSignalR(options =>
+            {
+                options.MaximumReceiveMessageSize = 64 * 1024;
+                options.AddFilter<UserContextHubFilter>();
+            });
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
         services.AddHealthChecks();

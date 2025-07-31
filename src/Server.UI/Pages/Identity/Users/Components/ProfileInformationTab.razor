@@ -3,10 +3,11 @@
 @using CleanArchitecture.Blazor.Domain.Common.Enums
 @using CleanArchitecture.Blazor.Application.Common.Constants
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @inject IStringLocalizer<CleanArchitecture.Blazor.Server.UI.Pages.Identity.Users.Profile> Localizer
 @inject IUploadService UploadService
 @inject UserManager<ApplicationUser> UserManager
-@inject UserProfileStateService UserProfileStateService
+@inject IUserProfileState UserProfileState
 @inject IOnlineUserTracker OnlineUserTracker
 
 @if (ProfileModel != null)
@@ -150,22 +151,22 @@ else
     protected override Task OnInitializedAsync()
     {
         InitializeProfileModel();
-        // Subscribe to UserProfileStateService changes
-        UserProfileStateService.OnChange += OnUserProfileChanged;
+        // Subscribe to UserProfileState changes
+        UserProfileState.Changed += OnUserProfileChanged;
         return Task.CompletedTask;
     }
 
     public void Dispose()
     {
-        // Unsubscribe from UserProfileStateService changes
-        UserProfileStateService.OnChange -= OnUserProfileChanged;
+        // Unsubscribe from UserProfileState changes
+        UserProfileState.Changed -= OnUserProfileChanged;
     }
 
-    private async Task OnUserProfileChanged()
+    private void OnUserProfileChanged(object? sender, UserProfile userProfile)
     {
         // Re-initialize the profile model when the service state changes
         InitializeProfileModel();
-        await InvokeAsync(StateHasChanged);
+        InvokeAsync(StateHasChanged);
     }
 
     private void InitializeProfileModel()
@@ -218,7 +219,15 @@ else
                     user.LanguageCode = ProfileModel.LanguageCode;
                     user.ProfilePictureDataUrl = ProfileModel.ProfilePictureDataUrl;
                     await UserManager.UpdateAsync(user);
-                    UserProfileStateService.UpdateUserProfile(user.UserName!, user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber, user.TimeZoneId, user.LanguageCode);
+                    
+                    // Update the user profile state with new values
+                    UserProfileState.UpdateLocal(
+                        profilePictureDataUrl: user.ProfilePictureDataUrl,
+                        displayName: user.DisplayName,
+                        phoneNumber: user.PhoneNumber,
+                        timeZoneId: user.TimeZoneId,
+                        languageCode: user.LanguageCode);
+                    
                     await OnlineUserTracker.Update(user.Id, user.UserName ?? "", user.DisplayName ?? "", user.ProfilePictureDataUrl ?? "");
                     Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
                 }
@@ -249,7 +258,10 @@ else
         user.ProfilePictureDataUrl = ProfileModel.ProfilePictureDataUrl;
         await UserManager.UpdateAsync(user);
         Snackbar.Add(Localizer["The avatar has been updated"], Severity.Info);
-        UserProfileStateService.UpdateUserProfile(user.UserName!, user.ProfilePictureDataUrl, user.DisplayName, user.PhoneNumber, user.TimeZoneId, user.LanguageCode);
+        
+        // Update the user profile state with new profile picture
+        UserProfileState.UpdateLocal(profilePictureDataUrl: user.ProfilePictureDataUrl);
+        
         await OnlineUserTracker.Update(user.Id, user.UserName ?? "", user.DisplayName ?? "", user.ProfilePictureDataUrl);
     }
 }

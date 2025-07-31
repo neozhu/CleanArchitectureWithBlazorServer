@@ -7,6 +7,7 @@ using ActualLab.Fusion.Blazor;
 using ActualLab.Fusion.Blazor.Authentication;
 using ActualLab.Fusion.Extensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Features.Fusion;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
@@ -24,6 +25,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 public static class DependencyInjection
@@ -276,6 +278,7 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IIdentityService, IdentityService>()
+            .AddScoped<IUserProfileState, UserProfileState>()
             .AddAuthorizationCore(options =>
             {
                 options.AddPolicy("CanPurge", policy => policy.RequireUserName(UserName.Administrator));
@@ -352,12 +355,16 @@ public static class DependencyInjection
     #region Session Management
     private static IServiceCollection AddSessionManagement(this IServiceCollection services)
     {
-        services.AddScoped<ICurrentUserContext, CurrentUserContext>();
-        services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
-        services.AddScoped<ICurrentUserContextSetter, CurrentUserContextSetter>();
+        // User context management
+        services.AddSingleton<IHubFilter, UserContextHubFilter>();
+        services.AddSingleton<IUserContextAccessor, UserContextAccessor>();
+        services.AddSingleton<IUserContextLoader, UserContextLoader>();
+        
+        // Circuit and state management
         services.AddScoped<CircuitHandler, UserSessionCircuitHandler>();
         services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
         services.AddScoped<IPermissionService, PermissionService>();
+
         return services;
     }
     #endregion

@@ -1,6 +1,8 @@
 ﻿@using CleanArchitecture.Blazor.Application.Common.Security
+@using CleanArchitecture.Blazor.Application.Features.Identity.DTOs
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @inject IStringLocalizer<UserInfoCard> L
-@inject UserProfileStateService UserProfileStateService
+@inject IUserProfileState UserProfileState
 @implements IDisposable
 
 <div class="pa-4">
@@ -87,19 +89,19 @@
 {
     [Parameter] public EventCallback<MouseEventArgs> OnSettingClick { get; set; }
     
-    private UserProfile UserProfile => UserProfileStateService.UserProfile;
+    private UserProfile UserProfile => UserProfileState.Value;
 
     protected override void OnInitialized()
     {
-        UserProfileStateService.OnChange += UserProfileStateService_OnChange;
+        UserProfileState.Changed += UserProfileState_OnChange;
     }
 
     public void Dispose()
     {
-        UserProfileStateService.OnChange -= UserProfileStateService_OnChange;
+        UserProfileState.Changed -= UserProfileState_OnChange;
     }
 
-    private async Task UserProfileStateService_OnChange()
+    private async void UserProfileState_OnChange(object? sender, UserProfile userProfile)
     {
         await InvokeAsync(StateHasChanged);
     }

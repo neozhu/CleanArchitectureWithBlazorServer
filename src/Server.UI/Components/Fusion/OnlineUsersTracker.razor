@@ -5,9 +5,9 @@
 @using CleanArchitecture.Blazor.Application.Features.Fusion
 
 
-@inherits ComputedStateComponent<List<SessionInfo>>
+@inherits ComputedStateComponent<List<UserContext>>
 @inject IOnlineUserTracker OnlineUserTracker
-@inject ICurrentUserAccessor SessionInfoAccessor
+@inject IUserContextAccessor UserContextAccessor
 @inject IJSRuntime JS
 @if (State.HasValue && State.LastNonErrorValue.Any())
 {
@@ -41,22 +41,22 @@
     
     private string sessionId = Guid.NewGuid().ToString();
     private string? currentUserId;
-    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
     private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(5);
     protected override async Task OnInitializedAsync()
     {
-        if (SessionInfoAccessor.SessionInfo!=null)
+        var currentUser = UserContextAccessor.Current;
+        if (currentUser != null)
         {
-            currentUserId = SessionInfoAccessor.SessionInfo?.UserId;
-            await OnlineUserTracker.Initial(SessionInfoAccessor.SessionInfo);
+            currentUserId = currentUser.UserId;
+            await OnlineUserTracker.Initialize(currentUser);
         }
     }
 
-    protected override ComputedState<List<SessionInfo>>.Options GetStateOptions()
+    protected override ComputedState<List<UserContext>>.Options GetStateOptions()
      => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
 
-    protected override Task<List<SessionInfo>> ComputeState(CancellationToken cancellationToken)
+    protected override Task<List<UserContext>> ComputeState(CancellationToken cancellationToken)
     {
         return OnlineUserTracker.GetOnlineUsers(cancellationToken);
     }

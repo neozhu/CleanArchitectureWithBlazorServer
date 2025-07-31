@@ -29,7 +29,6 @@ public static class DependencyInjection
         });
       
 
-        services.AddScoped<UserProfileStateService>();
         return services;
     }
     
