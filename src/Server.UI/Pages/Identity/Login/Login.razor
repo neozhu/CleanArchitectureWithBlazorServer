@@ -85,7 +85,7 @@
     private bool _passwordVisible = false;
     private InputType _passwordInputType = InputType.Password;
     private string _passwordIcon = Icons.Material.Filled.VisibilityOff;
-
+    private IJSObjectReference? _auth;
     private InputModel Input { get; set; } = new()
     {
         UserName = "administrator",
@@ -107,7 +107,11 @@
         _signInManager = ScopedServices.GetRequiredService<SignInManager<ApplicationUser>>();
         return Task.CompletedTask;
     }
-
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            _auth = await JS.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
+    }
 
     public async Task OnSubmit()
     {
@@ -129,12 +133,13 @@
         if (result)
         {
 
-            await JS.InvokeVoidAsync("auth.postLogin", new
+            if (_auth is null) return;
+            await _auth.InvokeVoidAsync("postLogin", new
             {
-            userName   = Input.UserName,
-            password   = Input.Password,
-            rememberMe = Input.RememberMe,
-            returnUrl  = ReturnUrl
+                userName = Input.UserName,
+                password = Input.Password,
+                rememberMe = Input.RememberMe,
+                returnUrl = ReturnUrl
             });
         }
         else

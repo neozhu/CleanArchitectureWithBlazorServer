@@ -26,6 +26,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using ZiggyCreatures.Caching.Fusion;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Http;
 
 namespace CleanArchitecture.Blazor.Infrastructure;
 public static class DependencyInjection
@@ -322,6 +323,8 @@ public static class DependencyInjection
             options.SlidingExpiration = true;
             options.SessionStore = new MemoryCacheTicketStore();
             options.LoginPath = LOGIN_PATH;
+            options.Cookie.SameSite = SameSiteMode.Strict;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         });
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
