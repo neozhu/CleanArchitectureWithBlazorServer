@@ -141,14 +141,14 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
         var accountGroup = endpoints.MapGroup("/pages/authentication");
 
         // Configure login endpoint with credential-based authentication
-        accountGroup.MapGet("login", async (
+        accountGroup.MapPost("login", async (
             HttpContext context,
             [FromServices] SignInManager<ApplicationUser> signInManager,
             [FromServices] UserManager<ApplicationUser> userManager,
-            [FromQuery] string? userName=null,
-            [FromQuery] string? password=null,
-            [FromQuery] bool rememberMe = false,
-            [FromQuery] string? returnUrl = null) =>
+            [FromForm] string? userName=null,
+            [FromForm] string? password=null,
+            [FromForm] bool rememberMe = false,
+            [FromForm] string? returnUrl = null) =>
         {
             try
             {

@@ -128,14 +128,14 @@
         var result = await _userManager.CheckPasswordAsync(user, Input.Password);
         if (result)
         {
-            // Direct redirect to GET login endpoint
-            var loginUrl = $"/pages/authentication/login?userName={Uri.EscapeDataString(Input.UserName)}&password={Uri.EscapeDataString(Input.Password)}&rememberMe={Input.RememberMe}";
-            if (!string.IsNullOrEmpty(ReturnUrl))
-            {
-                loginUrl += $"&returnUrl={Uri.EscapeDataString(ReturnUrl)}";
-            }
 
-            Navigation.NavigateTo(loginUrl, forceLoad: true);
+            await JS.InvokeVoidAsync("auth.postLogin", new
+            {
+            userName   = Input.UserName,
+            password   = Input.Password,
+            rememberMe = Input.RememberMe,
+            returnUrl  = ReturnUrl
+            });
         }
         else
         {

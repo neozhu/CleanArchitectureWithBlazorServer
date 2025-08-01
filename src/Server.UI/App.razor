@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Antiforgery
+@inject IHttpContextAccessor accessor
+@inject IAntiforgery Antiforgery
+@{
+    // 在首次加载时把 Token 写进 Cookie，并拿到 RequestToken
+    var tokens = Antiforgery.GetAndStoreTokens(accessor.HttpContext);
+}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,6 +17,7 @@
     <link href="@Assets["css/app.css"]" rel="stylesheet"/>
     <HeadOutlet @rendermode="RenderModeForPage"/>
     <ImportMap />
+    <meta name="xsrf-token" content="@tokens.RequestToken" />
     <!-- SEO Meta Tags -->
     <meta name="description" content="Blazor Server project template with Clean Architecture principles. A demo showcasing fast and easy web app creation using .NET Blazor." />
     <meta name="keywords" content="Blazor Server Project Template, Clean Architecture, Dashboard, .NET, Web Applications" />
@@ -36,7 +44,7 @@
     <script src="_framework/blazor.web.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-   
+    <script src="/js/auth.js" asp-append-version="true"></script>
 </body>
 
 </html>
