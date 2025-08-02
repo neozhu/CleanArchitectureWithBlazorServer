@@ -21,6 +21,11 @@ public static class LocalizationConstants
         },
         new()
         {
+            Code = "es-ES",
+            DisplayName = "Español (España)"
+        },
+        new()
+        {
             Code = "de-DE",
             DisplayName = "Deutsch (Deutschland)"
         },
