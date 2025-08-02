@@ -9,7 +9,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="14.0.0" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.10" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
         <PackageReference Include="Ardalis.Specification" Version="9.2.0" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.2.0" />
         <PackageReference Include="ClosedXML" Version="0.105.0" />
