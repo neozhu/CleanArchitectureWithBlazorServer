@@ -24,12 +24,23 @@
     protected override async Task OnInitializedAsync()
     {
 
-        AuthenticationState state = await AuthState;
+        var state = await AuthState;
         _canViewOnlineStatus = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ViewOnlineStatus)).Succeeded;
         Client.LoginEvent += _client_Login;
         Client.LogoutEvent += _client_Logout;
-        await Client.StartAsync();
 
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var state = await AuthState;
+            if (state.User.Identity?.IsAuthenticated ?? false)
+            {
+                await Client.StartAsync();
+            }
+        }
     }
     private void _client_Login(object? sender, UserStateChangeEventArgs args)
     {
