@@ -9,7 +9,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="14.0.0" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.10" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
         <PackageReference Include="Ardalis.Specification" Version="9.2.0" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.2.0" />
         <PackageReference Include="ClosedXML" Version="0.105.0" />
@@ -18,14 +18,14 @@
         <PackageReference Include="jcamp.FluentEmail.Razor" Version="3.8.0" />
         <PackageReference Include="FluentValidation" Version="12.0.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.7" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.8" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Hangfire.Core" Version="1.8.20" />
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.3.0" />
-           <PackageReference Include="ActualLab.Fusion" Version="10.2.45" />
-        <PackageReference Include="ActualLab.Fusion.Blazor" Version="10.2.45" />
-        <PackageReference Include="ActualLab.Generators" Version="10.2.45">
+           <PackageReference Include="ActualLab.Fusion" Version="10.2.66" />
+        <PackageReference Include="ActualLab.Fusion.Blazor" Version="10.2.66" />
+        <PackageReference Include="ActualLab.Generators" Version="10.2.66">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

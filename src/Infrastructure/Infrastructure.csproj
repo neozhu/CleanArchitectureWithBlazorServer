@@ -8,10 +8,10 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="ActualLab.Fusion.Blazor.Authentication" Version="10.2.45" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.7" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.7" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.7" />
+        <PackageReference Include="ActualLab.Fusion.Blazor.Authentication" Version="10.2.66" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.8" />
         <PackageReference Include="Minio" Version="6.0.5" />
         <PackageReference Include="QuestPDF" Version="2025.7.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
