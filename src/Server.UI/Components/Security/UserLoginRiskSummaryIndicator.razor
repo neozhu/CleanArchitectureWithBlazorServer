@@ -57,7 +57,17 @@
                                 @L["Security Recommendations"]:
                             </MudText>
                             <MudText Typo="Typo.body2" Class="text--secondary">
-                                @_riskSummary.Advice
+                                <div class="text-sm text-gray-600" style="margin-left:20px">
+                                    @{
+                                        var list = _riskSummary.Advice.Split(';', StringSplitOptions.RemoveEmptyEntries);
+                                    }
+                                    <ul>
+                                        @foreach (var item in list)
+                                        {
+                                            <li>@item</li>
+                                        }
+                                    </ul>
+                                </div>
                             </MudText>
                         </div>
                     }

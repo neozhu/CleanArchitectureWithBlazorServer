@@ -8,7 +8,7 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="ActualLab.Fusion.Blazor.Authentication" Version="10.2.66" />
+       
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="9.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.8" />

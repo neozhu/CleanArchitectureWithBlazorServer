@@ -14,6 +14,7 @@ public class SecurityAnalysisResult
     public SecurityRiskLevel RiskLevel { get; set; }
     public List<string> RiskFactors { get; set; } = new();
     public List<string> SecurityAdvice { get; set; } = new();
+    public HashSet<string> TriggeredRules { get; set; } = new();
     
     /// <summary>
     /// Detailed breakdown of risk scores by category

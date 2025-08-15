@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="AccountBruteForceFactor" xml:space="preserve"><value>Brute-Force-Angriff auf Konto erkannt: {0} fehlgeschlagene Anmeldeversuche innerhalb von {1} Minuten</value></data>
+  <data name="IpBruteForceFactor" xml:space="preserve"><value>IP-basierter Brute-Force-Angriff erkannt: {0} fehlgeschlagene Versuche von IP {1} gegen {2} verschiedene Konten</value></data>
+  <data name="NewIpFactor" xml:space="preserve"><value>neue IP-Adresse ({0})</value></data>
+  <data name="NewRegionFactor" xml:space="preserve"><value>neuer geografischer Standort ({0})</value></data>
+  <data name="NewBrowserFactor" xml:space="preserve"><value>neues Gerät/Browser ({0})</value></data>
+  <data name="LoginFromFactors" xml:space="preserve"><value>Anmeldung von {0}</value></data>
+  <data name="UnusualHoursFactor" xml:space="preserve"><value>Anmeldung zu ungewöhnlichen Zeiten ({0} UTC)</value></data>
+  <data name="Advice_Critical_ImmediateAction" xml:space="preserve"><value>SOFORTIGES HANDELN ERFORDERLICH: Sichern Sie Ihr Konto umgehend</value></data>
+  <data name="Advice_Critical_ChangePassword" xml:space="preserve"><value>Ändern Sie Ihr Passwort sofort</value></data>
+  <data name="Advice_Critical_Enable2FA" xml:space="preserve"><value>Aktivieren Sie umgehend die Zwei-Faktor-Authentifizierung</value></data>
+  <data name="Advice_Critical_ReviewDevices" xml:space="preserve"><value>Überprüfen Sie alle Geräte und entziehen Sie den Zugriff</value></data>
+  <data name="Advice_Critical_ContactSecurity" xml:space="preserve"><value>Kontaktieren Sie das Sicherheitsteam, wenn diese Aktivität nicht autorisiert war</value></data>
+  <data name="Advice_High_ReviewActivity" xml:space="preserve"><value>Überprüfen Sie sofort die jüngsten Kontoaktivitäten</value></data>
+  <data name="Advice_High_ChangePasswordConsider" xml:space="preserve"><value>Erwägen Sie, Ihr Passwort zu ändern</value></data>
+  <data name="Advice_High_Enable2FA" xml:space="preserve"><value>Aktivieren Sie die Zwei-Faktor-Authentifizierung, falls noch nicht aktiv</value></data>
+  <data name="Advice_High_MonitorAccount" xml:space="preserve"><value>Überwachen Sie Ihr Konto in den nächsten Tagen genau</value></data>
+  <data name="Advice_Medium_Monitor" xml:space="preserve"><value>Überwachen Sie Ihr Konto auf ungewöhnliche Aktivitäten</value></data>
+  <data name="Advice_Medium_Enable2FAConsider" xml:space="preserve"><value>Erwägen Sie die Aktivierung der Zwei-Faktor-Authentifizierung</value></data>
+  <data name="Advice_Medium_ReviewLoginHistory" xml:space="preserve"><value>Überprüfen Sie Ihre jüngste Anmeldehistorie</value></data>
+  <data name="Advice_Low_Normal" xml:space="preserve"><value>Die Sicherheit Ihres Kontos scheint normal zu sein</value></data>
+  <data name="Advice_Factor_BruteForce_ChangePassword" xml:space="preserve"><value>Ändern Sie Ihr Passwort sofort – Brute-Force-Angriff erkannt</value></data>
+  <data name="Advice_Factor_BruteForce_ReviewDevices" xml:space="preserve"><value>Überprüfen Sie nicht erkannte Geräte und entziehen Sie deren Zugriff</value></data>
+  <data name="Advice_Factor_BruteForce_StrongerPassword" xml:space="preserve"><value>Verwenden Sie ein stärkeres Passwort oder eine Passphrase</value></data>
+  <data name="Advice_Factor_NewLocation_Verify" xml:space="preserve"><value>Bestätigen Sie, dass die Anmeldung von dem neuen Standort durch Sie erfolgt ist</value></data>
+  <data name="Advice_Factor_NewLocation_SecureIfUnrecognized" xml:space="preserve"><value>Falls unbekannt, sichern Sie Ihr Konto und ändern Sie umgehend die Zugangsdaten</value></data>
+  <data name="Advice_Factor_NewDevice_Verify" xml:space="preserve"><value>Bestätigen Sie, dass die Anmeldung von Ihrem Gerät aus erfolgte</value></data>
+  <data name="Advice_Factor_NewDevice_PublicDevice" xml:space="preserve"><value>Bei öffentlichen/Shared-Geräten melden Sie sich vollständig ab</value></data>
+  <data name="Advice_Factor_UnusualHours_Secure" xml:space="preserve"><value>Wenn Sie sich nicht zu ungewöhnlichen Zeiten angemeldet haben, sichern Sie Ihr Konto umgehend</value></data>
+</root>
+

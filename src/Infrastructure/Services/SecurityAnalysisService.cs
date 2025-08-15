@@ -6,6 +6,7 @@ using CleanArchitecture.Blazor.Domain.Enums;
 using CleanArchitecture.Blazor.Domain.Identity;
 using System.Collections.Concurrent;
 using ZiggyCreatures.Caching.Fusion;
+using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
@@ -16,6 +17,7 @@ public class SecurityAnalysisService : ISecurityAnalysisService
     private readonly IFusionCache _fusionCache;
     private readonly SecurityAnalysisOptions _options;
     private readonly IApplicationDbContextFactory _dbContextFactory;
+    private readonly IStringLocalizer<SecurityAnalysisService> _localizer;
     
     // Cache for IP-based analysis to reduce database queries
     private static readonly ConcurrentDictionary<string, DateTime> _lastIpAnalysis = new();
@@ -24,12 +26,14 @@ public class SecurityAnalysisService : ISecurityAnalysisService
         ILogger<SecurityAnalysisService> logger,
         IFusionCache fusionCache,
         IOptions<SecurityAnalysisOptions> options,
-        IApplicationDbContextFactory dbContextFactory)
+        IApplicationDbContextFactory dbContextFactory,
+        IStringLocalizer<SecurityAnalysisService> localizer)
     {
         _logger = logger;
         _fusionCache = fusionCache;
         _options = options.Value;
         _dbContextFactory = dbContextFactory;
+        _localizer = localizer;
     }
 
     public async Task AnalyzeUserSecurityAsync(LoginAudit loginAudit, CancellationToken cancellationToken = default)
@@ -83,6 +87,7 @@ public class SecurityAnalysisService : ISecurityAnalysisService
         analysisResult.RiskFactors = ruleResults.SelectMany(r => r.Factors).ToList();
         analysisResult.RiskScoreBreakdown = ruleResults.ToDictionary(r => r.RuleName, r => r.Score);
         analysisResult.RiskLevel = DetermineRiskLevel(analysisResult.RiskScore);
+        analysisResult.TriggeredRules = ruleResults.Where(r => r.IsTriggered).Select(r => r.RuleName).ToHashSet();
         
         GenerateSecurityAdvice(analysisResult);
 
@@ -121,7 +126,7 @@ public class SecurityAnalysisService : ISecurityAnalysisService
         if (userFailuresInWindow >= _options.AccountBruteForceThreshold)
         {
             result.Score += _options.AccountBruteForceScore;
-            result.Factors.Add($"Account brute force detected: {userFailuresInWindow} failed login attempts within {_options.BruteForceWindowMinutes} minutes");
+            result.Factors.Add(_localizer["AccountBruteForceFactor", userFailuresInWindow, _options.BruteForceWindowMinutes]);
         }
 
         // Analyze IP-level brute force (with caching to reduce database load)
@@ -174,7 +179,7 @@ public class SecurityAnalysisService : ISecurityAnalysisService
             distinctUsersTargeted >= _options.IpBruteForceAccountThreshold)
         {
             result.Score = _options.IpBruteForceScore;
-            result.Factors.Add($"IP-based brute force detected: {totalIpFailures} failed attempts from IP {currentLogin.IpAddress} targeting {distinctUsersTargeted} different accounts");
+            result.Factors.Add(_localizer["IpBruteForceFactor", totalIpFailures, currentLogin.IpAddress ?? string.Empty, distinctUsersTargeted]);
         }
 
         return result;
@@ -208,18 +213,18 @@ public class SecurityAnalysisService : ISecurityAnalysisService
 
         // Evaluate novelty factors
         if (!hasSeenIpBefore && !string.IsNullOrEmpty(currentLogin.IpAddress))
-            newFactors.Add($"new IP address ({currentLogin.IpAddress})");
+            newFactors.Add(_localizer["NewIpFactor", currentLogin.IpAddress]);
         
         if (!hasSeenRegionBefore && !string.IsNullOrEmpty(currentLogin.Region))
-            newFactors.Add($"new geographic location ({currentLogin.Region})");
+            newFactors.Add(_localizer["NewRegionFactor", currentLogin.Region]);
         
         if (!hasSeenBrowserBefore && !string.IsNullOrEmpty(currentLogin.BrowserInfo))
-            newFactors.Add($"new device/browser ({currentLogin.BrowserInfo})");
+            newFactors.Add(_localizer["NewBrowserFactor", currentLogin.BrowserInfo]);
 
         if (newFactors.Any())
         {
             result.Score = _options.NewDeviceLocationScore;
-            result.Factors.Add($"Login from {string.Join(", ", newFactors)}");
+            result.Factors.Add(_localizer["LoginFromFactors", string.Join(", ", newFactors)]);
         }
 
         return result;
@@ -241,7 +246,7 @@ public class SecurityAnalysisService : ISecurityAnalysisService
         if (isUnusualTime)
         {
             result.Score = _options.UnusualTimeScore;
-            result.Factors.Add($"Login during unusual hours ({currentLogin.LoginTimeUtc:HH:mm} UTC)");
+            result.Factors.Add(_localizer["UnusualHoursFactor", currentLogin.LoginTimeUtc.ToString("HH:mm")] );
         }
 
         return result;
@@ -271,71 +276,70 @@ public class SecurityAnalysisService : ISecurityAnalysisService
             case SecurityRiskLevel.Critical:
                 securityAdvice.AddRange(new[]
                 {
-                    "IMMEDIATE ACTION REQUIRED: Secure your account immediately",
-                    "Change your password right now",
-                    "Enable two-factor authentication immediately",
-                    "Review and revoke access for all devices",
-                    "Contact security team if this activity was not authorized"
+                    _localizer["Advice_Critical_ImmediateAction"].Value,
+                    _localizer["Advice_Critical_ChangePassword"].Value,
+                    _localizer["Advice_Critical_Enable2FA"].Value,
+                    _localizer["Advice_Critical_ReviewDevices"].Value,
+                    _localizer["Advice_Critical_ContactSecurity"].Value,
                 });
                 break;
                 
             case SecurityRiskLevel.High:
                 securityAdvice.AddRange(new[]
                 {
-                    "Immediately review recent account activity",
-                    "Consider changing your password",
-                    "Enable two-factor authentication if not already active",
-                    "Monitor your account closely for the next few days"
+                    _localizer["Advice_High_ReviewActivity"].Value,
+                    _localizer["Advice_High_ChangePasswordConsider"].Value,
+                    _localizer["Advice_High_Enable2FA"].Value,
+                    _localizer["Advice_High_MonitorAccount"].Value,
                 });
                 break;
                 
             case SecurityRiskLevel.Medium:
                 securityAdvice.AddRange(new[]
                 {
-                    "Monitor your account for unusual activity",
-                    "Consider enabling two-factor authentication",
-                    "Review your recent login history"
+                    _localizer["Advice_Medium_Monitor"].Value,
+                    _localizer["Advice_Medium_Enable2FAConsider"].Value,
+                    _localizer["Advice_Medium_ReviewLoginHistory"].Value,
                 });
                 break;
                 
             case SecurityRiskLevel.Low:
-                securityAdvice.Add("Your account security appears normal");
+                securityAdvice.Add(_localizer["Advice_Low_Normal"].Value);
                 break;
         }
 
         // Specific advice based on risk factors
-        if (riskFactors.Any(rf => rf.Contains("brute force", StringComparison.OrdinalIgnoreCase)))
+        if (analysisResult.TriggeredRules.Contains("ConcentratedFailures") || analysisResult.TriggeredRules.Contains("IpBruteForce"))
         {
             securityAdvice.AddRange(new[]
             {
-                "Change your password immediately - brute force attack detected",
-                "Review and revoke access for any unrecognized devices",
-                "Consider using a more complex password or passphrase"
+                _localizer["Advice_Factor_BruteForce_ChangePassword"].Value,
+                _localizer["Advice_Factor_BruteForce_ReviewDevices"].Value,
+                _localizer["Advice_Factor_BruteForce_StrongerPassword"].Value,
             });
         }
 
-        if (riskFactors.Any(rf => rf.Contains("new IP address", StringComparison.OrdinalIgnoreCase) || 
-                                  rf.Contains("new geographic location", StringComparison.OrdinalIgnoreCase)))
+        if (analysisResult.TriggeredRules.Contains("NewDeviceOrLocation"))
         {
             securityAdvice.AddRange(new[]
             {
-                "Verify this login was made by you from the new location",
-                "If unrecognized, secure your account and change credentials immediately"
+                _localizer["Advice_Factor_NewLocation_Verify"].Value,
+                _localizer["Advice_Factor_NewLocation_SecureIfUnrecognized"].Value,
             });
         }
 
-        if (riskFactors.Any(rf => rf.Contains("new device/browser", StringComparison.OrdinalIgnoreCase)))
+        if (analysisResult.TriggeredRules.Contains("NewDeviceOrLocation"))
         {
             securityAdvice.AddRange(new[]
             {
-                "Verify this login was made from your device",
-                "If using a public or shared device, ensure you log out completely"
+                _localizer["Advice_Factor_NewDevice_Verify"].Value,
+                _localizer["Advice_Factor_NewDevice_PublicDevice"].Value,
             });
         }
 
-        if (riskFactors.Any(rf => rf.Contains("unusual hours", StringComparison.OrdinalIgnoreCase)))
+        if (analysisResult.TriggeredRules.Contains("UnusualTimeLogin"))
         {
-            securityAdvice.Add("If this wasn't you logging in during unusual hours, secure your account immediately");
+            securityAdvice.Add(_localizer["Advice_Factor_UnusualHours_Secure"].Value);
         }
     }
 

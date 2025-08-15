@@ -4,10 +4,8 @@
 using System.Reflection;
 using ActualLab.Fusion;
 using ActualLab.Fusion.Blazor;
-using ActualLab.Fusion.Blazor.Authentication;
 using ActualLab.Fusion.Extensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Features.Fusion;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
@@ -376,7 +374,7 @@ public static class DependencyInjection
     private static IServiceCollection AddFusionServices(this IServiceCollection services)
     {
         var fusion = services.AddFusion();
-        fusion.AddBlazor().AddAuthentication();
+        fusion.AddBlazor();
         fusion.AddFusionTime();
         fusion.AddService<IUserSessionTracker, UserSessionTracker>();
         fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
