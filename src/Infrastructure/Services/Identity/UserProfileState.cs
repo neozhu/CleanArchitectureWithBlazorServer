@@ -228,6 +228,46 @@ public class UserProfileState : IUserProfileState, IDisposable
             RefreshInterval);
     }
 
+    /// <summary>
+    /// Updates the user's language code in the database and refreshes local state.
+    /// </summary>
+    public async Task SetLanguageAsync(string languageCode, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(languageCode) || string.IsNullOrWhiteSpace(_currentUserId))
+            return;
+
+        await _semaphore.WaitAsync(cancellationToken);
+        try
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            var user = await userManager.FindByIdAsync(_currentUserId);
+            if (user is null)
+                return;
+
+            user.LanguageCode = languageCode;
+            var result = await userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException($"Failed to update language. Errors: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            }
+
+            // Update local state and cache
+            UpdateLocal(languageCode: languageCode);
+            ClearCacheInternal(_currentUserId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to set language for {UserId}", _currentUserId);
+            throw;
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
     public void Dispose()
     {
         _semaphore?.Dispose();

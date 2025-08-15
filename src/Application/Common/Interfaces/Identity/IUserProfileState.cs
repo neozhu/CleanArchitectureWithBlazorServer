@@ -1,4 +1,4 @@
-namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
 /// <summary>
 /// Interface for managing user profile state with immutable snapshots and precise notifications.
@@ -37,6 +37,14 @@ public interface IUserProfileState
     /// </summary>
     /// <param name="userProfile">The new user profile to set.</param>
     void Set(UserProfile userProfile);
+
+    /// <summary>
+    /// Updates the user's language code and persists it to the database.
+    /// Also updates the local state and notifies subscribers.
+    /// </summary>
+    /// <param name="languageCode">The BCP-47 language tag (e.g., "en-US").</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    Task SetLanguageAsync(string languageCode, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Updates specific fields locally without database access.
