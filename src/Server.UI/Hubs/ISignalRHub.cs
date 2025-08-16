@@ -13,4 +13,8 @@ public interface ISignalRHub
     Task SendMessage(string from, string message);
     Task SendPrivateMessage(string from, string to, string message);
     Task SendNotification(string message);
+
+    // Active page-component session signaling
+    Task PageComponentOpened(string pageComponent, string userId, string userName);
+    Task PageComponentClosed(string pageComponent, string userId, string userName);
 }

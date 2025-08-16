@@ -1,15 +1,10 @@
-﻿@using ActualLab.Fusion
-@using ActualLab.Fusion.Blazor
-@using ActualLab.Fusion.UI
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-@using CleanArchitecture.Blazor.Application.Features.Fusion
-@inherits ComputedStateComponent<string[]>
-@inject IUserSessionTracker UserSessionTracker
-@inject IUserContextAccessor UserContextAccessor
+﻿@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @inject IStringLocalizer<ActiveUserSession> L
-@inject  IJSRuntime JS
+@inject IJSRuntime JS
+@inject IUserContextAccessor UserContextAccessor
+@inject CleanArchitecture.Blazor.Server.UI.Hubs.HubClient Client
 
-@if (!string.IsNullOrEmpty(currentUserId) && State.Value.Any())
+@if (!string.IsNullOrEmpty(currentUserId) && _otherUsers.Any())
 {
     <MudAlert Class="mb-2" Severity="MudBlazor.Severity.Error" Variant="Variant.Outlined" Dense="true">@Message</MudAlert>
 }
@@ -17,40 +12,53 @@
 @code {
     [Parameter]
     public string PageComponent { get; set; } = nameof(ActiveUserSession);
-    private string Message => $"{string.Join(", ", State.Value)} {L["has this dialog open"]}";
+    private string Message => $"{string.Join(", ", _otherUsers)} {L["has this dialog open"]}";
     private string? currentUserId;
-    [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
-    private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(1);
-    
+    private string? currentUserName;
+    private readonly HashSet<string> _otherUsers = new(StringComparer.Ordinal);
+
     protected override async Task OnInitializedAsync()
     {
         var currentUser = UserContextAccessor.Current;
         if (currentUser != null)
         {
             currentUserId = currentUser.UserId;
-            await UserSessionTracker.AddUserSession(PageComponent, currentUser);
+            currentUserName = currentUser.UserName;
+        }
+
+        Client.PageComponentOpenedEvent += OnPageComponentOpened;
+        Client.PageComponentClosedEvent += OnPageComponentClosed;
+        await Client.StartAsync();
+        await Client.OpenPageComponentAsync(PageComponent);
+    }
+
+    private void OnPageComponentOpened(object? sender, CleanArchitecture.Blazor.Server.UI.Hubs.PageComponentEventArgs e)
+    {
+        if (!string.Equals(e.PageComponent, PageComponent, StringComparison.Ordinal)) return;
+        if (!string.Equals(e.UserId, currentUserId, StringComparison.Ordinal))
+        {
+            _otherUsers.Add(e.UserName ?? e.UserId);
+            InvokeAsync(StateHasChanged);
         }
     }
 
-    protected override ComputedState<string[]>.Options GetStateOptions()
-     => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
-
-    protected override async Task<string[]> ComputeState(CancellationToken cancellationToken)
+    private void OnPageComponentClosed(object? sender, CleanArchitecture.Blazor.Server.UI.Hubs.PageComponentEventArgs e)
     {
-        var result = await UserSessionTracker.GetUserSessions(PageComponent,cancellationToken);
-        if (result.Any())
+        if (!string.Equals(e.PageComponent, PageComponent, StringComparison.Ordinal)) return;
+        if (!string.Equals(e.UserId, currentUserId, StringComparison.Ordinal))
         {
-            return result.Where(x => x.UserId!=currentUserId).Select(x=>x.UserName??string.Empty).ToArray();
+            _otherUsers.Remove(e.UserName ?? e.UserId);
+            InvokeAsync(StateHasChanged);
         }
-
-        return Array.Empty<string>();
     }
 
-    public override async ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        if (!string.IsNullOrEmpty(currentUserId))
+        Client.PageComponentOpenedEvent -= OnPageComponentOpened;
+        Client.PageComponentClosedEvent -= OnPageComponentClosed;
+        if (!string.IsNullOrEmpty(PageComponent))
         {
-            await UserSessionTracker.RemoveUserSession(PageComponent,currentUserId);
+            await Client.ClosePageComponentAsync(PageComponent);
         }
         GC.Collect();
     }
