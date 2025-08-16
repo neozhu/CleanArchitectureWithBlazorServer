@@ -12,7 +12,7 @@
 @code {
     [Parameter]
     public string PageComponent { get; set; } = nameof(ActiveUserSession);
-    private string Message => $"{string.Join(", ", _otherUsers)} {L["also has this dialog open"]}";
+    private string Message => string.Format(L["has this dialog open"], string.Join(", ", _otherUsers));
     private string? currentUserId;
     private string? currentUserName;
     private readonly HashSet<string> _otherUsers = new(StringComparer.Ordinal);
