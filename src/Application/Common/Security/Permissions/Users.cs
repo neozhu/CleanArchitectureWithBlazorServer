@@ -50,6 +50,9 @@ public static partial class Permissions
         [Description("Allows viewing users' online status")]
         public const string ViewOnlineStatus = "Permissions.Users.ViewOnlineStatus";
 
+        [Description("Suppress broadcasting login notifications to other users")]
+        public const string SuppressLoginNotification = "Permissions.Users.SuppressLoginNotification";
+
         [Description("Allows switching between available tenants")]
         public const string SwitchTenants = "Permissions.Users.SwitchTenants";
 
@@ -73,6 +76,7 @@ public class UsersAccessRights
     public bool ManagePermissions { get; set; }
     public bool Deactivation { get; set; }
     public bool ViewOnlineStatus { get; set; }
+    public bool SuppressLoginNotification { get; set; }
     public bool SwitchTenants { get; set; }
     public bool SwitchToAnyTenant { get; set; }
 } 
