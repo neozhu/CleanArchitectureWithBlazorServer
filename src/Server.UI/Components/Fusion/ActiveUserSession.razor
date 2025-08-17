@@ -3,6 +3,7 @@
 @inject IJSRuntime JS
 @inject IUserContextAccessor UserContextAccessor
 @inject CleanArchitecture.Blazor.Server.UI.Hubs.HubClient Client
+@implements IAsyncDisposable
 
 @if (!string.IsNullOrEmpty(currentUserId) && _otherUsers.Any())
 {

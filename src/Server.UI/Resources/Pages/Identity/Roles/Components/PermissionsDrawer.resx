@@ -411,25 +411,91 @@
   <data name="Purge" xml:space="preserve">
     <value>Purge</value>
   </data>
-  <data name="ManageRoles" xml:space="preserve">
-    <value>Manage Roles</value>
+  <data name="ManageNavigation" xml:space="preserve">
+    <value>Manage Navigation</value>
   </data>
-  <data name="RestPassword" xml:space="preserve">
-    <value>Rest Password</value>
+  <data name="Allows managing role claims" xml:space="preserve">
+    <value>Allows managing role claims</value>
   </data>
-  <data name="SendRestPasswordMail" xml:space="preserve">
-    <value>Send Rest Password Mail</value>
+  <data name="Allows managing users in role" xml:space="preserve">
+    <value>Allows managing users in role</value>
   </data>
-  <data name="ManagePermissions" xml:space="preserve">
-    <value>Manage Permissions</value>
+  <data name="Allows viewing role permissions" xml:space="preserve">
+    <value>Allows viewing role permissions</value>
+  </data>
+  <data name="Allows viewing role claims" xml:space="preserve">
+    <value>Allows viewing role claims</value>
+  </data>
+  <data name="Allows viewing users in role" xml:space="preserve">
+    <value>Allows viewing users in role</value>
+  </data>
+  <data name="Suppress broadcasting login notifications to other users" xml:space="preserve">
+    <value>Suppress broadcasting login notifications to other users</value>
+  </data>
+  <data name="Allows switching between available tenants" xml:space="preserve">
+    <value>Allows switching between available tenants</value>
+  </data>
+  <data name="Allows switching to any tenant (admin privilege)" xml:space="preserve">
+    <value>Allows switching to any tenant (admin privilege)</value>
+  </data>
+  <data name="Allows viewing dashboard details" xml:space="preserve">
+    <value>Allows viewing dashboard details</value>
+  </data>
+  <data name="Allows modifying existing roles" xml:space="preserve">
+    <value>Allows modifying existing roles</value>
+  </data>
+  <data name="Allows importing role data" xml:space="preserve">
+    <value>Allows importing role data</value>
+  </data>
+  <data name="Allows exporting role data" xml:space="preserve">
+    <value>Allows exporting role data</value>
+  </data>
+  <data name="Allows managing role permissions" xml:space="preserve">
+    <value>Allows managing role permissions</value>
+  </data>
+  <data name="Manage claims in role" xml:space="preserve">
+    <value>Manage claims in role</value>
+  </data>
+  <data name="Manage users in role" xml:space="preserve">
+    <value>Manage users in role</value>
+  </data>
+  <data name="View permissions" xml:space="preserve">
+    <value>View permissions</value>
+  </data>
+  <data name="View claims in role" xml:space="preserve">
+    <value>View claims in role</value>
+  </data>
+  <data name="View users in role" xml:space="preserve">
+    <value>View users in role</value>
+  </data>
+  <data name="Manage roles" xml:space="preserve">
+    <value>Manage roles</value>
+  </data>
+  <data name="Rest password" xml:space="preserve">
+    <value>Rest password</value>
+  </data>
+  <data name="Send rest password mail" xml:space="preserve">
+    <value>Send rest password mail</value>
+  </data>
+  <data name="Manage permissions" xml:space="preserve">
+    <value>Manage permissions</value>
+  </data>
+  <data name="View online status" xml:space="preserve">
+    <value>View online status</value>
+  </data>
+  <data name="Suppress login notification" xml:space="preserve">
+    <value>Suppress login notification</value>
+  </data>
+  <data name="Switch tenants" xml:space="preserve">
+    <value>Switch tenants</value>
+  </data>
+  <data name="Switch to any tenant" xml:space="preserve">
+    <value>Switch to any tenant</value>
+  </data>
+  <data name="View all" xml:space="preserve">
+    <value>View all</value>
   </data>
   <data name="Deactivation" xml:space="preserve">
     <value>Deactivation</value>
-  </data>
-  <data name="ViewOnlineStatus" xml:space="preserve">
-    <value>View Online Status</value>
-  </data>
-  <data name="ManageNavigation" xml:space="preserve">
-    <value>Manage Navigation</value>
   </data>
 </root>

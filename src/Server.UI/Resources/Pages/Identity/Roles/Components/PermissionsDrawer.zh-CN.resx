@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Set Permissions" xml:space="preserve">
+    <value>权限</value>
+  </data>
   <data name="Assign / Unassign all permission set" xml:space="preserve">
     <value>分配/取消分配所有权限集</value>
   </data>
   <data name="Contact Permissions" xml:space="preserve">
     <value>联系人权限</value>
-  </data>
-  <data name="Set Permissions" xml:space="preserve">
-    <value>权限</value>
   </data>
   <data name="Product Permissions" xml:space="preserve">
     <value>产品权限</value>
@@ -381,6 +381,51 @@
   <data name="Set permissions for contact operations" xml:space="preserve">
     <value>设置联系人操作权限</value>
   </data>
+  <data name="Deactivation" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="Manage claims in role" xml:space="preserve">
+    <value>管理角色声明</value>
+  </data>
+  <data name="Manage users in role" xml:space="preserve">
+    <value>管理角色中的用户</value>
+  </data>
+  <data name="View permissions" xml:space="preserve">
+    <value>查看权限</value>
+  </data>
+  <data name="View claims in role" xml:space="preserve">
+    <value>查看角色声明</value>
+  </data>
+  <data name="View users in role" xml:space="preserve">
+    <value>查看角色中的用户</value>
+  </data>
+  <data name="Manage roles" xml:space="preserve">
+    <value>管理角色</value>
+  </data>
+  <data name="Rest password" xml:space="preserve">
+    <value>重置密码</value>
+  </data>
+  <data name="Send rest password mail" xml:space="preserve">
+    <value>发送重置密码邮件</value>
+  </data>
+  <data name="Manage permissions" xml:space="preserve">
+    <value>管理权限</value>
+  </data>
+  <data name="View online status" xml:space="preserve">
+    <value>查看在线状态</value>
+  </data>
+  <data name="Suppress login notification" xml:space="preserve">
+    <value>抑制登录通知</value>
+  </data>
+  <data name="Switch tenants" xml:space="preserve">
+    <value>切换租户</value>
+  </data>
+  <data name="Switch to any tenant" xml:space="preserve">
+    <value>切换到任意租户</value>
+  </data>
+  <data name="View all" xml:space="preserve">
+    <value>查看全部</value>
+  </data>
   <data name="ManageNavigation" xml:space="preserve">
     <value>管理导航</value>
   </data>
@@ -408,28 +453,49 @@
   <data name="Import" xml:space="preserve">
     <value>导入</value>
   </data>
-  <data name="ViewOnlineStatus" xml:space="preserve">
-    <value>查看在线状态</value>
-  </data>
   <data name="Download" xml:space="preserve">
     <value>下载</value>
   </data>
-  <data name="ManageRoles" xml:space="preserve">
-    <value>管理角色</value>
-  </data>
-  <data name="RestPassword" xml:space="preserve">
-    <value>重置密码</value>
-  </data>
-  <data name="SendRestPasswordMail" xml:space="preserve">
-    <value>发送重置密码邮件</value>
-  </data>
-  <data name="ManagePermissions" xml:space="preserve">
-    <value>管理权限</value>
-  </data>
-  <data name="Deactivation" xml:space="preserve">
-    <value>停用</value>
-  </data>
   <data name="Purge" xml:space="preserve">
     <value>清除</value>
+  </data>
+  <data name="Allows managing role claims" xml:space="preserve">
+    <value>允许管理角色声明</value>
+  </data>
+  <data name="Allows managing users in role" xml:space="preserve">
+    <value>允许管理角色中的用户</value>
+  </data>
+  <data name="Allows viewing role permissions" xml:space="preserve">
+    <value>允许查看角色权限</value>
+  </data>
+  <data name="Allows viewing role claims" xml:space="preserve">
+    <value>允许查看角色声明</value>
+  </data>
+  <data name="Allows viewing users in role" xml:space="preserve">
+    <value>允许查看角色中的用户</value>
+  </data>
+  <data name="Suppress broadcasting login notifications to other users" xml:space="preserve">
+    <value>禁止向其他用户广播登录通知</value>
+  </data>
+  <data name="Allows switching between available tenants" xml:space="preserve">
+    <value>允许在可用租户之间切换</value>
+  </data>
+  <data name="Allows switching to any tenant (admin privilege)" xml:space="preserve">
+    <value>允许切换到任意租户（管理员权限）</value>
+  </data>
+  <data name="Allows viewing dashboard details" xml:space="preserve">
+    <value>允许查看仪表板详情</value>
+  </data>
+  <data name="Allows modifying existing roles" xml:space="preserve">
+    <value>允许修改现有角色</value>
+  </data>
+  <data name="Allows importing role data" xml:space="preserve">
+    <value>允许导入角色数据</value>
+  </data>
+  <data name="Allows exporting role data" xml:space="preserve">
+    <value>允许导出角色数据</value>
+  </data>
+  <data name="Allows managing role permissions" xml:space="preserve">
+    <value>允许管理角色权限</value>
   </data>
 </root>
