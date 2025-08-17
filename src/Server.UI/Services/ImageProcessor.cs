@@ -26,11 +26,12 @@ public static class ImageProcessor
         // Load image from stream
         using var image = await Image.LoadAsync(sourceStream);
 
-        // Resize the image, maintaining aspect ratio
+        // Resize with center-crop to exact target size (no distortion)
         image.Mutate(x => x.Resize(new ResizeOptions
         {
             Size = new Size(maxWidth, maxHeight),
-            Mode = ResizeMode.Max // Maintains aspect ratio
+            Mode = ResizeMode.Crop,
+            Position = AnchorPositionMode.Center
         }));
 
         // Create new stream for the resized image
