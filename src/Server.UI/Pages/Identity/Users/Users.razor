@@ -1,8 +1,6 @@
 ﻿@page "/identity/users"
-@using ActualLab.Fusion
-@using CleanArchitecture.Blazor.Application.Features.Fusion
-@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
 
+@using CleanArchitecture.Blazor.Application.Features.Identity.Notifications.UserActivation
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Forgot
 @using CleanArchitecture.Blazor.Server.UI.Pages.Identity.Register
@@ -28,7 +26,6 @@
 @inherits OwningComponentBase
 @implements IDisposable
 
-@inject IOnlineUserTracker OnlineUserTracker
 @inject BlazorDownloadFileService DownloadFileService
 @inject IUserService UserService
 @inject ITenantService TenantService
@@ -456,7 +453,7 @@
             {
                 await UserProfileState.RefreshAsync();
             }
-            await OnlineUserTracker.Update(model.Id, model.UserName, model.DisplayName ?? string.Empty, model.ProfilePictureDataUrl ?? string.Empty);
+       
         }
         else
         {

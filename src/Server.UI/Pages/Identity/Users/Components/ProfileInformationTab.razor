@@ -8,7 +8,7 @@
 @inject IUploadService UploadService
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserProfileState UserProfileState
-@inject IOnlineUserTracker OnlineUserTracker
+
 
 @if (ProfileModel != null)
 {
@@ -228,7 +228,7 @@ else
                         timeZoneId: user.TimeZoneId,
                         languageCode: user.LanguageCode);
                     
-                    await OnlineUserTracker.Update(user.Id, user.UserName ?? "", user.DisplayName ?? "", user.ProfilePictureDataUrl ?? "");
+       
                     Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
                 }
             }
@@ -261,7 +261,5 @@ else
         
         // Update the user profile state with new profile picture
         UserProfileState.UpdateLocal(profilePictureDataUrl: user.ProfilePictureDataUrl);
-        
-        await OnlineUserTracker.Update(user.Id, user.UserName ?? "", user.DisplayName ?? "", user.ProfilePictureDataUrl);
     }
 }

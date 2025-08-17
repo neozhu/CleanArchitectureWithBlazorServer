@@ -1,0 +1,77 @@
+﻿@using CleanArchitecture.Blazor.Server.UI.Hubs
+@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+
+@inject HubClient Client
+@inject IUserContextAccessor UserContextAccessor
+@implements IAsyncDisposable
+
+@if (_onlineUsers.Any())
+{
+    <div class="d-flex flex-row gap-2 my-3 gap-2 my-3">
+        @foreach (var user in _onlineUsers.OrderBy(u => !string.Equals(u.UserId, currentUserId, StringComparison.Ordinal)))
+        {
+            <MudBadge Color="Color.Success" Overlap="false" Dot="true" Bordered="true">
+                @if (string.IsNullOrEmpty(user.ProfilePictureDataUrl))
+                {
+                    <MudAvatar title="@user.UserName">
+                        @user.UserName.First()
+                    </MudAvatar>
+                }
+                else
+                {
+                    <MudAvatar title="@user.UserName">
+                        <MudImage Src="@user.ProfilePictureDataUrl"></MudImage>
+                    </MudAvatar>
+                }
+            </MudBadge>
+        }
+    </div>
+}
+
+@code {
+    private readonly Dictionary<string, CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.UserContext> _usersById = new(StringComparer.Ordinal);
+    private IEnumerable<CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.UserContext> _onlineUsers => _usersById.Values;
+    private string? currentUserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var currentUser = UserContextAccessor.Current;
+        currentUserId = currentUser?.UserId;
+
+        Client.LoginEvent += OnLogin;
+        Client.LogoutEvent += OnLogout;
+
+        await Client.StartAsync();
+        await RefreshSnapshotAsync();
+    }
+
+    private void OnLogin(object? sender, UserStateChangeEventArgs args)
+    {
+        if (string.IsNullOrWhiteSpace(args.UserName)) return;
+        _ = InvokeAsync(RefreshSnapshotAsync);
+    }
+
+    private void OnLogout(object? sender, UserStateChangeEventArgs args)
+    {
+        if (string.IsNullOrWhiteSpace(args.UserName)) return;
+        _ = InvokeAsync(RefreshSnapshotAsync);
+    }
+
+    private async Task RefreshSnapshotAsync()
+    {
+        var snapshot = await Client.GetOnlineUsersAsync();
+        _usersById.Clear();
+        foreach (var u in snapshot)
+        {
+            _usersById[u.UserId] = u;
+        }
+        StateHasChanged();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Client.LoginEvent -= OnLogin;
+        Client.LogoutEvent -= OnLogout;
+        await Task.CompletedTask;
+    }
+}

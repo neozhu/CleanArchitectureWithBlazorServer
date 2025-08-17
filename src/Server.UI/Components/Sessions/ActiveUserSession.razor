@@ -1,0 +1,66 @@
+﻿@using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
+@inject IStringLocalizer<ActiveUserSession> L
+@inject IJSRuntime JS
+@inject IUserContextAccessor UserContextAccessor
+@inject CleanArchitecture.Blazor.Server.UI.Hubs.HubClient Client
+@implements IAsyncDisposable
+
+@if (!string.IsNullOrEmpty(currentUserId) && _otherUsers.Any())
+{
+    <MudAlert Class="mb-2" Severity="MudBlazor.Severity.Error" Variant="Variant.Outlined" Dense="true">@Message</MudAlert>
+}
+
+@code {
+    [Parameter]
+    public string PageComponent { get; set; } = nameof(ActiveUserSession);
+    private string Message => string.Format(L["has this dialog open"], string.Join(", ", _otherUsers));
+    private string? currentUserId;
+    private string? currentUserName;
+    private readonly HashSet<string> _otherUsers = new(StringComparer.Ordinal);
+
+    protected override async Task OnInitializedAsync()
+    {
+        var currentUser = UserContextAccessor.Current;
+        if (currentUser != null)
+        {
+            currentUserId = currentUser.UserId;
+            currentUserName = currentUser.UserName;
+        }
+
+        Client.PageComponentOpenedEvent += OnPageComponentOpened;
+        Client.PageComponentClosedEvent += OnPageComponentClosed;
+        await Client.StartAsync();
+        await Client.OpenPageComponentAsync(PageComponent);
+    }
+
+    private void OnPageComponentOpened(object? sender, CleanArchitecture.Blazor.Server.UI.Hubs.PageComponentEventArgs e)
+    {
+        if (!string.Equals(e.PageComponent, PageComponent, StringComparison.Ordinal)) return;
+        if (!string.Equals(e.UserId, currentUserId, StringComparison.Ordinal))
+        {
+            _otherUsers.Add(e.UserName ?? e.UserId);
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void OnPageComponentClosed(object? sender, CleanArchitecture.Blazor.Server.UI.Hubs.PageComponentEventArgs e)
+    {
+        if (!string.Equals(e.PageComponent, PageComponent, StringComparison.Ordinal)) return;
+        if (!string.Equals(e.UserId, currentUserId, StringComparison.Ordinal))
+        {
+            _otherUsers.Remove(e.UserName ?? e.UserId);
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Client.PageComponentOpenedEvent -= OnPageComponentOpened;
+        Client.PageComponentClosedEvent -= OnPageComponentClosed;
+        if (!string.IsNullOrEmpty(PageComponent))
+        {
+            await Client.ClosePageComponentAsync(PageComponent);
+        }
+        GC.Collect();
+    }
+}

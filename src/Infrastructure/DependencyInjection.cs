@@ -2,11 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Reflection;
-using ActualLab.Fusion;
-using ActualLab.Fusion.Blazor;
-using ActualLab.Fusion.Extensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
-using CleanArchitecture.Blazor.Application.Features.Fusion;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
@@ -56,8 +52,8 @@ public static class DependencyInjection
             .AddBusinessServices(configuration)
             .AddCachingServices()
             .AddNotificationServices(configuration)
-            .AddSessionManagement()
-            .AddFusionServices();
+            .AddSessionManagement();
+    
     }
 
     #region Configuration and Settings
@@ -370,15 +366,5 @@ public static class DependencyInjection
     }
     #endregion
 
-    #region Fusion Services
-    private static IServiceCollection AddFusionServices(this IServiceCollection services)
-    {
-        var fusion = services.AddFusion();
-        fusion.AddBlazor();
-        fusion.AddFusionTime();
-        fusion.AddService<IUserSessionTracker, UserSessionTracker>();
-        fusion.AddService<IOnlineUserTracker, OnlineUserTracker>();
-        return services;
-    }
-    #endregion
+ 
 }
