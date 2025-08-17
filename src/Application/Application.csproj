@@ -23,12 +23,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Hangfire.Core" Version="1.8.20" />
         <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.3.0" />
-           <PackageReference Include="ActualLab.Fusion" Version="10.2.66" />
-        <PackageReference Include="ActualLab.Fusion.Blazor" Version="10.2.66" />
-        <PackageReference Include="ActualLab.Generators" Version="10.2.66">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+     
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Domain\Domain.csproj" />

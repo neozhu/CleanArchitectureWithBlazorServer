@@ -157,6 +157,13 @@ public sealed class HubClient : IAsyncDisposable
     {
         await _hubConnection.SendAsync("NotifyPageComponentClose", pageComponent).ConfigureAwait(false);
     }
+
+    // Snapshot online users (usernames) from hub
+    public async Task<List<CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.UserContext>> GetOnlineUsersAsync(CancellationToken cancellationToken = default)
+    {
+        var users = await _hubConnection.InvokeAsync<List<CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.UserContext>>(nameof(ISignalRHub.GetOnlineUsers), cancellationToken).ConfigureAwait(false);
+        return users ?? new List<CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.UserContext>();
+    }
 }
 
 public class MessageReceivedEventArgs : EventArgs

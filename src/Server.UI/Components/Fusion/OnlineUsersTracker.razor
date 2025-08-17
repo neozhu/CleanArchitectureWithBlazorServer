@@ -1,24 +1,20 @@
-﻿@using ActualLab.Fusion
-@using ActualLab.Fusion.Blazor
-@using ActualLab.Fusion.UI
+﻿@using CleanArchitecture.Blazor.Server.UI.Hubs
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-@using CleanArchitecture.Blazor.Application.Features.Fusion
 
-
-@inherits ComputedStateComponent<List<UserContext>>
-@inject IOnlineUserTracker OnlineUserTracker
+@inject HubClient Client
 @inject IUserContextAccessor UserContextAccessor
-@inject IJSRuntime JS
-@if (State.HasValue && State.LastNonErrorValue.Any())
+@implements IAsyncDisposable
+
+@if (_onlineUsers.Any())
 {
     <div class="d-flex flex-row gap-2 my-3 gap-2 my-3">
-        @foreach (var user in State.LastNonErrorValue.OrderBy(u => u.UserId != currentUserId))
+        @foreach (var user in _onlineUsers.OrderBy(u => !string.Equals(u.UserId, currentUserId, StringComparison.Ordinal)))
         {
             <MudBadge Color="Color.Success" Overlap="false" Dot="true" Bordered="true">
                 @if (string.IsNullOrEmpty(user.ProfilePictureDataUrl))
                 {
                     <MudAvatar title="@user.UserName">
-                        @user?.UserName?.First()
+                        @user.UserName.First()
                     </MudAvatar>
                 }
                 else
@@ -31,41 +27,51 @@
         }
     </div>
 }
-@if (State.Error is not null)
-{
-    <MudAlert Severity="Severity.Error">@State.Error.Message</MudAlert>
-}
-
 
 @code {
-    
-    private string sessionId = Guid.NewGuid().ToString();
+    private readonly Dictionary<string, CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.UserContext> _usersById = new(StringComparer.Ordinal);
+    private IEnumerable<CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.UserContext> _onlineUsers => _usersById.Values;
     private string? currentUserId;
-    [Inject] private UIActionTracker UIActionTracker { get; init; } = null!;
-    private TimeSpan UpdateDelay { get; set; } = TimeSpan.FromSeconds(5);
+
     protected override async Task OnInitializedAsync()
     {
         var currentUser = UserContextAccessor.Current;
-        if (currentUser != null)
+        currentUserId = currentUser?.UserId;
+
+        Client.LoginEvent += OnLogin;
+        Client.LogoutEvent += OnLogout;
+
+        await Client.StartAsync();
+        await RefreshSnapshotAsync();
+    }
+
+    private void OnLogin(object? sender, UserStateChangeEventArgs args)
+    {
+        if (string.IsNullOrWhiteSpace(args.UserName)) return;
+        _ = InvokeAsync(RefreshSnapshotAsync);
+    }
+
+    private void OnLogout(object? sender, UserStateChangeEventArgs args)
+    {
+        if (string.IsNullOrWhiteSpace(args.UserName)) return;
+        _ = InvokeAsync(RefreshSnapshotAsync);
+    }
+
+    private async Task RefreshSnapshotAsync()
+    {
+        var snapshot = await Client.GetOnlineUsersAsync();
+        _usersById.Clear();
+        foreach (var u in snapshot)
         {
-            currentUserId = currentUser.UserId;
-            await OnlineUserTracker.Initialize(currentUser);
+            _usersById[u.UserId] = u;
         }
+        StateHasChanged();
     }
 
-    protected override ComputedState<List<UserContext>>.Options GetStateOptions()
-     => new() { UpdateDelayer = new UpdateDelayer(UIActionTracker, UpdateDelay) };
-
-    protected override Task<List<UserContext>> ComputeState(CancellationToken cancellationToken)
+    public async ValueTask DisposeAsync()
     {
-        return OnlineUserTracker.GetOnlineUsers(cancellationToken);
-    }
-
-    public override async ValueTask DisposeAsync()
-    {
-        if (!string.IsNullOrEmpty(currentUserId)){
-            await OnlineUserTracker.Clear(currentUserId);
-        }
-        GC.Collect();
+        Client.LoginEvent -= OnLogin;
+        Client.LogoutEvent -= OnLogout;
+        await Task.CompletedTask;
     }
 }

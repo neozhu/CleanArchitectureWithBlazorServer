@@ -5,26 +5,38 @@ using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Domain.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Blazor.Server.UI.Hubs;
 
 [Authorize(AuthenticationSchemes = "Identity.Application")]
 public class ServerHub : Hub<ISignalRHub>
 {
-    private static readonly ConcurrentDictionary<string, string> OnlineUsers = new(StringComparer.Ordinal);
+    private sealed record ConnectionUser(string UserId, string UserName);
+    private static readonly ConcurrentDictionary<string, ConnectionUser> OnlineUsers = new(StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<string, ConcurrentDictionary<string, string>> ComponentUsers = new(StringComparer.Ordinal);
+    private readonly IServiceScopeFactory _scopeFactory;
+    public ServerHub(IServiceScopeFactory scopeFactory)
+    {
+        _scopeFactory = scopeFactory;
+    }
     public override async Task OnConnectedAsync()
     {
         var connectionId = Context.ConnectionId;
-        var username =Context.User?.Identity?.Name ?? string.Empty;
+        var username = Context.User?.Identity?.Name ?? string.Empty;
+        var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                     ?? Context.User?.FindFirst("sub")?.Value
+                     ?? username;
         // Notify all clients if this is a new user connecting.
-        if (!OnlineUsers.Any(x => x.Value.Equals(username)))
+        if (!OnlineUsers.Any(x => string.Equals(x.Value.UserId, userId, StringComparison.Ordinal)))
         {
             await Clients.All.Connect(connectionId, username).ConfigureAwait(false);
         }
         if (!OnlineUsers.ContainsKey(connectionId))
         {
-            OnlineUsers.TryAdd(connectionId, username);
+            OnlineUsers.TryAdd(connectionId, new ConnectionUser(userId, username));
         }
         await base.OnConnectedAsync().ConfigureAwait(false); 
     }
@@ -33,11 +45,11 @@ public class ServerHub : Hub<ISignalRHub>
     {
         var connectionId = Context.ConnectionId;
         // Remove the connection and check if it was the last one for this user.
-        if (OnlineUsers.TryRemove(connectionId, out var username))
+        if (OnlineUsers.TryRemove(connectionId, out var connectionUser))
         {
-            if (!OnlineUsers.Any(x => x.Value.Equals(username)))
+            if (!OnlineUsers.Any(x => string.Equals(x.Value.UserId, connectionUser.UserId, StringComparison.Ordinal)))
             {
-                await Clients.All.Disconnect(connectionId, username).ConfigureAwait(false);
+                await Clients.All.Disconnect(connectionId, connectionUser.UserName).ConfigureAwait(false);
             }    
         }
         await base.OnConnectedAsync().ConfigureAwait(false);
@@ -98,5 +110,34 @@ public class ServerHub : Hub<ISignalRHub>
             }
         }
         await Clients.All.PageComponentClosed(pageComponent, userId, username).ConfigureAwait(false);
+    }
+
+    // Client -> Server: returns a snapshot of distinct online users with profile data
+    public async Task<List<UserContext>> GetOnlineUsers()
+    {
+        var distinctUsers = OnlineUsers.Values
+            .GroupBy(v => v.UserId, StringComparer.Ordinal)
+            .Select(g => g.First())
+            .ToList();
+
+        using var scope = _scopeFactory.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+        var result = new List<UserContext>(distinctUsers.Count);
+        foreach (var cu in distinctUsers.OrderBy(u => u.UserName, StringComparer.Ordinal))
+        {
+            var appUser = await userManager.FindByIdAsync(cu.UserId).ConfigureAwait(false);
+            result.Add(new UserContext(
+                UserId: cu.UserId,
+                UserName: cu.UserName,
+                DisplayName: appUser?.DisplayName,
+                TenantId: appUser?.TenantId,
+                Email: appUser?.Email,
+                Roles: null,
+                ProfilePictureDataUrl: appUser?.ProfilePictureDataUrl,
+                SuperiorId: appUser?.SuperiorId
+            ));
+        }
+        return result;
     }
 }
