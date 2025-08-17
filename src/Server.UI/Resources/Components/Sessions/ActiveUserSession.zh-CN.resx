@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="has this dialog open" xml:space="preserve">
-    <value>has this dialog open</value>
+    <value>{0} 也正在打开此对话框</value>
   </data>
 </root>

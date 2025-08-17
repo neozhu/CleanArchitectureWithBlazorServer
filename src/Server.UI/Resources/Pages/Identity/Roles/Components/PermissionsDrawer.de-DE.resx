@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Set Permissions" xml:space="preserve">
+    <value>Berechtigungen</value>
+  </data>
   <data name="Assign / Unassign all permission set" xml:space="preserve">
     <value>Alle Berechtigungssätze zuweisen / aufheben</value>
   </data>
   <data name="Contact Permissions" xml:space="preserve">
     <value>Kontakt-Berechtigungen</value>
-  </data>
-  <data name="Set Permissions" xml:space="preserve">
-    <value>Berechtigungen</value>
   </data>
   <data name="Product Permissions" xml:space="preserve">
     <value>Produkt-Berechtigungen</value>
@@ -381,6 +381,51 @@
   <data name="Set permissions for contact operations" xml:space="preserve">
     <value>Berechtigungen für Kontakt-Operationen festlegen</value>
   </data>
+  <data name="Deactivation" xml:space="preserve">
+    <value>Deaktivierung</value>
+  </data>
+  <data name="Manage claims in role" xml:space="preserve">
+    <value>Ansprüche in Rolle verwalten</value>
+  </data>
+  <data name="Manage users in role" xml:space="preserve">
+    <value>Benutzer in Rolle verwalten</value>
+  </data>
+  <data name="View permissions" xml:space="preserve">
+    <value>Berechtigungen anzeigen</value>
+  </data>
+  <data name="View claims in role" xml:space="preserve">
+    <value>Ansprüche in Rolle anzeigen</value>
+  </data>
+  <data name="View users in role" xml:space="preserve">
+    <value>Benutzer in Rolle anzeigen</value>
+  </data>
+  <data name="Manage roles" xml:space="preserve">
+    <value>Rollen verwalten</value>
+  </data>
+  <data name="Rest password" xml:space="preserve">
+    <value>Rest-Passwort</value>
+  </data>
+  <data name="Send rest password mail" xml:space="preserve">
+    <value>Rest-Passwort-E-Mail senden</value>
+  </data>
+  <data name="Manage permissions" xml:space="preserve">
+    <value>Berechtigungen verwalten</value>
+  </data>
+  <data name="View online status" xml:space="preserve">
+    <value>Online-Status anzeigen</value>
+  </data>
+  <data name="Suppress login notification" xml:space="preserve">
+    <value>Anmeldebenachrichtigung unterdrücken</value>
+  </data>
+  <data name="Switch tenants" xml:space="preserve">
+    <value>Mandanten wechseln</value>
+  </data>
+  <data name="Switch to any tenant" xml:space="preserve">
+    <value>Zu beliebigem Mandanten wechseln</value>
+  </data>
+  <data name="View all" xml:space="preserve">
+    <value>Alle anzeigen</value>
+  </data>
   <data name="ManageNavigation" xml:space="preserve">
     <value>Navigation verwalten</value>
   </data>
@@ -408,28 +453,49 @@
   <data name="Import" xml:space="preserve">
     <value>Importieren</value>
   </data>
-  <data name="ViewOnlineStatus" xml:space="preserve">
-    <value>Online-Status anzeigen</value>
-  </data>
   <data name="Download" xml:space="preserve">
     <value>Herunterladen</value>
   </data>
-  <data name="ManageRoles" xml:space="preserve">
-    <value>Rollen verwalten</value>
-  </data>
-  <data name="RestPassword" xml:space="preserve">
-    <value>Rest-Passwort</value>
-  </data>
-  <data name="SendRestPasswordMail" xml:space="preserve">
-    <value>Rest-Passwort-E-Mail senden</value>
-  </data>
-  <data name="ManagePermissions" xml:space="preserve">
-    <value>Berechtigungen verwalten</value>
-  </data>
-  <data name="Deactivation" xml:space="preserve">
-    <value>Deaktivierung</value>
-  </data>
   <data name="Purge" xml:space="preserve">
-    <value>Löschen</value>
+    <value>Bereinigen</value>
+  </data>
+  <data name="Allows managing role claims" xml:space="preserve">
+    <value>Erlaubt das Verwalten von Rollenansprüchen</value>
+  </data>
+  <data name="Allows managing users in role" xml:space="preserve">
+    <value>Erlaubt das Verwalten von Benutzern in der Rolle</value>
+  </data>
+  <data name="Allows viewing role permissions" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Rollenberechtigungen</value>
+  </data>
+  <data name="Allows viewing role claims" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Rollenansprüchen</value>
+  </data>
+  <data name="Allows viewing users in role" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Benutzern in der Rolle</value>
+  </data>
+  <data name="Suppress broadcasting login notifications to other users" xml:space="preserve">
+    <value>Unterdrückt das Senden von Anmeldebenachrichtigungen an andere Benutzer</value>
+  </data>
+  <data name="Allows switching between available tenants" xml:space="preserve">
+    <value>Erlaubt das Wechseln zwischen verfügbaren Mandanten</value>
+  </data>
+  <data name="Allows switching to any tenant (admin privilege)" xml:space="preserve">
+    <value>Erlaubt das Wechseln zu beliebigen Mandanten (Administratorrecht)</value>
+  </data>
+  <data name="Allows viewing dashboard details" xml:space="preserve">
+    <value>Erlaubt das Anzeigen von Dashboard-Details</value>
+  </data>
+  <data name="Allows modifying existing roles" xml:space="preserve">
+    <value>Erlaubt das Ändern bestehender Rollen</value>
+  </data>
+  <data name="Allows importing role data" xml:space="preserve">
+    <value>Erlaubt das Importieren von Rollendaten</value>
+  </data>
+  <data name="Allows exporting role data" xml:space="preserve">
+    <value>Erlaubt das Exportieren von Rollendaten</value>
+  </data>
+  <data name="Allows managing role permissions" xml:space="preserve">
+    <value>Erlaubt das Verwalten von Rollenberechtigungen</value>
   </data>
 </root>

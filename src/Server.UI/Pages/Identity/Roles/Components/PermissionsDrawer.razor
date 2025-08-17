@@ -18,7 +18,8 @@
                       Adornment="Adornment.End"
                       AdornmentIcon="@Icons.Material.Filled.Search"
                       AdornmentColor="Color.Secondary" />
-    </MudStack>    @if (Permissions != null && Permissions.Any())
+    </MudStack>   
+    @if (Permissions != null && Permissions.Any())
     {
         @foreach (var groupData in _filteredPermissionGroups)
         {

@@ -1,4 +1,6 @@
-﻿namespace CleanArchitecture.Blazor.Server.UI.Hubs;
+﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+
+namespace CleanArchitecture.Blazor.Server.UI.Hubs;
 
 public interface ISignalRHub
 {
@@ -13,4 +15,12 @@ public interface ISignalRHub
     Task SendMessage(string from, string message);
     Task SendPrivateMessage(string from, string to, string message);
     Task SendNotification(string message);
+
+    // Active page-component session signaling
+    Task PageComponentOpened(string pageComponent, string userId, string userName);
+    Task PageComponentClosed(string pageComponent, string userId, string userName);
+
+    // Snapshot method: fetch current online users with profile data
+    // Note: invoked via HubConnection.InvokeAsync from clients
+    Task<List<UserContext>> GetOnlineUsers();
 }
