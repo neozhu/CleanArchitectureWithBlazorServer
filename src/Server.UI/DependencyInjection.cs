@@ -12,6 +12,7 @@ using CleanArchitecture.Blazor.Server.UI.Services.Layout;
 using CleanArchitecture.Blazor.Server.UI.Services.Navigation;
 using CleanArchitecture.Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
+using CleanArchitecture.Blazor.Server.UI.Services.SEO;
 using Hangfire;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Localization;
@@ -94,6 +95,10 @@ public static class DependencyInjection
                 options.MaximumReceiveMessageSize = 64 * 1024;
                 options.AddFilter<UserContextHubFilter>();
             });
+        
+        // Add SEO services
+        services.AddScoped<ISeoService, SeoService>();
+        
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
         services.AddHealthChecks();

@@ -1,0 +1,193 @@
+@using Microsoft.AspNetCore.Components
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public string? Keywords { get; set; }
+    [Parameter] public string? Author { get; set; }
+    [Parameter] public string? ImageUrl { get; set; }
+    [Parameter] public string? ImageAlt { get; set; }
+    [Parameter] public string? Type { get; set; } = "website";
+    [Parameter] public string? Robots { get; set; } = "index, follow";
+    [Parameter] public bool NoIndex { get; set; } = false;
+    [Parameter] public string? CanonicalUrl { get; set; }
+    [Parameter] public string? Locale { get; set; } = "en_US";
+    [Parameter] public string? SiteName { get; set; } = "Clean Architecture With Blazor Server";
+    [Parameter] public Dictionary<string, string>? CustomMeta { get; set; }
+    [Parameter] public bool EnableJsonLd { get; set; } = true;
+    [Parameter] public object? JsonLdData { get; set; }
+
+    private string CurrentUrl => Navigation.Uri;
+    private string BaseUrl => Navigation.BaseUri.TrimEnd('/');
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await UpdatePageMetadata();
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await UpdatePageMetadata();
+    }
+
+    private async Task UpdatePageMetadata()
+    {
+        try
+        {
+            // Update document title
+            if (!string.IsNullOrEmpty(Title))
+            {
+                await JSRuntime.InvokeVoidAsync("eval", $"document.title = '{Title.Replace("'", "\\'")}';");
+            }
+
+            // Update meta description
+            if (!string.IsNullOrEmpty(Description))
+            {
+                await UpdateMetaTag("description", Description);
+            }
+
+            // Update meta keywords
+            if (!string.IsNullOrEmpty(Keywords))
+            {
+                await UpdateMetaTag("keywords", Keywords);
+            }
+
+            // Update robots
+            await UpdateMetaTag("robots", NoIndex ? "noindex, nofollow" : Robots);
+
+            // Update canonical URL
+            var canonical = !string.IsNullOrEmpty(CanonicalUrl) ? CanonicalUrl : CurrentUrl;
+            await UpdateLinkTag("canonical", canonical);
+
+            // Update Open Graph tags
+            await UpdateOpenGraphTags();
+
+            // Update Twitter Card tags
+            await UpdateTwitterCardTags();
+
+            // Update custom meta tags
+            if (CustomMeta != null)
+            {
+                foreach (var meta in CustomMeta)
+                {
+                    await UpdateMetaTag(meta.Key, meta.Value);
+                }
+            }
+
+            // Update JSON-LD structured data
+            if (EnableJsonLd && JsonLdData != null)
+            {
+                await UpdateJsonLd();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't break the page
+            Console.WriteLine($"SEO Component Error: {ex.Message}");
+        }
+    }
+
+    private async Task UpdateMetaTag(string name, string content)
+    {
+        var script = $@"
+            let meta = document.querySelector('meta[name=""{name}""]');
+            if (!meta) {{
+                meta = document.createElement('meta');
+                meta.name = '{name}';
+                document.head.appendChild(meta);
+            }}
+            meta.content = '{content.Replace("'", "\\'")}';
+        ";
+        await JSRuntime.InvokeVoidAsync("eval", script);
+    }
+
+    private async Task UpdateMetaProperty(string property, string content)
+    {
+        var script = $@"
+            let meta = document.querySelector('meta[property=""{property}""]');
+            if (!meta) {{
+                meta = document.createElement('meta');
+                meta.setAttribute('property', '{property}');
+                document.head.appendChild(meta);
+            }}
+            meta.content = '{content.Replace("'", "\\'")}';
+        ";
+        await JSRuntime.InvokeVoidAsync("eval", script);
+    }
+
+    private async Task UpdateLinkTag(string rel, string href)
+    {
+        var script = $@"
+            let link = document.querySelector('link[rel=""{rel}""]');
+            if (!link) {{
+                link = document.createElement('link');
+                link.rel = '{rel}';
+                document.head.appendChild(link);
+            }}
+            link.href = '{href}';
+        ";
+        await JSRuntime.InvokeVoidAsync("eval", script);
+    }
+
+    private async Task UpdateOpenGraphTags()
+    {
+        await UpdateMetaProperty("og:title", Title ?? "Clean Architecture With Blazor Server");
+        await UpdateMetaProperty("og:description", Description ?? "Blazor Server project template with Clean Architecture principles");
+        await UpdateMetaProperty("og:type", Type ?? "website");
+        await UpdateMetaProperty("og:url", CurrentUrl);
+        await UpdateMetaProperty("og:site_name", SiteName ?? "Clean Architecture With Blazor Server");
+        await UpdateMetaProperty("og:locale", Locale ?? "en_US");
+        
+        if (!string.IsNullOrEmpty(ImageUrl))
+        {
+            var fullImageUrl = ImageUrl.StartsWith("http") ? ImageUrl : $"{BaseUrl}/{ImageUrl.TrimStart('/')}";
+            await UpdateMetaProperty("og:image", fullImageUrl);
+            if (!string.IsNullOrEmpty(ImageAlt))
+            {
+                await UpdateMetaProperty("og:image:alt", ImageAlt);
+            }
+        }
+    }
+
+    private async Task UpdateTwitterCardTags()
+    {
+        await UpdateMetaTag("twitter:card", "summary_large_image");
+        await UpdateMetaTag("twitter:title", Title ?? "Clean Architecture With Blazor Server");
+        await UpdateMetaTag("twitter:description", Description ?? "Blazor Server project template with Clean Architecture principles");
+        
+        if (!string.IsNullOrEmpty(ImageUrl))
+        {
+            var fullImageUrl = ImageUrl.StartsWith("http") ? ImageUrl : $"{BaseUrl}/{ImageUrl.TrimStart('/')}";
+            await UpdateMetaTag("twitter:image", fullImageUrl);
+            if (!string.IsNullOrEmpty(ImageAlt))
+            {
+                await UpdateMetaTag("twitter:image:alt", ImageAlt);
+            }
+        }
+    }
+
+    private async Task UpdateJsonLd()
+    {
+        if (JsonLdData == null) return;
+
+        var jsonString = System.Text.Json.JsonSerializer.Serialize(JsonLdData);
+        var script = $@"
+            let existingScript = document.querySelector('script[type=""application/ld+json""][data-seo-component]');
+            if (existingScript) {{
+                existingScript.remove();
+            }}
+            
+            let script = document.createElement('script');
+            script.type = 'application/ld+json';
+            script.setAttribute('data-seo-component', 'true');
+            script.textContent = '{jsonString.Replace("'", "\\'")}';
+            document.head.appendChild(script);
+        ";
+        await JSRuntime.InvokeVoidAsync("eval", script);
+    }
+}
