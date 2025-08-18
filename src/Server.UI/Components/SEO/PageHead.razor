@@ -117,7 +117,7 @@
         if (NoIndex || _pageData?.NoIndex == true)
             return "noindex, nofollow";
         
-        return Robots ?? _pageData?.Type == "login" ? "noindex, nofollow" : SeoSettings.DefaultRobots;
+        return Robots ?? (_pageData?.Type == "login" ? "noindex, nofollow" : SeoSettings.DefaultRobots);
     }
 
     private string GetCanonicalUrl()
