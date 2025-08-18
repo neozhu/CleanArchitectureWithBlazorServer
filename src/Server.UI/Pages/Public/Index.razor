@@ -1,12 +1,392 @@
 ﻿@page "/public/index/{title?}"
+
+ 
+
 <PageTitle>@Title</PageTitle>
-<h2>Clean Architecture With Blazor Server</h2>
 
-<p>
-    This repository guides you through building robust and maintainable Blazor Server applications by embracing the principles of Clean Architecture. Experience a seamless development journey with the included, efficient code generator, empowering you to rapidly craft stunning web applications using the latest .NET Blazor technology.
-</p>
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 80px 0;
+        text-align: center;
+        margin-bottom: 0;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .hero-subtitle {
+        font-size: 1.5rem;
+        font-weight: 300;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+    
+    .hero-description {
+        font-size: 1.2rem;
+        max-width: 800px;
+        margin: 0 auto 3rem;
+        opacity: 0.85;
+        line-height: 1.6;
+    }
+    
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+    
+    .features-section {
+        padding: 80px 0;
+        background: #f8f9fa;
+    }
+    
+    .feature-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        border: none;
+        border-radius: 12px;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+    
+    .feature-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 1.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .tech-stack-section {
+        padding: 80px 0;
+        background: white;
+    }
+    
+    .tech-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        margin: 4px;
+        display: inline-block;
+        font-weight: 500;
+        transition: transform 0.2s ease;
+    }
+    
+    .tech-badge:hover {
+        transform: scale(1.05);
+    }
+    
+    .stats-section {
+        padding: 60px 0;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+    }
+    
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #74b9ff;
+    }
+    
+    .cta-section {
+        padding: 80px 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-align: center;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    
+    .section-subtitle {
+        font-size: 1.25rem;
+        color: #6c757d;
+        text-align: center;
+        margin-bottom: 3rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+        
+        .hero-description {
+            font-size: 1rem;
+        }
+        
+        .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
 
+<!-- Hero Section -->
+<div class="hero-section">
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <h1 class="hero-title">Clean Architecture</h1>
+        <p class="hero-subtitle">Enterprise Blazor Server Template</p>
+        <p class="hero-description">
+            Build robust, maintainable, and scalable web applications with our comprehensive Blazor Server template. 
+            Featuring Clean Architecture principles, modern UI components, and enterprise-grade security.
+        </p>
+        <div class="cta-buttons">
+            <MudButton Href="/account/login" 
+                       Variant="Variant.Filled" 
+                       Color="Color.Secondary" 
+                       Size="Size.Large"
+                       StartIcon="Icons.Material.Filled.PlayArrow">
+                Try Live Demo
+            </MudButton>
+            <MudButton Href="https://github.com/neozhu/CleanArchitectureWithBlazorServer" 
+                       Target="_blank"
+                       Variant="Variant.Outlined" 
+                       Color="Color.Inherit" 
+                       Size="Size.Large"
+                       StartIcon="Icons.Material.Filled.Code">
+                View on GitHub
+            </MudButton>
+        </div>
+    </MudContainer>
+</div>
+
+<!-- Features Section -->
+<div class="features-section">
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <h2 class="section-title">Why Choose Our Template?</h2>
+        <p class="section-subtitle">
+            Everything you need to build modern web applications with confidence
+        </p>
+        
+        <MudGrid>
+            <MudItem xs="12" md="4">
+                <MudCard Class="feature-card pa-6">
+                    <div class="feature-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.Code" Size="Size.Large" Color="Color.Inherit" />
+                    </div>
+                    <MudCardContent Class="text-center">
+                        <MudText Typo="Typo.h5" GutterBottom="true">Clean Architecture</MudText>
+                        <MudText Typo="Typo.body1" Color="Color.Secondary">
+                            Well-structured codebase following SOLID principles with clear separation of concerns and dependency inversion.
+                        </MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+            
+            <MudItem xs="12" md="4">
+                <MudCard Class="feature-card pa-6">
+                    <div class="feature-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.Security" Size="Size.Large" Color="Color.Inherit" />
+                    </div>
+                    <MudCardContent Class="text-center">
+                        <MudText Typo="Typo.h5" GutterBottom="true">Enterprise Security</MudText>
+                        <MudText Typo="Typo.body1" Color="Color.Secondary">
+                            JWT authentication, role-based authorization, multi-factor authentication, and comprehensive audit trails.
+                        </MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+            
+            <MudItem xs="12" md="4">
+                <MudCard Class="feature-card pa-6">
+                    <div class="feature-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.Dashboard" Size="Size.Large" Color="Color.Inherit" />
+                    </div>
+                    <MudCardContent Class="text-center">
+                        <MudText Typo="Typo.h5" GutterBottom="true">Modern UI/UX</MudText>
+                        <MudText Typo="Typo.body1" Color="Color.Secondary">
+                            Beautiful, responsive interface built with MudBlazor components and Material Design principles.
+                        </MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+            
+            <MudItem xs="12" md="4">
+                <MudCard Class="feature-card pa-6">
+                    <div class="feature-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.Speed" Size="Size.Large" Color="Color.Inherit" />
+                    </div>
+                    <MudCardContent Class="text-center">
+                        <MudText Typo="Typo.h5" GutterBottom="true">High Performance</MudText>
+                        <MudText Typo="Typo.body1" Color="Color.Secondary">
+                            Optimized for speed with caching, lazy loading, and efficient data access patterns using Entity Framework.
+                        </MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+            
+            <MudItem xs="12" md="4">
+                <MudCard Class="feature-card pa-6">
+                    <div class="feature-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.Language" Size="Size.Large" Color="Color.Inherit" />
+                    </div>
+                    <MudCardContent Class="text-center">
+                        <MudText Typo="Typo.h5" GutterBottom="true">Internationalization</MudText>
+                        <MudText Typo="Typo.body1" Color="Color.Secondary">
+                            Multi-language support with easy localization management and right-to-left (RTL) language support.
+                        </MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+            
+            <MudItem xs="12" md="4">
+                <MudCard Class="feature-card pa-6">
+                    <div class="feature-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.CloudSync" Size="Size.Large" Color="Color.Inherit" />
+                    </div>
+                    <MudCardContent Class="text-center">
+                        <MudText Typo="Typo.h5" GutterBottom="true">Real-time Features</MudText>
+                        <MudText Typo="Typo.body1" Color="Color.Secondary">
+                            SignalR integration for real-time notifications, live updates, and collaborative features.
+                        </MudText>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</div>
+
+<!-- Technology Stack Section -->
+<div class="tech-stack-section">
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <h2 class="section-title">Built with Modern Technologies</h2>
+        <p class="section-subtitle">
+            Leveraging the latest and greatest in .NET ecosystem
+        </p>
+        
+        <div style="text-align: center; margin-top: 3rem;">
+            <div class="tech-badge">.NET 8</div>
+            <div class="tech-badge">Blazor Server</div>
+            <div class="tech-badge">Entity Framework Core</div>
+            <div class="tech-badge">MudBlazor</div>
+            <div class="tech-badge">MediatR</div>
+            <div class="tech-badge">AutoMapper</div>
+            <div class="tech-badge">FluentValidation</div>
+            <div class="tech-badge">SignalR</div>
+            <div class="tech-badge">PostgreSQL</div>
+            <div class="tech-badge">SQLite</div>
+            <div class="tech-badge">SQL Server</div>
+            <div class="tech-badge">Docker</div>
+            <div class="tech-badge">xUnit</div>
+            <div class="tech-badge">Serilog</div>
+            <div class="tech-badge">Hangfire</div>
+            <div class="tech-badge">Identity</div>
+        </div>
+    </MudContainer>
+</div>
+
+ 
+
+<!-- Key Features List -->
+<div style="padding: 80px 0; background: white;">
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <h2 class="section-title">What's Included</h2>
+        <p class="section-subtitle">
+            Everything you need for enterprise application development
+        </p>
+        
+        <MudGrid>
+            <MudItem xs="12" md="6">
+                <MudList T="string">
+                    <MudListItem T="string" Icon="Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                        <MudText><strong>User Management:</strong> Complete CRUD operations with role-based access control</MudText>
+                    </MudListItem>
+                    <MudListItem T="string" Icon="Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                        <MudText><strong>Contact Management:</strong> Advanced contact system with search and filtering</MudText>
+                    </MudListItem>
+                    <MudListItem T="string" Icon="Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                        <MudText><strong>Product Catalog:</strong> Inventory management with categories and variants</MudText>
+                    </MudListItem>
+                    <MudListItem T="string" Icon="Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                        <MudText><strong>Document Management:</strong> File upload, organization, and secure storage</MudText>
+                    </MudListItem>
+                    <MudListItem T="string" Icon="Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                        <MudText><strong>Audit Trail:</strong> Comprehensive logging and activity tracking</MudText>
+                    </MudListItem>
+                </MudList>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudList T="string">
+                    <MudListItem T="string" Icon="Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                        <MudText><strong>Multi-tenant Support:</strong> SaaS-ready architecture with tenant isolation</MudText>
+                    </MudListItem>
+                    <MudListItem T="string" Icon="Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                        <MudText><strong>Advanced Search:</strong> Full-text search with filtering and pagination</MudText>
+                    </MudListItem>
+                    <MudListItem T="string" Icon="Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                        <MudText><strong>Data Export:</strong> Excel and CSV export functionality</MudText>
+                    </MudListItem>
+                    <MudListItem T="string" Icon="Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                        <MudText><strong>Dark/Light Theme:</strong> User preference theme switching</MudText>
+                    </MudListItem>
+                    <MudListItem T="string" Icon="Icons.Material.Filled.CheckCircle" IconColor="Color.Success">
+                        <MudText><strong>Responsive Layout:</strong> Mobile-first design with PWA support</MudText>
+                    </MudListItem>
+                </MudList>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</div>
+
+<!-- Call to Action Section -->
+<div class="cta-section">
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Ready to Start Building?</h2>
+        <p style="font-size: 1.25rem; margin-bottom: 3rem; opacity: 0.9;">
+            Join thousands of developers who are building amazing applications with our template
+        </p>
+        
+        <div class="cta-buttons">
+            <MudButton Href="/account/login" 
+                       Variant="Variant.Filled" 
+                       Color="Color.Secondary" 
+                       Size="Size.Large"
+                       StartIcon="Icons.Material.Filled.PlayArrow">
+                Try Live Demo
+            </MudButton>
+            <MudButton Href="https://github.com/neozhu/CleanArchitectureWithBlazorServer" 
+                       Target="_blank"
+                       Variant="Variant.Outlined" 
+                       Color="Color.Inherit" 
+                       Size="Size.Large"
+                       StartIcon="Icons.Material.Filled.GetApp">
+                Download Template
+            </MudButton>
+        </div>
+        
+        <div style="margin-top: 2rem; opacity: 0.8;">
+            <MudText Typo="Typo.body2">
+                Demo Credentials: <strong>administrator</strong> / <strong>Password123!</strong>
+            </MudText>
+        </div>
+    </MudContainer>
+</div>
 
 @code {
-    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Title { get; set; } = "Clean Architecture Blazor Server";
 }

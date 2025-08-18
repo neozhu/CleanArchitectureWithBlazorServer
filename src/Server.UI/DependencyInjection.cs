@@ -94,6 +94,9 @@ public static class DependencyInjection
                 options.MaximumReceiveMessageSize = 64 * 1024;
                 options.AddFilter<UserContextHubFilter>();
             });
+        
+      
+        
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
         services.AddHealthChecks();
