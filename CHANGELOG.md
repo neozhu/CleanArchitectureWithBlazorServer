@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2025-01-XX
+
+### 🚀 Added
+- **SEO Enhancement System**: Comprehensive SEO optimization with structured data
+  - `SeoSettings`: Centralized SEO configuration constants and defaults
+  - `PageSeoData`: Flexible page-specific SEO metadata management
+  - `PageSeoDataDefaults`: Predefined SEO data for common application pages
+  - Enhanced meta tags, Open Graph, and Twitter Card support
+- **Search Engine Optimization**: Improved search engine visibility and crawling
+  - `robots.txt`: Optimized robots directives for better search engine crawling
+  - `sitemap.xml`: Structured sitemap for public content discovery
+  - Enhanced meta descriptions and keywords for key pages
+- **Public Landing Page**: Enhanced public-facing homepage with SEO optimization
+  - Improved hero section with better content structure
+  - Enhanced call-to-action buttons and navigation
+  - Better semantic HTML structure for search engines
+
+### 🔧 Changed
+- **Page Head Component**: Enhanced `PageHead` component with comprehensive SEO support
+- **Public Layout**: Improved layout structure for better SEO and user experience
+- **Login Page SEO**: Optimized login page meta data for demo accessibility
+
+### 📊 Performance
+- **SEO Performance**: Improved search engine indexing and discovery
+- **Content Structure**: Better semantic HTML for improved accessibility and SEO
+- **Meta Data Optimization**: Streamlined meta tag management across all pages
+
+### 🔐 Security
+- **Robots.txt Security**: Properly configured to exclude sensitive endpoints and admin areas
+- **Public Content Control**: Careful management of what content is exposed to search engines
+
 ## [2.1.0] - 2025-07-31
 
 ### 🚀 Added
@@ -88,11 +119,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **v2.1.1**: SEO Enhancement System with search engine optimization
 - **v2.1.0**: User Context Accessor with FusionCache integration
 - **v2.0.0**: .NET 9 upgrade with enhanced AI integration
 - **v1.0.0**: Initial Blazor Server template release
 
 ## Migration Guides
+
+### Upgrading from v2.1.0 to v2.1.1
+
+1. **SEO Integration**: The new SEO enhancement system integrates automatically
+2. **Meta Tags**: Enhanced meta tag support is backward compatible
+3. **Public Pages**: Improved public page structure maintains existing functionality
+4. **Search Engine Optimization**: robots.txt and sitemap.xml are automatically available
 
 ### Upgrading from v2.0.0 to v2.1.0
 
