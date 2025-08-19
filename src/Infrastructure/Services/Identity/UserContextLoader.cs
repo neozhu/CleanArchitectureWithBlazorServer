@@ -78,7 +78,7 @@ public class UserContextLoader : IUserContextLoader
                     return null;
                 }
             },
-            options:null,
+            options:new FusionCacheEntryOptions(TimeSpan.FromHours(1)),
             cancellationToken
         );
     }

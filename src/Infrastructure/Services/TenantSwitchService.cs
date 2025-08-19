@@ -197,6 +197,9 @@ public class TenantSwitchService : ITenantSwitchService
             
             // Refresh user state and cache
             await _userProfileState.RefreshAsync();
+
+            // Clear user context cache
+            _fusionCache.Remove($"UserContext:{userId}");
             
             // Update user claims
             await RefreshUserClaimsAsync(user, userManager);

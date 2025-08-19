@@ -327,6 +327,7 @@
 
     private async Task OnRefresh()
     {
+        DocumentCacheKey.Refresh();
         _selectedDocuments = new HashSet<DocumentDto>();
         _searchString = string.Empty;
         await _dataGrid.ReloadServerData();
