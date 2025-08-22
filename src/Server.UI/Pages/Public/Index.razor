@@ -45,13 +45,13 @@
     
     .features-section {
         padding: 80px 0;
-        background: #f8f9fa;
+        background: var(--mud-palette-background);
     }
     
     .feature-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         height: 100%;
-        border: none;
+        border: 1px solid var(--mud-palette-table-lines);
         border-radius: 12px;
     }
     
@@ -68,11 +68,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        background-color: rgba(var(--mud-palette-primary-rgb), 0.12);
+        color: var(--mud-palette-primary);
     }
     
     .tech-stack-section {
         padding: 80px 0;
-        background: white;
+        background: var(--mud-palette-surface);
     }
     
     .tech-badge {
@@ -118,7 +120,7 @@
     
     .section-subtitle {
         font-size: 1.25rem;
-        color: #6c757d;
+        color: var(--mud-palette-text-secondary);
         text-align: center;
         margin-bottom: 3rem;
         max-width: 600px;
@@ -280,7 +282,7 @@
         </p>
         
         <div style="text-align: center; margin-top: 3rem;">
-            <div class="tech-badge">.NET 8</div>
+            <div class="tech-badge">.NET 9</div>
             <div class="tech-badge">Blazor Server</div>
             <div class="tech-badge">Entity Framework Core</div>
             <div class="tech-badge">MudBlazor</div>
@@ -303,7 +305,7 @@
  
 
 <!-- Key Features List -->
-<div style="padding: 80px 0; background: white;">
+<div style="padding: 80px 0; background: var(--mud-palette-surface);">
     <MudContainer MaxWidth="MaxWidth.Large">
         <h2 class="section-title">What's Included</h2>
         <p class="section-subtitle">
