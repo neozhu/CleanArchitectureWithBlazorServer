@@ -4,6 +4,8 @@ using System.Reflection;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Common.Constants.Cache;
+using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using ZiggyCreatures.Caching.Fusion;
@@ -19,7 +21,6 @@ public class PermissionHelper : IPermissionHelper, IDisposable
     private readonly IFusionCache _fusionCache;
     private readonly TimeSpan _refreshInterval;
     private readonly IServiceScopeFactory _scopeFactory;
-    private const string ClaimsCacheKeyPrefix = "get-claims-by-";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PermissionHelper"/> class.
@@ -126,7 +127,7 @@ public class PermissionHelper : IPermissionHelper, IDisposable
     /// <returns>The list of claims.</returns>
     private async Task<IList<Claim>> GetUserClaimsByUserId(string userId)
     {
-        var key = $"{ClaimsCacheKeyPrefix}{userId}";
+        var key = UserCacheKeys.GetCacheKey(userId, UserCacheType.Claims);
         return await _fusionCache.GetOrSetAsync(key, async _ =>
         {
             using var scope = _scopeFactory.CreateScope();
@@ -187,7 +188,7 @@ public class PermissionHelper : IPermissionHelper, IDisposable
     /// <returns>The list of claims.</returns>
     private async Task<IList<Claim>> GetUserClaimsByRoleId(string roleId)
     {
-        var key = $"{ClaimsCacheKeyPrefix}{roleId}";
+        var key = UserCacheKeys.RoleClaims(roleId);
         return await _fusionCache.GetOrSetAsync(key, async _ =>
         {
             using var scope = _scopeFactory.CreateScope();
