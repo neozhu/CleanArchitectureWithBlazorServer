@@ -130,7 +130,7 @@ Variant="@DrawerVariant.Temporary">
         </MudText>
         <MudGrid Spacing="2">
             <MudItem xs="12">
-                <MudSlider T="double" Value="@UserPreferences.DefaultFontSize" Min="9" Max="18" Immediate="false" Step="1" Color="Color.Primary"
+                <MudSlider T="double" Value="@UserPreferences.DefaultFontSize" Min="12" Max="18" Immediate="false" Step="1" Color="Color.Primary"
                 ValueChanged="@(e => ChangedFontSize(e))">
                     @($"{UserPreferences.DefaultFontSize.ToString()} px")
                 </MudSlider>
@@ -203,6 +203,7 @@ Variant="@DrawerVariant.Temporary">
     }
 </style>
 
+
 @code
 {
 
@@ -265,9 +266,12 @@ Variant="@DrawerVariant.Temporary">
 
     private async Task ChangedFontSize(double? args)
     {
-        UserPreferences.DefaultFontSize = args ?? 14;
+        var size = args ?? 14;
+        UserPreferences.DefaultFontSize = size;
+        await LayoutService.UpdateUserPreferences(UserPreferences);
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
+
 
     public void OpenSetting()
     {

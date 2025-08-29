@@ -1,18 +1,22 @@
 ﻿using System.Globalization;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
+using Microsoft.JSInterop;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Layout;
 
 public class LayoutService
 {
     private readonly IUserPreferencesService _userPreferencesService;
+    private readonly IJSRuntime _jsRuntime;
+    private IJSObjectReference? _themeModule;
     private bool _systemPreferences;
 
     public DarkLightMode DarkModeToggle { get; private set; } = DarkLightMode.System;
 
-    public LayoutService(IUserPreferencesService userPreferencesService)
+    public LayoutService(IUserPreferencesService userPreferencesService, IJSRuntime jsRuntime)
     {
         _userPreferencesService = userPreferencesService;
+        _jsRuntime = jsRuntime;
     }
 
     public UserPreferences.UserPreference UserPreferences { get; private set; } = new();
@@ -37,6 +41,7 @@ public class LayoutService
         UserPreferences = await _userPreferencesService.LoadUserPreferences().ConfigureAwait(false);
         UpdateLayoutSettings(isDarkModeDefaultTheme);
         UpdateCurrentTheme();
+        await ApplyBaseFontSize().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -47,6 +52,7 @@ public class LayoutService
         UserPreferences = preferences;
         UpdateLayoutSettings(_systemPreferences);
         UpdateCurrentTheme();
+        await ApplyBaseFontSize().ConfigureAwait(false);
         await _userPreferencesService.SaveUserPreferences(UserPreferences).ConfigureAwait(false);
         await OnMajorUpdateOccurred();
     }
@@ -82,6 +88,28 @@ public class LayoutService
         CurrentTheme.LayoutProperties.DefaultBorderRadius = UserPreferences.BorderRadius + "px";
 
          
+    }
+
+    private async Task EnsureThemeModule()
+    {
+        if (_themeModule is null)
+        {
+            _themeModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/theme.js").ConfigureAwait(false);
+        }
+    }
+
+    private async Task ApplyBaseFontSize()
+    {
+        try
+        {
+            await EnsureThemeModule().ConfigureAwait(false);
+            var size = UserPreferences?.DefaultFontSize > 0 ? UserPreferences.DefaultFontSize : 14;
+            await _themeModule!.InvokeVoidAsync("setRootFontSize", size).ConfigureAwait(false);
+        }
+        catch
+        {
+            // ignore JS errors on early startup
+        }
     }
 
 
