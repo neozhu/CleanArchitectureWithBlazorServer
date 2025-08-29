@@ -29,8 +29,8 @@
 
     <MudMenu AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" LockScroll="true" Class="flex-grow-1">
         <ActivatorContent>
-            <div class="d-flex align-center">
-                <MudStack Justify="Justify.SpaceBetween" Spacing="0">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="flex-grow-1">
+                <MudStack Spacing="0">
                     <MudText Typo="Typo.h6">
                         @L[ApplicationSettings.AppName]
                     </MudText>
@@ -38,8 +38,8 @@
                         @(UserProfile?.TenantName ?? "No Organization")
                     </MudText>
                 </MudStack>
-                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown" Size="Size.Small" Class="ml-3" />
-            </div>
+                <MudIcon Icon="@Icons.Material.Outlined.KeyboardDoubleArrowDown" Size="Size.Small" Class="mr-4" />
+            </MudStack>
         </ActivatorContent>
         <ChildContent>
             <div style="min-width: 200px;">
