@@ -15,5 +15,9 @@ public interface IUserContextLoader
     /// <returns>The loaded UserContext, or null if the user is not authenticated.</returns>
     Task<UserContext?> LoadAsync(ClaimsPrincipal principal, CancellationToken cancellationToken = default);
 
-
+    /// <summary>
+    /// Clears the cached user context for a specific user.
+    /// </summary>
+    /// <param name="userId">The user ID to clear cache for.</param>
+    void ClearUserContextCache(string userId);
 } 

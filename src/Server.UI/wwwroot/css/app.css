@@ -1,4 +1,7 @@
-﻿.mud-main-content {
+﻿html {
+  font-size: 14px; /* 默认：1rem = 14px */
+}
+.mud-main-content {
     height: 100%;
     min-height: 100vh;
     display: flex;
@@ -107,3 +110,4 @@
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+

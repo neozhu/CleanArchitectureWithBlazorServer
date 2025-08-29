@@ -10,6 +10,7 @@ global using CleanArchitecture.Blazor.Application.Common.Models;
 global using CleanArchitecture.Blazor.Infrastructure.Persistence;
 global using CleanArchitecture.Blazor.Infrastructure.Persistence.Extensions;
 global using CleanArchitecture.Blazor.Infrastructure.Services;
+global using CleanArchitecture.Blazor.Application.Common.Constants.Cache;
 global using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 global using CleanArchitecture.Blazor.Domain.Entities;
 global using Microsoft.AspNetCore.Components.Authorization;

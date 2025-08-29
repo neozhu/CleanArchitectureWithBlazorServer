@@ -117,11 +117,10 @@ Variant="@DrawerVariant.Temporary">
         <MudText Typo="Typo.body2">
             <b>@L["Border Radius"]</b>
         </MudText>
-        <MudGrid Class="my-3"
-        Spacing="2">
+        <MudGrid Spacing="2">
             <MudItem xs="12">
-                <MudSlider Value="@UserPreferences.BorderRadius" Min="0" Max="@MaxValue" Immediate="false" Step="1" Color="Color.Primary"
-                @oninput="@(e => ChangedSelection(e))">
+                <MudSlider T="double" Value="@UserPreferences.BorderRadius" Min="0" Max="@MaxValue" Immediate="false" Step="1" Color="Color.Primary"
+                 ValueChanged="@(e => ChangedSelection(e))">
                     @UserPreferences.BorderRadius.ToString()
                 </MudSlider>
             </MudItem>
@@ -129,12 +128,11 @@ Variant="@DrawerVariant.Temporary">
         <MudText Typo="Typo.body2">
             <b>@L["Default Font Size"]</b>
         </MudText>
-        <MudGrid Class="my-3"
-        Spacing="2">
+        <MudGrid Spacing="2">
             <MudItem xs="12">
-                <MudSlider Value="@UserPreferences.DefaultFontSize" Min="0.625" Max="1.125" Immediate="false" Step="0.0625" Color="Color.Primary"
-                @oninput="@(e => ChangedFontSize(e))">
-                    @($"{UserPreferences.DefaultFontSize.ToString()} rem")
+                <MudSlider T="double" Value="@UserPreferences.DefaultFontSize" Min="12" Max="18" Immediate="false" Step="1" Color="Color.Primary"
+                ValueChanged="@(e => ChangedFontSize(e))">
+                    @($"{UserPreferences.DefaultFontSize.ToString()} px")
                 </MudSlider>
             </MudItem>
         </MudGrid>
@@ -205,6 +203,7 @@ Variant="@DrawerVariant.Temporary">
     }
 </style>
 
+
 @code
 {
 
@@ -244,9 +243,9 @@ Variant="@DrawerVariant.Temporary">
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
 
-    private async Task ChangedSelection(ChangeEventArgs args)
+    private async Task ChangedSelection(double? args)
     {
-        UserPreferences.BorderRadius = double.Parse(args?.Value?.ToString() ?? "0");
+        UserPreferences.BorderRadius = args ?? 0;
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
 
@@ -265,11 +264,14 @@ Variant="@DrawerVariant.Temporary">
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
 
-    private async Task ChangedFontSize(ChangeEventArgs args)
+    private async Task ChangedFontSize(double? args)
     {
-        UserPreferences.DefaultFontSize = double.Parse(args?.Value?.ToString() ?? "0", NumberStyles.Float, CultureInfo.InvariantCulture);
+        var size = args ?? 14;
+        UserPreferences.DefaultFontSize = size;
+        await LayoutService.UpdateUserPreferences(UserPreferences);
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
+
 
     public void OpenSetting()
     {
