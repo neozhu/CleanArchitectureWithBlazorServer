@@ -117,8 +117,7 @@ Variant="@DrawerVariant.Temporary">
         <MudText Typo="Typo.body2">
             <b>@L["Border Radius"]</b>
         </MudText>
-        <MudGrid Class="my-3"
-        Spacing="2">
+        <MudGrid Spacing="2">
             <MudItem xs="12">
                 <MudSlider Value="@UserPreferences.BorderRadius" Min="0" Max="@MaxValue" Immediate="false" Step="1" Color="Color.Primary"
                 @oninput="@(e => ChangedSelection(e))">
@@ -129,12 +128,11 @@ Variant="@DrawerVariant.Temporary">
         <MudText Typo="Typo.body2">
             <b>@L["Default Font Size"]</b>
         </MudText>
-        <MudGrid Class="my-3"
-        Spacing="2">
+        <MudGrid Spacing="2">
             <MudItem xs="12">
-                <MudSlider Value="@UserPreferences.DefaultFontSize" Min="0.625" Max="1.125" Immediate="false" Step="0.0625" Color="Color.Primary"
+                <MudSlider Value="@UserPreferences.DefaultFontSize" Min="9" Max="18" Immediate="false" Step="1" Color="Color.Primary"
                 @oninput="@(e => ChangedFontSize(e))">
-                    @($"{UserPreferences.DefaultFontSize.ToString()} rem")
+                    @($"{UserPreferences.DefaultFontSize.ToString()} px")
                 </MudSlider>
             </MudItem>
         </MudGrid>

@@ -44,7 +44,7 @@ public class UserPreference
     /// <summary>
     /// Scale factor used for typography.
     /// </summary>
-    public const double ScaleFactor = 1.067;
+
 
     /// <summary>
     /// The primary color for light mode.
@@ -79,55 +79,9 @@ public class UserPreference
     /// <summary>
     /// The default font size (in rem).
     /// </summary>
-    public double DefaultFontSize { get; set; } = 0.8125;
+    public double DefaultFontSize { get; set; } = 14;
 
-    /// <summary>
-    /// Calculates the line height based on the default font size.
-    /// </summary>
-    public double LineHeight => 1.12 * Math.Pow(DefaultFontSize, 2)
-                              - 1.16 * DefaultFontSize
-                              + 1.5875;
-
-    /// <summary>
-    /// Calculates the letter spacing based on the default font size.
-    /// </summary>
-    public double LetterSpacing => 0.00938 * (DefaultFontSize / 0.875);
-
-    // Heading font sizes (calculated using the default font size and the scale factor)
-    public double H6FontSize => DefaultFontSize * 1.15385 * ScaleFactor; // ≈ 1.0rem
-    public double H5FontSize => DefaultFontSize * 1.297 * ScaleFactor;   // ≈ 1.125rem
-    public double H4FontSize => DefaultFontSize * 1.441 * ScaleFactor;   // ≈ 1.25rem
-    public double H3FontSize => DefaultFontSize * 1.73 * ScaleFactor;    // ≈ 1.5rem
-    public double H2FontSize => DefaultFontSize * 2.163 * ScaleFactor;   // ≈ 1.875rem
-    public double H1FontSize => DefaultFontSize * 2.594 * ScaleFactor;   // ≈ 2.25rem
-
-    // Body text properties
-    public double Body1FontSize => DefaultFontSize;
-    public double Body1LineHeight => LineHeight;
-    public double Body1LetterSpacing => LetterSpacing;
-    public double Body2FontSize => DefaultFontSize - 0.0625;
-    public double Body2LineHeight => LineHeight;
-    public double Body2LetterSpacing => LetterSpacing;
-
-    // Button text properties
-    public double ButtonFontSize => DefaultFontSize;
-    public double ButtonLineHeight => 1.12 * Math.Pow(DefaultFontSize, 2)
-                             - 1.16 * DefaultFontSize
-                             + 1.9075;
-
-    // Caption text properties
-    public double CaptionFontSize => DefaultFontSize - 0.1875;
-    public double CaptionLineHeight => 1.12 * Math.Pow(DefaultFontSize, 2)
-                             - 1.16 * DefaultFontSize
-                             + 1.9075;
-
-    // Overline text properties
-    public double OverlineFontSize => DefaultFontSize - 0.1875;
-    public double OverlineLineHeight => LineHeight;
-
-    // Subtitle text properties
-    public double Subtitle1FontSize => DefaultFontSize;
-    public double Subtitle2FontSize => DefaultFontSize + 0.125;
+     
 
     /// <summary>
     /// The theme mode (System, Light, or Dark).

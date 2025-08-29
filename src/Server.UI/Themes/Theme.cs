@@ -83,104 +83,104 @@ public static class Theme
             {
                 Default = new DefaultTypography
                 {
-                    FontSize = ".875rem", // 14px, modern standard
+                    FontSize = ".875rem",
                     FontWeight = "400",
                     LineHeight = "1.5",
                     LetterSpacing = "normal",
-                    FontFamily = ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"]
+                    FontFamily = ["Inter var", "Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji"]
                 },
                 H1 = new H1Typography
                 {
-                    FontSize = "2.25rem", // 36px   
-                    FontWeight = "700",        
-                    LineHeight = "1.2",       
+                    FontSize = "2.25rem", 
+                    FontWeight = "800",        
+                    LineHeight = "2.5rem",       
                     LetterSpacing = "-0.025em"
                 },
                 H2 = new H2Typography
                 {
-                    FontSize = "1.875rem", // 30px    
+                    FontSize = "1.875rem",
                     FontWeight = "600",
-                    LineHeight = "1.25",
+                    LineHeight = "2.25rem",
                     LetterSpacing = "-0.025em"
                 },
                 H3 = new H3Typography
                 {
-                    FontSize = "1.5rem", // 24px     
+                    FontSize = "1.5rem", 
                     FontWeight = "600",
-                    LineHeight = "1.33",
+                    LineHeight = "2rem",
                     LetterSpacing = "-0.025em"
                 },
                 H4 = new H4Typography
                 {
-                    FontSize = "1.25rem", // 20px     
+                    FontSize = "1.25rem",
                     FontWeight = "600",
-                    LineHeight = "1.4",
+                    LineHeight = "1.75rem",
                     LetterSpacing = "-0.025em"
                 },
                 H5 = new H5Typography
                 {
-                    FontSize = "1.125rem", // 18px    
+                    FontSize = "1.125rem",
                     FontWeight = "600",
-                    LineHeight = "1.44",
+                    LineHeight = "1.75rem",
                     LetterSpacing = "-0.025em"
                 },
                 H6 = new H6Typography
                 {
-                    FontSize = "1rem", // 16px       
+                    FontSize = "1rem",
                     FontWeight = "600",
-                    LineHeight = "1.5",
+                    LineHeight = "1.25rem",
                     LetterSpacing = "-0.025em"
                 },
                 Button = new ButtonTypography
                 {
-                    FontSize = ".875rem", // 14px
+                    FontSize = ".875rem",
                     FontWeight = "500",
-                    LineHeight = "1.5",
-                    LetterSpacing = ".025em",
-                    TextTransform = "none" // Modern design does not use uppercase
+                    LineHeight = "1.25rem",
+                    LetterSpacing = "normal",
+                    TextTransform = "none"
                 },
                 Subtitle1 = new Subtitle1Typography
                 {
-                    FontSize = "1rem", // 16px
+                    FontSize = ".875rem",
                     FontWeight = "500",
-                    LineHeight = "1.5",
-                    LetterSpacing = "-0.025em",
+                    LineHeight = "1.25rem",
+                    LetterSpacing = "0",
                 },
                 Subtitle2 = new Subtitle2Typography
                 {
-                    FontSize = ".875rem", // 14px
+                    FontSize = ".75rem",
                     FontWeight = "500",
-                    LineHeight = "1.43",
-                    LetterSpacing = "-0.025em"
+                    LineHeight = "1rem",
+                    LetterSpacing = "0"
                 },
                 Body1 = new Body1Typography
                 {
-                    FontSize = "1rem", // 16px
+                    FontSize = ".875rem",
                     FontWeight = "400",
-                    LineHeight = "1.5",
-                    LetterSpacing = "-0.025em"
+                    LineHeight = "1.25rem",
+                    LetterSpacing = "0"
                 },
                 Body2 = new Body2Typography
                 {
-                    FontSize = ".875rem", // 14px
+                    FontSize = ".75rem",
                     FontWeight = "400",
-                    LineHeight = "1.43",
-                    LetterSpacing = "-0.025em"
+                    LineHeight = "1rem",
+                    LetterSpacing = "0"
                 },
                 Caption = new CaptionTypography
                 {
-                    FontSize = "0.75rem", // 12px
-                    FontWeight = "500",
-                    LineHeight = "1.33",
-                    LetterSpacing = "0.025em"
+                    FontSize = "0.75rem", 
+                    FontWeight = "400",
+                    LineHeight = "1rem",
+                    LetterSpacing = "0"
                 },
                 Overline = new OverlineTypography
                 {
-                    FontSize = "0.75rem", // 12px
-                    FontWeight = "500",
-                    LineHeight = "1.33",
-                    LetterSpacing = "0.1em",
-                    TextTransform = "uppercase"
+                    FontSize = "0.75rem",
+                    FontWeight = "400",
+                    LineHeight = "1rem",
+                    LetterSpacing = "0",
+                    TextTransform = "none"
                 }
             }
         };

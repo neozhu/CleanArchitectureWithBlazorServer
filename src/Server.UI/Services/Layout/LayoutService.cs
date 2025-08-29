@@ -81,47 +81,10 @@ public class LayoutService
         // Update layout properties
         CurrentTheme.LayoutProperties.DefaultBorderRadius = UserPreferences.BorderRadius + "px";
 
-        // Update typography settings
-        string defaultFontSize = FormatFontSize(UserPreferences.DefaultFontSize);
-        CurrentTheme.Typography.Default.FontSize = defaultFontSize;
-
-        CurrentTheme.Typography.Button.FontSize = FormatFontSize(UserPreferences.ButtonFontSize);
-        CurrentTheme.Typography.Button.LineHeight = UserPreferences.ButtonLineHeight.ToString();
-
-        // Heading fonts
-        CurrentTheme.Typography.H1.FontSize = FormatFontSize(UserPreferences.H1FontSize);
-        CurrentTheme.Typography.H2.FontSize = FormatFontSize(UserPreferences.H2FontSize);
-        CurrentTheme.Typography.H3.FontSize = FormatFontSize(UserPreferences.H3FontSize);
-        CurrentTheme.Typography.H4.FontSize = FormatFontSize(UserPreferences.H4FontSize);
-        CurrentTheme.Typography.H5.FontSize = FormatFontSize(UserPreferences.H5FontSize);
-        CurrentTheme.Typography.H6.FontSize = FormatFontSize(UserPreferences.H6FontSize);
-
-        // Body text
-        CurrentTheme.Typography.Body1.FontSize = FormatFontSize(UserPreferences.Body1FontSize);
-        CurrentTheme.Typography.Body1.LineHeight = UserPreferences.Body1LineHeight.ToString();
-        //CurrentTheme.Typography.Body1.LetterSpacing = FormatFontSize(UserPreferences.Body1LetterSpacing);
-
-        CurrentTheme.Typography.Body2.FontSize = FormatFontSize(UserPreferences.Body2FontSize);
-        CurrentTheme.Typography.Body2.LineHeight = UserPreferences.Body1LineHeight.ToString();
-        //CurrentTheme.Typography.Body2.LetterSpacing = FormatFontSize(UserPreferences.Body1LetterSpacing);
-
-        // Caption and overline texts
-        CurrentTheme.Typography.Caption.FontSize = FormatFontSize(UserPreferences.CaptionFontSize);
-        CurrentTheme.Typography.Caption.LineHeight = UserPreferences.CaptionLineHeight.ToString();
-
-        CurrentTheme.Typography.Overline.FontSize = FormatFontSize(UserPreferences.OverlineFontSize);
-        CurrentTheme.Typography.Overline.LineHeight = UserPreferences.OverlineLineHeight.ToString();
-
-        // Subtitles
-        CurrentTheme.Typography.Subtitle1.FontSize = FormatFontSize(UserPreferences.Subtitle1FontSize);
-        CurrentTheme.Typography.Subtitle2.FontSize = FormatFontSize(UserPreferences.Subtitle2FontSize); 
+         
     }
 
-    /// <summary>
-    /// Formats a font size value as a string with the "rem" unit.
-    /// </summary>
-    private string FormatFontSize(double size) =>
-        size.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+
 
     #region Events and System Preferences
 
