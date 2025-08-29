@@ -119,8 +119,8 @@ Variant="@DrawerVariant.Temporary">
         </MudText>
         <MudGrid Spacing="2">
             <MudItem xs="12">
-                <MudSlider Value="@UserPreferences.BorderRadius" Min="0" Max="@MaxValue" Immediate="false" Step="1" Color="Color.Primary"
-                @oninput="@(e => ChangedSelection(e))">
+                <MudSlider T="double" Value="@UserPreferences.BorderRadius" Min="0" Max="@MaxValue" Immediate="false" Step="1" Color="Color.Primary"
+                 ValueChanged="@(e => ChangedSelection(e))">
                     @UserPreferences.BorderRadius.ToString()
                 </MudSlider>
             </MudItem>
@@ -130,8 +130,8 @@ Variant="@DrawerVariant.Temporary">
         </MudText>
         <MudGrid Spacing="2">
             <MudItem xs="12">
-                <MudSlider Value="@UserPreferences.DefaultFontSize" Min="9" Max="18" Immediate="false" Step="1" Color="Color.Primary"
-                @oninput="@(e => ChangedFontSize(e))">
+                <MudSlider T="double" Value="@UserPreferences.DefaultFontSize" Min="9" Max="18" Immediate="false" Step="1" Color="Color.Primary"
+                ValueChanged="@(e => ChangedFontSize(e))">
                     @($"{UserPreferences.DefaultFontSize.ToString()} px")
                 </MudSlider>
             </MudItem>
@@ -242,9 +242,9 @@ Variant="@DrawerVariant.Temporary">
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
 
-    private async Task ChangedSelection(ChangeEventArgs args)
+    private async Task ChangedSelection(double? args)
     {
-        UserPreferences.BorderRadius = double.Parse(args?.Value?.ToString() ?? "0");
+        UserPreferences.BorderRadius = args ?? 0;
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
 
@@ -263,9 +263,9 @@ Variant="@DrawerVariant.Temporary">
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
 
-    private async Task ChangedFontSize(ChangeEventArgs args)
+    private async Task ChangedFontSize(double? args)
     {
-        UserPreferences.DefaultFontSize = double.Parse(args?.Value?.ToString() ?? "0", NumberStyles.Float, CultureInfo.InvariantCulture);
+        UserPreferences.DefaultFontSize = args ?? 14;
         await UserPreferencesChanged.InvokeAsync(UserPreferences);
     }
 
