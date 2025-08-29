@@ -2,7 +2,10 @@
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Application.Features.Tenants.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Tenants.Caching;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Domain.Identity;
+using CleanArchitecture.Blazor.Application.Common.Constants.Cache;
+using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
@@ -16,6 +19,7 @@ public class TenantSwitchService : ITenantSwitchService
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IPermissionService _permissionService;
     private readonly IUserProfileState _userProfileState;
+    private readonly IUserContextLoader _userContextLoader;
     private readonly IFusionCache _fusionCache;
     private readonly IMapper _mapper;
     private readonly ILogger<TenantSwitchService> _logger;
@@ -25,6 +29,7 @@ public class TenantSwitchService : ITenantSwitchService
         IServiceScopeFactory serviceScopeFactory,
         IPermissionService permissionService,
         IUserProfileState userProfileState,
+        IUserContextLoader userContextLoader,
         IFusionCache fusionCache,
         IMapper mapper,
         ILogger<TenantSwitchService> logger)
@@ -33,6 +38,7 @@ public class TenantSwitchService : ITenantSwitchService
         _serviceScopeFactory = serviceScopeFactory;
         _permissionService = permissionService;
         _userProfileState = userProfileState;
+        _userContextLoader = userContextLoader;
         _fusionCache = fusionCache;
         _mapper = mapper;
         _logger = logger;
@@ -199,7 +205,7 @@ public class TenantSwitchService : ITenantSwitchService
             await _userProfileState.RefreshAsync();
 
             // Clear user context cache
-            _fusionCache.Remove($"UserContext:{userId}");
+            _userContextLoader.ClearUserContextCache(userId);
             
             // Update user claims
             await RefreshUserClaimsAsync(user, userManager);

@@ -4,6 +4,8 @@ using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Application.Common.Constants.Cache;
+using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 using Microsoft.AspNetCore.Identity;
 using ZiggyCreatures.Caching.Fusion;
 
@@ -14,18 +16,17 @@ public class UserPermissionAssignmentService : IPermissionAssignmentService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IPermissionHelper _permissionHelper;
-    private readonly IFusionCache _cache;
+    private readonly IFusionCache _fusionCache;
     private readonly ILogger<UserPermissionAssignmentService> _logger;
-    private const string CacheKeyPrefix = "get-claims-by-";
 
     public UserPermissionAssignmentService(UserManager<ApplicationUser> userManager,
         IPermissionHelper permissionHelper,
-        IFusionCache cache,
+        IFusionCache fusionCache,
         ILogger<UserPermissionAssignmentService> logger)
     {
         _userManager = userManager;
         _permissionHelper = permissionHelper;
-        _cache = cache;
+        _fusionCache = fusionCache;
         _logger = logger;
     }
 
@@ -72,6 +73,16 @@ public class UserPermissionAssignmentService : IPermissionAssignmentService
 
     private void InvalidateCache(string userId)
     {
-        _cache.Remove($"{CacheKeyPrefix}{userId}");
+        // Clear both claims/permissions and context cache
+        _ = Task.Run(async () => 
+        {
+            var cacheTypes = new[] { UserCacheType.Claims, UserCacheType.Permissions, UserCacheType.Context };
+            var tasks = cacheTypes.Select(cacheType =>
+            {
+                var cacheKey = UserCacheKeys.GetCacheKey(userId, cacheType);
+                return _fusionCache.RemoveAsync(cacheKey).AsTask();
+            });
+            await Task.WhenAll(tasks);
+        });
     }
 } 

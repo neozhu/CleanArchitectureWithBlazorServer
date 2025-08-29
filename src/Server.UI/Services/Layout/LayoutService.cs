@@ -1,18 +1,22 @@
 ﻿using System.Globalization;
 using CleanArchitecture.Blazor.Server.UI.Services.UserPreferences;
+using Microsoft.JSInterop;
 
 namespace CleanArchitecture.Blazor.Server.UI.Services.Layout;
 
 public class LayoutService
 {
     private readonly IUserPreferencesService _userPreferencesService;
+    private readonly IJSRuntime _jsRuntime;
+    private IJSObjectReference? _themeModule;
     private bool _systemPreferences;
 
     public DarkLightMode DarkModeToggle { get; private set; } = DarkLightMode.System;
 
-    public LayoutService(IUserPreferencesService userPreferencesService)
+    public LayoutService(IUserPreferencesService userPreferencesService, IJSRuntime jsRuntime)
     {
         _userPreferencesService = userPreferencesService;
+        _jsRuntime = jsRuntime;
     }
 
     public UserPreferences.UserPreference UserPreferences { get; private set; } = new();
@@ -37,6 +41,7 @@ public class LayoutService
         UserPreferences = await _userPreferencesService.LoadUserPreferences().ConfigureAwait(false);
         UpdateLayoutSettings(isDarkModeDefaultTheme);
         UpdateCurrentTheme();
+        await ApplyBaseFontSize().ConfigureAwait(false);
     }
 
     /// <summary>
@@ -47,6 +52,7 @@ public class LayoutService
         UserPreferences = preferences;
         UpdateLayoutSettings(_systemPreferences);
         UpdateCurrentTheme();
+        await ApplyBaseFontSize().ConfigureAwait(false);
         await _userPreferencesService.SaveUserPreferences(UserPreferences).ConfigureAwait(false);
         await OnMajorUpdateOccurred();
     }
@@ -81,47 +87,32 @@ public class LayoutService
         // Update layout properties
         CurrentTheme.LayoutProperties.DefaultBorderRadius = UserPreferences.BorderRadius + "px";
 
-        // Update typography settings
-        string defaultFontSize = FormatFontSize(UserPreferences.DefaultFontSize);
-        CurrentTheme.Typography.Default.FontSize = defaultFontSize;
-
-        CurrentTheme.Typography.Button.FontSize = FormatFontSize(UserPreferences.ButtonFontSize);
-        CurrentTheme.Typography.Button.LineHeight = UserPreferences.ButtonLineHeight.ToString();
-
-        // Heading fonts
-        CurrentTheme.Typography.H1.FontSize = FormatFontSize(UserPreferences.H1FontSize);
-        CurrentTheme.Typography.H2.FontSize = FormatFontSize(UserPreferences.H2FontSize);
-        CurrentTheme.Typography.H3.FontSize = FormatFontSize(UserPreferences.H3FontSize);
-        CurrentTheme.Typography.H4.FontSize = FormatFontSize(UserPreferences.H4FontSize);
-        CurrentTheme.Typography.H5.FontSize = FormatFontSize(UserPreferences.H5FontSize);
-        CurrentTheme.Typography.H6.FontSize = FormatFontSize(UserPreferences.H6FontSize);
-
-        // Body text
-        CurrentTheme.Typography.Body1.FontSize = FormatFontSize(UserPreferences.Body1FontSize);
-        CurrentTheme.Typography.Body1.LineHeight = UserPreferences.Body1LineHeight.ToString();
-        //CurrentTheme.Typography.Body1.LetterSpacing = FormatFontSize(UserPreferences.Body1LetterSpacing);
-
-        CurrentTheme.Typography.Body2.FontSize = FormatFontSize(UserPreferences.Body2FontSize);
-        CurrentTheme.Typography.Body2.LineHeight = UserPreferences.Body1LineHeight.ToString();
-        //CurrentTheme.Typography.Body2.LetterSpacing = FormatFontSize(UserPreferences.Body1LetterSpacing);
-
-        // Caption and overline texts
-        CurrentTheme.Typography.Caption.FontSize = FormatFontSize(UserPreferences.CaptionFontSize);
-        CurrentTheme.Typography.Caption.LineHeight = UserPreferences.CaptionLineHeight.ToString();
-
-        CurrentTheme.Typography.Overline.FontSize = FormatFontSize(UserPreferences.OverlineFontSize);
-        CurrentTheme.Typography.Overline.LineHeight = UserPreferences.OverlineLineHeight.ToString();
-
-        // Subtitles
-        CurrentTheme.Typography.Subtitle1.FontSize = FormatFontSize(UserPreferences.Subtitle1FontSize);
-        CurrentTheme.Typography.Subtitle2.FontSize = FormatFontSize(UserPreferences.Subtitle2FontSize); 
+         
     }
 
-    /// <summary>
-    /// Formats a font size value as a string with the "rem" unit.
-    /// </summary>
-    private string FormatFontSize(double size) =>
-        size.ToString("0.0000", CultureInfo.InvariantCulture) + "rem";
+    private async Task EnsureThemeModule()
+    {
+        if (_themeModule is null)
+        {
+            _themeModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/theme.js").ConfigureAwait(false);
+        }
+    }
+
+    private async Task ApplyBaseFontSize()
+    {
+        try
+        {
+            await EnsureThemeModule().ConfigureAwait(false);
+            var size = UserPreferences?.DefaultFontSize > 0 ? UserPreferences.DefaultFontSize : 14;
+            await _themeModule!.InvokeVoidAsync("setRootFontSize", size).ConfigureAwait(false);
+        }
+        catch
+        {
+            // ignore JS errors on early startup
+        }
+    }
+
+
 
     #region Events and System Preferences
 
