@@ -130,6 +130,9 @@
   <data name="Color" xml:space="preserve">
     <value>颜色</value>
   </data>
+  <data name="Primary Color" xml:space="preserve">
+    <value>主题色</value>
+  </data>
   <data name="Mode" xml:space="preserve">
     <value>模式</value>
   </data>
@@ -147,5 +150,11 @@
   </data>
   <data name="Online Users" xml:space="preserve">
     <value>在线用户</value>
+  </data>
+  <data name="Custom Color" xml:space="preserve">
+    <value>自定义颜色</value>
+  </data>
+  <data name="Enter hex color code" xml:space="preserve">
+    <value>输入十六进制颜色代码</value>
   </data>
 </root>

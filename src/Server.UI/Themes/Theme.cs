@@ -78,6 +78,7 @@ public static class Theme
                 AppbarHeight = "64px", // More modern height
                 DefaultBorderRadius = "8px", // More modern border radius
                 DrawerWidthLeft = "280px", // Wider sidebar
+                DrawerMiniWidthRight= "260px"
             },
             Typography = new Typography
             {

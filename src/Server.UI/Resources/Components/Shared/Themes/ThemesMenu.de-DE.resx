@@ -130,6 +130,9 @@
   <data name="Color" xml:space="preserve">
     <value>Farbe</value>
   </data>
+  <data name="Primary Color" xml:space="preserve">
+    <value>Primärfarbe</value>
+  </data>
   <data name="Mode" xml:space="preserve">
     <value>Modus</value>
   </data>

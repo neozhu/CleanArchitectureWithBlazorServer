@@ -1,0 +1,319 @@
+﻿@using Microsoft.AspNetCore.Components
+@inject IStringLocalizer<PrimaryColorPicker> L
+
+<div class="color-picker-container">
+    <div class="color-grid" Role="list">
+        @foreach (var color in Colors)
+        {
+            <div Role="listitem" class="color-item">
+                <MudTooltip Text="@color" Duration="300" Placement="Placement.Top">
+                    <button class="@($"color-swatch {(color == Selected ? "selected" : string.Empty)}")"
+                            aria-label="@($"Select color {color}")"
+                            aria-pressed="@(color == Selected)"
+                            @onclick="(() => HandleSelect(color))"
+                            style="@($"--swatch-color: {color};")">
+                        <div class="color-preview">
+                            <div class="color-inner" style="@($"background: {color};")"></div>
+                            @if (color == Selected)
+                            {
+                                <div class="selection-indicator">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Check" Class="check-icon" />
+                                </div>
+                            }
+                        </div>
+                        <div class="color-ripple"></div>
+                    </button>
+                </MudTooltip>
+            </div>
+        }
+    </div>
+
+    @if (ShowCustomInput)
+    {
+        <div class="custom-color-section">
+            <MudDivider Class="my-4" />
+            <div class="custom-color-input">
+                <MudTextField @bind-Value="_customColor"
+                              Label="@L["Custom Color"]"
+                              Placeholder="#RRGGBB"
+                              Immediate="true"
+                              Variant="Variant.Outlined"
+                              AdornmentIcon="@Icons.Material.Outlined.Palette"
+                              Adornment="Adornment.Start"
+                              OnBlur="@(async _ => await TrySelectCustom())"
+                              HelperText="@L["Enter hex color code"]"
+                              Class="custom-color-field" />
+                @if (!string.IsNullOrEmpty(_customColor) && IsValidHexColor(_customColor))
+                {
+                    <div class="custom-color-preview" style="@($"background: {_customColor};")"></div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .color-picker-container {
+        width: 100%;
+    }
+
+    .color-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(52px, 1fr));
+        gap: 6px;
+        padding: 8px 0;
+    }
+
+    .color-item {
+        display: flex;
+        justify-content: center;
+    }
+
+    .color-swatch {
+        position: relative;
+        width: 52px;
+        height: 52px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: scale(1);
+    }
+
+    .color-swatch:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .color-swatch:active {
+        transform: scale(0.95);
+    }
+
+    .color-swatch.selected {
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .color-preview {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 2px solid var(--mud-palette-background-grey);
+        transition: border-color 0.3s ease;
+    }
+
+    .color-swatch.selected .color-preview {
+        border-color: var(--mud-palette-primary);
+        border-width: 3px;
+    }
+
+    .color-inner {
+        width: 100%;
+        height: 100%;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .color-inner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .color-swatch:hover .color-inner::before {
+        opacity: 1;
+    }
+
+    .selection-indicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        animation: checkmark-appear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        backdrop-filter: blur(4px);
+    }
+
+    .check-icon {
+        color: var(--mud-palette-primary) !important;
+        font-weight: bold;
+    }
+
+    .color-ripple {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 14px;
+        background: var(--swatch-color);
+        opacity: 0;
+        transform: scale(0.8);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+    }
+
+    .color-swatch:active .color-ripple {
+        opacity: 0.3;
+        transform: scale(1.2);
+    }
+
+    .custom-color-section {
+        margin-top: 16px;
+    }
+
+    .custom-color-input {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .custom-color-field {
+        flex: 1;
+    }
+
+    .custom-color-preview {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        border: 2px solid var(--mud-palette-background-grey);
+        margin-top: 4px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-color-preview:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    @@keyframes checkmark-appear {
+        0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5) rotate(-180deg);
+        }
+        50% {
+            transform: translate(-50%, -50%) scale(1.2) rotate(-90deg);
+        }
+        100% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        }
+    }
+
+    /* Dark mode adjustments */
+    .mud-theme-dark .color-preview {
+        border-color: var(--mud-palette-surface);
+    }
+
+    .mud-theme-dark .selection-indicator {
+        background: rgba(0, 0, 0, 0.85);
+    }
+
+    .mud-theme-dark .custom-color-preview {
+        border-color: var(--mud-palette-surface);
+    }
+
+    /* Mobile responsive */
+    @@media (max-width: 600px) {
+        .color-grid {
+            grid-template-columns: repeat(auto-fit, minmax(46px, 1fr));
+            gap: 10px;
+        }
+
+        .color-swatch {
+            width: 46px;
+            height: 46px;
+        }
+
+        .custom-color-preview {
+            width: 46px;
+            height: 46px;
+        }
+    }
+
+    /* Accessibility improvements */
+    @@media (prefers-reduced-motion: reduce) {
+        .color-swatch,
+        .color-inner,
+        .color-ripple,
+        .selection-indicator {
+            transition: none;
+            animation: none;
+        }
+        
+        .color-swatch:hover {
+            transform: none;
+        }
+    }
+
+    /* High contrast mode */
+    @@media (prefers-contrast: high) {
+        .color-preview {
+            border-width: 3px;
+        }
+        
+        .selection-indicator {
+            background: #ffffff;
+            border: 2px solid #000000;
+        }
+    }
+</style>
+
+@code
+{
+    [Parameter] public IEnumerable<string> Colors { get; set; } = Array.Empty<string>();
+
+    [Parameter] public string Selected { get; set; } = string.Empty;
+
+    [Parameter] public EventCallback<string> OnSelect { get; set; }
+
+    [Parameter] public bool ShowCustomInput { get; set; }
+
+    private string _customColor = string.Empty;
+
+    private async Task HandleSelect(string color)
+    {
+        if (OnSelect.HasDelegate)
+        {
+            await OnSelect.InvokeAsync(color);
+        }
+    }
+
+    private async Task TrySelectCustom()
+    {
+        var color = _customColor?.Trim();
+        if (string.IsNullOrWhiteSpace(color)) return;
+        if (!IsValidHexColor(color)) return;
+        await HandleSelect(color);
+    }
+
+    private bool IsValidHexColor(string color)
+    {
+        if (string.IsNullOrWhiteSpace(color)) return false;
+        if (!color.StartsWith("#")) return false;
+        
+        // Support both #RGB and #RRGGBB formats
+        var hex = color.Substring(1);
+        return (hex.Length == 3 || hex.Length == 6) && 
+               hex.All(c => char.IsDigit(c) || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'));
+    }
+}
+
+
