@@ -22,9 +22,11 @@ Variant="@DrawerVariant.Temporary">
     <div class="themes-content">
         <!-- Theme Mode Section -->
         <div class="theme-section">
-            <MudText Typo="Typo.body2">
-                <b>@L["Mode"]</b>
-            </MudText>
+            <div class="section-header">
+                <MudIcon Icon="@Icons.Material.Outlined.AutoMode" Class="section-icon" />
+                <MudText Typo="Typo.subtitle1" Class="section-title">@L["Mode"]</MudText>
+            </div>
+        
             <MudGrid Class="my-3"
                      Spacing="2">
                 <MudItem xs="4">
@@ -75,7 +77,7 @@ Variant="@DrawerVariant.Temporary">
         <div class="theme-section">
             <div class="section-header">
                 <MudIcon Icon="@Icons.Material.Outlined.Palette" Class="section-icon" />
-                <MudText Typo="Typo.h6" Class="section-title">@L["Primary Color"]</MudText>
+                <MudText Typo="Typo.subtitle1" Class="section-title">@L["Primary Color"]</MudText>
             </div>
             <div class="color-section">
                 <PrimaryColorPicker
@@ -92,7 +94,7 @@ Variant="@DrawerVariant.Temporary">
         <div class="theme-section">
             <div class="section-header">
                 <MudIcon Icon="@Icons.Material.Outlined.CropFree" Class="section-icon" />
-                <MudText Typo="Typo.h6" Class="section-title">@L["Border Radius"]</MudText>
+                <MudText Typo="Typo.subtitle1" Class="section-title">@L["Border Radius"]</MudText>
                 <MudChip T="string" Size="Size.Small"  Variant="Variant.Text" >
                     @UserPreferences.BorderRadius.ToString("F0")px
                 </MudChip>
@@ -121,7 +123,7 @@ Variant="@DrawerVariant.Temporary">
         <div class="theme-section">
             <div class="section-header">
                 <MudIcon Icon="@Icons.Material.Outlined.FormatSize" Class="section-icon" />
-                <MudText Typo="Typo.h6" Class="section-title">@L["Default Font Size"]</MudText>
+                <MudText Typo="Typo.subtitle1" Class="section-title">@L["Default Font Size"]</MudText>
                 <MudChip T="string" Size="Size.Small" >
                     @UserPreferences.DefaultFontSize.ToString("F0")px
                 </MudChip>
@@ -150,7 +152,7 @@ Variant="@DrawerVariant.Temporary">
         <div class="theme-section">
             <div class="section-header">
                 <MudIcon Icon="@Icons.Material.Outlined.People" Class="section-icon" />
-                <MudText Typo="Typo.h6" Class="section-title">@L["Online Users"]</MudText>
+                <MudText Typo="Typo.subtitle1" Class="section-title">@L["Online Users"]</MudText>
             </div>
             <div class="online-users-container">
                 <OnlineUsersTracker />
@@ -189,7 +191,6 @@ Variant="@DrawerVariant.Temporary">
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 16px;
         padding-bottom: 8px;
     }
 
