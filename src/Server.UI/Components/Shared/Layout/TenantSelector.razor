@@ -7,6 +7,7 @@
 @inject ITenantSwitchService TenantSwitchService
 @inject ISnackbar Snackbar
 @inject NavigationManager Navigation
+@inject IPermissionService PermissionService
 @implements IDisposable
 
 
@@ -27,7 +28,7 @@
                  Size="Size.Large" />
     }
 
-    <MudMenu AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" LockScroll="true" Class="flex-grow-1">
+    <MudMenu AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.BottomRight" LockScroll="true" Class="flex-grow-1" Disabled="!_hasSwitchPermission">
         <ActivatorContent>
             <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="flex-grow-1">
                 <MudStack Spacing="0">
@@ -104,10 +105,12 @@
     private UserProfile UserProfile => UserProfileState.Value;
     private List<TenantDto>? _availableTenants;
     private bool _isSwitching;
+    private bool _hasSwitchPermission;
 
     protected override async Task OnInitializedAsync()
     {
         UserProfileState.Changed += OnUserProfileChanged;
+        _hasSwitchPermission = await PermissionService.HasPermissionAsync(Permissions.Users.SwitchTenants);
         await LoadAvailableTenants();
     }
 
