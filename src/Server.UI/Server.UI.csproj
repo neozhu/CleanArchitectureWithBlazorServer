@@ -26,7 +26,7 @@
         <PackageReference Include="Hangfire.InMemory" Version="1.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.8" />
         <PackageReference Include="MudBlazor" Version="8.11.0" />
-        <PackageReference Include="Blazor-ApexCharts" Version="6.0.1" />
+        <PackageReference Include="Blazor-ApexCharts" Version="6.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
