@@ -13,9 +13,11 @@
         <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
         <PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="9.3.1" />
         <PackageReference Include="ClosedXML" Version="0.105.0" />
-        <PackageReference Include="jcamp.FluentEmail.Core" Version="3.8.0" />
-        <PackageReference Include="jcamp.FluentEmail.MailKit" Version="3.8.0" />
-        <PackageReference Include="jcamp.FluentEmail.Razor" Version="3.8.0" />
+    
+        <PackageReference Include="MailKit" Version="4.13.0" />
+        <PackageReference Include="MimeKit" Version="4.13.0" />
+        <PackageReference Include="Scriban" Version="6.2.0" />
+        
         <PackageReference Include="FluentValidation" Version="12.0.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.8" />
