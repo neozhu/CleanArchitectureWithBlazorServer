@@ -67,13 +67,13 @@
 
 <body>
     <div class="container">
-        <h2>Welcome to @Model.AppName</h2>
-        <p>Dear @Model.UserName,</p>
-        <p>Thank you for joining @Model.AppName. We're here to ensure you have the best experience.</p>
+        <h2>Welcome to {{ app_name }}</h2>
+        <p>Dear {{ user_name }},</p>
+        <p>Thank you for joining {{ app_name }}. We're here to ensure you have the best experience.</p>
         <p>You can log in to your account here:</p>
-        <a href="@Model.LoginUrl" class="button">Log In</a>
+        <a href="{{ login_url }}" class="button">Log In</a>
         <div class="footer">
-            <p>Best wishes,<br>The @Model.Company Team</p>
+            <p>Best wishes,<br>The {{ company }} Team</p>
         </div>
     </div>
 </body>

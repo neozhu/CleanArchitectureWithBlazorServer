@@ -63,12 +63,12 @@
 <body>
     <div class="container">
         <h2>Verification Code</h2>
-        <p>Dear @Model.UserName,</p>
+        <p>Dear {{ user_name }},</p>
         <p>Your verification code is:</p>
-        <div class="verification-code">@Model.AuthenticatorCode</div>
+        <div class="verification-code">{{ authenticator_code }}</div>
         <p>This code is valid for 10 minutes. If you did not request it, please contact support immediately.</p>
         <div class="footer">
-            <p>Thanks,<br>@Model.Company Team</p>
+            <p>Thanks,<br>{{ company }} Team</p>
         </div>
     </div>
 </body>
