@@ -29,7 +29,7 @@ public class MailService : IMailService
         try
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(_smtpOptions.DefaultFromName, _smtpOptions.DefaultFromEmail));
+            message.From.Add(new MailboxAddress(_smtpOptions.DefaultFromEmail, _smtpOptions.DefaultFromEmail));
             message.To.Add(new MailboxAddress("", to));
             message.Subject = subject;
 
@@ -40,8 +40,7 @@ public class MailService : IMailService
             message.Body = builder.ToMessageBody();
 
             using var client = new SmtpClient();
-            await client.ConnectAsync(_smtpOptions.Host, _smtpOptions.Port, 
-                _smtpOptions.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+            await client.ConnectAsync(_smtpOptions.Host, _smtpOptions.Port, _smtpOptions.UseSsl);
 
             if (_smtpOptions.RequireCredentials)
             {

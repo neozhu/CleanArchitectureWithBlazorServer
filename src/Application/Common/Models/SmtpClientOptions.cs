@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Common.Models;
@@ -38,10 +38,6 @@ public class SmtpClientOptions
     /// </summary>
     public string DefaultFromEmail { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Default from display name
-    /// </summary>
-    public string DefaultFromName { get; set; } = string.Empty;
 
     /// <summary>
     /// Enable SMTP authentication
