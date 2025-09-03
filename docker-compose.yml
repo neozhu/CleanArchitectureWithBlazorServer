@@ -17,9 +17,9 @@ services:
       - DatabaseSettings__DBProvider=${DB_PROVIDER}
       - DatabaseSettings__ConnectionString=${DB_CONNECTION_STRING}
       - AI__GeminiApiKey=${GEMINI_API_KEY}
-      - SmtpClientOptions__User=${SMTP_USER}
+      - SmtpClientOptions__UserName=${SMTP_USERNAME}
       - SmtpClientOptions__Port=${SMTP_PORT}
-      - SmtpClientOptions__Server=${SMTP_SERVER}
+      - SmtpClientOptions__Host=${SMTP_HOST}
       - SmtpClientOptions__Password=${SMTP_PASSWORD}
       - SmtpClientOptions__DefaultFromEmail=${SMTP_DEFAULT_FROM}
       - Authentication__Microsoft__ClientId=${MS_CLIENT_ID}
