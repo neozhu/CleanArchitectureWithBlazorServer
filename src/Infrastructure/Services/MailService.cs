@@ -3,10 +3,8 @@
 
 using System.Reflection;
 using MailKit.Net.Smtp;
-using MailKit.Security;
 using MimeKit;
 using Scriban;
-using CleanArchitecture.Blazor.Application.Common.Models;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
@@ -50,11 +48,11 @@ public class MailService : IMailService
             await client.SendAsync(message);
             await client.DisconnectAsync(true);
 
-            _logger.LogInformation("Email sent successfully to {To}. Subject: {Subject}", to, subject);
+            _logger.LogInformation("Email sent successfully to {To}", to);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to send email. Subject: {EmailSubject}. An exception occurred.", subject);
+            _logger.LogError(e, "Failed to send email. An exception occurred.");
             throw;
         }
     }
@@ -91,8 +89,8 @@ public class MailService : IMailService
         catch (Exception e)
         {
             _logger.LogError(e,
-                "Failed to send templated email. Subject: {EmailSubject}, Template: {EmailTemplate}. An exception occurred.",
-                subject, template);
+                "Failed to send templated email, Template: {EmailTemplate}. An exception occurred.",
+                template);
             throw;
         }
     }
