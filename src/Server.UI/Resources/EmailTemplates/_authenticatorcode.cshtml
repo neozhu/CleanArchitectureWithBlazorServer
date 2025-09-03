@@ -2,33 +2,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
+    <title>Verification Code</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
         }
 
         .container {
-            background-color: #fff;
-            padding: 20px;
-            max-width: 600px;
-            margin: auto;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            padding: 40px 30px;
+            max-width: 500px;
+            margin: 20px auto;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: #000000;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 20px 0;
+            text-align: center;
         }
 
         p {
-            line-height: 1.6;
+            margin: 0 0 16px 0;
+            font-size: 14px;
+            color: #495057;
         }
-        .x_verification-code{
-             font-size: 48px;
-             line-height: 60px;
-             color: #032e61; 
-             margin: 12px 0;
+
+        .verification-code {
+            font-size: 36px;
+            font-weight: 700;
+            color: #000000;
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin: 24px 0;
+            border: 2px solid #e9ecef;
+            border-radius: 4px;
+            letter-spacing: 8px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            font-size: 13px;
+            color: #6c757d;
         }
     </style>
 </head>
@@ -36,11 +63,13 @@
 <body>
     <div class="container">
         <h2>Verification Code</h2>
-        <p>Dear @Model.UserName,</p>
+        <p>Dear {{ user_name }},</p>
         <p>Your verification code is:</p>
-        <h1>@Model.AuthenticatorCode</h1>
+        <div class="verification-code">{{ authenticator_code }}</div>
         <p>This code is valid for 10 minutes. If you did not request it, please contact support immediately.</p>
-        <p>@Model.Company Team</p>
+        <div class="footer">
+            <p>Thanks,<br>{{ company }} Team</p>
+        </div>
     </div>
 </body>
 </html>
