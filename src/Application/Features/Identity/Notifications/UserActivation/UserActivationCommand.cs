@@ -25,19 +25,19 @@ public class UserActivationNotificationHandler : INotificationHandler<UserActiva
 
     public async Task Handle(UserActivationNotification notification, CancellationToken cancellationToken)
     {
-        var sendMailResult = await _mailService.SendAsync(
+        await _mailService.SendAsync(
             notification.Email,
             _localizer["Account Activation Required"],
             "_useractivation",
             new
             {
-                notification.ActivationUrl,
-                _settings.AppName,
-                _settings.Company,
-                notification.UserName,
-                notification.Email
+                ActivationUrl = notification.ActivationUrl,
+                AppName = _settings.AppName,
+                Company = _settings.Company,
+                UserName = notification.UserName,
+                Email = notification.Email
             });
-        _logger.LogInformation("Activation email sent to {Email}, Activation Callback URL: {ActivationUrl}. sending result {Successful} {Message}, ",
-            notification.Email, notification.ActivationUrl,sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
+        _logger.LogInformation("Activation email sent to {Email}, Activation Callback URL: {ActivationUrl}.", 
+            notification.Email, notification.ActivationUrl);
     }
 }

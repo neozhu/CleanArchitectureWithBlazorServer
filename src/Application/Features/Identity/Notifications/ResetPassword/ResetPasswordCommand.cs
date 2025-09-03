@@ -24,19 +24,19 @@ public class ResetPasswordNotificationHandler : INotificationHandler<ResetPasswo
 
     public async Task Handle(ResetPasswordNotification notification, CancellationToken cancellationToken)
     {
-        var sendMailResult = await _mailService.SendAsync(
+        await _mailService.SendAsync(
             notification.Email,
             _localizer["Verify your recovery email"],
             "_recoverypassword",
             new
             {
-                notification.RequestUrl,
-                _settings.AppName,
-                _settings.Company,
-                notification.UserName,
-                notification.Email
+                RequestUrl = notification.RequestUrl,
+                AppName = _settings.AppName,
+                Company = _settings.Company,
+                UserName = notification.UserName,
+                Email = notification.Email
             });
-        _logger.LogInformation("Password rest email sent to {Email}. Reset Password Callback URL: {RequestUrl} sending result {Successful} {ErrorMessages}",
-            notification.Email, notification.RequestUrl, sendMailResult.Successful, string.Join(' ', sendMailResult.ErrorMessages));
+        _logger.LogInformation("Password reset email sent to {Email}. Reset Password Callback URL: {RequestUrl}", 
+            notification.Email, notification.RequestUrl);
     }
 }

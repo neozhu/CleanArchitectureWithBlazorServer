@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
+using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using CleanArchitecture.Blazor.Application.Common.Constants.ClaimTypes;
@@ -13,7 +14,6 @@ using CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 using CleanArchitecture.Blazor.Infrastructure.Services.Circuits;
 using CleanArchitecture.Blazor.Infrastructure.Services.Gemini;
 using CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
-using FluentEmail.MailKitSmtp;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -198,12 +198,6 @@ public static class DependencyInjection
 
         services.AddSingleton(smtpClientOptions);
         services.AddScoped<IMailService, MailService>();
-
-        // configure your sender and template choices with dependency injection.
-        var defaultFromEmail = configuration.GetValue<string>(SMTP_CLIENT_OPTIONS_DEFAULT_FROM_EMAIL);
-        services.AddFluentEmail(defaultFromEmail ?? DEFAULT_FROM_EMAIL)
-            .AddRazorRenderer(Path.Combine(Directory.GetCurrentDirectory(), EMAIL_TEMPLATES_PATH))
-            .AddMailKitSender(smtpClientOptions);
 
         return services;
     }
